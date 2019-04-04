@@ -14,7 +14,7 @@ class House extends Admin
             $keywords = input('param.keywords');
             
             $where = [
-                ['is_show','eq',1],
+                ['house_status','eq',1],
             ];
             if($keywords){
                 $where[] = ['keywords','like','%'.$keywords.'%'];

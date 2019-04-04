@@ -15,7 +15,7 @@ class Ban extends Admin
             $keywords = input('param.keywords');
             
             $where = [
-                ['is_show','eq',1],
+                ['ban_status','eq',1],
             ];
             if(INST_LEVEL == 2){
                 $where[] = ['ban_inst_pid','eq',INST];
