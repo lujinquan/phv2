@@ -1,19 +1,52 @@
 <div class="page-toolbar">
-    <div class="page-filter">
-        <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
-            <div class="layui-input-inline layui-col-md2">
-                <input type="text" name="keywords" placeholder="搜索" class="layui-input">
-            </div>
-            <div class="layui-input-inline layui-col-md3" style="margin-left:20px;">
-                
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                    <i class="layui-icon">&#xe615;</i>
-                    搜索
-                </button>
-                <button type="reset" class="layui-btn">重置</button>
-            </div>
-        </form>
-    </div>
+    <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+        <div class="layui-input-inline" style="width:150px;">
+            <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+        </div>
+        <div class="layui-input-inline" style="width:150px;padding-left:5px">
+            <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+        </div>
+        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+            <select name="ban_inst_id">
+                <option value="">机构</option>
+                {volist name="params['insts']" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+            <select name="ban_owner_id">
+                <option value="">产别</option>
+                {volist name="params['owners']" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+            <select name="ban_struct_id">
+                <option value="">结构类别</option>
+                {volist name="params['structs']" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+            <select name="ban_damage_id">
+                <option value="">完损等级</option>
+                {volist name="params['damages']" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="margin-left:20px;padding-left:5px">
+            
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                <i class="layui-icon">&#xe615;</i>
+                搜索
+            </button>
+            <button type="reset" class="layui-btn">重置</button>
+        </div>
+    </form>
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>

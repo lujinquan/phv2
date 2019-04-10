@@ -98,6 +98,7 @@ class Admin extends Common
                 $this->assign('hisiTabType', 0);
                 // 获取所有参数
                 $params = ParamModel::getCparams();
+                //halt($params);
                 $this->assign('params',$params);
                 $this->assign('paramsJson',json_encode($params));
                 //halt(json_encode($params));

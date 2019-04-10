@@ -1,5 +1,6 @@
 <?php
 namespace app\house\admin;
+use think\Db;
 use app\system\admin\Admin;
 use app\house\model\House as HouseModel;
 
@@ -55,5 +56,19 @@ class House extends Admin
     public function del()
     {
         
+    }
+
+    public function houseRoom()
+    {
+        $olds = Db::name('room_old')->column('RoomID,HouseID');
+        $str = '';
+        foreach($olds as $k => $v){
+            $arr = explode(',',$v);
+            foreach($arr as $a){
+                $str .= '("' .$k .'","'.$a . '"),';
+            }
+        }
+        // $re = Db::execute("insert into ".config('database.prefix')."house_room (room_number,house_number) values " . rtrim($str, ','));
+        // halt($re);
     }
 }

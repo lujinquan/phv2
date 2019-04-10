@@ -122,7 +122,7 @@ class Module extends Admin
 
         }
 
-        $this->assign('emptyTips', '<tr><td colspan="5" align="center" height="100">未发现相关模块，快去<a href="'.url('store/index').'"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</td></tr>');
+        $this->assign('emptyTips', '<tr><td colspan="5" align="center" height="100">未发现相关模块！</td></tr>');
         $this->assign('data_list', array_values($modules));
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);

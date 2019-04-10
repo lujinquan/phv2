@@ -1,10 +1,7 @@
 <div class="page-toolbar">
     <div class="page-filter">
-        <div class="layui-input-inline layui-col-md2">
-            <a href="{:url('add')}" class="layui-btn layui-btn-normal layui-icon layui-icon-edit">&nbsp;新增房屋</a>
-        </div>
         <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
-            <div class="layui-input-inline layui-col-md2" style="margin-left:20px;">
+            <div class="layui-input-inline layui-col-md2">
                 <input type="text" name="keywords" placeholder="搜索" class="layui-input">
             </div>
             <div class="layui-input-inline layui-col-md3" style="margin-left:20px;">
@@ -20,6 +17,15 @@
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    <a href="{:url('add')}"><button class="layui-btn layui-btn-sm layui-btn-normal">新增房屋</button></a>
+    <button data-href="{:url('del')}?id={{ d.ban_id }}" class="layui-btn layui-btn-sm layui-btn-danger j-tr-del">批量删除</button>
+    <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+    <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button> -->
+  </div>
+</script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     <!-- <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a> -->
 	<a href="{:url('renttable')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
@@ -32,6 +38,7 @@
         table.render({
             elem: '#dataTable'
             ,height: 500
+            ,toolbar: '#toolbar'
             ,url: '{:url("house/House/index")}' //数据接口
             ,page: true //开启分页
             ,limit: 10
@@ -39,7 +46,8 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'house_number', width: 140, title: '房屋编号'}
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'house_number', width: 140, title: '房屋编号'}
                 ,{field: 'ban_number', width: 120, title: '楼栋编号'}
                 ,{field: 'tenant_name', width: 100, title: '租户姓名'}
                 ,{field: 'ban_inst_id', width: 120, title: '管段', templet: function(d) {

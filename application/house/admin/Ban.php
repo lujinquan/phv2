@@ -12,23 +12,12 @@ class Ban extends Admin
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
-            $keywords = input('param.keywords');
-            
-            $where = [
-                ['ban_status','eq',1],
-            ];
-            if(INST_LEVEL == 2){
-                $where[] = ['ban_inst_pid','eq',INST];
-            }elseif(INST_LEVEL == 3){
-                $where[] = ['ban_inst_id','eq',INST];
-            }
-            if($keywords){
-                $where[] = ['keywords','like','%'.$keywords.'%'];
-            }
-            
+            $data = $this->request->get();
+            $banModel = new BanModel;
+            $where = $banModel->checkWhere($data);
             $fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_area,ban_party_area,ban_career_area,ban_use_area,ban_civil_oprice,ban_party_oprice,ban_career_oprice';
-            $data['data'] = BanModel::field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
-            $data['count'] = BanModel::where($where)->count('ban_id');
+            $data['data'] = $banModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
+            $data['count'] = $banModel->where($where)->count('ban_id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
