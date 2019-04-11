@@ -13,21 +13,16 @@ namespace app\house\validate;
 use think\Validate;
 
 /**
- * 楼栋验证器
+ * 租户验证器
  * @package app\admin\validate
  */
-class Ban extends Validate
+class Tenant extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'ban_struct_id|结构类别' => 'require|number',
-        'ban_damage_id|完损等级' => 'require|number',
-        'ban_owner_id|产别' => 'require|number',
-        'ban_units|单元数' => 'require|number',
-        'ban_floors|楼层数' => 'require|number',
-        'ban_ratio|栋系数' => 'float',
-        'ban_build_year|建成年份' => 'require|date',
-        'ban_address|地址' => 'require',   
+        'tenant_name|租户姓名' => 'require',
+        'tenant_tel|联系电话' => 'require|number',
+        'tenant_card|身份证号' => 'require|number',
     ];
 
     //定义验证提示
@@ -38,7 +33,7 @@ class Ban extends Validate
     //定义验证场景
     protected $scene = [
         //新增
-        'sceneForm'  =>  ['ban_struct_id','ban_damage_id','ban_owner_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_address'],
+        'sceneForm'  =>  ['tenant_name','tenant_tel','tenant_card'],
         // //修改
         // 'edit'  =>  ['ban_struct_id'],    
     ];

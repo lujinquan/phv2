@@ -22,6 +22,22 @@ class Ban extends Admin
             $data['msg'] = '';
             return json($data);
         }
+        $group = input('group','y');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '正常',
+                'url' => '?group=y',
+            ],
+            [
+                'title' => '异常',
+                'url' => '?group=n',
+            ],
+        ];
+        $tabData['current'] = url('?group='.$group);
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
         return $this->fetch();
     }
 
@@ -29,21 +45,50 @@ class Ban extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            $result = $this->validate($data, 'Article.sceneAdd');
+            // 数据验证
+            $result = $this->validate($data, 'Ban.sceneForm');
             if($result !== true) {
                 return $this->error($result);
             }
-            $mod = new BanModel();
-            if (!$mod->allowField(true)->create($data)) {
+            $BanModel = new BanModel();
+            // 数据过滤
+            $filData = $BanModel->dataFilter($data);
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            // 入库
+            if (!$BanModel->allowField(true)->create($filData)) {
                 return $this->error('添加失败');
             }
             return $this->success('添加成功');
         }
-        return $this->fetch('form');
+        return $this->fetch();
     }
 
     public function edit()
     {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'Ban.sceneForm');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $BanModel = new BanModel();
+            // 数据过滤
+            $filData = $BanModel->dataFilter($data);
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            // 入库
+            if (!$BanModel->allowField(true)->save($filData)) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+        $id = input('param.id/d');
+        $row = BanModel::get($id);
+        $this->assign('data_info',$row);
         return $this->fetch('form');
     }
 
@@ -58,5 +103,15 @@ class Ban extends Admin
     public function del()
     {
         
+    }
+
+    public function struct()
+    {
+        return $this->fetch();
+    }
+
+    public function ceshi()
+    {
+        return $this->fetch();
     }
 }

@@ -23,5 +23,56 @@ class Tenant extends Model
         return $this->belongsTo('hosue', 'house_number', 'house_number')->bind('house_id');
     }
 
-    
+    public function checkWhere($data)
+    {
+        if(!$data){
+            $data = request()->param();
+        }
+        $group = isset($data['group'])?$data['group']:'y';
+        $where = ($group == 'y')?[['tenant_status','eq',1]]:[['tenant_status','neq',1]];
+        // 检索楼栋编号
+        if(isset($data['tenant_number']) && $data['tenant_number']){
+            $where[] = ['tenant_number','like','%'.$data['tenant_number'].'%'];
+        }
+        // 检索楼栋地址
+        if(isset($data['tenant_name']) && $data['tenant_name']){
+            $where[] = ['tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
+        // 检索产别
+        if(isset($data['tenant_tel']) && $data['tenant_tel']){
+            $where[] = ['tenant_tel','like','%'.$data['tenant_tel'].'%'];
+        }
+        // 检索结构类别
+        if(isset($data['tenant_card']) && $data['tenant_card']){
+            $where[] = ['tenant_card','like','%'.$data['tenant_card'].'%'];
+        }
+        // 检索管段
+        $insts = config('insts');
+        $instid = (isset($data['tenant_inst_id']) && $data['tenant_inst_id'])?$data['tenant_inst_id']:INST;
+        if(isset($insts[$instid])){
+            if($insts[$instid]){
+                $where[] = ['tenant_inst_id','in',$insts[$instid]];
+            }
+        }else{
+            $where[] = ['tenant_inst_id','eq',$data['tenant_inst_id']];
+        }
+
+        return $where;
+    }
+
+    public function dataFilter($data)
+    {
+        if(isset($data['tenant_inst_id']) && $data['tenant_inst_id']){
+            $data['tenant_inst_id'] = $data['tenant_inst_id'];
+        }else{
+            $data['tenant_inst_id'] = INST;
+        }
+        $data['tenant_cuid'] = ADMIN_ID;
+        $data['tenant_number'] = (self::max('tenant_number') + 1);
+        if($data['tenant_inst_id'] < 4){
+            return '请选择正确的管段';
+        }else{
+            return $data;
+        }
+    }
 }

@@ -18,11 +18,13 @@ class Ban extends Model
         'ban_ctime' => 'timestamp:Y-m-d H:i:s',
     ];
 
-    public function checkWhere($data){
+    public function checkWhere($data)
+    {
         if(!$data){
             $data = request()->param();
         }
-        $where = [['ban_status','eq',1]];
+        $group = isset($data['group'])?$data['group']:'y';
+        $where = ($group == 'y')?[['ban_status','eq',1]]:[['ban_status','neq',1]];
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
             $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];
@@ -56,5 +58,21 @@ class Ban extends Model
         }
 
         return $where;
+    }
+
+    public function dataFilter($data)
+    {
+        if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+            $data['ban_inst_id'] = $data['ban_inst_id'];
+        }else{
+            $data['ban_inst_id'] = INST;
+        }
+        $data['ban_cuid'] = ADMIN_ID;
+        $data['ban_number'] = (self::max('ban_number') + 1);
+        if($data['ban_inst_id'] < 4){
+            return '请选择正确的管段';
+        }else{
+            return $data;
+        }
     }
 }

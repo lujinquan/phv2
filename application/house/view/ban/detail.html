@@ -1,10 +1,15 @@
 	<div class="e-space"></div>
     <div class="page-form">
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">基本信息</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
-            <label class="layui-form-label e-label"><font color="red"></font>栋号</label>
+                <label class="layui-form-label e-label">管段</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_door" value="{$data_info['ban_door']}" readonly class="layui-input">
+                    <input type="text" value="{$params['insts'][$data_info['ban_inst_id']]}" readonly class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
@@ -34,7 +39,7 @@
                 </div>
             </div>
             <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">单元数</label>
+                <label class="layui-form-label e-label">总单元数</label>
                 <div class="layui-input-inline">
                     <input type="text" value="{$data_info['ban_units']}" readonly class="layui-input">
                 </div>
@@ -42,7 +47,7 @@
         </div>
         <div class="layui-form-item e-inline">
             <div class="layui-inline">
-                <label class="layui-form-label e-label">楼层数</label>
+                <label class="layui-form-label e-label">总楼层数</label>
                 <div class="layui-input-inline">
                     <input type="text" value="{$data_info['ban_floors']}" readonly class="layui-input">
                 </div>
@@ -144,9 +149,21 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label">产权来源</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['ban_property_source']}" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label">使用面积</label>
                 <div class="layui-input-inline">
                     <input type="text" value="{$data_info['ban_use_area']}" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label">栋号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_door" value="{$data_info['ban_door']}" readonly class="layui-input">
                 </div>
             </div>
         </div>
@@ -159,7 +176,12 @@
                 </div>
             </div>
         </div>
-        <div class="layui-form-item"></div>
+        <div class="e-space"></div>
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">补充附件</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label">图卡</label>
@@ -168,14 +190,20 @@
         </div>
 
 	    <div class="layui-form-item">
-	        <div class="layui-inline e-inline">
-	            <label class="layui-form-label e-label">经纬度</label>
-	            <div class="layui-input-inline w400">
-	                <input type="text" name="remark" value="{$data_info['ban_gpsx']} , {$data_info['ban_gpsy']}" readonly class="layui-input">
-	            </div>
-	        </div>
-	        <div class="layui-block e-inline e-box"></div>
-	    </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label">经度</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['ban_gpsx']}" readonly class="layui-input">
+                </div> 
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label">纬度</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['ban_gpsy']}" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-block e-inline e-box"></div>
+        </div>
 	</div>
 
 {include file="system@block/layui" /}

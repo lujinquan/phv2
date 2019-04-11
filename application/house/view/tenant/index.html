@@ -1,49 +1,60 @@
 <div class="page-toolbar">
-    <div class="page-filter">
-        <div class="layui-input-inline layui-col-md2">
-            <a href="{:url('add')}" class="layui-btn layui-btn-normal layui-icon layui-icon-edit">&nbsp;新增租户</a>
+    <form class="layui-form layui-form-pane" action="{:url('index')}"  method="get" id="hisi-table-search">
+        <div class="layui-input-inline layui-col-md2"  style="width:120px;">
+            <input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
         </div>
-        <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
-            <div class="layui-input-inline layui-col-md2" style="margin-left:20px;">
-                <input type="text" name="keywords" placeholder="搜索" class="layui-input">
-            </div>
-            <div class="layui-input-inline layui-col-md3" style="margin-left:20px;">
-                
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                    <i class="layui-icon">&#xe615;</i>
-                    搜索
-                </button>
-                <button type="reset" class="layui-btn">重置</button>
-            </div>
-        </form>
-    </div>
+        <div class="layui-input-inline layui-col-md2"  style="width:150px;padding-left:5px">
+            <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+        </div>
+        <div class="layui-input-inline layui-col-md2"  style="width:120px;padding-left:5px">
+            <input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
+        </div>
+        <div class="layui-input-inline layui-col-md2"  style="width:170px;padding-left:5px">
+            <input type="text" name="tenant_card" placeholder="身份证号" class="layui-input">
+        </div>
+        <input type="hidden" name="group" value="{$group}" class="layui-input">
+        <div class="layui-input-inline" style="margin-left:10px;"> 
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                <i class="layui-icon">&#xe615;</i>
+                搜索
+            </button>
+            <button type="reset" class="layui-btn">重置</button>
+        </div>
+    </form>
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+    {if condition="$group == 'n'"}
+    <a href="{:url('add')}"><button class="layui-btn layui-btn-sm layui-btn-normal">新增租户</button></a>
+    <button data-href="{:url('del')}?id={{ d.ban_id }}" class="layui-btn layui-btn-sm layui-btn-danger j-tr-del">批量删除</button>
+    {/if}
+  </div>
+</script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('edit')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    <a href="{:url('detail')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
-    <button data-href="{:url('del')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</button>
+	<a href="{:url('edit')}?id={{ d.tenant_number }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    <a href="{:url('detail')}?id={{ d.tenant_number }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
         var $ = layui.$;
         var s = $('#dataTable').attr('params');
-        //console.log(JSON.parse(s));
         var params = JSON.parse(s);
         var table = layui.table;
         table.render({
             elem: '#dataTable'
-            ,height: 500
-            //,height: 'full-20' //浏览器最大高度
-            ,url: '{:url("house/Tenant/index")}' //数据接口
+            ,height: 550
+            ,toolbar: '#toolbar'
+            ,url: '{:url("house/Tenant/index")}?group={$group}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'tenant_number', width:100, title: '租户编号'}
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'tenant_number', width:100, title: '租户编号'}
                 ,{field: 'tenant_name', width: 100, title: '租户姓名'}
                 ,{field: 'tenant_inst_id', width: 140, title: '管段', templet: function(d) {
                     return params.insts[d.tenant_inst_id];

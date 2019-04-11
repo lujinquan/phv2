@@ -1,4 +1,4 @@
-<form class="layui-form" action="{url('edit')}" method="post">
+<form class="layui-form" action="{url('add')}" method="post">
     <div class="e-space"></div>
     <div class="page-form">
         <div class="layui-form-item" style="padding-left:40px;">
@@ -13,7 +13,7 @@
                     <select name="ban_struct_id" class="field-cid" type="select">
                         <option value="">请选择</option>
                         {volist name="params['structs']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
+                        <option value="{$k}">{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -25,7 +25,7 @@
                     <select name="ban_damage_id" class="field-cid" type="select">
                         <option value="">请选择</option>
                         {volist name="params['damages']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_damage_id']"}selected{/if}>{$v}</option>
+                        <option value="{$k}">{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -36,7 +36,7 @@
                     <select name="ban_owner_id" class="field-cid" type="select">
                         <option value="">请选择</option>
                         {volist name="params['owners']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_owner_id']"}selected{/if}>{$v}</option>
+                        <option value="{$k}">{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -46,19 +46,19 @@
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 建成年份</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_build_year" value="{$data_info['ban_build_year']}" id="ban_build_year" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_build_year" value="" id="ban_build_year" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 总单元数</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_units" value="{$data_info['ban_units']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_units" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 总楼层数</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_floors" value="{$data_info['ban_floors']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_floors" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -66,20 +66,20 @@
             <div class="layui-inline e-inline">
             <label class="layui-form-label e-label"><font color="red"></font>  栋号</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_door" value="{$data_info['ban_door']}" placeholder="" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_door" placeholder="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 栋系数</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_ratio" value="{$data_info['ban_ratio']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_ratio" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 产权证号</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_property_id" value="{$data_info['ban_property_id']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_property_id" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
                     <select name="ban_inst_id" class="field-cid" type="select" required>
                         <option value="">请选择</option>
                         {volist name="params['insts']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
+                        <option value="{$k}">{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -102,7 +102,7 @@
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 产权来源</label>
                 <div class="layui-input-inline w400">
-                    <input type="text" name="ban_property_source" value="{$data_info['ban_property_source']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_property_source" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 地址</label>
                 <div class="layui-input-inline w400">
-                    <input type="text" name="ban_address" value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_address" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
         </div>
@@ -135,13 +135,13 @@
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 经度</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_gpsx" value="{$data_info['ban_gpsx']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_gpsx" autocomplete="off" class="layui-input">
                 </div> 
             </div>
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 纬度</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_gpsy" value="{$data_info['ban_gpsy']}" autocomplete="off" class="layui-input">
+                    <input type="text" name="ban_gpsy" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-block e-inline e-box"></div>
@@ -160,18 +160,18 @@
 <script>
     layui.use('laydate', function(){
         var laydate = layui.laydate;
-        //年选择器
-        laydate.render({
-            elem: '#ban_build_year'
-            ,type: 'year'
-            ,max: nowDate()
-        });
+	    //年选择器
+	    laydate.render({
+	        elem: '#ban_build_year'
+	        ,type: 'year'
+	        ,max: nowDate()
+	    });
 
-        laydate.render({
-            elem: '#rentTime'
-            ,range: '~'
-        });
-    });
+	    laydate.render({
+	        elem: '#rentTime'
+	        ,range: '~'
+	    });
+	});
 
     function nowDate(){
         var now = new Date();

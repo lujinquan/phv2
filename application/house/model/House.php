@@ -27,4 +27,51 @@ class House extends Model
     {
         return $this->belongsTo('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name');
     }
+
+    public function checkWhere($data)
+    {
+        if(!$data){
+            $data = request()->param();
+        }
+        $group = isset($data['group'])?$data['group']:'y';
+        $where = ($group == 'y')?[['house_status','eq',1]]:[['house_status','neq',1]];
+        // 检索租户姓名
+        if(isset($data['tenant_name']) && $data['tenant_name']){
+            $where[] = ['tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['house_number','like','%'.$data['house_number'].'%'];
+        }
+        // 检索楼栋编号
+        if(isset($data['ban_number']) && $data['ban_number']){
+            $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];
+        }
+        // 检索楼栋地址
+        if(isset($data['ban_address']) && $data['ban_address']){
+            $where[] = ['ban_address','like','%'.$data['ban_address'].'%'];
+        }
+        // 检索产别
+        if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
+            $where[] = ['ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索使用性质
+        if(isset($data['ban_use_id']) && $data['ban_use_id']){
+            $where[] = ['ban_use_id','eq',$data['ban_use_id']];
+        }
+        
+
+        // 检索管段
+        $insts = config('insts');
+        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        if(isset($insts[$instid])){
+            if($insts[$instid]){
+                $where[] = ['ban_inst_id','in',$insts[$instid]];
+            }
+        }else{
+            $where[] = ['ban_inst_id','eq',$data['ban_inst_id']];
+        }
+
+        return $where;
+    }
 }
