@@ -54,7 +54,7 @@
   <div class="layui-btn-container">
     {if condition="$group == 'n'"}
     <a href="{:url('add')}"><button class="layui-btn layui-btn-sm layui-btn-normal">新增楼栋</button></a>
-    <button data-href="{:url('del')}?id={{ d.ban_id }}" class="layui-btn layui-btn-sm layui-btn-danger j-tr-del">批量删除</button>
+    <button data-href="{:url('del')}" data-id="ban_id" class="layui-btn layui-btn-sm layui-btn-danger j-page-btns">批量删除</button>
     {/if}
     <!-- <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>

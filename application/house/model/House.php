@@ -25,7 +25,7 @@ class House extends Model
 
     public function tenant()
     {
-        return $this->belongsTo('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name');
+        return $this->belongsTo('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name,tenant_tel,tenant_card');
     }
 
     public function checkWhere($data)
@@ -73,5 +73,17 @@ class House extends Model
         }
 
         return $where;
+    }
+
+    public function dataFilter($data)
+    {
+        $data['house_cuid'] = ADMIN_ID;
+        $maxHouseNumber = self::where([['house_number', 'like', $data['ban_number'] . '%']])->max('house_number');
+        if (!$maxHouseNumber) {
+            $data['house_number'] = $data['ban_number'] . '0001';
+        } else {
+            $data['house_number'] = $maxHouseNumber + 1;
+        }
+        return $data; 
     }
 }

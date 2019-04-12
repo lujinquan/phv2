@@ -66,16 +66,42 @@ class Tenant extends Admin
 
     public function edit()
     {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'Tenant.sceneForm');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $TenantModel = new TenantModel();
+            // 入库
+            if (!$TenantModel->allowField(true)->update($data)) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+        $id = input('param.id/d');
+        $row = TenantModel::get($id);
+        $this->assign('data_info',$row);
         return $this->fetch('form');
     }
 
     public function detail()
     {
-        return $this->fetch();
+        $id = input('param.id/d');
+        $row = TenantModel::get($id);
+        $this->assign('data_info',$row);
+        return $this->fetch('form');
     }
 
     public function del()
     {
-        
+        $ids = $this->request->param('id/a');        
+        $res = TenantModel::where([['tenant_id','in',$ids]])->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }  
     }
 }

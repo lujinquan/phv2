@@ -1,1 +1,95 @@
+<form class="layui-form" action="{url('edit')}" method="post">
+    <div class="e-space"></div>
+    <div class="page-form">
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 楼栋编号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_number" value="{$data_info['ban_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 租户编号 </label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tenant_number" value="{$data_info['tenant_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 门牌号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="house_door" value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 单元号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="house_unit_id" value="{$data_info['house_unit_id']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 楼层号 </label>
+                <div class="layui-input-inline">
+                    <input type="text" name="house_floor_id" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 使用性质</label>
+                <div class="layui-input-inline">
+                    <select name="house_use_id" class="field-cid" type="select">
+                        <option value="">请选择</option>
+                        {volist name="params['uses']" id="v" key="k"}
+                        <option value="{$k}" {if condition="$k == $data_info['house_use_id']"}selected{/if}>{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 房屋原价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="house_oprice" value="{$data_info['house_oprice']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 建筑面积 </label>
+                <div class="layui-input-inline">
+                    <input type="text" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="house_id" value="{$data_info['house_id']}">
+        <div class="e-space"></div>
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">补充附件</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 影像资料</label>
+                <div class="layui-input-inline">
+                    <button type="button" name="house_imgs" class="layui-btn layui-btn-normal" lay-type="image" lay-data="{accept:'image'}">点击上传</button>
+                </div>
+            </div> 
+            <div class="layui-block e-inline e-box"></div> 
+        </div> 
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-input-block e-inline">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+                <a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            </div>
+        </div>
+    </div>
+</form>
 {include file="system@block/layui" /}

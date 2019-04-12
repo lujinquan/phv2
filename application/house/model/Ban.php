@@ -68,7 +68,11 @@ class Ban extends Model
             $data['ban_inst_id'] = INST;
         }
         $data['ban_cuid'] = ADMIN_ID;
-        $data['ban_number'] = (self::max('ban_number') + 1);
+
+        $banID = '1009001';
+        $maxBanID = self::where([['ban_number', 'like', $banID . '%']])->max('ban_number');
+        $data['ban_number'] = $maxBanID?$maxBanID + 1:$banID . '001'; 
+       
         if($data['ban_inst_id'] < 4){
             return '请选择正确的管段';
         }else{

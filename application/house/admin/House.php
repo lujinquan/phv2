@@ -15,7 +15,7 @@ class House extends Admin
             $data = $this->request->get();
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($data);
-            $fields = 'house_number,ban_number,tenant_number,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+            $fields = 'house_id,house_number,ban_number,tenant_number,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
             // $data['data'] = $HouseModel->with([
             //     'ban'=> function($query){
             //         $query->where([['ban_number','like','%10101020%']]);
@@ -52,13 +52,47 @@ class House extends Admin
     public function add()
     {
         if ($this->request->isPost()) {
-            $mod = new HouseModel();
-            if (!$mod->storage()) {
-                return $this->error($mod->getError());
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'House.sceneForm');
+            if($result !== true) {
+                return $this->error($result);
             }
-            return $this->success('保存成功');
+            $HouseModel = new HouseModel();
+            // 数据过滤
+            $filData = $HouseModel->dataFilter($data);
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            // 入库
+            if (!$HouseModel->allowField(true)->create($filData)) {
+                return $this->error('添加失败');
+            }
+            return $this->success('添加成功');
         }
         return $this->fetch();
+    }
+
+        public function edit()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'House.sceneForm');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $HouseModel = new HouseModel();
+            // 入库
+            if (!$HouseModel->allowField(true)->update($data)) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+        $id = input('param.id/d');
+        $row = HouseModel::get($id);
+        $this->assign('data_info',$row);
+        return $this->fetch('form');
     }
 
     public function renttable()
@@ -68,12 +102,21 @@ class House extends Admin
 
     public function detail()
     {
+        $id = input('param.id/d');
+        $row = HouseModel::with(['ban','tenant'])->get($id);
+        $this->assign('data_info',$row);
         return $this->fetch();
     }
 
     public function del()
     {
-        
+        $ids = $this->request->param('id/a');        
+        $res = HouseModel::where([['house_id','in',$ids]])->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
     }
 
     public function houseRoom()

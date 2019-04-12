@@ -75,13 +75,8 @@ class Ban extends Admin
                 return $this->error($result);
             }
             $BanModel = new BanModel();
-            // 数据过滤
-            $filData = $BanModel->dataFilter($data);
-            if(!is_array($filData)){
-                return $this->error($filData);
-            }
             // 入库
-            if (!$BanModel->allowField(true)->save($filData)) {
+            if (!$BanModel->allowField(true)->update($data)) {
                 return $this->error('修改失败');
             }
             return $this->success('修改成功');
@@ -102,7 +97,13 @@ class Ban extends Admin
 
     public function del()
     {
-        
+        $ids = $this->request->param('id/a');        
+        $res = BanModel::where([['ban_id','in',$ids]])->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
     }
 
     public function struct()

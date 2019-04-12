@@ -1,4 +1,4 @@
-/***** HisiPHP By http://www.mylucas.com.cn *****/
+/***** By http://www.mylucas.com.cn *****/
 layui.define(['element', 'form', 'table', 'md5'], function(exports) {
     var $ = layui.jquery,element = layui.element, 
         layer = layui.layer, 
@@ -476,6 +476,8 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             code = function(that) {
                 var href = that.attr('href') ? that.attr('href') : that.attr('data-href');
                 var tableObj = that.attr('data-table') ? that.attr('data-table') : 'dataTable';
+                //获取主键
+                var witchid = that.attr('data-id') ? that.attr('data-id') : 'id';
                 if (!href) {
                     layer.msg('请设置data-href参数');
                     return false;
@@ -491,7 +493,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                         if (i > 0) {
                             query += '&';
                         }
-                        query += 'id[]='+checkStatus.data[i].id;
+                        query += 'id[]='+checkStatus.data[i][witchid];
                     }
                 } else {
                     if (that.parents('form')[0]) {
