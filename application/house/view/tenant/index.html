@@ -3,6 +3,16 @@
         <div class="layui-input-inline layui-col-md2"  style="width:120px;">
             <input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
         </div>
+        {if condition="INST_LEVEL != 3"}
+        <div class="layui-input-inline layui-col-md2" style="width:120px;padding-left:5px">
+            <select name="tenant_inst_id">
+                <option value="">机构</option>
+                {volist name=":config('inst_check_names')[INST]" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        {/if}
         <div class="layui-input-inline layui-col-md2"  style="width:150px;padding-left:5px">
             <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
         </div>
@@ -48,6 +58,7 @@
             elem: '#dataTable'
             ,height: 550
             ,toolbar: '#toolbar'
+            // ,defaultToolbar: ['print']
             ,url: '{:url("house/Tenant/index")}?group={$group}' //数据接口
             ,page: true //开启分页
             ,limit: 10
@@ -57,7 +68,7 @@
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'tenant_number', width:100, title: '租户编号'}
-                ,{field: 'tenant_name', width: 100, title: '租户姓名'}
+                ,{field: 'tenant_name', width: 240, title: '租户姓名'}
                 ,{field: 'tenant_inst_id', width: 140, title: '管段', templet: function(d) {
                     return params.insts[d.tenant_inst_id];
                 }}

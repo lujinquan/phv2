@@ -9,23 +9,58 @@ class House extends Admin
 
     public function index()
     {
+    
+        // $s = Db::name('house')->alias('a')->join('ban b','a.ban_number = b.ban_number','left')->join('tenant c','a.tenant_number = c.tenant_number','left')->field('a.house_id')->page('1,10')->select();
+        // halt($s);
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $data = $this->request->get();
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($data);
-            $fields = 'house_id,house_number,ban_number,tenant_number,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+            // //halt($where);
+            $fields = 'ban_number,tenant_number,house_id,house_number,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+
+            // $fields = 'a.house_id,a.house_number,a.ban_number,a.tenant_number,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+            // $data['data'] = Db::name('house')->alias('a')->join('ban b','a.ban_number = b.ban_number','left')->join('tenant c','a.tenant_number = c.tenant_number','left')->field($fields)->page($page,$limit)->select();
+         
+            //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】，但是速度太慢）
+            // $data['data'] = $HouseModel->withJoin([
+            //      'ban'=> function($query){
+            //          $query->where([['ban_address','like','%康平小区%']]);
+            //      },
+            //      'tenant'=> function($query){
+            //          $query->where(1);
+            //      },
+            //      ],'left')->field($fields)->where($where)->page($page)->order('house_ctime desc')->limit($limit)->select();
+            //      $data['count'] = $HouseModel->withJoin([
+            //      'ban'=> function($query){
+            //          $query->where([['ban_address','like','%康平小区%']]);
+            //      },
+            //      'tenant'=> function($query){
+            //          $query->where(1);
+            //      },
+            //      ],'left')->where($where)->count('house_id');
+               
+            //二、这种可以实现关联模型查询，但是不能将无法关联的数据剔除掉会出现undifined数据，速度快）
             // $data['data'] = $HouseModel->with([
-            //     'ban'=> function($query){
-            //         $query->where([['ban_number','like','%10101020%']]);
-            //     },
-            //     'tenant'=> function($query){
-            //         $query->where(1);
-            //     },
-            //     ])->field($fields)->where($where)->page($page)->order('house_ctime desc')->limit($limit)->select();
+            //      'ban'=> function($query){
+            //          $query->where([['ban_address','like','%康平小区%']]);
+            //      },
+            //      'tenant'=> function($query){
+            //          $query->where(1);
+            //      },
+            //      ],'inner')->field($fields)->where($where)->page($page)->order('house_ctime desc')->limit($limit)->select();
+             
+
+            //halt(Db::name('house')->alias('a')->join('ban b','a.ban_number = b.ban_number','left')->join('tenant c','a.tenant_number = c.tenant_number','left')->find());
+            //为什么速度这么慢？？？
+            // $data['count'] = Db::name('house')->alias('a')->join('ban b','a.ban_number = b.ban_number','left')->join('tenant c','a.tenant_number = c.tenant_number','left')->count();        
+            //halt($HouseModel->getLastSql());
+            
+            //三、无法实现关联查询，速度快    
             $data['data'] = $HouseModel->with(['ban','tenant'])->field($fields)->where($where)->page($page)->order('house_ctime desc')->limit($limit)->select();
-            $data['count'] = $HouseModel->where($where)->count('house_id');
+            $data['count'] = $HouseModel->with(['ban','tenant'])->where($where)->count('house_id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

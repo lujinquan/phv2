@@ -25,8 +25,13 @@ class House extends Model
 
     public function tenant()
     {
-        return $this->belongsTo('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name,tenant_tel,tenant_card');
+        return $this->hasOne('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name,tenant_tel,tenant_card');
     }
+
+    // public function tenant()
+    // {
+    //     return $this->belongsTo('tenant', 'tenant_number', 'tenant_number')->bind('tenant_name,tenant_tel,tenant_card');
+    // }
 
     public function checkWhere($data)
     {
@@ -62,15 +67,9 @@ class House extends Model
         
 
         // 检索管段
-        $insts = config('insts');
-        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        if(isset($insts[$instid])){
-            if($insts[$instid]){
-                $where[] = ['ban_inst_id','in',$insts[$instid]];
-            }
-        }else{
-            $where[] = ['ban_inst_id','eq',$data['ban_inst_id']];
-        }
+        // $insts = config('inst_ids');
+        // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        // $where[] = ['ban_inst_id','in',$insts[$instid]];
 
         return $where;
     }

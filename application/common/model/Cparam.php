@@ -86,6 +86,8 @@ class Cparam extends Model
                         //     $result[$config['group']][$config['name']] = parse_attr($config['value']);
                         // }
                         break;
+                    case 'json':
+                        $result[$config['name']] = json_decode($config['options']);
                     default:
                         //$result[$config['group']][$config['name']] = $config['value'];
                         break;

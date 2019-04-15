@@ -6,6 +6,6 @@ return [
     'version' => '2.0.0',
     'release' => 0,
     'copyright' => '公房管理系统',
-    'url' => 'http://www.mylucas.com.cn',
+    'url' => 'http://pro.ctnmit.com',
   ],
 ];

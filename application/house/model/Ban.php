@@ -18,6 +18,11 @@ class Ban extends Model
         'ban_ctime' => 'timestamp:Y-m-d H:i:s',
     ];
 
+    public function house()
+    {
+        return $this->hasMany('ban', 'ban_number', 'ban_number')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors');
+    }
+
     public function checkWhere($data)
     {
         if(!$data){
@@ -45,17 +50,9 @@ class Ban extends Model
         if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
             $where[] = ['ban_damage_id','eq',$data['ban_damage_id']];
         }
-
-        // 检索管段
-        $insts = config('insts');
+        
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        if(isset($insts[$instid])){
-            if($insts[$instid]){
-                $where[] = ['ban_inst_id','in',$insts[$instid]];
-            }
-        }else{
-            $where[] = ['ban_inst_id','eq',$data['ban_inst_id']];
-        }
+        $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
 
         return $where;
     }

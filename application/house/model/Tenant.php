@@ -47,15 +47,8 @@ class Tenant extends Model
             $where[] = ['tenant_card','like','%'.$data['tenant_card'].'%'];
         }
         // 检索管段
-        $insts = config('insts');
         $instid = (isset($data['tenant_inst_id']) && $data['tenant_inst_id'])?$data['tenant_inst_id']:INST;
-        if(isset($insts[$instid])){
-            if($insts[$instid]){
-                $where[] = ['tenant_inst_id','in',$insts[$instid]];
-            }
-        }else{
-            $where[] = ['tenant_inst_id','eq',$data['tenant_inst_id']];
-        }
+        $where[] = ['tenant_inst_id','in',config('inst_ids')[$instid]];
 
         return $where;
     }
