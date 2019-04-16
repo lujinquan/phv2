@@ -1,25 +1,24 @@
 <div class="page-toolbar">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
         <div class="layui-input-inline" style="width:150px;">
-            <input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
-        </div>
-        <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
         </div>
         <div class="layui-input-inline" style="width:150px;padding-left:5px">
-            <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+            <input type="text" name="rent_order_number" placeholder="订单编号" class="layui-input">
         </div>
         <div class="layui-input-inline" style="width:150px;padding-left:5px">
             <input type="text" name="ban_address" placeholder="地址" class="layui-input">
         </div>
+        {if condition="INST_LEVEL != 3"}
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_inst_id">
                 <option value="">机构</option>
-                {volist name="params['insts']" id="v" key="k"}
+                {volist name=":config('inst_check_names')[INST]" id="v" key="k"}
                 <option value="{$k}">{$v}</option>
                 {/volist}
               </select>
         </div>
+        {/if}
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_owner_id">
                 <option value="">产别</option>
@@ -36,7 +35,6 @@
                 {/volist}
               </select>
         </div>
-        <input type="hidden" name="group" value="{$group}" class="layui-input">
         <div class="layui-input-inline" style="margin-left:10px;">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
                 <i class="layui-icon">&#xe615;</i>
@@ -50,19 +48,12 @@
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="toolbar">
   <div class="layui-btn-container">
-    {if condition="$group == 'n'"}
-    <a href="{:url('add')}"><button class="layui-btn layui-btn-sm layui-btn-normal">新增房屋</button></a>
-    <button data-href="{:url('del')}" data-id="house_id" class="layui-btn layui-btn-sm layui-btn-danger j-page-btns">批量删除</button>
-    {/if}
+
   </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {if condition="$group == 'n'"}
-    <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    {/if}
-	<a href="{:url('renttable')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
-    <a href="{:url('detail')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
-    <a href="{:url('tenant/index')}?id={{ d.tenant_number }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a>
+
+    <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
@@ -70,43 +61,34 @@
         table.render({
             elem: '#dataTable'
             ,height: 550
-            ,toolbar: '#toolbar'
-            ,url: '{:url("house/House/index")}?group={$group}' //数据接口
-            ,page: true //开启分页
+            ,url: '{:url("rent/Rent/index")}'
+            ,page: true 
             ,limit: 10
             ,text: {
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'house_number', width: 140, title: '房屋编号'}
-                ,{field: 'ban_number', width: 110, title: '楼栋编号'}
-                ,{field: 'tenant_name', width: 100, title: '租户姓名'}
-                ,{field: 'ban_inst_id', width: 120, title: '管段',hide: isShowInst, templet: function(d) {
+                ,{field: 'rent_order_number', width: 240, align:'center', title: '订单编号'}
+                ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
-                ,{field: 'ban_owner_id', width: 60, title: '产别', templet: function(d) {
+                ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'house_use_id', width: 100, title: '使用性质', templet: function(d) {
+                ,{field: 'house_use_id', width: 100, align:'center', title: '使用性质', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'ban_address', width: 200, title: '地址'}
-                ,{field: 'house_area', width: 80, title: '建面'}
-                ,{field: 'house_lease_area', width: 100, title: '计租面积'}
-                ,{field: '', width: 80, title: '单元',templet: function(d) {
-                    return d.house_unit_id + '/' + d.ban_units;
-                }}
-                ,{field: '', width: 80, title: '楼层',templet: function(d) {
-                    return d.house_floor_id + '/' + d.ban_floors;
-                }}
-                
-                ,{title: '操作', minWidth: 230, templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'rent_order_receive', width: 140, align:'center', title: '账单金额'}
+                ,{field: 'rent_order_paid', width: 140, align:'center', title: '已支付金额'}
+                ,{field: 'rent_order_date', width: 140, align:'center', title: '账单期'}
+                ,{field: 'ban_address', width: 140, align:'center', title: '地址'}
+                ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
+                ,{title: '操作', minWidth: 100,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                
             }
         },isShowInst)
     });
-
 </script>

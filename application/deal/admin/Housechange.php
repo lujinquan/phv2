@@ -3,9 +3,9 @@ namespace app\deal\admin;
 use app\system\admin\Admin;
 
 /**
- * 使用权变更
+ * 房屋调整
  */
-class Usechange extends Admin
+class Housechange extends Admin
 {
 
     public function index()

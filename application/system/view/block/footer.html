@@ -7,14 +7,14 @@
     <div class="layui-footer footer">
         <span class="fl">Powered by <a href="{:config('hisiphp.url')}" target="_blank">{:config('hisiphp.name')}</a> v{:config('hisiphp.version')}</span>
  
-        <div class="layui-inline scroll-box" style="margin-left:200px;color:red;">
+        <div class="layui-inline scroll-box" style="margin-left:200px;color:red;font-size:14px;font-weight:bold;">
 		 <ul>
-		  <li>系统v2.0.1于2019年4月15日，完成如下调整</li>
-		  <li>1、修复主界面切换刷新混乱问题</li>
-		  <li>2、修复管段搜索功能</li>
-		  <li>3、增加月租金报表统计页面</li>
-		  <li>4、增加地图功能页面</li>
-		  <li>5、导入原系统数据</li>
+		  <li>提示信息：系统 v2.0.0 于2019年4月16日，完成如下5项调整</li>
+		  <li>1、修复主界面切换刷新混乱问题。</li>
+		  <li>2、修复管段搜索功能，优化管段无需显示默认机构功能。</li>
+		  <li>3、增加月租金报表统计页面、地图功能页面、导航菜单。</li>
+		  <li>4、增加底部滚动条提示栏（仅作案例）</li>
+		  <li>5、导入原系统楼栋、房屋、房间、租户、租金(数据不完整只做案例使用)。</li>
 		 </ul>
 		</div>
 
@@ -39,7 +39,7 @@
 		        timer = setInterval(function() {
 		            scrollList($uList);
 		        },
-		        2000);
+		        3000);
 		    }).trigger("mouseleave"); //自动触发触摸事件
 		    //滚动动画
 		    function scrollList(obj) {

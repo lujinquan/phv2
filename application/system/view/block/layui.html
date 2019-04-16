@@ -1,5 +1,5 @@
 <script src="__PUBLIC_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
-<div params="{if condition='isset($paramsJson)'}{$paramsJson}{/if}" id="paramsJson"></div>
+<div params="{if condition='isset($paramsJson)'}{$paramsJson}{/if}" isShowInst="{if condition='isset($inst_level)'}{$inst_level}{/if}" id="paramsJson"></div>
 <script>
     var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 60;
     layui.config({
@@ -9,4 +9,6 @@
     // 载入全局系统参数
     var paramsJson = document.getElementById("paramsJson").getAttribute('params');
     var params = JSON.parse(paramsJson);
+    var instLevel = document.getElementById("paramsJson").getAttribute('isShowInst');
+    var isShowInst = (instLevel == 3) ? true : false; 
 </script>

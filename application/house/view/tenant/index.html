@@ -69,17 +69,17 @@
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'tenant_number', width:100, title: '租户编号'}
                 ,{field: 'tenant_name', width: 240, title: '租户姓名'}
-                ,{field: 'tenant_inst_id', width: 140, title: '管段', templet: function(d) {
+                ,{field: 'tenant_inst_id', width: 140, title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.tenant_inst_id];
                 }}
                 ,{field: 'tenant_tel', width: 140, title: '联系方式'}
                 ,{field: 'tenant_card', width: 180, title: '身份证号'}
-                ,{title: '操作', width: 180, templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', minWidth: 180, templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                
             }
-        })
+        },isShowInst)
     });
 
 </script>

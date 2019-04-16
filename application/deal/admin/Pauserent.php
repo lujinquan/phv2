@@ -3,9 +3,9 @@ namespace app\deal\admin;
 use app\system\admin\Admin;
 
 /**
- * 使用权变更
+ * 暂停计租
  */
-class Usechange extends Admin
+class Pauserent extends Admin
 {
 
     public function index()

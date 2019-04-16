@@ -3,9 +3,9 @@ namespace app\deal\admin;
 use app\system\admin\Admin;
 
 /**
- * 使用权变更
+ * 减免
  */
-class Usechange extends Admin
+class Cutrent extends Admin
 {
 
     public function index()

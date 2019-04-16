@@ -87,7 +87,7 @@
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'ban_number', width: 110, align:'center', title: '楼栋编号'}
-                ,{field: 'ban_inst_id', width: 120, align:'center', title: '管段', hide: false, templet: function(d) {
+                ,{field: 'ban_inst_id', width: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
                 ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
@@ -112,11 +112,11 @@
                     return parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice);
                 }}
                 ,{field: 'ban_use_area', width: 100, align:'center', title: '使用面积'}
-                ,{title: '操作', width: 210, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', minWidth: 180, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                
             }
-        })
+        },isShowInst)
     });
 </script>

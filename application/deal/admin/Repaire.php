@@ -3,9 +3,9 @@ namespace app\deal\admin;
 use app\system\admin\Admin;
 
 /**
- * 使用权变更
+ * 维修
  */
-class Usechange extends Admin
+class Repaire extends Admin
 {
 
     public function index()

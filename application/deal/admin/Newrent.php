@@ -3,9 +3,9 @@ namespace app\deal\admin;
 use app\system\admin\Admin;
 
 /**
- * 使用权变更
+ * 新发租
  */
-class Usechange extends Admin
+class Newrent extends Admin
 {
 
     public function index()
