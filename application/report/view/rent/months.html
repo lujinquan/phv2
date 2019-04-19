@@ -1,7 +1,7 @@
 <div class="page-toolbar">
-    <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+    <form class="layui-form layui-form-pane" action="{url('months')}"  method="get" id="hisi-table-search">
         <div class="layui-input-inline" style="width:120px;">
-            <select name="ban_inst_id">
+            <select name="inst_id">
                 <option value="">机构</option>
                 {volist name="params['insts']" id="v" key="k"}
                 <option value="{$k}">{$v}</option>
@@ -9,7 +9,7 @@
             </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
-            <select name="ban_owner_id">
+            <select name="owner_id">
                 <option value="">产别</option>
                 {volist name="params['owners']" id="v" key="k"}
                 <option value="{$k}">{$v}</option>
@@ -40,7 +40,7 @@
     }
 </style>
 <div class="e-space"></div>
-<table class="report" id="PropertyForm">
+<table class="report" >
     <tbody>
         <tr>
             <th rowspan="2" colspan="3" class="am-text-middle">租金月报</th>
@@ -86,7 +86,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="7" colspan="1"  class="am-text-middle">基数增减</td>
@@ -102,7 +101,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -127,7 +125,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">调整</td>
@@ -142,7 +139,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -167,7 +163,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">租差/泵费</td>
@@ -182,7 +177,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -207,7 +201,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">管段调整</td>
@@ -227,7 +220,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="3">规定租金</td>
@@ -242,7 +234,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -268,7 +259,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">减免</td>
@@ -283,7 +273,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -308,7 +297,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">暂停计租</td>
@@ -323,7 +311,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -348,7 +335,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">政策折减</td>
@@ -363,7 +349,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -388,7 +373,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="2">累计补差</td>
@@ -403,7 +387,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -428,7 +411,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="3">实收租金</td>
@@ -443,7 +425,6 @@
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
             <td rowspan="1" colspan="1" class="once_hide"></td>
-            <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
@@ -468,7 +449,6 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
         <tr>
             <td rowspan="1" colspan="3">结欠租金</td>
@@ -488,11 +468,13 @@
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
             <td rowspan="1" colspan="1"></td>
-            <td rowspan="1" colspan="1"></td>
         </tr>
     </tbody>
 </table>
+
 <script>
+
+
     layui.use('laydate', function(){
         var laydate = layui.laydate;
         //年选择器

@@ -1,1 +1,242 @@
+<form class="layui-form" action="{url('add')}" method="post">
+	<div class="e-space"></div>
+	<div class="page-form">
+		<div class="layui-form-item" style="padding-left:40px;">
+			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
+			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+		</div>
+		<div class="e-space"></div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 楼栋编号</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ban_number" readonly value="{$data_info['ban_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 房屋结构 </label>
+				<div class="layui-input-inline">
+					<input type="text" name="tenant_number" readonly value="{$params['structs'][$data_info['ban_struct_id']]}" placeholder="双击选择" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 楼层数量</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 结构基价</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 房屋编号</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_number" readonly value="{$data_info['house_number']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 租户</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_unit_id" readonly value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 居住层 </label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_floor_id" readonly value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 产别</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ban_owner_id" readonly value="{$params['owners'][$data_info['ban_owner_id']]}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 房屋地址</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ban_address" readonly value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 实有面积</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_oprice" readonly value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 计租面积 </label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_area" readonly value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 规定租金</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_number" readonly value="{$data_info['house_pre_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 计算租金</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_unit_id" readonly value="{$data_info['house_cou_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 租差 </label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_floor_id" readonly value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 泵费</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ban_owner_id" readonly value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red"></font> 租金减免</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_number" readonly value="预留" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 协议租金</label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_unit_id" readonly value="预留" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 应收租金 </label>
+				<div class="layui-input-inline">
+					<input type="text" name="house_floor_id" readonly value="预留" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline e-inline">
+				<label class="layui-form-label e-label"><font color="red">*</font> 电梯</label>
+				<div class="layui-input-inline">
+					<input type="text" name="ban_owner_id" readonly value="预留" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="e-space"></div>
+		<div class="layui-form-item" style="padding-left:40px;">
+			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">房间信息</font>
+			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+		</div>
+		<div class="e-space"></div>
+
+		<!-- 房间信息 -->
+		<div class="layui-col-md10">
+		<table class="layui-table e-inline" width="1000px" lay-size="sm">
+			<colgroup>
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+			<col width="100">
+			<col width="80">
+			<col width="80">
+			<col width="80">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>房屋类型</th>
+				<th>房间编号</th>
+				<th>间号</th>
+				<th>绑定楼栋</th>
+				<th>绑定房屋</th>
+				<th>产别</th>
+				<th>单元号</th>
+				<th>层次</th>
+				<th>实有面积</th>
+				<th>基价折减</th>
+				<th>计租面积</th>
+				<th>层次调解率</th>
+				<th>规定租金</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr> 
+		</thead>
+		<tbody>
+			<tr>
+				<td>卧室</td>
+				<td>65181</td>
+				<td>1</td>
+				<td>100210215</td>
+				<td>1002102154544</td>
+				<td>市属</td>
+				<td>4</td>
+				<td>5</td>
+				<td>14.85</td>
+				<td>0%</td>
+				<td>14.85</td>
+				<td>105%</td>
+				<td>23.39</td>
+				<td>正常</td>
+				<td></td>
+			</tr>
+			{volist name="room_tables" id="vo"}
+			<tr>
+				<td>{$params['roomtypes'][$vo['baseinfo']['room_type']]}</td>
+				<td>{$vo['baseinfo']['room_number']}</td>
+				<td>{$vo['baseinfo']['room_door']}</td>
+				<td>{$vo['baseinfo']['ban_number']}</td>
+				<td>{$vo['houseinfo'][0]}</td>
+				<td>{$params['owners'][$vo['baseinfo']['ban_owner_id']]}</td>
+				<td>{$vo['baseinfo']['room_unit_id']}</td>
+				<td>{$vo['baseinfo']['room_floor_id']}</td>
+				<td>{$vo['baseinfo']['room_use_area']}</td>
+				<td>占位</td>
+				<td>{$vo['baseinfo']['room_lease_area']}</td>
+				<td>占位</td>
+				<td>{$vo['baseinfo']['room_pre_rent']}</td>
+				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
+				<td></td>
+			</tr>
+			{if condition="isset($vo['houseinfo'][1])"}
+			{volist name="$vo['houseinfo']" offset="1" id="vv"}
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>{$vv}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			{/volist}
+			{/if}
+			{/volist}
+		</tbody>
+	</table>
+</div>
+</form>
 {include file="system@block/layui" /}

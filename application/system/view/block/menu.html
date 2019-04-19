@@ -13,6 +13,15 @@
     </ul>
     <ul class="layui-nav fr nobg head-info">
         <li class="layui-nav-item">
+            <!-- <a href="javascript:;"> class="aicon ai-app-store">消息中心 &nbsp;</a> -->
+            <!-- <i class="typcn typcn-mail"></i> -->
+            <i class="aicon ai-app-store"><a href="javascript:;"></a></i>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                <dd><a target="_blank" href="{:url('system/userhome/add')}">新增工单</a></dd>
+                <dd><a target="_blank" href="{:url('system/userhome/index')}">我的工单</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item">
             <!-- <a href="__ROOT_DIR__" target="_blank" class="aicon ai-ai-home" title="前台"></a> -->
             <a href="/admin.php" target="_blank" class="aicon ai-ai-home" title="主页"></a>
         </li>

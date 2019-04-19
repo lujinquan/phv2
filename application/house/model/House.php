@@ -20,12 +20,17 @@ class House extends Model
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id');
     }
 
     public function tenant()
     {
         return $this->hasOne('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_tel,tenant_card');
+    }
+
+    public function house_room()
+    {
+        return $this->hasMany('house_room', 'house_number', 'house_number');
     }
 
     // public function tenant()

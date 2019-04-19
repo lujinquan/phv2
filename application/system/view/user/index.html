@@ -27,8 +27,8 @@
             elem: '#dataTable'
             ,url: '{:url()}' //数据接口
             ,page: true //开启分页
-            ,skin: 'row'
-            ,even: true
+            //,skin: 'row'
+            //,even: true
             ,limit: 20
             ,text: {
                 none : '暂无相关数据'
@@ -37,18 +37,21 @@
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'username', title: '用户名'}
-                ,{field: 'nick', title: '昵称'}
-                ,{field: 'role_id', title: '角色', templet:function(d){
+                ,{field: 'username', width: 90, title: '用户名'}
+                ,{field: 'inst_id', width: 120, align:'center', title: '机构', hide: isShowInst, templet: function(d) {
+                    return params.insts[d.inst_id];
+                }}
+                ,{field: 'nick', width: 90,title: '昵称'}
+                ,{field: 'role_id', width: 90,title: '角色', templet:function(d){
                     return d.role.name;
                 }}
-                ,{field: 'mobile', title: '手机'}
-                ,{field: 'email', title: '邮箱'}
+                ,{field: 'mobile', width: 120,title: '手机'}
+                ,{field: 'email', width: 120, title: '邮箱'}
                 ,{field: 'last_login_time', width: 150, title: '最后登陆时间'}
-                ,{field: 'last_login_ip', title: '最后登陆IP'}
-                ,{field: 'intro', title: '简介'}
-                ,{field: 'status', title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', templet: '#buttonTpl'}
+                ,{field: 'last_login_ip', width: 120,title: '最后登陆IP'}
+                ,{field: 'intro', width: 120,title: '简介'}
+                ,{field: 'status',width: 100, title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', minWidth: 120, templet: '#buttonTpl',fixed:'right'}
             ]]
         });
     });

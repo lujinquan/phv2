@@ -3,6 +3,7 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\house\model\House as HouseModel;
+use app\house\model\Room as RoomModel;
 
 class House extends Admin
 {
@@ -14,12 +15,12 @@ class House extends Admin
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
-            $data = $this->request->get();
+            $getData = $this->request->get();
             $HouseModel = new HouseModel;
-            $where = $HouseModel->checkWhere($data);
+            $where = $HouseModel->checkWhere($getData);
             
             $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
-
+            $data = [];
             //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
             $data['data'] = $HouseModel->withJoin([
                  'ban'=> function($query)use($where){ //注意闭包传参的方式
@@ -128,6 +129,23 @@ class House extends Admin
 
     public function renttable()
     {
+        $id = input('param.id/d');
+        $row = HouseModel::with(['ban','tenant'])->find($id);
+        //获取当前房屋的房间
+        $rooms = $row->house_room()->column('room_number'); 
+        //定义计租表房间数组
+        $roomTables = [];
+        foreach($rooms as $r){
+            $room = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
+            $room_houses = $room->house_room()->column('house_number');
+            $roomTables[] = [
+                'baseinfo' => $room,
+                'houseinfo' => $room_houses
+            ];
+        }
+        //halt($roomTables);
+        $this->assign('room_tables',$roomTables);
+        $this->assign('data_info',$row);
         return $this->fetch('renttable');
     }
 
