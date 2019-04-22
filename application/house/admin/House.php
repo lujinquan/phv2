@@ -4,14 +4,14 @@ use think\Db;
 use app\system\admin\Admin;
 use app\house\model\House as HouseModel;
 use app\house\model\Room as RoomModel;
+use app\house\model\FloorPoint as FloorPointModel;
 
 class House extends Admin
 {
 
     public function index()
     {
-    
-    
+        //$houserent = (new HouseModel)->count_house_rent(512);
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -105,7 +105,7 @@ class House extends Admin
         return $this->fetch();
     }
 
-        public function edit()
+    public function edit()
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -136,10 +136,11 @@ class House extends Admin
         //定义计租表房间数组
         $roomTables = [];
         foreach($rooms as $r){
-            $room = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
-            $room_houses = $room->house_room()->column('house_number');
+            $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
+            //(new FloorPointModel)->get_floor_point($roomRow['room_floor_id'], $roomRow['BanFloorNum']);
+            $room_houses = $roomRow->house_room()->column('house_number');
             $roomTables[] = [
-                'baseinfo' => $room,
+                'baseinfo' => $roomRow,
                 'houseinfo' => $room_houses
             ];
         }

@@ -1,7 +1,7 @@
 <form class="layui-form" action="{url('add')}" method="post">
 	<div class="e-space"></div>
 	<div class="page-form">
-		<div class="layui-form-item" style="padding-left:40px;">
+		<div class="layui-form-item e-inline">
 			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
 			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
 		</div>
@@ -109,44 +109,46 @@
 			<div class="layui-inline e-inline">
 				<label class="layui-form-label e-label"><font color="red"></font> 租金减免</label>
 				<div class="layui-input-inline">
-					<input type="text" name="house_number" readonly value="预留" autocomplete="off" class="layui-input">
+					<input type="text" name="house_number" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
 				<label class="layui-form-label e-label"><font color="red">*</font> 协议租金</label>
 				<div class="layui-input-inline">
-					<input type="text" name="house_unit_id" readonly value="预留" autocomplete="off" class="layui-input">
+					<input type="text" name="house_unit_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
 				<label class="layui-form-label e-label"><font color="red">*</font> 应收租金 </label>
 				<div class="layui-input-inline">
-					<input type="text" name="house_floor_id" readonly value="预留" autocomplete="off" class="layui-input">
+					<input type="text" name="house_floor_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
 				<label class="layui-form-label e-label"><font color="red">*</font> 电梯</label>
 				<div class="layui-input-inline">
-					<input type="text" name="ban_owner_id" readonly value="预留" autocomplete="off" class="layui-input">
+					<input type="text" name="ban_owner_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
 		<div class="e-space"></div>
-		<div class="layui-form-item" style="padding-left:40px;">
+		<div class="layui-form-item e-inline">
 			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">房间信息</font>
 			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
 		</div>
 		<div class="e-space"></div>
 
+		<div class="layui-row e-inline">
+			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
+			<a href="{:url('room/add')}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="新增房间">新增房间</a>
+		</div>
+
 		<!-- 房间信息 -->
-		<div class="layui-col-md10">
-		<table class="layui-table e-inline" width="1000px" lay-size="sm">
+		<div class="layui-col-md11">
+		<table class="layui-table e-inline" width="1000px">
 			<colgroup>
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="80">
+			<col width="100">
+			<col width="100">
 			<col width="80">
 			<col width="80">
 			<col width="80">
@@ -154,9 +156,12 @@
 			<col width="80">
 			<col width="80">
 			<col width="100">
+			<col width="120">
+			<col width="100">
+			<col width="120">
+			<col width="100">
 			<col width="80">
-			<col width="80">
-			<col width="80">
+			<col width="100">
 		</colgroup>
 		<thead>
 			<tr>
@@ -178,7 +183,7 @@
 			</tr> 
 		</thead>
 		<tbody>
-			<tr>
+<!-- 			<tr>
 				<td>卧室</td>
 				<td>65181</td>
 				<td>1</td>
@@ -194,7 +199,7 @@
 				<td>23.39</td>
 				<td>正常</td>
 				<td></td>
-			</tr>
+			</tr> -->
 			{volist name="room_tables" id="vo"}
 			<tr>
 				<td>{$params['roomtypes'][$vo['baseinfo']['room_type']]}</td>
@@ -211,7 +216,12 @@
 				<td>占位</td>
 				<td>{$vo['baseinfo']['room_pre_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
-				<td></td>
+				<td>
+					<i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i>
+					<i class="layui-icon layui-icon-delete table-delete" style="color:#ff3333;"></i>
+					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
+				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
+			    </td>
 			</tr>
 			{if condition="isset($vo['houseinfo'][1])"}
 			{volist name="$vo['houseinfo']" offset="1" id="vv"}
@@ -240,3 +250,8 @@
 </div>
 </form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+layui.use(['jquery'], function() {
+
+})
+</script>

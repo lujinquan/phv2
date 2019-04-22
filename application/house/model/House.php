@@ -2,6 +2,7 @@
 namespace app\house\model;
 
 use think\Model;
+use app\house\model\Room as RoomModel;
 
 class House extends Model
 {
@@ -79,6 +80,11 @@ class House extends Model
         return $where;
     }
 
+    /**
+     * 数据过滤
+     * @param  [type] $data [传入数据]
+     * @return [type]
+     */
     public function dataFilter($data)
     {
         $data['house_cuid'] = ADMIN_ID;
@@ -89,5 +95,40 @@ class House extends Model
             $data['house_number'] = $maxHouseNumber + 1;
         }
         return $data; 
+    }
+
+    /**
+     * [计算房屋计算租金]
+     * @param  [type] $houseid [房屋编号]
+     * @return [type]        
+     */
+    function count_house_rent($houseid){
+        // 特殊的房屋计算租金
+        if(in_array($houseid,array(666,888,999))){
+            return 0;
+        }
+        $row = $this->find($houseid);
+        $rooms = $row->house_room()->column('room_id');
+
+        //halt($row->house_room()->column('room_id'));
+        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','eq',1]])->column('room_id,room_cou_rent'); 
+        $sumrent = 0;
+        if($roomRents){
+            $rent = [];
+            foreach ($roomRents as $k=>$v) {
+                $rent[$k] = $v;         
+            }
+            $sumrent = array_sum($rent);
+        }
+
+        if($row['ban_number'] == '1050053295'){
+            return $row['house_pre_rent'];
+        }else{
+            //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
+            $houseRent = $sumrent  + $row['house_diff_rent'] + $row['house_protocol_rent'];
+            // 民用的四舍五入保留一位，机关企业的四舍五入保留两位 
+            return ($row['house_use_id'] == 1)?round($houseRent,1):round($houseRent,2); 
+        }
+
     }
 }
