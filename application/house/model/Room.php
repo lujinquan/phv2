@@ -30,6 +30,12 @@ class Room extends Model
         return $this->belongsTo('ban', 'ban_number', 'ban_number')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id,ban_is_first');
     }
 
+    // 待优化
+    public function room_type_point()
+    {
+        return $this->belongsTo('room_type_point', 'room_type', 'id')->bind('sort');
+    }
+
     /**
      * 数据过滤
      * @param  [type] $data [传入数据]

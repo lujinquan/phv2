@@ -137,17 +137,28 @@ class House extends Admin
         $roomTables = [];
 
         $FloorPointModel =new FloorPointModel;
-        foreach($rooms as $r){
-            $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r],])->find();
-            //动态获取层次调解率
-            $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
-            $roomRow['floor_point'] = ($flor_point * 100).'%';
-            $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
-            $room_houses = $roomRow->house_room()->column('house_number');
-            $roomTables[] = [
-                'baseinfo' => $roomRow,
-                'houseinfo' => $room_houses
-            ];
+        foreach($rooms as $roo){
+             $roomtype = RoomModel::where([['room_number','eq',$roo]])->find();
+             $sort = $roomtype->room_type_point()->value('sort');
+             $roomsSort[$sort][] = $roo;
+        }
+        //halt($roomsSort);
+        ksort($roomsSort);
+        //halt($roomsSort);
+        foreach($roomsSort as $ro){
+            foreach($ro as $r){
+                $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
+                //动态获取层次调解率
+                $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
+                $roomRow['floor_point'] = ($flor_point * 100).'%';
+                $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
+                $room_houses = $roomRow->house_room()->column('house_number');
+                $roomTables[] = [
+                    'baseinfo' => $roomRow,
+                    'houseinfo' => $room_houses
+                ];
+            }
+            
         }
         //halt($roomTables);
         $this->assign('room_tables',$roomTables);
