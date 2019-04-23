@@ -140,7 +140,7 @@
 
 		<div class="layui-row e-inline">
 			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
-			<a href="{:url('room/add')}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="新增房间">新增房间</a>
+			<a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="新增房间">新增房间</a>
 		</div>
 
 		<!-- 房间信息 -->
@@ -211,14 +211,14 @@
 				<td>{$vo['baseinfo']['room_unit_id']}</td>
 				<td>{$vo['baseinfo']['room_floor_id']}</td>
 				<td>{$vo['baseinfo']['room_use_area']}</td>
-				<td>占位</td>
+				<td>{$vo['baseinfo']['room_rent_point']}</td>
 				<td>{$vo['baseinfo']['room_lease_area']}</td>
-				<td>占位</td>
+				<td>{$vo['baseinfo']['floor_point']}</td>
 				<td>{$vo['baseinfo']['room_pre_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
 				<td>
 					<i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i>
-					<i class="layui-icon layui-icon-delete table-delete" style="color:#ff3333;"></i>
+					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
 					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
 				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
 			    </td>

@@ -132,12 +132,17 @@ class House extends Admin
         $id = input('param.id/d');
         $row = HouseModel::with(['ban','tenant'])->find($id);
         //获取当前房屋的房间
-        $rooms = $row->house_room()->column('room_number'); 
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_number'); 
         //定义计租表房间数组
         $roomTables = [];
+
+        $FloorPointModel =new FloorPointModel;
         foreach($rooms as $r){
-            $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
-            //(new FloorPointModel)->get_floor_point($roomRow['room_floor_id'], $roomRow['BanFloorNum']);
+            $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r],])->find();
+            //动态获取层次调解率
+            $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
+            $roomRow['floor_point'] = ($flor_point * 100).'%';
+            $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
             $room_houses = $roomRow->house_room()->column('house_number');
             $roomTables[] = [
                 'baseinfo' => $roomRow,

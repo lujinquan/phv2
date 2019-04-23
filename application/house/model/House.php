@@ -102,16 +102,16 @@ class House extends Model
      * @param  [type] $houseid [房屋编号]
      * @return [type]        
      */
-    function count_house_rent($houseid){
+    public function count_house_rent($houseid){
         // 特殊的房屋计算租金
         if(in_array($houseid,array(666,888,999))){
             return 0;
         }
         $row = $this->find($houseid);
-        $rooms = $row->house_room()->column('room_id');
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_id');
 
         //halt($row->house_room()->column('room_id'));
-        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','eq',1]])->column('room_id,room_cou_rent'); 
+        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','<=',1]])->column('room_id,room_cou_rent'); 
         $sumrent = 0;
         if($roomRents){
             $rent = [];
