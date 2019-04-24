@@ -38,20 +38,30 @@ class Room extends Validate
 
     protected function existInBan($value, $rule='', $data)
   	{
-  		$row = BanModel::where([['ban_number','eq',$value]])->value('ban_id');
-      	return $row?true:'楼栋编号格式错误';	
+    		$row = BanModel::where([['ban_number','eq',$value]])->find();
+
+        if($row){
+            if($row['ban_units'] < $data['room_unit_id']){
+                return '单元号不能超过所属楼总单元数'.$row['ban_units'];
+            }
+            if($row['ban_floors'] < $data['room_floor_id']){
+                return '楼层号不能超过所属楼总楼层数'.$row['ban_floors'];
+            }
+            return true;
+        }
+        return '楼栋编号格式错误';	
   	}
 
   	protected function existInHouse($value, $rule='', $data)
   	{
-  		$val = array_filter($value);
-  		$is = true;
-  		foreach($val as $v){
-  			$row = HouseModel::where([['house_number','eq',$v]])->value('house_id');
-  			if(!$row){
-				$is = '房屋编号格式错误';
-  			}
-  		}
+    		$val = array_filter($value);
+    		$is = true;
+    		foreach($val as $v){
+    			$row = HouseModel::where([['house_number','eq',$v]])->value('house_id');
+    			if(!$row){
+  				$is = '房屋编号格式错误';
+    			}
+    		}
       	return $is;	
   	}
 

@@ -77,18 +77,18 @@
             </div>
         </div>
         <div class="layui-form-item">
-		    <div class="layui-inline e-inline">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" lay-skin="primary" title="1、土地面房屋 5%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" lay-skin="primary" title="2、无平顶瓦屋面、石棉瓦屋面房屋 5%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="10" lay-skin="primary" title="3、油毡屋面房屋 10%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" lay-skin="primary" title="4、室内地坪低于室外路面10厘米 5%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="10" lay-skin="primary" title="5、室内地坪低于室外路面50厘米 10%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" lay-skin="primary" title="6、室内无直接或间接采光的黑房间 5%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" lay-skin="primary" title="7、无上下水、无厕所房间 5%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="20" lay-skin="primary" title="8、两户共用厅、厨、卫生间、室内走道的分摊面积 20%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="25" lay-skin="primary" title="9、封闭式阳台（含内、外阳台） 25%">
-		      <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="25" lay-skin="primary" title="10、空间在2.2米以上的阁楼、梯间、夹层、半地下层 25%">
-		    </div>
+		              <div class="layui-inline e-inline">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="1" v="5" lay-skin="primary" title="1、土地面房屋 5%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="2" v="5" lay-skin="primary" title="2、无平顶瓦屋面、石棉瓦屋面房屋 5%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="3" v="10" lay-skin="primary" title="3、油毡屋面房屋 10%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="4" v="5" lay-skin="primary" title="4、室内地坪低于室外路面10厘米 5%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="5" v="10" lay-skin="primary" title="5、室内地坪低于室外路面50厘米 10%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="6" v="5" lay-skin="primary" title="6、室内无直接或间接采光的黑房间 5%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="7" v="5" lay-skin="primary" title="7、无上下水、无厕所房间 5%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="8" v="20" lay-skin="primary" title="8、两户共用厅、厨、卫生间、室内走道的分摊面积 20%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="9" v="25" lay-skin="primary" title="9、封闭式阳台（含内、外阳台） 25%">
+              <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="10" v="25" lay-skin="primary" title="10、空间在2.2米以上的阁楼、梯间、夹层、半地下层 25%">
+            </div>
 		</div>
 
         <div class="e-space"></div>
@@ -104,19 +104,24 @@
 <script type="text/javascript">
 layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
+
+    $('.table-add').click(function(){
+        var html = '<div class="layui-inline e-inline"><div class="layui-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off"class="layui-input"></div></div>';
+        $('.table-add').before(html);
+    });
     var s = $('#room_rent_point').val();
     //layui.func.assign({:json_encode($formData)});
     form.on('checkbox(filter)', function(data){
         if(data.elem.checked){
-            s = Number(s) + Number(data.value);
+            s = Number(s) + Number($(data.elem).attr('v'));
         }else{
-            s = Number(s) - Number(data.value);
+            s = Number(s) - Number($(data.elem).attr('v'));
         }
         
         $('#room_rent_point').val(s);
-        // console.log(data.elem); //得到checkbox原始DOM对象
+        //console.log(data.elem); //得到checkbox原始DOM对象
         // console.log(data.elem.checked); //是否被选中，true或者false
-        // console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+        //console.log(data.value); //复选框value值，也可以通过data.elem.value得到
         // console.log(data.othis); //得到美化后的DOM对象
     });
 });

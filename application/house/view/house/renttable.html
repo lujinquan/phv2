@@ -41,19 +41,19 @@
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 租户</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 租户</label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_unit_id" readonly value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 居住层 </label>
+				<label class="layui-form-label e-label"><font color="red"></font> 居住层 </label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_floor_id" readonly value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 产别</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 产别</label>
 				<div class="layui-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$params['owners'][$data_info['ban_owner_id']]}" autocomplete="off" class="layui-input">
 				</div>
@@ -87,19 +87,19 @@
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 计算租金</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 计算租金</label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_unit_id" readonly value="{$data_info['house_cou_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 租差 </label>
+				<label class="layui-form-label e-label"><font color="red"></font> 租差 </label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_floor_id" readonly value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 泵费</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 泵费</label>
 				<div class="layui-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
 				</div>
@@ -113,19 +113,19 @@
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 协议租金</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 协议租金</label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_unit_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 应收租金 </label>
+				<label class="layui-form-label e-label"><font color="red"></font> 应收租金 </label>
 				<div class="layui-input-inline">
 					<input type="text" name="house_floor_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red">*</font> 电梯</label>
+				<label class="layui-form-label e-label"><font color="red"></font> 电梯</label>
 				<div class="layui-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
@@ -140,7 +140,9 @@
 
 		<div class="layui-row e-inline">
 			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
+			{if condition="$group == 'n'"}
 			<a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="新增房间">新增房间</a>
+			{/if}
 		</div>
 
 		<!-- 房间信息 -->
@@ -177,7 +179,7 @@
 				<th>基价折减</th>
 				<th>计租面积</th>
 				<th>层次调解率</th>
-				<th>规定租金</th>
+				<th>计算租金</th>
 				<th>状态</th>
 				<th>操作</th>
 			</tr> 
@@ -214,11 +216,14 @@
 				<td>{$vo['baseinfo']['room_rent_point']}</td>
 				<td>{$vo['baseinfo']['room_lease_area']}</td>
 				<td>{$vo['baseinfo']['floor_point']}</td>
-				<td>{$vo['baseinfo']['room_pre_rent']}</td>
+				<td>{$vo['baseinfo']['room_cou_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
 				<td>
-					<i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i>
+				{if condition="$group == 'n'"}
+					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
+					
 					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+					{/if}
 					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
 				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
 			    </td>

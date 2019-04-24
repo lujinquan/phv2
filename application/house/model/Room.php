@@ -41,13 +41,18 @@ class Room extends Model
      * @param  [type] $data [传入数据]
      * @return [type]
      */
-    public function dataFilter($data)
+    public function dataFilter($data,$flag='add')
     {
-        $data['room_cuid'] = ADMIN_ID;
-        $data['room_rent_point'] = 1 - $data['room_rent_point']/100;
-        $maxNumber = self::max('room_number');
-        $data['room_number'] = $maxNumber + 1;
+        if($flag == 'add'){
+            $data['room_cuid'] = ADMIN_ID;
+            $maxNumber = self::max('room_number');
+            $data['room_number'] = $maxNumber + 1;
+        }else{
+            $roomRow = $this->find($data['room_id']);
+            $data['room_number'] = $roomRow['room_number'];
+        }
         
+        $data['room_rent_point'] = 1 - $data['room_rent_point']/100;
         $data['ban_id'] = BanModel::where([['ban_number','eq',$data['ban_number']]])->value('ban_id');
         $temp = array_filter($data['house_number']);
         $data['room_pub_num'] = count($temp);
@@ -65,6 +70,7 @@ class Room extends Model
         }
         //$data['house_number'] = implode(',',array_filter($data['house_number']));
         $data['room_rent_pointids'] = isset($data['room_rent_pointids'])?implode(',',array_filter($data['room_rent_pointids'])):'';
+
         
         return $data; 
     }

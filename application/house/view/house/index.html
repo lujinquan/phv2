@@ -62,7 +62,7 @@
     {if condition="$group == 'n'"}
     <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
-	<a href="{:url('renttable')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
+	<a href="{:url('renttable')}?id={{ d.house_id }}&group={$group}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
     <a href="{:url('detail')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('tenant/index')}?id={{ d.tenant_number }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a>
 </script>
