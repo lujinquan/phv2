@@ -241,12 +241,20 @@ body{background-color:#f5f5f5;margin:0;padding:0;}
 	width: 90px;
 }
 .icon-search{
-    background: url(.././image/search.png) no-repeat;
+    background: url(.././image/icon-search.png) no-repeat;
     width: 32px;
     height: 32px;
     position: absolute;
-    top: 4px;
-    right: 0px;
+    top: 12px;
+    right: 10px;
+}
+.icon-cancel{
+    background: url(.././image/icon-cancel.png) no-repeat;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: -4px;
+    right: -4px;
 }
 .icon-baifenhao{
     background: url(.././image/baifenhao.png) no-repeat;
@@ -255,4 +263,7 @@ body{background-color:#f5f5f5;margin:0;padding:0;}
     position: absolute;
     top: 11px;
     right: 3px;
+}
+.e-title{
+	font-weight:bold;
 }

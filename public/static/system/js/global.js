@@ -250,7 +250,21 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             opt.url += '?hisi_iframe=yes'+query;
         }
 
-        layer.open({type: opt.type, title: opt.title, content: opt.url, area: [opt.width, opt.height]});
+        layer.open({
+            type: opt.type, 
+            title: opt.title, 
+            content: opt.url, 
+            area: [opt.width, opt.height],
+            cancel: function(index, layero){ 
+              // if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+              //   layer.close(index);
+              //   location.reload();
+              // }
+              location.reload();
+              return false; 
+            }  
+
+        });
         return false;
     });
 
@@ -351,6 +365,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
     $(document).on('click', '.j-tr-del,.hisi-tr-del', function() {
         var that = $(this),
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
+            isReload = that.attr('isreload');
         layer.confirm('删除之后无法恢复，您确定要删除吗？', {title:false, closeBtn:0}, function(index){
             if (!href) {
                 layer.msg('请设置data-href参数');
@@ -360,7 +375,12 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 if (res.code == 0) {
                     layer.msg(res.msg);
                 } else {
-                    that.parents('tr').remove();
+                    if(isReload){
+                        location.reload();
+                    }else{
+                        that.parents('tr').remove();
+                    }
+                    
                 }
             });
             layer.close(index);

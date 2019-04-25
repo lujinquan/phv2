@@ -12,7 +12,25 @@ class Room extends Admin
 
     public function index()
     {   
-
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $RoomModel = new RoomModel;
+            $where = $RoomModel->checkWhere($getData);
+            
+            $data = [];
+            $data['data'] = $RoomModel->withJoin(['ban'=> function($query)use($where){ //注意闭包传参的方式
+                     $query->where($where['ban']);
+                 },])->where($where['room'])->page($page)->order('room_ctime desc')->limit($limit)->select();
+            $data['count'] = $RoomModel->withJoin(['ban'=> function($query)use($where){ //注意闭包传参的方式
+                     $query->where($where['ban']);
+                 },])->where($where['room'])->count('room_id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+        return $this->fetch();
     }
 
     public function add()
@@ -122,5 +140,17 @@ class Room extends Admin
         }
             return $this->error('删除失败');
 
+    }
+
+    public function detail()
+    {
+        $id = input('param.id/d');
+        $row = RoomModel::with(['ban'])->find($id);
+        $row['room_rent_point'] = 100 - $row['room_rent_point']*100;
+        $houses = $row->house_room()->where([['house_room_status','<=',1]])->column('house_number');
+        //halt($houses);
+        $this->assign('houses',$houses);
+        $this->assign('data_info',$row);
+        return $this->fetch();
     }
 }

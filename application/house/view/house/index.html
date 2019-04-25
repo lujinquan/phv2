@@ -81,29 +81,29 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'house_number', width: 140,title: '<span style="font-weight:bold;">房屋编号</span>'}
-                ,{field: 'ban_number', width: 110, title: '<span style="font-weight:bold;">楼栋编号</span>'}
-                ,{field: 'tenant_name', width: 100, title: '租户姓名'}
-                ,{field: 'ban_inst_id', width: 120, title: '管段',hide: isShowInst, templet: function(d) {
+                ,{field: 'house_number', width: 140,title: '<span class="e-title">房屋编号</span>'}
+                ,{field: 'ban_number', width: 110, title: '<span class="e-title">楼栋编号</span>'}
+                ,{field: 'tenant_name', width: 100, title: '<span class="e-title">租户姓名</span>'}
+                ,{field: 'ban_inst_id', width: 120, title: '<span class="e-title">管段</span>',hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
-                ,{field: 'ban_owner_id', width: 60, title: '产别', templet: function(d) {
+                ,{field: 'ban_owner_id', width: 60, title: '<span class="e-title">产别</span>', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'house_use_id', width: 100, title: '使用性质', templet: function(d) {
+                ,{field: 'house_use_id', width: 100, title: '<span class="e-title">使用性质</span>', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'ban_address', width: 200, title: '地址'}
-                ,{field: 'house_area', width: 80, title: '建面'}
-                ,{field: 'house_lease_area', width: 100, title: '计租面积'}
-                ,{field: '', width: 80, title: '单元',templet: function(d) {
+                ,{field: 'ban_address', width: 200, title: '<span class="e-title">地址</span>'}
+                ,{field: 'house_area', width: 80, title: '<span class="e-title">建面</span>'}
+                ,{field: 'house_lease_area', width: 100, title: '<span class="e-title">计租面积</span>'}
+                ,{field: '', width: 80, title: '<span class="e-title">单元</span>',templet: function(d) {
                     return d.house_unit_id + '/' + d.ban_units;
                 }}
-                ,{field: '', width: 80, title: '楼层',templet: function(d) {
+                ,{field: '', width: 80, title: '<span class="e-title">楼层</span>',templet: function(d) {
                     return d.house_floor_id + '/' + d.ban_floors;
                 }}
                 
-                ,{title: '操作', minWidth: 230, templet: '#buttonTpl',fixed:'right'}
+                ,{title: '<span class="e-title">操作</span>', minWidth: 230, templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

@@ -54,14 +54,18 @@ class Room extends Validate
 
   	protected function existInHouse($value, $rule='', $data)
   	{
-    		$val = array_filter($value);
-    		$is = true;
-    		foreach($val as $v){
-    			$row = HouseModel::where([['house_number','eq',$v]])->value('house_id');
-    			if(!$row){
-  				$is = '房屋编号格式错误';
-    			}
-    		}
+		$val = array_filter($value);
+
+		$is = true;
+		foreach($val as $v){
+			$row = HouseModel::where([['house_number','eq',$v]])->value('house_id');
+			if(!$row){
+				$is = '房屋编号格式错误';
+			}
+		}
+        if (count($val) != count(array_unique($val))) {
+            $is = '房屋编号有重复值';
+        }
       	return $is;	
   	}
 

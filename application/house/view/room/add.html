@@ -47,25 +47,28 @@
                 </div>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item e-house">
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 绑定房屋</label>
                 <div class="layui-input-inline">
                     <input type="text" name="house_number[]" value="{$data_info['house_number']}" readonly autocomplete="off" class="layui-input">
-                    <input type="hidden" value="{$data_info['house_id']}" readonly autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
                 <div class="layui-input-inline">
+                    <i class="icon-search"></i>
+                    <i class="icon-cancel lu-del"></i>
                     <input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline e-inline">
                 <div class="layui-input-inline">
+                    <i class="icon-search"></i>
+                    <i class="icon-cancel lu-del"></i>
                     <input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;"></i>
+            <i class="layui-icon layui-icon-add-1 lu-add" style="color:#1E9FFF;"></i>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
@@ -105,9 +108,14 @@
 layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
 
-    $('.table-add').click(function(){
-        var html = '<div class="layui-inline e-inline"><div class="layui-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off"class="layui-input"></div></div>';
-        $('.table-add').before(html);
+    $('.lu-add').click(function(){
+        var html = '<div class="layui-inline e-inline"><div class="layui-input-inline"><i class="icon-search"></i><i class="icon-cancel lu-del"></i><input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input"></div></div>';
+        $('.lu-add').before(html);
+    });
+    $('.e-house').on('click','.lu-del',function(){
+        var that = $(this);
+        console.log(that);
+        that.parent().parent().remove();
     });
     var s = $('#room_rent_point').val();
     //layui.func.assign({:json_encode($formData)});

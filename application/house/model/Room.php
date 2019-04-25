@@ -36,6 +36,38 @@ class Room extends Model
         return $this->belongsTo('room_type_point', 'room_type', 'id')->bind('sort');
     }
 
+    public function checkWhere($data)
+    {
+        if(!$data){
+            $data = request()->param();
+        }
+        $where = [];
+        $where['ban'] = [];
+        $where['room'] = [['room_status','eq',1],['room_pub_num','>',2]];
+        // 检索楼栋编号
+        if(isset($data['ban_number']) && $data['ban_number']){
+            $where['ban'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
+        }
+        // 检索楼栋地址
+        if(isset($data['ban_address']) && $data['ban_address']){
+            $where['ban'][] = ['ban_address','like','%'.$data['ban_address'].'%'];
+        }
+        // 检索房间编号
+        if(isset($data['room_number']) && $data['room_number']){
+            $where['room'][] = ['room_number','like','%'.$data['room_number'].'%'];
+        }
+        // 检索房间类型
+        if(isset($data['room_type']) && $data['room_type']){
+            $where['room'][] = ['room_type','eq',$data['room_type']];
+        }
+        //检索管段
+        $insts = config('inst_ids');
+        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];
+
+        return $where;
+    }
+
     /**
      * 数据过滤
      * @param  [type] $data [传入数据]

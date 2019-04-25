@@ -115,7 +115,7 @@
 			<div class="layui-inline e-inline">
 				<label class="layui-form-label e-label"><font color="red"></font> 协议租金</label>
 				<div class="layui-input-inline">
-					<input type="text" name="house_unit_id" readonly value="占位" autocomplete="off" class="layui-input">
+					<input type="text" name="house_unit_id" readonly value="{$data_info['house_protocol_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline e-inline">
@@ -222,7 +222,7 @@
 				{if condition="$group == 'n'"}
 					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
 					
-					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
 					{/if}
 					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
 				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
