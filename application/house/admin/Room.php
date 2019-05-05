@@ -146,7 +146,7 @@ class Room extends Admin
     {
         $id = input('param.id/d');
         $row = RoomModel::with(['ban'])->find($id);
-        $row['room_rent_point'] = 100 - $row['room_rent_point']*100;
+        $row['room_rent_point'] = (100 - $row['room_rent_point']*100).'%';
         $houses = $row->house_room()->where([['house_room_status','<=',1]])->column('house_number');
         //halt($houses);
         $this->assign('houses',$houses);
