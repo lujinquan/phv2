@@ -12,8 +12,8 @@
                 <div class="layui-input-inline">
                     <select name="ban_struct_id" class="field-cid" type="select">
                         <option value="">请选择</option>
-                        {volist name="params['structs']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
+                        {volist name="params['structs']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -24,8 +24,8 @@
                 <div class="layui-input-inline">
                     <select name="ban_damage_id" class="field-cid" type="select">
                         <option value="">请选择</option>
-                        {volist name="params['damages']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_damage_id']"}selected{/if}>{$v}</option>
+                        {volist name="params['damages']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_damage_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -35,8 +35,8 @@
                 <div class="layui-input-inline">
                     <select name="ban_owner_id" class="field-cid" type="select">
                         <option value="">请选择</option>
-                        {volist name="params['owners']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_owner_id']"}selected{/if}>{$v}</option>
+                        {volist name="params['owners']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_owner_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>
@@ -90,8 +90,8 @@
                 <div class="layui-input-inline">
                     <select name="ban_inst_id" class="field-cid" type="select" required>
                         <option value="">请选择</option>
-                        {volist name="params['insts']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
+                        {volist name=":config('inst_data_names')[INST]" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>

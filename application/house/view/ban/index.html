@@ -10,8 +10,8 @@
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_inst_id">
                 <option value="">机构</option>
-                {volist name=":config('inst_check_names')[INST]" id="v" key="k"}
-                <option value="{$k}">{$v}</option>
+                {volist name=":config('inst_check_names')[INST]" id="v"}
+                <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>
@@ -19,24 +19,24 @@
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_owner_id">
                 <option value="">产别</option>
-                {volist name="params['owners']" id="v" key="k"}
-                <option value="{$k}">{$v}</option>
+                {volist name="params['owners']" id="v"}
+                <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_struct_id">
                 <option value="">结构类别</option>
-                {volist name="params['structs']" id="v" key="k"}
-                <option value="{$k}">{$v}</option>
+                {volist name="params['structs']" id="v"}
+                <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
             <select name="ban_damage_id">
                 <option value="">完损等级</option>
-                {volist name="params['damages']" id="v" key="k"}
-                <option value="{$k}">{$v}</option>
+                {volist name="params['damages']" id="v"}
+                <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>

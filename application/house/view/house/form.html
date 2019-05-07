@@ -45,8 +45,8 @@
                 <div class="layui-input-inline">
                     <select name="house_use_id" class="field-cid" type="select">
                         <option value="">请选择</option>
-                        {volist name="params['uses']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['house_use_id']"}selected{/if}>{$v}</option>
+                        {volist name="params['uses']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>

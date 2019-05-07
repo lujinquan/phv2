@@ -46,7 +46,7 @@ class HouseTai extends Model
         return $where;
     }
 
-    public function store()
+    public static function store($data)
     {
 
     }

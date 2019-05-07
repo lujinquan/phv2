@@ -34,8 +34,8 @@
                 <div class="layui-input-inline">
                     <select name="tenant_inst_id" class="field-cid" type="select" required>
                         <option value="">请选择</option>
-                        {volist name="params['insts']" id="v" key="k"}
-                        <option value="{$k}" {if condition="$k == $data_info['tenant_inst_id']"}selected{/if}>{$v}</option>
+                        {volist name="params['insts']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['tenant_inst_id']"}selected{/if}>{$v}</option>
                         {/volist}
                     </select>
                 </div>

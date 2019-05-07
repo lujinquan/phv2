@@ -89,8 +89,8 @@
                 <div class="layui-input-inline">
                     <select name="ban_inst_id" class="field-cid" type="select" required>
                         <option value="">请选择</option>
-                        {volist name="params['insts']" id="v" key="k"}
-                        <option value="{$k}">{$v}</option>
+                        {volist name=":config('inst_data_names')[INST]" id="v"}
+                        <option value="{$key}">{$v}</option>
                         {/volist}
                     </select>
                 </div>
