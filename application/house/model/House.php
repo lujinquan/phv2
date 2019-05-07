@@ -47,7 +47,21 @@ class House extends Model
         $group = isset($data['group'])?$data['group']:'y';
         $where = [];
         $where['ban'] = $where['house'] = $where['tenant'] = [];
-        $where['house'][] = ($group == 'y')?[['house_status','eq',1]]:[['house_status','neq',1]];
+
+        switch ($group) {
+            case 'y':
+                $where['house'][] = [['house_status','eq',1]];
+                break;
+            case 'x':
+                $where['house'][] = [['house_status','eq',0]];
+                break;
+            case 'z':
+                $where['house'][] = [['house_status','>',1]];
+                break;
+            default:
+                $where['house'][] = [['house_status','eq',1]];
+                break;
+        }
         // 检索【租户】姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where['tenant'][] = ['tenant_name','like','%'.$data['tenant_name'].'%'];

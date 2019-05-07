@@ -29,7 +29,20 @@ class Ban extends Model
             $data = request()->param();
         }
         $group = isset($data['group'])?$data['group']:'y';
-        $where = ($group == 'y')?[['ban_status','eq',1]]:[['ban_status','neq',1]];
+        switch ($group) {
+            case 'y':
+                $where = [['ban_status','eq',1]];
+                break;
+            case 'x':
+                $where = [['ban_status','eq',0]];
+                break;
+            case 'z':
+                $where = [['ban_status','>',1]];
+                break;
+            default:
+                $where = [['ban_status','eq',1]];
+                break;
+        }
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
             $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];

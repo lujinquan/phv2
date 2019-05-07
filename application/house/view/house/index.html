@@ -52,14 +52,14 @@
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="toolbar">
   <div class="layui-btn-container">
-    {if condition="$group == 'n'"}
+    {if condition="$group == 'x'"}
     <a href="{:url('add')}"><button class="layui-btn layui-btn-sm layui-btn-normal">新增房屋</button></a>
     <button data-href="{:url('del')}" data-id="house_id" class="layui-btn layui-btn-sm layui-btn-danger j-page-btns">批量删除</button>
     {/if}
   </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {if condition="$group == 'n'"}
+    {if condition="$group == 'x'"}
     <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
 	<a href="{:url('renttable')}?id={{ d.house_id }}&group={$group}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>

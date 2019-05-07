@@ -3,6 +3,7 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
@@ -70,9 +71,13 @@ class House extends Admin
                 'url' => '?group=y',
             ],
             [
-                'title' => '异常',
-                'url' => '?group=n',
+                'title' => '新发',
+                'url' => '?group=x',
             ],
+            [
+                'title' => '注销',
+                'url' => '?group=z',
+            ]
         ];
         $tabData['current'] = url('?group='.$group);
         $this->assign('group',$group);
@@ -173,6 +178,37 @@ class House extends Admin
     {
         $id = input('param.id/d');
         $row = HouseModel::with(['ban','tenant'])->get($id);
+        $group = input('group','y');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '详情',
+                'url' => '?id='.$id.'&group=y',
+            ],
+            [
+                'title' => '台账',
+                'url' => '?id='.$id.'&group=t',
+            ]
+        ];
+        $tabData['current'] = url("detail?id=$id&group=$group");
+
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->param();
+            $HouseTaiModel = new HouseTaiModel;
+            $where = $HouseTaiModel->checkWhere($getData);
+            $data = [];
+            $data['data'] = $HouseTaiModel->with(['tenant','SystemUser'])->where($where)->page($page)->order('house_tai_ctime desc')->limit($limit)->select();
+            $data['count'] = $HouseTaiModel->where($where)->count('house_tai_id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+   
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

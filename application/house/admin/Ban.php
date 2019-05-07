@@ -31,9 +31,13 @@ class Ban extends Admin
                 'url' => '?group=y',
             ],
             [
-                'title' => '异常',
-                'url' => '?group=n',
+                'title' => '新发',
+                'url' => '?group=x',
             ],
+            [
+                'title' => '注销',
+                'url' => '?group=z',
+            ]
         ];
         $tabData['current'] = url('?group='.$group);
         $this->assign('group',$group);

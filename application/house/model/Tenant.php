@@ -29,7 +29,7 @@ class Tenant extends Model
             $data = request()->param();
         }
         $group = isset($data['group'])?$data['group']:'y';
-        $where = ($group == 'y')?[['tenant_status','eq',1]]:[['tenant_status','neq',1]];
+        $where = ($group == 'y')?[['tenant_status','eq',1]]:[['tenant_status','eq',0]];
         // 检索楼栋编号
         if(isset($data['tenant_number']) && $data['tenant_number']){
             $where[] = ['tenant_number','like','%'.$data['tenant_number'].'%'];

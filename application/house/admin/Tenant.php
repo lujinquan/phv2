@@ -30,8 +30,8 @@ class Tenant extends Admin
                 'url' => '?group=y',
             ],
             [
-                'title' => '异常',
-                'url' => '?group=n',
+                'title' => '新发',
+                'url' => '?group=x',
             ],
         ];
         $tabData['current'] = url('?group='.$group);
