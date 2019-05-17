@@ -210,10 +210,11 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
      */
     $(document).on('click', '.j-iframe-pop,.hisi-iframe-pop', function() {
         var that = $(this), query = '';
-        var def = {width: '750px', height: '500px', idSync: false, table: 'dataTable', type: 2, url: that.attr('href'), title: that.attr('title')};
+        var def = {refresh: 1, width: '750px', height: '500px', idSync: false, table: 'dataTable', type: 2, url: that.attr('href'), title: that.attr('title')};
         var opt = new Function('return '+ that.attr('hisi-data'))() || {};
 
         opt.url     = opt.url || def.url;
+        opt.refresh  = opt.refresh || def.refresh;
         opt.title   = opt.title || def.title;
         opt.width   = opt.width || def.width;
         opt.height  = opt.height || def.height;
@@ -260,7 +261,10 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
               //   layer.close(index);
               //   location.reload();
               // }
-              location.reload();
+              layer.close(index);
+              if(opt.refresh == 1){
+                location.reload();
+              }
               return false; 
             }  
 
