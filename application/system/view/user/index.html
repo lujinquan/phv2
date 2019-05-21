@@ -13,7 +13,7 @@
 
 <script type="text/html" id="toolbar">
     <div class="layui-btn-group fl">
-        <a href="{:url('addUser')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop" hisi-data="{width: '470px', height: '400px'}" title="添加管理员">&nbsp;添加</a>
+        <a href="{:url('addUser')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine j-iframe-pop" hisi-data="{width: '470px', height: '500px'}" title="添加管理员">&nbsp;添加</a>
         <a data-href="{:url('status?table=admin_user&val=1')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns layui-icon layui-icon-play" data-table="dataTable">&nbsp;启用</a>
         <a data-href="{:url('status?table=admin_user&val=0')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns layui-icon layui-icon-pause" data-table="dataTable">&nbsp;禁用</a>
         <a data-href="{:url('delUser')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns confirm layui-icon layui-icon-close red">&nbsp;删除</a>
@@ -42,14 +42,14 @@
                     return params.insts[d.inst_id];
                 }}
                 ,{field: 'nick', width: 90,title: '昵称'}
-                ,{field: 'role_id', width: 90,title: '角色', templet:function(d){
+                ,{field: 'role_id', width: 100,title: '角色', templet:function(d){
                     return d.role.name;
                 }}
                 ,{field: 'mobile', width: 120,title: '手机'}
-                ,{field: 'email', width: 120, title: '邮箱'}
+                ,{field: 'email', width: 180, title: '邮箱'}
                 ,{field: 'last_login_time', width: 150, title: '最后登陆时间'}
                 ,{field: 'last_login_ip', width: 120,title: '最后登陆IP'}
-                ,{field: 'intro', width: 120,title: '简介'}
+                ,{field: 'intro', width: 160,title: '简介'}
                 ,{field: 'status',width: 100, title: '状态', templet: '#statusTpl'}
                 ,{title: '操作', minWidth: 120, templet: '#buttonTpl',fixed:'right'}
             ]]

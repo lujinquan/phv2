@@ -61,6 +61,7 @@ class User extends Admin
             }
 
             $data['data'] = UserModel::with('role')->where($where)->page($page)->limit($limit)->select();
+            //halt($data['data']);
             $data['count'] = UserModel::where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -274,7 +275,7 @@ class User extends Admin
             $page = $this->request->param('page/d', 1);
             $limit = $this->request->param('limit/d', 15);
 
-            $data['data'] = RoleModel::where('id', '<>', 1)->select();
+            $data['data'] = RoleModel::where('id', '<>', 1)->order('sort asc')->select();
             $data['count'] = RoleModel::where('id', '<>', 1)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';

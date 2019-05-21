@@ -35,11 +35,11 @@
             ,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'name', title: '角色名称'}
-                ,{field: 'intro', title: '角色简介'}
-                ,{field: 'ctime', title: '创建时间'}
-                ,{field: 'status', title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', templet: '#buttonTpl'}
+                ,{field: 'name',width: 100, title: '角色名称'}
+                ,{field: 'intro',width: 400, title: '角色简介'}
+                ,{field: 'ctime',width: 180, title: '创建时间'}
+                ,{field: 'status',width: 100, title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', minWidth: 100,templet: '#buttonTpl'}
             ]]
         });
     });

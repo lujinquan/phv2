@@ -3,7 +3,7 @@
 
 <script type="text/html" id="buttonTpl">
     <div class="layui-btn-group">
-        <a href="{:url('design')}?id={{ d.Name }}" hisi-data="{width:'1000px',title:'表结构',refresh:2}" class="layui-btn layui-btn-primary layui-btn-sm j-iframe-pop">表结构</a>
+        <a href="{:url('design')}?id={{ d.Name }}" hisi-data="{width:'1000px',title:'表结构',refresh:2}" class="layui-btn layui-btn-normal layui-btn-xs j-iframe-pop">表结构</a>
      </div>  
 </script>
 
@@ -31,40 +31,26 @@
                 {type:'checkbox'}
                 ,{field: 'Name', title: '表名',width:200}
                 ,{field: 'Comment', title: '备注', width: 180}
-                ,{field: 'Rows', title: '数据量', width: 100,templet: function(d) {
-                    return d.Rows + '条';
+                // ,{field: 'Version', title: '版本', width: 80}
+                ,{field: 'Rows', title: '数据量/条', width: 120,templet: function(d) {
+                    return d.Rows;
                 }}
-                ,{field: 'Engine', title: '引擎', width: 100}
+                ,{field: 'Engine', title: '引擎',sort: true, width: 100}
                 ,{field: 'Data_length', title: '大小', sort: true,width: 100, templet: function(d) {
-                    if(d.Data_length < 1024){
-                        return d.Data_length + 'b';
-                    }else if(d.Data_length < 1024*1024){
-                        return (d.Data_length / 1024).toFixed(1) + 'kb';
-                    }else{
-                        return (d.Data_length / 1024 / 1024).toFixed(1) + 'M';
-                    }
+                    return bytesToSize(d.Data_length);
                 }}
+                // ,{field: 'Max_data_length', title: '可容最大数据量', sort: true,width: 180, templet: function(d) {
+                //     return bytesToSize(d.Max_data_length);
+                // }}
                 ,{field: 'Avg_row_length', title: '平均每条', sort: true,width: 120, templet: function(d) {
-                    if(d.Avg_row_length < 1024){
-                        return d.Avg_row_length + 'b';
-                    }else if(d.Avg_row_length < 1024*1024){
-                        return (d.Avg_row_length / 1024).toFixed(1) + 'kb';
-                    }else{
-                        return (d.Avg_row_length / 1024 / 1024).toFixed(1) + 'M';
-                    }
+                    return bytesToSize(d.Avg_row_length);
                 }}
                 ,{field: 'Index_length', title: '索引大小', sort: true,width: 120, templet: function(d) {
-                    if(d.Index_length < 1024){
-                        return d.Index_length + 'b';
-                    }else if(d.Index_length < 1024*1024){
-                        return (d.Index_length / 1024).toFixed(1) + 'kb';
-                    }else{
-                        return (d.Index_length / 1024 / 1024).toFixed(1) + 'M';
-                    }
+                    return bytesToSize(d.Index_length);
                 }}
                 ,{field: 'Check_time', title: '最近检查表时间', width: 160}
                 ,{field: 'Data_free', title: '冗余', width: 100, templet: function(d) {
-                    return d.Data_free / 1024;
+                    return bytesToSize(d.Data_free);
                 }}
                 
                 ,{title: '操作', minWidth: 100, templet: '#buttonTpl'}

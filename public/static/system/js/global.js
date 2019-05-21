@@ -585,3 +585,13 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
     });
     exports('global', {});
 });
+
+function bytesToSize(bytes) {  
+　　if (bytes === 0) return '0 B';
+　　var k = 1024;
+　　sizes = ['B','K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+　　i = Math.floor(Math.log(bytes) / Math.log(k))　　
+　　//return (bytes / Math.pow(k, i)) + ' ' + sizes[i];
+　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+　　//toPrecision(3) 后面保留两位小数，如1.00GB  
+} 
