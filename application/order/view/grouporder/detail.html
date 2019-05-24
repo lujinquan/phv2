@@ -1,0 +1,93 @@
+<form class="layui-form" action="transfer" method="post">
+	<div class="e-space"></div>
+    <div class="page-form">
+        <div class="layui-form-item e-line">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 问题描述</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['remark']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div> 
+        </div>
+        <div class="layui-form-item">
+        	<div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 附件</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['imgs']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+        	<div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 状态 </label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['status_info']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+		{if condition="$data_info['is_current']"}
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 回复</label>
+
+            </div> 
+            <div class="layui-block e-inline">
+				<textarea name="replay" placeholder="" class="layui-textarea" width="200px" height="40px"></textarea>
+            </div> 
+        </div>
+     
+        <!-- 只有运营人员才能转交 -->
+		{if condition="ADMIN_ROLE == 11"}
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 转交给</label>
+                <div class="layui-input-inline">
+                    <select name="transfer_to" lay-filter="select-fileter" class="field-cid" type="select" >
+                        <option value="">请选择</option>
+                        <option value="41">卢金权（技术部）</option>
+                        <option value="42">叶慧丽（经管科）</option>
+                    </select>
+                </div>
+            </div> 
+        </div>
+        {/if}
+        {/if}
+        <input type="hidden" name="id" value="{$data_info['id']}">
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-input-block e-inline">
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+                {if condition="$data_info['is_current']"}
+                <button type="submit" class="layui-btn" id="trans" lay-submit lay-filter="formSubmit">完结工单</button>
+                {/if}
+                <!-- <button type="button" class="layui-btn" lay-submit>完成工单</button> -->
+            </div>
+        </div>
+    </div>
+</form>
+{include file="system@block/layui" /}
+<script>
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+    // 监听下拉框，如果角色为运营中心则，显示多选机构框
+    form.on('select(select-fileter)', function(data){
+      //console.log(data.elem); //得到select原始DOM对象
+      console.log(data.value); //得到被选中的值
+      //console.log(data.othis); //得到美化后的DOM对象
+      if(data.value){
+        $('#trans').text('转交工单');
+      }else{
+      	$('#trans').text('完结工单');
+        // if(!$('#trans').hasClass('layui-hide')){
+        //     $('#trans').addClass('layui-hide');
+        // }
+      }
+    });
+    
+});
+</script>

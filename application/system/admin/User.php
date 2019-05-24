@@ -116,6 +116,13 @@ class User extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
+            if($data['role_id'] == 11){
+                if(!isset($data['inst_ids']) || !$data['inst_ids']){
+                    return $this->error('请为运营人员配置管辖管段！');
+                }else{
+                    $data['inst_ids'] = implode(',',$data['inst_ids']);
+                }
+            }
             $data['password'] = md5($data['password']);
             $data['password_confirm'] = md5($data['password_confirm']);
             // 验证
@@ -123,6 +130,7 @@ class User extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
             
             unset($data['id'], $data['password_confirm']);
             $data['last_login_ip'] = '';

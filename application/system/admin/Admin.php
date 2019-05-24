@@ -84,7 +84,7 @@ class Admin extends Common
                     $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                     $menuParents = current($breadCrumbs);
                 }
-
+//halt(MenuModel::getMainMenu());
                 // 获取面包屑导航
                 $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                 $this->assign('hisiBreadcrumb', $breadCrumbs);
@@ -100,6 +100,7 @@ class Admin extends Common
                 $params = ParamModel::getCparams();
                 $this->assign('inst_level',INST_LEVEL);
                 $this->assign('params',$params);
+                $this->assign('systemusers',session('systemusers'));
                 $this->assign('paramsJson',json_encode($params));
                 //halt(json_encode($params));
                 // tab切换数据

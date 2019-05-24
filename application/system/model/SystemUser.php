@@ -184,6 +184,7 @@ class SystemUser extends Model
             $login['role_id'] = $user->role_id;
             $login['inst_id'] = $user->inst_id;
             $login['inst_level'] = $user->inst_level;
+            $login['inst_ids'] = $user->inst_ids;
             $login['role_name'] = $role['name'];
             $login['nick'] = $user->nick;
             cookie('hisi_iframe', (int)$user->iframe);
@@ -195,6 +196,9 @@ class SystemUser extends Model
             // 缓存登录信息
             session('admin_user', $login);
             session('admin_user_sign', $this->dataSign($login));
+            // 缓存用户表基础数据
+            $users = $this->where([['status','eq','1']])->column('id,nick');
+            session('systemusers',$users);
             return $user->id;
         }
         return false;

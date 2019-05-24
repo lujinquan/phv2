@@ -205,7 +205,7 @@ class SystemMenu extends Model
 
                 $data = self::where($map)
                         ->order('sort asc,id asc')
-                        ->column('id,pid,module,title,url,param,target,icon');
+                        ->column('id,pid,module,title,url,param,target,tip,icon');
                 $data = array_values($data); 
             }
 

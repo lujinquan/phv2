@@ -309,7 +309,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         } else {
             _form = that.parents('form');
         }
-
+        
         if (that.attr('hisi-data')) {
             options = new Function('return '+ that.attr('hisi-data'))();
         } else if (that.attr('lay-data')) {

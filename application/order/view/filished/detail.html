@@ -1,0 +1,52 @@
+<form class="layui-form" action="transfer" method="post">
+	<div class="e-space"></div>
+    <div class="page-form">
+        <div class="layui-form-item e-line">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 问题描述</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['remark']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div> 
+        </div>
+        <div class="layui-form-item">
+        	<div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 附件</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['imgs']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+        	<div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 状态 </label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$data_info['status_info']}" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+		
+        <input type="hidden" name="id" value="{$data_info['id']}">
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-input-block e-inline">
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+                
+            </div>
+        </div>
+    </div>
+</form>
+{include file="system@block/layui" /}
+<script>
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+    // 监听下拉框，如果角色为运营中心则，显示多选机构框
+    
+    
+});
+</script>

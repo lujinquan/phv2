@@ -17,8 +17,8 @@
             <!-- <i class="typcn typcn-mail"></i> -->
             <i class="aicon ai-app-store"><a href="javascript:;"></a></i>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                <dd><a target="_blank" href="{:url('system/userhome/add')}">新增工单</a></dd>
-                <dd><a target="_blank" href="{:url('system/userhome/index')}">我的工单</a></dd>
+                <dd><a target="_blank" href="{:url('order/accept/add')}">新增工单</a></dd>
+                <dd><a target="_blank" href="{:url('system/myorder/index')}">我的工单</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">
@@ -74,7 +74,7 @@
                     {else /}
                         {volist name="vv['childs']" id="vvv"}
                         <dd>
-                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']}</a>
+                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']} &nbsp;&nbsp;{$vvv['tip']}</a>
                         </dd>
                         {/volist}
                     {/if}
