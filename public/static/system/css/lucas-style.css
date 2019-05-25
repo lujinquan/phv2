@@ -1,0 +1,84 @@
+.clear{clear:both;}
+.clearfix{zoom:1;}
+.clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
+.j-back-gray{ background: #f5f5f5;}
+.j-back-white{ background: #fff;}
+.j-border-radius10{ border-radius: 10px;}
+/* 按钮颜色 S*/
+.layui-btn{ font-weight: bold;}
+.layui-btn-orange{ background: #F9B048;}
+.layui-btn-grass{ background: #55C151;}
+/* 按钮颜色 E*/
+/* 详情样式  S*/
+.j-row-box{ overflow: hidden;}
+.j-row-box .j-left,.j-row-box .j-right{ margin-bottom: -9999px;padding-bottom: 9999px;}
+.j-card-header{font-size:14px;font-weight:bold;color:rgba(133,146,163,1);line-height:19px; padding:25px 15px 0;}
+.j-enclosure-box li{ float: left; margin:15px 10px 0 0; width:120px; height: 112px;}
+.j-enclosure-box li img{width:120px; height: 112px; border-radius: 10px;}
+.j-info-box dl{ padding: 35px  35px 0;}
+.j-info-box dt{font-weight: bold; color: #333;font-family: 'MicrosoftYaHei';}
+.j-info-box dt i{ margin-right: 5px;}
+.j-info-box dd{ margin-top: 20px;}
+.j-info-box dd h1{font-size:14px;color:rgba(133,146,163,1);line-height:19px;}
+.j-info-box dd p{color: #333; font-family: 'MicrosoftYaHei';padding-top: 3px;}
+.j-axis-main{
+	background:rgba(42,96,228,0.05);
+	padding: 20px;
+}
+.time-axis{
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+.time-axis:before{
+	content: '';
+	position: absolute;
+	left:12px;
+	top: 8px;
+	width: 1px;
+	height: 100%;
+	background-color: #E4E4E4;
+}
+.time-axis-item{
+	list-style: none;
+	padding-left:30px;
+	position: relative;
+	line-height: 45px;
+	font-size: 14px;
+	color: #141414;
+}
+.time-axis-title{position: relative;top:-5px;}
+.time-axis-title h1,.time-axis-title .j-remarks{ font:bold 14px/19px 'MicrosoftYaHei'; color: #666;}
+.time-axis-title .j-remarks{ padding: 10px 0 20px;}
+.time-axis-date{
+	position: absolute;
+	left: 0;
+	top: 0;
+	color: #666;
+}
+
+.time-axis-date span{
+	position: absolute;
+	right: -18px;
+	top: 35%;
+	display: block;
+	width: 10px;
+	height: 10px;
+	border-radius: 100%;
+	background-color:#0084FF;
+}
+/* 状态条 S */
+.j-status-bar ul{display: inline-block;margin:10px 0 30px;width: 100%;}
+.j-status-bar li{ text-align: center;  height: 6px; background: #0084FF;border-radius: 4px;position: relative;}
+.j-status-bar li i{ width: 20px; height: 20px; position: absolute; left: 50%; margin-left: -10px;top:-10px;}
+.j-status-bar li p{ padding-top: 15px;color:rgba(0,132,255,1); font:bold 14px 'MicrosoftYaHei';}
+/* 状态条 E */
+/*回复 S*/
+.j-reply-textarea{border:#ADBECB 1px solid;}
+.j-reply-textarea textarea{ width: 100%; box-sizing: border-box; padding: 15px; font-size: 14px; color: #000;border: 0;resize:none}
+.j-upload-size{ background:#F3F6FD ; height: 40px; line-height: 40px; padding: 0 15px;}
+.j-upload-size i{margin-right: 10px;}
+.j-upload-size span{ color: #8592A3;}
+/*回复 E*/
+.j-form-box{padding: 0 15px;}
+/* 详情样式 E */
