@@ -63,7 +63,7 @@
 				  <h1 class="j-card-header">回复：</h1>
 				  <div class="layui-card-body clearfix">
 				  	<div  class="j-reply-textarea clearfix">
-						<textarea    rows="6"></textarea>
+						<textarea  name="replay"  rows="6"></textarea>
 						<div class="j-upload-size">
 							<i class="layui-icon layui-icon-picture"></i><span>上传附件</span>
 						</div>
@@ -77,8 +77,9 @@
 					<button class="layui-btn">返回</button>
 				</div>
 				<div class="fr">
-					<button type="submit" class="layui-btn layui-btn-orange" lay-submit="" lay-filter="formSubmit">转交工单</button>
-					<button type="submit" class="layui-btn layui-btn-grass" lay-submit="" lay-filter="formSubmit">完成工单</button>
+					<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+					<button type="button" class="layui-btn layui-btn-orange" id="handover" >转交工单</button>
+					<button type="button" class="layui-btn layui-btn-grass" id="complete" >完成工单</button>
 				</div>
 			</div>	
          </div>
@@ -126,8 +127,46 @@
 		  </dl>
 	  </div>
     </div>
+	<!-- 转交工单 S -->
+	 
+
+	<!-- 转交工单 E -->
   </div>
+  <style>
+	  .j-frame-class{padding: 15px 15px 0;}
+	  .j-frame-class .j-frame-label{ font-size: 16px; color:rgba(74,74,74,1); line-height: 40px; margin-bottom: 10px;}
+	  .layui-layer-title{font-size: 16px; font-weight: bold;}
+	  .j-frame-class .layui-form-select dl dd.layui-this{background-color:#0084FF;}
+	  .j-frame-class .layui-form-select dl dt{ font-size: 14px;}
+  </style>
+  <div class="row j-frame-class" id="show_div">
+    	 <form class="layui-form" >
+    	   <div class="layui-form-item">
+    			 <label class="j-frame-label">工单受理人</label>
+    			 <div class="j-input-block">
+    				<select name="quiz">
+    				  <option value="">请选择工单受理人</option>
+    				  <optgroup label="超级管理员">
+    					<option value="超级管理员1">超级管理员1</option>
+    					<option value="超级管理员2">超级管理员2</option>
+    				  </optgroup>
+    				  <optgroup label="技术员">
+    					<option value="技术员1">技术员1</option>
+    					<option value="技术员2">技术员2</option>
+    				  </optgroup>
+    				</select>
+    			 </div>
+    		</div>
+    		 <div class="layui-form-item layui-form-text">
+    			<label class="j-frame-label">备注</label>
+    			<div class="j-input-block">
+    			  <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+    			</div>
+    		  </div>
+         </form>
+    </div>
 {include file="system@block/layui" /}
+
 <script>
 layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
@@ -144,6 +183,39 @@ layui.use(['form', 'func'], function() {
         //     $('#trans').addClass('layui-hide');
         // }
       }
+    });
+	//转交工单
+	$("#handover").on("click",function(){
+		 var index = layer.open({
+			 type: 1,
+			 btn: ["确定","取消"],
+			 zIndex: layer.zIndex,
+			 title: ['转交工单'],
+			 area: ['400px'],
+			 offset: 'auto',
+			 content: $('#show_div'),
+		 yes: function(index, layero){
+				
+		   }
+	     });
+	})
+	//完结工单
+	$("#complete").on("click", function() {
+		 layer.confirm("是否确认完结工单", {
+            btn: ["确定","取消"],
+			icon: 3,
+			title:false,
+			offset: 'auto',
+			closeBtn:false
+        }, function(index){
+		   alert('完成');
+           layer.close(index);
+            
+        }, function(index){
+             alert('取消');
+			 layer.close(index);
+        });
+  
     });
     
 });
