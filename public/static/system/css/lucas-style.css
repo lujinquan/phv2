@@ -54,13 +54,16 @@
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
 }
 .j-details-box .j-enclosure-label{float: initial;}
+/* .j-enclosure-upload{ margin-top: 15px;} */
+.j-details-box .j-enclosure-upload .j-enclosure-label { float: left;}
+.j-details-box .j-enclosure-label.j-uplode-icon{background:#fff; color:#0084FF;position: relative;left: -1px; margin-right: 5px;}
+.j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 13px; height: 13px;position: relative;top:-3px; margin-right: 5px;}
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
 .j-details-box .layui-form-item .j-input-inline{padding-left: 122px; position: relative;left: -2px;font-weight: bold; color: #666;}
 .j-details-box .layui-form-item .j-input-inline.j-input-radio{padding-left: 142px; font-weight: inherit;}
 .j-details-box .layui-form-item .j-lengthen .j-input-inline.j-input-radio{padding-left: 212px; font-weight: inherit;}
-.j-details-box .layui-input,.j-details-box .layui-select,.j-details-box .layui-textarea{border:1px solid rgba(
-198,210,223,1);}
+.j-details-box .layui-input,.j-details-box .layui-select,.j-details-box .layui-textarea{border:1px solid rgba(198,210,223,1);}
 .j-map-height{ width: 100%; height: 224px;}
 .j-enclosure-img li{ margin:20px 10px 0 0;width: 120px; height: 112px; float: left; border-radius: 4px;}
 .j-enclosure-img li img{width: 120px; height: 112px;}
@@ -68,7 +71,13 @@
 .layui-col-space90>*{padding: 15px 45px 0;}
 .layui-col-space90{margin: -15px -45px 0;}
 /*房屋档案详情 E*/
+
+/*新建工单 S*/
+.j-textarea-border{border: #C6D2DF 1px solid; margin-top: 15px; padding: 10px 10px 0;}
+.j-textarea{ width: 100%; height:185px; border: none;resize:none  }
+.j-textarea-border .j-size{ text-align: right; line-height: 25px; color:#BBBBBB;}
+/*新建工单 E*/
 /*弹框样式 S*/
 .j-frame-class{padding: 15px 15px 0;}
-
+.j-details-box .layui-form-select dl dd.layui-this{ background:#0084FF;}
 /*弹框样式 E*/
