@@ -4,6 +4,8 @@
 .j-back-gray{ background: #f5f5f5;}
 .j-back-white{ background: #fff;}
 .j-border-radius10{ border-radius: 10px;}
+.hide{display: none;}
+.page-tab-content{border-radius: 2px;}
 /* 按钮颜色 S*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}
@@ -21,52 +23,15 @@
 .j-info-box dd{ margin-top: 20px;}
 .j-info-box dd h1{font-size:14px;color:rgba(133,146,163,1);line-height:19px;}
 .j-info-box dd p{color: #333; font-family: 'MicrosoftYaHei';padding-top: 3px;}
-.j-axis-main{
-	background:rgba(42,96,228,0.05);
-	padding: 20px;
-}
-.time-axis{
-	margin: 0;
-	padding: 0;
-	position: relative;
-}
-.time-axis:before{
-	content: '';
-	position: absolute;
-	left:12px;
-	top: 8px;
-	width: 1px;
-	height: 100%;
-	background-color: #E4E4E4;
-}
-.time-axis-item{
-	list-style: none;
-	padding-left:30px;
-	position: relative;
-	line-height: 45px;
-	font-size: 14px;
-	color: #141414;
-}
+.j-axis-main{background:rgba(42,96,228,0.05);padding: 20px;}
+.time-axis{margin: 0;padding: 0;position: relative;}
+.time-axis:before{content: '';position: absolute;left:12px;top: 8px;width: 1px;height: 100%;background-color: #E4E4E4;}
+.time-axis-item{list-style: none;padding-left:30px;position: relative;line-height: 45px;font-size: 14px;color: #141414;}
 .time-axis-title{position: relative;top:-5px;}
 .time-axis-title h1,.time-axis-title .j-remarks{ font:bold 14px/19px 'MicrosoftYaHei'; color: #666;}
 .time-axis-title .j-remarks{ padding: 10px 0 20px;}
-.time-axis-date{
-	position: absolute;
-	left: 0;
-	top: 0;
-	color: #666;
-}
-
-.time-axis-date span{
-	position: absolute;
-	right: -18px;
-	top: 35%;
-	display: block;
-	width: 10px;
-	height: 10px;
-	border-radius: 100%;
-	background-color:#0084FF;
-}
+.time-axis-date{position: absolute;left: 0;top: 0;color: #666;}
+.time-axis-date span{position: absolute;right: -18px;top: 35%;display: block;width: 10px;height: 10px;border-radius: 100%;background-color:#0084FF;}
 /* 状态条 S */
 .j-status-bar ul{display: inline-block;margin:10px 0 30px;width: 100%;}
 .j-status-bar li{ text-align: center;  height: 6px; background: #0084FF;border-radius: 4px;position: relative;}
@@ -82,3 +47,28 @@
 /*回复 E*/
 .j-form-box{padding: 0 15px;}
 /* 详情样式 E */
+/*房屋档案详情 S*/
+.j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden;}
+.layui-elem-field.j-field-box{ margin: 30px 0 20px;}
+.layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
+.j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
+}
+.j-details-box .j-enclosure-label{float: initial;}
+.j-details-box .j-lengthen .j-form-label{ width: 190px;}
+.j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
+.j-details-box .layui-form-item .j-input-inline{padding-left: 122px; position: relative;left: -2px;font-weight: bold; color: #666;}
+.j-details-box .layui-form-item .j-input-inline.j-input-radio{padding-left: 142px; font-weight: inherit;}
+.j-details-box .layui-form-item .j-lengthen .j-input-inline.j-input-radio{padding-left: 212px; font-weight: inherit;}
+.j-details-box .layui-input,.j-details-box .layui-select,.j-details-box .layui-textarea{border:1px solid rgba(
+198,210,223,1);}
+.j-map-height{ width: 100%; height: 224px;}
+.j-enclosure-img li{ margin:20px 10px 0 0;width: 120px; height: 112px; float: left; border-radius: 4px;}
+.j-enclosure-img li img{width: 120px; height: 112px;}
+.j-margin-btn{padding: 40px 0 40px 15px;}
+.layui-col-space90>*{padding: 15px 45px 0;}
+.layui-col-space90{margin: -15px -45px 0;}
+/*房屋档案详情 E*/
+/*弹框样式 S*/
+.j-frame-class{padding: 15px 15px 0;}
+
+/*弹框样式 E*/
