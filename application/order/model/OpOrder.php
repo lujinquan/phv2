@@ -16,8 +16,8 @@ class OpOrder extends Model
     protected $autoWriteTimestamp = true;
 
     protected $type = [
-        'ctime' => 'timestamp:Y-m-d H:i:s',
-        'ftime' => 'timestamp:Y-m-d H:i:s',
+        'ctime' => 'timestamp:Y-m-d H:i',
+        'ftime' => 'timestamp:Y-m-d H:i',
     ];
 
     public function SystemUser()
@@ -32,6 +32,7 @@ class OpOrder extends Model
         }
         $where = [];
         switch ($type) {
+            // 待受理工单
             case 'accept':
                 if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                     $inst_ids = explode(',',session('admin_user.inst_ids'));
@@ -40,6 +41,7 @@ class OpOrder extends Model
                     $where[] = [['duid','like','%,'.ADMIN_ID]];
                 }
                 break;
+            // 我的工单
             case 'myorder':
                 if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                     $inst_ids = explode(',',session('admin_user.inst_ids'));
@@ -52,8 +54,19 @@ class OpOrder extends Model
                     }
                 }
                 break;
+            // 已受理工单
             case 'filished':
                 $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                
+                break;
+            // 组内待受理工单
+            case 'grouporder':
+                if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
+                    $inst_ids = explode(',',session('admin_user.inst_ids'));
+                    $where[] = [['cuid','in',$inst_ids]];
+                }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
+                    $where[] = [['duid','like','%,'.ADMIN_ID]];
+                }
                 
                 break;
             default:
@@ -92,15 +105,27 @@ class OpOrder extends Model
                 $data['cuid'] = ADMIN_ID;
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
+                $jsondata[] = [
+                    'FromUid' => ADMIN_ID, 
+                    'Img' => '',
+                    'Desc' => $data['remark'],
+                    'ToUid' => '',
+                    'Time' => time(),
+                    'Action' => '提交',
+                ];
+                $data['jsondata'] = json_encode($jsondata);
                 break;
             // 转交工单
             case 'transfer':
                 $find = $this->get($data['id']);
                 $jsonarr = json_decode($find['jsondata'],true);
                 $jsonarr[] = [
-                    'uid' => ADMIN_ID,
-                    'img' => '',
-                    'desc' => $data['replay'],
+                    'FromUid' => ADMIN_ID,
+                    'Img' => '',
+                    'ToUid' => $data['transfer_to'],
+                    'Desc' => $data['replay'],
+                    'Time' => time(),
+                    'Action' => '转交至',
                 ];
                 // 【更新】序列化数据
                 $data['jsondata'] = json_encode($jsonarr);

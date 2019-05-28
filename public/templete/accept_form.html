@@ -1,0 +1,36 @@
+   <!--  <link rel="stylesheet" href="../static/js/layui/css/layui.css?v={:config('hisiphp.version')}"> -->
+    <style>
+	  .j-frame-class{padding: 15px 15px 0;}
+	  .j-frame-class .j-frame-label{ font-size: 16px; color:rgba(74,74,74,1); line-height: 40px; margin-bottom: 10px;}
+	  .layui-layer-title{font-size: 16px; font-weight: bold;}
+	  .j-frame-class .layui-form-select dl dd.layui-this{background-color:#0084FF;}
+	  .j-frame-class .layui-form-select dl dt{ font-size: 14px;}
+  </style>
+  <div class="row j-frame-class" id="show_div">
+    	 <form class="layui-form" >
+    	   <div class="layui-form-item">
+    			 <label class="j-frame-label">工单受理人</label>
+    			 <div class="j-input-block">
+    				<select name="transfer_to" id="transfer_to">
+    				  <option value="">请选择工单受理人</option>
+    				  <optgroup label="技术部">
+    					<option value="41">卢金权</option>
+    				  </optgroup>
+    				  <optgroup label="经管科">
+    					<option value="42">叶慧丽</option>
+    				  </optgroup>
+    				  <optgroup label="运营部">
+    					<option value="39">郑湾</option>
+    					<option value="40">刘丹</option>
+    				  </optgroup>
+    				</select>
+    			 </div>
+    		</div>
+    		 <!-- <div class="layui-form-item layui-form-text">
+    			<label class="j-frame-label">备注</label>
+    			<div class="j-input-block">
+    			  <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+    			</div>
+    		  </div> -->
+         </form>
+    </div>
