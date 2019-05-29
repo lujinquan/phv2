@@ -63,4 +63,35 @@ class Myorder extends Admin
 
     	return $this->fetch('index_'.$group);
     }
+
+    public function detail()
+    {
+        $id = input('param.id/d');
+        $row = OpOrderModel::with(['SystemUser'])->get($id);
+        $duid = explode(',',$row['duid']);
+        $current_uid = array_pop($duid);
+
+        // 如果是当前用户处理，或者是运营中心的人，就打开回复框
+        if(ADMIN_ID == $current_uid || (ADMIN_ROLE == 11 && !$duid)){
+            $row['is_current'] = true;
+        }else{
+            $row['is_current'] = false;
+        }
+        // 工单状态
+        $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
+        //halt($row);
+        $row['jsondata'] = json_decode($row['jsondata'],true);
+
+        if($duid){
+            $row['status_info'] = '待确认';
+            //$row['status_info'] = '转交给'.$current_nick;
+        }else{
+            $row['status_info'] = '处理中';
+            //$row['status_info'] = $current_nick.'提交工单编号：'.$row['op_order_number'];
+        }
+    
+
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
 }

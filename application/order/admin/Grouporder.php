@@ -86,13 +86,17 @@ class Grouporder extends Admin
         }
         // 工单状态
         $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-        //halt($duid);
+        //halt($row);
+        $row['jsondata'] = json_decode($row['jsondata'],true);
+
         if($duid){
-            $row['status_info'] = '转交给'.$current_nick;
+            $row['status_info'] = '待确认';
+            //$row['status_info'] = '转交给'.$current_nick;
         }else{
-            $row['status_info'] = $current_nick.'提交工单编号：'.$row['op_order_number'];
+            $row['status_info'] = '处理中';
+            //$row['status_info'] = $current_nick.'提交工单编号：'.$row['op_order_number'];
         }
-        
+    
 
         $this->assign('data_info',$row);
         return $this->fetch();

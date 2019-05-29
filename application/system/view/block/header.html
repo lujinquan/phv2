@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<!-- 单页模式 -->
     <title>{$hisiCurMenu['title']} -  Powered by {:config('hisiphp.name')}</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -12,10 +13,12 @@
     <link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="all">
     <link rel="stylesheet" href="__STATIC__/fonts/typicons/min.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/font-awesome/min.css?v={:config('hisiphp.version')}">
+	<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="all">
 </head>
 <body class="hisi-theme-{:cookie('hisi_admin_theme')}">
 {else /}
 <!DOCTYPE html>
+<!-- ifram模式 -->
 <html>
 <head>
     <title>{if condition="$hisiCurMenu['url'] eq 'system/index/index'"}管理控制台{else /}{$hisiCurMenu['title']}{/if} -  Powered by {:config('hisiphp.name')}</title>

@@ -1,44 +1,4 @@
 <form class="layui-form" action="{url('add')}" method="post">
-    <div class="e-space hide"></div>
-    <div class="page-form hide">
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 问题类型</label>
-                <div class="layui-input-inline">
-                    <select name="op_order_type" class="field-cid" type="select">
-                        <option value="">请选择</option>
-                        {volist name="params['op_order_type']" id="v"}
-                        <option value="{$key}">{$v}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 问题描述</label>
-                <div class="layui-input-inline">
-                  <textarea name="remark" placeholder="" class="layui-textarea"></textarea>  
-                </div>
-            </div>
-        </div>
-        <div class="e-space"></div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 影像资料</label>
-                <div class="layui-input-inline">
-                    <button type="button" name="house_imgs" class="layui-btn layui-btn-normal" lay-type="image" lay-data="{accept:'image'}">点击上传</button>
-                </div>
-            </div> 
-            <div class="layui-block e-inline e-box"></div> 
-        </div> 
-        <div class="e-space"></div>
-        <div class="layui-form-item">
-            <div class="layui-input-block e-inline">
-                <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
-            </div>
-        </div>
-    </div>
 <!-- 新建工单 S -->
 <div class="j-details-box layui-form">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">

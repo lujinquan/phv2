@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_CSS__/zyupload-1.0.0.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="{url('add')}" method="post">
     <div class="e-space"></div>
     <div class="page-form">
@@ -5,7 +6,6 @@
             <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
             <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
         </div>
-        <div class="e-space"></div>
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 结构类别</label>
@@ -113,42 +113,39 @@
                 </div>
             </div>
         </div>
-        <div class="e-space"></div>
         <div class="layui-form-item" style="padding-left:40px;">
             <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">补充附件</font>
             <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
         </div>
-        <div class="e-space"></div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
+        <div class="layui-form-item" style="padding-left:40px;">
+            <!-- <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 图卡</label>
                 <div class="layui-input-inline">
                     <button type="button" name="img" class="layui-btn layui-btn-normal" lay-type="image" lay-data="{accept:'image'}">请上传图片</button>
                 </div>
             </div> 
-            <div class="layui-block e-inline e-box"></div> 
+            <div class="layui-block e-inline e-box"></div> -->
+			 <div id="zyupload1" class="zyupload"></div>
+			 <!-- <input type="text" name="uploadInfs" value="" autocomplete="off" id="uploadInfs"> -->
         </div>
-
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 经度</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_gpsx" autocomplete="off" class="layui-input">
+                    <input type="text" name="jingdu" autocomplete="off" id="jingdu" class="layui-input">
                 </div> 
             </div>
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red"></font> 纬度</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="ban_gpsy" autocomplete="off" class="layui-input">
+                    <input type="text" name="weidu" autocomplete="off" id="weidu" class="layui-input">
                 </div>
             </div>
-            <div class="layui-block e-inline e-box"></div>
+            <div id="allmap" class="layui-block e-box  j-top-15 e-inline"></div>
         </div>
-        <div class="e-space"></div>
         <div class="layui-form-item">
-            <div class="layui-input-block e-inline">
-                <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+            <div class="e-inline">
+                <button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
                 <a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
             </div>
         </div>
@@ -156,20 +153,72 @@
 </form>
 {include file="system@block/layui" /}
 
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/zyupload-1.0.0.min.js?v={:config('hisiphp.version')}"></script>
 <script>
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
+    layui.use(['jquery','laydate','upload'], function(){
+        var laydate = layui.laydate
+		   ,$ = layui.$
+		   ,upload = layui.upload;
+
 	    //年选择器
 	    laydate.render({
 	        elem: '#ban_build_year'
 	        ,type: 'year'
 	        ,max: nowDate()
 	    });
-
+         
 	    laydate.render({
 	        elem: '#rentTime'
 	        ,range: '~'
 	    });
+		
+		$(function(){
+		// 初始化插件
+			$("#zyupload1").zyUpload({
+				width            :   "800px",                 // 宽度
+				height           :   "",                 // 宽度
+				itemWidth        :   "140px",                 // 文件项的宽度
+				itemHeight       :   "115px",                 // 文件项的高度
+				url              :   "",              // 上传文件的路径
+				fileType         :   ["jpg","png","txt","js","exe"],// 上传文件的类型
+				fileSize         :   61440,                // 上传文件的大小
+				multiple      :   true,                    // 是否可以多个文件上传
+				dragDrop         :   false,                    // 是否可以拖动上传文件
+				tailor           :   true,                    // 是否可以裁剪图片
+				del              :   true,                    // 是否可以删除文件
+				finishDel        :   true,  				  // 是否在上传文件完成后删除预览
+				/* 外部获得的回调接口 */
+				onSelect: function(selectFiles, allFiles){    // 选择文件的回调方法  selectFile:当前选中的文件  allFiles:还没上传的全部文件
+					/* console.info("当前选择了以下文件：");
+					console.info(selectFiles); */
+				},
+				onDelete: function(file, files){              // 删除一个文件的回调方法 file:当前删除的文件  files:删除之后的文件
+					/* console.info("当前删除了此文件：");
+					console.info(file.name); */
+				},
+				onSuccess: function(file, response){          // 文件上传成功的回调方法
+					/* console.info("此文件上传成功：");
+					console.info(file.name); */
+					/* console.log(file); */
+					$("#uploadInfs").val(file.name);
+					/* console.info("此文件上传到服务器地址：");
+					console.info(response);
+					$("#uploadInf").append("<p>上传成功，文件地址是：" + response + "</p>"); */
+				},
+				onFailure: function(file, response){          // 文件上传失败的回调方法
+					/* console.info("此文件上传失败：");
+					console.info(file.name); */
+				},
+				onComplete: function(response){           	  // 上传完成的回调方法
+					/* console.info("文件上传完成");
+					console.info(response); */
+				}
+			});
+			
+		});
 	});
 
     function nowDate(){

@@ -584,7 +584,11 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         return false;
     });
     exports('global', {});
+
+
 });
+
+
 
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
