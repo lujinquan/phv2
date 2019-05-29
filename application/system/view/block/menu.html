@@ -76,7 +76,7 @@
                     {else /}
                         {volist name="vv['childs']" id="vvv"}
                         <dd>
-                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']} &nbsp;&nbsp;{$vvv['tip']}</a>
+                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']} &nbsp;&nbsp;<b class="j-news-num">{$vvv['tip']}</b></a>
                         </dd>
                         {/volist}
                     {/if}
