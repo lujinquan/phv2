@@ -8,10 +8,11 @@
 		<div class="layui-col-md4">
 			<div class="j-form-label"><i class="red">*</i>问题类型</div> 
 			<div class="j-input-inline">
-				<select name="ban_problem">
+				<select name="op_order_type">
 				   <option value="">请选择</option>
-				   <option value="问题类型1">问题类型1</option>
-				   <option value="问题类型2">问题类型2</option>
+				   {volist name="params['op_order_type']" id="v"}
+				   <option value="{$key}">{$v}</option>
+				   {/volist}
 				</select>
 			</div>
 		</div>
@@ -21,7 +22,7 @@
 			<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
 			<div class="j-enclosure-text clearfix">
 			  <div class="j-textarea-border">
-				<textarea  class="j-textarea" rows="10" name="ban_describe" onKeyUp="keypress()" id="j_answer"></textarea>
+				<textarea  class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer"></textarea>
 				<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
 			  </div>
 			</div>

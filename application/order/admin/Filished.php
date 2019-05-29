@@ -34,7 +34,7 @@ class Filished extends Admin
                        unset($temps[$k]); 
                     }else{
                         $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-                        $v['status_info'] = '转交给'.$current_nick;
+                        $v['status_info'] = '转交至'.$current_nick;
                     }
                     
                 }

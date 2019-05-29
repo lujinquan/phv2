@@ -1,0 +1,304 @@
+<style>
+	.page-tab-content{ background: none;padding: 0;overflow-x: hidden;}
+</style>
+<div class="layui-row layui-col-space10 j-row-box">
+	<div class="layui-col-md9 j-back-gray j-border-radius10 clearfix">
+	    <form class="layui-form" action="transfer" method="post">
+		  <div class="grid-demo j-back-white clearfix j-left">
+			  <div class="layui-card">
+				  <h1 class="j-card-header">问题描述：</h1>
+				  <div class="layui-card-body">
+					  {$data_info['remark']}
+				  </div>
+				  <h1 class="j-card-header">附件：</h1>
+				  <div class="layui-card-body clearfix">
+					<ul class="j-enclosure-box">
+						<li>
+							<img src="__ADMIN_IMG__/theme.png" />
+						</li>
+						<li>
+							<img src="__ADMIN_IMG__/theme.png" />
+						</li>
+					</ul>
+				  </div>
+				  <h1 class="j-card-header">状态：</h1>
+				  <div class="layui-card-body clearfix">
+					<!-- 状态条显示 S -->
+					<!-- <div class="j-status-bar">
+						<ul>
+							{volist name="$data_info['jsondata']" id="v"}
+							<li class="layui-col-xs2">
+								<i class="layui-icon layui-icon-ok-circle"></i>
+								<p>{$systemusers[$v['FromUid']]}</p>
+							</li>
+							{/volist}
+						</ul>
+					</div> -->
+					<!-- 状态条显示 E -->
+					<div class="j-axis-main clearfix">
+						 <ul class="time-axis">
+						 	{volist name="data_info['jsondata']" id="v"}
+							 <li class="time-axis-item">
+								 <div class="time-axis-date"><span></span></div>
+								 <div class="time-axis-title">
+									 <h1>【{$systemusers[$v['FromUid']]}】 于 {$v['Time']|date='Y-m-d H:i'} {$v['Action']} {if condition="$v['ToUid']"} 【{$systemusers[$v['ToUid']]}】 {/if}</h1>
+									 <div class="j-remarks">
+										 备注：{$v['Desc']}
+									 </div>
+								 </div>
+							 </li>
+							 {/volist}
+						<ul>
+					</div>
+					<!-- <div class="j-axis-main clearfix">
+						 <ul class="time-axis">
+							 <li class="time-axis-item">
+								 <div class="time-axis-date"><span></span></div>
+								 <div class="time-axis-title">
+									 <h1>运行人员 【郑湾】 于2019-02-12 14:43:47 转交至 技术员【卢金圈】；</h1>
+									 <div class="j-remarks">
+										 备注：无法处理，XXXXXXXX
+									 </div>
+								 </div>
+							 </li>
+							 <li class="time-axis-item">
+								 <div class="time-axis-date"><span></span></div>
+								 <div class="time-axis-title">
+									 <h1>技术员 【卢金圈】 于2019-02-12 15:05:15 转交至 运行人员【郑湾】；</h1>
+									 <div class="j-remarks">
+										 备注：无法处理，XXXXXXXX
+									 </div>
+								 </div>
+						    </li>
+						<ul>
+					</div> -->
+				  </div>
+				  <h1 class="j-card-header">回复：</h1>
+				  <div class="layui-card-body clearfix">
+				  	<div  class="j-reply-textarea clearfix">
+						<textarea name="replay" rows="6"></textarea>
+						<div class="j-upload-size">
+							<i class="layui-icon layui-icon-picture"></i><span>上传附件</span>
+						</div>
+					</div>
+				  </div>
+			  </div>
+		  </div>
+		  <!-- <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 转交给</label>
+                <div class="layui-input-inline">
+                    <select name="transfer_to" lay-filter="select-fileter" class="field-cid" type="select" >
+                        <option value="">请选择</option>
+                        <option value="41">卢金权（技术部）</option>
+                        <option value="42">叶慧丽（经管科）</option>
+                    </select>
+                </div>
+            </div> 
+          </div> -->
+		  <input type="hidden" name="id" value="{$data_info['id']}">
+		  <div class="layui-form-item">
+			<div class="j-form-box clearfix">
+				<div class="fl">
+					<button class="layui-btn">返回</button>
+				</div>
+				<div class="fr">
+					<!-- <button type="submit" class="layui-btn layui-btn-orange" lay-submit="" lay-filter="formSubmit">转交工单</button>
+					<button type="submit" class="layui-btn layui-btn-grass" lay-submit="" lay-filter="formSubmit">完成工单</button> -->
+					<button type="button" class="layui-btn layui-btn-orange" id="handover" >转交工单</button>
+					<button type="button" class="layui-btn layui-btn-grass" id="complete" >完成工单</button>
+				</div>
+			</div>	
+         </div>
+		</form>
+	</div>
+    <div class="layui-col-md3 j-back-gray j-border-radius10 clearfix">
+      <div class="grid-demo j-back-white j-info-box clearfix j-right">
+		  <dl class="clearfix">
+			  <dt><i class="layui-icon layui-icon-read"></i>工单信息</dt>
+			  <dd>
+				  <h1>工单编号</h1>
+				  <p>{$data_info['op_order_number']}</p>
+			  </dd>
+			  <dd>
+				  <h1>创建时间</h1>
+				  <p>{$data_info['ctime']}</p>
+			  </dd>
+			  <dd>
+				  <h1>发起人</h1>
+				  <p>{$data_info['nick']}</p>
+			  </dd>
+			  <dd>
+				  <h1>运行人员</h1>
+				  <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]:''}</p>
+			  </dd>
+			  <dd>
+				  <h1>状态</h1>
+				  <p>{$data_info['status_info']}</p>
+			  </dd>
+			  <dd>
+				  <h1>问题类型</h1>
+				  <p>{$params['op_order_type'][$data_info['op_order_type']]}</p>
+			  </dd>
+		  </dl>
+		  <dl class="clearfix">
+			 <dt><i class="layui-icon layui-icon-username"></i>用户信息</dt>
+			  <dd>
+				 <h1>姓名</h1>
+				 <p>{$data_info['nick']}</p> 
+			  </dd>
+			  <dd>
+				 <h1>管段</h1>
+				 <p>{$params['insts'][$data_info['inst_id']]}</p> 
+			  </dd>
+		  </dl>
+	  </div>
+    </div>
+  </div>
+
+     <!--  <link rel="stylesheet" href="../static/js/layui/css/layui.css?v={:config('hisiphp.version')}"> -->
+    <style>
+	  .j-frame-class{padding: 15px 15px 0;}
+	  .j-frame-class .j-frame-label{ font-size: 16px; color:rgba(74,74,74,1); line-height: 40px; margin-bottom: 10px;}
+	  .layui-layer-title{font-size: 16px; font-weight: bold;}
+	  .j-frame-class .layui-form-select dl dd.layui-this{background-color:#0084FF;}
+	  .j-frame-class .layui-form-select dl dt{ font-size: 14px;}
+  </style>
+  <div class="row j-frame-class" style="display:none" id="show_div">
+    	 <form class="layui-form" >
+    	   <div class="layui-form-item">
+    			 <label class="j-frame-label">工单受理人</label>
+    			 <div class="j-input-block">
+    				<select name="transfer_to" id="transfer_to">
+    				  <option value="">请选择工单受理人</option>
+    				  <optgroup label="技术部">
+    					<option value="41">卢金权</option>
+    				  </optgroup>
+    				  <optgroup label="经管科">
+    					<option value="42">叶慧丽</option>
+    				  </optgroup>
+    				  <optgroup label="运营部">
+    					<option value="39">郑湾</option>
+    					<option value="40">刘丹</option>
+    				  </optgroup>
+    				</select>
+    			 </div>
+    		</div>
+    		 <!-- <div class="layui-form-item layui-form-text">
+    			<label class="j-frame-label">备注</label>
+    			<div class="j-input-block">
+    			  <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+    			</div>
+    		  </div> -->
+         </form>
+    </div>
+{include file="system@block/layui" /}
+<script src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
+<script>
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+    // 监听下拉框，如果角色为运营中心则，显示多选机构框
+    form.on('select(select-fileter)', function(data){
+      //console.log(data.elem); //得到select原始DOM对象
+      console.log(data.value); //得到被选中的值
+      //console.log(data.othis); //得到美化后的DOM对象
+      if(data.value){
+        $('#trans').text('转交工单');
+      }else{
+      	$('#trans').text('完结工单');
+        // if(!$('#trans').hasClass('layui-hide')){
+        //     $('#trans').addClass('layui-hide');
+        // }
+      }
+    });
+    //转交工单
+	$("#handover").on("click",function(){
+		var index = layer.open({
+			 type: 1,
+			 btn: ["确定","取消"],
+			 zIndex: 10,
+			 title: ['转交工单'],
+			 area: ['400px','500px'],
+			 offset: 'auto',
+			 content: $('#show_div'),
+		 	 yes: function(index, layero){
+				console.log($('.layui-form').serialize());
+				var data = $('.layui-form').serialize();
+				// var transfer_to = $('#transfer_to').val();
+				// console.log(transfer_to);
+				// var data = data + '&transfer_to=' + transfer_to;
+				formSubmit('post','/admin.php/order/accept/transfer',data,index);
+		    }
+	     });
+		 
+	})
+	function formSubmit(type,url,data,index){
+        $.ajax({
+            type: "POST",
+            url: '/admin.php/order/accept/transfer',
+            data: data,
+            success: function(res) {
+                //that.text(res.msg);
+                console.log(res);
+                layer.msg(res.msg, function(){
+                	if (res.code != 0){
+                		location.href = res.url;
+                		//layer.close(index);
+                	}
+				});
+                
+                // if (res.code == 0) {
+                //     that.prop('disabled', false).removeClass('layui-btn-normal').addClass('layui-btn-danger');
+                //     setTimeout(function(){
+                //         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
+                //     }, 3000);
+                // } else {
+                //     setTimeout(function() {
+                //         that.text(text).prop('disabled', false);
+                //         if (options.callback) {
+                //             options.callback(that, res);
+                //         }
+                //         if (options.pop == true) {
+                //             if (options.refresh == true) {
+                //                 parent.location.reload();
+                //             } else if (options.jump == true && res.url != '') {
+                //                 parent.location.href = res.url;
+                //             }
+                //             parent.layui.layer.closeAll();
+                //         } else if (options.refresh == true) {
+                //             if (res.url != '') {
+                //                 location.href = res.url;
+                //             } else {
+                //                 location.reload();
+                //             }
+                //         }
+                //     }, 3000);
+                // }
+            }
+        });
+        return false;
+    }
+	//完结工单
+	$("#complete").on("click", function() {
+		 layer.confirm("是否确认完结工单", {
+            btn: ["确定","取消"],
+			icon: 3,
+			title:false,
+			offset: 'auto',
+			closeBtn:false
+        }, function(index){
+		   console.log($('.layui-form').serialize());
+				var data = $('.layui-form').serialize();
+				// var transfer_to = $('#transfer_to').val();
+				// console.log(transfer_to);
+				var data = data + '&is_end=' + 1;
+			formSubmit('post','/admin.php/order/accept/transfer',data,index);
+           
+            
+        }, function(index){
+			 layer.close(index);
+        });
+  
+    });
+});
+</script>

@@ -132,9 +132,9 @@ class OpOrder extends Model
                 
                 // 【更新】经手人+
                 if($find['jsondata']){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
-                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to'];
+                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
                 }else{ //写入 转交人id
-                   $data['duid'] = $find['duid'].','.$data['transfer_to']; 
+                   $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
                 }
                 
                 unset($data['replay']);
@@ -143,9 +143,28 @@ class OpOrder extends Model
             // 完结工单
             case 'complete':
 
-                $data['cuid'] = ADMIN_ID;
-                $data['duid'] = slef::where();
-                $data['op_order_number'] = random(12,1);
+                $find = $this->get($data['id']);
+                $jsonarr = json_decode($find['jsondata'],true);
+                $jsonarr[] = [
+                    'FromUid' => ADMIN_ID,
+                    'Img' => '',
+                    'ToUid' => $find['cuid'],
+                    'Desc' => $data['replay'],
+                    'Time' => time(),
+                    'Action' => '转交至',
+                ];
+                // 【更新】序列化数据
+                $data['jsondata'] = json_encode($jsonarr);
+                
+                // 【更新】经手人+
+                if($find['jsondata']){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
+                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
+                }else{ //写入 转交人id
+                   $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
+                }
+                $data['dtime'] = time();
+                
+                unset($data['replay']);
                 break;
             default:
                 # code...

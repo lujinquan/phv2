@@ -35,6 +35,9 @@ class OpOrder extends Validate
     protected $scene = [
         //新增
         'sceneForm'  =>  ['op_order_type','remark'],
-        'sceneTransfer'  =>  ['transfer_to','replay'],        
+        // 转交工单
+        'sceneTransfer'  =>  ['transfer_to','replay'],   
+        // 完结工单     
+        'sceneEnd'  =>  ['replay'],     
     ];
 }
