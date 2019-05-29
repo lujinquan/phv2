@@ -1,6 +1,6 @@
 <form class="layui-form" action="{url('add')}" method="post">
-    <div class="e-space"></div>
-    <div class="page-form">
+    <div class="e-space hide"></div>
+    <div class="page-form hide">
         <div class="layui-form-item">
             <div class="layui-inline e-inline">
                 <label class="layui-form-label e-label"><font color="red">*</font> 问题类型</label>
@@ -39,5 +39,74 @@
             </div>
         </div>
     </div>
+<!-- 新建工单 S -->
+<div class="j-details-box layui-form">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+	  <legend>新建工单</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<div class="j-form-label"><i class="red">*</i>问题类型</div> 
+			<div class="j-input-inline">
+				<select name="ban_problem">
+				   <option value="">请选择</option>
+				   <option value="问题类型1">问题类型1</option>
+				   <option value="问题类型2">问题类型2</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md6">
+			<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
+			<div class="j-enclosure-text clearfix">
+			  <div class="j-textarea-border">
+				<textarea  class="j-textarea" rows="10" name="ban_describe" onKeyUp="keypress()" id="j_answer"></textarea>
+				<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md6">
+			<div class="j-enclosure-upload clearfix">
+				<div class="j-enclosure-label">身份证</div>
+				<div class="j-enclosure-label j-uplode-icon"><i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传</div>
+				<div class="layui-form-mid layui-word-aux">限制60kb</div>
+			</div>
+			<div class="j-enclosure-img clearfix">
+				<ul>
+					<li>
+						<img src="__ADMIN_IMG__/add_img.png" />
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<button class="layui-btn layui-btn-primary">取消</button>
+			<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+		</div>
+	</div>
+</div>
+<!--新建工单 E -->
 </form>
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript"> 
+		function keypress(){
+			var text1=document.getElementById("j_answer").value;
+			var maxLen=document.getElementById("j_answer").cols*document.getElementById("j_answer").rows;
+			var len;//记录剩余字符串的长度
+			if(text1.length>=maxLen)
+			{
+				document.getElementById("j_answer").value=text1.substr(0,maxLen);//只显示起始位-末尾；substr（起始位，末尾)
+				len=0;
+			}else{
+				len=maxLen-text1.length;
+			}
+			document.getElementById("pinglun").innerText=len;
+		}
+	
+</script>
