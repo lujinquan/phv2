@@ -6,12 +6,15 @@
 .j-border-radius10{ border-radius: 10px;}
 .hide{display: none;}
 .page-tab-content{border-radius: 2px;}
-/* 按钮颜色 S*/
+.j-news-num{background:rgba(255,195,104,1); padding: 0 5px; border-radius:7px; color: #fff; font-size: 10px; height: 14px; line-height: 14px; font-weight: 100;
+position: absolute; right: 15px;top:50%; margin-top: -7px;
+}
+/*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}
 .layui-btn-grass{ background: #55C151;}
-/* 按钮颜色 E*/
-/* 详情样式  S*/
+/* ----------按钮颜色 E----------*/
+/* ----------详情样式  S----------*/
 .j-row-box{ overflow: hidden;}
 .j-row-box .j-left,.j-row-box .j-right{ margin-bottom: -9999px;padding-bottom: 9999px;}
 .j-card-header{font-size:14px;font-weight:bold;color:rgba(133,146,163,1);line-height:19px; padding:25px 15px 0;}
@@ -32,23 +35,25 @@
 .time-axis-title .j-remarks{ padding: 10px 0 20px;}
 .time-axis-date{position: absolute;left: 0;top: 0;color: #666;}
 .time-axis-date span{position: absolute;right: -18px;top: 35%;display: block;width: 10px;height: 10px;border-radius: 100%;background-color:#0084FF;}
-/* 状态条 S */
+/*---------- 状态条 S ----------*/
 .j-status-bar ul{display: inline-block;margin:10px 0 30px;width: 100%;}
 .j-status-bar li{ text-align: center;  height: 6px; background: #0084FF;border-radius: 4px;position: relative;}
 .j-status-bar li i{ width: 20px; height: 20px; position: absolute; left: 50%; margin-left: -10px;top:-10px;}
 .j-status-bar li p{ padding-top: 15px;color:rgba(0,132,255,1); font:bold 14px 'MicrosoftYaHei';}
-/* 状态条 E */
-/*回复 S*/
+/* ----------状态条 E ----------*/
+/*----------回复 S----------*/
 .j-reply-textarea{border:#ADBECB 1px solid;}
 .j-reply-textarea textarea{ width: 100%; box-sizing: border-box; padding: 15px; font-size: 14px; color: #000;border: 0;resize:none}
 .j-upload-size{ background:#F3F6FD ; height: 40px; line-height: 40px; padding: 0 15px;}
 .j-upload-size i{margin-right: 10px;}
 .j-upload-size span{ color: #8592A3;}
-/*回复 E*/
+/*----------回复 E----------*/
 .j-form-box{padding: 0 15px;}
-/* 详情样式 E */
-/*房屋档案详情 S*/
+/* ----------详情样式 E ----------*/
+
+/*----------房屋档案详情 S----------*/
 .j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden;}
+.j-details-box.floorWrap{ padding-top: 50px;}
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
@@ -70,14 +75,28 @@
 .j-margin-btn{padding: 40px 0 40px 15px;}
 .layui-col-space90>*{padding: 15px 45px 0;}
 .layui-col-space90{margin: -15px -45px 0;}
-/*房屋档案详情 E*/
+/*楼层导航 S*/
+.j-floor-nav .navWrap{position: fixed;top:150px;left: 240px;height: 28px;z-index: 99999;background:rgba(255,255,255,0.5);}
+.j-floor-nav .navWrap li{ float: left; width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
+.j-floor-nav .navWrap li.on{background:url(../image/guide.png) no-repeat;}
+.j-floor-nav .navWrap li.current{width: 212px; height: 28px;background:url(../image/Rectangle17-on.png) no-repeat;}
+.j-floor-nav .navWrap li.on.current{background:url(../image/guide-on.png) no-repeat;}
+.j-floor-nav .navWrap li a{display: block; color: #fff;}
+.j-floor-nav .navWrap li i{ border:#fff 1px solid;border-radius: 50%; width: 15px;height: 15px;font-style:normal; margin-left: 25px;
+ display: inline-block;font:12px/14px '';text-align: center;margin-right: 12px;
+ }
+ .j-floor-nav .navWrap li b{ line-height: 28px;display: inline-block;}
+/*楼层导航 E*/
+/*----------房屋档案详情 E----------*/
+/*楼栋结构 S*/
 
-/*新建工单 S*/
+/*楼栋结构 E*/
+/*----------新建工单 S----------*/
 .j-textarea-border{border: #C6D2DF 1px solid; margin-top: 15px; padding: 10px 10px 0;}
 .j-textarea{ width: 100%; height:185px; border: none;resize:none  }
 .j-textarea-border .j-size{ text-align: right; line-height: 25px; color:#BBBBBB;}
-/*新建工单 E*/
-/*弹框样式 S*/
+/*----------新建工单 E----------*/
+/*----------弹框样式 S----------*/
 .j-frame-class{padding: 15px 15px 0;}
 .j-details-box .layui-form-select dl dd.layui-this{ background:#0084FF;}
-/*弹框样式 E*/
+/*----------弹框样式 E----------*/
