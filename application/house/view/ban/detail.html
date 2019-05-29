@@ -1,240 +1,15 @@
-	<div class="e-space hide"></div>
-    <div class="page-form hide">
-        <div class="layui-form-item e-line">
-            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">基本信息</font>
-            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-        </div>
-        <div class="e-space"></div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">管段</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$params['insts'][$data_info['ban_inst_id']]}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">完损等级</label>
-                <div class="layui-input-inline">
-                	<input type="text" value="{$params['damages'][$data_info['ban_damage_id']]}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">楼栋产别</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$params['owners'][$data_info['ban_owner_id']]}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">结构类别</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$params['structs'][$data_info['ban_owner_id']]}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">建成年份</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_build_year']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">总单元数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_units']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item e-inline">
-            <div class="layui-inline">
-                <label class="layui-form-label e-label">总楼层数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_floors']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">栋系数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_ratio']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">产权证号</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_property_id']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">民栋数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_civil_num']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">机栋数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_party_num']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">企栋数</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_career_num']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">民建面</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_civil_area']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">机建面</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_party_area']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">企建面</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_career_area']}" readonly class="layui-input">
-                </div>
-
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">民规租</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_civil_rent']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">机规租</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_party_rent']}" readonly class="layui-input">
-                </div>  
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">企规租</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_career_rent']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">民原价</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_civil_oprice']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">机原价</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_party_oprice']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">企原价</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_career_oprice']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">产权来源</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_property_source']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">使用面积</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_use_area']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">栋号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="ban_door" value="{$data_info['ban_door']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">地址</label>
-                <div class="layui-input-inline w400">
-                    <input type="text" value="{$data_info['ban_address']}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="e-space"></div>
-        <div class="layui-form-item e-line">
-            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">补充附件</font>
-            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-        </div>
-        <div class="e-space"></div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">图卡</label>
-            </div> 
-            <div class="layui-block e-inline e-box"></div> 
-        </div>
-
-	    <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">经度</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_gpsx']}" readonly class="layui-input">
-                </div> 
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label">纬度</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$data_info['ban_gpsy']}" readonly class="layui-input">
-                </div>
-            </div>
-            <div class="layui-block e-inline e-box"></div>
-        </div>
-	</div>
 <!-- 详情 S -->
-<style type="text/css">
-		.navWrap{width:100%;height: 60px;position: fixed;left:220px;top:60px;}
-		.navWrap li{float: left;}
-		.navWrap li a{color:#000;text-decoration: none;display: block;}
-		.floorWrap{width:500px;margin:0 auto;}
-		.floorWrap li{height: 600px;text-align: center;line-height: 600px;border: 1px solid red;}
-		.current{background-color: #908CC8;}
-		.current a{color:#fff;}
-
-</style>
-<ul class="navWrap">
-	<li class="current"><a href="#item1">1楼</a></li>
-	<li><a href="#item2">2楼</a></li>
-	<li><a href="#item3">3楼</a></li>
-	<li><a href="#item4">4楼</a></li>
-	<li><a href="#item5">5楼</a></li>
-</ul>
-<ul class="floorWrap">
-	<li id="item1" class="item">一楼内容</li>
-	<li id="item2" class="item">二楼内容</li>
-	<li id="item3" class="item">三楼内容</li>
-	<li id="item4" class="item">四楼内容</li>
-	<li id="item5" class="item">五楼内容</li>
-</ul>
-
-
-
-<div class="j-details-box layui-form">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
+<div class="j-floor-nav">
+	<ul class="navWrap layui-col-md8">
+		<li class="current"><a href="#item1"><i>1</i><b>楼栋信息</b></a></li>
+		<li><a href="#item2"><i>2</i><b>房屋信息</b></a></li>
+		<li><a href="#item3"><i>3</i><b>状态选择</b></a></li>
+		<li><a href="#item4"><i>4</i><b>附件信息</b></a></li>
+	</ul>
+</div>
+<div class="j-details-box floorWrap layui-form">
+  <div id="item1" class="item">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	  <legend>楼栋信息</legend>
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
@@ -345,6 +120,8 @@
 		  </div>
 		</div>
 	</div>
+  </div>
+  <div id="item2" class="item">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 	  <legend>房屋信息</legend>
 	</fieldset>
@@ -448,6 +225,8 @@
 		  </div>
 		</div>
 	</div>
+  </div>
+  <div id="item3" class="item">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 	  <legend>状态选择</legend>
 	</fieldset>
@@ -510,6 +289,8 @@
 			<div class="j-map-height" id="allmap"></div>
 		</div>
 	</div>
+  </div>
+  <div id="item4" class="item">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 	  <legend>附件信息</legend>
 	</fieldset>
@@ -567,6 +348,7 @@
 			</div>
 		</div>
 	</div>
+  </div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn"><button class="layui-btn">返回</button></div>
 	</div>
@@ -589,12 +371,20 @@
 			map.addOverlay(marker);
 			marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
 			/*百度地图 E */
+			$(".j-floor-nav li:first").addClass("on");
             $(".layui-body").on("scroll",function(){
             		var scrollTop = $(document).scrollTop();
             		var floor = $('.floorWrap');
             		var nav = $('.navWrap').find('li');
             		var items = $('.floorWrap').find('.item');
-             
+                   /* if(scrollTop>150){
+						$(".j-floor-nav").addClass("on");
+						console.log(1);
+					}
+					else{
+						$(".j-floor-nav").removeClass("on");
+						console.log(3);
+					}; */
             		items.each(function(){
             			var m=$(this);
             			var itemTop = m.offset().top;
