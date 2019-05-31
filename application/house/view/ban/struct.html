@@ -1,1 +1,174 @@
+<form class="layui-form" action="{url('add')}" method="post">
+  <div class="j-details-box layui-form">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+	  <legend>楼栋信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+		  <div class="j-size-typeset">
+			  <ul>
+				  <li>
+					<label>楼栋编号：</label><span>1140060473</span>
+				  </li>
+				  <li>
+					<label>结构类别：</label><span>砖混一等</span>
+				  </li>
+				  <li>
+				  	<label>完损等级：</label><span>完好</span>
+				  </li>
+				  <li>
+				  	<label>单元号：</label><span>1</span>
+				  </li>
+				  <li>
+				  	<label>楼层数：</label><span>7</span>
+				  </li>
+				  <li class="times">
+					<label>楼栋地址：</label><span>中山路还建楼5栋中山路还建</span>
+				  </li>
+			  </ul>
+		  </div>
+		</div>
+	</div>
+	<fieldset class="layui-elem-field layui-field-title j-field-box j-top-margin20">
+	  <legend>房屋信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-structure-box clearfix">
+			<div class="layui-col-md8 j-border-box">
+				<!-- 导航 S -->
+				<div class="j-title clearfix">
+					<div class="j-text-indent15 fl">实际楼层</div>
+					<div class="j-layui-inlines">
+					  <div class="layui-input-inline">
+						<select name="modules"  lay-search="">
+						  <option value="">请选择</option>
+						  <option value="1">1单元</option>
+						  <option value="2">2单元</option>
+						  <option value="3">3单元</option>
+						  <option value="4">4单元</option>
+						</select>
+					  </div>
+					</div>
+				</div>
+				<!-- 导航 E -->
+				<!-- 内容区 S -->
+				<div class="j-structure-con">
+					<dl class="clearfix">
+						<dt>1</dt>
+						<dd>
+							<ul>
+								<li class="on">01</li>
+								<li>02</li>
+								<li>03</li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>2</dt>
+						<dd>
+							<ul>
+								<li>04</li>
+								<li>05</li>
+							</ul>
+						</dd>
+					</dl>
+					<dl class="clearfix">
+						<dt>3</dt>
+						<dd>
+							<ul>
+								<li>06</li>
+							</ul>
+						</dd>
+					</dl>
+				</div>
+				<!-- 内容区 E -->
+			</div>
+			<div class="layui-col-md4 j-border-box j-border-noleft">
+				<!-- 导航 S -->
+				<div class="j-title  clearfix">
+					<div class="j-size">
+						信息展示
+					</div>
+				</div>
+				<!-- 导航 E -->
+				<!-- 内容区 S -->
+				<div class="j-structure-data">
+					<div class="layui-row">
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>租户姓名</h1>
+						  <p>张三</p>
+						</div>
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>楼层号数</h1>
+						  <p>1</p>
+						</div>
+					</div>
+					<div class="layui-row">
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>单元号数</h1>
+						  <p>1</p>
+						</div>
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>门牌号</h1>
+						  <p>1102</p>
+						</div>
+					</div>
+					<div class="layui-row">
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>月租金</h1>
+						  <p>15.82</p>
+						</div>
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>原价</h1>
+						  <p>0.00</p>
+						</div>
+					</div>
+					<div class="layui-row">
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>使用面积</h1>
+						  <p>0.00</p>
+						</div>
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>建筑面积</h1>
+						  <p>0.00</p>
+						</div>
+					</div>
+					<div class="layui-row">
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>泵费</h1>
+						  <p>90.00</p>
+						</div>
+						<div class="layui-col-md3 layui-col-md-offset2">
+						  <h1>房屋基数</h1>
+						  <p>暂无</p>
+						</div>
+					</div>
+				</div>
+				<!-- 内容区 E -->
+			</div>
+		</div>
+    </div>
+	<hr />
+	<div class="layui-form-item">
+		<div class="j-form-box clearfix">
+			<div class="fr">
+				<button class="layui-btn layui-btn-primary">取消</button>
+				<button type="submit" class="layui-btn" id="#open_btn_primary" lay-submit lay-filter="formSubmit">确定</button>
+			</div>
+		</div>	
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery'], function() {
+	   var $ = layui.$;
+	   $(".j-structure-data .layui-row:first").addClass("on");//信息展示添加头部距离
+		  $('.j-structure-con').on('click', 'li', function(e){
+				$('.j-structure-con li').removeClass('on');
+				$(e.target).addClass('on');
+				console.log($(e.target).text());
+		  });
+		$(".j-structure-con dl:odd").addClass("cur");//隔行背景色
+	 });
+</script>
