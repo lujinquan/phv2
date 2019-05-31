@@ -12,6 +12,8 @@ class Accept extends Admin
 {
     public function index()
     {
+        // $OpOrderModel = new OpOrderModel;
+        // halt($OpOrderModel->getAcceptCount());
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -35,7 +37,6 @@ class Accept extends Admin
                         $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
                         $v['status_info'] = '转交至'.$current_nick;
                     }
-                    
                 }
             }
             //halt($temps);
@@ -83,11 +84,12 @@ class Accept extends Admin
 
 
         $row['jsondata'] = json_decode($row['jsondata'],true);
-        //如果改订单待处理的当前人和提交人相同，表示“待确认”，否则即为处理中
-        if(count($duid) > 1 &&($duid[0] == $current_uid)){
+        if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
-        }else{
+        }else if(!$row['dtime']){
             $row['status_info'] = '处理中';
+        }else{
+            $row['status_info'] = '已完结';
         }
     
         $this->assign('data_info',$row);
@@ -95,14 +97,13 @@ class Accept extends Admin
     }
 
     /**
-     * 转交工单
+     * 转交工单,完结工单
      * @return [type] [description]
      */
     public function transfer()
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            // halt($data);
             // 数据验证
             if(isset($data['is_end'])){
                 $result = $this->validate($data, 'OpOrder.sceneEnd');
@@ -122,7 +123,7 @@ class Accept extends Admin
                 $filData = $OporderModel->dataFilter($data,'transfer');
                 $msg = '转交';
             }
-            
+            //halt($filData);
             if (!$OporderModel->allowField(true)->update($filData)) {
                 return $this->error($msg.'失败');
             }

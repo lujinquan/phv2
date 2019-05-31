@@ -177,6 +177,7 @@ class SystemUser extends Model
         // 更新登录信息
         $user->last_login_time = time();
         $user->last_login_ip   = get_client_ip();
+
         if ($user->save()) {
             // 执行登陆
             $login = [];
@@ -199,6 +200,7 @@ class SystemUser extends Model
             // 缓存用户表基础数据
             $users = $this->where([['status','eq','1']])->column('id,nick');
             session('systemusers',$users);
+
             return $user->id;
         }
         return false;

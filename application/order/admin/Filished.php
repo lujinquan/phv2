@@ -68,13 +68,12 @@ class Filished extends Admin
         $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
         //halt($row);
         $row['jsondata'] = json_decode($row['jsondata'],true);
-
-        if($duid){
+        if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
-            //$row['status_info'] = '转交给'.$current_nick;
-        }else{
+        }else if(!$row['dtime']){
             $row['status_info'] = '处理中';
-            //$row['status_info'] = $current_nick.'提交工单编号：'.$row['op_order_number'];
+        }else{
+            $row['status_info'] = '已完结';
         }
     
 

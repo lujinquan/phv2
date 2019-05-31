@@ -17,6 +17,7 @@ use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemLog as LogModel;
 use app\common\model\Cparam as ParamModel;
+use app\Order\model\OpOrder as OpOrderModel;
 use think\Db;
 
 /**
@@ -73,6 +74,13 @@ class Admin extends Common
 
             }
 
+            // 更新工单中心的待受理工单(每个用户在刷新页面的时候，会对待受理工单节点更新)
+            $acceptMenu = MenuModel::get('215');
+            $acceptMenuTip = json_decode($acceptMenu['tip'],true);
+            $OpOrderModel = new OpOrderModel;
+            $acceptMenuTip[ADMIN_ID] = $OpOrderModel->getAcceptCount();
+            MenuModel::where('id','eq',215)->setField('tip',json_encode($acceptMenuTip));
+
             $this->_systemLog($curMenu['title']);
 
             // 如果不是ajax请求，则读取菜单
@@ -84,7 +92,7 @@ class Admin extends Common
                     $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                     $menuParents = current($breadCrumbs);
                 }
-//halt(MenuModel::getMainMenu());
+                //halt(MenuModel::getMainMenu());
                 // 获取面包屑导航
                 $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                 $this->assign('hisiBreadcrumb', $breadCrumbs);

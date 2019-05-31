@@ -71,58 +71,62 @@ class Grouporder extends Admin
     	return $this->fetch();
     }
 
+    // 待受理的详情
     public function detail()
     {
         $id = input('param.id/d');
         $row = OpOrderModel::with(['SystemUser'])->get($id);
+
+        // 缺少一个判断，需要判断当前工单是否为当前角色待处理的工单【优化】
         $duid = explode(',',$row['duid']);
         $current_uid = array_pop($duid);
 
-        // 如果是当前用户处理，或者是运营中心的人，就打开回复框
-        if(ADMIN_ID == $current_uid || (ADMIN_ROLE == 11 && !$duid)){
-            $row['is_current'] = true;
-        }else{
-            $row['is_current'] = false;
-        }
-        // 工单状态
-        $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-        //halt($row);
-        $row['jsondata'] = json_decode($row['jsondata'],true);
 
-        if($duid){
+        $row['jsondata'] = json_decode($row['jsondata'],true);
+        if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
-            //$row['status_info'] = '转交给'.$current_nick;
-        }else{
+        }else if(!$row['dtime']){
             $row['status_info'] = '处理中';
-            //$row['status_info'] = $current_nick.'提交工单编号：'.$row['op_order_number'];
+        }else{
+            $row['status_info'] = '已完结';
         }
     
-
         $this->assign('data_info',$row);
         return $this->fetch();
     }
 
     /**
-     * 转交工单
+     * 转交工单,完结工单
      * @return [type] [description]
      */
     public function transfer()
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            // halt($data);
             // 数据验证
-            $result = $this->validate($data, 'OpOrder.sceneTransfer');
+            if(isset($data['is_end'])){
+                $result = $this->validate($data, 'OpOrder.sceneEnd');
+            }else{
+                $result = $this->validate($data, 'OpOrder.sceneTransfer');
+            }
+            
             if($result !== true) {
                 return $this->error($result);
             }
             $OporderModel = new OporderModel();
             // 数据过滤
-            $filData = $OporderModel->dataFilter($data,'transfer');
-            if (!$OporderModel->allowField(true)->update($filData)) {
-                return $this->error('转交失败');
+            if(isset($data['is_end'])){
+                $filData = $OporderModel->dataFilter($data,'complete');
+                $msg = '完结';
+            }else{
+                $filData = $OporderModel->dataFilter($data,'transfer');
+                $msg = '转交';
             }
-            return $this->success('转交成功',url('index'));
+            //halt($filData);
+            if (!$OporderModel->allowField(true)->update($filData)) {
+                return $this->error($msg.'失败');
+            }
+            return $this->success($msg.'成功',url('index'));
         }
     }
 }

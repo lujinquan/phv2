@@ -59,14 +59,9 @@ class OpOrder extends Model
                 $where[] = [['duid','like','%'.ADMIN_ID.'%']];
                 
                 break;
-            // 组内待受理工单
+            // 组内待受理工单[只有运营中心]
             case 'grouporder':
-                if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
-                    $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['cuid','in',$inst_ids]];
-                }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
-                    $where[] = [['duid','like','%,'.ADMIN_ID]];
-                }
+                
                 
                 break;
             default:
@@ -82,7 +77,7 @@ class OpOrder extends Model
         }
         // 检索工单类型
         if(isset($data['op_order_type']) && $data['op_order_type']){
-            $where[] = ['op_order_type','eq',$data['room_type']];
+            $where[] = ['op_order_type','eq',$data['op_order_type']];
         }
         //检索管段
         // $insts = config('inst_ids');
@@ -119,6 +114,12 @@ class OpOrder extends Model
             case 'transfer':
                 $find = $this->get($data['id']);
                 $jsonarr = json_decode($find['jsondata'],true);
+                // 【更新】经手人+
+                if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
+                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
+                }else{ //写入 转交人id
+                   $data['duid'] = $find['duid'].','.$data['transfer_to'];
+                }
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
                     'Img' => '',
@@ -129,22 +130,21 @@ class OpOrder extends Model
                 ];
                 // 【更新】序列化数据
                 $data['jsondata'] = json_encode($jsonarr);
-                
-                // 【更新】经手人+
-                if($find['jsondata']){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
-                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
-                }else{ //写入 转交人id
-                   $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
-                }
-                
                 unset($data['replay']);
                 unset($data['transfer_to']);
                 break;
+
             // 完结工单
             case 'complete':
 
                 $find = $this->get($data['id']);
                 $jsonarr = json_decode($find['jsondata'],true);
+                // 【更新】经手人+
+                if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
+                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$find['cuid']; // 完结的转交人就是，申请人
+                }else{ //写入 转交人id
+                   $data['duid'] = $find['duid'].','.$find['cuid'];  // 完结的转交人就是，申请人
+                }
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
                     'Img' => '',
@@ -155,16 +155,27 @@ class OpOrder extends Model
                 ];
                 // 【更新】序列化数据
                 $data['jsondata'] = json_encode($jsonarr);
-                
-                // 【更新】经手人+
-                if($find['jsondata']){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
-                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
-                }else{ //写入 转交人id
-                   $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
-                }
                 $data['dtime'] = time();
-                
                 unset($data['replay']);
+                break;
+            // 确认完结工单
+            case 'affirm':
+
+                $find = $this->get($data['id']);
+                $jsonarr = json_decode($find['jsondata'],true);
+
+                $jsonarr[] = [
+                    'FromUid' => ADMIN_ID,
+                    'Img' => '',
+                    'ToUid' => '',
+                    'Desc' => '',
+                    'Time' => time(),
+                    'Action' => '确认完结工单',
+                ];
+                // 【更新】序列化数据
+                $data['jsondata'] = json_encode($jsonarr);
+                $data['ftime'] = time();
+
                 break;
             default:
                 # code...
@@ -173,4 +184,25 @@ class OpOrder extends Model
         
         return $data; 
     }
+
+    /**
+     * [getAcceptCount 获取当前用户工单待处理数量，显示在左侧菜单中]
+     * @return [type] [待处理工单数]
+     */
+    public function getAcceptCount(){
+        $where = $this->checkWhere([],'accept');    
+        $data = [];
+        $temps = $this->where($where)->select();
+        foreach($temps as $k => &$v){
+            if(strpos($v['duid'],',') !== false){  
+                $uids = explode(',',$v['duid']);
+                $current_uid = array_pop($uids);
+                if($current_uid != ADMIN_ID){ //保证是待受理的工单
+                   unset($temps[$k]); 
+                }
+            }
+        }
+        return count($temps);
+    }
+
 }
