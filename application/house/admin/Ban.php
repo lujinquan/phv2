@@ -2,6 +2,7 @@
 namespace app\house\admin;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
+use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 
 class Ban extends Admin
@@ -113,6 +114,24 @@ class Ban extends Admin
 
     public function struct()
     {
+        $id = input('param.id/d');
+        $row = BanModel::get($id);
+        $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id')->select();
+        $tempHouseArr = [];
+        foreach($houseArr as $h){
+            $tempHouseArr[$h['house_unit_id']][$h['house_unit_id']][] = $h['house_id'];
+        }
+        //halt($houseArr);
+        // for($i=1;$i<$row['ban_units'];$i++){
+        //     for($j=1;$j<$row['ban_floors'];$j++){
+        //         if($tempHouseArr[$i][$j]){
+
+        //         }else{
+
+        //         }
+        //     }
+        // }
+        $this->assign('tempHouseArr',$tempHouseArr);
         return $this->fetch();
     }
 
