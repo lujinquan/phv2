@@ -1,4 +1,4 @@
-/*----------公用样式 S-------------*/
+/*---------------------公用样式 S--------------------*/
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
@@ -15,10 +15,19 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 .j-text-indent15{ text-indent: 15px;}
 /*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
-.layui-btn-orange{ background: #F9B048;}
+.layui-btn-orange{ background: #F9B048;}/*  */
 .layui-btn-grass{ background: #55C151;}
+.layui-btn-gray{background:#B6B9BE;}
 /* ----------按钮颜色 E----------*/
-/*----------公用样式 S-------------*/
+/* 操作菜单 S */
+.j-container-margin.layui-btn-container .layui-btn{ margin:5px 10px 0 0;}
+/* 操作菜单 E */
+/*搜索框样式 S*/
+.page-toolbar.j-page-toolbar{margin: 5px 0;}
+.j-page-toolbar .layui-input-inline .layui-input,.j-page-toolbar .layui-input-inline .layui-form-select{ margin:10px 5px 0 0;}
+.page-toolbar.j-page-toolbar  .layui-btn+.layui-btn,.page-toolbar.j-page-toolbar  .layui-btn{ margin: 10px 5px 0 0;}
+/*搜索框样式 E*/
+/*--------------------公用样式 S---------------------*/
 /* ----------详情样式  S----------*/
 .j-row-box{ overflow: hidden;}
 .j-row-box .j-left,.j-row-box .j-right{ margin-bottom: -9999px;padding-bottom: 9999px;}
@@ -116,7 +125,7 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 .j-structure-con dl.cur{background:rgba(247,248,250,1);}
 .j-structure-con dt{ width:80px; text-align: center; display: inline-block; float: left; line-height: 40px;}
 .j-structure-con dd{padding:0 20px 0 120px;text-align: center;}
-.j-structure-con dd li{border:1px solid rgba(127,155,185,1);border-radius:2px;padding: 1px 5px;display: inline-block;color:#7F9BB9; font-size: 12px; margin: 12px 3px 3px 0;}
+.j-structure-con dd li{border:1px solid rgba(127,155,185,1);border-radius:2px;padding: 1px 5px;display: inline-block;color:#7F9BB9; font-size: 12px; margin: 12px 3px 3px 0;cursor: pointer;}
 .j-structure-con dd li.on{ background:#0084FF; border: #0084FF 1px solid; color: #fff;}
 /*楼栋结构 E*/
 /*----------新建工单 S----------*/
