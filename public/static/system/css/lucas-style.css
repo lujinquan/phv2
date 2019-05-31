@@ -1,3 +1,4 @@
+/*----------公用样式 S-------------*/
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
@@ -9,11 +10,15 @@
 .j-news-num{background:rgba(255,195,104,1); padding: 0 5px; border-radius:7px; color: #fff; font-size: 10px; height: 14px; line-height: 14px; font-weight: 100;
 position: absolute; right: 15px;top:50%; margin-top: -7px;
 }
+.j-border-box{border:1px solid rgba(198,210,223,1);}
+.j-border-box.j-border-noleft{border-left: none;}
+.j-text-indent15{ text-indent: 15px;}
 /*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}
 .layui-btn-grass{ background: #55C151;}
 /* ----------按钮颜色 E----------*/
+/*----------公用样式 S-------------*/
 /* ----------详情样式  S----------*/
 .j-row-box{ overflow: hidden;}
 .j-row-box .j-left,.j-row-box .j-right{ margin-bottom: -9999px;padding-bottom: 9999px;}
@@ -89,7 +94,30 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 /*楼层导航 E*/
 /*----------房屋档案详情 E----------*/
 /*楼栋结构 S*/
-
+.j-size-typeset li{ width: 240px; margin:0 15px 15px 0; float: left;}
+.j-size-typeset li label{ width: 98px; text-align: right; display: inline-block; color: #8592A3;}
+.j-size-typeset li.times{ width: 480px;}
+.layui-elem-field.j-field-box.j-top-margin20{margin:10px 0 20px;}
+.j-structure-box{ margin: 0 30px;}
+.j-structure-box .j-title{height: 40px;font:bold 14px/40px '';color: #666;background:rgba(240,241,245,1);}
+.j-structure-box .j-title .j-size{ text-align: center; }
+.layui-form-item .j-layui-inlines{ padding-left: 80px;}
+.layui-form-item .j-layui-inlines .layui-input-inline{width: 100px; float: initial; display: block; margin: 0 auto;position: relative;top:6px; font-size: 12px;}
+.layui-form-item .j-layui-inlines .layui-input-inline .layui-input{ height: 26px;border:#148EFF 1px solid;}
+.j-structure-box .layui-form-select dl{top:30px;}
+.j-structure-con,.j-structure-data{ border-top:1px solid rgba(198,210,223,1); height: 360px; overflow: auto;}
+.j-structure-data h1{font:12px '' ;color:#8592A3;word-wrap: break-word;}
+.j-structure-data p{word-wrap: break-word;font:12px '' ; padding-top: 5px;}
+.j-structure-data .layui-row:first{padding-top: 15px;}
+.j-structure-data .layui-row.on{ padding-top: 15px;}
+.j-structure-data .layui-row{ padding-bottom: 30px;}
+.j-details-box hr{margin: 20px 0;}
+.j-structure-con dl{min-height: 40px;    position: relative;}
+.j-structure-con dl.cur{background:rgba(247,248,250,1);}
+.j-structure-con dt{ width:80px; text-align: center; display: inline-block; float: left; line-height: 40px;}
+.j-structure-con dd{padding:0 20px 0 120px;text-align: center;}
+.j-structure-con dd li{border:1px solid rgba(127,155,185,1);border-radius:2px;padding: 1px 5px;display: inline-block;color:#7F9BB9; font-size: 12px; margin: 12px 3px 3px 0;}
+.j-structure-con dd li.on{ background:#0084FF; border: #0084FF 1px solid; color: #fff;}
 /*楼栋结构 E*/
 /*----------新建工单 S----------*/
 .j-textarea-border{border: #C6D2DF 1px solid; margin-top: 15px; padding: 10px 10px 0;}
