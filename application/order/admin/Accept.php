@@ -22,7 +22,7 @@ class Accept extends Admin
             $where = $OpOrderModel->checkWhere($getData,'accept');
             
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select();
             //$result = [];
             foreach($temps as $k => &$v){
                 if(strpos($v['duid'],',') === false){

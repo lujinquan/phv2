@@ -79,7 +79,7 @@
 		  <div class="layui-form-item">
 			<div class="j-form-box clearfix">
 				<div class="fl">
-					<button class="layui-btn">返回</button>
+					<a href="{:url('index')}?group={$group}" class="layui-btn layui-btn-normal">返回</a>
 					{if condition="($current_uid == ADMIN_ID && $data_info['dtime'] && $group=='j')"}
 					<button type="button" class="layui-btn layui-btn-grass" id="complete" >确认工单</button>
 					{/if}

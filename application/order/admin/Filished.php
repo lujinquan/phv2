@@ -34,9 +34,12 @@ class Filished extends Admin
                        unset($temps[$k]); 
                     }else{
                         $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-                        $v['status_info'] = '转交至'.$current_nick;
-                    }
-                    
+                        if($v['ftime']){ // 如果方管员已确认表示已完结
+                            $v['status_info'] = '已完结';
+                        }else{
+                            $v['status_info'] = '转交至'.$current_nick;
+                        }
+                    }  
                 }
             }
             //halt($temps);
