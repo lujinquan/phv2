@@ -3,6 +3,7 @@
 namespace app\order\admin;
 use app\system\admin\Admin;
 use app\system\model\SystemUser as UserModel;
+use app\system\model\SystemRole as RoleModel;
 use app\order\model\OpOrder as OpOrderModel;
 
 /**
@@ -18,7 +19,7 @@ class Grouporder extends Admin
             $getData = $this->request->get();
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData,'grouporder');
-            
+        //halt($where);    
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
             //$result = [];
@@ -29,11 +30,12 @@ class Grouporder extends Admin
                     $uids = explode(',',$v['duid']);
 
                     $current_uid = array_pop($uids);
-                    if($current_uid != ADMIN_ID){ //保证是待受理的工单
-                       unset($temps[$k]); 
+                    $find = UserModel::where([['id','eq',$current_uid]])->field('nick,role_id')->find();
+                    // 如果是运营中心
+                    if($find['role_id'] == 11 && ADMIN_ROLE == 11){
+                        $v['status_info'] = '转交至'.$find['nick'];
                     }else{
-                        $current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-                        $v['status_info'] = '转交至'.$current_nick;
+                        unset($temps[$k]);
                     }
                     
                 }

@@ -67,7 +67,11 @@ class Accept extends Admin
             if (!$OporderModel->allowField(true)->create($filData)) {
                 return $this->error('提交失败');
             }
-            return $this->success('提交成功',url('Myorder/index'));
+
+            // 【待解决问题，成功跳转后，菜单的高亮没有正确呈现】
+            //return $this->success('提交成功',url('Myorder/index'));
+            
+            return $this->success('提交成功');
         }
     	return $this->fetch();
     }
@@ -103,7 +107,7 @@ class Accept extends Admin
     public function transfer()
     {
         if ($this->request->isPost()) {
-            $data = $this->request->post();
+            $data = $this->request->post();//halt($data);
             // 数据验证
             if(isset($data['is_end'])){
                 $result = $this->validate($data, 'OpOrder.sceneEnd');
@@ -118,7 +122,7 @@ class Accept extends Admin
             // 数据过滤
             if(isset($data['is_end'])){
                 $filData = $OporderModel->dataFilter($data,'complete');
-                $msg = '完结';
+                $msg = '完成';
             }else{
                 $filData = $OporderModel->dataFilter($data,'transfer');
                 $msg = '转交';

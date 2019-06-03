@@ -63,16 +63,6 @@
 							</ul>
 						</dd>
 					</dl>
-					<!-- <dl class="clearfix">
-						<dt>1</dt>
-						<dd>
-							<ul>
-								<li class="on">01</li>
-								<li>02</li>
-								<li>03</li>
-							</ul>
-						</dd>
-					</dl>
 					<dl class="clearfix">
 						<dt>2</dt>
 						<dd>
@@ -89,7 +79,7 @@
 								<li>06</li>
 							</ul>
 						</dd>
-					</dl> -->
+					</dl>
 				</div>
 				<!-- 内容区 E -->
 			</div>
@@ -180,5 +170,18 @@
 				console.log($(e.target).text());
 		  });
 		$(".j-structure-con dl:odd").addClass("cur");//隔行背景色
+
+		$(document).ready(function(){
+		  	console.log(111);
+		  	$.ajax({
+			   type: 'post',
+			   url: '{:url("house/Ban/struct")}',
+			   data: "id=7",
+			   success: function(data){
+			   console.log(data);
+			     //alert( "Data Saved: " + msg );
+			   }
+			});
+		});
 	 });
 </script>
