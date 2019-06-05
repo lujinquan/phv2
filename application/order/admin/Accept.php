@@ -20,9 +20,9 @@ class Accept extends Admin
             $getData = $this->request->get();
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData,'accept');
-            
+            //halt($where);
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select();//halt($temps);
             //$result = [];
             foreach($temps as $k => &$v){
                 if(strpos($v['duid'],',') === false){

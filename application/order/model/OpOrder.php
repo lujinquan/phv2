@@ -22,7 +22,7 @@ class OpOrder extends Model
 
     public function SystemUser()
     {
-        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick,inst_id');
+        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick');
     }
 
     public function checkWhere($data,$type='accept')
@@ -36,10 +36,11 @@ class OpOrder extends Model
             case 'accept':
                 if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                     $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['cuid','in',$inst_ids]];
+                    $where[] = [['inst_id','in',$inst_ids]];
                 }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
                     $where[] = [['duid','like','%,'.ADMIN_ID]];
                 }
+                //halt($where);
                 break;
             // 我的工单
             case 'myorder':
@@ -98,6 +99,7 @@ class OpOrder extends Model
             // 新增
             case 'add':
                 $data['cuid'] = ADMIN_ID;
+                $data['inst_id'] = INST;
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
                 $jsondata[] = [
