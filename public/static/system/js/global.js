@@ -584,7 +584,33 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         return false;
     });
     exports('global', {});
-
+    /*楼层导航 S*/
+     $(".j-floor-nav li:first").addClass("on");
+     $(".layui-body").on("scroll",function(){
+     		var scrollTop = $(document).scrollTop();
+     		var floor = $('.floorWrap');
+     		var nav = $('.navWrap').find('li');
+     		var items = $('.floorWrap').find('.item');
+            /* if(scrollTop>150){
+    						$(".j-floor-nav").addClass("on");
+    						console.log(1);
+    					}
+    					else{
+    						$(".j-floor-nav").removeClass("on");
+    						console.log(3);
+    					}; */
+     		items.each(function(){
+     			var m=$(this);
+     			var itemTop = m.offset().top;
+     			if(scrollTop>itemTop-200){
+     				/* console.log(scrollTop-itemTop); */
+     				nav.eq(m.index()).addClass('current').siblings().removeClass('current');
+     			}else{
+     				return false;
+     			}
+     		})
+     	})
+    /*楼层导航 E*/
 
 });
 

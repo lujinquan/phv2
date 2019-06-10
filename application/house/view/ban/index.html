@@ -1,3 +1,4 @@
+<div class="j-table-content">
 <div class="layui-btn-container j-container-margin">
     {if condition="$group == 'x'"}
     <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增楼栋</button></a>
@@ -9,55 +10,59 @@
 </div>
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
-          <div class="layui-input-inline j-input-margin" style="width:150px;">
-              <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
-          </div>
-          <div class="layui-input-inline" style="width:150px;">
-              <input type="text" name="ban_address" placeholder="地址" class="layui-input">
-          </div>
-          {if condition="INST_LEVEL != 3"}
-          <div class="layui-input-inline" style="width:120px;">
-              <select name="ban_inst_id">
-                  <option value="">机构</option>
-                  {volist name=":config('inst_check_names')[INST]" id="v"}
-                  <option value="{$key}">{$v}</option>
-                  {/volist}
-                </select>
-          </div>
-          {/if}
-          <div class="layui-input-inline" style="width:120px;">
-              <select name="ban_owner_id">
-                  <option value="">产别</option>
-                  {volist name="params['owners']" id="v"}
-                  <option value="{$key}">{$v}</option>
-                  {/volist}
-                </select>
-          </div>
-          <div class="layui-input-inline" style="width:120px;">
-              <select name="ban_struct_id">
-                  <option value="">结构类别</option>
-                  {volist name="params['structs']" id="v"}
-                  <option value="{$key}">{$v}</option>
-                  {/volist}
-                </select>
-          </div>
-          <div class="layui-input-inline" style="width:120px;">
-              <select name="ban_damage_id">
-                  <option value="">完损等级</option>
-                  {volist name="params['damages']" id="v"}
-                  <option value="{$key}">{$v}</option>
-                  {/volist}
-                </select>
-          </div>
-          <input type="hidden" name="group" value="{$group}" class="layui-input">
+		<div class="j-search-fl layui-col-md8  fl">
+			  <div class="layui-input-inline j-input-margin" style="width:150px;">
+				  <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-input-margin" style="width:150px;">
+				  <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+			  </div>
+			  {if condition="INST_LEVEL != 3"}
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_inst_id">
+					  <option value="">机构</option>
+					  {volist name=":config('inst_check_names')[INST]" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  {/if}
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_owner_id">
+					  <option value="">产别</option>
+					  {volist name="params['owners']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_struct_id">
+					  <option value="">结构类别</option>
+					  {volist name="params['structs']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_damage_id">
+					  <option value="">完损等级</option>
+					  {volist name="params['damages']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  <input type="hidden" name="group" value="{$group}" class="layui-input">
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
-			  <button type="reset" class="layui-btn layui-btn-normal">重置</button>
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
               <button class="layui-btn" lay-submit lay-filter="formDemo">
                   <i class="layui-icon">&#xe615;</i>
                   搜索
               </button>
 			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
           </div>
+		</div>
       </form>
   </div>
 {include file="system@block/layui" /}
@@ -69,17 +74,20 @@
     <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('struct')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">结构</a>
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
-        var table = layui.table;
+        var table = layui.table
+		    ,$ = layui.$;
         table.render({
             elem: '#dataTable'
             //,skin: 'line' //行边框风格
             //,even: true //开启隔行背景
             //,size: 'sm' //小尺寸的表格
-            ,height: 500
+            //,height: 550
             //,height: 'full-20' //浏览器最大高度
-            ,toolbar: false
+            ,toolbar: true
+			,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,page: true //开启分页
             ,limit: 10
@@ -119,6 +127,14 @@
             ,done:function(res,curr,count){
                
             }
-        },isShowInst)
+        },isShowInst);
+		
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+		//显示搜索框title属性值
+		$(".layui-input.layui-unselect").mouseover(function(){
+		  var titles = $(this).val();
+		  $(this).attr("title",titles)
+		});
     });
 </script>

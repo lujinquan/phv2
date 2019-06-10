@@ -13,6 +13,7 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 .j-border-box{border:1px solid rgba(198,210,223,1);}
 .j-border-box.j-border-noleft{border-left: none;}
 .j-text-indent15{ text-indent: 15px;}
+a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 /*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}/*  */
@@ -20,13 +21,35 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 .layui-btn-gray{background:#B6B9BE;}
 /* ----------按钮颜色 E----------*/
 /* 操作菜单 S */
-.j-container-margin.layui-btn-container .layui-btn{ margin:5px 10px 0 0;}
+.j-container-margin.layui-btn-container .layui-btn{ margin:8px 10px 10px 0;}
+.j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:-64px; right:-18px; width: 113px; height: 38px;border: 0;}
+.j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"] i.layui-icon-cols{ display: none;}
+.j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]  .layui-table-tool-panel{top:45px;}
+.j-table-content .layui-table-tool{ min-height: 0; padding: 0;border-width:0}
+.j-table-content .layui-table-box{min-height: 450px;}
+.j-table-content .layui-form-checked i,.j-table-content .layui-form-checked:hover i{ color: #fff!important;}
 /* 操作菜单 E */
 /*搜索框样式 S*/
-.page-toolbar.j-page-toolbar{margin: 5px 0;}
-.j-page-toolbar .layui-input-inline .layui-input,.j-page-toolbar .layui-input-inline .layui-form-select{ margin:10px 5px 0 0;}
-.page-toolbar.j-page-toolbar  .layui-btn+.layui-btn,.page-toolbar.j-page-toolbar  .layui-btn{ margin: 10px 5px 0 0;}
+.j-table-content .layui-table-view{margin: 0 0 10px;}
+.layui-form-pane .j-search-fl{display: flex;}
+.layui-form-pane .j-search-fl .layui-input-inline,.j-search-fr .layui-btn{ float: left;margin-left: 1px;}
+.layui-form-pane .j-search-fl .layui-input-inline.j-input-margin{ margin-right: 10px;}
+.page-toolbar.j-page-toolbar{margin: 8px 0 5px;}
+.j-page-toolbar .layui-input-inline .layui-input,.j-page-toolbar .layui-input-inline .layui-form-select{ margin:0 10px 10px 0;}
+.page-toolbar.j-page-toolbar  .layui-btn+.layui-btn,.page-toolbar.j-page-toolbar  .layui-btn{ margin: 0 10px 10px 0;}
+.page-toolbar.j-page-toolbar  .layui-btn.on{margin: 0 0 10px 0;}
+.j-table-content .j-btn-reset{  background: none; color: #0084FF;padding: 0 10px;}/* 重置样式 */
+/* .j-table-content .layui-tab-card{border: 0;box-shadow: none;}//自适应搜索
+.j-table-content .layui-tab-card .layui-tab-title{ border: none;} */
+.wrap{height: 38px; overflow: hidden;} 
+.cont{ height: 60px; overflow-x: auto; overflow-y:hidden ;position: relative; } 
+.state { white-space: nowrap; display: flex; } 
+.state:-webkit-scrollbar {display: none;}
+.state li{float: left;}
 /*搜索框样式 E*/
+/* 表格样式 S */
+.layui-table-body .layui-btn{ font-weight: inherit;} 
+/* 表格样式 E */
 /*--------------------公用样式 S---------------------*/
 /* ----------详情样式  S----------*/
 .j-row-box{ overflow: hidden;}
@@ -74,8 +97,10 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 }
 .j-details-box .j-enclosure-label{float: initial;}
 /* .j-enclosure-upload{ margin-top: 15px;} */
-.j-details-box .j-enclosure-upload .j-enclosure-label { float: left;}
+.j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}
+.j-enclosure-img{ padding: 20px 0 0;}
 .j-details-box .j-enclosure-label.j-uplode-icon{background:#fff; color:#0084FF;position: relative;left: -1px; margin-right: 5px;}
+.j-details-box .j-enclosure-label.j-uplode-icon input{position: absolute; left: 0; top:0; height: 38px;  width: 122px; overflow: hidden; opacity: 0;}
 .j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 13px; height: 13px;position: relative;top:-3px; margin-right: 5px;}
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
@@ -137,3 +162,50 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 .j-frame-class{padding: 15px 15px 0;}
 .j-details-box .layui-form-select dl dd.layui-this{ background:#0084FF;}
 /*----------弹框样式 E----------*/
+/*------------------ 多图上传S ----------------*/
+.uploader-list {
+            margin-left: -15px;
+        }
+ 
+        .uploader-list .info {
+            position: relative;
+            margin-top: -25px;
+            background-color: black;
+            color: white;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            width: 100px;
+            height: 25px;
+            text-align: center;
+            display: none;
+        }
+ 
+        .uploader-list .handle {
+            position: relative;
+            background-color: black;
+            color: white;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            width: 100px;
+            text-align: right;
+            height: 18px;
+            margin-bottom: -18px;
+            display: none;
+        }
+ 
+        .uploader-list .handle i {
+            margin-right: 5px;
+        }
+ 
+        .uploader-list .handle i:hover {
+            cursor: pointer;
+        }
+ 
+        .uploader-list .file-iteme {
+            margin: 12px 0 0 15px;
+            padding: 1px;
+            float: left;
+        }
+/*------------------ 多图上传E ----------------*/
