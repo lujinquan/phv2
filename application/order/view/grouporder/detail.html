@@ -66,7 +66,7 @@
         <div class="layui-form-item">
           <div class="j-form-box clearfix">
             <div class="fl">
-              <button class="layui-btn">返回</button>
+              <a href="{:url('index')}" class="layui-btn layui-btn-normal">返回</a>
             </div>
             <div class="fr">
           <button type="button" class="layui-btn layui-btn-orange" id="handover" >转交工单</button>
@@ -134,16 +134,22 @@
       <div class="j-input-block">
         <select name="transfer_to" id="transfer_to">
           <option value="">请选择工单受理人</option>
+          {if condition="ADMIN_ROLE != 10"}
           <optgroup label="技术部">
             <option value="41" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
           </optgroup>
+          {/if}
+          {if condition="ADMIN_ROLE != 9"}
           <optgroup label="经管科">
             <option value="42" {if condition="session('admin_user.nick') == '叶慧丽'"}disabled{/if}>叶慧丽</option>
           </optgroup>
+          {/if}
+          {if condition="ADMIN_ROLE != 11"}
           <optgroup label="运营部">
             <option value="39" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
             <option value="40" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
           </optgroup>
+          {/if}
         </select>
       </div>
     </div>
@@ -181,7 +187,9 @@
             data: data,
             success: function(res) {
               console.log(res);
-              layer.msg(res.msg, function(){
+              layer.msg(res.msg, {
+                isOutAnim:false,
+              },function(){
                 if (res.code != 0){
                   location.href = res.url;
                 }

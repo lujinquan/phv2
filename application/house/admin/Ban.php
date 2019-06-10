@@ -2,6 +2,7 @@
 namespace app\house\admin;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
+use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 
 class Ban extends Admin
@@ -113,6 +114,32 @@ class Ban extends Admin
 
     public function struct()
     {
+        $id = input('param.id/d');
+        $row = BanModel::get($id);
+        $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id,tenant_id')->select();
+
+        if ($this->request->isPost()) {
+            $id = input('param.id/d');
+            $row = BanModel::get($id);
+            $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id,tenant_id')->select();
+            $tempHouseArr = [];
+            foreach($houseArr as $h){
+                $tempHouseArr[$h['house_unit_id']][$h['house_floor_id']][] = $h['tenant_name'];
+            }
+            for($i=1;$i<$row['ban_units'];$i++){
+                for($j=1;$j<$row['ban_floors'];$j++){
+                    if(!isset($tempHouseArr[$i][$j])){
+                        $tempHouseArr[$i][$j] = [];
+                    }
+                }
+            }
+            $data = [];
+            $data['data'] = $tempHouseArr;
+            $data['code'] = 0;
+            $data['msg'] = '获取成功';
+            return json($data);
+        }
+        
         return $this->fetch();
     }
 

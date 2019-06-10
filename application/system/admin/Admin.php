@@ -17,7 +17,7 @@ use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemLog as LogModel;
 use app\common\model\Cparam as ParamModel;
-use app\Order\model\OpOrder as OpOrderModel;
+use app\order\model\OpOrder as OpOrderModel;
 use think\Db;
 
 /**

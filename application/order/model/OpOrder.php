@@ -22,7 +22,7 @@ class OpOrder extends Model
 
     public function SystemUser()
     {
-        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick,inst_id');
+        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick');
     }
 
     public function checkWhere($data,$type='accept')
@@ -36,10 +36,11 @@ class OpOrder extends Model
             case 'accept':
                 if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                     $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['cuid','in',$inst_ids]];
+                    $where[] = [['inst_id','in',$inst_ids]];
                 }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
                     $where[] = [['duid','like','%,'.ADMIN_ID]];
                 }
+                //halt($where);
                 break;
             // 我的工单
             case 'myorder':
@@ -98,6 +99,7 @@ class OpOrder extends Model
             // 新增
             case 'add':
                 $data['cuid'] = ADMIN_ID;
+                $data['inst_id'] = INST;
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
                 $jsondata[] = [
@@ -134,28 +136,51 @@ class OpOrder extends Model
                 unset($data['transfer_to']);
                 break;
 
-            // 完结工单
+            // 完成工单
             case 'complete':
 
                 $find = $this->get($data['id']);
+
                 $jsonarr = json_decode($find['jsondata'],true);
-                // 【更新】经手人+
-                if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
-                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$find['cuid']; // 完结的转交人就是，申请人
-                }else{ //写入 转交人id
-                   $data['duid'] = $find['duid'].','.$find['cuid'];  // 完结的转交人就是，申请人
+
+                // 如果不是运营中心的人，那么此处的完成工单指的是默认转交回去
+                if(ADMIN_ROLE != 11){
+                    $findDuids = explode(',',$find['duid']);
+                    $comp = $findDuids[1];
+                   
+                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
+                    
+                    $jsonarr[] = [
+                        'FromUid' => ADMIN_ID,
+                        'Img' => '',
+                        'ToUid' => $comp,
+                        'Desc' => $data['replay'],
+                        'Time' => time(),
+                        'Action' => '转交至',
+                    ];
+                    // 【更新】序列化数据
+                    $data['jsondata'] = json_encode($jsonarr);
+                }else{
+                    $comp = $find['cuid'];
+                    // 【更新】经手人+
+                    if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
+                        $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp; // 完结的转交人就是，申请人
+                    }else{ //写入 转交人id
+                       $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
+                    }
+                    $jsonarr[] = [
+                        'FromUid' => ADMIN_ID,
+                        'Img' => '',
+                        'ToUid' => $comp,
+                        'Desc' => $data['replay'],
+                        'Time' => time(),
+                        'Action' => '转交至',
+                    ];
+                    // 【更新】序列化数据
+                    $data['jsondata'] = json_encode($jsonarr);
+                    $data['dtime'] = time(); 
                 }
-                $jsonarr[] = [
-                    'FromUid' => ADMIN_ID,
-                    'Img' => '',
-                    'ToUid' => $find['cuid'],
-                    'Desc' => $data['replay'],
-                    'Time' => time(),
-                    'Action' => '转交至',
-                ];
-                // 【更新】序列化数据
-                $data['jsondata'] = json_encode($jsonarr);
-                $data['dtime'] = time();
+                
                 unset($data['replay']);
                 break;
             // 确认完结工单
