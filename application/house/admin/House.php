@@ -224,6 +224,28 @@ class House extends Admin
         }
     }
 
+    public function detail()
+    {
+        if ($this->request->isAjax()) {
+            $id = input('param.id/d');
+            $row = HouseModel::get($id);
+            if($row){
+                $data = [
+                    'code' => 0,
+                    'msg' => '获取成功',
+                    'data' => $row,
+                ];
+            }else{
+                $data = [
+                    'code' => 1,
+                    'msg' => '获取失败',
+                    'data' => $row,
+                ];
+            } 
+            return json($data);
+        }
+    }
+
     public function houseRoom()
     {
         $olds = Db::name('room_old')->column('RoomID,HouseID');

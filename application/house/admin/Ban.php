@@ -118,29 +118,39 @@ class Ban extends Admin
         $row = BanModel::get($id);
         $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id,tenant_id')->select();
 
-        if ($this->request->isPost()) {
+        if ($this->request->isGet()) {
             $id = input('param.id/d');
+            $unitID = input('param.unit_id/d',1);
             $row = BanModel::get($id);
-            $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id,tenant_id')->select();
+            $houseArr = HouseModel::with(['tenant'])->where([['ban_id','eq',$id],['house_unit_id','eq',$unitID]])->field('house_floor_id,house_id,tenant_id')->order('house_floor_id asc')->select();
             $tempHouseArr = [];
-            foreach($houseArr as $h){
-                $tempHouseArr[$h['house_unit_id']][$h['house_floor_id']][] = $h['tenant_name'];
-            }
-            for($i=1;$i<$row['ban_units'];$i++){
-                for($j=1;$j<$row['ban_floors'];$j++){
-                    if(!isset($tempHouseArr[$i][$j])){
-                        $tempHouseArr[$i][$j] = [];
-                    }
+            //halt($houseArr);
+            
+            for($j=1;$j<=$row['ban_floors'];$j++){
+                foreach($houseArr as $h){
+                    if($h['house_floor_id'] == $j){
+                        $tempHouseArr[$j][] = [
+                            'house_id' => $h['house_id'],
+                            'tenant_name' => $h['tenant_name'],
+                        ];
+                    } 
+                }
+                if(!isset($tempHouseArr[$j])){
+                    $tempHouseArr[$j] = [];
                 }
             }
+            
+           
+            //sort($tempHouseArr);
             $data = [];
             $data['data'] = $tempHouseArr;
             $data['code'] = 0;
             $data['msg'] = '获取成功';
+            // halt($data);
             return json($data);
         }
         
-        return $this->fetch();
+        //return $this->fetch();
     }
 
     public function ceshi()
