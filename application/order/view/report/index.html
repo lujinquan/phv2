@@ -1,1 +1,530 @@
 {include file="system@block/layui" /}
+<style>
+	.page-tab-content{ background: none;}
+</style>
+<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/echarts.min.js?v={:config('hisiphp.version')}"></script>
+<div class="layui-row layui-col-space15 j-echarts-box">
+    <div class="layui-col-md6">
+      <div class="layui-row layui-col-space15">
+          <div class="layui-col-md6">
+            <div  class="j-list-box j-list1">
+				<h1 class="j-title">待受理工单</h1>
+				<div class="j-Statistics">
+					12<i>个</i>
+				</div>
+				<img src="__ADMIN_IMG__/j-Clip.png" />
+			</div>
+          </div>
+          <div class="layui-col-md6">
+            <div  class="j-list-box j-list2">
+            	<h1 class="j-title">受理中工单</h1>
+            	<div class="j-Statistics">
+            		14<i>个</i>
+            	</div>
+            	<img src="__ADMIN_IMG__/j-Group5.png" />
+            </div>
+          </div>
+        </div>
+		<div class="layui-row layui-col-space15">
+		    <div class="layui-col-md6">
+		      <div  class="j-list-box j-list3">
+		      	<h1 class="j-title">已完结工单</h1>
+		      	<div class="j-Statistics">
+		      		24<i>个</i>
+		      	</div>
+		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
+		      </div>
+		    </div>
+		    <div class="layui-col-md6">
+		      <div  class="j-list-box j-list4">
+		      	<h1 class="j-title">全部工单</h1>
+		      	<div class="j-Statistics">
+		      		53<i>个</i>
+		      	</div>
+		      	<img src="__ADMIN_IMG__/j-Fill.png" />
+		      </div>
+		    </div>
+		  </div>
+    </div>
+    <div class="layui-col-md6">
+	  <div class="j-chart-box">
+		<div class="product-main clearfix">
+		  <div class="j-product-title clearfix">
+			  <div class="j-title fl">工单受理状态分析图</div>
+			  <div class="product-title fr">
+				<ul class="product-ul">
+				  <li class="cur">全部</li>
+				  <li class="">郑湾</li>
+				  <li class="">刘丹</li>
+				</ul>
+			  </div>
+		  </div>
+		  <div class="product-con">
+			<div class="product-box clearfix">
+			  <div id="main1" style="width:100%;height:318px;"></div>
+			</div>
+			<div class="product-box  clearfix" style="display: none;">
+			  <div id="main2" style="width:100%;height:318px;"></div>
+			</div>
+			<div class="product-box  clearfix" style="display: none;">
+			  <div id="main3" style="width:100%;height:318px;"></div>
+			</div>
+		  </div>
+	    </div>
+	  </div>
+    </div>
+  </div>
+  <hr />
+  <!-- 工单完结量统计 S-->
+  <div class="layui-row j-echarts-box">
+      <div class="layui-col-md12">
+		  <div class="j-chart-box">
+		  		<div class="product-main clearfix">
+		  		  <div class="j-product-title clearfix">
+		  			  <div class="j-title fl">工单完结量统计</div>
+					  <form class="layui-form" action="">
+					    <div class="layui-inline j-chart-right fr">
+					  	  <div class="layui-input-inline">
+					  		<select name="modules" lay-verify="required" lay-search="">
+					  		  <option value="">请选择时间点查询</option>
+							  <option value="1">近7天</option>
+					  		  <option value="2">月</option>
+					  		  <option value="3">年</option>
+					  		</select>
+					  	  </div>
+					    </div>
+					  </form>
+		  		  </div>
+		  		  <div class="product-con">
+		  			<div class="product-box clearfix">
+		  			  <div id="main4" style="width:100%;height:463px;"></div>
+		  			</div>
+		  			<div class="product-box  clearfix" style="display: none;">
+		  			  <div id="main5" style="width:100%;height:463px;">2</div>
+		  			</div>
+		  			<div class="product-box  clearfix" style="display: none;">
+		  			  <div id="main6" style="width:100%;height:463px;">3</div>
+		  			</div>
+		  		  </div>
+		    </div>
+		  </div>
+	  </div>
+  </div>
+  <!-- 工单完结量统计 E-->
+  <hr />
+   <!-- 工单类别统计 S-->
+  <div class="layui-row j-echarts-box">
+      <div class="layui-col-md12">
+  		  <div class="j-chart-box">
+  		  		<div class="product-main clearfix">
+  		  		  <div class="j-product-title clearfix">
+  		  			  <div class="j-title fl">工单类别统计</div>
+					<form class="layui-form" action="">
+					  <div class="layui-inline j-chart-right  fr">
+						  <div class="layui-input-inline">
+							<select name="modules" lay-verify="required" lay-search="">
+							  <option value="">请选择时间点查询</option>
+							  <option value="1">月</option>
+							  <option value="2">年</option>
+							</select>
+						  </div>
+					  </div>
+					</form>
+  		  		  </div>
+  		  		  <div class="product-con">
+  		  			<div class="product-box clearfix">
+  		  			  <div id="main7" style="width:100%;height:463px;"></div>
+  		  			</div>
+  		  			<div class="product-box  clearfix" style="display: none;">
+  		  			  <div id="main8" style="width:100%;height:463px;">2</div>
+  		  			</div>
+  		  			<div class="product-box  clearfix" style="display: none;">
+  		  			  <div id="main9" style="width:100%;height:463px;">3</div>
+  		  			</div>
+  		  		  </div>
+  		    </div>
+  		  </div>
+  	  </div>
+  </div>
+  <!-- 工单类别统计 E-->
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+		$("#main2").css('width',$("#main1").width());
+		$("#main3").css('width',$("#main1").width());
+        var myChart = echarts.init(document.getElementById('main1'));
+        // 指定图表的配置项和数据
+        var option = {
+			 title: {
+				text: '总计',
+				subtext: '103个',
+				align: 'center',
+				x: '24%',
+				y: '40%',
+				textStyle: {
+					fontWeight: 'normal',
+					fontSize: 14,
+					color: '#4A4A4A'
+				}, // 标题
+				subtextStyle: {
+					fontWeight: 'normal',
+					fontSize: 28,
+					color: '#007AFF'
+				}, // 副标题
+			},
+			tooltip : {
+				trigger: 'item',
+				formatter: "{a} <br/>{b} : {c} ({d}%)"
+			},
+			legend: {
+				orient: 'vertical',
+				right: 'right',
+				bottom:'50%',
+				textStyle:{color: '#4A4A4A',fontSize:'14'},
+				data: ['待受理','受理中','已完结']
+			},
+			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
+			series : [
+				{
+					name: '工单受理状态分析图',
+					type: 'pie',
+					radius: ['40%', '80%'], 
+					center: ['30%', '50%'],
+					label : {
+						normal : {
+							//饼形图显示格式
+							formatter : '{d}%',
+						}
+					},
+					data:[
+						{value:30, name:'待受理'},
+						{value:30, name:'受理中'},
+						{value:40, name:'已完结'},
+					],
+					itemStyle: {
+						emphasis: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: 'rgba(0, 0, 0, 0.5)'
+						}
+					}
+				}
+			]
+		};
+	    var myChart2 = echarts.init(document.getElementById('main2'));
+		var option2 = {
+			 title: {
+				text: '总计',
+				subtext: '60个',
+				align: 'center',
+				x: '24%',
+				y: '40%',
+				textStyle: {
+					fontWeight: 'normal',
+					fontSize: 14,
+					color: '#4A4A4A'
+				}, // 标题
+				subtextStyle: {
+					fontWeight: 'normal',
+					fontSize: 28,
+					color: '#007AFF'
+				}, // 副标题
+			},
+			tooltip : {
+				trigger: 'item',
+				formatter: "{a} <br/>{b} : {c} ({d}%)"
+			},
+			legend: {
+				orient: 'vertical',
+				right: 'right',
+				bottom:'50%',
+				textStyle:{color: '#4A4A4A',fontSize:'14'},
+				data: ['待受理','受理中','已完结']
+			},
+			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
+			series : [
+				{
+					name: '工单受理状态分析图',
+					type: 'pie',
+					radius: ['40%', '80%'], 
+					center: ['30%', '50%'],
+					label : {
+						normal : {
+							//饼形图显示格式
+							formatter : '{d}%',
+						}
+					},
+					data:[
+						{value:10, name:'待受理'},
+						{value:30, name:'受理中'},
+						{value:40, name:'已完结'},
+					],
+					itemStyle: {
+						emphasis: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: 'rgba(0, 0, 0, 0.5)'
+						}
+					}
+				}
+			]
+		};
+		var myChart3 = echarts.init(document.getElementById('main3'));
+		var option3 = {
+			 title: {
+				text: '总计',
+				subtext: '53个',
+				align: 'center',
+				x: '24%',
+				y: '40%',
+				textStyle: {
+					fontWeight: 'normal',
+					fontSize: 14,
+					color: '#4A4A4A'
+				}, // 标题
+				subtextStyle: {
+					fontWeight: 'normal',
+					fontSize: 28,
+					color: '#007AFF'
+				}, // 副标题
+			},
+			tooltip : {
+				trigger: 'item',
+				formatter: "{a} <br/>{b} : {c} ({d}%)"
+			},
+			legend: {
+				orient: 'vertical',
+				right: 'right',
+				bottom:'50%',
+				textStyle:{color: '#4A4A4A',fontSize:'14'},
+				data: ['待受理','受理中','已完结']
+			},
+			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
+			series : [
+				{
+					name: '工单受理状态分析图',
+					type: 'pie',
+					radius: ['40%', '80%'], 
+					center: ['30%', '50%'],
+					label : {
+						normal : {
+							//饼形图显示格式
+							formatter : '{d}%',
+						}
+					},
+					data:[
+						{value:80, name:'待受理'},
+						{value:30, name:'受理中'},
+						{value:40, name:'已完结'},
+					],
+					itemStyle: {
+						emphasis: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: 'rgba(0, 0, 0, 0.5)'
+						}
+					}
+				}
+			]
+		};
+        // 使用刚指定的配置项和数据显示图表。
+		myChart.setOption(option);
+		myChart2.setOption(option2);
+		myChart3.setOption(option3);
+		//工程完结量统计 S
+		var myChart4 = echarts.init(document.getElementById('main4'));
+		  // 指定图表的配置项和数据
+		var option4 = {
+			backgroundColor:'#fff',
+			tooltip: {
+				trigger: 'item'
+			},
+			legend: {
+				orient: 'vertical',
+				right: 'right',
+				bottom:'70',
+				textStyle:{color: '#4A4A4A',fontSize:'14'},
+				data: ['全部','刘丹','郑湾']
+			},
+			grid: {
+				x: '50',
+				x2: '30',
+				y: '40',
+				y2: '50',
+				left: 0,
+				right: 100,
+				top: 50,
+				bottom:50,
+				containLabel: true
+			},
+			xAxis:  {
+				type: 'category',
+				axisLabel:{
+					textStyle:{
+						color:'#333'
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color:'#d9d9d9'
+					}
+				},
+				axisTick:{
+					show:false
+				},
+				splitLine: {
+					show: true,
+					lineStyle: {
+						color: '#ccc',
+						type : "solid"
+					}
+				},	
+				boundaryGap: false,
+				data: ['05.21','05.22','05.23','05.24','05.25','05.26','05.27']
+			},
+			yAxis: {
+				type: 'value',
+				axisLabel:
+				{
+					textStyle:{
+						color:'#333'
+					},
+					formatter: '{value}'
+				},
+				axisLine:{
+					lineStyle:{
+						color:'#d9d9d9'
+					}
+				},
+				axisTick:{
+					show:false
+				},
+				splitLine: {
+					show: true,
+					lineStyle: {
+						color: '#ccc',
+						type : "solid"
+					}
+				},	
+			},
+			color : [ '#7860E9', '#7ACE4C', '#FAB844'],
+			series: [
+				{
+					name:'全部',
+					type:'line',
+					data:[11, 11, 14, 11, 21, 25, 21],
+					symbol:'emptyCircle',
+					symbolSize:10
+				},
+				{
+					name:'刘丹',
+					type:'line',
+					data:[18, 17, 15, 13, 12, 23, 20],
+					symbol:'emptyCircle',
+					symbolSize:10
+				},
+				{
+					name:'郑湾',
+					type:'line',
+					data:[12, 14, 12, 11, 10, 16, 30],
+					symbol:'emptyCircle',
+					symbolSize:10
+				}
+			]
+		};
+
+		  // 使用刚指定的配置项和数据显示图表。
+		  myChart4.setOption(option4);
+		//工程完结量统计 E
+		//工单类别统计S
+		// 基于准备好的dom，初始化echarts实例
+			var myChart7 = echarts.init(document.getElementById('main7'));
+			  // 指定图表的配置项和数据
+			var option7 = {
+				tooltip : {
+					trigger: 'item',
+					axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+						type : 'shadow',      // 默认为直线，可选为：'line' | 'shadow'
+					}
+				},
+				grid: {
+					left:0,
+					right: 100,
+					top:50,
+					bottom:50,
+					containLabel: true
+				},
+				legend: {
+					orient: 'vertical',
+					right: '0',
+					bottom:'80',
+					textStyle:{color: '#4A4A4A',fontSize:'14'},
+					data:['全部','紫阳所','粮道所',]
+				},
+				color:['#7960E8','#7ACE4C','#FAB844'],
+				calculable : true,
+				xAxis : [
+					{
+						type : 'category',
+						data : ['楼栋基础数据','房屋基础数据','租户信息','租金管理','计租表','租约','异动','报表数据'],
+						axisTick:{
+							show:false
+						}
+					}
+				],
+				yAxis : [
+					{   
+						name: '',
+						max:120,
+						type : 'value',
+						axisTick:{
+							show:false
+						},
+						axisLabel:{
+							// formatter: '{value}家企业'
+						}
+					}
+				],
+				series : [
+					{
+						name:'全部',
+						radius : '45%',
+						type:'bar',
+						barGap:0,
+						//barWidth:25,
+						data:[112,101,23,53,64,72,93,101],
+					},
+					{
+						name:'紫阳所',
+						type:'bar',
+						barGap:0,
+						//barWidth:25,
+						data:[111,93,22,54,63,72,91,101],
+					},
+					{
+						name:'粮道所',
+						type:'bar',
+						barGap:0,
+						//barWidth:25,
+						data:[81,92,50,53,90,74,90,42],
+					}
+				]
+			};
+	
+		  // 使用刚指定的配置项和数据显示图表。
+		  myChart7.setOption(option7);
+		//工单类别统计E
+		//tab切换
+		$(function(){
+			var $div_li =$(".product-title li");
+			$div_li.click(function(){
+				$(this).addClass("cur")
+					   .siblings().removeClass("cur");
+				var index =  $div_li.index(this);
+				$(".product-con > div") 
+						.eq(index).show().siblings().hide(); 
+			})
+			
+
+		})
+    </script>
