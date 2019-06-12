@@ -162,10 +162,10 @@ class SystemAnnex extends Model
         $filePath = '/upload/'.$group.'/'.$type.'/';
 
         // 如果文件已经存在，直接返回数据
-        // $res = self::where('hash', $file->hash())->find();
-        // if ($res) {
-        //     return self::result('文件上传成功。', $from, 1, $res);
-        // }
+        $res = self::where('hash', $file->hash())->find();
+        if ($res) {
+            return self::result('文件上传成功。', $from, 1, $res);
+        }
 
         // 执行上传
         $upfile = $file->rule('md5')->move('.'.$filePath);
@@ -177,6 +177,7 @@ class SystemAnnex extends Model
         $fileSize   = round($upfile->getInfo('size')/1024, 2);
 
         $data = [
+            'name'      => $input,
             'file'      => $filePath.str_replace('\\', '/', $upfile->getSaveName()),
             'hash'      => $upfile->hash(),
             'data_id'   => input('param.data_id', 0),
@@ -187,11 +188,11 @@ class SystemAnnex extends Model
         ];
 
         // 记录入库
-        // self::create($data);
-        // $group_info = GroupModel::where('name', $group)->find();
-        // if (!$group_info) {
-        //     GroupModel::create(['name' => $group]);
-        // }
+        self::create($data);
+        $group_info = GroupModel::where('name', $group)->find();
+        if (!$group_info) {
+            GroupModel::create(['name' => $group]);
+        }
 
         $data['thumb'] = [];
 
@@ -291,8 +292,8 @@ class SystemAnnex extends Model
         }
         
         // 附件分组统计
-        // GroupModel::where('name', $group)->setInc('count', $fileCount);
-        // GroupModel::where('name', $group)->setInc('size', $fileSize);
+        GroupModel::where('name', $group)->setInc('count', $fileCount);
+        GroupModel::where('name', $group)->setInc('size', $fileSize);
 
         runhook('system_annex_upload', $data);
 

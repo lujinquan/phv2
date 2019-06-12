@@ -224,7 +224,7 @@ class House extends Admin
         }
     }
 
-    public function detail()
+    public function detailOne()
     {
         if ($this->request->isAjax()) {
             $id = input('param.id/d');

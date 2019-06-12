@@ -426,6 +426,10 @@
 	</div>
 	<!-- 新增楼栋 E -->
 </form>
+<form action="{:url('system/Annex/upload')}?input=avator&group=ban&water=no" id="form" method="post" enctype="multipart/form-data">
+<input type="file" name="avator" />
+<input type="submit" value="上传">
+</form>
 {include file="system@block/layui" /}
 
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
@@ -456,7 +460,7 @@
 	   		   show: "#landCardShow",
 	   		   upButton: "#landCardUp",
 	   		   size: 102400,
-	   		   url: "add.html",
+	   		   url: "{:url('system/Annex/upload')}?input=avator&group=ban&water=no",
 	   		   ChangeOrderID: '',
 	   		   Type: 1,
 	   		   title: "土地证电子版"
@@ -496,10 +500,10 @@
              success: function(res) {
                    res = JSON.parse(res);
                   layer.msg(res.msg); 
-                 if(res.retcode == '2000'){
-                     layer.close(thisIndex);
-                     location.reload();
-                 }
+                 // if(res.retcode == '2000'){
+                 //     layer.close(thisIndex);
+                 //     location.reload();
+                 // }
              }
          });
 		});
