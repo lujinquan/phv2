@@ -98,9 +98,8 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .j-enclosure-label{float: initial;}
 /* .j-enclosure-upload{ margin-top: 15px;} */
 .j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}
-.j-enclosure-img{ padding: 20px 0 0;}
+/* .j-enclosure-img{ padding: 20px 0 0;} */
 .j-details-box .j-enclosure-label.j-uplode-icon{background:#fff; color:#0084FF;position: relative;left: -1px; margin-right: 5px;}
-.j-details-box .j-enclosure-label.j-uplode-icon input{position: absolute; left: 0; top:0; height: 38px;  width: 122px; overflow: hidden; opacity: 0;}
 .j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 13px; height: 13px;position: relative;top:-3px; margin-right: 5px;}
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
@@ -163,51 +162,12 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .layui-form-select dl dd.layui-this{ background:#0084FF;}
 /*----------弹框样式 E----------*/
 /*------------------ 多图上传S ----------------*/
-.uploader-list {
-            margin-left: -15px;
-        }
- 
-        .uploader-list .info {
-            position: relative;
-            margin-top: -25px;
-            background-color: black;
-            color: white;
-            filter: alpha(Opacity=80);
-            -moz-opacity: 0.5;
-            opacity: 0.5;
-            width: 100px;
-            height: 25px;
-            text-align: center;
-            display: none;
-        }
- 
-        .uploader-list .handle {
-            position: relative;
-            background-color: black;
-            color: white;
-            filter: alpha(Opacity=80);
-            -moz-opacity: 0.5;
-            opacity: 0.5;
-            width: 100px;
-            text-align: right;
-            height: 18px;
-            margin-bottom: -18px;
-            display: none;
-        }
- 
-        .uploader-list .handle i {
-            margin-right: 5px;
-        }
- 
-        .uploader-list .handle i:hover {
-            cursor: pointer;
-        }
- 
-        .uploader-list .file-iteme {
-            margin: 12px 0 0 15px;
-            padding: 1px;
-            float: left;
-        }
+.upload_img_list dd {position: relative;margin: 20px 10px 10px 0;float: left}
+.upload_img_list .operate {position: absolute;top: -9px;right: -12px;z-index: 1}
+.upload_img_list .operate i {cursor: pointer;padding: 2px;line-height: 15px;text-align: center;color: #F14C3D;margin-left: 1px;float: left;filter: alpha(opacity=80);-moz-opacity: .8;-khtml-opacity: .8;
+opacity: .8color: #333;}
+.upload_img_list dd .img {height: 100px; width: auto;}
+.j-details-box .j-enclosure-label.j-uplode-icon button{position: absolute; left: 0; top:0; height: 38px;  width: 122px; overflow: hidden; opacity: 0;}
 /*------------------ 多图上传E ----------------*/
 /*------------------ 工单数据S ----------------*/
 .j-chart-box{ background: #fff;border-radius: 4px; padding: 30px;}
