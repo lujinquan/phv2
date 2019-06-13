@@ -230,4 +230,86 @@ class OpOrder extends Model
         return count($temps);
     }
 
+    /**
+     * [statistics 工单数据统计]
+     * @return [type] [description]
+     */
+    public function statistics(){
+
+        $result = [];
+
+        $operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick,inst_ids')->select();
+        //$inst_ids = explode(',',session('admin_user.inst_ids'));
+        //
+        $initWhere['days'] = [];
+        
+        $whereS[] = ['duid','not like','%,%']; //受理中工单
+        $whereI[] = ['duid','like','%,%']; //受理中工单
+        $whereZ[] = ['ftime','eq',0];
+        $whereE[] = ['ftime','neq',0];
+
+        $opOrderAll = self::field('id,cuid,inst_id,duid,ctime,ftime')->select();
+
+        foreach($operateAdmins as $v){ //遍历运营人员
+
+            $result['partOne'][$v['id']]['accept'] = 0;
+            $result['partOne'][$v['id']]['acceptIng'] = 0;
+            $result['partOne'][$v['id']]['end'] = 0;
+            $result['partOne'][$v['id']]['all'] = 0;
+
+            foreach($opOrderAll as $op){ //遍历有效工单
+
+                $inst = in_array($op['inst_id'],explode(',',$v['inst_ids'])); //判断每条记录是否属于某运营人员
+                $duid = strpos($op['duid'],','); //判断是否有逗号，即是否为待受理
+                $ftime = $op['ftime'];
+                // 第一部分（饼状图数据）
+                if($inst && !$duid){ //待受理中工单
+                    $result['partOne'][$v['id']]['accept']++;
+                }
+                if($inst && $duid && !$ftime){ //受理中工单
+                    $result['partOne'][$v['id']]['acceptIng']++;
+                }
+                if($inst && $ftime){ //已完结工单
+                    $result['partOne'][$v['id']]['end']++;
+                }
+                if($inst){ //全部工单
+                    $result['partOne'][$v['id']]['all']++;
+                }
+
+                // 第二部分（折线图）
+                for($i=0;$i<7;$i++){
+
+                    $nowDayTime = date('m-d',strtotime("-$i day"));
+                    $nowMonthTime = date('Y-m',strtotime("-$i month"));
+                    $nowYearTime = date('Y',strtotime("-$i year"));
+                    $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
+                    $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
+                    $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
+
+                    $opTime = $op->getData('ctime'); //用创建时间来判断【估计要改成完结时间】
+
+                    if($opTime > strtotime($nowDayTime) && $opTime < (strtotime($nowDayTime) + 3600*24)){
+                        $result['partTwo'][$v['id']]['day'][$nowDayTime]++;
+                    }
+                    if($opTime > strtotime($nowMonthTime) && $opTime < (strtotime($nowMonthTime) + 3600*24*30)){
+                        $result['partTwo'][$v['id']]['month'][$nowMonthTime]++;
+                    }
+                    if($opTime > strtotime($nowYearTime) && $opTime < (strtotime($nowYearTime) + 3600*24*30*12)){
+                        $result['partTwo'][$v['id']]['year'][$nowYearTime]++;
+                    }
+                    
+                }
+                
+                
+                
+            }
+
+        }
+        //halt($result);
+        
+
+        
+        return $result;
+    }
+
 }

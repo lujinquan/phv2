@@ -11,7 +11,7 @@
             <div  class="j-list-box j-list1">
 				<h1 class="j-title">待受理工单</h1>
 				<div class="j-Statistics">
-					12<i>个</i>
+					{$data['partOne'][ADMIN_ID]['accept']}<i>个</i>
 				</div>
 				<img src="__ADMIN_IMG__/j-Clip.png" />
 			</div>
@@ -20,7 +20,7 @@
             <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
-            		14<i>个</i>
+            		{$data['partOne'][ADMIN_ID]['acceptIng']}<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
             </div>
@@ -31,7 +31,7 @@
 		      <div  class="j-list-box j-list3">
 		      	<h1 class="j-title">已完结工单</h1>
 		      	<div class="j-Statistics">
-		      		24<i>个</i>
+		      		{$data['partOne'][ADMIN_ID]['end']}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
 		      </div>
@@ -40,7 +40,7 @@
 		      <div  class="j-list-box j-list4">
 		      	<h1 class="j-title">全部工单</h1>
 		      	<div class="j-Statistics">
-		      		53<i>个</i>
+		      		{$data['partOne'][ADMIN_ID]['all']}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-Fill.png" />
 		      </div>
@@ -54,22 +54,20 @@
 			  <div class="j-title fl">工单受理状态分析图</div>
 			  <div class="product-title fr">
 				<ul class="product-ul">
-				  <li class="cur">全部</li>
+				  <!-- <li class="cur">全部</li>
 				  <li class="">郑湾</li>
-				  <li class="">刘丹</li>
+				  <li class="">刘丹</li> -->
+				  {volist name="operateAdmins" id='vo'}
+				  <li class="{if condition="$vo['id'] == ADMIN_ID"}cur{/if} product-li">{$vo['nick']}</li>
+				  {/volist}
 				</ul>
 			  </div>
 		  </div>
 		  <div class="product-con">
-			<div class="product-box clearfix">
-			  <div id="main1" style="width:100%;height:318px;"></div>
-			</div>
-			<div class="product-box  clearfix" style="display: none;">
-			  <div id="main2" style="width:100%;height:318px;"></div>
-			</div>
-			<div class="product-box  clearfix" style="display: none;">
-			  <div id="main3" style="width:100%;height:318px;"></div>
-			</div>
+		  	{volist name="operateAdmins" id='vo'}
+			<div class="product-box clearfix" data-id="{$vo['id']}" {if condition="$vo['id'] == ADMIN_ID"}style="display: none;"{/if}></div>
+			{/volist}
+			<div id="mainPie" style="width:100%;height:318px;"></div>
 		  </div>
 	    </div>
 	  </div>
@@ -86,7 +84,7 @@
 					  <form class="layui-form" action="">
 					    <div class="layui-inline j-chart-right fr">
 					  	  <div class="layui-input-inline">
-					  		<select name="modules" lay-verify="required" lay-search="">
+					  		<select name="modules" lay-verify="required" lay-filter="select-fileter" id="modules" lay-search="">
 					  		  <option value="">请选择时间点查询</option>
 							  <option value="1">近7天</option>
 					  		  <option value="2">月</option>
@@ -150,291 +148,14 @@
   <!-- 工单类别统计 E-->
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
-		$("#main2").css('width',$("#main1").width());
-		$("#main3").css('width',$("#main1").width());
-        var myChart = echarts.init(document.getElementById('main1'));
-        // 指定图表的配置项和数据
-        var option = {
-			 title: {
-				text: '总计',
-				subtext: '103个',
-				align: 'center',
-				x: '24%',
-				y: '40%',
-				textStyle: {
-					fontWeight: 'normal',
-					fontSize: 14,
-					color: '#4A4A4A'
-				}, // 标题
-				subtextStyle: {
-					fontWeight: 'normal',
-					fontSize: 28,
-					color: '#007AFF'
-				}, // 副标题
-			},
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			legend: {
-				orient: 'vertical',
-				right: 'right',
-				bottom:'50%',
-				textStyle:{color: '#4A4A4A',fontSize:'14'},
-				data: ['待受理','受理中','已完结']
-			},
-			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
-			series : [
-				{
-					name: '工单受理状态分析图',
-					type: 'pie',
-					radius: ['40%', '80%'], 
-					center: ['30%', '50%'],
-					label : {
-						normal : {
-							//饼形图显示格式
-							formatter : '{d}%',
-						}
-					},
-					data:[
-						{value:30, name:'待受理'},
-						{value:30, name:'受理中'},
-						{value:40, name:'已完结'},
-					],
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				}
-			]
-		};
-	    var myChart2 = echarts.init(document.getElementById('main2'));
-		var option2 = {
-			 title: {
-				text: '总计',
-				subtext: '60个',
-				align: 'center',
-				x: '24%',
-				y: '40%',
-				textStyle: {
-					fontWeight: 'normal',
-					fontSize: 14,
-					color: '#4A4A4A'
-				}, // 标题
-				subtextStyle: {
-					fontWeight: 'normal',
-					fontSize: 28,
-					color: '#007AFF'
-				}, // 副标题
-			},
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			legend: {
-				orient: 'vertical',
-				right: 'right',
-				bottom:'50%',
-				textStyle:{color: '#4A4A4A',fontSize:'14'},
-				data: ['待受理','受理中','已完结']
-			},
-			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
-			series : [
-				{
-					name: '工单受理状态分析图',
-					type: 'pie',
-					radius: ['40%', '80%'], 
-					center: ['30%', '50%'],
-					label : {
-						normal : {
-							//饼形图显示格式
-							formatter : '{d}%',
-						}
-					},
-					data:[
-						{value:10, name:'待受理'},
-						{value:30, name:'受理中'},
-						{value:40, name:'已完结'},
-					],
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				}
-			]
-		};
-		var myChart3 = echarts.init(document.getElementById('main3'));
-		var option3 = {
-			 title: {
-				text: '总计',
-				subtext: '53个',
-				align: 'center',
-				x: '24%',
-				y: '40%',
-				textStyle: {
-					fontWeight: 'normal',
-					fontSize: 14,
-					color: '#4A4A4A'
-				}, // 标题
-				subtextStyle: {
-					fontWeight: 'normal',
-					fontSize: 28,
-					color: '#007AFF'
-				}, // 副标题
-			},
-			tooltip : {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			legend: {
-				orient: 'vertical',
-				right: 'right',
-				bottom:'50%',
-				textStyle:{color: '#4A4A4A',fontSize:'14'},
-				data: ['待受理','受理中','已完结']
-			},
-			color : [ '#FAB843', '#7ED44F', '#7B62E9'],
-			series : [
-				{
-					name: '工单受理状态分析图',
-					type: 'pie',
-					radius: ['40%', '80%'], 
-					center: ['30%', '50%'],
-					label : {
-						normal : {
-							//饼形图显示格式
-							formatter : '{d}%',
-						}
-					},
-					data:[
-						{value:80, name:'待受理'},
-						{value:30, name:'受理中'},
-						{value:40, name:'已完结'},
-					],
-					itemStyle: {
-						emphasis: {
-							shadowBlur: 10,
-							shadowOffsetX: 0,
-							shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				}
-			]
-		};
+		// $("#main2").css('width',$("#main1").width());
+		// $("#main3").css('width',$("#main1").width());
+      
         // 使用刚指定的配置项和数据显示图表。
-		myChart.setOption(option);
-		myChart2.setOption(option2);
-		myChart3.setOption(option3);
-		//工程完结量统计 S
-		var myChart4 = echarts.init(document.getElementById('main4'));
-		  // 指定图表的配置项和数据
-		var option4 = {
-			backgroundColor:'#fff',
-			tooltip: {
-				trigger: 'item'
-			},
-			legend: {
-				orient: 'vertical',
-				right: 'right',
-				bottom:'70',
-				textStyle:{color: '#4A4A4A',fontSize:'14'},
-				data: ['全部','刘丹','郑湾']
-			},
-			grid: {
-				x: '50',
-				x2: '30',
-				y: '40',
-				y2: '50',
-				left: 0,
-				right: 100,
-				top: 50,
-				bottom:50,
-				containLabel: true
-			},
-			xAxis:  {
-				type: 'category',
-				axisLabel:{
-					textStyle:{
-						color:'#333'
-					}
-				},
-				axisLine:{
-					lineStyle:{
-						color:'#d9d9d9'
-					}
-				},
-				axisTick:{
-					show:false
-				},
-				splitLine: {
-					show: true,
-					lineStyle: {
-						color: '#ccc',
-						type : "solid"
-					}
-				},	
-				boundaryGap: false,
-				data: ['05.21','05.22','05.23','05.24','05.25','05.26','05.27']
-			},
-			yAxis: {
-				type: 'value',
-				axisLabel:
-				{
-					textStyle:{
-						color:'#333'
-					},
-					formatter: '{value}'
-				},
-				axisLine:{
-					lineStyle:{
-						color:'#d9d9d9'
-					}
-				},
-				axisTick:{
-					show:false
-				},
-				splitLine: {
-					show: true,
-					lineStyle: {
-						color: '#ccc',
-						type : "solid"
-					}
-				},	
-			},
-			color : [ '#7860E9', '#7ACE4C', '#FAB844'],
-			series: [
-				{
-					name:'全部',
-					type:'line',
-					data:[11, 11, 14, 11, 21, 25, 21],
-					symbol:'emptyCircle',
-					symbolSize:10
-				},
-				{
-					name:'刘丹',
-					type:'line',
-					data:[18, 17, 15, 13, 12, 23, 20],
-					symbol:'emptyCircle',
-					symbolSize:10
-				},
-				{
-					name:'郑湾',
-					type:'line',
-					data:[12, 14, 12, 11, 10, 16, 30],
-					symbol:'emptyCircle',
-					symbolSize:10
-				}
-			]
-		};
-
-		  // 使用刚指定的配置项和数据显示图表。
-		  myChart4.setOption(option4);
+		//myChart.setOption(option);
+		//myChart2.setOption(option2);
+		// myChart3.setOption(option3);
+		
 		//工程完结量统计 E
 		//工单类别统计S
 		// 基于准备好的dom，初始化echarts实例
@@ -513,18 +234,230 @@
 	
 		  // 使用刚指定的配置项和数据显示图表。
 		  myChart7.setOption(option7);
+
+		var data = {:json_encode($data['partOne'])};
+		myChartPie(data,40);
 		//工单类别统计E
 		//tab切换
 		$(function(){
+
 			var $div_li =$(".product-title li");
 			$div_li.click(function(){
-				$(this).addClass("cur")
-					   .siblings().removeClass("cur");
+				$(this).addClass("cur").siblings().removeClass("cur");
+				
 				var index =  $div_li.index(this);
-				$(".product-con > div") 
-						.eq(index).show().siblings().hide(); 
+				// $(".product-con > div").eq(index).show().siblings().hide(); 
+				var adminID = $(".product-con > div").eq(index).attr('data-id');
+				// var data = {:json_encode($data['partOne'])};
+				console.log(data);
+				console.log(adminID);
+				myChartPie(data,adminID);
 			})
-			
+		});
+		layui.use(['form', 'func'], function() {
+		    var $ = layui.jquery, form = layui.form;
+				form.on('select(select-fileter)', function(data){
+			      //console.log(data.elem); //得到select原始DOM对象
+			      //console.log(data.value); //得到被选中的值
+			      //console.log(data.othis); //得到美化后的DOM对象
+			      var searchType = data.value;
+			      var ob = {1:'day',2:'month',3:'year'};
+			      console.log(ob[searchType]);
+			      var dataTwo = {:json_encode($data['partTwo'])};
+			      var key = []; //折线图的x轴坐标点数组
+			      var value = new Object(); //折线图的y轴坐标点数组(分人)
+			      for(var i in dataTwo){
+			      	var z = dataTwo[i][ob[searchType]];
+			      	value[i] = new Array();
+			      	for(var j in z){
+			      		key.push(j);
+			      		// value[i].push(z[j]);
+			      		// y.push(z[j]);
+			      	}
+						//console.log(dataTwo[i][ob[searchType]]);
 
-		})
+			      	
+			      }
+			      console.log(key); //得到被选中的值
+			      console.log(value); //得到被选中的值
+			    });
+		});
+		// 折线图渲染函数
+	    function myChartLine(){
+	    	//工程完结量统计 S
+			var myChart4 = echarts.init(document.getElementById('main4'));
+			  // 指定图表的配置项和数据
+			var option4 = {
+				backgroundColor:'#fff',
+				tooltip: {
+					trigger: 'item'
+				},
+				legend: {
+					orient: 'vertical',
+					right: 'right',
+					bottom:'70',
+					textStyle:{color: '#4A4A4A',fontSize:'14'},
+					data: ['全部','刘丹','郑湾']
+				},
+				grid: {
+					x: '50',
+					x2: '30',
+					y: '40',
+					y2: '50',
+					left: 0,
+					right: 100,
+					top: 50,
+					bottom:50,
+					containLabel: true
+				},
+				xAxis:  {
+					type: 'category',
+					axisLabel:{
+						textStyle:{
+							color:'#333'
+						}
+					},
+					axisLine:{
+						lineStyle:{
+							color:'#d9d9d9'
+						}
+					},
+					axisTick:{
+						show:false
+					},
+					splitLine: {
+						show: true,
+						lineStyle: {
+							color: '#ccc',
+							type : "solid"
+						}
+					},	
+					boundaryGap: false,
+					data: ['05.21','05.22','05.23','05.24','05.25','05.26','05.27']
+				},
+				yAxis: {
+					type: 'value',
+					axisLabel:
+					{
+						textStyle:{
+							color:'#333'
+						},
+						formatter: '{value}'
+					},
+					axisLine:{
+						lineStyle:{
+							color:'#d9d9d9'
+						}
+					},
+					axisTick:{
+						show:false
+					},
+					splitLine: {
+						show: true,
+						lineStyle: {
+							color: '#ccc',
+							type : "solid"
+						}
+					},	
+				},
+				color : [ '#7860E9', '#7ACE4C', '#FAB844'],
+				series: [
+					// {
+					// 	name:'全部',
+					// 	type:'line',
+					// 	data:[11, 11, 14, 11, 21, 25, 21],
+					// 	symbol:'emptyCircle',
+					// 	symbolSize:10
+					// },
+					{
+						name:'刘丹',
+						type:'line',
+						data:[18, 17, 15, 13, 12, 23, 20],
+						symbol:'emptyCircle',
+						symbolSize:10
+					},
+					{
+						name:'郑湾',
+						type:'line',
+						data:[12, 14, 12, 11, 10, 16, 30],
+						symbol:'emptyCircle',
+						symbolSize:10
+					}
+				]
+			};
+
+			// 使用刚指定的配置项和数据显示图表。
+			myChart4.setOption(option4);
+	    }
+
+		// 饼状图渲染函数
+		function myChartPie(data,adminID){
+			var myChart = echarts.init(document.getElementById('mainPie'));
+			    
+		    var main1Value = data[adminID].accept;
+		    var main2Value = data[adminID].acceptIng;
+		    var main3Value = data[adminID].end;
+
+		    // 指定图表的配置项和数据
+		    var option = {
+				 title: {
+					text: '总计',
+					subtext: (parseInt(main1Value) + parseInt(main2Value) + parseInt(main3Value))+'个',
+					align: 'center',
+					x: '24%',
+					y: '40%',
+					textStyle: {
+						fontWeight: 'normal',
+						fontSize: 14,
+						color: '#4A4A4A'
+					}, // 标题
+					subtextStyle: {
+						fontWeight: 'normal',
+						fontSize: 28,
+						color: '#007AFF'
+					}, // 副标题
+				},
+				tooltip : {
+					trigger: 'item',
+					formatter: "{a} <br/>{b} : {c} ({d}%)"
+				},
+				legend: {
+					orient: 'vertical',
+					right: 'right',
+					bottom:'50%',
+					textStyle:{color: '#4A4A4A',fontSize:'14'},
+					data: ['待受理','受理中','已完结']
+				},
+				color : [ '#FAB843', '#7ED44F', '#7B62E9'],
+				series : [
+					{
+						name: '工单受理状态分析图',
+						type: 'pie',
+						radius: ['40%', '80%'], 
+						center: ['30%', '50%'],
+						label : {
+							normal : {
+								//饼形图显示格式
+								formatter : '{d}%',
+							}
+						},
+						data:[
+							{value:main1Value, name:'待受理'},
+							{value:main2Value, name:'受理中'},
+							{value:main3Value, name:'已完结'},
+						],
+						itemStyle: {
+							emphasis: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: 'rgba(0, 0, 0, 0.5)'
+							}
+						}
+					}
+				]
+			};
+
+			myChart.setOption(option);
+		}
+
     </script>
