@@ -113,7 +113,7 @@ function file(opt){
     this.UpButton = $(opt.upButton);
     this.ChangeOrderID = opt.ChangeOrderID;
     this.TitleName = opt.title;
-    this.init();
+   /* this.init(); */
 }
 file.prototype.init = function(){
     var that = this;
@@ -175,7 +175,7 @@ file.prototype.fileShowEvent = function(){
             });
         }
     }
-    this.button.val('');
+   /* this.button.val(''); */
     // console.log(this.filesArray);
 }
 file.prototype.upload = function(){
