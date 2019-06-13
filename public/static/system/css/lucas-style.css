@@ -90,7 +90,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 
 /*----------房屋档案详情 S----------*/
 .j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden;}
-.j-details-box.floorWrap{ padding-top: 50px;}
+/* .j-details-box.floorWrap{ padding-top: 50px;} */
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
@@ -114,13 +114,15 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-col-space90>*{padding: 15px 45px 0;}
 .layui-col-space90{margin: -15px -45px 0;}
 /*楼层导航 S*/
-.j-floor-nav .navWrap{position: fixed;top:150px;left: 240px;height: 28px;z-index: 99999;background:rgba(255,255,255,0.5);}
-.j-floor-nav .navWrap li{ float: left; width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
+.j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 99999;background:rgba(255,255,255,0.5);}
+/* .j-floor-nav .navWrap li{width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
 .j-floor-nav .navWrap li.on{background:url(../image/guide.png) no-repeat;}
 .j-floor-nav .navWrap li.current{width: 212px; height: 28px;background:url(../image/Rectangle17-on.png) no-repeat;}
-.j-floor-nav .navWrap li.on.current{background:url(../image/guide-on.png) no-repeat;}
+.j-floor-nav .navWrap li.on.current{background:url(../image/guide-on.png) no-repeat;} */
+.j-floor-nav .navWrap li{min-width: 80px; height: 39px; line-height: 39px; padding: 0 12px; background:#C6D2DF; margin-bottom: 10px; border-radius: 4px;}
+.j-floor-nav .navWrap li.current{background:#2E77EF;}
 .j-floor-nav .navWrap li a{display: block; color: #fff;}
-.j-floor-nav .navWrap li i{ border:#fff 1px solid;border-radius: 50%; width: 15px;height: 15px;font-style:normal; margin-left: 25px;
+.j-floor-nav .navWrap li i{ border:#fff 1px solid;border-radius: 50%; width: 15px;height: 15px;font-style:normal; /* margin-left: 25px; */
  display: inline-block;font:12px/14px '';text-align: center;margin-right: 12px;
  }
  .j-floor-nav .navWrap li b{ line-height: 28px;display: inline-block;}
