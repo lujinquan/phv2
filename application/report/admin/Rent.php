@@ -20,10 +20,10 @@ class Rent extends Admin
      */
     public function months()
     {
-    	if ($this->request->isAjax()) {halt(1);
+    	if ($this->request->isAjax()) {
             $ReportModel = new ReportModel;
             $where = [['type','eq','RentReport']];
-            $getData = $this->request->get();
+            $getData = $this->request->post();
 
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:1;
@@ -39,7 +39,8 @@ class Rent extends Admin
             $data['data'] = isset($temps[$instid][$ownerid])?$temps[$instid][$ownerid]:[];
             $data['msg'] = '';
             $data['code'] = 0;
-            return json($data);
+            //halt(json_encode($data));
+            return json_encode($data);
         }
         // $ReportModel = new ReportModel;
         // $where = [['type','eq','RentReport']];
