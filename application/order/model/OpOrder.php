@@ -3,6 +3,7 @@ namespace app\order\model;
 
 use think\Model;
 use app\system\model\SystemUser as UserModel;
+use app\common\model\Cparam as ParamModel;
 
 class OpOrder extends Model
 {
@@ -236,11 +237,19 @@ class OpOrder extends Model
      */
     public function statistics(){
 
-        $result = [];
+        $result = [
+            'partOne' => [],
+            'partTwo' => [],
+            'partThree' => [],
+        ];
 
         $operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick,inst_ids')->select();
         //$inst_ids = explode(',',session('admin_user.inst_ids'));
-        //
+        $params = ParamModel::getCparams();
+        $opTypes = array_keys($params['op_order_type']);
+        $inZys = array_keys($params['insts_zy']);
+        $inLds = array_keys($params['insts_ld']);
+
         $initWhere['days'] = [];
         
         $whereS[] = ['duid','not like','%,%']; //受理中工单
@@ -248,9 +257,9 @@ class OpOrder extends Model
         $whereZ[] = ['ftime','eq',0];
         $whereE[] = ['ftime','neq',0];
 
-        $opOrderAll = self::field('id,cuid,inst_id,duid,ctime,ftime')->select();
+        $opOrderAll = self::field('id,cuid,inst_id,duid,op_order_type,ctime,ftime')->select();
 
-        foreach($operateAdmins as $v){ //遍历运营人员
+        foreach($operateAdmins as $key => $v){ //遍历运营人员
 
             $result['partOne'][$v['id']]['accept'] = 0;
             $result['partOne'][$v['id']]['acceptIng'] = 0;
@@ -300,8 +309,29 @@ class OpOrder extends Model
                     
                 }
                 
+                // 第三部分（柱状图）
                 
+                if($key == 0){
+                    foreach($opTypes as $o){
+                        if(!isset($result['partThree']['zy'][$o])){
+                            $result['partThree']['zy'][$o] = 0;
+                        }
+                        if(!isset($result['partThree']['ld'][$o])){
+                            $result['partThree']['ld'][$o] = 0;
+                        }
+                        if($o == $op['op_order_type']){
+                            if(in_array($op['inst_id'],$inZys)){ //紫阳所
+                                $result['partThree']['zy'][$op['op_order_type']]++;
+                            }
+                            if(in_array($op['inst_id'],$inLds)){ //粮道所
+                                $result['partThree']['ld'][$op['op_order_type']]++;
+                            } 
+                        }
+                        
+                    }
+                }
                 
+                //halt();
             }
 
         }

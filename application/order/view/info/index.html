@@ -1,1 +1,36 @@
 {include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+
+  </div>
+</script>
+
+<script type="text/javascript">
+    layui.use(['table','jquery'], function() {
+        var table = layui.table;
+        table.render({
+            elem: '#dataTable'
+            ,height: 550
+            ,url: '{:url("order/Info/index")}' //数据接口
+            ,page: true //开启分页
+            ,limit: 10
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                {field: 'name', width: 160, align:'center', title: '姓名'}
+                ,{field: 'orderTotal', width: 100, align:'center', title: '工单总量'} 
+                ,{field: 'orderEndTotal', minWidth: 120, align:'center', title: '完结量'}
+                ,{field: 'orderEndPercent', width: 180, align:'center', title: '完结率'}
+                ,{field: 'orderTurnTotal', width: 100, align:'center', title: '转接量'}
+                ,{field: 'orderTimePercent', width: 180, align:'center', title: '平均处理时长'}
+                ,{field: 'orderTurnPercent', width: 180, align:'center', title: '平均流转节点'}
+                //,{title: '操作', minWidth: 80, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        })
+    });
+</script>
