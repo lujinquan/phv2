@@ -85,7 +85,6 @@
 					    <div class="layui-inline j-chart-right fr">
 					  	  <div class="layui-input-inline">
 					  		<select name="modules" lay-verify="required" lay-filter="select-fileter" id="modules" lay-search="">
-					  		  <option value="">请选择时间点查询</option>
 							  <option value="1">近7天</option>
 					  		  <option value="2">月</option>
 					  		  <option value="3">年</option>
@@ -118,7 +117,7 @@
   		  		<div class="product-main clearfix">
   		  		  <div class="j-product-title clearfix">
   		  			  <div class="j-title fl">工单类别统计</div>
-					<form class="layui-form" action="">
+<!-- 					<form class="layui-form" action="">
 					  <div class="layui-inline j-chart-right  fr">
 						  <div class="layui-input-inline">
 							<select name="modules" lay-verify="required" lay-search="">
@@ -128,7 +127,7 @@
 							</select>
 						  </div>
 					  </div>
-					</form>
+					</form> -->
   		  		  </div>
   		  		  <div class="product-con">
   		  			<div class="product-box clearfix">
@@ -147,94 +146,6 @@
   </div>
   <!-- 工单类别统计 E-->
 <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-		// $("#main2").css('width',$("#main1").width());
-		// $("#main3").css('width',$("#main1").width());
-      
-        // 使用刚指定的配置项和数据显示图表。
-		//myChart.setOption(option);
-		//myChart2.setOption(option2);
-		// myChart3.setOption(option3);
-		
-		//工程完结量统计 E
-		//工单类别统计S
-		// 基于准备好的dom，初始化echarts实例
-			var myChart7 = echarts.init(document.getElementById('main7'));
-			  // 指定图表的配置项和数据
-			var option7 = {
-				tooltip : {
-					trigger: 'item',
-					axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-						type : 'shadow',      // 默认为直线，可选为：'line' | 'shadow'
-					}
-				},
-				grid: {
-					left:0,
-					right: 100,
-					top:50,
-					bottom:50,
-					containLabel: true
-				},
-				legend: {
-					orient: 'vertical',
-					right: '0',
-					bottom:'80',
-					textStyle:{color: '#4A4A4A',fontSize:'14'},
-					data:['全部','紫阳所','粮道所',]
-				},
-				color:['#7960E8','#7ACE4C','#FAB844'],
-				calculable : true,
-				xAxis : [
-					{
-						type : 'category',
-						data : ['楼栋基础数据','房屋基础数据','租户信息','租金管理','计租表','租约','异动','报表数据'],
-						axisTick:{
-							show:false
-						}
-					}
-				],
-				yAxis : [
-					{   
-						name: '',
-						max:120,
-						type : 'value',
-						axisTick:{
-							show:false
-						},
-						axisLabel:{
-							// formatter: '{value}家企业'
-						}
-					}
-				],
-				series : [
-					{
-						name:'全部',
-						radius : '45%',
-						type:'bar',
-						barGap:0,
-						//barWidth:25,
-						data:[112,101,23,53,64,72,93,101],
-					},
-					{
-						name:'紫阳所',
-						type:'bar',
-						barGap:0,
-						//barWidth:25,
-						data:[111,93,22,54,63,72,91,101],
-					},
-					{
-						name:'粮道所',
-						type:'bar',
-						barGap:0,
-						//barWidth:25,
-						data:[81,92,50,53,90,74,90,42],
-					}
-				]
-			};
-	
-		  // 使用刚指定的配置项和数据显示图表。
-		  myChart7.setOption(option7);
-
 		var data = {:json_encode($data['partOne'])};
 		myChartPie(data,40);
 		//工单类别统计E
@@ -256,34 +167,155 @@
 		});
 		layui.use(['form', 'func'], function() {
 		    var $ = layui.jquery, form = layui.form;
-				form.on('select(select-fileter)', function(data){
-			      //console.log(data.elem); //得到select原始DOM对象
-			      //console.log(data.value); //得到被选中的值
-			      //console.log(data.othis); //得到美化后的DOM对象
-			      var searchType = data.value;
-			      var ob = {1:'day',2:'month',3:'year'};
-			      console.log(ob[searchType]);
-			      var dataTwo = {:json_encode($data['partTwo'])};
-			      var key = []; //折线图的x轴坐标点数组
-			      var value = new Object(); //折线图的y轴坐标点数组(分人)
-			      for(var i in dataTwo){
-			      	var z = dataTwo[i][ob[searchType]];
-			      	value[i] = new Array();
-			      	for(var j in z){
-			      		key.push(j);
-			      		// value[i].push(z[j]);
-			      		// y.push(z[j]);
-			      	}
-						//console.log(dataTwo[i][ob[searchType]]);
 
-			      	
-			      }
-			      console.log(key); //得到被选中的值
-			      console.log(value); //得到被选中的值
-			    });
+		    //线型图数据
+		    var dataTwo = {:json_encode($data['partTwo'])};
+		    var ob = {1:'day',2:'month',3:'year'};
+		    var keys = []; //折线图的x轴坐标点数组
+		    var values = new Object(); //折线图的y轴坐标点数组(分人)
+
+			form.on('select(select-fileter)', function(data){
+		        var searchType = data.value; //得到被选中的值
+		        var keys = []; //折线图的x轴坐标点数组
+		        var values = new Object(); //折线图的y轴坐标点数组(分人)
+			     for(var i in dataTwo){
+			      	var z = dataTwo[i][ob[searchType]];
+			      	values[i] = new Array();
+			      	for(var j in z){
+			      		if(keys.indexOf(j) === -1){
+			      			keys.push(j);
+			      		}
+			      		values[i].push(z[j]);
+			      	}
+			    }
+			    myChartLine(keys,values);
+		    });
+		    for(var a in dataTwo){
+		      	var b = dataTwo[a][ob[1]];
+		      	values[a] = new Array();
+		      	for(var c in b){
+		      		if(keys.indexOf(c) === -1){
+		      			keys.push(c);
+		      		}
+		      		values[a].push(b[c]);
+		      	}
+		    }
+		    myChartLine(keys,values);
+
+		    //柱状图数据
+		    var dataThree = {:json_encode($data['partThree'])};
+		    var params = {:json_encode($params)};
+		    var shadowKeys = new Array();
+		    var zyValues = new Array()
+		    var ldValues = new Array()
+		     
+		    for(var s in params.op_order_type){
+		      	shadowKeys.push(params.op_order_type[s]);
+		    }
+		    for(var t in dataThree.zy){
+		      	zyValues.push(dataThree.zy[t]);
+		    }
+		    for(var u in dataThree.ld){
+		      	ldValues.push(dataThree.ld[u]);
+		    }
+		    myChartShadow(shadowKeys,zyValues,ldValues);
+
+		    console.log(shadowKeys);
+		    console.log(zyValues);
+		    console.log(ldValues);
 		});
+
+
+
+
+
+
+		// 柱状图渲染函数
+		function myChartShadow(shadowKeys,zyValues,ldValues){
+			//工单类别统计S
+			// 基于准备好的dom，初始化echarts实例
+			var myChart7 = echarts.init(document.getElementById('main7'));
+
+			// 指定图表的配置项和数据
+			var option7 = {
+				tooltip : {
+					trigger: 'item',
+					axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+						type : 'shadow',      // 默认为直线，可选为：'line' | 'shadow'
+					}
+				},
+				grid: {
+					left:0,
+					right: 100,
+					top:50,
+					bottom:50,
+					containLabel: true
+				},
+				legend: {
+					orient: 'vertical',
+					right: '0',
+					bottom:'80',
+					textStyle:{color: '#4A4A4A',fontSize:'14'},
+					data:['紫阳所','粮道所',]
+				},
+				color:['#7960E8','#7ACE4C','#FAB844'],
+				calculable : true,
+				xAxis : [
+					{
+						type : 'category',
+						data : shadowKeys,
+						axisTick:{
+							show:false
+						}
+					}
+				],
+				yAxis : [
+					{   
+						name: '',
+						max:120,
+						type : 'value',
+						axisTick:{
+							show:false
+						},
+						axisLabel:{
+							// formatter: '{value}家企业'
+						}
+					}
+				],
+				series : [
+					// {
+					// 	name:'全部',
+					// 	radius : '45%',
+					// 	type:'bar',
+					// 	barGap:0,
+					// 	//barWidth:25,
+					// 	data:[112,101,23,53,64,72,93,101],
+					// },
+					{
+						name:'紫阳所',
+						type:'bar',
+						barGap:0,
+						//barWidth:25,
+						data:zyValues,
+					},
+					{
+						name:'粮道所',
+						type:'bar',
+						barGap:0,
+						//barWidth:25,
+						data:ldValues,
+					}
+				]
+			};
+	
+			// 使用刚指定的配置项和数据显示图表。
+			myChart7.setOption(option7);
+		}
+
+
+
 		// 折线图渲染函数
-	    function myChartLine(){
+	    function myChartLine(keys,values){
 	    	//工程完结量统计 S
 			var myChart4 = echarts.init(document.getElementById('main4'));
 			  // 指定图表的配置项和数据
@@ -333,7 +365,7 @@
 						}
 					},	
 					boundaryGap: false,
-					data: ['05.21','05.22','05.23','05.24','05.25','05.26','05.27']
+					data: keys
 				},
 				yAxis: {
 					type: 'value',
@@ -372,14 +404,14 @@
 					{
 						name:'刘丹',
 						type:'line',
-						data:[18, 17, 15, 13, 12, 23, 20],
+						data:values[39],
 						symbol:'emptyCircle',
 						symbolSize:10
 					},
 					{
 						name:'郑湾',
 						type:'line',
-						data:[12, 14, 12, 11, 10, 16, 30],
+						data:values[40],
 						symbol:'emptyCircle',
 						symbolSize:10
 					}
@@ -389,6 +421,8 @@
 			// 使用刚指定的配置项和数据显示图表。
 			myChart4.setOption(option4);
 	    }
+
+
 
 		// 饼状图渲染函数
 		function myChartPie(data,adminID){
