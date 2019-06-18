@@ -26,6 +26,7 @@ class SystemAffiche extends Model
     	]; 
     	if($allDatas){
     		foreach($allDatas as $row){
+                $row['create_time'] = tranTime($row['create_time']);
     			if(strpos($row['read_users'],'|'.session('admin_user.uid').'|') === false){
 					$affiches['unreads'][] = $row;
     			}else{
@@ -34,7 +35,7 @@ class SystemAffiche extends Model
     			
     		}
     	}
-    	//$affiches['total'] = count($affiches['unreads']);
+    	//halt($affiches);
     	return $affiches;
     }
 

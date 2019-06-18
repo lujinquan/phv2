@@ -40,7 +40,7 @@
 			</a>
 			<div class="layui-nav-child">
 			   <div class="j-title clearfix">
-				   <span class="j-news">消息{if condition="count($affiche['unreads'])"}（{:count($affiche['unreads'])}）<i class="j-dot"></i>{/if}</span>
+				   <span class="j-news">消息（<span class="aff-sum">{:count($affiche['unreads'])}</span>）{if condition="count($affiche['unreads'])"}<i class="j-dot"></i>{/if}</span>
 			   </div>
 			   <div class="j-title-tab clearfix">
 				  <ul>
@@ -53,16 +53,16 @@
                        {volist name="affiche['unreads']" id="vo"}
 					   <li class="j-list" data-id="{$vo['id']}">
 							<a  class="" href="javascript:;">
-								<span class="fr">{:date('H:i',$vo['create_time'])}</span><span class="j-size">{$vo['title']}</span>
+								<span class="fr">{$vo['create_time']}</span><span class="j-size">{$vo['title']}</span>
 							</a>
 						</li>
                         {/volist}
 				   </ol>
-				    <ol class="hide">
+				    <ol class="hide" id="reads">
                        {volist name="affiche['reads']" id="vo"}
 					   <li class="j-list" data-id="{$vo['id']}">
 							<a  class="" href="javascript:;">
-								<span class="fr">{:date('H:i',$vo['create_time'])}</span><span class="j-size">{$vo['title']}</span>
+								<span class="fr">{$vo['create_time']}</span><span class="j-size">{$vo['title']}</span>
 							</a>
 						</li>
                         {/volist}
@@ -158,9 +158,18 @@
 	
 	$(".j-title-con li").on('click', function(){
         var id = $(this).attr('data-id');
-        $.post('/admin.php/system/Api/getAfficheRow', {id:id}, function(res){
+        //var that = $(this);
+        $('#reads').append(this);
+        var affSum = $('.aff-sum').text();
+        $('.aff-sum').text(affSum - 1);
+        if(affSum == 1){
+            $('.j-dot').remove();
+        }
+  
+        console.log(affSum);
+        $.post('/admin.php/system/Api/getAfficheRow', {id:id}, function(res,that){
           //console.log(res.data.content);
-          //console.log(res);
+          //console.log(res); 
           layer.open({
               title: '消息通知'
               ,offset: 'auto'
@@ -169,6 +178,9 @@
               ,content: '<div id="j-news-details" class="j-news-details"><h1>'+res.data.title +'</h1><h2>' +res.data.create_time + '</h2><div class="j-content-size">'+ res.data.content +'</div></div>' //注意，如果str是object，那么需要字符拼接。
           });
         });
+        
+        //$(this).remove();
+        //$(this).append();
 		// layer.open({
 		//   title: '消息通知'
 		//   ,offset: 'auto'
