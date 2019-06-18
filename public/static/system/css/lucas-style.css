@@ -207,3 +207,14 @@ opacity: .8color: #333;}
 .j-news-details h2{color: #141414; font:12px/31px '';}
 .j-news-details .j-content-size{ line-height: 24px;}
 /*------------------ 站内信 E ----------------*/
+/*------------------ 公告 S ----------------*/
+.j-index-notice{background: #fff;border-radius: 4px;padding: 15px;}
+.j-notice-details{ padding: 10px;}
+.j-record .j-title {height: 25px; line-height: 25px; margin-bottom: 20px;}
+.j-record .j-title .j-explain .j-name{ text-indent: 18px;display: inline-block; font:bold 22px/25px 'MicrosoftYaHei-Bold';}
+.j-record .j-title .j-explain i{ width: 5px; height: 25px; background:#0084FF ; border-radius: 3px;display: inline-block; float: left;}
+.j-record .j-title .j-tab li{ float: left;font:bold 22px/25px 'MicrosoftYaHei-Bold'; color: #9B9B9B; margin-right: 10px;}
+.j-record .j-title .j-tab li.j-line{ box-sizing: border-box; border-right: #ccc 1px solid; padding-right: 10px;}
+.j-record .j-record-name li{ height: 35px; font:bold 16px/35px 'MicrosoftYaHei-Bold'; color: #4A4A4A;}
+.j-record .j-record-name dd{ width: 33.3%; box-sizing: border-box; border-right: #D8D8D8 1px solid;}
+/*------------------ 公告 E ----------------*/
