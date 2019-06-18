@@ -1,0 +1,181 @@
+<form class="layui-form" action="{url('edit')}" method="post">
+    <div class="e-space"></div>
+    <div class="page-form">
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">基本信息</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 结构类别</label>
+                <div class="layui-input-inline">
+                    <select name="ban_struct_id" class="field-cid" type="select">
+                        <option value="">请选择</option>
+                        {volist name="params['structs']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 完损等级</label>
+                <div class="layui-input-inline">
+                    <select name="ban_damage_id" class="field-cid" type="select">
+                        <option value="">请选择</option>
+                        {volist name="params['damages']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_damage_id']"}selected{/if}>{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 楼栋产别</label>
+                <div class="layui-input-inline">
+                    <select name="ban_owner_id" class="field-cid" type="select">
+                        <option value="">请选择</option>
+                        {volist name="params['owners']" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_owner_id']"}selected{/if}>{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 建成年份</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_build_year" value="{$data_info['ban_build_year']}" id="ban_build_year" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 总单元数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_units" value="{$data_info['ban_units']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 总楼层数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_floors" value="{$data_info['ban_floors']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+            <label class="layui-form-label e-label"><font color="red"></font>  栋号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_door" value="{$data_info['ban_door']}" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 栋系数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_ratio" value="{$data_info['ban_ratio']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 产权证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_property_id" value="{$data_info['ban_property_id']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        {if condition="INST_LEVEL < 3"}
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 管段</label>
+                <div class="layui-input-inline">
+                    <select name="ban_inst_id" class="field-cid" type="select" required>
+                        <option value="">请选择</option>
+                        {volist name=":config('inst_data_names')[INST]" id="v"}
+                        <option value="{$key}" {if condition="$key == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 产权来源</label>
+                <div class="layui-input-inline w400">
+                    <input type="text" name="ban_property_source" value="{$data_info['ban_property_source']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 地址</label>
+                <div class="layui-input-inline w400">
+                    <input type="text" name="ban_address" value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
+        <div class="e-space"></div>
+        <div class="layui-form-item" style="padding-left:40px;">
+            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font color="#0084FF">补充附件</font>
+            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
+        </div>
+        <div class="e-space"></div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red">*</font> 图卡</label>
+                <div class="layui-input-inline">
+                    <button type="button" name="img" class="layui-btn layui-btn-normal" lay-type="image" lay-data="{accept:'image'}">请上传图片</button>
+                </div>
+            </div> 
+            <div class="layui-block e-inline e-box"></div> 
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 经度</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_gpsx" value="{$data_info['ban_gpsx']}" autocomplete="off" class="layui-input">
+                </div> 
+            </div>
+            <div class="layui-inline e-inline">
+                <label class="layui-form-label e-label"><font color="red"></font> 纬度</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ban_gpsy" value="{$data_info['ban_gpsy']}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-block e-inline e-box"></div>
+        </div>
+        <div class="e-space"></div>
+        <div class="layui-form-item">
+            <div class="layui-input-block e-inline">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            </div>
+        </div>
+    </div>
+</form>
+{include file="system@block/layui" /}
+
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //年选择器
+        laydate.render({
+            elem: '#ban_build_year'
+            ,type: 'year'
+            ,max: nowDate()
+        });
+
+        laydate.render({
+            elem: '#rentTime'
+            ,range: '~'
+        });
+    });
+
+    function nowDate(){
+        var now = new Date();
+        return "'"+now.getFullYear()+"'";
+    }
+</script>
