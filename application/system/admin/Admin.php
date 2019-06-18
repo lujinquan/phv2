@@ -16,6 +16,7 @@ use app\system\model\SystemMenu as MenuModel;
 use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemLog as LogModel;
+use app\system\model\SystemAffiche as AfficheModel;
 use app\common\model\Cparam as ParamModel;
 use app\order\model\OpOrder as OpOrderModel;
 use think\Db;
@@ -82,6 +83,10 @@ class Admin extends Common
             MenuModel::where('id','eq',215)->setField('tip',json_encode($acceptMenuTip));
 
             $this->_systemLog($curMenu['title']);
+
+            $afficheModel = new AfficheModel;
+            $affiche = $afficheModel->getAffiche();//halt($affiches);
+            $this->assign('affiche',$affiche);
 
             // 如果不是ajax请求，则读取菜单
             if (!$this->request->isAjax()) {

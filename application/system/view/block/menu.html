@@ -36,11 +36,11 @@
 		<li class="layui-nav-item j-mail-box">
 		    <a href="javascript:;"  class="j-aicon">
 				<i class="layui-icon layui-icon-notice"></i>
-				<i class="j-dot"></i>
+				{if condition="count($affiche['unreads'])"}<i class="j-dot"></i>{/if}
 			</a>
 			<div class="layui-nav-child">
 			   <div class="j-title clearfix">
-				   <span class="j-news">消息（5）<i class="j-dot"></i></span>
+				   <span class="j-news">消息{if condition="count($affiche['unreads'])"}（{:count($affiche['unreads'])}）<i class="j-dot"></i>{/if}</span>
 			   </div>
 			   <div class="j-title-tab clearfix">
 				  <ul>
@@ -50,28 +50,23 @@
 			   </div>
 			   <div class="j-title-con">
 				   <ol>
-					   <li class="j-list">
+                       {volist name="affiche['unreads']" id="vo"}
+					   <li class="j-list" data-id="{$vo['id']}">
 							<a  class="" href="javascript:;">
-								<span class="fr">14:09</span><span class="j-size">待确认问题记录表2019年5月——2待确认问题记录表2019年5月——2</span>
+								<span class="fr">{:date('H:i',$vo['create_time'])}</span><span class="j-size">{$vo['title']}</span>
 							</a>
 						</li>
-						<li  class="j-list">
-							<a  class="" href="javascript:;">
-								<span class="fr">昨天 9:30</span><span class="j-size">您有一条【房屋基础数据】工单已处理，单号12587459854</span>
-							</a>
-						</li>
+                        {/volist}
 				   </ol>
 				    <ol class="hide">
-					   <li class="j-list">
+                       {volist name="affiche['reads']" id="vo"}
+					   <li class="j-list" data-id="{$vo['id']}">
 							<a  class="" href="javascript:;">
-								<span class="fr">14:09</span><span class="j-size">未读信息</span>
+								<span class="fr">{:date('H:i',$vo['create_time'])}</span><span class="j-size">{$vo['title']}</span>
 							</a>
 						</li>
-						<li  class="j-list">
-							<a  class="" href="javascript:;">
-								<span class="fr">昨天 9:30</span><span class="j-size">您有一条【房屋基础数据】工单已处理，单号12587459854</span>
-							</a>
-						</li>
+                        {/volist}
+						
 				   </ol>
 			  </div>
 			  <!-- 暂无消息-->
@@ -162,13 +157,25 @@
 <script type="text/javascript">
 	
 	$(".j-title-con li").on('click', function(){
-		layer.open({
-		  title: '消息通知'
-		  ,offset: 'auto'
-		  ,area: ['60%', '40%']
-		  , btn:false
-		  ,content: '<div id="j-news-details" class="j-news-details"><h1>工单通知</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
-		});
+        var id = $(this).attr('data-id');
+        $.post('/admin.php/system/Api/getAfficheRow', {id:id}, function(res){
+          //console.log(res.data.content);
+          //console.log(res);
+          layer.open({
+              title: '消息通知'
+              ,offset: 'auto'
+              ,area: ['60%', '40%']
+              , btn:false
+              ,content: '<div id="j-news-details" class="j-news-details"><h1>'+res.data.title +'</h1><h2>' +res.data.create_time + '</h2><div class="j-content-size">'+ res.data.content +'</div></div>' //注意，如果str是object，那么需要字符拼接。
+          });
+        });
+		// layer.open({
+		//   title: '消息通知'
+		//   ,offset: 'auto'
+		//   ,area: ['60%', '40%']
+		//   , btn:false
+		//   ,content: '<div id="j-news-details" class="j-news-details"><h1>工单通知</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
+		// });
 	})
 	  //已读/未读切换
 	  var $div_li =$(".j-title-tab li");
