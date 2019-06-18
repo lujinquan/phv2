@@ -26,6 +26,17 @@ class OpOrder extends Model
         return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick');
     }
 
+    /**
+     * imgs 自动转化
+     * @param $value
+     * @return array
+     */
+    public function getImgsAttr($value)
+    {
+        //halt($value);
+        return $value?explode(',',$value):'';
+    }
+
     public function checkWhere($data,$type='accept')
     {
         if(!$data){
@@ -101,6 +112,7 @@ class OpOrder extends Model
             case 'add':
                 $data['cuid'] = ADMIN_ID;
                 $data['inst_id'] = INST;
+                $data['imgs'] = $data['carded']?implode(',',$data['carded']):'';
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
                 $jsondata[] = [
