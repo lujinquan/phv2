@@ -23,16 +23,61 @@
             </dl>
         </li>
         {/if}
-        <li class="layui-nav-item">
-            <!-- <a href="__ROOT_DIR__" target="_blank" class="aicon ai-ai-home" title="前台"></a> -->
+        <!-- <li class="layui-nav-item">
+            <a href="__ROOT_DIR__" target="_blank" class="aicon ai-ai-home" title="前台"></a>
             <a href="/admin.php" target="_blank" class="aicon ai-ai-home" title="主页"></a>
-        </li>
+        </li> -->
         <li class="layui-nav-item">
             <a href="javascript:void(0);" class="aicon ai-qingchu" id="hisi-clear-cache" title="清缓存"></a>
         </li>
 <!--         <li class="layui-nav-item">
             <a href="javascript:void(0);" class="aicon ai-suo" id="lockScreen" title="锁屏"></a>
         </li> -->
+		<li class="layui-nav-item j-mail-box">
+		    <a href="javascript:;"  class="j-aicon">
+				<i class="layui-icon layui-icon-notice"></i>
+				<i class="j-dot"></i>
+			</a>
+			<div class="layui-nav-child">
+			   <div class="j-title clearfix">
+				   <span class="j-news">消息（5）<i class="j-dot"></i></span>
+			   </div>
+			   <div class="j-title-tab clearfix">
+				  <ul>
+					  <li class="j-tab-size cur">未读</li>
+					  <li class="j-tab-size">已读</li>
+				  </ul> 
+			   </div>
+			   <div class="j-title-con">
+				   <ol>
+					   <li class="j-list">
+							<a  class="" href="javascript:;">
+								<span class="fr">14:09</span><span class="j-size">待确认问题记录表2019年5月——2待确认问题记录表2019年5月——2</span>
+							</a>
+						</li>
+						<li  class="j-list">
+							<a  class="" href="javascript:;">
+								<span class="fr">昨天 9:30</span><span class="j-size">您有一条【房屋基础数据】工单已处理，单号12587459854</span>
+							</a>
+						</li>
+				   </ol>
+				    <ol class="hide">
+					   <li class="j-list">
+							<a  class="" href="javascript:;">
+								<span class="fr">14:09</span><span class="j-size">未读信息</span>
+							</a>
+						</li>
+						<li  class="j-list">
+							<a  class="" href="javascript:;">
+								<span class="fr">昨天 9:30</span><span class="j-size">您有一条【房屋基础数据】工单已处理，单号12587459854</span>
+							</a>
+						</li>
+				   </ol>
+			  </div>
+			  <!-- 暂无消息-->
+			  <div class="j-no-news hide">暂无消息</div>
+			</div>
+		</li>
         <li class="layui-nav-item">
             <a href="{:url('system/user/setTheme')}" id="hisi-theme-setting" class="aicon ai-theme"></a>
         </li>
@@ -87,6 +132,10 @@
         {/volist}
     </div>
 </div>
+<!-- 消息详情 S -->
+
+<!-- 消息详情 E -->
+<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
 <script type="text/html" id="hisi-theme-tpl">
     <ul class="hisi-themes">
         {volist name=":session('hisi_admin_themes')" id="vo"}
@@ -109,4 +158,23 @@
             <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">执行删除</button>
         </div>
     </form>
+</script>
+<script type="text/javascript">
+	
+	$(".j-title-con li").on('click', function(){
+		layer.open({
+		  title: '消息通知'
+		  ,offset: 'auto'
+		  ,area: ['60%', '40%']
+		  , btn:false
+		  ,content: '<div id="j-news-details" class="j-news-details"><h1>工单通知</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
+		});
+	})
+	  //已读/未读切换
+	  var $div_li =$(".j-title-tab li");
+	   $div_li.click(function(){
+	       $(this).addClass("cur").siblings().removeClass("cur");
+	       var index =  $div_li.index(this);
+	       $(".j-title-con > ol").eq(index).show().siblings().hide(); 
+	   });
 </script>

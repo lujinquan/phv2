@@ -187,3 +187,23 @@ opacity: .8color: #333;}
 .j-chart-box .product-ul li.cur{border-bottom: #4786DA 3px solid; color:#4786DA;}
 .j-chart-right {padding-right: 100px;}
 /*------------------ 工单数据E ----------------*/
+/*------------------ 站内信 S ----------------*/
+.layui-nav .j-mail-box .layui-nav-more{ display: none;}
+.layui-nav .j-mail-box .layui-nav-child{ width: 300px;left: 50%; margin-left: -150px; padding: 0 10px;border-radius: 6px;}
+.layui-nav .j-mail-box .layui-nav-child .j-title{ height: 35px; font: 16px/35px ''; color: #007AFF; border-bottom: #D8D8D8 1px solid;}
+.layui-nav .j-mail-box .layui-nav-child .j-title .j-dot{ width: 5px; height: 5px; border-radius: 50%; background: #FC5055;display: inline-block; position: relative; top: -10px;}
+.head-info .layui-nav-item a.j-aicon i.j-dot{width: 5px; height: 5px; border-radius: 50%; background: #FC5055;display: inline-block; position: relative; top: -8px; left: -9px;}
+.layui-nav .j-mail-box .layui-nav-child .j-title .j-news{display: inline-block;width: 50%; text-align: center;border-bottom: #007AFF 2px solid; height: 34px;}
+.layui-nav .j-mail-box .layui-nav-child .j-title-tab{ margin: 10px 0;}
+.layui-nav .j-mail-box .layui-nav-child .j-title-con{ padding-bottom: 15px;}
+.layui-nav .j-mail-box .layui-nav-child .j-title-tab li{float: left; color: #9B9B9B; margin-left: 15px; width: 50px;height: 20px; font: 12px/20px ''; text-align: center; background:#F1F2F6; border-radius: 10px; cursor: pointer;}
+.layui-nav .j-mail-box .layui-nav-child .j-title-tab li.cur{background:#007AFF; color: #fff;}
+.layui-nav .j-mail-box .layui-nav-child li.j-list{height: 36px; line-height: 36px;overflow: hidden;}
+.layui-nav .j-mail-box .layui-nav-child li.j-list .j-size{ display: inline-block; width: 70%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 12px/36px ''; color: #4A4A4A;}
+.layui-nav .j-mail-box .layui-nav-child li.j-list .fr{ font-size: 10px; color: #bbb;}
+.layui-nav .j-mail-box .layui-nav-child ol{ max-height: 315px; overflow-y: auto;} 
+.layui-nav .j-mail-box .layui-nav-child .j-no-news{ text-align: center; color:#4A4A4A; line-height: 45px;}
+.j-news-details h1{color: #141414; font:bold 24px/31px 'MicrosoftYaHei-Bold';}
+.j-news-details h2{color: #141414; font:12px/31px '';}
+.j-news-details .j-content-size{ line-height: 24px;}
+/*------------------ 站内信 E ----------------*/
