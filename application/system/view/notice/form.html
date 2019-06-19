@@ -1,0 +1,78 @@
+<form class="layui-form" id="form1" action="{url('edit')}" method="post">
+	<!-- 新增公告 S -->
+	<div class="j-details-box floorWrap layui-form">
+		<div class="item">
+			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+				<legend>编辑公告</legend>
+			</fieldset>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md12">
+					<div class="j-form-label"><i class="red">*</i>标题</div>
+					<div class="j-input-inline">
+						<input type="text" id="title" name="title" autocomplete="off" class="layui-input" value="{$data_info['title']}">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>可见</label>
+					<div class="j-input-inline">
+						<select name="inst_id" lay-search="">
+							<option value="">请选择</option>
+							<option value="1" {if condition="$data_info['inst_id'] == '全部'"}selected{/if}>全部</option>
+							<option value="2" {if condition="$data_info['inst_id'] == '紫阳所'"}selected{/if}>紫阳所</option>
+							<option value="3" {if condition="$data_info['inst_id'] == '粮道所'"}selected{/if}>粮道所</option>
+						</select>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<div class="j-form-label"><i class="red">*</i>排序</div>
+					<div class="j-input-inline">
+						<input type="text" name="sort" autocomplete="off" class="layui-input" value="{$data_info['sort']}">
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>类型</label>
+					<div class="j-input-inline">
+						<select id="mechanism" name="type" lay-search="">
+							<option value="">请选择</option>
+							{volist name="params['notice_type']" id="vo"}
+							<option value="{$key}" {if condition="$data_info['type'] == $key"}selected{/if}>{$vo}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md12">
+					<label class="j-form-label"><i class="red">*</i>内容</label>
+				</div>
+				<div class="layui-col-md12">
+				 <textarea id="editor_id" name="content" style="width:100%;height:300px;">{:htmlspecialchars_decode($data_info['content'])}</textarea>
+				</div>
+			</div>
+	</div>
+	<input type="hidden" name="id" value="{$data_info['id']}">
+	{:token()}
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
+		</div>
+	</div>
+	</div>
+	<!-- 新增公告 E -->
+</form>
+{include file="block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script>
+<script>
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="content"]', {
+			afterBlur:function(){this.sync();},
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			
+		});
+	});
+</script>

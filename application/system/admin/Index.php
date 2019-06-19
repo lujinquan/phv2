@@ -13,6 +13,7 @@ namespace app\system\admin;
 
 use Env;
 use hisi\Dir;
+use app\system\model\SystemNotice;
 
 /**
  * 后台默认首页控制器
@@ -28,12 +29,26 @@ class Index extends Admin
      */
     public function index()
     {
-        if (cookie('hisi_iframe')) {
-            $this->view->engine->layout(false);
-            return $this->fetch('iframe');
-        } else {
-            return $this->fetch();
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 5);
+            $getData = $this->request->post();
+            $systemNotice = new SystemNotice;
+            $where = $systemNotice->checkWhere($getData);
+            $data['data'] = $systemNotice->field('title,create_time')->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }else{
+           if (cookie('hisi_iframe')) {  //单页面模式
+                $this->view->engine->layout(false);
+                return $this->fetch('iframe');
+            } else { //ifram模式
+                return $this->fetch();
+            } 
         }
+        
+        
     }
 
     /**

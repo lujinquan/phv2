@@ -9,7 +9,7 @@
 				<div class="layui-col-md12">
 					<div class="j-form-label"><i class="red">*</i>标题</div>
 					<div class="j-input-inline">
-						<input type="text" id="ban_title" name="ban_address" autocomplete="off" class="layui-input">
+						<input type="text" id="title" name="title" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -17,26 +17,28 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>可见</label>
 					<div class="j-input-inline">
-						<select id="mechanism" name="ban_show" lay-search="">
+						<select name="inst_id" lay-search="">
 							<option value="">请选择</option>
-							<option value="1">房管员</option>
-							<option value="2">科长</option>
+							<option value="1">全部</option>
+							<option value="2">紫阳所</option>
+							<option value="3">粮道所</option>
 						</select>
 					</div>
 				</div>
 				<div class="layui-col-md4">
-					<div class="j-form-label"><i class="red">*</i>置顶（1-10）</div>
+					<div class="j-form-label"><i class="red">*</i>排序</div>
 					<div class="j-input-inline">
-						<input type="text" id="ban_title" name="ban_top" autocomplete="off" class="layui-input">
+						<input type="text" name="sort" autocomplete="off" class="layui-input" value="1000">
 					</div>
 				</div>
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>类型</label>
 					<div class="j-input-inline">
-						<select id="mechanism" name="ban_class" lay-search="">
+						<select id="mechanism" name="type" lay-search="">
 							<option value="">请选择</option>
-							<option value="1">类型1</option>
-							<option value="2">类型2</option>
+							{volist name="params['notice_type']" id="vo"}
+							<option value="{$key}">{$vo}</option>
+							{/volist}
 						</select>
 					</div>
 				</div>
@@ -50,6 +52,7 @@
 				</div>
 			</div>
 	</div>
+	{:token()}
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
@@ -60,19 +63,15 @@
 	<!-- 新增公告 E -->
 </form>
 {include file="block/layui" /}
-<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script>
 <script>
-	/*上传参数设定*/
-	layui.use(['jquery', 'laydate','form'], function() {
-		var laydate = layui.laydate,
-			$ = layui.$,
-			form = layui.form;
-
-		
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="content"]', {
+			afterBlur:function(){this.sync();},
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			
+		});
 	});
-	 KindEditor.ready(function(K) {
-                window.editor = K.create('#editor_id');
-        });
 </script>

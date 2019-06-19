@@ -1,2 +1,101 @@
-{:runhook('system_admin_index')}
-{include file="block/layui" /}
+
+<style>
+		.page-tab-content{ background: none;}
+	</style>
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md6">
+		  <div class="j-index-notice">
+			  <div class="j-table-content clearfix">
+				  <fieldset class="layui-elem-field layui-field-title">
+					<legend>公告</legend>
+				  </fieldset>
+				  <div class="page-toolbar j-page-toolbar clearfix">
+					<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
+						<div class="j-search-fl layui-col-md8  fl">
+							  <div class="layui-input-inline j-input-margin" style="width:150px;">
+								  <input type="text" name="title" placeholder="标题查询" class="layui-input">
+							  </div>
+							  <div class="layui-input-inline" style="width:120px;">
+								  <select name="type">
+									  <option value="">类型</option>
+									    {volist name="params['notice_type']" id="vo"}
+										<option value="{$key}">{$vo}</option>
+										{/volist}
+									</select>
+							  </div>
+						</div>
+						<div class="j-search-fr layui-col-md4 fr">
+							<div class="layui-input-inline fr">
+							  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+								<button class="layui-btn" lay-submit lay-filter="formDemo">
+									<i class="layui-icon">&#xe615;</i>
+									搜索
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			  </div>
+			  <table id="dataTable" class="layui-table" lay-filter='dataTable'></table>
+			  <!-- <table class="layui-table">
+				<thead>
+				  <tr>
+					<th>标题</th>
+					<th>创建时间</th>
+				  </tr> 
+				</thead>
+				<tbody>
+				  <tr>
+					<td>公房数据培训</td>
+					<td>2019-05-16 19:40:37</td>
+				  </tr>
+				  <tr>
+					<td>武房网公房系统v1.0运行计划</td>
+					<td>2019-05-16 19:40:37</td>
+				  </tr>
+				</tbody>
+			  </table> -->
+		  </div>
+		</div>
+		<div class="layui-col-md6">
+		  
+		</div>
+	</div>
+	{include file="block/layui" /}
+	<script type="text/javascript">
+	layui.use(['table'], function() {
+        var table = layui.table;
+        table.render({
+            elem: '#dataTable'
+            ,height: 300
+            //,toolbar: '#toolbar'
+            // ,defaultToolbar: ['print']
+            ,url: '{:url("system/Index/index")}' //数据接口
+            ,page: true //开启分页
+            ,limit: 5
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+				{field: 'title', width:100, title: '标题'}
+                ,{field: 'create_time', width: 240, title: '创建时间'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        })
+    });
+
+	//  $(".layui-table tr").each(function(){
+	// 	$(this).find("td:eq(0)").on('click', function(){
+	// 		$(this).parent("tr").addClass("on").siblings().removeClass("on");;
+	// 		layer.open({
+	// 		  title: '公告'
+	// 		  ,offset: 'auto'
+	// 		  ,area: ['60%', '40%']
+	// 		  , btn:false
+	// 		  ,content: '<div id="j-news-details" class="j-news-details"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
+	// 		});
+	// 	})
+	// })
+	</script>

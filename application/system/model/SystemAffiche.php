@@ -5,7 +5,7 @@ namespace app\system\model;
 use think\Model;
 
 /**
- * 系统公告模型
+ * 系统消息模型
  * @package app\system\model
  */
 class SystemAffiche extends Model
