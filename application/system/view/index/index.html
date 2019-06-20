@@ -1,7 +1,8 @@
 
-<style>
+	<style>
 		.page-tab-content{ background: none;}
 	</style>
+	<link rel="stylesheet" href="__PUBLIC_JS__/Viewer/viewer.min.css?v={:config('hisiphp.version')}">
 	<div class="layui-row layui-col-space15">
 		<div class="layui-col-md6">
 		  <div class="j-index-notice">
@@ -58,10 +59,14 @@
 		  </div>
 		</div>
 		<div class="layui-col-md6">
-		  
+			<div class="j-viewer-img">
+				<img  data-original="__ADMIN_IMG__/add_img.png" src="__ADMIN_IMG__/add_img.png" alt="图片1" />
+				<img  data-original="__ADMIN_IMG__/j-chenggonganli.png" src="__ADMIN_IMG__/j-chenggonganli.png" alt="图片2" />
+			</div>
 		</div>
 	</div>
 	{include file="block/layui" /}
+	<script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 	<script type="text/javascript">
 	layui.use(['table','layer'], function() {
         var table = layui.table
@@ -93,10 +98,16 @@
 			  ,offset: 'auto'
 			  ,area: ['60%', '40%']
 			  , btn:false
-			  ,content: '<div id="j-news-details" class="j-news-details"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
+			  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515<img  data-original="__ADMIN_IMG__/add_img.png" src="__ADMIN_IMG__/add_img.png" alt="图片1" /></div></div>'
 			});
 		})
     });
-
+	$(document).on('click', '.layui-table-hover', function() {
+	  //点击图片全屏展示
+	  $('.j-viewer-img').viewer({
+	  	url: 'data-original',
+	  });
+	});
+    
 		
 	</script>
