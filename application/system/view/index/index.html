@@ -63,8 +63,10 @@
 	</div>
 	{include file="block/layui" /}
 	<script type="text/javascript">
-	layui.use(['table'], function() {
-        var table = layui.table;
+	layui.use(['table','layer'], function() {
+        var table = layui.table
+		    ,$ = layui.jquery
+			,layer = layui.layer;
         table.render({
             elem: '#dataTable'
             ,height: 300
@@ -84,18 +86,17 @@
                
             }
         })
+		//点击查看详情
+		$(".layui-table").on('click','.layui-table-hover td:eq(0)', function(){
+			layer.open({
+			  title: '公告'
+			  ,offset: 'auto'
+			  ,area: ['60%', '40%']
+			  , btn:false
+			  ,content: '<div id="j-news-details" class="j-news-details"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
+			});
+		})
     });
 
-	//  $(".layui-table tr").each(function(){
-	// 	$(this).find("td:eq(0)").on('click', function(){
-	// 		$(this).parent("tr").addClass("on").siblings().removeClass("on");;
-	// 		layer.open({
-	// 		  title: '公告'
-	// 		  ,offset: 'auto'
-	// 		  ,area: ['60%', '40%']
-	// 		  , btn:false
-	// 		  ,content: '<div id="j-news-details" class="j-news-details"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
-	// 		});
-	// 	})
-	// })
+		
 	</script>
