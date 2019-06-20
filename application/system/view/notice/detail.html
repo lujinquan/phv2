@@ -6,9 +6,7 @@
 	</div>
 	<hr />
 	<!-- 详细内容 S -->
-	<div class="j-details-size">
-		<textarea id="editor_ids"  style="width:100%;">{$data_info['content']}</textarea>
-	</div>
+	<div class="j-details-size" data-value="{:htmlspecialchars_decode($data_info['content'])}"></div>
 	<!-- 详细内容 E -->
 	<hr />
 	<!-- 浏览记录 S -->
@@ -41,17 +39,10 @@
 </div>
 <!-- 详情 E -->
 {include file="block/layui" /}
-<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-all.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script>
+<!-- <script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-all.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script> -->
 <script type="text/javascript">
-	KindEditor.ready(function(K) {
-			editor = K.create('textarea[name="content"]', {
-				afterBlur:function(){this.sync();},
-				resizeType : 1,
-				allowPreviewEmoticons : false,
-				
-			});
-		});
-		
-
+	var content = $('.j-details-size').attr('data-value');
+	//console.log(content);
+	$('.j-details-size').html(content);
 </script>

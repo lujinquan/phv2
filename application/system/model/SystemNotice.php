@@ -38,6 +38,10 @@ class SystemNotice extends Model
         return session('systemusers')[$value];
     }
 
+    // public function getContentAttr($value){
+    //     return htmlspecialchars_decode($value);
+    // }
+
     public function appendReadId($id)
     {
     	$this->get($id);
