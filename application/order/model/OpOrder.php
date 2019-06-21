@@ -46,12 +46,12 @@ class OpOrder extends Model
         switch ($type) {
             // 待受理工单
             case 'accept':
-                if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
-                    $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['inst_id','in',$inst_ids]];
-                }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
-                    $where[] = [['duid','like','%,'.ADMIN_ID]];
-                }
+                // if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
+                //     $inst_ids = explode(',',session('admin_user.inst_ids'));
+                //     $where[] = [['inst_id','in',$inst_ids]];
+                // }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
+                //     $where[] = [['duid','like','%,'.ADMIN_ID]];
+                // }
                 //halt($where);
                 break;
             // 我的工单
@@ -112,7 +112,7 @@ class OpOrder extends Model
             case 'add':
                 $data['cuid'] = ADMIN_ID;
                 $data['inst_id'] = INST;
-                $data['imgs'] = $data['carded']?implode(',',$data['carded']):'';
+                $data['imgs'] = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
                 $jsondata[] = [
@@ -161,7 +161,8 @@ class OpOrder extends Model
                     $findDuids = explode(',',$find['duid']);
                     $comp = $findDuids[1];
                    
-                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
+                    //$data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
+                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
                     
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
