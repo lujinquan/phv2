@@ -11,7 +11,7 @@
             <div  class="j-list-box j-list1">
 				<h1 class="j-title">待受理工单</h1>
 				<div class="j-Statistics">
-					{$data['partOne'][ADMIN_ID]['accept']}<i>个</i>
+					{$data['partOne'][ADMIN_ID]['accept']?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][39]['accept'] + $data['partOne'][40]['accept'])}<i>个</i>
 				</div>
 				<img src="__ADMIN_IMG__/j-Clip.png" />
 			</div>
@@ -20,7 +20,7 @@
             <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
-            		{$data['partOne'][ADMIN_ID]['acceptIng']}<i>个</i>
+            		{$data['partOne'][ADMIN_ID]['acceptIng']?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][39]['acceptIng'] + $data['partOne'][40]['acceptIng'])}<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
             </div>
@@ -31,7 +31,7 @@
 		      <div  class="j-list-box j-list3">
 		      	<h1 class="j-title">已完结工单</h1>
 		      	<div class="j-Statistics">
-		      		{$data['partOne'][ADMIN_ID]['end']}<i>个</i>
+		      		{$data['partOne'][ADMIN_ID]['end']?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][39]['end'] + $data['partOne'][40]['end'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
 		      </div>
@@ -40,7 +40,7 @@
 		      <div  class="j-list-box j-list4">
 		      	<h1 class="j-title">全部工单</h1>
 		      	<div class="j-Statistics">
-		      		{$data['partOne'][ADMIN_ID]['all']}<i>个</i>
+		      		{$data['partOne'][ADMIN_ID]['all']?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][39]['all'] + $data['partOne'][40]['all'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-Fill.png" />
 		      </div>
@@ -57,13 +57,16 @@
 				  <!-- <li class="cur">全部</li>
 				  <li class="">郑湾</li>
 				  <li class="">刘丹</li> -->
+				  <li class="{if condition="ADMIN_ID != 39 && ADMIN_ID != 40"}cur{/if} product-li">全部</li>
 				  {volist name="operateAdmins" id='vo'}
+
 				  <li class="{if condition="$vo['id'] == ADMIN_ID"}cur{/if} product-li">{$vo['nick']}</li>
 				  {/volist}
 				</ul>
 			  </div>
 		  </div>
 		  <div class="product-con">
+		  <div class="product-box clearfix" data-id="{ADMIN_ID}" {if condition="ADMIN_ID != 39 && ADMIN_ID != 40"}style="display: none;"{/if}></div>
 		  	{volist name="operateAdmins" id='vo'}
 			<div class="product-box clearfix" data-id="{$vo['id']}" {if condition="$vo['id'] == ADMIN_ID"}style="display: none;"{/if}></div>
 			{/volist}
@@ -147,7 +150,9 @@
   <!-- 工单类别统计 E-->
 <script type="text/javascript">
 		var data = {:json_encode($data['partOne'])};
-		myChartPie(data,40);
+		//console.log(data);
+		var curAdminId = {:session('admin_user.uid')};
+		myChartPie(data,curAdminId);
 		//工单类别统计E
 		//tab切换
 		$(function(){
@@ -160,7 +165,7 @@
 				// $(".product-con > div").eq(index).show().siblings().hide(); 
 				var adminID = $(".product-con > div").eq(index).attr('data-id');
 				// var data = {:json_encode($data['partOne'])};
-				console.log(data);
+				//console.log(data);
 				console.log(adminID);
 				myChartPie(data,adminID);
 			})
@@ -220,9 +225,7 @@
 		    }
 		    myChartShadow(shadowKeys,zyValues,ldValues);
 
-		    console.log(shadowKeys);
-		    console.log(zyValues);
-		    console.log(ldValues);
+		    
 		});
 
 
@@ -427,10 +430,17 @@
 		// 饼状图渲染函数
 		function myChartPie(data,adminID){
 			var myChart = echarts.init(document.getElementById('mainPie'));
-			    
-		    var main1Value = data[adminID].accept;
-		    var main2Value = data[adminID].acceptIng;
-		    var main3Value = data[adminID].end;
+			 
+			if(adminID != 39 && adminID != 40){
+				var main1Value = data[39].accept + data[40].accept;
+				var main2Value = data[39].acceptIng + data[40].acceptIng;
+				var main3Value = data[39].end + data[40].end;
+			}else{
+				var main1Value = data[adminID].accept;
+			    var main2Value = data[adminID].acceptIng;
+			    var main3Value = data[adminID].end;
+			} 
+		    
 
 		    // 指定图表的配置项和数据
 		    var option = {
