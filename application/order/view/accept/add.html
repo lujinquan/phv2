@@ -1,133 +1,132 @@
 <form class="layui-form" action="{url('add')}" method="post">
-<!-- 新建工单 S -->
-<div class="j-details-box layui-form">
-	<div class="layui-row layui-form-item layui-col-space90">
-	  <fieldset class="layui-elem-field layui-field-title j-field-box j-bottom">
-	  		<legend>新建工单</legend>
-	  </fieldset>
-	  <div class="layui-col-md6">
+	<!-- 新建工单 S -->
+	<div class="j-details-box layui-form">
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md8">
-				<div class="j-form-label"><i class="red">*</i>问题类型</div> 
-				<div class="j-input-inline">
-					<select name="op_order_type">
-					   <option value="">请选择</option>
-					   {volist name="params['op_order_type']" id="v"}
-					   <option value="{$key}">{$v}</option>
-					   {/volist}
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md12">
-				<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
-				<div class="j-enclosure-text clearfix">
-				  <div class="j-textarea-border">
-					<textarea  class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer"></textarea>
-					<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
-				  </div>
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md12">
-				<div class="j-enclosure-upload clearfix">
-					<div class="j-enclosure-label">附件</div>
-					<div class="j-enclosure-label j-uplode-icon">
-						<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-						<button type="button" class="layui-btn layui-btn-primary" id="upload_img">上传图片</button>
+			<fieldset class="layui-elem-field layui-field-title j-field-box j-bottom">
+				<legend>新建工单</legend>
+			</fieldset>
+			<div class="layui-col-md6">
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md8">
+						<div class="j-form-label"><i class="red">*</i>问题类型</div>
+						<div class="j-input-inline">
+							<select name="op_order_type">
+								<option value="">请选择</option>
+								{volist name="params['op_order_type']" id="v"}
+								<option value="{$key}">{$v}</option>
+								{/volist}
+							</select>
+						</div>
 					</div>
-					<div class="layui-form-mid layui-word-aux">限制60kb</div>
 				</div>
-				<div class="j-enclosure-img clearfix">
-					<div id="upload_img_list3" class="upload_img_list"> </div>
-	</div>
-	</div>
-	</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="j-margin-btn">
-				<button class="layui-btn layui-btn-primary">取消</button>
-				<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
+						<div class="j-enclosure-text clearfix">
+							<div class="j-textarea-border">
+								<textarea class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer"></textarea>
+								<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<div class="j-enclosure-upload clearfix">
+							<div class="j-enclosure-label">附件</div>
+							<div class="j-enclosure-label j-uplode-icon">
+								<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+								<button type="button" class="layui-btn layui-btn-primary" id="upload_img">上传图片</button>
+							</div>
+							<div class="layui-form-mid layui-word-aux">限制60kb</div>
+						</div>
+						<div class="j-enclosure-img clearfix">
+							<div id="upload_img_list3" class="upload_img_list"> </div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="j-margin-btn">
+						<button class="layui-btn layui-btn-primary">取消</button>
+						<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6 j-explain-box">
+				<h1><i class="red">*</i>工单分类说明：</h1>
+				<ul>
+					<li>1、<b>楼栋基础数据</b>（地址修改）</li>
+					<li>2、<b>房屋基础数据</b>（房屋居住层修改、房屋绑定错误楼栋的结构修改、计租表拆分）</li>
+					<li>3、<b>租户信息</b></li>
+					<li>4、<b>租金管理</b>（租金加减1毛）</li>
+					<li>5、<b>计租表</b>（单元号修改、间号，绑定楼栋，产别，实有面积，基价折减，加计租金）</li>
+					<li>6、<b>租约</b></li>
+					<li>7、<b>异动</b>（别字更正、租金调整、楼栋调整、分户、房屋调整、注销、新发租、管段调整、租金追加调整、陈欠核销、暂停计租、空租、租金减免）</li>
+					<li>8、<b>报表数据</b></li>
+					<li>9、<b>意见反馈</b></li>
+				</ul>
 			</div>
 		</div>
-	  </div>
-	  <div class="layui-col-md6 j-explain-box">
-		  <h1>工单分类说明：</h1>
-		  <ul>
-			  <li>1、楼栋基础数据（地址修改）</li>
-			  <li>2、房屋基础数据（房屋居住层修改、房屋绑定错误楼栋的结构修改、计租表拆分）</li>
-			  <li>3、租户信息</li>
-			  <li>4、租金管理（租金加减1毛）</li>
-			  <li>5、计租表（单元号修改、间号，绑定楼栋，产别，实有面积，基价折减，加计租金）</li>
-			  <li>6、租约</li>	
-			  <li>7、异动（别字更正、租金调整、楼栋调整、分户、房屋调整、注销、新发租、管段调整、租金追加调整、陈欠核销、暂停计租、空租、租金减免）</li>	
-			  <li>8、报表数据</li>	
-			  <li>9、意见反馈</li>	
-		  </ul>
-	  </div>  
 	</div>
-</div>
-<!--新建工单 E -->
+	<!--新建工单 E -->
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript"> 
-     var upurl2 = "{:url('system/Annex/upload')}?input=carded&group=ban&water=no"; //影像资料上传图片地址
-     var duotu = true; //是否为多图上传true false
-	 layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
-	 	var laydate = layui.laydate,
-	 		$ = layui.$,
-	 		upload = layui.upload,
-	 		form = layui.form;
-			
-			//影像资料
-			upload.render({
-				elem: '#upload_img',
-				url: upurl2,
-				multiple: duotu,
-				field: 'carded',
-				before: function(obj) {
-					layer.msg('图片上传中...', {
-						icon: 16,
-						shade: 0.01,
-						time: 0
-					})
-				},
-				done: function(res) {
-					layer.close(layer.msg()); //关闭上传提示窗口
-					if (duotu == true) {
-						//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-						$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
-							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-							'" class="img" ><input type="hidden" name="carded[]" value="' + res.data.file + '" /></dd>');
-					} else {
-						//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-						$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
-							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-							'" class="img" ><input type="hidden" name="carded" value="' + res.data.file + '" /></dd>');
-					}
+<script type="text/javascript">
+	var upurl2 = "{:url('system/Annex/upload')}?input=carded&group=ban&water=no"; //影像资料上传图片地址
+	var duotu = true; //是否为多图上传true false
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+
+		//影像资料
+		upload.render({
+			elem: '#upload_img',
+			url: upurl2,
+			multiple: duotu,
+			field: 'carded',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="carded[]" value="' + res.data.file + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="carded" value="' + res.data.file + '" /></dd>');
 				}
-			})
-			/*
-			删除上传图片
-			*/
-			$(document).on("click", ".upload_img_list dd i", function() {
-				$(this).parents("dd").remove();
-			})
-		});
-		function keypress(){
-			var text1=document.getElementById("j_answer").value;
-			var maxLen=document.getElementById("j_answer").cols*document.getElementById("j_answer").rows;
-			var len;//记录剩余字符串的长度
-			if(text1.length>=maxLen)
-			{
-				document.getElementById("j_answer").value=text1.substr(0,maxLen);//只显示起始位-末尾；substr（起始位，末尾)
-				len=0;
-			}else{
-				len=maxLen-text1.length;
 			}
-			document.getElementById("pinglun").innerText=len;
+		})
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+
+	function keypress() {
+		var text1 = document.getElementById("j_answer").value;
+		var maxLen = document.getElementById("j_answer").cols * document.getElementById("j_answer").rows;
+		var len; //记录剩余字符串的长度
+		if (text1.length >= maxLen) {
+			document.getElementById("j_answer").value = text1.substr(0, maxLen); //只显示起始位-末尾；substr（起始位，末尾)
+			len = 0;
+		} else {
+			len = maxLen - text1.length;
 		}
-	
+		document.getElementById("pinglun").innerText = len;
+	}
 </script>
