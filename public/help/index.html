@@ -40,7 +40,10 @@
     var layer = layui.layer
       , $ = layui.jquery
       , tree = layui.tree;
- 
+
+    $.get("/admin.php/system/api/helpdoc",function(nodes){
+      var nodes = JSON.parse(nodes);
+    
     // 同步(绑定)layui的tree的搜索(过滤)框
     // treeId: tree所在的容器的id
     // filter: 对应的搜索框的selector或者dom对象,尽量要确保是唯一的节点，或者真的是要控制这个树的input
@@ -94,45 +97,46 @@
     tree({
       elem: '#demo1' //指定元素
       , target: '_blank' //是否新选项卡打开（比如节点返回href才有效）
-      , nodes: [ //节点
-        {
-          name: '常见问题'
-		  ,spread:true
-          , id: 1
-          , alias: 'changjianwentyi'
-          , children: [
-            {
-              name: '问题1（设置跳转）'
-              , id: 11
-              , alias: 'wenti1'
-            }, {
-              name: '问题2'
-              , id: 12
-			  , alias: 'wenti2'
-            }
-          ]
-        },
-		{
-		  name: '产品使用'
-		  , id: 2
-		  , alias: 'chanpinshiyong'
-		  , children: [
-		    {
-		      name: '产品使用1'
-		      , id: 21
-		      , alias: 'chanpinshiyong1'
-		    }, {
-		      name: '产品使用2'
-		      , id: 22
-			  , alias: 'chanpinshiyong2'
-		    }
-		  ]
-		}
-      ],
+      , nodes: nodes
+    //   [ //节点
+    //     {
+    //       name: '常见问题'
+    //   ,spread:true
+    //       , id: 1
+    //       , alias: 'changjianwentyi'
+    //       , children: [
+    //         {
+    //           name: '问题1（设置跳转）'
+    //           , id: 11
+    //           , alias: 'wenti1'
+    //         }, {
+    //           name: '问题2'
+    //           , id: 12
+    //     , alias: 'wenti2'
+    //         }
+    //       ]
+    //     },
+    // {
+    //   name: '产品使用'
+    //   , id: 2
+    //   , alias: 'chanpinshiyong'
+    //   , children: [
+    //     {
+    //       name: '产品使用1'
+    //       , id: 21
+    //       , alias: 'chanpinshiyong1'
+    //     }, {
+    //       name: '产品使用2'
+    //       , id: 22
+    //     , alias: 'chanpinshiyong2'
+    //     }
+    //   ]
+    // }
+    //   ]
 	  //点击节点的回调
-	  click: function(node){
+	  ,click: function(node){
 		//console.log(node) //node即为当前点击的节点数据
-		$('.j-help-details').html('<h1 class="j-title">'+node.name+'</h1><div class="j-help-content">内容区'+node.name+'</div>');
+		$('.j-help-details').html('<h1 class="j-title">'+node.name+'</h1><div class="j-help-content">内容区'+node.content+'</div>');
 	  }  
     });
     //搜索条数
@@ -151,6 +155,7 @@
 		$(this).parent().addClass("current");
 	});
   });
+    });
 </script>
 	</body>
 </html>

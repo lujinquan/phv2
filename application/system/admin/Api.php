@@ -51,4 +51,59 @@ class Api extends Common
             }
         }
 	}
+
+      public function helpdoc()
+      {
+            $data = [];
+            $data['data']  =  [
+                                    [
+                                          'name'=> '常见问题',
+                                          'spread'=>true,
+                                          'id'=> 1,
+                                          'alias'=> 'changjianwentyi',
+                                          'alias'=> 'changjianwentyi',
+                                          'children'=> [
+                                          [
+                                            'name'=> '问题1（设置跳转）',
+                                            'id'=> 11,
+                                            'alias'=> 'wenti1',
+                                            'content'=> 'content1'
+                                          ], 
+                                          [
+                                            'name'=> '问题2',
+                                            'id'=> 12,
+                                            'alias'=> 'wenti2',
+                                            'content'=> 'content2'
+                                          ]
+                                        ],
+
+                                    ],
+                                    [
+                                          'name'=> '产品使用',
+                                          'spread'=>true,
+                                          'id'=> 2,
+                                          'alias'=> 'changjianwentyi',
+                                          'children'=> [
+                                          [
+                                            'name'=> '产品使用1',
+                                            'id'=> 13,
+                                            'alias'=> 'wenti1',
+                                            'content'=> 'content3'
+                                          ], 
+                                          [
+                                            'name'=> '产品使用2',
+                                            'id'=> 14,
+                                            'alias'=> 'wenti2',
+                                            'content'=> 'content4'
+                                          ]
+                                        ],
+
+                                    ],
+
+                              ];
+
+            $data['msg'] = '';
+            $data['code'] = 0;
+            return json_encode($data['data']);
+      }
 }

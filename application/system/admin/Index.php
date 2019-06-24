@@ -71,6 +71,16 @@ class Index extends Admin
     }
 
     /**
+     * 欢迎首页
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
+    public function help()
+    {
+        return $this->fetch('./templete/helpcenter/index.html');
+    }
+
+    /**
      * 清理缓存
      * @author Lucas <598936602@qq.com>
      * @return mixed
@@ -78,21 +88,25 @@ class Index extends Admin
     public function clear()
     {
         $path   = Env::get('runtime_path');
-        $cache  = $this->request->param('cache/d', 0);
-        $log    = $this->request->param('log/d', 0);
-        $temp   = $this->request->param('temp/d', 0);
+        // $cache  = $this->request->param('cache/d', 0);
+        // $log    = $this->request->param('log/d', 0);
+        // $temp   = $this->request->param('temp/d', 0);
 
-        if ($cache == 1) {
-            Dir::delDir($path.'cache');
-        }
+        // if ($cache == 1) {
+        //     Dir::delDir($path.'cache');
+        // }
 
-        if ($temp == 1) {
-            Dir::delDir($path.'temp');
-        }
+        // if ($temp == 1) {
+        //     Dir::delDir($path.'temp');
+        // }
 
-        if ($log == 1) {
-            Dir::delDir($path.'log');
-        }
+        // if ($log == 1) {
+        //     Dir::delDir($path.'log');
+        // }
+
+        Dir::delDir($path.'cache');
+        Dir::delDir($path.'temp');
+        Dir::delDir($path.'log');
 
         return $this->success('任务执行成功');
     }
