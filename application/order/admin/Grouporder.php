@@ -27,18 +27,21 @@ class Grouporder extends Admin
                 if(strpos($v['duid'],',') === false){
                     $v['status_info'] = '待处理';
                 }else{
-                    $uids = explode(',',$v['duid']);
-
-                    $current_uid = array_pop($uids);
-                    $find = UserModel::where([['id','eq',$current_uid]])->field('nick,role_id')->find();
-                    // 如果是运营中心
-                    if($find['role_id'] == 11 && ADMIN_ROLE == 11){
-                        $v['status_info'] = '转交至'.$find['nick'];
-                    }else{
-                        unset($temps[$k]);
-                    }
-                    
+                    unset($temps[$k]);
                 }
+                // else{
+                //     $uids = explode(',',$v['duid']);
+
+                //     $current_uid = array_pop($uids);
+                //     $find = UserModel::where([['id','eq',$current_uid]])->field('nick,role_id')->find();
+                //     // 如果是运营中心
+                //     if($find['role_id'] == 11 && ADMIN_ROLE == 11){
+                //         $v['status_info'] = '转交至'.$find['nick'];
+                //     }else{
+                //         unset($temps[$k]);
+                //     }
+                    
+                // }
             }
             //halt($temps);
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);

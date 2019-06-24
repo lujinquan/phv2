@@ -46,12 +46,12 @@ class OpOrder extends Model
         switch ($type) {
             // 待受理工单
             case 'accept':
-                if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
-                    $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['inst_id','in',$inst_ids]];
-                }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
-                    $where[] = [['duid','like','%,'.ADMIN_ID]];
-                }
+                // if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
+                //     $inst_ids = explode(',',session('admin_user.inst_ids'));
+                //     $where[] = [['inst_id','in',$inst_ids]];
+                // }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的
+                //     $where[] = [['duid','like','%,'.ADMIN_ID]];
+                // }
                 //halt($where);
                 break;
             // 我的工单
@@ -112,7 +112,7 @@ class OpOrder extends Model
             case 'add':
                 $data['cuid'] = ADMIN_ID;
                 $data['inst_id'] = INST;
-                $data['imgs'] = $data['carded']?implode(',',$data['carded']):'';
+                $data['imgs'] = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(12,1);
                 $jsondata[] = [
@@ -161,7 +161,8 @@ class OpOrder extends Model
                     $findDuids = explode(',',$find['duid']);
                     $comp = $findDuids[1];
                    
-                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
+                    //$data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
+                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
                     
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
@@ -271,6 +272,7 @@ class OpOrder extends Model
 
         $opOrderAll = self::field('id,cuid,inst_id,duid,op_order_type,ctime,ftime')->select();
 
+
         foreach($operateAdmins as $key => $v){ //遍历运营人员
 
             $result['partOne'][$v['id']]['accept'] = 0;
@@ -279,22 +281,25 @@ class OpOrder extends Model
             $result['partOne'][$v['id']]['all'] = 0;
 
             foreach($opOrderAll as $op){ //遍历有效工单
-
+                $uids = explode(',',$op['duid']);
                 $inst = in_array($op['inst_id'],explode(',',$v['inst_ids'])); //判断每条记录是否属于某运营人员
                 $duid = strpos($op['duid'],','); //判断是否有逗号，即是否为待受理
                 $ftime = $op['ftime'];
+
                 // 第一部分（饼状图数据）
                 if($inst && !$duid){ //待受理中工单
                     $result['partOne'][$v['id']]['accept']++;
-                }
-                if($inst && $duid && !$ftime){ //受理中工单
-                    $result['partOne'][$v['id']]['acceptIng']++;
-                }
-                if($inst && $ftime){ //已完结工单
-                    $result['partOne'][$v['id']]['end']++;
-                }
-                if($inst){ //全部工单
                     $result['partOne'][$v['id']]['all']++;
+                }
+                if($duid){
+                    if($uids[1] == $v['id']){
+                        if($ftime){
+                            $result['partOne'][$v['id']]['end']++;  //已完结
+                        }else{
+                            $result['partOne'][$v['id']]['acceptIng']++; //受理中
+                        }
+                        $result['partOne'][$v['id']]['all']++; //全部
+                    }
                 }
 
                 // 第二部分（折线图）
@@ -321,8 +326,7 @@ class OpOrder extends Model
                     
                 }
                 
-                // 第三部分（柱状图）
-                
+                // 第三部分（柱状图）    
                 if($key == 0){
                     foreach($opTypes as $o){
                         if(!isset($result['partThree']['zy'][$o])){

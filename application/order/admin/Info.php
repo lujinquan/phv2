@@ -16,6 +16,9 @@ class Info extends Admin
 	    	$OpOrderModel = new OpOrderModel;
 	    	$temps = $OpOrderModel->with('SystemUser')->where([['duid','like','%,%']])->select();
 
+	    	$liudanInstIds = explode(',',session('39inst_ids'));
+	    	$zhengwanInstIds = explode(',',session('40inst_ids'));
+
 	    	$data['data'][0] = [
 	    		'name' => '刘丹',
 				'orderTotal' => 0, //工单总量
@@ -39,23 +42,25 @@ class Info extends Admin
 	    			$data['data'][0]['orderTotal']++;
 	    			if($v['ftime']){
 						$data['data'][0]['orderEndTotal']++;
+						$data['data'][0]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
 	    			}
-	    			if(array_search(40,$uids) > 1){
-						$data['data'][1]['orderTurnTotal']++;
+	    			if(in_array($v['inst_id'],$zhengwanInstIds)){
+	    				$data['data'][1]['orderTurnTotal']++;
 	    			}
 	    			$data['data'][0]['orderTurnTotal'] += count($uids);
-	    			$data['data'][0]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
+	    			
 	    		}
 	    		if($uids[1] == 40){ //郑湾
 	    			$data['data'][1]['orderTotal']++;
 	    			if($v['ftime']){
 						$data['data'][0]['orderEndTotal']++;
+						$data['data'][1]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
 	    			}
-	    			if(array_search(40,$uids) > 1){
+	    			if(in_array($v['inst_id'],$liudanInstIds)){
 						$data['data'][1]['orderTurnTotal']++;
 	    			}
 	    			$data['data'][1]['orderTurnTotal'] += count($uids);
-	    			$data['data'][1]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
+	    			
 	    		}
 	        }
 	        if($data['data'][0]['orderTotal'] == 0){
