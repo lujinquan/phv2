@@ -1,0 +1,37 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {margin:0;padding:0;} 
+.clear{clear:both;}
+.clearfix{zoom:1;}
+.clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
+a:link {color:#666;text-decoration:none;} 
+.fl{float:left;display:inline}
+.fr{float:right;display:inline}
+/* 内容样式 */
+.j-help-con .j-help-fl{position: fixed;left: -280px;top: 0;bottom: 0;width: 280px;border-right: 1px solid #ddd;background-color: #fafafa;
+display: flex;flex-direction: column;flex-wrap: nowrap;transition: left .25s ease;}
+.j-help-con.with-show .j-help-fl{left: 0;}
+.j-help-con.with-show .j-help-fr{margin-left: 280px;}
+.j-help-con .j-help-fr{transition: margin-left .25s ease;}
+.j-help-fr h1.j-title{flex: 1;margin: 0;font-size: 20px;font-weight: 200;text-align: center;line-height: 30px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color: #7e888b; margin: 10px 0; padding: 0 40px;}
+.j-help-fr .j-shrink{ width: 17px; height: 17px; display: block; position: relative; left: 20px;top:20px;}
+.j-help-content{ width: 80%; margin: 0 auto;}
+.j-header .j-title{padding: 0 12px;border-bottom: 1px solid #ddd;line-height: 55px;color: inherit;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 700;font-size: 16px;}
+.j-search-form{padding: 12px;border-bottom: 1px solid #ddd;flex: none;}
+.j-search-form .j-input{position: relative;}
+.j-search-form .j-input input{border: 1px solid rgba(34,36,38,.15); border-radius: 5px;width: 100%; height: 35px; line-height: 35px; padding: 0 10px; box-sizing: border-box;}
+.j-sidebar-body{flex: auto;overflow: hidden;position: relative;}
+.j-catalog-body{padding: 12px 0;overflow-y: auto;display: flex;flex-direction: column;overflow-x: hidden;}
+.j-sidebar-body>div {position: absolute;top: 0;left: 0;right: 0;bottom: 0;}
+.layui-tree li a i{display: none;}
+.layui-tree li .layui-show a cite{padding: 0 6px 0 40px;}
+/* .layui-tree li a.current{ color: #f60;} */
+.layui-tree li .layui-show li.current{ background:#e5e5e5;}
+.layui-tree li .layui-show li{ padding: 3px 0;}
+.j-catalog-body .layui-tree li ul{margin-left:0px;}
+/* 菜单 */
+/* .j-sidebar-body .j-catalog-body ul{padding:0 18px;margin:0;}
+.j-sidebar-body .j-catalog-body ul li{font-size:14px;color:#666;line-height:30px;cursor:pointer;list-style:none;padding:0 0 3px 20px;}
+.j-sidebar-body .j-catalog-body ul li:hover{background: #f2f2f2;}
+.j-sidebar-body .j-catalog-body ul li ul{}
+.j-sidebar-body .j-catalog-body ul li ul li{}
+.j-catalog-body .folder{background:url(../images/st_icon.png) no-repeat left center;padding:0 0 0 20px;}
+.j-catalog-body .open{background:url(../images/st_icon_open.png) no-repeat left center;padding:0 0 0 20px;} */

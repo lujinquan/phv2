@@ -1,53 +1,71 @@
 <form class="layui-form" action="{url('add')}" method="post">
 <!-- 新建工单 S -->
 <div class="j-details-box layui-form">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
-	  <legend>新建工单</legend>
-	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<div class="j-form-label"><i class="red">*</i>问题类型</div> 
-			<div class="j-input-inline">
-				<select name="op_order_type">
-				   <option value="">请选择</option>
-				   {volist name="params['op_order_type']" id="v"}
-				   <option value="{$key}">{$v}</option>
-				   {/volist}
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md6">
-			<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
-			<div class="j-enclosure-text clearfix">
-			  <div class="j-textarea-border">
-				<textarea  class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer"></textarea>
-				<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
-			  </div>
-			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md6">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">身份证</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img">上传图片</button>
+	  <fieldset class="layui-elem-field layui-field-title j-field-box j-bottom">
+	  		<legend>新建工单</legend>
+	  </fieldset>
+	  <div class="layui-col-md6">
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<div class="j-form-label"><i class="red">*</i>问题类型</div> 
+				<div class="j-input-inline">
+					<select name="op_order_type">
+					   <option value="">请选择</option>
+					   {volist name="params['op_order_type']" id="v"}
+					   <option value="{$key}">{$v}</option>
+					   {/volist}
+					</select>
 				</div>
-				<div class="layui-form-mid layui-word-aux">限制60kb</div>
-			</div>
-			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list3" class="upload_img_list"> </div>
 			</div>
 		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-			<button class="layui-btn layui-btn-primary">取消</button>
-			<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix"><i class="red">*</i>问题描述</div>
+				<div class="j-enclosure-text clearfix">
+				  <div class="j-textarea-border">
+					<textarea  class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer"></textarea>
+					<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
+				  </div>
+				</div>
+			</div>
 		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">身份证</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制60kb</div>
+				</div>
+				<div class="j-enclosure-img clearfix">
+					<div id="upload_img_list3" class="upload_img_list"> </div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<button class="layui-btn layui-btn-primary">取消</button>
+				<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-col-md6 j-explain-box">
+		  <h1>工单分类说明：</h1>
+		  <ul>
+			  <li>1、楼栋基础数据（地址修改）</li>
+			  <li>2、房屋基础数据（房屋居住层修改、房屋绑定错误楼栋的结构修改、计租表拆分）</li>
+			  <li>3、租户信息</li>
+			  <li>4、租金管理（租金加减1毛）</li>
+			  <li>5、计租表（单元号修改、间号，绑定楼栋，产别，实有面积，基价折减，加计租金）</li>
+			  <li>6、租约</li>	
+			  <li>7、异动（别字更正、租金调整、楼栋调整、分户、房屋调整、注销、新发租、管段调整、租金追加调整、陈欠核销、暂停计租、空租、租金减免）</li>	
+			  <li>8、报表数据</li>	
+			  <li>9、意见反馈</li>	
+		  </ul>
+	  </div>  
 	</div>
 </div>
 <!--新建工单 E -->

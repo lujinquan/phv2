@@ -50,7 +50,16 @@ class Index extends Admin
         
         
     }
-
+    //楼栋选择器
+	public function querier()
+	{
+		return $this->fetch('block/queriers/building');
+	}
+	 //租户选择器
+	public function tenant()
+	{
+		return $this->fetch('block/queriers/tenant');
+	}
     /**
      * 欢迎首页
      * @author Lucas <598936602@qq.com>

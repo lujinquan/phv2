@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="../../static/js/layui/css/layui.css">
+		<script type="text/javascript" src="../../static/js/jquery.2.1.4.min.js"></script>
+		<script type="text/javascript" src="../../static/js/layui/layui.js"></script>
+	</head>
+	<body>
+		<div id="main">
+		   <div class="j-help-con with-show clearfix">
+			   <div class="j-help-fl">
+				   <div class="j-header">
+					   <a href="javascript:;"  class="j-title">公房管理系统帮助文档</a>
+					   <div class="j-search-form">
+						<div class="j-input">
+						 <input class="layui-input layui-input-inline" placeholder="请输入搜索关键词..." name="searchTree">
+						 <i class="icon search"></i>
+						</div>
+					   </div>
+					</div>
+					<div class="j-sidebar-body">
+						<div class="j-catalog-body">
+							<ul id="demo1"></ul>
+						</div>
+					</div>
+			   </div>
+			   <div class="j-help-fr">
+				  <i class="j-shrink layui-icon layui-icon-shrink-right"></i>
+				  <div class="j-help-details">
+					<h1 class="j-title">帮助中心</h1><div class="j-help-content">内容区</div>
+				  </div> 
+			   </div>
+		   </div>
+		</div>		
+<script>
+  layui.use(['tree', 'layer'], function () {
+    var layer = layui.layer
+      , $ = layui.jquery
+      , tree = layui.tree;
+ 
+    // 同步(绑定)layui的tree的搜索(过滤)框
+    // treeId: tree所在的容器的id
+    // filter: 对应的搜索框的selector或者dom对象,尽量要确保是唯一的节点，或者真的是要控制这个树的input
+    // callback: 回调 参数(树节点jquery对象, 输入框对象, 匹配到的节点数量)
+    tree.syncLayuiTreeFilter = function (treeId, filter, callback) {
+      var treeElem = $('#' + treeId), filterElem = $(filter);
+      if (!filterElem.length || !filterElem.length) {
+        return;
+      }
+      filterElem.unbind('change').change(function (event) {
+        var that = this;
+        var value = $(that).val().trim();
+        var HIDE = 'layui-hide';
+        var hintClass = 'search_hit';
+        // 先恢复现场
+        treeElem.find('.' + HIDE).removeClass(HIDE);
+        treeElem.find('.' + hintClass).removeClass(hintClass).each(function (index, item) {
+          item = $(item);
+          item.html(item.data('textOld')).data('textOld', null);
+        });
+        // 如果有值筛选开始
+        if (value) {
+          layui.each(treeElem.find('cite'), function (index, elem) {
+            elem = $(elem);
+            var textTemp = elem.text();
+            if (textTemp.indexOf(value) === -1) {
+              // 不存在就隐藏
+              elem.closest('li').addClass(HIDE);
+            } else {
+              // 命中就添加一个class
+              elem.addClass(hintClass)
+                .data('textOld', textTemp)
+                .html(textTemp.replace(new RegExp(value, 'g'), '<span class="search_hint_text">' + value + '</span>'));
+            }
+          });
+          layui.each(treeElem.find('.' + hintClass), function (index, elem) {
+            elem = $(elem);
+            elem.parents('li').removeClass(HIDE);
+            elem.parents('ul').each(function (i, item) {
+              if (!$(item).hasClass('layui-show')) {
+                $(item).parent('li').find('>i').click();
+              }
+            });
+            elem.parents('ul').parent('li').removeClass(HIDE);
+          });
+        }
+        typeof callback === 'function' && callback.call(that, treeElem, filterElem, treeElem.find('.' + hintClass).length);
+      });
+    };
+ 
+    tree({
+      elem: '#demo1' //指定元素
+      , target: '_blank' //是否新选项卡打开（比如节点返回href才有效）
+      , nodes: [ //节点
+        {
+          name: '常见问题'
+		  ,spread:true
+          , id: 1
+          , alias: 'changjianwentyi'
+          , children: [
+            {
+              name: '问题1（设置跳转）'
+              , id: 11
+              , alias: 'wenti1'
+            }, {
+              name: '问题2'
+              , id: 12
+			  , alias: 'wenti2'
+            }
+          ]
+        },
+		{
+		  name: '产品使用'
+		  , id: 2
+		  , alias: 'chanpinshiyong'
+		  , children: [
+		    {
+		      name: '产品使用1'
+		      , id: 21
+		      , alias: 'chanpinshiyong1'
+		    }, {
+		      name: '产品使用2'
+		      , id: 22
+			  , alias: 'chanpinshiyong2'
+		    }
+		  ]
+		}
+      ],
+	  //点击节点的回调
+	  click: function(node){
+		//console.log(node) //node即为当前点击的节点数据
+		$('.j-help-details').html('<h1 class="j-title">'+node.name+'</h1><div class="j-help-content">内容区'+node.name+'</div>');
+	  }  
+    });
+    //搜索条数
+    tree.syncLayuiTreeFilter('demo1', '[name="searchTree"]', function (treeElem, filterElem, hitNumbers) {
+      /* console.log('hitNumbers', hitNumbers);
+      layer.msg('找到' + hitNumbers + '个节点'); */
+    });
+    //左边菜单栏目收缩
+	$(".j-shrink").click(function(){
+		$(".j-help-con ").toggleClass("with-show");
+		$(this).toggleClass("layui-icon-spread-left")
+	})
+	//点击添加标识
+	$(".layui-tree li a").click(function() {
+		$(".layui-tree li a").parent().removeClass("current");
+		$(this).parent().addClass("current");
+	});
+  });
+</script>
+	</body>
+</html>

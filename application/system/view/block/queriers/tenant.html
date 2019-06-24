@@ -1,0 +1,95 @@
+<style>
+	/*------------------ iframe页面去共用部分样式 S ----------------*/
+	.layui-header,.layui-side,.layui-footer,.bread-crumbs{ display: none; color: #f60;}
+	.layui-layout-admin .layui-body{top: 0;bottom: 0;}
+	.layui-body{left: 0;}
+	.page-tab-content{margin: 0;}
+	/*------------------ iframe页面去共用部分样式 E ----------------*/
+</style>
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
+    <form class="layui-form layui-form-pane" action="{:url('index')}"  method="get" id="hisi-table-search">
+	  <div class="j-search-fl layui-col-md8  fl">
+        <div class="layui-input-inline layui-col-md2" style="width:120px;padding-left:5px">
+            <select name="tenant_inst_id">
+                <option value="">所属机构</option>
+                {volist name=":config('inst_check_names')[INST]" id="v"}
+                <option value="{$key}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline layui-col-md2"  style="width:150px;padding-left:5px">
+            <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+        </div>
+        <div class="layui-input-inline layui-col-md2"  style="width:120px;padding-left:5px">
+            <input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
+        </div>
+	  </div>
+	  <div class="j-search-fr layui-col-md4 fr">
+        <div class="layui-input-inline fr">
+			<button type="reset" class="layui-btn  j-btn-reset">重置</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                <i class="layui-icon">&#xe615;</i>
+                搜索
+            </button>
+        </div>
+	  </div>
+    </form>
+</div>
+{include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+</div>
+<script type="text/javascript">
+	var conId;
+	var data;
+    layui.use(['table','jquery'], function() {
+        var $ = layui.$;
+        var s = $('#dataTable').attr('params');
+        var params = JSON.parse(s);
+        var table = layui.table;
+        table.render({
+            elem: '#dataTable'
+            // ,height: 550
+			,defaultToolbar: false//设置右边筛选，导出，打印显示
+            ,toolbar: 'true'
+            // ,defaultToolbar: ['print']
+            ,url: '{:url("house/Tenant/index")}' //数据接口
+            ,page: true //开启分页
+            ,limit: 10
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                {field: 'tenant_number', width:100, title: '租户ID'}
+                ,{field: 'tenant_name', width: 240, title: '租户姓名'}
+				,{field: 'tenant_tel', width: 140, title: '联系方式'}
+				,{field: 'tenant_card', width: 180, title: '身份证号'}
+                ,{field: 'tenant_inst_id', width: 140, title: '管段', hide: isShowInst, templet: function(d) {
+                    return params.insts[d.tenant_inst_id];
+                }}
+                
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        },isShowInst);
+		//监听行单击事件（单击事件为：rowDouble）
+		table.on('row(dataTable)',function(obj){
+			data = obj.data;
+			conId = data.id;
+			/* console.log(data); */
+			//标注选中样式
+			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+		});
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		//显示搜索框title属性值
+		$(".layui-unselect").mouseover(function(){
+		  var titles = $(this).val();
+		  $(this).attr("title",titles)
+		});
+    });
+	var tenantdata = function () {
+	     return data;
+	}
+
+</script>
