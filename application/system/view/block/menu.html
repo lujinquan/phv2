@@ -163,9 +163,9 @@
 	
 	$(".j-title-con li").on('click', function(){
         var id = $(this).attr('data-id');
-        var flag = $(this).attr('data-flag');
-        $('#reads').append(this);
+        var flag = $(this).attr('data-flag'); 
         if(flag === 'unreads'){
+            $('#reads').append(this);
             var affSum = $('.aff-sum').text();
             $('.aff-sum').text(affSum - 1);
             if(affSum == 1){

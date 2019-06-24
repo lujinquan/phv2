@@ -58,12 +58,7 @@
 			  </table> -->
 		  </div>
 		</div>
-		<div class="layui-col-md6">
-			<div class="j-viewer-img">
-				<img  data-original="__ADMIN_IMG__/add_img.png" src="__ADMIN_IMG__/add_img.png" alt="图片1" />
-				<img  data-original="__ADMIN_IMG__/j-chenggonganli.png" src="__ADMIN_IMG__/j-chenggonganli.png" alt="图片2" />
-			</div>
-		</div>
+		
 	</div>
 	{include file="block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
@@ -85,6 +80,9 @@
             }
             ,cols: [[ //表头
 				{field: 'title', width:100, title: '标题'}
+                ,{field: 'type', width: 240, title: '类型',templet: function(d) {
+							return params.notice_type[d.type];
+						}}
                 ,{field: 'content', width: 240, hide: true ,title: '内容'}
                 ,{field: 'reads', width: 240, hide: true ,title: '阅读记录'}
                 ,{field: 'cuid', width: 240, hide: true ,title: '创建人'}

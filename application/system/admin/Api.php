@@ -25,11 +25,13 @@ class Api extends Common
             		if($row['read_users']){
             			$arrTemp = explode('|',$row['read_users']);
             			if(!in_array(session('admin_user.uid'),$arrTemp)){
-            				$readUsers = array_filter(array_push($arrTemp,session('admin_user.uid')));
+                                    //dump($arrTemp);halt(session('admin_user.uid'));
+                                    $arrTemp[] = session('admin_user.uid');
+            				$readUsers = array_filter($arrTemp);
+                                    //halt($readUsers);
             				$readUsers = '|'.implode('|',$readUsers).'|';
             				$afficheModel->where([['id','eq',$id]])->update(['read_users'=>$readUsers]);
             			}
-            			
             		}else{
             			$readUsers = '|'.session('admin_user.uid').'|';
             			$afficheModel->where([['id','eq',$id]])->update(['read_users'=>$readUsers]);
