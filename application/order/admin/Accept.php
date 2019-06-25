@@ -3,7 +3,9 @@
 namespace app\order\admin;
 use app\system\admin\Admin;
 use app\system\model\SystemUser as UserModel;
+use app\system\model\SystemAffiche;
 use app\order\model\OpOrder as OpOrderModel;
+use think\Db;
 
 /**
  * 待受理工单，权限限开放给【运营中心 + 技术部 + 经管科】
@@ -53,6 +55,10 @@ class Accept extends Admin
 
     public function add()
     {
+        // 【待解决问题，模糊查找whereOr如何实现】
+        //$userRow = UserModel::whereOr([['role_id','eq',11],['inst_ids','like','%8,%']])->whereOr([['role_id','eq',11],['inst_ids','like','%,8%']])->select();
+        //$userRow = Db::query("select * from system_user where role_id = 11 and ((inst_ids like %,8%) or (inst_ids like %8,%))");
+        //halt($userRow);
     	if ($this->request->isPost()) {
             $data = $this->request->post();
             //halt($data);
@@ -64,13 +70,24 @@ class Accept extends Admin
             $OporderModel = new OporderModel();
             // 数据过滤
             $filData = $OporderModel->dataFilter($data);
-            if (!$OporderModel->allowField(true)->create($filData)) {
+            $row = $OporderModel->allowField(true)->create($filData);
+            if (!$row) {
                 return $this->error('提交失败');
             }
 
+            
             // 【待解决问题，成功跳转后，菜单的高亮没有正确呈现】
             //return $this->success('提交成功',url('Myorder/index'));
             
+            $userRow = UserModel::where([['role_id','eq',11],['inst_ids','like','%'.$row['inst_id'].',%']])->find();
+            $systemAffiche = new SystemAffiche;
+            $systemAffiche->title = '您有一条来自【'.session('admin_user.nick').'】的工单待受理！';
+            $systemAffiche->content = '您有一条来自【'.session('admin_user.nick').'】的工单待受理！工单编号：'.$filData['op_order_number'].'。请您尽快处理！';
+            $systemAffiche->from_user_id = '*';
+            $systemAffiche->to_user_id = '|'.$userRow['id'].'|';
+            $systemAffiche->create_time = time();
+            $systemAffiche->save();
+
             return $this->success('提交成功');
         }
     	return $this->fetch();
@@ -88,6 +105,14 @@ class Accept extends Admin
 
 
         $row['jsondata'] = json_decode($row['jsondata'],true);
+        $temp = $row['jsondata'];
+        if($temp){
+           foreach($temp as &$v){
+                if($v['Img']){
+                    $v['Img'] = explode(',',$v['Img']);
+                }
+            } 
+        }
         if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
         }else if(!$row['dtime']){

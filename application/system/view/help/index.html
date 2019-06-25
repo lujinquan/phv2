@@ -1,0 +1,55 @@
+<div class="j-table-content">
+<div class="layui-btn-container j-container-margin">
+    <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>发布</button></a>
+    <button data-href="{:url('del')}" data-id="id" class="layui-btn layui-btn-gray j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+</div>
+{include file="block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+</script>
+<script type="text/html" title="排序模板" id="sortTpl">
+    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_notice&id={{ d.id }}">
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery'], function() {
+        var table = layui.table
+		    ,$ = layui.$;
+        table.render({
+            elem: '#dataTable'
+            ,toolbar: true
+			,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
+            ,url: '{:url("system/Help/index")}' //数据接口
+            ,page: true //开启分页
+            ,limit: 10
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'title' , width: 200 , align:'center' , title: '标题'}
+                ,{field: 'type' , width: 200 , align:'center' , title: '类型',
+                        templet: function(d) {
+                            return params.help_type[d.type];
+                }}
+                ,{field: 'create_time' , width: 200 ,  align:'center' , title: '创建时间'}
+                ,{field: 'sort' , width: 80 ,  title: '排序' , templet: '#sortTpl'}
+                ,{field: 'cuid',width: 130 , align:'center', title: '发布人'}
+                ,{title: '操作', minWidth: 130, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        });
+		
+		// $(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+		// //显示搜索框title属性值
+		// $(".layui-input.layui-unselect").mouseover(function(){
+		//   var titles = $(this).val();
+		//   $(this).attr("title",titles)
+		// });
+    });
+</script>

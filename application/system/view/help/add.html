@@ -1,0 +1,66 @@
+<form class="layui-form" id="form1" action="{url('add')}" method="post">
+	<!-- 新增文档 S -->
+	<div class="j-details-box floorWrap layui-form">
+		<div class="item">
+			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+				<legend>新增文档</legend>
+			</fieldset>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md12">
+					<div class="j-form-label"><i class="red">*</i>标题</div>
+					<div class="j-input-inline">
+						<input type="text" id="title" name="title" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md4">
+					<div class="j-form-label"><i class="red">*</i>排序</div>
+					<div class="j-input-inline">
+						<input type="text" name="sort" autocomplete="off" class="layui-input" value="1000">
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>类型</label>
+					<div class="j-input-inline">
+						<select id="mechanism" name="type" lay-search="">
+							<option value="">请选择</option>
+							{volist name="params['help_type']" id="vo"}
+							<option value="{$key}">{$vo}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md12">
+					<label class="j-form-label"><i class="red">*</i>内容</label>
+				</div>
+				<div class="layui-col-md12">
+				 <textarea id="editor_id" name="content" style="width:100%;height:300px;"></textarea>
+				</div>
+			</div>
+	</div>
+	{:token()}
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
+		</div>
+	</div>
+	</div>
+	<!-- 新增文档 E -->
+</form>
+{include file="block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-all.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script>
+<script>
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="content"]', {
+			afterBlur:function(){this.sync();},
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			
+		});
+	});
+</script>

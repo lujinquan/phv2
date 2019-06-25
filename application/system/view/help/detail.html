@@ -1,0 +1,48 @@
+<!-- 详情 S -->
+<div class="j-notice-details">
+	<div class="j-title clearfix">
+	  <h1>{$data_info['title']}</h1>
+	  <h2><span class="j-time">{$data_info['cuid']} {$data_info['create_time']}<span> <span class="j-browse"><i class="layui-icon iconfont j-icon-yanjing"></i>{:count(json_decode($data_info['reads'],true))}</span></h2>  
+	</div>
+	<hr />
+	<!-- 详细内容 S -->
+	<div class="j-details-size" data-value="{:htmlspecialchars_decode($data_info['content'])}"></div>
+	<!-- 详细内容 E -->
+	<hr />
+	<!-- 浏览记录 S -->
+	<div class="j-record">
+		<div class="j-title clearfix">
+			<div class="j-explain fl">
+				<i></i><span class="j-name">浏览记录：<span>
+			</div>
+		</div>
+		<div class="j-record-name clearfix">
+			<ul class="layui-row layui-col-space30">
+				{volist name="(json_decode($data_info['reads'],true))" id="vo"}
+				<li class="layui-col-md4">
+					<span class="fr">{:tranTime($vo['time'])}</span>
+					<span class="j-size">
+						{$systemusers[$vo['uid']]}
+					</span>
+				</li>
+				{/volist}
+				<!-- <li class="layui-col-md4">
+					<span class="fr">2019/05/04 14:09:12</span>
+					<span class="j-size">
+						李某某
+					</span>
+				</li> -->
+			</ul>
+		</div>
+	</div>
+	<!-- 浏览记录 E -->
+</div>
+<!-- 详情 E -->
+{include file="block/layui" /}
+<!-- <script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/kindeditor-all.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/editor/kindeditor/lang/zh_CN.js?v={:config('hisiphp.version')}"></script> -->
+<script type="text/javascript">
+	var content = $('.j-details-size').attr('data-value');
+	//console.log(content);
+	$('.j-details-size').html(content);
+</script>
