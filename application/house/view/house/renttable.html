@@ -1,170 +1,159 @@
 <form class="layui-form" action="{url('add')}" method="post">
-	<div class="e-space"></div>
-	<div class="page-form">
-		<div class="layui-form-item e-inline">
-			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
-			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-		</div>
-		<div class="e-space"></div>
-
-		<div class="layui-form-item">
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 楼栋编号</label>
-				<div class="layui-input-inline">
-					<input type="text" name="ban_number" readonly value="{$data_info['ban_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 房屋结构 </label>
-				<div class="layui-input-inline">
-					<input type="text" name="tenant_number" readonly value="{$params['structs'][$data_info['ban_struct_id']]}" placeholder="双击选择" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 楼层数量</label>
-				<div class="layui-input-inline">
+  <div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+        <div class="layui-row layui-form-item layui-col-space90">
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">楼栋编号</label>
+        		<div class="j-input-inline">
+        			<input type="text" name="ban_number" readonly value="{$data_info['ban_number']}" placeholder="" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">房屋结构</label>
+        		<div class="j-input-inline">
+        			<input type="text" name="tenant_number" readonly value="{$params['structs'][$data_info['ban_struct_id']]}" placeholder="双击选择" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">楼层数量</label>
+        		<div class="j-input-inline">
+        			<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        </div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">结构基价</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 结构基价</label>
-				<div class="layui-input-inline">
-					<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-form-item">
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 房屋编号</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋编号</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_number" readonly value="{$data_info['house_number']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 租户</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">租户</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_unit_id" readonly value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 居住层 </label>
-				<div class="layui-input-inline">
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">居住层</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_floor_id" readonly value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 产别</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">产别</label>
+				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$params['owners'][$data_info['ban_owner_id']]}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-form-item">
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 房屋地址</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋地址</label>
+				<div class="j-input-inline">
 					<input type="text" name="ban_address" readonly value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 实有面积</label>
-				<div class="layui-input-inline">
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">实有面积</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_oprice" readonly value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 计租面积 </label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">计租面积</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_area" readonly value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-form-item">
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 规定租金</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">规定租金</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_number" readonly value="{$data_info['house_pre_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 计算租金</label>
-				<div class="layui-input-inline">
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">计算租金</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_unit_id" readonly value="{$data_info['house_cou_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 租差 </label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">租差</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_floor_id" readonly value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 泵费</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">泵费</label>
+				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
-		<div class="layui-form-item">
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 租金减免</label>
-				<div class="layui-input-inline">
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">租金减免</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_number" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 协议租金</label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">协议租金</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_unit_id" readonly value="{$data_info['house_protocol_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 应收租金 </label>
-				<div class="layui-input-inline">
+			<div class="layui-col-md4">
+				<label class="j-form-label">应收租金</label>
+				<div class="j-input-inline">
 					<input type="text" name="house_floor_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-inline e-inline">
-				<label class="layui-form-label e-label"><font color="red"></font> 电梯</label>
-				<div class="layui-input-inline">
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">电梯</label>
+				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="占位" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">协议租金</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_unit_id" readonly value="{$data_info['house_protocol_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">应收租金</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_floor_id" readonly value="占位" autocomplete="off" class="layui-input">
+				</div>
+			</div>
 		</div>
-		<div class="e-space"></div>
-		<div class="layui-form-item e-inline">
-			<div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">房间信息</font>
-			<div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-		</div>
-		<div class="e-space"></div>
-
-		<div class="layui-row e-inline">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>房间信息</legend>
+		</fieldset>
+		<div class="layui-row">
 			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
 			{if condition="$group == 'x'"}
-			<a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="新增房间">新增房间</a>
+			<a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 			{/if}
 		</div>
-
 		<!-- 房间信息 -->
-		<div class="layui-col-md11">
-		<table class="layui-table e-inline" width="1000px">
-			<colgroup>
-			<col width="100">
-			<col width="100">
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="80">
-			<col width="100">
-			<col width="120">
-			<col width="100">
-			<col width="120">
-			<col width="100">
-			<col width="80">
-			<col width="100">
-		</colgroup>
+		<table class="layui-table ">
 		<thead>
 			<tr>
 				<th>房屋类型</th>
@@ -252,6 +241,7 @@
 			{/volist}
 		</tbody>
 	</table>
+
 </div>
 </form>
 {include file="system@block/layui" /}

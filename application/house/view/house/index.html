@@ -172,6 +172,13 @@
 			done: function(res, curr, count) {
 
 			}
-		}, isShowInst)
+		}, isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+		//显示搜索框title属性值
+		$(".layui-input.layui-unselect").mouseover(function(){
+		  var titles = $(this).val();
+		  $(this).attr("title",titles)
+		});
 	});
 </script>
