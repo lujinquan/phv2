@@ -135,15 +135,15 @@ class OpOrder extends Model
                 }else{ //写入 转交人id
                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
                 }
+                //halt($data);
                 if($data['reply']){
-
                     $img = implode(',',$data['reply']);
                 }else{
                     $img = '';
                 }
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
-                    'Img' => json_encode($data['reply']),
+                    'Img' => $img,
                     'ToUid' => $data['transfer_to'],
                     'Desc' => $data['replay'],
                     'Time' => time(),

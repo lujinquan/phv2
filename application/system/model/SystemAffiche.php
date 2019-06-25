@@ -11,11 +11,11 @@ use think\Model;
 class SystemAffiche extends Model
 {
     // 定义时间戳字段名
-    protected $createTime = 'ctime';
-    protected $updateTime = 'mtime';
+    // protected $createTime = 'create_time';
+    // protected $updateTime = false;
 
     // 自动写入时间戳
-    protected $autoWriteTimestamp = true;
+    //protected $autoWriteTimestamp = true;
 
     public function getAffiche()
     {
@@ -43,4 +43,23 @@ class SystemAffiche extends Model
     {
     	$this->get($id);
     }
+
+    /**
+     * [buildAffiche description]
+     * @param  [type] $title        [description]
+     * @param  [type] $content      [description]
+     * @param  string $to_user_id   [description]
+     * @param  string $from_user_id [description]
+     * @return [type]               [description]
+     */
+    // public function buildAffiche($title,$content,$to_user_id = '*',$from_user_id = '*')
+    // {
+    //     $row = [];
+    //     $row['title'] = $title;
+    //     $row['from_user_id'] = $from_user_id;
+    //     $row['to_user_id'] = $to_user_id;
+    //     $row['content'] = $content;
+    //     $row['create_time'] = time();
+    //     return $this->save($row);
+    // }
 }

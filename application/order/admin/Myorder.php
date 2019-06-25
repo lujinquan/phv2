@@ -75,7 +75,14 @@ class Myorder extends Admin
         //$current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
         //halt($row);
         $row['jsondata'] = json_decode($row['jsondata'],true);
-
+        $temp = $row['jsondata'];
+        if($temp){
+           foreach($temp as &$v){
+                if($v['Img']){
+                    $v['Img'] = explode(',',$v['Img']);
+                }
+            } 
+        }
         if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
         }else if(!$row['dtime']){

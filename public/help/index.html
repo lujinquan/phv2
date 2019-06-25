@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>系统帮助文档</title>
 		<link rel="stylesheet" href="css/index.css">
 		<link rel="stylesheet" href="../../static/js/layui/css/layui.css">
 		<script type="text/javascript" src="../../static/js/jquery.2.1.4.min.js"></script>
@@ -41,8 +41,11 @@
       , $ = layui.jquery
       , tree = layui.tree;
 
-    $.get("/admin.php/system/api/helpdoc",function(nodes){
-      var nodes = JSON.parse(nodes);
+    $.get("/admin.php/system/api/helpdoc",function(data){
+      console.log(data.data);
+      var nodes = data.data;
+    
+      //var nodes = JSON.parse(nodes);
     
     // 同步(绑定)layui的tree的搜索(过滤)框
     // treeId: tree所在的容器的id
@@ -135,8 +138,8 @@
     //   ]
 	  //点击节点的回调
 	  ,click: function(node){
-		//console.log(node) //node即为当前点击的节点数据
-		$('.j-help-details').html('<h1 class="j-title">'+node.name+'</h1><div class="j-help-content">内容区'+node.content+'</div>');
+		console.log(node.content) //node即为当前点击的节点数据
+		$('.j-help-details').html('<h1 class="j-title">'+node.name+'</h1><div class="j-help-content">'+htmlRestore(node.content)+'</div>');
 	  }  
     });
     //搜索条数
@@ -156,6 +159,20 @@
 	});
   });
     });
+
+  function htmlRestore(str) {
+    var s = "";
+    if (str.length === 0) {
+      return "";
+    }
+    s = str.replace(/&amp;/g, "&");
+    s = s.replace(/&lt;/g, "<");
+    s = s.replace(/&gt;/g, ">");
+    s = s.replace(/&nbsp;/g, " ");
+    s = s.replace(/&#39;/g, "\'");
+    s = s.replace(/&quot;/g, "\"");
+    return s;
+  }
 </script>
 	</body>
 </html>

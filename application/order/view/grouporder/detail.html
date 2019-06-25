@@ -45,6 +45,11 @@
                   <div class="j-remarks">
                     备注：{$v['Desc']}
                   </div>
+                  {if condition="$v['Img']"}
+                  {volist name="$v['Img']" id="vo"}
+                  <img src="{$vo}" />
+                  {/volist}
+                  {/if}
                 </div>
               </li>
               {/volist}
