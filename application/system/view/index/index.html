@@ -15,14 +15,7 @@
 							  <div class="layui-input-inline j-input-margin" style="width:150px;">
 								  <input type="text" name="title" placeholder="标题查询" class="layui-input">
 							  </div>
-							  <!-- <div class="layui-input-inline" style="width:120px;">
-								  <select name="type">
-									  <option value="">类型</option>
-									    {volist name="params['notice_type']" id="vo"}
-										<option value="{$key}">{$vo}</option>
-										{/volist}
-									</select>
-							  </div> -->
+
 						</div>
 						<div class="j-search-fr layui-col-md4 fr">
 							<div class="layui-input-inline fr">
@@ -60,9 +53,6 @@
             }
             ,cols: [[ //表头
 				{field: 'title', width:200, title: '标题'}
-    //             ,{field: 'type', width: 240, title: '类型',templet: function(d) {
-				// 	return params.notice_type[d.type];
-				// }}
                 ,{field: 'content', width: 240, hide: true ,title: '内容'}
                 ,{field: 'reads', width: 240, hide: true ,title: '阅读记录'}
                 ,{field: 'cuid', width: 240, hide: true ,title: '创建人'}
