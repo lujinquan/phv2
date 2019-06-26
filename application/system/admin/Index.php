@@ -60,6 +60,11 @@ class Index extends Admin
 	{
 		return $this->fetch('block/queriers/tenant');
 	}
+	 //房屋选择器
+	public function house()
+	{
+		return $this->fetch('block/queriers/house');
+	}
     /**
      * 欢迎首页
      * @author Lucas <598936602@qq.com>

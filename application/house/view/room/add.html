@@ -1,86 +1,89 @@
 <form class="layui-form" action="{url('add')}" method="post">
-    <div class="e-space"></div>
-    <div class="page-form">
-		<div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 房间类型</label>
-                <div class="layui-input-inline">
-                    <select name="room_type" class="field-cid" type="select" required>
-                        <option value="">请选择</option>
-                        {volist name="params['roomtypes']" id="v" key="k"}
-                        <option value="{$k}">{$v}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 间号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="room_door" value="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 单元号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="room_unit_id" value="" autocomplete="off" class="layui-input ">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 绑定楼栋</label>
-                <div class="layui-input-inline">
-                    <i class="icon-search"></i>
-                    <input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 层次</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="room_floor_id" value="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 实有面积</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="room_use_area" value="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item e-house">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 绑定房屋</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="house_number[]" value="{$data_info['house_number']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <div class="layui-input-inline">
-                    <i class="icon-search"></i>
-                    <i class="icon-cancel lu-del"></i>
-                    <input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <div class="layui-input-inline">
-                    <i class="icon-search"></i>
-                    <i class="icon-cancel lu-del"></i>
-                    <input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <i class="layui-icon layui-icon-add-1 lu-add" style="color:#1E9FFF;"></i>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 基价折减</label>
-                <div class="layui-input-inline">
-                    <i class="icon-baifenhao"></i>
-                    <input type="text" name="room_rent_point" value="0" id="room_rent_point" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-		              <div class="layui-inline e-inline">
+    <div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>房间类型</label>
+	  		<div class="j-input-inline">
+	  			 <select name="room_type" class="field-cid" type="select" required>
+	  			    <option value="">请选择</option>
+	  			    {volist name="params['roomtypes']" id="v" key="k"}
+	  			    <option value="{$k}">{$v}</option>
+	  			    {/volist}
+	  			</select>
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>间号</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="room_door" value="" autocomplete="off" class="layui-input">
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>单元号</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="room_unit_id" value="" autocomplete="off" class="layui-input ">
+	  		</div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>绑定楼栋</label>
+	  		<div class="j-input-inline">
+	  			 <input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" placeholder="双击选择" class="layui-input">
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>层次</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="room_floor_id" value="" autocomplete="off" class="layui-input">
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>实有面积</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="room_use_area" value="" autocomplete="off" class="layui-input">
+	  		</div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90 e-house">
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
+	  		<div class="j-input-inline">
+	  			 <input type="text" name="house_number[]" value="{$data_info['house_number']}" data-id="1" readonly autocomplete="off" placeholder="双击选择" class="layui-input">
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="2" placeholder="双击选择" class="layui-input">
+				<i class="icon-cancel lu-del"></i>
+	  		</div>
+	  	</div>
+	  	<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
+	  		<div class="j-input-inline">
+	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="3" placeholder="双击选择" class="layui-input">
+				<i class="icon-cancel lu-del"></i>
+	  		</div>
+	  	</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label lu-add"><i class="layui-icon layui-icon-add-1 " style="color:#1E9FFF;"></i>添加房屋</label>
+		</div>
+		
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md4">
+	  		<label class="j-form-label"><i class="red">*</i>基价折减</label>
+	  		<div class="j-input-inline">
+	  			 <input type="text" name="room_rent_point" value="0" id="room_rent_point" readonly autocomplete="off" class="layui-input">
+	  		</div>
+	  	</div>
+	  </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+		   <div class="layui-inline j-inline-margin">
               <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="1" v="5" lay-skin="primary" title="1、土地面房屋 5%">
               <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="2" v="5" lay-skin="primary" title="2、无平顶瓦屋面、石棉瓦屋面房屋 5%">
               <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="3" v="10" lay-skin="primary" title="3、油毡屋面房屋 10%">
@@ -92,16 +95,14 @@
               <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="9" v="25" lay-skin="primary" title="9、封闭式阳台（含内、外阳台） 25%">
               <input type="checkbox" name="room_rent_pointids[]" lay-filter="filter" value="10" v="25" lay-skin="primary" title="10、空间在2.2米以上的阁楼、梯间、夹层、半地下层 25%">
             </div>
-		</div>
+  </div>
 
-        <div class="e-space"></div>
-        <div class="layui-form-item">
-            <div class="layui-input-block e-inline">
-                <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
-                
-            </div>
-        </div>
-    </div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+		</div>
+	</div>
+  </div>
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript">
@@ -109,8 +110,8 @@ layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
 
     $('.lu-add').click(function(){
-        var html = '<div class="layui-inline e-inline"><div class="layui-input-inline"><i class="icon-search"></i><i class="icon-cancel lu-del"></i><input type="text" name="house_number[]" value="" autocomplete="off" class="layui-input"></div></div>';
-        $('.lu-add').before(html);
+        var html = '<div class="layui-col-md4"><label class="j-form-label"><i class="red">*</i>绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" placeholder="双击选择" class="layui-input"><i class="icon-cancel lu-del"></i></div></div>';
+        $('.lu-add').parent().before(html);
     });
     $('.e-house').on('click','.lu-del',function(){
         var that = $(this);
@@ -132,5 +133,49 @@ layui.use(['form', 'func'], function() {
         //console.log(data.value); //复选框value值，也可以通过data.elem.value得到
         // console.log(data.othis); //得到美化后的DOM对象
     });
+	//双击获取楼栋查询器
+	 $(".layui-form").on('dblclick','input[name="ban_number"]',function(){
+	layer.open({
+				title: '楼栋查询器'
+				,type: 2
+				,offset: 'auto'
+				,area: ['90%', '90%']
+				, btn:false
+				,pageTabs: false
+				,content: '{:url('system/index/querier')}'
+				,btn: ['确定','关闭']
+				,yes: function(index, layero){
+					var row = window["layui-layer-iframe" + index].callbackdata();
+					console.log(row);
+					layer.close(index);
+					$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+				},btn2: function(index, layero){
+					layer.close(index);
+				}
+	 });
+	})
+	//双击获取房屋查询器
+	 $(".layui-form").on('dblclick','input[name="house_number[]"]',function(){
+		 var that = $(this);
+		 console.log(that.attr('data-id'));
+		layer.open({
+					title: '房屋查询器'
+					,type: 2
+					,offset: 'auto'
+					,area: ['90%', '90%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('system/index/house')}'
+					,btn: ['确定','关闭']
+					,yes: function(index, layero){
+						var row = window["layui-layer-iframe" + index].hoesedata();
+						/* console.log(row); */
+						layer.close(index);
+						that.val(row.house_number);//获取房屋编号
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
+		 });
+	})
 });
 </script>

@@ -1,1 +1,114 @@
+<div class="j-details-box floorWrap layui-form">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>基本信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">租户编号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="tenant_number" value="{$data_info['tenant_number']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">联系姓名</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">联系电话</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">身份证号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">账户余额</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_balance" value="" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">欠租金额</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_arrears" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>登记状态</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">登记人</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">登记机构</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">登陆时间</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_time" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">更新时间</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_update" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>补充附件</legend>
+  </fieldset>
+   <div class="layui-row layui-form-item layui-col-space90">
+   	<div class="layui-col-md12">
+   		<div class="j-enclosure-upload clearfix">
+   			<div class="j-enclosure-label">身份证正面</div>
+   		</div>
+   		<div class="j-enclosure-img clearfix">
+   			<div  class="upload_img_list">
+			  <div class="j-enclosure-img clearfix">
+				<ul>
+					<li>
+						<img src="/static/system/image/add_img.png">
+					</li>
+				</ul>
+			</div>
+			</div>
+   		</div>
+   	</div>
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">身份证反面</div>
+		</div>
+		<div class="j-enclosure-img clearfix">
+			<div  class="upload_img_list">
+			  <div class="j-enclosure-img clearfix">
+				<ul>
+					<li>
+						<img src="/static/system/image/add_img.png">
+					</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+   </div>
+</div>
 {include file="system@block/layui" /}

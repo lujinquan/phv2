@@ -59,7 +59,7 @@
 					<li>2、<b>房屋基础数据</b>（房屋居住层修改、房屋绑定错误楼栋的结构修改、计租表拆分）</li>
 					<li>3、<b>租户信息</b></li>
 					<li>4、<b>租金管理</b>（租金加减1毛）</li>
-					<li>5、<b>计租表</b>（单元号修改、间号，绑定楼栋，产别，实有面积，基价折减，加计租金）</li>
+					<li>5、<b>计租表</b>（单元号修改、间号、绑定楼栋、产别、实有面积、基价折减、加计租金）</li>
 					<li>6、<b>租约</b></li>
 					<li>7、<b>异动</b>（别字更正、租金调整、楼栋调整、分户、房屋调整、注销、新发租、管段调整、租金追加调整、陈欠核销、暂停计租、空租、租金减免）</li>
 					<li>8、<b>报表数据</b></li>
@@ -71,9 +71,8 @@
 	<!--新建工单 E -->
 </form>
 {include file="system@block/layui" /}
-<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl2 = "{:url('system/Annex/upload')}?input=carded&group=ban&water=no"; //影像资料上传图片地址
+	var upurl2 = "{:url('system/Api/upload')}?input=carded&group=ban&water=no"; //影像资料上传图片地址
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,

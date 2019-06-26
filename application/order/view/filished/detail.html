@@ -1,6 +1,7 @@
 <style>
     .page-tab-content{ background: none;padding: 0;overflow-x: hidden;}
 </style>
+<link rel="stylesheet" href="__PUBLIC_JS__/Viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <div class="layui-row layui-col-space10 j-row-box">
     <div class="layui-col-md9 j-back-gray j-border-radius10 clearfix">
         <form class="layui-form" action="transfer" method="post">
@@ -12,10 +13,10 @@
                   </div>
                   <h1 class="j-card-header">附件：</h1>
                   <div class="layui-card-body clearfix">
-                    <ul class="j-enclosure-box">
+                    <ul class="j-enclosure-box j-viewer-img">
                         {volist name="data_info['imgs']" id="vo"}
                         <li>
-                          <img src="{$vo}" />
+                          <img data-original="{$vo}" src="{$vo}" />
                         </li>
                         {/volist}
                     </ul>
@@ -37,7 +38,7 @@
                     <div class="j-axis-main clearfix">
                          <ul class="time-axis">
                             {volist name="data_info['jsondata']" id="v"}
-                             <li class="time-axis-item">
+                             <li class="time-axis-item j-viewer-img">
                                  <div class="time-axis-date"><span></span></div>
                                  <div class="time-axis-title">
                                      <h1>【{$systemusers[$v['FromUid']]}】 于 {$v['Time']|date='Y-m-d H:i'} {$v['Action']} {if condition="$v['ToUid']"} 【{$systemusers[$v['ToUid']]}】 {/if}</h1>
@@ -46,7 +47,7 @@
                                      </div>
                                      {if condition="$v['Img']"}
                                      {volist name="$v['Img']" id="vo"}
-                                     <img src="{$vo}" />
+                                     <img data-original="{$vo}" src="{$vo}" />
                                      {/volist}
                                      {/if}
                                  </div>
@@ -133,3 +134,11 @@
     </div>
   </div>
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+</script>	
+	

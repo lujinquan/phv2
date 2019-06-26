@@ -428,9 +428,9 @@
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
 <script>
 	/*上传参数设定*/
-	var upurl = "{:url('system/Annex/upload')}?input=landCard&group=ban&water=no"; //土地证电子版上传图片地址
-	var upurl1 = "{:url('system/Annex/upload')}?input=realestateCard&group=ban&water=no"; //不动产电子版上传图片地址
-	var upurl2 = "{:url('system/Annex/upload')}?input=imagingData&group=ban&water=no"; //影像资料上传图片地址
+	var upurl = "{:url('system/Api/upload')}?input=landCard&group=ban&water=no"; //土地证电子版上传图片地址
+	var upurl1 = "{:url('system/Api/upload')}?input=realestateCard&group=ban&water=no"; //不动产电子版上传图片地址
+	var upurl2 = "{:url('system/Api/upload')}?input=imagingData&group=ban&water=no"; //影像资料上传图片地址
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,

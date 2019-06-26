@@ -1,0 +1,175 @@
+<style>
+	/*------------------ iframe页面去共用部分样式 S ----------------*/
+	.layui-header,.layui-side,.layui-footer,.bread-crumbs{ display: none; color: #f60;}
+	.layui-layout-admin .layui-body{top: 0;bottom: 0;}
+	.layui-body{left: 0;}
+	.page-tab-content{margin: 0;}
+	/*------------------ iframe页面去共用部分样式 E ----------------*/
+</style>
+<div class="j-table-content">
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline" style="width:150px;">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
+				</div>
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<select name="ban_inst_id">
+						<option value="">机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<select name="house_use_id">
+						<option value="">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<input type="hidden" name="" value="" class="layui-input">
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+</div>
+<script type="text/javascript">
+	var conId;
+	var data;
+	layui.use(['table', 'jquery'], function() {
+		var table = layui.table
+		    ,$ = layui.$;;
+		table.render({
+			elem: '#dataTable'
+				//,height: 550
+				//,height: 'full-20' //浏览器最大高度
+				,
+			toolbar: true,
+			defaultToolbar: false //设置右边筛选，导出，打印显示
+				,
+			url: '{:url("house/House/index")}' //数据接口
+				,
+			page: true //开启分页
+				,
+			limit: 10,
+			text: {
+				none: '暂无相关数据'
+			},
+			cols: [
+				[ //表头
+					{
+						field: 'house_number',
+						width: 140,
+						title: '房屋编号'
+					}, {
+						field: 'ban_number',
+						width: 110,
+						title: '楼栋编号'
+					}, {
+						field: 'tenant_name',
+						width: 100,
+						title: '租户姓名'
+					}, {
+						field: 'ban_inst_id',
+						width: 120,
+						title: '管段',
+						hide: isShowInst,
+						templet: function(d) {
+							return params.insts[d.ban_inst_id];
+						}
+					}, {
+						field: 'ban_owner_id',
+						width: 60,
+						title: '产别',
+						templet: function(d) {
+							return params.owners[d.ban_owner_id];
+						}
+					}, {
+						field: 'house_use_id',
+						width: 100,
+						title: '使用性质',
+						templet: function(d) {
+							return params.uses[d.house_use_id];
+						}
+					}, {
+						field: 'ban_address',
+						width: 200,
+						title: '地址'
+					}, {
+						field: 'house_area',
+						width: 80,
+						title: '建面'
+					}, {
+						field: 'house_lease_area',
+						width: 100,
+						title: '计租面积'
+					}, {
+						field: '',
+						width: 80,
+						title: '单元',
+						templet: function(d) {
+							return d.house_unit_id + '/' + d.ban_units;
+						}
+					}, {
+						field: '',
+						width: 80,
+						title: '楼层',
+						templet: function(d) {
+							return d.house_floor_id + '/' + d.ban_floors;
+						}
+					}
+
+				]
+			],
+			done: function(res, curr, count) {
+
+			}
+		}, isShowInst);
+		//监听行单击事件（单击事件为：rowDouble）
+		table.on('row(dataTable)',function(obj){
+			data = obj.data;
+			conId = data.id;
+			/* console.log(data); */
+			//标注选中样式
+			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+		});
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+	});
+	var hoesedata = function () {
+	     return data;
+	}
+</script>
