@@ -30,7 +30,7 @@
 			   <div class="j-help-fr">
 				  <i class="j-shrink layui-icon layui-icon-shrink-right"></i>
 				  <div class="j-help-details">
-					<h1 class="j-title">帮助中心</h1><div class="j-help-content">内容区</div>
+					
 				  </div> 
 			   </div>
 		   </div>
@@ -42,9 +42,12 @@
       , tree = layui.tree;
 
     $.get("/admin.php/system/api/helpdoc",function(data){
-      console.log(data.data);
+     /* console.log(data.data); */
       var nodes = data.data;
-    
+      window.onload=function(){
+      	//要初始化的东西
+        $('.j-help-details').html('<h1 class="j-title">'+nodes[0].children[0].name+'</h1><div class="j-help-content">'+htmlRestore(nodes[0].children[0].content)+'</div>')
+      	};
       //var nodes = JSON.parse(nodes);
     
     // 同步(绑定)layui的tree的搜索(过滤)框
