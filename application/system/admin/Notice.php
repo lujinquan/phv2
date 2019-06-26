@@ -103,28 +103,10 @@ class Notice extends Admin
     public function detail()
     {
         $systemNotice = new SystemNotice;
-        
         $id = input('param.id/d');
         $row = $systemNotice->find($id);
-        $reads = [];
-        $i = true;
-        if($row['reads']){
-            $reads = json_decode($row['reads'],true);
-            foreach($reads as $r){
-                if($r['uid'] == ADMIN_ID){
-                    $i = false;
-                    break;
-                }
-            } 
-        }
-        if($i){
-            $tempArr = [
-                'uid' => ADMIN_ID,
-                'time' => time()
-            ];
-            array_unshift($reads,$tempArr);
-            $systemNotice->where([['id','eq',$id]])->update(['reads'=>json_encode($reads)]);
-        }
+        // 更新已读记录 
+        $systemNotice->updateReads($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

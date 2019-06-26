@@ -5,6 +5,7 @@ namespace app\system\admin;
 use app\common\controller\Common;
 use app\system\model\SystemAffiche as AfficheModel;
 use app\system\model\SystemHelp;
+use app\system\model\SystemNotice;
 use app\common\model\Cparam as CparamModel;
 use think\Db;
 
@@ -128,5 +129,13 @@ class Api extends Common
             $data['msg'] = '';
             $data['code'] = 0;
             return json($data);
+      }
+
+      public function update_notice_reads()
+      {
+            $id = input('param.id/d');
+            $systemNotice = new SystemNotice;
+            $result = $systemNotice->updateReads($id);
+            return $result;
       }
 }

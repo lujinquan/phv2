@@ -81,7 +81,7 @@ class Accept extends Admin
             
             $userRow = UserModel::where([['role_id','eq',11],['inst_ids','like','%'.$row['inst_id'].',%']])->find();
             $systemAffiche = new SystemAffiche;
-            $systemAffiche->title = '您有一条来自【'.session('admin_user.nick').'】的工单待受理！';
+            $systemAffiche->title = '来自【'.session('admin_user.nick').'】的工单待受理！';
             $systemAffiche->content = '您有一条来自【'.session('admin_user.nick').'】的工单待受理！工单编号：'.$filData['op_order_number'].'。请您尽快处理！';
             $systemAffiche->from_user_id = '*';
             $systemAffiche->to_user_id = '|'.$userRow['id'].'|';
@@ -113,6 +113,7 @@ class Accept extends Admin
                 }
             } 
         }
+        $row['jsondata'] = $temp;
         if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
         }else if(!$row['dtime']){

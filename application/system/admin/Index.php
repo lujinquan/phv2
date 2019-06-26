@@ -35,7 +35,7 @@ class Index extends Admin
             $getData = $this->request->post();
             $systemNotice = new SystemNotice;
             $where = $systemNotice->checkWhere($getData);
-            $data['data'] = $systemNotice->field('title,type,content,cuid,reads,create_time')->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+            $data['data'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where($where)->page($page)->order('sort asc')->limit($limit)->select();
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -108,6 +108,6 @@ class Index extends Admin
         Dir::delDir($path.'temp');
         Dir::delDir($path.'log');
 
-        return $this->success('任务执行成功');
+        return $this->success('清除成功');
     }
 }

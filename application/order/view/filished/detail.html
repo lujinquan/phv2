@@ -13,12 +13,11 @@
                   <h1 class="j-card-header">附件：</h1>
                   <div class="layui-card-body clearfix">
                     <ul class="j-enclosure-box">
+                        {volist name="data_info['imgs']" id="vo"}
                         <li>
-                            <img src="__ADMIN_IMG__/theme.png" />
+                          <img src="{$vo}" />
                         </li>
-                        <li>
-                            <img src="__ADMIN_IMG__/theme.png" />
-                        </li>
+                        {/volist}
                     </ul>
                   </div>
                   <h1 class="j-card-header">状态：</h1>

@@ -18,7 +18,7 @@ class Myorder extends Admin
             $where = $OpOrderModel->checkWhere($getData,'myorder');
             
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('dtime desc')->limit($limit)->select();
             if($getData['group'] == 'j'){
             	foreach($temps as &$v){
 	            	if($v['dtime'] && !$v['ftime']){
@@ -35,7 +35,7 @@ class Myorder extends Admin
 					$v['nick'] = UserModel::where([['id','eq',$yunyin_uid]])->value('nick');
 	            }
             }
-            
+            //halt($temps);
             //halt($temps);
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
@@ -83,6 +83,7 @@ class Myorder extends Admin
                 }
             } 
         }
+        $row['jsondata'] = $temp;
         if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
         }else if(!$row['dtime']){

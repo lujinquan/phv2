@@ -92,7 +92,7 @@ class Tenant extends Admin
         $id = input('param.id/d');
         $row = TenantModel::get($id);
         $this->assign('data_info',$row);
-        return $this->fetch('form');
+        return $this->fetch();
     }
 
     public function del()

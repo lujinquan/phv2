@@ -76,4 +76,35 @@ class SystemNotice extends Model
 
         return $where;
     }
+
+    public function updateReads($id)
+    {
+        $row = $this->get($id);
+        $reads = [];
+        $i = true;
+        if($row['reads']){
+            $reads = json_decode($row['reads'],true);
+            foreach($reads as $r){
+                if($r['uid'] == session('admin_user.uid')){
+                    $i = false;
+                    break;
+                }
+            } 
+        }
+        if($i){
+            $tempArr = [
+                'uid' => session('admin_user.uid'),
+                'time' => time()
+            ];
+            array_unshift($reads,$tempArr);
+            //dump($id);halt($reads);
+            $re = self::where([['id','eq',$id]])->update(['reads'=>json_encode($reads)]);
+            if($re){
+                return '阅读记录更新成功！';
+            }else{
+                return '阅读记录更新失败！';
+            }
+        }
+        return '阅读记录已存在！';
+    }
 }

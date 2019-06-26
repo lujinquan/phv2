@@ -50,11 +50,11 @@
                 ,{field: 'inst_id', width: 120, align:'center', title: '机构', templet: function(d) {
                     return params.insts[d.inst_id];
                 }}
-                ,{field: 'remark', width: 300, align:'center', title: '问题详情'}
+                ,{field: 'remark', minWidth: 130, align:'center', title: '问题详情'}
                 ,{field: 'nick', width: 100, align:'center', title: '运行人员'}
                 ,{field: 'ctime', width: 180, align:'center', title: '创建时间'}
                 ,{field: 'ftime', width: 180, align:'center', title: '完结时间'}
-                ,{title: '操作', minWidth: 180, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 80, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

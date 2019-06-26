@@ -96,6 +96,7 @@ class Grouporder extends Admin
                 }
             } 
         }
+        $row['jsondata'] = $temp;
         if($row['dtime'] && !$row['ftime']){
             $row['status_info'] = '待确认';
         }else if(!$row['dtime']){
