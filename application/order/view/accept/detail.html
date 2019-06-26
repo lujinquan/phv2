@@ -41,7 +41,8 @@
 							<li class="time-axis-item j-viewer-img">
 								<div class="time-axis-date"><span></span></div>
 								<div class="time-axis-title">
-									<h1>【{$systemusers[$v['FromUid']]}】 于 {$v['Time']|date='Y-m-d H:i'} {$v['Action']} {if condition="$v['ToUid']"} 【{$systemusers[$v['ToUid']]}】 {/if}</h1>
+									<h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
+									<font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
 									<div class="j-remarks">
 										备注：{$v['Desc']}
 									</div>
