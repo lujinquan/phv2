@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | 基于ThinkPHP5开发
 // +----------------------------------------------------------------------
@@ -24,36 +25,31 @@ class Notice extends Admin
 {
 
     /**
-     * 初始化方法
+     * 公告列表
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
      */
     public function index()
     {
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
-            //$getData = $this->request->get();
             $SystemNotice = new SystemNotice;
-            //$data['data'] = $SystemNotice->select();
-            //halt($where);
             $data = [];
             $data['data'] = $SystemNotice->page($page)->order('sort asc')->limit($limit)->select();
-
-            //$result = [];
-            // foreach($temps as $k => &$v){
-                
-            // }
-            //halt($temps);
-            //$data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
-            //$data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
-            //halt($data);
             return json($data);
 
         }
     	return $this->fetch();
     }
 
+    /**
+     * 新增公告
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function add()
     {
         if ($this->request->isPost()) {
@@ -65,7 +61,6 @@ class Notice extends Admin
             }
             $systemNotice = new SystemNotice;
             $data['cuid'] = ADMIN_ID;
-            
             $data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$systemNotice->allowField(true)->create($data)) {
@@ -76,6 +71,11 @@ class Notice extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 修改公告
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function edit()
     {
         $systemNotice = new SystemNotice;
@@ -86,8 +86,6 @@ class Notice extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            
-            //$data['cuid'] = ADMIN_ID;
             // 入库
             if (!$systemNotice->allowField(true)->update($data)) {
                 return $this->error('编辑失败');
@@ -100,6 +98,11 @@ class Notice extends Admin
         return $this->fetch('form');
     }
 
+    /**
+     * 公告详情
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function detail()
     {
         $systemNotice = new SystemNotice;
@@ -111,6 +114,11 @@ class Notice extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 删除公告
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function del()
     {
         $ids = $this->request->param('id/a'); 

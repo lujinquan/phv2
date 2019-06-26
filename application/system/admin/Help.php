@@ -24,7 +24,9 @@ class Help extends Admin
 {
 
     /**
-     * 初始化方法
+     * 帮助文档列表
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
      */
     public function index()
     {
@@ -41,6 +43,11 @@ class Help extends Admin
     	return $this->fetch();
     }
 
+    /**
+     * 新增帮助文档
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function add()
     {
         if ($this->request->isPost()) {
@@ -63,6 +70,11 @@ class Help extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 修改帮助文档
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function edit()
     {
         $SystemHelp = new SystemHelp;
@@ -85,6 +97,11 @@ class Help extends Admin
         return $this->fetch('form');
     }
 
+    /**
+     * 帮助文档详情
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function detail()
     {
         $SystemHelp = new SystemHelp;
@@ -114,6 +131,11 @@ class Help extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 删除帮助文档
+     * @author Lucas <598936602@qq.com>
+     * @return mixed
+     */
     public function del()
     {
         $ids = $this->request->param('id/a'); 

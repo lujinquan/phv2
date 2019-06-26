@@ -18,11 +18,9 @@ class Grouporder extends Admin
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
             $OpOrderModel = new OpOrderModel;
-            $where = $OpOrderModel->checkWhere($getData,'grouporder');
-        //halt($where);    
+            $where = $OpOrderModel->checkWhere($getData,'grouporder');  
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
-            //$result = [];
             foreach($temps as $k => &$v){
                 if(strpos($v['duid'],',') === false){
                     $v['status_info'] = '待处理';
@@ -43,23 +41,20 @@ class Grouporder extends Admin
                     
                 // }
             }
-            //halt($temps);
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
-            //halt($data);
             return json($data);
 
         }
-    	return $this->fetch();
+        return $this->fetch();
     }
 
     public function add()
     {
-    	if ($this->request->isPost()) {
+        if ($this->request->isPost()) {
             $data = $this->request->post();
-            //halt($data);
             // 数据验证
             $result = $this->validate($data, 'OpOrder.sceneForm');
             if($result !== true) {
@@ -73,7 +68,7 @@ class Grouporder extends Admin
             }
             return $this->success('提交成功',url('Myorder/index'));
         }
-    	return $this->fetch();
+        return $this->fetch();
     }
 
     // 待受理的详情
@@ -81,12 +76,9 @@ class Grouporder extends Admin
     {
         $id = input('param.id/d');
         $row = OpOrderModel::with(['SystemUser'])->get($id);
-
         // 缺少一个判断，需要判断当前工单是否为当前角色待处理的工单【优化】
         $duid = explode(',',$row['duid']);
         $current_uid = array_pop($duid);
-
-
         $row['jsondata'] = json_decode($row['jsondata'],true);
         $temp = $row['jsondata'];
         if($temp){
@@ -122,8 +114,7 @@ class Grouporder extends Admin
                 $result = $this->validate($data, 'OpOrder.sceneEnd');
             }else{
                 $result = $this->validate($data, 'OpOrder.sceneTransfer');
-            }
-            
+            }    
             if($result !== true) {
                 return $this->error($result);
             }
@@ -143,4 +134,5 @@ class Grouporder extends Admin
             return $this->success($msg.'成功',url('index'));
         }
     }
+    
 }

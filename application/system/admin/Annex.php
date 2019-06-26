@@ -41,10 +41,10 @@ class Annex extends Admin
      * @author Lucas <598936602@qq.com>
      * @return json
      */
-    public function upload($from = 'input', $group = 'sys', $water = '', $thumb = '', $thumb_type = '', $input = 'file')
-    {
-        return json(AnnexModel::upload($from, $group, $water, $thumb, $thumb_type, $input));
-    }
+    // public function upload($from = 'input', $group = 'sys', $water = '', $thumb = '', $thumb_type = '', $input = 'file')
+    // {
+    //     return json(AnnexModel::upload($from, $group, $water, $thumb, $thumb_type, $input));
+    // }
 
     /**
      * favicon 图标上传
