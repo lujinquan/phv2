@@ -115,6 +115,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-margin-btn{padding: 40px 0 40px 15px;}
 .layui-col-space90>*{padding: 15px 45px 0;}
 .layui-col-space90{margin: -15px -45px 0;}
+/*说明文字*/
+.j-details-box .layui-input.j-explain-input{ padding-right: 30px;}
+b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px}
 /*楼层导航 S*/
 .j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 99999;background:rgba(255,255,255,0.5);}
 /* .j-floor-nav .navWrap li{width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
@@ -235,3 +238,5 @@ opacity: .8color: #333;}
 .j-home-help{position: absolute; bottom:15px; width: 100%; text-align: center; font-size: 12px;}/* 帮助中心入口 */
 .j-home-help a{color: #999; }
 .j-home-help i{ margin-right: 5px;font-size: 12px;}
+.layui-input.inp{ display: inline-block;}
+.layui-btn.ana{ position: absolute;top:0;right:0;}

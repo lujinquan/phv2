@@ -1,109 +1,121 @@
 {include file="system@block/layui" /}
 {if condition="$group == 'y'"}
-    <div class="e-space"></div>
-    <div class="page-form">
-        <div class="layui-form-item e-line">
-            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">基本信息</font>
-            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-        </div>
-        <div class="e-space"></div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 楼栋编号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 楼栋地址</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="ban_address" value="{$data_info['ban_address']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 产别</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="ban_address" value="{$params['owners'][$data_info['ban_owner_id']]}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-        	<div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 租户编号 </label>
-                <div class="layui-input-inline">
-                    <input type="text" name="tenant_number" value="{$data_info['tenant_number']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 租户姓名</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="tenant_name" value="{$data_info['tenant_name']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 身份证号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="tenant_card" value="{$data_info['tenant_card']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 单元号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="house_unit_id" value="{$data_info['house_unit_id']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 楼层号 </label>
-                <div class="layui-input-inline">
-                    <input type="text" name="house_floor_id" value="{$data_info['house_floor_id']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 使用性质</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="{$params['uses'][$data_info['house_use_id']]}" readonly class="layui-input">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 房屋原价</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="house_oprice" value="{$data_info['house_oprice']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red"></font> 建筑面积 </label>
-                <div class="layui-input-inline">
-                    <input type="text" name="house_area" value="{$data_info['house_area']}" readonly autocomplete="off" class="layui-input">
-                </div>
-            </div>
-        </div>
-
-        <div class="e-space"></div>
-        <div class="layui-form-item e-line">
-            <div class="layui-inline" style="width:20px;border:1px solid #EEE"></div><font style="font-weight:bold;color:#0084FF">补充附件</font>
-            <div class="layui-inline" style="margin-left:8px;margin-right:40px;width:80%;border:1px solid #EEE"></div>
-        </div>
-        <div class="e-space"></div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline e-inline">
-                <label class="layui-form-label e-label"><font color="red">*</font> 影像资料</label>
-                <div class="layui-input-inline">
-                    <button type="button" name="house_imgs" class="layui-btn layui-btn-normal" lay-type="image" lay-data="{accept:'image'}">点击上传</button>
-                </div>
-            </div> 
-            <div class="layui-block e-inline e-box"></div> 
-        </div> 
-        <div class="e-space"></div>
-    </div>
+  <div class="j-details-box floorWrap layui-form">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_address" value="{$data_info['ban_address']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_address" value="{$params['owners'][$data_info['ban_owner_id']]}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_number" value="{$data_info['tenant_number']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">单元号</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_unit_id" value="{$data_info['house_unit_id']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼层号</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_floor_id" value="{$data_info['house_floor_id']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$params['uses'][$data_info['house_use_id']]}" readonly class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">房屋原价</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_oprice" value="{$data_info['house_oprice']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">建筑面积</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_area" value="{$data_info['house_area']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>地址信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md8">
+			<label class="j-form-label">经纬度</label> 
+			<div class="j-input-inline">
+				<input type="text" name="enterprise_number" id="coordinate" disabled="disabled" value="114.334228,30.560372" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md8">
+			<div class="j-map-height" id="allmap"></div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">返回</a>
+		</div>
+	</div>
+  </div>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+  <script type="text/javascript">
+      var map = new BMap.Map("allmap");//2d地图
+      //var map = new BMap.Map("allmap", { mapType: BMAP_SATELLITE_MAP });//卫星地图
+      var point = new BMap.Point(114.334228,30.560372);
+      map.centerAndZoom(point, 18);
+      map.addControl(new BMap.NavigationControl());
+      var marker = new BMap.Marker(point);
+      map.addOverlay(marker);
+      marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+  </script>
 {else /}
-<div class="page-toolbar">
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url()}"  method="get" id="hisi-table-search">
+	  <div class="j-search-fl layui-col-md8  fl">
         <div class="layui-input-inline" style="width:120px;">
             <select name="house_tai_type">
                 <option value="">业务类型</option>
@@ -112,27 +124,34 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+        <div class="layui-input-inline" style="width:120px;">
             <input type="text" name="house_tai_remark" placeholder="描述内容" class="layui-input">
         </div>
         <input type="hidden" name="group" value="{$group}" class="layui-input">
         <input type="hidden" name="house_id" value="{$data_info['house_id']}" class="layui-input">
+	  </div>
+	  <div class="j-search-fr layui-col-md4 fr">
+	   <div class="layui-input-inline fr">
         <div class="layui-input-inline" style="margin-left:10px;">
+			<button type="reset" class="layui-btn j-btn-reset">重置</button>
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
                 <i class="layui-icon">&#xe615;</i>
                 搜索
             </button>
-            <button type="reset" class="layui-btn">重置</button>
         </div>
+	  </div>
+	</div>
     </form>
 </div>
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
-        var table = layui.table;
+        var table = layui.table
+		   ,$ = layui.$;
         table.render({
             elem: '#dataTable'
             ,skin: 'line' //行边框风格
@@ -157,8 +176,7 @@
             ,done:function(res,curr,count){
                
             }
-        },isShowInst)
+        },isShowInst);
     });
-
 </script>
 {/if}
