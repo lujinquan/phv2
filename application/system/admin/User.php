@@ -50,6 +50,9 @@ class User extends Admin
      */
     public function index($q = '')
     {
+        //$s = UserModel::with('role')->column('id,role_id,nick');
+        // $s = UserModel::with('role')->select();
+        // halt($s);
         if ($this->request->isAjax()) {
             $where      = $data = [];
             $page       = $this->request->param('page/d', 1);
