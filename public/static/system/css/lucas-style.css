@@ -29,6 +29,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-table-content .layui-table-tool{ min-height: 0; padding: 0;border-width:0}
 .j-table-content .layui-table-box{min-height: 450px;}
 .j-table-content .layui-form-checked i,.j-table-content .layui-form-checked:hover i{ color: #fff!important;}
+.layui-form-item .layui-inline.j-inline-margin{ margin: -5px 0 15px 0;}
+.j-inline-margin .layui-form-checkbox[lay-skin=primary]:hover i{border-color:#0084FF;}
+.j-inline-margin .layui-form-checked i,.j-inline-margin .layui-form-checked:hover i{ color: #fff!important;}
 /* 操作菜单 E */
 /*搜索框样式 S*/
 .j-table-content .layui-table-view{margin: 0 0 10px;}
@@ -91,7 +94,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 /* ----------详情样式 E ----------*/
 
 /*----------房屋档案详情 S----------*/
-.j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden;}
+.j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden; min-height: 550px;}
 /* .j-details-box.floorWrap{ padding-top: 50px;} */
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}

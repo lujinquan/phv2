@@ -611,6 +611,12 @@ console.log($('.checkbox-ids:checked'));
      		})
      	})
     /*楼层导航 E*/
+	//显示搜索框title属性值S
+	$(".layui-input.layui-unselect").mouseover(function(){
+	  var titles = $(this).val();
+	  $(this).attr("title",titles)
+	});
+	//显示搜索框title属性值E
 
 });
 
