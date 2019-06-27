@@ -44,10 +44,10 @@
     $.get("/admin.php/system/api/helpdoc",function(data){
      /* console.log(data.data); */
       var nodes = data.data;
-      window.onload=function(){
+      $(document).ready(function(){ 
       	//要初始化的东西
         $('.j-help-details').html('<h1 class="j-title">'+nodes[0].children[0].name+'</h1><div class="j-help-content">'+htmlRestore(nodes[0].children[0].content)+'</div>')
-      	};
+      	});
       //var nodes = JSON.parse(nodes);
     
     // 同步(绑定)layui的tree的搜索(过滤)框
