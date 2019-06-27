@@ -136,7 +136,7 @@ class OpOrder extends Model
                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
                 }
                 //halt($data);
-                if($data['reply']){
+                if(isset($data['reply']) && $data['reply']){
                     $img = implode(',',$data['reply']);
                 }else{
                     $img = '';
@@ -162,6 +162,12 @@ class OpOrder extends Model
 
                 $jsonarr = json_decode($find['jsondata'],true);
 
+                if(isset($data['reply']) && $data['reply']){
+                    $img = implode(',',$data['reply']);
+                }else{
+                    $img = '';
+                }
+
                 // 如果不是运营中心的人，那么此处的完成工单指的是默认转交回去
                 if(ADMIN_ROLE != 11){
                     $findDuids = explode(',',$find['duid']);
@@ -172,7 +178,7 @@ class OpOrder extends Model
                     
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
-                        'Img' => '',
+                        'Img' => $img,
                         'ToUid' => $comp,
                         'Desc' => $data['replay'],
                         'Time' => time(),
@@ -190,7 +196,7 @@ class OpOrder extends Model
                     }
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
-                        'Img' => '',
+                        'Img' => $img,
                         'ToUid' => $comp,
                         'Desc' => $data['replay'],
                         'Time' => time(),

@@ -153,6 +153,11 @@
             <option value="41" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
           </optgroup>
           {/if}
+          {if condition="ADMIN_ROLE != 12"}
+          <optgroup label="产品部">
+            <option value="16" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
+          </optgroup>
+          {/if}
           {if condition="ADMIN_ROLE != 9"}
           <optgroup label="经管科">
             <option value="42" {if condition="session('admin_user.nick') == '叶慧丽'"}disabled{/if}>叶慧丽</option>
@@ -188,10 +193,14 @@
             offset: 'auto',
             content: $('#show_div'),
             yes: function(index, layero){
-              console.log($('.layui-form').serialize());
+              
               var data = $('.layui-form').serialize();
-            // var data = data + '&transfer_to=' + transfer_to;
-            formSubmit('post',"{:url('transfer')}",data,index);
+      
+              if(!$('.layui-layer-btn0').hasClass('disabled')){
+                $('.layui-layer-btn0').addClass('disabled').text('提交中...');
+                formSubmit('post',"{:url('transfer')}",data,index);
+              }
+           
           }
         });
 
@@ -203,13 +212,15 @@
             data: data,
             success: function(res) {
               console.log(res);
-              layer.msg(res.msg, {
-                isOutAnim:false,
-              },function(){
-                if (res.code != 0){
-                  location.href = res.url;
-                }
-              });
+              var that = $('.layui-layer-btn0');
+              that.text(res.msg);
+              if (res.code == 0) { 
+                  setTimeout(function(){
+                      that.removeClass('disabled').text('确认');
+                  }, 3000);
+              } else {
+                    location.href = res.url;
+              }
             }
           });
           return false;
@@ -226,7 +237,10 @@
         console.log($('.layui-form').serialize());
         var data = $('.layui-form').serialize();
         var data = data + '&is_end=' + 1;
-        formSubmit('post',"{:url('transfer')}",data,index);
+        if(!$('.layui-layer-btn0').hasClass('disabled')){
+          $('.layui-layer-btn0').addClass('disabled').text('提交中...');
+          formSubmit('post',"{:url('transfer')}",data,index);
+        }
       }, function(index){
         layer.close(index);
       });

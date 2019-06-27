@@ -164,7 +164,7 @@ class SystemAnnex extends Model
         // 如果文件已经存在，直接返回数据
         $res = self::where('hash', $file->hash())->find();
         if ($res) {
-            return self::result('文件上传成功。', $from, 1, $res);
+            return self::result('文件已存在上传成功。', $from, 1, $res);
         }
 
         // 执行上传

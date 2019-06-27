@@ -197,13 +197,14 @@
 		    		offset: 'auto',
 		    		content: $('#show_div'),
 		    		yes: function(index, layero){
-		    			console.log($('.layui-form').serialize());
 		    			var data = $('.layui-form').serialize();
-						// var data = data + '&transfer_to=' + transfer_to;
-						formSubmit('post',"{:url('transfer')}",data,index);
+		    			//console.log($('.layui-layer-btn0').hasClass('disabled'));
+						if(!$('.layui-layer-btn0').hasClass('disabled')){
+							$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+							formSubmit('post',"{:url('transfer')}",data,index);
+						}
 					}
 				});
-
 		    })
 		    function formSubmit(type,url,data,index){
 		    	$.ajax({
@@ -212,13 +213,15 @@
 		    		data: data,
 		    		success: function(res) {
 		    			console.log(res);
-		    			layer.msg(res.msg, {
-		    				isOutAnim:false,
-		    			},function(){
-		    				if (res.code != 0){
-		    					location.href = res.url;
-		    				}
-		    			});
+		    			var that = $('.layui-layer-btn0');
+						that.text(res.msg);
+		                if (res.code == 0) { 
+		                    setTimeout(function(){
+		                        that.removeClass('disabled').text('确认');
+		                    }, 3000);
+		                } else {
+	                        location.href = res.url;
+		                }
 		    		}
 		    	});
 		    	return false;
@@ -235,7 +238,10 @@
 				console.log($('.layui-form').serialize());
 				var data = $('.layui-form').serialize();
 				var data = data + '&is_end=' + 1;
-				formSubmit('post',"{:url('transfer')}",data,index);
+				if(!$('.layui-layer-btn0').hasClass('disabled')){
+					$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+					formSubmit('post',"{:url('transfer')}",data,index);
+				}
 			}, function(index){
 				layer.close(index);
 			});
