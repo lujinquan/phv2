@@ -38,10 +38,15 @@ class Accept extends Admin
             $where        = $OpOrderModel->checkWhere($getData,'accept');
             $data  = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select(); //halt($temps);
-
+            $inst_ids = explode(',',session('admin_user.inst_ids'));
             foreach ($temps as $k => &$v) {
                 if (strpos($v['duid'], ',') === false) {
-                    $v['status_info'] = '待处理';
+                    if (!in_array($v['inst_id'],$inst_ids)) {
+                        unset($temps[$k]);
+                    } else {
+                        $v['status_info'] = '待处理';
+                    }
+                    
                 } else {
                     $uids = explode(',', $v['duid']);
 

@@ -238,12 +238,24 @@ class OpOrder extends Model
         $where = $this->checkWhere([],'accept');    
         $data = [];
         $temps = $this->where($where)->select();
-        foreach($temps as $k => &$v){
-            if(strpos($v['duid'],',') !== false){  
-                $uids = explode(',',$v['duid']);
+        $inst_ids = explode(',',session('admin_user.inst_ids'));
+        foreach ($temps as $k => &$v) {
+            if (strpos($v['duid'], ',') === false) {
+                if (!in_array($v['inst_id'],$inst_ids)) {
+                    unset($temps[$k]);
+                } else {
+                    $v['status_info'] = '待处理';
+                }
+                
+            } else {
+                $uids = explode(',', $v['duid']);
+
                 $current_uid = array_pop($uids);
-                if($current_uid != ADMIN_ID){ //保证是待受理的工单
-                   unset($temps[$k]); 
+                if ($current_uid != ADMIN_ID) { //保证是待受理的工单
+                    unset($temps[$k]);
+                } else {
+                    $current_nick     = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
+                    $v['status_info'] = '转交至'. $current_nick;
                 }
             }
         }

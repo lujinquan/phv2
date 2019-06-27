@@ -42,7 +42,7 @@
 								 <div class="time-axis-date"><span></span></div>
 								 <div class="time-axis-title">
 									 <h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
-									<font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
+									<font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['ToUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
 									 <div class="j-remarks">
 										 备注：{$v['Desc']}
 									 </div>
@@ -91,7 +91,7 @@
 			  </dd>
 			  <dd>
 				  <h1>运行人员</h1>
-				  <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]:''}</p>
+				  <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]['nick']:''}</p>
 			  </dd>
 			  <dd>
 				  <h1>状态</h1>
@@ -157,7 +157,7 @@ function formSubmit(type,url,data,index){
 	$("#complete").on("click", function() {
 		 layer.confirm("是否确认完结工单", {
             btn: ["确定","取消"],
-			icon: 3,
+			icon: 1,
 			title:false,
 			offset: 'auto',
 			closeBtn:false
