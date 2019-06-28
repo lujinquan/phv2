@@ -2,7 +2,6 @@
 <style>
 	.page-tab-content{ background: none;}
 </style>
-<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/echarts.min.js?v={:config('hisiphp.version')}"></script>
 <div class="layui-row layui-col-space15 j-echarts-box">
     <div class="layui-col-md6">
@@ -166,7 +165,7 @@
 				var adminID = $(".product-con > div").eq(index).attr('data-id');
 				// var data = {:json_encode($data['partOne'])};
 				//console.log(data);
-				console.log(adminID);
+				//console.log(adminID);
 				myChartPie(data,adminID);
 			})
 		});

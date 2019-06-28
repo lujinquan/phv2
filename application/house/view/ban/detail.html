@@ -16,13 +16,13 @@
 		<div class="layui-col-md4">
 			<div class="j-form-label">楼栋编号</div> 
 			<div class="j-input-inline">
-				<input type="text" name="number" value="1005001001" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="number" value="{$data_info['ban_number']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md8">
 		  <div class="j-form-label"><i class="red">*</i>楼栋地址</div> 
 		  <div class="j-input-inline">
-			<input type="text" name="address"  disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="address"  value="{$data_info['ban_address']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -30,19 +30,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>机构名称</label> 
 			<div class="j-input-inline">
-				<input type="text" name="mechanism" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="mechanism" value="{$params['insts'][$data_info['ban_inst_id']]}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>楼栋产别</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="category" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="category" value="{$params['owners'][$data_info['ban_owner_id']]}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>使用性质</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="nature" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="nature" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input layui-bg-gray">
 		  </div>
 		</div>
 	</div>
@@ -50,19 +50,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>完损等级</label> 
 			<div class="j-input-inline">
-				<input type="text" name="grade" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="grade" value="{$params['damages'][$data_info['ban_damage_id']]}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>结构类别</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="structure" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="structure" value="{$params['structs'][$data_info['ban_struct_id']]}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>建成年份</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="year" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="year" value="{$data_info['ban_build_year']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -70,19 +70,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>栋号</label> 
 			<div class="j-input-inline">
-				<input type="text" name="building _num" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="building _num" value="{$data_info['ban_door']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>单元数量</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="cell num" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="cell num" value="{$data_info['ban_units']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>楼层数量</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="floors_num" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="floors_num" value="{$data_info['ban_floors']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -90,13 +90,13 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">起始楼层</label> 
 			<div class="j-input-inline">
-				<input type="text" name="starting_floor" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="starting_floor" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input layui-bg-gray">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>总户数</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="sum_house" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="sum_house" disabled="disabled" value="系统无当前字段" autocomplete="off" class="layui-input layui-bg-gray">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
@@ -110,13 +110,13 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">栋系数</label> 
 			<div class="j-input-inline">
-				<input type="text" name="coefficient" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="coefficient" value="{$data_info['ban_ratio']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>产权来源</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="property" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="property" value="{$data_info['ban_property_source']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -129,19 +129,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>使用面积</label> 
 			<div class="j-input-inline">
-				<input type="text" name="area_use" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="area_use" value="{$data_info['ban_use_area']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>占地面积</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="area_covered" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="area_covered" value="系统无当前字段" disabled="disabled"  autocomplete="off" class="layui-input layui-bg-gray">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>证载面积</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="proof_area" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="proof_area" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input layui-bg-gray">
 		  </div>
 		</div>
 	</div>
@@ -149,19 +149,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>企业建面</label> 
 			<div class="j-input-inline">
-				<input type="text" name="enterprise_building" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="enterprise_building" value="{$data_info['ban_career_area']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>机关建面</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="office_building" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="office_building" value="{$data_info['ban_party_area']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>民用建面</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="civil_building" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="civil_building" value="{$data_info['ban_civil_area']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -169,19 +169,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>企业规租</label> 
 			<div class="j-input-inline">
-				<input type="text" name="enterprise_rent" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="enterprise_rent" value="{$data_info['ban_career_rent']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>机关规租</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="office_rent" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="office_rent" value="{$data_info['ban_party_rent']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>民用规租</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="civil_rent" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="civil_rent" value="{$data_info['ban_civil_rent']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -189,19 +189,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>企业原价</label> 
 			<div class="j-input-inline">
-				<input type="text" name="enterprise_original" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="enterprise_original" value="{$data_info['ban_career_oprice']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>机关原价</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="office_original" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="office_original" value="{$data_info['ban_party_oprice']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>民用原价</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="civil_original" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="civil_original" value="{$data_info['ban_civil_oprice']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -209,19 +209,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>企业栋数</label> 
 			<div class="j-input-inline">
-				<input type="text" name="enterprise_number" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="enterprise_number" value="{$data_info['ban_career_num']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>机关栋数</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="office_number" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="office_number" value="{$data_info['ban_party_num']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
-		  <label class="j-form-label"><i class="red">*</i>机关栋数</label> 
+		  <label class="j-form-label"><i class="red">*</i>民用栋数</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="civil_number" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="civil_number" value="{$data_info['ban_civil_num']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -230,7 +230,7 @@
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 	  <legend>状态选择</legend>
 	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
+	<!-- <div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">历史优秀建筑</label> 
 			<div class="j-input-inline j-input-radio">
@@ -252,27 +252,27 @@
 			<input type="radio" name="reform" value="否" title="否" disabled="disabled">
 		  </div>
 		</div>
-	</div>
+	</div> -->
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
+		<!-- <div class="layui-col-md4">
 			<label class="j-form-label">产权分割</label> 
 			<div class="j-input-inline j-input-radio">
 				 <input type="radio" name="division" value="是" title="是" disabled="disabled" checked="">
 				 <input type="radio" name="division" value="否" title="否" disabled="disabled">
 			</div>
-		</div>
+		</div> -->
 		<div class="layui-col-md4">
 		  <label class="j-form-label">电梯</label> 
 		  <div class="j-input-inline j-input-radio">
-			<input type="radio" name="lift" value="是" title="是" disabled="disabled" checked="">
-			<input type="radio" name="lift" value="否" title="否" disabled="disabled">
+			<input type="radio" name="lift" value="是" title="是" disabled="disabled" {if condition="$data_info['ban_is_levator']"}checked{/if}>
+			<input type="radio" name="lift" value="否" title="否" disabled="disabled" {if condition="!$data_info['ban_is_levator']"}checked{/if}>
 		  </div>
 		</div>
 		<div class="layui-col-md4 j-lengthen">
 		  <label class="j-form-label">一层为架空层或木地板住房</label> 
 		  <div class="j-input-inline j-input-radio">
-			<input type="radio" name="special" value="是" title="是" disabled="disabled" checked="">
-			<input type="radio" name="special" value="否" title="否" disabled="disabled">
+			<input type="radio" name="special" value="是" title="是" disabled="disabled" {if condition="$data_info['ban_is_first']"}checked{/if}>
+			<input type="radio" name="special" value="否" title="否" disabled="disabled" {if condition="!$data_info['ban_is_first']"}checked{/if}>
 		  </div>
 		</div>
 	</div>
@@ -298,13 +298,13 @@
 		<div class="layui-col-md6">
 			<label class="j-form-label"><i class="red">*</i>产权证号</label> 
 			<div class="j-input-inline">
-				<input type="text" name="property_number" disabled="disabled" autocomplete="off" class="layui-input">
+				<input type="text" name="property_number" value="{$data_info['ban_property_id']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md6">
 		  <label class="j-form-label">土地证号</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="certificate_number" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="certificate_number" value="系统无当前字段" disabled="disabled"  autocomplete="off" class="layui-input layui-bg-gray">
 		  </div>
 		</div>
 	</div>

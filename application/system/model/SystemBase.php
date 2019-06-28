@@ -10,18 +10,18 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-namespace app\order\admin;
-use app\system\admin\Admin;
+namespace app\system\model;
 
-class Index extends Admin
+use think\Model;
+use app\system\model\SystemMenu as MenuModel;
+use app\system\model\SystemRole as RoleModel;
+use app\system\model\SystemLog as LogModel;
+
+/**
+ * 后台基础模型
+ */
+class SystemBase extends Model
 {
-    protected $hisiModel = '';//模型名称[通用添加、修改专用]
-    protected $hisiTable = '';//表名称[通用添加、修改专用]
-    protected $hisiAddScene = '';//添加数据验证场景名
-    protected $hisiEditScene = '';//更新数据验证场景名
+ 
 
-    public function index()
-    {
-        return $this->fetch();
-    }
 }

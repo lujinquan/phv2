@@ -8,22 +8,22 @@
 		  <div class="j-size-typeset">
 			  <ul>
 				  <li>
-					<label>楼栋编号：</label><span>1140060473</span>
+					<label>楼栋编号：</label><span>{$data_info['ban_number']}</span>
 				  </li>
 				  <li>
-					<label>结构类别：</label><span>砖混一等</span>
+					<label>结构类别：</label><span>{$params['structs'][$data_info['ban_struct_id']]}</span>
 				  </li>
 				  <li>
-				  	<label>完损等级：</label><span>完好</span>
+				  	<label>完损等级：</label><span>{$params['damages'][$data_info['ban_damage_id']]}</span>
 				  </li>
 				  <li>
-				  	<label>单元号：</label><span>1</span>
+				  	<label>单元数：</label><span>{$data_info['ban_units']}</span>
 				  </li>
 				  <li>
-				  	<label>楼层数：</label><span>7</span>
+				  	<label>楼层数：</label><span>{$data_info['ban_floors']}</span>
 				  </li>
 				  <li class="times">
-					<label>楼栋地址：</label><span>中山路还建楼5栋中山路还建</span>
+					<label>楼栋地址：</label><span>{$data_info['ban_address']}</span>
 				  </li>
 			  </ul>
 		  </div>
@@ -162,23 +162,25 @@
 {include file="system@block/layui" /}
 <script type="text/javascript">
 	layui.use(['jquery'], function() {
-	   var $ = layui.$;
-	   $(".j-structure-data .layui-row:first").addClass("on");//信息展示添加头部距离
-		  $('.j-structure-con').on('click', 'li', function(e){
+		var id = {$data_info['ban_id']};
+		var unit_id = 1;
+	    var $ = layui.$;
+	    $(".j-structure-data .layui-row:first").addClass("on");//信息展示添加头部距离
+		   $('.j-structure-con').on('click', 'li', function(e){
 				$('.j-structure-con li').removeClass('on');
 				$(e.target).addClass('on');
 				console.log($(e.target).text());
-		  });
+		   });
 		$(".j-structure-con dl:odd").addClass("cur");//隔行背景色
 
 		$(document).ready(function(){
-		  	console.log(111);
+		  	//console.log(111);
 		  	$.ajax({
 			   type: 'post',
 			   url: '{:url("house/Ban/struct")}',
-			   data: "id=7",
+			   data: "id="+id+"&unit_id"+ unit_id,
 			   success: function(data){
-			   console.log(data);
+			     console.log(data);
 			     //alert( "Data Saved: " + msg );
 			   }
 			});

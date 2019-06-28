@@ -1,14 +1,14 @@
 <?php
 namespace app\house\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\FloorPoint as FloorPointModel;
 use app\house\model\BanStructType as BanStructTypeModel;
 use app\house\model\RoomTypePoint as RoomTypePointModel;
 
-class Room extends Model
+class Room extends SystemBase
 {
 	// 设置模型名称
     protected $name = 'room';

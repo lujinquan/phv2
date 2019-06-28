@@ -1,9 +1,9 @@
 <?php
 namespace app\house\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 
-class HouseTai extends Model
+class HouseTai extends SystemBase
 {
 	// 设置模型名称
     protected $name = 'house_tai';

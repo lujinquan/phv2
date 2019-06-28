@@ -1,13 +1,24 @@
 <?php
+
+// +----------------------------------------------------------------------
+// | 基于ThinkPHP5开发
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016-2021 http://www.mylucas.com.cn
+// +----------------------------------------------------------------------
+// | 基础框架永久免费开源
+// +----------------------------------------------------------------------
+// | Author: Lucas <598936602@qq.com>，开发者QQ群：*
+// +----------------------------------------------------------------------
+
 namespace app\order\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 use app\system\model\SystemUser as UserModel;
 use app\common\model\Cparam as ParamModel;
 
-class OpOrder extends Model
+class OpOrder extends SystemBase
 {
-	// 设置模型名称
+    // 设置模型名称
     protected $name = 'op_order';
     // 设置主键
     protected $pk = 'id';
@@ -370,15 +381,8 @@ class OpOrder extends Model
                         
                     }
                 }
-                
-                //halt();
             }
-
-        }
-        //halt($result);
-        
-
-        
+        } 
         return $result;
     }
 

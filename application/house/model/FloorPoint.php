@@ -1,9 +1,9 @@
 <?php
 namespace app\house\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 
-class FloorPoint extends Model
+class FloorPoint extends SystemBase
 {
 	// 设置模型名称
     protected $name = 'floor_point';

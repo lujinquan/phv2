@@ -1,4 +1,16 @@
 <?php
+
+// +----------------------------------------------------------------------
+// | 基于ThinkPHP5开发
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016-2021 http://www.mylucas.com.cn
+// +----------------------------------------------------------------------
+// | 基础框架永久免费开源
+// +----------------------------------------------------------------------
+// | Author: Lucas <598936602@qq.com>，开发者QQ群：*
+// +----------------------------------------------------------------------
+
+
 namespace app\house\admin;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
@@ -10,7 +22,7 @@ class Ban extends Admin
 
     public function index()
     {   
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
@@ -116,15 +128,13 @@ class Ban extends Admin
     {
         $id = input('param.id/d');
         $row = BanModel::get($id);
-        $houseArr = HouseModel::with(['tenant'])->where('ban_id','eq',$id)->field('house_unit_id,house_floor_id,house_id,tenant_id')->select();
-
-        if ($this->request->isGet()) {
+        if ($this->request->isAjax()) {
             $id = input('param.id/d');
             $unitID = input('param.unit_id/d',1);
             $row = BanModel::get($id);
             $houseArr = HouseModel::with(['tenant'])->where([['ban_id','eq',$id],['house_unit_id','eq',$unitID]])->field('house_floor_id,house_id,tenant_id')->order('house_floor_id asc')->select();
             $tempHouseArr = [];
-            //halt($houseArr);
+            //dump($row['ban_floors']);halt($houseArr);
             
             for($j=1;$j<=$row['ban_floors'];$j++){
                 foreach($houseArr as $h){
@@ -139,9 +149,6 @@ class Ban extends Admin
                     $tempHouseArr[$j] = [];
                 }
             }
-            
-           
-            //sort($tempHouseArr);
             $data = [];
             $data['data'] = $tempHouseArr;
             $data['code'] = 0;
@@ -149,8 +156,9 @@ class Ban extends Admin
             // halt($data);
             return json($data);
         }
-        
-        //return $this->fetch();
+        //halt($row);
+        $this->assign('data_info',$row);
+        return $this->fetch();
     }
 
     public function ceshi()

@@ -1,9 +1,9 @@
 <?php
 namespace app\house\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 
-class BanStructType extends Model
+class BanStructType extends SystemBase
 {
 	// 设置模型名称
     protected $name = 'ban_struct_type';

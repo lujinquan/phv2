@@ -1,10 +1,10 @@
 <?php
 namespace app\house\model;
 
-use think\Model;
+use app\system\model\SystemBase;
 use app\house\model\Room as RoomModel;
 
-class House extends Model
+class House extends SystemBase
 {
 	// 设置模型名称
     protected $name = 'house';

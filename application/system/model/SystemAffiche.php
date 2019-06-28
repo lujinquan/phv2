@@ -19,7 +19,7 @@ class SystemAffiche extends Model
 
     public function getAffiche()
     {
-    	$allDatas = $this->where([['to_user_id','eq','*']])->whereOr([['to_user_id','like','%|'.session('admin_user.uid').'|%']])->select();
+    	$allDatas = $this->where([['to_user_id','eq','*']])->whereOr([['to_user_id','like','%|'.session('admin_user.uid').'|%']])->order('id desc')->select();
     	$affiches = [
     		'reads' => [],
     		'unreads' => [],
