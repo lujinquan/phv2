@@ -10,7 +10,7 @@
             <div  class="j-list-box j-list1">
 				<h1 class="j-title">待受理工单</h1>
 				<div class="j-Statistics">
-					{$data['partOne'][ADMIN_ID]['accept']?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][39]['accept'] + $data['partOne'][40]['accept'])}<i>个</i>
+					{:isset($data['partOne'][ADMIN_ID]['accept'])?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][39]['accept'] + $data['partOne'][40]['accept'])}<i>个</i>
 				</div>
 				<img src="__ADMIN_IMG__/j-Clip.png" />
 			</div>
@@ -19,7 +19,7 @@
             <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
-            		{$data['partOne'][ADMIN_ID]['acceptIng']?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][39]['acceptIng'] + $data['partOne'][40]['acceptIng'])}<i>个</i>
+            		{:isset($data['partOne'][ADMIN_ID]['acceptIng'])?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][39]['acceptIng'] + $data['partOne'][40]['acceptIng'])}<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
             </div>
@@ -30,7 +30,7 @@
 		      <div  class="j-list-box j-list3">
 		      	<h1 class="j-title">已完结工单</h1>
 		      	<div class="j-Statistics">
-		      		{$data['partOne'][ADMIN_ID]['end']?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][39]['end'] + $data['partOne'][40]['end'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['end'])?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][39]['end'] + $data['partOne'][40]['end'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
 		      </div>
@@ -39,7 +39,7 @@
 		      <div  class="j-list-box j-list4">
 		      	<h1 class="j-title">全部工单</h1>
 		      	<div class="j-Statistics">
-		      		{$data['partOne'][ADMIN_ID]['all']?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][39]['all'] + $data['partOne'][40]['all'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['all'])?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][39]['all'] + $data['partOne'][40]['all'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-Fill.png" />
 		      </div>
@@ -119,17 +119,6 @@
   		  		<div class="product-main clearfix">
   		  		  <div class="j-product-title clearfix">
   		  			  <div class="j-title fl">工单类别统计</div>
-<!-- 					<form class="layui-form" action="">
-					  <div class="layui-inline j-chart-right  fr">
-						  <div class="layui-input-inline">
-							<select name="modules" lay-verify="required" lay-search="">
-							  <option value="">请选择时间点查询</option>
-							  <option value="1">月</option>
-							  <option value="2">年</option>
-							</select>
-						  </div>
-					  </div>
-					</form> -->
   		  		  </div>
   		  		  <div class="product-con">
   		  			<div class="product-box clearfix">
@@ -226,9 +215,6 @@
 
 		    
 		});
-
-
-
 
 
 

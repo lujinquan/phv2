@@ -44,3 +44,49 @@ if (!function_exists('tranTime')) {
 	}
 
 } 
+
+if (!function_exists('bubble_sort')) {
+	
+	function bubble_sort(&$sort,&$a,$type='asc'){//默认为正序排列
+		$len = count($a);
+		if($type=='desc'){
+			//从大到小，倒序排列
+			for($i=1;$i<$len;$i++)
+			{
+				for($j=$len-1;$j>=$i;$j--)
+				{
+					
+					if($a[$j]>$a[$j-1])
+					{
+						$x=$a[$j];
+						$a[$j]=$a[$j-1];
+						$a[$j-1]=$x;
+						
+						$y = $sort[$j];
+						$sort[$j] = $sort[$j-1];
+						$sort[$j-1] = $y;
+					}
+				}
+			}
+		}else{
+			//从小到大，正序排列
+			for($i=1;$i<$len;$i++)
+			{
+				for($j=$len-1;$j>=$i;$j--)
+				{
+					if($a[$j]<$a[$j-1])
+					{
+						$x=$a[$j];
+						$a[$j]=$a[$j-1];
+						$a[$j-1]=$x;
+						
+						$y = $sort[$j];
+						$sort[$j] = $sort[$j-1];
+						$sort[$j-1] = $y;
+					}
+				}
+			}
+		}
+		return $sort;
+	}
+}
