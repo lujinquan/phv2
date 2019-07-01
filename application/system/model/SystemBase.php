@@ -23,5 +23,8 @@ use app\system\model\SystemLog as LogModel;
 class SystemBase extends Model
 {
  
-
+	protected function parse_params()
+	{
+		return 'parse_params';
+	}
 }

@@ -37,7 +37,7 @@ class Accept extends Admin
             $OpOrderModel = new OpOrderModel;
             $where        = $OpOrderModel->checkWhere($getData,'accept');
             $data  = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select(); //halt($temps);
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select()->toArray(); //halt($temps);
             $inst_ids = explode(',',session('admin_user.inst_ids'));
             foreach ($temps as $k => &$v) {
                 if (strpos($v['duid'], ',') === false) {
@@ -45,6 +45,7 @@ class Accept extends Admin
                         unset($temps[$k]);
                     } else {
                         $v['status_info'] = '待处理';
+                        $v['order_sort'] = 2;
                     }
                     
                 } else {
@@ -56,10 +57,19 @@ class Accept extends Admin
                     } else {
                         $current_nick     = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
                         $v['status_info'] = '转交至'. $current_nick;
+                        $v['order_sort'] = 1;
                     }
                 }
             }
-            $data['data']  = array_slice($temps->toArray(), ($page- 1) * $limit, $limit);
+
+            sort($temps);
+            $a = [];
+            foreach($temps as $key=>$val){
+                $a[] = $val['order_sort'];//$a是$sort的其中一个字段
+            }
+            $temps = bubble_sort($temps,$a,'asc');//正序
+
+            $data['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code']  = 0;
             $data['msg']   = '';
@@ -175,6 +185,23 @@ class Accept extends Admin
             if (!$OporderModel->allowField(true)->update($filData)){
                 return $this->error($msg . '失败');
             }
+            //$userRow                     = UserModel::where([['id', 'eq', $data['thransfer_to']]])->find();
+            $systemAffiche               = new SystemAffiche;
+            
+
+            if (isset($filData['dtime']) && $filData['dtime']) { //最终转给申请人的工单
+                $contentMsg = '确认';
+            } else {
+                $contentMsg = '处理';
+            }
+            $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
+
+            $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
+            $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+            $systemAffiche->from_user_id = '*';
+            $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
+            $systemAffiche->create_time  = time();
+            $systemAffiche->save();
             return $this->success($msg . '成功', url('index'));
         }
     }

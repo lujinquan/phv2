@@ -25,6 +25,8 @@ class Ban extends SystemBase
 
     public function checkWhere($data)
     {
+        // $parse = $this->parse_params();
+        // halt($parse);
         if(!$data){
             $data = request()->param();
         }

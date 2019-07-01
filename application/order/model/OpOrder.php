@@ -161,9 +161,10 @@ class OpOrder extends SystemBase
                     'Action' => '转交至',
                 ];
                 // 【更新】序列化数据
+                $data['op_order_number'] = $find['op_order_number'];
                 $data['jsondata'] = json_encode($jsonarr);
                 unset($data['replay']);
-                unset($data['transfer_to']);
+                //unset($data['transfer_to']);
                 break;
 
             // 完成工单
@@ -217,7 +218,8 @@ class OpOrder extends SystemBase
                     $data['jsondata'] = json_encode($jsonarr);
                     $data['dtime'] = time(); 
                 }
-                
+                $data['transfer_to'] = $comp;
+                $data['op_order_number'] = $find['op_order_number'];
                 unset($data['replay']);
                 break;
             // 确认完结工单
@@ -382,7 +384,7 @@ class OpOrder extends SystemBase
                     }
                 }
             }
-        } 
+        } //halt($result);
         return $result;
     }
 
