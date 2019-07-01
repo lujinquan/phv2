@@ -27,7 +27,7 @@ class Rent extends Admin
 
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:1;
-            $where[] = (isset($getData['query_month']) && $getData['query_month'])?['date','eq',$getData['query_month']]:['date','eq',date('Ym')];
+            $where[] = (isset($getData['query_month']) && $getData['query_month'])?['date','eq',str_replace('-','',$getData['query_month'])]:['date','eq',date('Ym')];
             $tempData = $ReportModel->where($where)->value('data');
             if($tempData){
                 $temps = json_decode($tempData,true);

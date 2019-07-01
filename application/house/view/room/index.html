@@ -1,4 +1,4 @@
-<div class="j-table-content">
+<div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
@@ -60,7 +60,7 @@
 			elem: '#dataTable'
 				/* ,height: 550 */
 				,toolbar: '#toolbar'
-				,defaultToolbar: ['filter'] //设置右边筛选，导出，打印显示
+				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 				,url: '{:url("house/Room/index")}'
 				,page: true
 				,limit: 10

@@ -617,6 +617,7 @@ console.log($('.checkbox-ids:checked'));
 	  $(this).attr("title",titles)
 	});
 	//显示搜索框title属性值E
+	$(".j-page-btns").parents(".j-table-content").addClass("on");//表单新发样式
 
 });
 

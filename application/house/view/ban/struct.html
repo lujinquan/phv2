@@ -1,189 +1,187 @@
 <form class="layui-form" action="{url('add')}" method="post">
-  <div class="j-details-box layui-form">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
-	  <legend>楼栋信息</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-		  <div class="j-size-typeset">
-			  <ul>
-				  <li>
-					<label>楼栋编号：</label><span>{$data_info['ban_number']}</span>
-				  </li>
-				  <li>
-					<label>结构类别：</label><span>{$params['structs'][$data_info['ban_struct_id']]}</span>
-				  </li>
-				  <li>
-				  	<label>完损等级：</label><span>{$params['damages'][$data_info['ban_damage_id']]}</span>
-				  </li>
-				  <li>
-				  	<label>单元数：</label><span>{$data_info['ban_units']}</span>
-				  </li>
-				  <li>
-				  	<label>楼层数：</label><span>{$data_info['ban_floors']}</span>
-				  </li>
-				  <li class="times">
-					<label>楼栋地址：</label><span>{$data_info['ban_address']}</span>
-				  </li>
-			  </ul>
-		  </div>
-		</div>
-	</div>
-	<fieldset class="layui-elem-field layui-field-title j-field-box j-top-margin20">
-	  <legend>房屋信息</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-structure-box clearfix">
-			<div class="layui-col-md8 j-border-box">
-				<!-- 导航 S -->
-				<div class="j-title clearfix">
-					<div class="j-text-indent15 fl">实际楼层</div>
-					<div class="j-layui-inlines">
-					  <div class="layui-input-inline">
-						<select name="modules"  lay-search="">
-						  <option value="">请选择</option>
-						  <option value="1">1单元</option>
-						  <option value="2">2单元</option>
-						  <option value="3">3单元</option>
-						  <option value="4">4单元</option>
-						</select>
-					  </div>
-					</div>
+	<div class="j-details-box layui-form">
+		<fieldset class="layui-elem-field layui-field-title j-field-box">
+			<legend>楼栋信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-size-typeset">
+					<ul>
+						<li>
+							<label>楼栋编号：</label><span>{$data_info['ban_number']}</span>
+						</li>
+						<li>
+							<label>结构类别：</label><span>{$params['structs'][$data_info['ban_struct_id']]}</span>
+						</li>
+						<li>
+							<label>完损等级：</label><span>{$params['damages'][$data_info['ban_damage_id']]}</span>
+						</li>
+						<li>
+							<label>单元数：</label><span>{$data_info['ban_units']}</span>
+						</li>
+						<li>
+							<label>楼层数：</label><span>{$data_info['ban_floors']}</span>
+						</li>
+						<li class="times">
+							<label>楼栋地址：</label><span>{$data_info['ban_address']}</span>
+						</li>
+					</ul>
 				</div>
-				<!-- 导航 E -->
-				<!-- 内容区 S -->
-				<div class="j-structure-con">
-					<dl class="clearfix">
-						<dt>1</dt>
-						<dd>
-							<ul>
-								<li class="on">01</li>
-								<li>02</li>
-								<li>03</li>
-							</ul>
-						</dd>
-					</dl>
-					<dl class="clearfix">
-						<dt>2</dt>
-						<dd>
-							<ul>
-								<li>04</li>
-								<li>05</li>
-							</ul>
-						</dd>
-					</dl>
-					<dl class="clearfix">
-						<dt>3</dt>
-						<dd>
-							<ul>
-								<li>06</li>
-							</ul>
-						</dd>
-					</dl>
-				</div>
-				<!-- 内容区 E -->
-			</div>
-			<div class="layui-col-md4 j-border-box j-border-noleft">
-				<!-- 导航 S -->
-				<div class="j-title  clearfix">
-					<div class="j-size">
-						信息展示
-					</div>
-				</div>
-				<!-- 导航 E -->
-				<!-- 内容区 S -->
-				<div class="j-structure-data">
-					<div class="layui-row">
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>租户姓名</h1>
-						  <p>张三</p>
-						</div>
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>楼层号数</h1>
-						  <p>1</p>
-						</div>
-					</div>
-					<div class="layui-row">
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>单元号数</h1>
-						  <p>1</p>
-						</div>
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>门牌号</h1>
-						  <p>1102</p>
-						</div>
-					</div>
-					<div class="layui-row">
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>月租金</h1>
-						  <p>15.82</p>
-						</div>
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>原价</h1>
-						  <p>0.00</p>
-						</div>
-					</div>
-					<div class="layui-row">
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>使用面积</h1>
-						  <p>0.00</p>
-						</div>
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>建筑面积</h1>
-						  <p>0.00</p>
-						</div>
-					</div>
-					<div class="layui-row">
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>泵费</h1>
-						  <p>90.00</p>
-						</div>
-						<div class="layui-col-md3 layui-col-md-offset2">
-						  <h1>房屋基数</h1>
-						  <p>暂无</p>
-						</div>
-					</div>
-				</div>
-				<!-- 内容区 E -->
 			</div>
 		</div>
-    </div>
-	<hr />
-	<div class="layui-form-item">
-		<div class="j-form-box clearfix">
-			<div class="fr">
-				<button class="layui-btn layui-btn-primary">取消</button>
-				<button type="submit" class="layui-btn" id="#open_btn_primary" lay-submit lay-filter="formSubmit">确定</button>
+		<fieldset class="layui-elem-field layui-field-title j-field-box j-top-margin20">
+			<legend>房屋信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-structure-box clearfix">
+				<div class="layui-col-md8 j-border-box">
+					<!-- 导航 S -->
+					<div class="j-title clearfix">
+						<div class="j-text-indent15 fl">实际楼层</div>
+						<div class="j-layui-inlines">
+							<div class="layui-input-inline">
+								<select name="modules" id="modules" lay-search="" lay-filter="sel-floor" >
+									{for start="1" end="$data_info['ban_units']+1" name="i" }
+									<option value="{$i}">第{$i}单元</option>
+									{/for}
+
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- 导航 E -->
+					<!-- 内容区 S -->
+					<div class="j-structure-con">
+
+					</div>
+					<!-- 内容区 E -->
+				</div>
+				<div class="layui-col-md4 j-border-box j-border-noleft">
+					<!-- 导航 S -->
+					<div class="j-title  clearfix">
+						<div class="j-size">
+							信息展示
+						</div>
+					</div>
+					<!-- 导航 E -->
+					<!-- 内容区 S -->
+					<div class="j-structure-data">
+
+					</div>
+					<!-- 内容区 E -->
+				</div>
 			</div>
-		</div>	
+		</div>
+		<hr />
+		<div class="layui-form-item">
+			<div class="j-form-box clearfix">
+				<div class="fr">
+					<button class="layui-btn layui-btn-primary">取消</button>
+					<button type="submit" class="layui-btn" id="#open_btn_primary" lay-submit lay-filter="formSubmit">确定</button>
+				</div>
+			</div>
+		</div>
 	</div>
-  </div>
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript">
-	layui.use(['jquery'], function() {
-		var id = {$data_info['ban_id']};
-		var unit_id = 1;
-	    var $ = layui.$;
-	    $(".j-structure-data .layui-row:first").addClass("on");//信息展示添加头部距离
-		   $('.j-structure-con').on('click', 'li', function(e){
-				$('.j-structure-con li').removeClass('on');
-				$(e.target).addClass('on');
-				console.log($(e.target).text());
-		   });
-		$(".j-structure-con dl:odd").addClass("cur");//隔行背景色
+	function infodisplay(forData) {
+		return '<div class="layui-row">\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>租户姓名</h1>\
+				      	  <p>' + forData.tenant_name +'</p>\
+				      	</div>\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>楼层号数</h1>\
+				      	  <p>1</p>\
+				      	</div>\
+				      </div>\
+				      <div class="layui-row">\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>单元号数</h1>\
+				      	  <p>1</p>\
+				      	</div>\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>门牌号</h1>\
+				      	  <p>' + forData.house_id +'</p>\
+				      	</div>\
+				      </div>\
+				      <div class="layui-row">\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>月租金</h1>\
+				      	  <p>15.82</p>\
+				      	</div>\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>原价</h1>\
+				      	  <p>0.00</p>\
+				      	</div>\
+				      </div>\
+				      <div class="layui-row">\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>使用面积</h1>\
+				      	  <p>0.00</p>\
+				      	</div>\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>建筑面积</h1>\
+				      	  <p>0.00</p>\
+				      	</div>\
+				      </div>\
+				      <div class="layui-row">\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>泵费</h1>\
+				      	  <p>90.00</p>\
+				      	</div>\
+				      	<div class="layui-col-md3 layui-col-md-offset2">\
+				      	  <h1>房屋基数</h1>\
+				      	  <p>暂无</p>\
+				      	</div>\
+				      </div>';
+	};
+	$('.j-structure-con').on('click', 'li', function(e) {
+		$('.j-structure-con li').removeClass('on');
+		$(e.target).addClass('on');
+		var dataInfo = $(e.target).attr('info');
+		//console.log(dataInfo);
+		var infoData = infodisplay(JSON.parse(dataInfo));//将一个 JSON 字符串转换为对象
+		/* console.log($(e.target).text()); */
+		$(".j-structure-data").html(infoData);
 
-		$(document).ready(function(){
-		  	//console.log(111);
-		  	$.ajax({
-			   type: 'post',
-			   url: '{:url("house/Ban/struct")}',
-			   data: "id="+id+"&unit_id"+ unit_id,
-			   success: function(data){
-			     console.log(data);
-			     //alert( "Data Saved: " + msg );
-			   }
+	});
+	$(document).on('click', ".j-structure-box", function(){
+		$(".j-structure-data .layui-row:first").addClass("on"); //信息展示添加头部距离
+		$(".j-structure-con dl:odd").addClass("cur"); //隔行背景色
+	});
+	layui.use(['jquery', 'form'], function() {
+		var id = {$data_info['ban_id']};
+		var unitNum = {$data_info['ban_units']};
+		var unit_id = 1;
+		var $ = layui.$,
+			form = layui.form;
+	    //监听楼层改变
+		form.on('select(sel-floor)', function(data){
+             console.log(data);
+         });
+		$(document).ready(function() {
+			$.ajax({
+				type: 'post',
+				url: '{:url("house/Ban/struct")}',
+				data: "id=" + id + "&unit_id" + unit_id,
+				success: function(datas) {
+					var forData = datas.data;
+					/* console.log(forData); */
+					var str = '';
+					for (var item in forData) {
+						str += '<dl class="clearfix"><dt>' + item + '</dt><dd><ul>';
+						/* console.log(forData[item]); */
+						for (var i in forData[item]) {
+							// console.log(forData[item][i]);
+							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + i + '</li>';
+						}
+						str += '</ul></dd></dl>';
+					}
+					$('.j-structure-con').append(str);
+				}
 			});
 		});
-	 });
+	});
 </script>
