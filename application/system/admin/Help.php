@@ -108,25 +108,7 @@ class Help extends Admin
         
         $id = input('param.id/d');
         $row = $SystemHelp->find($id);
-        $reads = [];
-        $i = true;
-        if($row['reads']){
-            $reads = json_decode($row['reads'],true);
-            foreach($reads as $r){
-                if($r['uid'] == ADMIN_ID){
-                    $i = false;
-                    break;
-                }
-            } 
-        }
-        if($i){
-            $tempArr = [
-                'uid' => ADMIN_ID,
-                'time' => time()
-            ];
-            array_unshift($reads,$tempArr);
-            $SystemHelp->where([['id','eq',$id]])->update(['reads'=>json_encode($reads)]);
-        }
+        //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

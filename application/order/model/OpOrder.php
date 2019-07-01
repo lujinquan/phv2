@@ -278,7 +278,8 @@ class OpOrder extends SystemBase
                 }
             }
         }
-        return count($temps);
+        // 超管账号无待处理工单
+        return (ADMIN_ID == 1)?'':count($temps);
     }
 
     /**

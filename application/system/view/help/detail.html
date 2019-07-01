@@ -2,16 +2,32 @@
 <div class="j-notice-details">
 	<div class="j-title clearfix">
 	  <h1>{$data_info['title']}</h1>
-	  <h2><span class="j-time">{$data_info['cuid']} {$data_info['create_time']}<span> <span class="j-browse"><i class="layui-icon iconfont j-icon-yanjing"></i>{:count(json_decode($data_info['reads'],true))}</span></h2>  
+	  <h2><span class="j-time">{$data_info['cuid']} {$data_info['create_time']}<span></h2>  
 	</div>
 	<hr />
 	<!-- 详细内容 S -->
-	<div class="j-details-size" data-value="{:htmlspecialchars_decode($data_info['content'])}"></div>
+	<div class="j-details-size" data-value="{$data_info['content']}"></div>
 	<!-- 详细内容 E -->
 </div>
 <!-- 详情 E -->
 {include file="block/layui" /}
 <script type="text/javascript">
-	var content = $('.j-details-size').attr('data-value');
+
+	var content = htmlRestore($('.j-details-size').attr('data-value'));
+	//console.log(content);
 	$('.j-details-size').html(content);
+
+	function htmlRestore(str) {
+	    var s = "";
+	    if (str.length === 0) {
+	      return "";
+	    }
+	    s = str.replace(/&amp;/g, "&");
+	    s = s.replace(/&lt;/g, "<");
+	    s = s.replace(/&gt;/g, ">");
+	    s = s.replace(/&nbsp;/g, " ");
+	    s = s.replace(/&#39;/g, "\'");
+	    s = s.replace(/&quot;/g, "\"");
+	    return s;
+	}
 </script>

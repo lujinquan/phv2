@@ -18,7 +18,7 @@ class SystemHelp extends Model
     ];
 
     public function getCuidAttr($value){
-        return session('systemusers')[$value];
+        return session('systemusers')[$value]['role']['name'];
     }
 
     public function appendReadId($id)
