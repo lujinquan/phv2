@@ -38,6 +38,7 @@
 					<div class="j-axis-main clearfix">
 						 <ul class="time-axis">
 						 	{volist name="data_info['jsondata']" id="v"}
+						 	{if condition="($v['Action'] == '提交') || ($v['Action'] == '确认完结工单')"}
 							 <li class="time-axis-item">
 								 <div class="time-axis-date"><span></span></div>
 								 <div class="time-axis-title">
@@ -53,6 +54,7 @@
                                     {/if}
 								 </div>
 							 </li>
+							 {/if}
 							 {/volist}
 						<ul>
 					</div>

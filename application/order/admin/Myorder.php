@@ -28,7 +28,7 @@ class Myorder extends Admin
             $where = $OpOrderModel->checkWhere($getData,'myorder');
             
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('dtime desc')->limit($limit)->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('dtime desc,ctime desc')->limit($limit)->select();
             if($getData['group'] == 'j'){
             	foreach($temps as &$v){
 	            	if($v['dtime'] && !$v['ftime']){
@@ -100,7 +100,7 @@ class Myorder extends Admin
             $row['status_info'] = '处理中';
         }else{
             $row['status_info'] = '已完结';
-        }
+        }//halt($row);
         $this->assign('group',input('group','j'));
         $this->assign('current_uid',$current_uid);
         $this->assign('data_info',$row);
