@@ -24,6 +24,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}
+.tangram-suggestion-main{ z-index: 9999;/* 百度地图搜索 */}
 /* 操作菜单 S */
 .j-container-margin.layui-btn-container .layui-btn{ margin:8px 10px 10px 0;}
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:100px; right:7px; width: 113px; height: 38px;border: 0;z-index: 999;position: absolute;}
