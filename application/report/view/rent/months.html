@@ -469,7 +469,7 @@
 				<td rowspan="1" colspan="1">'+ data[20][15] + '</td>\
 			</tr>';	
 		}
-		$("#button_search").click(function(insts,owners,months){
+		$("#button_search").click(function(inst_id,owner_id,query_month){
 			var inst = $("select[name='inst_id']").val();
 			var owner = $("select[name='owner_id']").val();
 			var month = $("input[name='query_month']").val();
@@ -479,12 +479,19 @@
 				url:"{:url('rent/months')}",
 				async:true,// 同步异步
 				dataType:"json",
-				data :{'insts':inst,'owners':owner,'months':month},//这里是前台传到后台的数据
+				data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
 			   //回调函数
 				success:function(jsondata){
 					var data = JSON.parse(jsondata).data;//由JSON字符串转换为JSON对象
-					var trData = datajson(data);
-					$('tbody').html(trData);
+					if(data.length==0)
+					{
+						$('tbody').html("<div class='j-no-data'><i class='layui-icon layui-icon-tips'></i>暂无数据！</div>");
+					}
+					else{
+						var trData = datajson(data);
+						$('tbody').html(trData);
+					}
+					
 					//将值为0.00的替换为空
 					$(".report tr").each(function(){
 					        var td=$(this).find("td");
@@ -504,9 +511,16 @@
 			dataType:"json",
 		   //回调函数
 			success:function(result){
-                var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
-				var trData = datajson(data);
-				$('tbody').append(trData);
+				var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
+				if(data.length==0)
+				{
+					$('tbody').append("<div class='j-no-data'><i class='layui-icon layui-icon-tips'></i>暂无数据！</div>");
+				}
+				else{
+					var trData = datajson(data);
+					$('tbody').append(trData);
+				}
+                
 				//将值为0.00的替换为空
 				$(".report tr").each(function(){
 				        var td=$(this).find("td");

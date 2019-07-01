@@ -148,9 +148,8 @@
 		</fieldset>
 		<div class="layui-row">
 			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
-			<a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 			{if condition="$group == 'x'"}
-			
+			  <a href="{:url('room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 			{/if}
 		</div>
 		<!-- 房间信息 -->
