@@ -9,10 +9,10 @@
         </div>
     </div>
     <div class="layui-form-item layui-hide" id="yunyin">
-        <label class="layui-form-label">管辖管段</label>
+        <label class="layui-form-label">管辖机构</label>
         <div class="layui-inline">
-            {volist name=":config('inst_data_names')[INST]" id="v"}
-                <input type="checkbox" name="inst_ids[]" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$v}">
+            {volist name=":config('inst_check_names')[INST]" id="v"}
+                <input type="checkbox" name="inst_ids[]" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$v}" {if condition="isset($formData['inst_ids'])"}{if condition="in_array($key,$formData['inst_ids'])"}checked{/if}{/if}><br>
             {/volist}
         </div>
     </div>
@@ -141,6 +141,7 @@
 <script>
 var formData = {:json_encode($formData)};
 layui.use(['form', 'func'], function() {
+
     var $ = layui.jquery, form = layui.form;
     layui.func.assign(formData);
     /* 有BUG 待完善*/
@@ -173,10 +174,13 @@ layui.use(['form', 'func'], function() {
     }
     var role_id = $('.field-role_id option:selected').val();
 
+    if(role_id == 11){
+        $('#yunyin').removeClass('layui-hide');
+    }
     // 监听下拉框，如果角色为运营中心则，显示多选机构框
     form.on('select(select-fileter)', function(data){
       //console.log(data.elem); //得到select原始DOM对象
-      console.log(data.value); //得到被选中的值
+      //console.log(data.value); //得到被选中的值
       //console.log(data.othis); //得到美化后的DOM对象
       if(data.value == 11){
         $('#yunyin').removeClass('layui-hide');

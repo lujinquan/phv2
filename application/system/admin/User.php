@@ -163,6 +163,7 @@ class User extends Admin
         }
         if ($this->request->isPost()) {
             $data = $this->request->post();
+            
             if (!isset($data['auth'])) {
                 $data['auth'] = '';
             }
@@ -175,6 +176,9 @@ class User extends Admin
                 }
             } else if ($row['role_id'] != $data['role_id']) {// 如果分组不同，自定义权限无效
                 $data['auth'] = '';
+            }
+            if (isset($data['inst_ids']) && $data['inst_ids']) {
+                $data['inst_ids'] = implode(',',$data['inst_ids']);
             }
 
             if (isset($data['role_id']) && RoleModel::where('id', $data['role_id'])->value('auth') == json_encode($data['auth'])) {// 如果自定义权限与角色权限一致，则设置自定义权限为空
@@ -198,13 +202,17 @@ class User extends Admin
             return $this->success('修改成功');
         }
 
-        $row = UserModel::where('id', $id)->field('id,username,role_id,inst_id,nick,email,mobile,auth,status')->find()->toArray();
+        $row = UserModel::where('id', $id)->field('id,username,role_id,inst_id,inst_ids,nick,email,mobile,auth,status')->find()->toArray();
         if (!$row['auth']) {
             $auth = RoleModel::where('id', $row['role_id'])->value('auth');
             $row['auth'] = json_decode($auth);
         } else {
             $row['auth'] = json_decode($row['auth']);
         }
+        if ($row['inst_ids']) {
+            $row['inst_ids'] = explode(',',$row['inst_ids']);
+        }
+        //halt($row);
         $tabData = [];
         $tabData['menu'] = [
             ['title' => '修改管理员'],

@@ -126,7 +126,7 @@ layui.use(['form', 'func'], function() {
       // 监听下拉框，如果角色为运营中心则，显示多选机构框
       form.on('select(select-fileter)', function(data){
       //console.log(data.elem); //得到select原始DOM对象
-      console.log(data.value); //得到被选中的值
+      //console.log(data.value); //得到被选中的值
       //console.log(data.othis); //得到美化后的DOM对象
       if(data.value){
         $('#trans').text('转交工单');
@@ -143,14 +143,16 @@ function formSubmit(type,url,data,index){
             url: url,
             data: data,
             success: function(res) {
-                //that.text(res.msg);
                 console.log(res);
-                layer.msg(res.msg, function(){
-                	if (res.code != 0){
-                		location.href = res.url;
-                		//layer.close(index);
-                	}
-				});
+    			var that = $('.layui-layer-btn0');
+				that.text(res.msg);
+                if (res.code == 0) { 
+                    setTimeout(function(){
+                        that.removeClass('disabled').text('确认');
+                    }, 3000);
+                } else {
+                    location.href = res.url;
+                }
             }
         });
         return false;
@@ -164,14 +166,13 @@ function formSubmit(type,url,data,index){
 			offset: 'auto',
 			closeBtn:false
         }, function(index){
-		   console.log($('.layui-form').serialize());
-				var data = $('.layui-form').serialize();
-				// var transfer_to = $('#transfer_to').val();
-				// console.log(transfer_to);
-				//var data = data + '&is_filish=' + 1;
-			formSubmit('post','/admin.php/order/myorder/affirm',data,index);
-           
-            
+		    console.log($('.layui-form').serialize());
+			var data = $('.layui-form').serialize();
+			if(!$('.layui-layer-btn0').hasClass('disabled')){
+				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+				formSubmit('post','/admin.php/order/myorder/affirm',data,index);
+			}
+			
         }, function(index){
 			 layer.close(index);
         });
