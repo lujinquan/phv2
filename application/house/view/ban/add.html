@@ -334,7 +334,7 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label">地址查询</label>
 				<div class="j-input-inline">
-					<input name="address" type="text" id="address" class="layui-input inp" style="width:92%" value="武汉市"><input type="button" value=" 搜索 "  class="layui-btn ana">
+					<input type="text" id="suggestId" name="address" size="30" value="" class="layui-input" />
 				</div>  
 			</div>
 		</div>
@@ -424,7 +424,6 @@
 {include file="system@block/layui" /}
 
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/jquery-1.7.2.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
 <script>
 	/*上传参数设定*/
