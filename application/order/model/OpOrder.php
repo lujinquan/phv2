@@ -194,7 +194,7 @@ class OpOrder extends SystemBase
                         'ToUid' => $comp,
                         'Desc' => $data['replay'],
                         'Time' => time(),
-                        'Action' => '转交至',
+                        'Action' => '转交回',
                     ];
                     // 【更新】序列化数据
                     $data['jsondata'] = json_encode($jsonarr);
