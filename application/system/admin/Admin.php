@@ -87,7 +87,7 @@ class Admin extends Common
             $afficheModel = new AfficheModel;
             $affiche = $afficheModel->getAffiche();//halt($affiches);
             $this->assign('affiche',$affiche);
-
+            
             // 如果不是ajax请求，则读取菜单
             if (!$this->request->isAjax()) {
                 $breadCrumbs = [];
@@ -106,6 +106,7 @@ class Admin extends Common
                 // 获取当前菜单的顶级节点
                 $this->assign('hisiCurParents', $menuParents);
                 // 获取导航菜单
+                //halt(MenuModel::getMainMenu());
                 $this->assign('hisiMenus', MenuModel::getMainMenu());
                 // 分组切换类型 0无需分组切换，1单个分组，2分组切换[无链接]，3分组切换[有链接]，具体请看后台layout.html
                 $this->assign('hisiTabType', 0);
@@ -115,6 +116,13 @@ class Admin extends Common
                 $this->assign('params',$params);
                 $this->assign('systemusers',session('systemusers'));
                 $this->assign('paramsJson',json_encode($params));
+
+                //当前用户是否拥有“提交工单”权限
+                $addOrderAuthBool = RoleModel::checkAuth(218);
+                $this->assign('addOrderAuthBool',$addOrderAuthBool);
+                //当前用户是否拥有“我的工单”权限
+                $myOrderAuthBool = RoleModel::checkAuth(219);
+                $this->assign('myOrderAuthBool',$myOrderAuthBool);
                 //halt(json_encode($params));
                 // tab切换数据
                 // $hisiTabData = [

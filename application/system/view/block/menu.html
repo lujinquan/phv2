@@ -12,14 +12,18 @@
         {/volist}
     </ul>
     <ul class="layui-nav fr nobg head-info">
-        {if condition="session('admin_user.role_id') ==  4||session('admin_user.role_id') ==  9"}
+        {if condition="$myOrderAuthBool || $myOrderAuthBool"}
         <li class="layui-nav-item">
             <!-- <a href="javascript:;"> class="aicon ai-app-store">消息中心 &nbsp;</a> -->
             <!-- <i class="typcn typcn-mail"></i> -->
             <a href="javascript:;">工单 &nbsp;</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                {if condition="$addOrderAuthBool"}
                 <dd><a target="_blank" href="{:url('order/accept/add')}">提交工单</a></dd>
+                {/if}
+                {if condition="$myOrderAuthBool"}
                 <dd><a target="_blank" href="{:url('order/myorder/index')}">我的工单</a></dd>
+                {/if}
             </dl>
         </li>
         {/if}
