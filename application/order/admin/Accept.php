@@ -132,6 +132,7 @@ class Accept extends Admin
                     $systemAffiche->title        = '来自【' . session('admin_user.nick') . '】的工单待受理！';
                     $systemAffiche->content      = '您有一条来自【'. session('admin_user.nick') . '】的工单待受理！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
                     $systemAffiche->from_user_id = '*';
+                    $systemAffiche->url = '/admin.php/order/accept/index.html';
                     $systemAffiche->to_user_id   = '|' . $userRow['id'] . '|';
                     $systemAffiche->create_time  = time();
                     $systemAffiche->save();
@@ -220,6 +221,7 @@ class Accept extends Admin
             $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
             $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
             $systemAffiche->from_user_id = '*';
+            $systemAffiche->url = '/admin.php/order/accept/index.html';
             $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
             $systemAffiche->create_time  = time();
             $systemAffiche->save();
