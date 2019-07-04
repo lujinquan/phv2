@@ -185,6 +185,7 @@ class SystemAnnex extends Model
             'size'      => $fileSize,
             'group'     => $group,
             'ctime'     => request()->time(),
+            'etime'     => request()->time() + 3600*24,
         ];
 
         // 记录入库
@@ -392,6 +393,53 @@ class SystemAnnex extends Model
 
         return $arr;
 
+    }
+
+    /**
+     * 更新附件的过期时间
+     * @param  [type] $file [值，多个值之间用逗号分隔或数组形式]
+     * @param  string $type [名，默认file，可选hash，id]
+     * @return [type]       [description]
+     */
+    public function updateAnnexEtime($file ,$type = 'file')
+    {
+        if(!in_array($type,['file','hash','id'])){
+            return '参数名不合法！';
+        }
+        if(!$file){
+            return '附件值不能为空！';
+        }
+        if(is_array($file)){
+            $where = [[$type,'in',$file]];
+        }else{
+            if(strpos($file,',',1)){ //如果值为多个
+                $where = [[$type,'eq',$file]];
+            }else{
+                $where = [[$type,'eq',$file]];
+            } 
+        }
+        
+        $res = self::where($where)->setField('etime',0); //将附件的过期时间设为永不过期
+        if($res !== false){
+            return '过期时间更新成功！';
+        }else{
+            return '过期时间更新失败！';
+        }
+    }
+    
+    /**
+     * 清除过期附件
+     */
+    public function clearAnnex()
+    {
+        $curTime = time();
+        $files = self::where([['etime','<',$curTime],['etime','neq',0]])->column('file');
+        if($files){
+            foreach($files as $file){
+                @unlink($_SERVER['DOCUMENT_ROOT'].$file);
+            }
+            self::where([['etime','<',$curTime],['etime','neq',0]])->delete();
+        }
     }
 
 }

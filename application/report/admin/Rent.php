@@ -1,7 +1,9 @@
 <?php
 namespace app\report\admin;
+use think\Db;
 use app\system\admin\Admin;
 use app\report\model\Report as ReportModel;
+use app\rent\model\Rent as RentModel;
 
 class Rent extends Admin
 {
@@ -66,6 +68,43 @@ class Rent extends Admin
     {
     	if ($this->request->isAjax()) {
             
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * [months 欠租明细报表]
+     * @return [type] [description]
+     */
+    public function unpaidRent()
+    {
+        if ($this->request->isAjax()) {
+            //$ownerid = input('param.owner_id/d',2); //默认查询市属
+            //$instid = input('param.inst_id/d',7); //默认查询当前机构
+            //$useid = input('param.house_use_id/d',1); //默认查询住宅
+            $month = str_replace('-','',input('param.month',date('Y-m')));
+            $where = [];
+            $where[] = ['a.rent_order_date','<=',$month];
+            //$where[] = ['c.inst_id','eq',$inst_id];
+            $fields = 'a.house_id,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $data = $temp = [];
+            $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
+            
+            foreach($baseData as $b){
+
+                $temp[$b['house_id']]['address'] = $b['ban_address'];
+                $temp[$b['house_id']]['tenant'] = $b['tenant_name'];
+                $temp[$b['house_id']]['use'] = $b['house_use_id'];
+                $temp[$b['house_id']]['curMonthUnpaidRent'] = $b['house_use_id'];
+                $temp[$b['house_id']]['beforeMonthUnpaidRent'] = $b['house_use_id'];
+                $temp[$b['house_id']]['beforeYearUnpaidRent'] = $b['house_use_id'];
+            }
+
+            $data['data'] = $temp;
+            $data['count'] = count($temp);
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
         }
         return $this->fetch();
     }

@@ -112,11 +112,17 @@ class Accept extends Admin
             $OporderModel = new OporderModel();
             // 数据过滤
             $filData = $OporderModel->dataFilter($data);
+
+            
+            //halt($filData);
             $row     = $OporderModel->allowField(true)->create($filData);
             if (!$row) {
                 return $this->error('提交失败');
             }
 
+            if(isset($filData['imgs'])){ //如果上传了附件，且提交成功，就修改附件的过期时间为0
+                (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['imgs']);
+            }
             // 【待解决问题，成功跳转后，菜单的高亮没有正确呈现】
             //return $this->success('提交成功',url('Myorder/index'));
 
@@ -140,7 +146,7 @@ class Accept extends Admin
                     break;
                 }
             }
-            return $this->success('提交成功');
+            return $this->success('提交成功');       
         }
         return $this->fetch();
     }
@@ -206,6 +212,10 @@ class Accept extends Admin
             }
             if (!$OporderModel->allowField(true)->update($filData)){
                 return $this->error($msg . '失败');
+            }
+
+            if(isset($filData['reply'])){ //如果上传了附件，且提交成功，就修改附件的过期时间为0
+                (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['reply']);
             }
             //$userRow                     = UserModel::where([['id', 'eq', $data['thransfer_to']]])->find();
             $systemAffiche               = new SystemAffiche;
