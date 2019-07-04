@@ -37,15 +37,23 @@ class Accept extends Admin
             $OpOrderModel = new OpOrderModel;
             $where        = $OpOrderModel->checkWhere($getData,'accept');
             $data  = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select()->toArray(); //halt($temps);
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select()->toArray();
             $inst_ids = explode(',',session('admin_user.inst_ids'));
+
+            //‘转交至’状态的数据排在前面,‘待处理’状态的数据排在后面，且同状态的按照创建时间倒序排列
+            $i = 1;
+            $j = 10000;
             foreach ($temps as $k => &$v) {
+                if(ADMIN_ROLE == 9 && $v['role_id'] == 9){
+                    unset($temps[$k]);
+                }
                 if (strpos($v['duid'], ',') === false) {
                     if (!in_array($v['inst_id'],$inst_ids)) {
                         unset($temps[$k]);
-                    } else {
+                    } else {   
                         $v['status_info'] = '待处理';
-                        $v['order_sort'] = 2;
+                        $v['order_sort'] = $j;
+                        $j++;
                     }
                     
                 } else {
@@ -57,12 +65,15 @@ class Accept extends Admin
                     } else {
                         $current_nick     = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
                         $v['status_info'] = '转交至'. $current_nick;
-                        $v['order_sort'] = 1;
+                        $v['order_sort'] = $i;
+                        $i++;
                     }
                 }
             }
 
             sort($temps);
+
+            //二维数组冒泡排序
             $a = [];
             foreach($temps as $key=>$val){
                 $a[] = $val['order_sort'];//$a是$sort的其中一个字段
@@ -109,15 +120,26 @@ class Accept extends Admin
             // 【待解决问题，成功跳转后，菜单的高亮没有正确呈现】
             //return $this->success('提交成功',url('Myorder/index'));
 
-            $userRow                     = UserModel::where([['role_id', 'eq', 11], ['inst_ids', 'like', '%' . $row['inst_id'] . ',%']])->find();
+            //$userRow                     = UserModel::where([['role_id', 'eq', 11], ['inst_ids', 'like', '%,' . $row['inst_id'] . ',%']])->find();
             $systemAffiche               = new SystemAffiche;
-            $systemAffiche->title        = '来自【' . session('admin_user.nick') . '】的工单待受理！';
-            $systemAffiche->content      = '您有一条来自【'. session('admin_user.nick') . '】的工单待受理！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
-            $systemAffiche->from_user_id = '*';
-            $systemAffiche->to_user_id   = '|' . $userRow['id'] . '|';
-            $systemAffiche->create_time  = time();
-            $systemAffiche->save();
+            $userArr                     = UserModel::where([['role_id', 'eq', 11]])->select();
+            foreach($userArr as $users){
+                $insts = explode(',',$users['inst_ids']);
+                if(in_array($row['inst_id'],$insts)){
+                    $userRow = $users;
 
+                    
+                    $systemAffiche->title        = '来自【' . session('admin_user.nick') . '】的工单待受理！';
+                    $systemAffiche->content      = '您有一条来自【'. session('admin_user.nick') . '】的工单待受理！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+                    $systemAffiche->from_user_id = '*';
+                    $systemAffiche->url = '/admin.php/order/accept/index.html';
+                    $systemAffiche->to_user_id   = '|' . $userRow['id'] . '|';
+                    $systemAffiche->create_time  = time();
+                    $systemAffiche->save();
+
+                    break;
+                }
+            }
             return $this->success('提交成功');
         }
         return $this->fetch();
@@ -150,7 +172,7 @@ class Accept extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
-
+//halt($row);
         $this->assign('data_info', $row);
         return $this->fetch();
     }
@@ -199,6 +221,7 @@ class Accept extends Admin
             $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
             $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
             $systemAffiche->from_user_id = '*';
+            $systemAffiche->url = '/admin.php/order/accept/index.html';
             $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
             $systemAffiche->create_time  = time();
             $systemAffiche->save();

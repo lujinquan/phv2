@@ -163,7 +163,7 @@
 					{/if}
 					{if condition="ADMIN_ROLE != 9"}
 					<optgroup label="经管科">
-						<option value="42" {if condition="session('admin_user.nick') == '叶慧丽'"}disabled{/if}>叶慧丽</option>
+						<option value="42" {if condition="session('admin_user.nick') == '叶慧丽' || $data_info['nick'] == '叶慧丽'"}disabled{/if}>叶慧丽</option>
 					</optgroup>
 					{/if}
 					{if condition="ADMIN_ROLE != 11"}

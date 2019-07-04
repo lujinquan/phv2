@@ -34,7 +34,7 @@ class OpOrder extends SystemBase
 
     public function SystemUser()
     {
-        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick');
+        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick,role_id');
     }
 
     /**
@@ -194,7 +194,7 @@ class OpOrder extends SystemBase
                         'ToUid' => $comp,
                         'Desc' => $data['replay'],
                         'Time' => time(),
-                        'Action' => '转交至',
+                        'Action' => '转交回',
                     ];
                     // 【更新】序列化数据
                     $data['jsondata'] = json_encode($jsonarr);
@@ -203,8 +203,10 @@ class OpOrder extends SystemBase
                     // 【更新】经手人+
                     if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
                         $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp; // 完结的转交人就是，申请人
+                        $action = '转交至';
                     }else{ //写入 转交人id
-                       $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
+                        $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
+                        $action = '转交回';
                     }
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
@@ -212,7 +214,7 @@ class OpOrder extends SystemBase
                         'ToUid' => $comp,
                         'Desc' => $data['replay'],
                         'Time' => time(),
-                        'Action' => '转交至',
+                        'Action' => $action,
                     ];
                     // 【更新】序列化数据
                     $data['jsondata'] = json_encode($jsonarr);
@@ -256,9 +258,12 @@ class OpOrder extends SystemBase
     public function getAcceptCount(){
         $where = $this->checkWhere([],'accept');    
         $data = [];
-        $temps = $this->where($where)->select();
+        $temps = $this->with('SystemUser')->where($where)->select();
         $inst_ids = explode(',',session('admin_user.inst_ids'));
         foreach ($temps as $k => &$v) {
+            if(ADMIN_ROLE == 9 && $v['role_id'] == 9){
+                    unset($temps[$k]);
+            }
             if (strpos($v['duid'], ',') === false) {
                 if (!in_array($v['inst_id'],$inst_ids)) {
                     unset($temps[$k]);

@@ -30,10 +30,18 @@ class Filished extends Admin
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData, 'filished');
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+            $i = 1;
+            $j = 1000;
+            $p = 10000;
             foreach ($temps as $k => & $v) {
+                if(ADMIN_ROLE == 9 && $v['role_id'] == 9){
+                    unset($temps[$k]);
+                }
                 if (strpos($v['duid'], ',') === false) {
                     $v['status_info'] = '待运营中心处理';
+                    $v['order_sort'] = $j;
+                    $j++;
                 } else {
                     $uids = explode(',', $v['duid']);
                     $current_uid = array_pop($uids);
@@ -43,14 +51,27 @@ class Filished extends Admin
                         $current_nick = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
                         if ($v['ftime']) { // 如果方管员已确认表示已完结
                             $v['status_info'] = '已完结';
+                            $v['order_sort'] = $p;
+                            $p++;
                         } else {
                             $v['status_info'] = '转交至' . $current_nick;
+                            $v['order_sort'] = $i;
+                            $i++;
                         }
                     }
                 }
             }
+
+            sort($temps);
+
+            //二维数组冒泡排序
+            $a = [];
+            foreach($temps as $key=>$val){
+                $a[] = $val['order_sort'];//$a是$sort的其中一个字段
+            }
+            $temps = bubble_sort($temps,$a,'asc');//正序
             //halt($temps);
-            $data['data'] = array_slice($temps->toArray() , ($page - 1) * $limit, $limit);
+            $data['data'] = array_slice($temps , ($page - 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';

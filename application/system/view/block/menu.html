@@ -12,14 +12,18 @@
         {/volist}
     </ul>
     <ul class="layui-nav fr nobg head-info">
-        {if condition="session('admin_user.role_id') ==  4||session('admin_user.role_id') ==  9"}
+        {if condition="$myOrderAuthBool || $myOrderAuthBool"}
         <li class="layui-nav-item">
             <!-- <a href="javascript:;"> class="aicon ai-app-store">消息中心 &nbsp;</a> -->
             <!-- <i class="typcn typcn-mail"></i> -->
             <a href="javascript:;">工单 &nbsp;</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
+                {if condition="$addOrderAuthBool"}
                 <dd><a target="_blank" href="{:url('order/accept/add')}">提交工单</a></dd>
+                {/if}
+                {if condition="$myOrderAuthBool"}
                 <dd><a target="_blank" href="{:url('order/myorder/index')}">我的工单</a></dd>
+                {/if}
             </dl>
         </li>
         {/if}
@@ -177,25 +181,25 @@
  
         $.post('/admin.php/system/Api/getAfficheRow', {id:id}, function(res,that){
           //console.log(res.data.content);
-          //console.log(res); 
+          
+          // 待优化，目前判断的是只要有已阅读的人，就关闭超链接
+          if(res.data.read_users){
+            var addStr = '';
+          }else{
+            var addStr = '<a href="'+ res.data.url +'">点此跳转</a>';
+          }
+
+          newsStr = '<div id="j-news-details" class="j-news-details"><h1>'+res.data.title +'</h1><h2>' +res.data.create_time + '</h2><div class="j-content-size">'+ res.data.content + addStr + '</div></div>';
+
           layer.open({
               title: '消息通知'
               ,offset: 'auto'
-              ,area: ['60%', '40%']
+              ,area: ['60%', '30%']
               , btn:false
-              ,content: '<div id="j-news-details" class="j-news-details"><h1>'+res.data.title +'</h1><h2>' +res.data.create_time + '</h2><div class="j-content-size">'+ res.data.content +'</div></div>' //注意，如果str是object，那么需要字符拼接。
+              ,content: newsStr //注意，如果str是object，那么需要字符拼接。
           });
         });
         
-        //$(this).remove();
-        //$(this).append();
-		// layer.open({
-		//   title: '消息通知'
-		//   ,offset: 'auto'
-		//   ,area: ['60%', '40%']
-		//   , btn:false
-		//   ,content: '<div id="j-news-details" class="j-news-details"><h1>工单通知</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515</div></div>'
-		// });
 	})
 	  //已读/未读切换
 	  var $div_li =$(".j-title-tab li");
