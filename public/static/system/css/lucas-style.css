@@ -251,3 +251,11 @@ opacity: .8color: #333;}
 .j-home-help i{ margin-right: 5px;font-size: 12px;}
 .layui-input.inp{ display: inline-block;}
 .layui-btn.ana{ position: absolute;top:0;right:0;}
+/* 时间控件选中样式 */
+.layui-laydate .layui-this{ background: #2E77EF!important;}
+/* 房屋报表 S */
+.j-report-table{ min-height: 350px;}
+.j-report-con .j-report-title{ font:bold 20px/25px 'MicrosoftYaHei-Bold'; text-align: center; margin-bottom: 15px;}
+.layui-table .j-bold-size,.j-report-con .j-bold-size{ font-weight: bold; color: #666;  font-size: 14px;}
+.j-report-table li{float: left; width: 33.3%;margin-bottom: 15px;}
+/* 房屋报表 E */

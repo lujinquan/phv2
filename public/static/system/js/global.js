@@ -618,6 +618,15 @@ console.log($('.checkbox-ids:checked'));
 	});
 	//显示搜索框title属性值E
 	$(".j-page-btns").parents(".j-table-content").addClass("on");//表单新发样式
+	//报表管理页面将值为0.00的替换为空
+	$(".report tr").each(function(){
+	        var td=$(this).find("td");
+	        td.each(function(){
+	            if($(this).text()=="0.00"){
+	                $(this).text("");
+	            }
+	        });
+	});
 
 });
 

@@ -78,6 +78,7 @@ class Base
             '__ADMIN_CSS__'     => $rootDir.'static/system/css',
             '__ADMIN_JS__'      => $rootDir.'static/system/js',
             '__ADMIN_IMG__'     => $rootDir.'static/system/image',
+			'__ADMIN_VIEWJS__'     => $rootDir.'static/system/viewjs',
             // 后台模块静态目录
             '__ADMIN_MOD_CSS__' => $rootDir.'static/'.$module.'/css',
             '__ADMIN_MOD_JS__'  => $rootDir.'static/'.$module.'/js',
