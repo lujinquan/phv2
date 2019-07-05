@@ -1,1 +1,158 @@
+<div class="j-table-content">
+  <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane" >
+  		<div class="j-search-fl layui-col-md8  fl">
+            <div class="layui-input-inline" style="width:120px;padding-left:5px">
+                <select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
+                    <option value="">产别</option>
+                    {volist name="params['owners']" id="v" key="k"}
+                    <option value="{$k}">{$v}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width:120px;padding-left:5px">
+                <input type="text" name="query_month" value="" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+  		
+          <div class="j-search-fr layui-col-md4 fr">
+            <div class="layui-input-inline fr">
+  			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+  			<button type="button" class="layui-btn"  id="yueQuery" lay-submit lay-filter="formDemo">
+  			    <i class="layui-icon">&#xe615;</i>
+  			    搜索
+  			</button>
+  			<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
+  			    <i class="layui-icon layui-icon-print"></i>
+  			    打印
+  			</button>
+            </div>
+  		</div>
+        </form>
+    </div>
+	<div class="j-report-con">
+	  <h1 class="j-report-title">武汉市房地局直管公房产权（<span id="DOwnerTyp"></span>）情况综合统计表</h1>
+	  <div class="j-report-table">
+	    <ul>
+			  <li class="j-bold-size">产别:<span class=" DQueryType">按房屋价值</span></li>
+			  <li class="j-bold-size">填报单位:<span class="fontsize"></span></li>
+			  <li class="j-bold-size">填报时间:<span class="time"></span></li>
+	    </ul>
+		<table class="layui-table" id="PropertyForm">
+		        <tbody>
+		            <tr>
+		                <th rowspan="4" colspan="2" class="am-text-middle">产权基本情况</th>
+		                <th rowspan="1" colspan="3" class="am-text-middle">房屋总计</th>
+		                <th rowspan="1" colspan="9" class="am-text-middle">其中：</th>
+		            </tr>
+		            <tr>
+		                <td rowspan="2" colspan="1" >栋</td>
+		                <td rowspan="2" colspan="2" >建筑面积</td>
+		                <td rowspan="1" colspan="3" >代管房屋</td>
+		                <td rowspan="1" colspan="3" >托管房屋</td>
+		                <td rowspan="1" colspan="3" >与私房、区直共有房屋</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >1</td>
+		                <td rowspan="1" colspan="2" >2</td>
+		                <td rowspan="1" colspan="1" >3</td>
+		                <td rowspan="1" colspan="2" >4</td>
+		                <td rowspan="1" colspan="1" >5</td>
+		                <td rowspan="1" colspan="2" >6</td>
+		                <td rowspan="1" colspan="1" >7</td>
+		                <td rowspan="1" colspan="2" >8</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="4" colspan="2" class="am-text-middle">本期房屋增减</td>
+		                <td rowspan="1" colspan="6" class="am-text-middle">年房屋增加<span style="padding: 0 5px">9</span>栋，建筑面积<span style="padding: 0 5px"></span>10㎡</td>
+		                <td rowspan="1" colspan="9" class="am-text-middle">年度房减少<span style="padding: 0 5px">11</span>栋，建筑面积<span style="padding: 0 5px"></span>12㎡</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >接管</td>
+		                <td rowspan="1" colspan="1" >13栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >合建</td>
+		                <td rowspan="1" colspan="1" >15栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >公房出售</td>
+		                <td rowspan="1" colspan="1" >17栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >拆迁</td>
+		                <td rowspan="1" colspan="1" >19栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >危改还建</td>
+		                <td rowspan="1" colspan="1" >21栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >加改扩</td>
+		                <td rowspan="1" colspan="1" >23栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >危改拆除</td>
+		                <td rowspan="1" colspan="1" >25栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >房屋划转</td>
+		                <td rowspan="1" colspan="1" >27栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >新建</td>
+		                <td rowspan="1" colspan="1" >29栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >其他</td>
+		                <td rowspan="1" colspan="1" >31栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >落私发还</td>
+		                <td rowspan="1" colspan="1" >33栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" >其他</td>
+		                <td rowspan="1" colspan="1" >35栋</td>
+		                <td rowspan="1" colspan="1" ></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="3" class="am-text-middle">已登记房屋</td>
+		                <td rowspan="1" colspan="2" class="am-text-middle">37栋</td>
+		                <td rowspan="1" colspan="4" class="am-text-middle">建筑面积<span style="padding: 0 5px"></span>38㎡</td>
+		                <td rowspan="1" colspan="5" class="am-text-middle">备注：<span style="padding: 0 5px"></span></td>
+		            </tr>
+		
+		            </tbody>
+		
+		</table>
+	  </div>
+	</div>
+</div>
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_propertys.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 E -->
+<script>
+    layui.use(['jquery', 'laydate', 'element','table'], function(){
+        var laydate = layui.laydate,
+		    $ = layui.$
+			,element = layui.element
+			,table = layui.table;
+        //年选择器
+        laydate.render({
+            elem: '#timeYear'
+            ,type: 'month'
+			,value: new Date() 
+            ,isInitValue: true
+        });
+		
+    });
+	//打印
+	function  click_print(){
+	 $(".j-report-con").jqprint();
+	}
+</script>

@@ -40,7 +40,7 @@
 				    <i class="layui-icon">&#xe615;</i>
 				    搜索
 				</button>
-				<button type="button" class="layui-btn layui-btn-warm on" onclick="a1()" id="button_print">
+				<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
 				    <i class="layui-icon layui-icon-print"></i>
 				    打印
 				</button>
@@ -402,8 +402,11 @@
 	   <!--endprint1-->
 </div>
 {include file="system@block/layui" /}
-<table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_archives.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 E -->
 <script>
     layui.use(['jquery', 'laydate', 'element','table'], function(){
         var laydate = layui.laydate,
@@ -419,5 +422,8 @@
         });
 		
     });
-	
+	//打印
+	function  click_print(){
+	 $(".j-report-con").jqprint();
+	}
 </script>

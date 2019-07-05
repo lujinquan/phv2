@@ -224,8 +224,9 @@ opacity: .8color: #333;}
 .layui-nav .j-mail-box .layui-nav-child li.j-list .fr{ font-size: 10px; color: #bbb;}
 .layui-nav .j-mail-box .layui-nav-child ol{ max-height: 315px; overflow-y: auto;} 
 .layui-nav .j-mail-box .layui-nav-child .j-no-news{ text-align: center; color:#4A4A4A; line-height: 45px;}
-.j-news-details h1{color: #141414; font:bold 24px/31px 'MicrosoftYaHei-Bold';}
-.j-news-details h2{color: #141414; font:12px/31px '';}
+.j-news-details h1{color: #141414; font:bold 20px/31px 'MicrosoftYaHei-Bold';}
+.j-news-details h2{color: #141414; font:12px/31px '';  margin-bottom: 5px;}
+.j-news-details a{ color: #0084FF;}
 .j-news-details .j-content-size{ line-height: 24px;}
 /*------------------ 站内信 E ----------------*/
 /*------------------ 公告 S ----------------*/
@@ -256,6 +257,14 @@ opacity: .8color: #333;}
 /* 房屋报表 S */
 .j-report-table{ min-height: 350px;}
 .j-report-con .j-report-title{ font:bold 20px/25px 'MicrosoftYaHei-Bold'; text-align: center; margin-bottom: 15px;}
-.layui-table .j-bold-size,.j-report-con .j-bold-size{ font-weight: bold; color: #666;  font-size: 14px;}
+.layui-table .j-bold-size,.j-report-con .j-bold-size,.am-text-middle{ font-weight: bold; color: #666;  font-size: 14px;}
 .j-report-table li{float: left; width: 33.3%;margin-bottom: 15px;}
 /* 房屋报表 E */
+/* 表格样式 */
+.report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #666;} 
+.report td,.report th{padding:0.5rem 0;}
+.report {width:100%;}
+/* 根据浏览器宽度设置头部导航右边内容 */
+@media screen and (max-width: 1200px) { 
+ .head-info .j-display{ display: none;}
+} 

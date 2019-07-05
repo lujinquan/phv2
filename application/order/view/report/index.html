@@ -212,12 +212,11 @@
 		      	ldValues.push(dataThree.ld[u]);
 		    }
 		    myChartShadow(shadowKeys,zyValues,ldValues);
-
-		    
+              
 		});
-
-
-
+        var myChart = echarts.init(document.getElementById('mainPie'));
+		var myChart7 = echarts.init(document.getElementById('main7'));
+		var myChart4 = echarts.init(document.getElementById('main4'));
 		// 柱状图渲染函数
 		function myChartShadow(shadowKeys,zyValues,ldValues){
 			//工单类别统计S
@@ -324,7 +323,7 @@
 					x2: '30',
 					y: '40',
 					y2: '50',
-					left: 0,
+					left:5,
 					right: 100,
 					top: 50,
 					bottom:50,
@@ -334,7 +333,7 @@
 					type: 'category',
 					axisLabel:{
 						textStyle:{
-							color:'#333'
+							color:'#333',
 						}
 					},
 					axisLine:{
@@ -487,6 +486,13 @@
 			};
 
 			myChart.setOption(option);
-		}
+		};
+		setTimeout(function (){
+            window.onresize = function () {
+		     myChart7.resize();
+		     myChart4.resize();
+			 myChart.resize();
+		   };
+		 }, 200);
 
     </script>
