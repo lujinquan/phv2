@@ -1,1 +1,178 @@
+<div class="j-table-content">
+	<div class="page-toolbar j-page-toolbar clearfix">
+	      <form class="layui-form layui-form-pane" >
+			<div class="j-search-fl layui-col-md8  fl">
+	          <div class="layui-input-inline" style="width:150px;">
+	              <select name="inst_id" lay-filter="inst_id">
+	                  <option value="">机构</option>
+	                  {volist name="params['insts']" id="v" key="k"}
+	                  <option value="{$k}" {if condition="$k == INST"}selected{/if}>{$v}</option>
+	                  {/volist}
+	              </select>
+	          </div>
+	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
+	              <select name="owner_id" lay-filter="owner_id">
+	                  <option value="">产别</option>
+	                  {volist name="params['owners']" id="v" key="k"}
+	                  <option value="{$k}" {if condition="$k == 1"}selected{/if}>{$v}</option>
+	                  {/volist}
+	              </select>
+	          </div>
+	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
+	              <select name="use_id" lay-filter="owner_id">
+	                  <option value="">使用性质</option>
+	                  {volist name="params['uses']" id="v" key="k"}
+	                  <option value="{$k}" {if condition="$k == 1"}selected{/if}>{$v}</option>
+	                  {/volist}
+	              </select>
+	          </div>
+	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
+	              <input type="text" name="query_month" value="" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+	          </div>
+	        </div>
+			
+	        <div class="j-search-fr layui-col-md4 fr">
+	          <div class="layui-input-inline fr">
+				<button type="reset" class="layui-btn j-btn-reset">重置</button>
+				<button type="button" class="layui-btn"  id="button_search" lay-submit lay-filter="formDemo">
+				    <i class="layui-icon">&#xe615;</i>
+				    搜索
+				</button>
+				<button type="button" class="layui-btn layui-btn-warm on" onclick="a1()" id="button_print">
+				    <i class="layui-icon layui-icon-print"></i>
+				    导出
+				</button>
+	          </div>
+			</div>
+	      </form>
+	  </div>
+	   <!--startprint1-->
+	  <div class="j-report-con">
+		  <h1 class="j-report-title">欠租明细统计（<span id="DOwnerTyp">市属</span>）报表</h1>
+		  <div class="j-report-table">
+			  <!-- <ul>
+				  <li><div class=" DQueryType j-bold-size">产别：</div></li>
+				  <li><div class="time j-bold-size"></div></li>
+				  <li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
+			  </ul> -->
+			  <table class="layui-table" id="PropertyForm">
+			          <!-- 完损等级分 -->
+			          <tbody id="Tbody">
+			              
+			          </tbody>
+			  </table>
+		  </div>
+	  </div>
+	   <!--endprint1-->
+</div>
 {include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_archives.js?v={:config('hisiphp.version')}"></script>
+<script>
+    layui.use(['jquery', 'laydate', 'element','table'], function(){
+        var laydate = layui.laydate,
+		    $ = layui.$
+			,element = layui.element
+			,table = layui.table;
+
+		
+
+		$("#button_search").click(function(){
+			var inst = $("select[name='inst_id']").val();
+			var owner = $("select[name='owner_id']").val();
+			var use = $("select[name='use_id']").val();
+			var month = $("input[name='query_month']").val();
+			$.ajax({
+				type:"post",// 请求方式
+				url:"{:url('rent/unpaidRent')}",
+				async:true,// 同步异步
+				dataType:"json",
+				data :{'inst_id':inst,'owner_id':owner,'use_id':use,'query_month':month},//这里是前台传到后台的数据
+			    //回调函数
+				success:function(jsondata){
+
+					var tableStr = `<tr>
+						  <th rowspan="2" colspan="1" class="j-bold-size">房屋编号</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">地址</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">户名</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">使用性质</th>
+		                  <th rowspan="1" colspan="4" class="j-bold-size">房屋欠租情况</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">备注</th>
+		                </tr>
+		                <tr>
+		                  <td rowspan="1" colspan="1" >本月份</td>
+		                  <td rowspan="1" colspan="1" >以前月份</td>
+		                  <td rowspan="1" colspan="1" >以前年度</td>
+		                  <td rowspan="1" colspan="1" >合计</td>
+		                </tr>`;
+
+					var data = jsondata.data;//由JSON字符串转换为JSON对象
+					console.log(data);
+					//var str = '';
+					for(var i in data) {
+						tableStr += "<tr><td>" + data[i].number + "</td><td>" + data[i].address + "</td><td>" + data[i].tenant + "</td><td>" + data[i].use + "</td><td>"+ data[i].curMonthUnpaidRent + "</td><td>" +data[i].beforeMonthUnpaidRent+ "</td><td>" +data[i].beforeYearUnpaidRent+ "</td><td>" +data[i].total+ "</td><td>" + data[i].remark+"</td></tr>";
+						
+					}
+					//console.log(tableStr);
+					$('#Tbody').html(tableStr);
+				}
+			})
+		});
+		// 写入数据
+		$.ajax({
+			type:"post",// 请求方式
+			url:"{:url('rent/unpaidRent')}",
+			async:true,// 同步异步
+			dataType:"json",
+			//data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
+		    //回调函数
+			success:function(jsondata){
+				var data = jsondata.data;//由JSON字符串转换为JSON对象
+				
+				var str = `<tr>
+						  <th rowspan="2" colspan="1" class="j-bold-size">房屋编号</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">地址</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">户名</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">使用性质</th>
+		                  <th rowspan="1" colspan="4" class="j-bold-size">房屋欠租情况</th>
+		                  <th rowspan="2" colspan="1" class="j-bold-size">备注</th>
+		                </tr>
+		                <tr>
+		                  <td rowspan="1" colspan="1" >本月份</td>
+		                  <td rowspan="1" colspan="1" >以前月份</td>
+		                  <td rowspan="1" colspan="1" >以前年度</td>
+		                  <td rowspan="1" colspan="1" >合计</td>
+		                </tr>`;
+				
+				for(var i in data) {
+					//console.log(data[i].address);
+					// tableStr += "<tr>\
+					// 				<td rowspan='1' colspan='1'>1</td>\
+					// 				<td rowspan='1' colspan='1'>2</td>\
+					// 				<td rowspan='1' colspan='1'>3</td>\
+					// 				<td rowspan='1' colspan='1'>4</td>\
+					// 				<td rowspan='1' colspan='1'>5</td>\
+					// 				<td rowspan='1' colspan='1'>6</td>\
+					// 				<td rowspan='1' colspan='1'>7</td>\
+					// 				<td rowspan='1' colspan='1'>8</td>\
+					// 			</tr>";
+					str += "<tr><td>" + data[i].number + "</td><td>" + data[i].address + "</td><td>" + data[i].tenant + "</td><td>" + data[i].use + "</td><td>"+ data[i].curMonthUnpaidRent + "</td><td>" + data[i].beforeMonthUnpaidRent + "</td><td>" +data[i].beforeYearUnpaidRent+ "</td><td>" +data[i].total+ "</td><td>" + data[i].remark+"</td></tr>";
+					
+				}
+				//console.log(tableStr);
+				$('#Tbody').html(str);
+			}
+		})
+
+
+        //年选择器
+        laydate.render({
+            elem: '#timeYear'
+            ,type: 'month'
+			,value: new Date() 
+            ,isInitValue: true
+        });
+		
+    });
+	
+</script>

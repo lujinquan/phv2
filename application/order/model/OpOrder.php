@@ -300,7 +300,7 @@ class OpOrder extends SystemBase
         ];
 
         $operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick,inst_ids')->select();
-        //$inst_ids = explode(',',session('admin_user.inst_ids'));
+
         $params = ParamModel::getCparams();
         $opTypes = array_keys($params['op_order_type']);
         $inZys = array_keys($params['insts_zy']);
@@ -327,7 +327,9 @@ class OpOrder extends SystemBase
                 $uids = explode(',',$op['duid']);
                 $inst = in_array($op['inst_id'],explode(',',$v['inst_ids'])); //判断每条记录是否属于某运营人员
                 $duid = strpos($op['duid'],','); //判断是否有逗号，即是否为待受理
-                $ftime = $op['ftime'];
+                //$ftime = $op['ftime'];
+
+                $ftime = $op->getData('ftime'); //用完结时间
 
                 // 第一部分（饼状图数据）
                 if($inst && !$duid){ //待受理中工单
@@ -345,25 +347,41 @@ class OpOrder extends SystemBase
                     }
                 }
 
+
                 // 第二部分（折线图）
+                $year = date('Y');
                 for($i=0;$i<7;$i++){
 
                     $nowDayTime = date('m-d',strtotime("-$i day"));
                     $nowMonthTime = date('Y-m',strtotime("-$i month"));
                     $nowYearTime = date('Y',strtotime("-$i year"));
-                    $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
-                    $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
-                    $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
+                    // $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
+                    // $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
+                    // $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
 
-                    $opTime = $op->getData('ctime'); //用创建时间来判断【估计要改成完结时间】
+                    
 
-                    if($opTime > strtotime($nowDayTime) && $opTime < (strtotime($nowDayTime) + 3600*24)){
+                    if(!isset($result['partTwo'][$v['id']]['day'][$nowDayTime])){
+                        $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
+                    }
+                    if(!isset($result['partTwo'][$v['id']]['month'][$nowMonthTime])){
+                        $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
+                    }
+                    if(!isset($result['partTwo'][$v['id']]['year'][$nowYearTime])){
+                        $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
+                    }
+
+                    //dump($v);dump($ftime);dump($nowDayTime);dump($nowMonthTime);dump($nowYearTime);halt(strtotime($year.$nowDayTime));
+                    // 完结时间>当天0时0分0秒 ，且<次天0时0分0秒
+                    if($ftime > strtotime($year.'-'.$nowDayTime) && $ftime < (strtotime($year.'-'.$nowDayTime) + 3600*24)){
                         $result['partTwo'][$v['id']]['day'][$nowDayTime]++;
                     }
-                    if($opTime > strtotime($nowMonthTime) && $opTime < (strtotime($nowMonthTime) + 3600*24*30)){
+                    // 完结时间>当月1日0时0分0秒 ，且<当月1日0时0分0秒
+                    if($ftime > strtotime($nowMonthTime.'-01') && $ftime < (strtotime($nowMonthTime.'-01') + 3600*24*30)){
                         $result['partTwo'][$v['id']]['month'][$nowMonthTime]++;
                     }
-                    if($opTime > strtotime($nowYearTime) && $opTime < (strtotime($nowYearTime) + 3600*24*30*12)){
+                    // 完结时间>当年1月1日0时0分0秒 ，且<当年1月1日0时0分0秒
+                    if($ftime > strtotime($nowYearTime.'-01-01') && $ftime < (strtotime($nowYearTime.'-01-01') + 3600*24*30*12)){
                         $result['partTwo'][$v['id']]['year'][$nowYearTime]++;
                     }
                     
@@ -371,6 +389,7 @@ class OpOrder extends SystemBase
                 
                 // 第三部分（柱状图）    
                 if($key == 0){
+                    //dump($inZys);dump($inLds);halt();
                     foreach($opTypes as $o){
                         if(!isset($result['partThree']['zy'][$o])){
                             $result['partThree']['zy'][$o] = 0;

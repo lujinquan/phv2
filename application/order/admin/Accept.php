@@ -223,15 +223,17 @@ class Accept extends Admin
 
             if (isset($filData['dtime']) && $filData['dtime']) { //最终转给申请人的工单
                 $contentMsg = '确认';
+                $url = '/admin.php/order/myorder/index.html';
             } else {
                 $contentMsg = '处理';
+                $url = '/admin.php/order/accept/index.html';
             }
             $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
 
             $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
             $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
             $systemAffiche->from_user_id = '*';
-            $systemAffiche->url = '/admin.php/order/accept/index.html';
+            $systemAffiche->url = $url;
             $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
             $systemAffiche->create_time  = time();
             $systemAffiche->save();
