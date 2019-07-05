@@ -350,42 +350,42 @@ class OpOrder extends SystemBase
 
                 // 第二部分（折线图）
                 $year = date('Y');
-                for($i=0;$i<7;$i++){
+                if($ftime){ //如果已完结
+                    if($uids[1] == $v['id']){ //如果当前订单处理人等于当前管理员
+                        for($i=0;$i<7;$i++){
 
-                    $nowDayTime = date('m-d',strtotime("-$i day"));
-                    $nowMonthTime = date('Y-m',strtotime("-$i month"));
-                    $nowYearTime = date('Y',strtotime("-$i year"));
-                    // $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
-                    // $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
-                    // $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
+                            $nowDayTime = date('m-d',strtotime("-$i day"));
+                            $nowMonthTime = date('Y-m',strtotime("-$i month"));
+                            $nowYearTime = date('Y',strtotime("-$i year"));
 
-                    
+                            if(!isset($result['partTwo'][$v['id']]['day'][$nowDayTime])){
+                                $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
+                            }
+                            if(!isset($result['partTwo'][$v['id']]['month'][$nowMonthTime])){
+                                $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
+                            }
+                            if(!isset($result['partTwo'][$v['id']]['year'][$nowYearTime])){
+                                $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
+                            }
 
-                    if(!isset($result['partTwo'][$v['id']]['day'][$nowDayTime])){
-                        $result['partTwo'][$v['id']]['day'][$nowDayTime] = 0;
+                            //dump($v);dump($ftime);dump($nowDayTime);dump($nowMonthTime);dump($nowYearTime);halt(strtotime($year.$nowDayTime));
+                            
+                            // 完结时间>当天0时0分0秒 ，且<次天0时0分0秒
+                            if($ftime > strtotime($year.'-'.$nowDayTime) && $ftime < (strtotime($year.'-'.$nowDayTime) + 3600*24)){
+                                $result['partTwo'][$v['id']]['day'][$nowDayTime]++;
+                            }
+                            // 完结时间>当月1日0时0分0秒 ，且<当月1日0时0分0秒
+                            if($ftime > strtotime($nowMonthTime.'-01') && $ftime < (strtotime($nowMonthTime.'-01') + 3600*24*30)){
+                                $result['partTwo'][$v['id']]['month'][$nowMonthTime]++;
+                            }
+                            // 完结时间>当年1月1日0时0分0秒 ，且<当年1月1日0时0分0秒
+                            if($ftime > strtotime($nowYearTime.'-01-01') && $ftime < (strtotime($nowYearTime.'-01-01') + 3600*24*30*12)){
+                                $result['partTwo'][$v['id']]['year'][$nowYearTime]++;
+                            }   
+                        }
                     }
-                    if(!isset($result['partTwo'][$v['id']]['month'][$nowMonthTime])){
-                        $result['partTwo'][$v['id']]['month'][$nowMonthTime] = 0;
-                    }
-                    if(!isset($result['partTwo'][$v['id']]['year'][$nowYearTime])){
-                        $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
-                    }
-
-                    //dump($v);dump($ftime);dump($nowDayTime);dump($nowMonthTime);dump($nowYearTime);halt(strtotime($year.$nowDayTime));
-                    // 完结时间>当天0时0分0秒 ，且<次天0时0分0秒
-                    if($ftime > strtotime($year.'-'.$nowDayTime) && $ftime < (strtotime($year.'-'.$nowDayTime) + 3600*24)){
-                        $result['partTwo'][$v['id']]['day'][$nowDayTime]++;
-                    }
-                    // 完结时间>当月1日0时0分0秒 ，且<当月1日0时0分0秒
-                    if($ftime > strtotime($nowMonthTime.'-01') && $ftime < (strtotime($nowMonthTime.'-01') + 3600*24*30)){
-                        $result['partTwo'][$v['id']]['month'][$nowMonthTime]++;
-                    }
-                    // 完结时间>当年1月1日0时0分0秒 ，且<当年1月1日0时0分0秒
-                    if($ftime > strtotime($nowYearTime.'-01-01') && $ftime < (strtotime($nowYearTime.'-01-01') + 3600*24*30*12)){
-                        $result['partTwo'][$v['id']]['year'][$nowYearTime]++;
-                    }
-                    
                 }
+
                 
                 // 第三部分（柱状图）    
                 if($key == 0){
