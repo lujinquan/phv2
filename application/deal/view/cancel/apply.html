@@ -1,1 +1,155 @@
+<form class="layui-form" action="{url('add')}" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">注销类别</label>
+				<div class="j-input-inline">
+					<select name="tenant_inst_id" class="field-cid">
+					    <option value="0">请选择</option>
+						<option value="1">1</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_name" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_tel" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_card" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>补充附件</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-upload clearfix">
+				<div class="j-enclosure-label">身份证正面</div>
+				<div class="j-enclosure-label j-uplode-icon">
+					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+					<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+				</div>
+				<div class="layui-form-mid layui-word-aux">限制1M</div>
+			</div>
+			<div class="j-enclosure-img clearfix">
+				<div id="upload_img_list3" class="upload_img_list"> </div>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-upload clearfix">
+				<div class="j-enclosure-label">身份证反面</div>
+				<div class="j-enclosure-label j-uplode-icon">
+					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+					<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
+				</div>
+				<div class="layui-form-mid layui-word-aux">限制1M</div>
+			</div>
+			<div class="j-enclosure-img clearfix">
+				<div id="upload_img_list4" class="upload_img_list"> </div>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<!-- <script type="text/javascript" src="__ADMIN_VIEWJS__/deal_cancel_apply.js?v={:config('hisiphp.version')}"></script> -->
+<script type="text/javascript">
+	var upurl2 = "{:url('system/Api/upload')}?input=positiveid&group=ban&water=no"; //身份证正面上传图片地址
+	var upurl3 = "{:url('system/Api/upload')}?input=backid&group=ban&water=no"; //身份证反面上传图片地址
+	var duotu = true; //是否为多图上传true false
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+	
+		//身份证正面
+		upload.render({
+			elem: '#upload_img1',
+			url: upurl2,
+			size: 1024,
+			multiple: duotu,
+			field: 'positiveid',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="positiveid[]" value="' + res.data.file + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="positiveid" value="' + res.data.file + '" /></dd>');
+				}
+			}
+		})
+		//身份证反面
+		upload.render({
+			elem: '#upload_img2',
+			url: upurl3,
+			size: 1024,
+			multiple: duotu,
+			field: 'backid',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list4').append('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="backid[]" value="' + res.data.file + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list4').html('<dd class="item_img" id="' + res.data.file +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="backid" value="' + res.data.file + '" /></dd>');
+				}
+			}
+		})
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+</script>

@@ -7,13 +7,15 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="ban_number" name="ban_number" value="" placeholder="双击选择" autocomplete="off" class="layui-input">
+					<input type="text" id="ban_number" name="ban_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<b class="j-explain-search j-ban_number">查询</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>租户编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_number" name="tenant_number" value="" placeholder="双击选择" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_number" name="tenant_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<b class="j-explain-search j-tenant_number">查询</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -112,7 +114,7 @@
 				,layer = layui.layer;
       
 	      //双击获取楼栋查询器
-		  $(".layui-form").on('dblclick','input[name="ban_number"]',function(){
+		  $(".layui-form").on('click','.j-ban_number',function(){
 		 layer.open({
 			title: '楼栋查询器'
 			,type: 2
@@ -133,7 +135,7 @@
 		  });
 		 })
 		 //双击获取租户查询器
-		  $(".layui-form").on('dblclick','input[name="tenant_number"]',function(){
+		  $(".layui-form").on('click','.j-tenant_number',function(){
 		 layer.open({
 		 			title: '租户查询器'
 		 			,type: 2

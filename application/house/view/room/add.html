@@ -32,7 +32,8 @@
 	  	<div class="layui-col-md4">
 	  		<label class="j-form-label"><i class="red">*</i>绑定楼栋</label>
 	  		<div class="j-input-inline">
-	  			 <input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" placeholder="双击选择" class="layui-input">
+	  			 <input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" readonly placeholder="点击查询" class="layui-input">
+				 <b class="j-explain-search j-ban_number">查询</b>
 	  		</div>
 	  	</div>
 	  	<div class="layui-col-md4">
@@ -52,20 +53,23 @@
 	  	<div class="layui-col-md4">
 	  		<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 	  		<div class="j-input-inline">
-	  			 <input type="text" name="house_number[]" value="{$data_info['house_number']}" data-id="1" readonly autocomplete="off" placeholder="双击选择" class="layui-input">
+	  			 <input type="text" name="house_number[]" value="{$data_info['house_number']}" data-id="1" readonly autocomplete="off" readonly placeholder="点击查询" class="layui-input j-explain-input">
+				 <b class="j-explain-search j-house_number">查询</b>
 	  		</div>
 	  	</div>
 	  	<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 	  		<div class="j-input-inline">
-	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="2" placeholder="双击选择" class="layui-input">
+	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="2" readonly placeholder="点击查询" class="layui-input j-explain-input">
+				<b class="j-explain-search j-house_number">查询</b>
 				<i class="icon-cancel lu-del"></i>
 	  		</div>
 	  	</div>
 	  	<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 	  		<div class="j-input-inline">
-	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="3" placeholder="双击选择" class="layui-input">
+	  			<input type="text" name="house_number[]" value="" autocomplete="off" data-id="3" readonly placeholder="点击查询" class="layui-input j-explain-input">
+				<b class="j-explain-search j-house_number">查询</b>
 				<i class="icon-cancel lu-del"></i>
 	  		</div>
 	  	</div>
@@ -110,7 +114,7 @@ layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
 
     $('.lu-add').click(function(){
-        var html = '<div class="layui-col-md4"><label class="j-form-label"><i class="red">*</i>绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" placeholder="双击选择" class="layui-input"><i class="icon-cancel lu-del"></i></div></div>';
+        var html = '<div class="layui-col-md4"><label class="j-form-label"><i class="red">*</i>绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
         $('.lu-add').parent().before(html);
     });
     $('.e-house').on('click','.lu-del',function(){
@@ -134,7 +138,7 @@ layui.use(['form', 'func'], function() {
         // console.log(data.othis); //得到美化后的DOM对象
     });
 	//双击获取楼栋查询器
-	 $(".layui-form").on('dblclick','input[name="ban_number"]',function(){
+	 $(".layui-form").on('click','.j-ban_number',function(){
 	layer.open({
 				title: '楼栋查询器'
 				,type: 2
@@ -155,7 +159,7 @@ layui.use(['form', 'func'], function() {
 	 });
 	})
 	//双击获取房屋查询器
-	 $(".layui-form").on('dblclick','input[name="house_number[]"]',function(){
+	 $(".layui-form").on('click','.j-house_number',function(){
 		 var that = $(this);
 		 console.log(that.attr('data-id'));
 		layer.open({
@@ -171,7 +175,7 @@ layui.use(['form', 'func'], function() {
 						var row = window["layui-layer-iframe" + index].hoesedata();
 						/* console.log(row); */
 						layer.close(index);
-						that.val(row.house_number);//获取房屋编号
+						that.prev("input").val(row.house_number);//获取房屋编号
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
