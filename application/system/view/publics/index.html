@@ -58,7 +58,7 @@
 					  <label class="layadmin-user-login-icon layui-icon layui-icon-password" ></label>
 					  <input type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
 					</div>
-					<div class="layui-form-item hide">
+					<!-- <div class="layui-form-item">
 					  <div class="layui-row">
 						<div class="layui-col-xs7">
 						  <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" ></label>
@@ -70,7 +70,8 @@
 						  </div>
 						</div>
 					  </div>
-					</div>
+					</div> -->
+					{:token()}
 					<div class="layui-form-item j-position">
 					  <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="formLogin">登录</button>
 					</div>
