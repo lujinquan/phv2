@@ -19,6 +19,9 @@ use app\system\model\SystemLog as LogModel;
 use app\system\model\SystemAffiche as AfficheModel;
 use app\common\model\Cparam as ParamModel;
 use app\order\model\OpOrder as OpOrderModel;
+use app\house\model\Tenant as TenantModel;
+use app\house\model\House as HouseModel;
+use app\house\model\Ban as BanModel;
 use think\Db;
 
 /**
@@ -635,5 +638,152 @@ class Admin extends Common
         return json($model::fileUpload());
 
     }
+
+    /**
+     * [queryData description]
+     * @param  string $queryType [查询类型：house、ban、tenant]
+     * @param  array  $where     [条件：不同的查询器查询的条件不同
+     *                           
+     * ]
+     * @return [type]            [description]
+     */
+    public function queryData()
+    {
+        if ($this->request->isAjax()) {
+
+            $where = $this->request->post();
+            
+            $queryType = input('param.type', 'house');
+            $queryTypeArr = ['house','ban','tenant'];
+            if(!in_array($queryType,$queryTypeArr)){
+                return '查询器类型不合法';
+            }
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            $where = $where?$where:[];
+
+            switch ($queryType) {
+                case 'ban':
+                    $where[] = [
+                        ['ban_status','eq',1], // 默认查询正常状态下的房屋
+                    ];
+                    $where[] = [
+                        ['ban_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的房屋
+                    ];
+                    
+                    if(isset($where['ban_number']) && $where['ban_number']){ //查询楼栋编号
+                        $where[] = ['ban_number','like','%'.$where['ban_number'].'%'];
+                    }
+                    if(isset($where['ban_address']) && $where['ban_address']){ //查询楼栋地址
+                        $where['ban'][] = ['ban_address','like','%'.$where['ban_address'].'%'];
+                    }
+                    if(isset($where['ban_inst_id']) && $where['ban_inst_id']){ //查询机构
+                        $where[] = ['ban_inst_id','in',config('inst_ids')[$where['ban_inst_id']]];
+                    }
+                    if(isset($where['ban_status'])){ //查询房屋状态
+                        $where[] = ['ban_status','eq',$where['ban_status']];
+                    }
+
+                    $BanModel = new BanModel;
+
+                    $fields = 'ban_id,ban_number,ban_address,ban_owner_id,ban_damage_id,ban_struct_id';
+
+                    $data = [];
+                    //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
+                    $data['data'] = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
+                    $data['count'] = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
+
+                    break;
+
+                case 'tenant':
+                    $where[] = [
+                        ['tenant_status','eq',1], // 默认查询正常状态下的租户
+                    ];
+                    $where[] = [
+                        ['tenant_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的租户
+                    ];
+                    
+                    if(isset($where['tenant_number']) && $where['tenant_number']){ //查询租户编号
+                        $where[] = ['tenant_number','like','%'.$where['tenant_number'].'%'];
+                    }
+                    if(isset($where['tenant_name']) && $where['tenant_name']){ //查询租户姓名
+                        $where['ban'][] = ['tenant_name','like','%'.$where['tenant_name'].'%'];
+                    }
+                    if(isset($where['tenant_inst_id']) && $where['tenant_inst_id']){ //查询机构
+                        $where[] = ['tenant_inst_id','in',config('inst_ids')[$where['tenant_inst_id']]];
+                    }
+                    if(isset($where['tenant_status'])){ //查询房屋状态
+                        $where[] = ['tenant_status','eq',$where['tenant_status']];
+                    }
+                    
+                    $TenantModel = new TenantModel;
+
+                    $fields = 'tenant_id,tenant_number,tenant_name,tenant_tel,tenant_card';
+
+                    $data = [];
+                    //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
+                    $data['data'] = $TenantModel->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+                    $data['count'] = $TenantModel->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+
+                    break;
+
+                case 'house':
+                    $where['house'] = [
+                        ['house_status','eq',1], // 默认查询正常状态下的房屋
+                    ];
+                    $where['ban'] = [
+                        ['ban_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的房屋
+                    ];
+                    $where['tenant'] = [
+                    ];
+                    if(isset($where['house_number']) && $where['house_number']){ //查询房屋编号
+                        $where['house'][] = ['house_number','like','%'.$where['house_number'].'%'];
+                    }
+                    if(isset($where['tenant_name']) && $where['tenant_name']){ //查询租户姓名
+                        $where['tenant'][] = ['tenant_name','like','%'.$where['tenant_name'].'%'];
+                    }
+                    if(isset($where['ban_address']) && $where['ban_address']){ //查询楼栋地址
+                        $where['ban'][] = ['ban_address','like','%'.$where['ban_address'].'%'];
+                    }
+                    if(isset($where['ban_inst_id']) && $where['ban_inst_id']){ //查询机构
+                        $where['ban'][] = ['ban_inst_id','in',config('inst_ids')[$where['ban_inst_id']]];
+                    }
+                    if(isset($where['house_status'])){ //查询房屋状态
+                        $where['house'][] = ['house_status','eq',$where['house_status']];
+                    }
+                    
+                    $HouseModel = new HouseModel;
+
+                    $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+
+                    $data = [];
+                    //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
+                    $data['data'] = $HouseModel->withJoin([
+                         'ban'=> function($query)use($where){ //注意闭包传参的方式
+                             $query->where($where['ban']);
+                         },
+                         'tenant'=> function($query)use($where){
+                             $query->where($where['tenant']);
+                         },
+                         ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
+                    $data['count'] = $HouseModel->withJoin([
+                         'ban'=> function($query)use($where){ //注意闭包传参的方式
+                             $query->where($where['ban']);
+                         },
+                         ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
+
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+    }
+
 
 }
