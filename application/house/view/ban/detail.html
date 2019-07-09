@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/Viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <!-- 详情 S -->
 <div class="j-floor-nav">
 	<ul class="navWrap">
@@ -311,7 +312,7 @@
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md6">
 			<div class="j-enclosure-label clearfix">土地证电子版</div>
-			<div class="j-enclosure-img clearfix">
+			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
 					<li>
 						<img src="__ADMIN_IMG__/add_img.png" />
@@ -324,7 +325,7 @@
 		</div>
 		<div class="layui-col-md6">
 		    <div class="j-enclosure-label clearfix">不动产电子版</div>
-		    <div class="j-enclosure-img clearfix">
+		    <div class="j-enclosure-img j-viewer-img clearfix">
 		    	<ul>
 		    		<li>
 		    			<img src="__ADMIN_IMG__/add_img.png" />
@@ -339,7 +340,7 @@
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md6">
 			<div class="j-enclosure-label clearfix">影像资料</div>
-			<div class="j-enclosure-img clearfix">
+			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
 					<li>
 						<img src="__ADMIN_IMG__/add_img.png" />
@@ -356,6 +357,8 @@
 <!-- 详情 E -->
 {include file="system@block/layui" /}
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+<!-- 图片查看 -->
+<script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 		layui.use(['jquery'], function() {
 		   var $ = layui.$;
@@ -373,4 +376,8 @@
 			
 
 	})
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
 </script>

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/Viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <div class="j-details-box floorWrap layui-form">
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
     <legend>基本信息</legend>
@@ -78,37 +79,33 @@
   </fieldset>
    <div class="layui-row layui-form-item layui-col-space90">
    	<div class="layui-col-md12">
-   		<div class="j-enclosure-upload clearfix">
-   			<div class="j-enclosure-label">身份证正面</div>
-   		</div>
-   		<div class="j-enclosure-img clearfix">
-   			<div  class="upload_img_list">
-			  <div class="j-enclosure-img clearfix">
+			<div class="j-enclosure-label clearfix">身份证正面</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
 					<li>
-						<img src="/static/system/image/add_img.png">
+						<img src="__ADMIN_IMG__/add_img.png" />
 					</li>
 				</ul>
 			</div>
-			</div>
-   		</div>
    	</div>
 	<div class="layui-col-md12">
-		<div class="j-enclosure-upload clearfix">
-			<div class="j-enclosure-label">身份证反面</div>
-		</div>
-		<div class="j-enclosure-img clearfix">
-			<div  class="upload_img_list">
-			  <div class="j-enclosure-img clearfix">
-				<ul>
-					<li>
-						<img src="/static/system/image/add_img.png">
-					</li>
-				</ul>
-			</div>
-			</div>
+		<div class="j-enclosure-label clearfix">身份证反面</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				<li>
+					<img src="__ADMIN_IMG__/add_img.png" />
+				</li>
+			</ul>
 		</div>
 	</div>
    </div>
 </div>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+</script>

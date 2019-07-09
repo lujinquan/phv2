@@ -1,4 +1,7 @@
 /*---------------------公用样式 S--------------------*/
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;/* 去谷歌默认背景色 */
+}
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
@@ -164,7 +167,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px;cursor: pointer;}
 b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text-decoration: underline;cursor: pointer;}
 /*楼层导航 S*/
-.j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 99999;background:rgba(255,255,255,0.5);}
+.j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 999;background:rgba(255,255,255,0.5);}
 /* .j-floor-nav .navWrap li{width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
 .j-floor-nav .navWrap li.on{background:url(../image/guide.png) no-repeat;}
 .j-floor-nav .navWrap li.current{width: 212px; height: 28px;background:url(../image/Rectangle17-on.png) no-repeat;}
