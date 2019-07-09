@@ -2,6 +2,8 @@
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
+.fl{ float: left;}
+.fr{float: right;}
 .j-back-gray{ background: #f5f5f5; padding-bottom: 15px;}
 .j-back-white{ background: #fff;}
 .j-border-radius10{ border-radius: 10px;}
@@ -25,6 +27,36 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}
 .tangram-suggestion-main{ z-index: 9999;/* 百度地图搜索 */}
+/* 登陆 S */
+.layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
+.layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}
+.layadmin-user-login .j-user-fr.fr{width: 440px;height: 450px;}
+.layadmin-user-login .j-title{ height: 40px; border-bottom: #CDCDCD 1px solid; margin-bottom: 15px;}
+.layadmin-user-login .j-title li{ float: left; line-height: 40px; width: 50%;color: #999; cursor: pointer;}
+.layadmin-user-login .j-title li.j-list2{ text-align: right;}
+.layadmin-user-login .j-title li span{ padding: 0 8px;display: inline-block;font-size:14px;font-family:MicrosoftYaHei;}
+.layadmin-user-login .j-title li.cur span{ color:#2E77EF; border-bottom: #2E77EF 2px solid;}
+.layadmin-user-login-main{width:250px; height: 410px; margin: 0 auto; box-sizing: border-box; position: relative;}
+.layadmin-user-login-header{text-align: center;}
+.layadmin-user-login-header h2{margin: 40px 0; font:24px/35px 'MicrosoftYaHei';}
+.layadmin-user-login-header p{font-weight: 300; color: #999;}
+.layadmin-user-login-body .layui-form-item{position: relative;}
+.layadmin-user-login-icon{position: absolute; left: 1px; top: 1px; width: 38px; line-height: 36px; text-align: center; color: #4A4A4A; font-size: 18px;}
+.layadmin-user-login-body .layui-form-item .layui-input{padding-left: 38px;}
+.layadmin-user-login-codeimg{max-height: 38px; width: 100%; cursor: pointer; box-sizing: border-box;}
+.layadmin-user-login-other{position: relative; font-size: 0; line-height: 38px; padding-top: 20px;}
+.layadmin-user-login-other>*{display: inline-block; vertical-align: middle; margin-right: 10px; font-size: 14px;}
+.layadmin-user-login-other .layui-icon{position: relative; top: 2px; font-size: 26px;}
+.layadmin-user-login-other a:hover{opacity: 0.8;}
+.layadmin-user-login-footer{position: absolute; left: 0; bottom: 0; width: 100%; line-height: 30px; padding: 20px; text-align: center; box-sizing: border-box; color: rgba(0,0,0,.5)}
+.layadmin-user-login-footer span{padding: 0 5px;}
+.layadmin-user-login-footer a{padding: 0 5px; color: rgba(0,0,0,.5);}
+.layadmin-user-login-footer a:hover{color: rgba(0,0,0,1);}
+.j-con .layui-btn{background-color:#2A60E4;}
+.j-con .layui-btn.on{background-color:#ADBECB;}
+.j-con .layui-btn-primary{ border: none; color: #fff;}
+.j-con .j-position{position: absolute; bottom: 60px; width: 100%;}
+/* 登陆 E */
 /* 操作菜单 S */
 .j-container-margin.layui-btn-container .layui-btn{ margin:8px 10px 10px 0;}
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:100px; right:7px; width: 113px; height: 38px;border: 0;z-index: 999;position: absolute;}
@@ -128,7 +160,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-col-space90{margin: -15px -45px 0;}
 /*说明文字*/
 .j-details-box .layui-input.j-explain-input{ padding-right: 30px;}
-b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px}
+.j-details-box .layui-input.j-search-input{padding-right: 40px;}
+b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px;cursor: pointer;}
+b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text-decoration: underline;cursor: pointer;}
 /*楼层导航 S*/
 .j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 99999;background:rgba(255,255,255,0.5);}
 /* .j-floor-nav .navWrap li{width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
@@ -265,6 +299,6 @@ opacity: .8color: #333;}
 .report td,.report th{padding:0.5rem 0;}
 .report {width:100%;}
 /* 根据浏览器宽度设置头部导航右边内容 */
-@media screen and (max-width: 1200px) { 
+@media screen and (max-width: 1250px) { 
  .head-info .j-display{ display: none;}
 } 
