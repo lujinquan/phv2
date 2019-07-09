@@ -34,7 +34,7 @@
 	  <div class="j-user-fr fr">
 		<div class="layadmin-user-login-main">
 		  <div class="layadmin-user-login-box layadmin-user-login-header clearfix">
-		    <h2>武房房屋管理系统</h2>
+		    <h2>武房公房管理系统</h2>
 		  </div>
 		  <div class="j-title">
 			  <ul>
@@ -58,19 +58,19 @@
 					  <label class="layadmin-user-login-icon layui-icon layui-icon-password" ></label>
 					  <input type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
 					</div>
-					<!-- <div class="layui-form-item">
+					<div class="layui-form-item">
 					  <div class="layui-row">
 						<div class="layui-col-xs7">
 						  <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" ></label>
-						  <input type="text" name="vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+						  <input type="text" name="captcha" lay-verify="required" placeholder="验证码" class="layui-input">
 						</div>
 						<div class="layui-col-xs5">
 						  <div style="margin-left: 10px;">
-							<img src="https://www.oschina.net/action/user/captcha" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+							<img src="/captcha.html" class="layadmin-user-login-codeimg" onclick="this.src='/captcha.html?d='+Math.random();" id="LAY-user-get-vercode">
 						  </div>
 						</div>
 					  </div>
-					</div> -->
+					</div>
 					{:token()}
 					<div class="layui-form-item j-position">
 					  <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="formLogin">登录</button>
@@ -123,6 +123,7 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
             account = $('input[name="username"]').val(),
             pwd = $('input[name="password"]').val(),
             token = $('input[name="__token__"]').val();
+            captcha = $('input[name="captcha"]').val();
 
         layer.msg('数据提交中...',{time:500000});
         that.prop('disabled', true);
@@ -130,7 +131,7 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
         $.ajax({
             type: "POST",
             url: _form.attr('action'),
-            data: {username: account, password: md5.exec(pwd), '__token__' : token},
+            data: {username: account, password: md5.exec(pwd), captcha: captcha, '__token__' : token},
             success: function(res) {
                 if (typeof(res.data.token) != 'undefined') {
                     $('input[name="__token__"]').val(res.data.token);

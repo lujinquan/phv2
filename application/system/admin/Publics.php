@@ -11,6 +11,7 @@
 
 namespace app\system\admin;
 
+use think\Validate;
 use app\common\controller\Common;
 use app\system\model\SystemUser as UserModel;
 
@@ -31,7 +32,15 @@ class Publics extends Common
         if ($this->request->isPost()) {
             $username = $this->request->post('username/s');
             $password = $this->request->post('password/s');
-            
+
+            $data = $this->request->post();
+
+            $validate = new Validate([
+                'captcha|验证码' => 'require|captcha',
+            ]);
+            if (!$validate->check($data)) {
+                return $this->error($validate->getError(), url('index'));
+            }
             if (!$model->login($username, $password)) {
                 $data = [];
                 $data['token'] = $this->request->token();
