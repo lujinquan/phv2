@@ -240,4 +240,6 @@ class Accept extends Admin
             return $this->success($msg . '成功', url('index'));
         }
     }
+
+    
 }
