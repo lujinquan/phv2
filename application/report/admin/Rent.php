@@ -86,7 +86,7 @@ class Rent extends Admin
     public function export()
     {
         if ($this->request->isAjax()) {
-            
+
             $ReportModel = new ReportModel; 
             $tableTemp =  $ReportModel->getUnpaidRent();
            
@@ -177,11 +177,15 @@ class Rent extends Admin
             $objWriter->save('php://output');
 
             */
-           
-           // 方案二：先保存在服务器，然后返回文件路径
-           $filePath = './upload/excel/'.convertGBK($filename); //以GBK编码保存文件到服务器，解决中文名乱码问题
-           $objWriter->save($filePath);
+           //halt(strtoupper(substr(PHP_OS,0,3))==='WIN'?'windows 服务器':'不是 widnows 服务器');
 
+           // 方案二：先保存在服务器，然后返回文件路径【注意windows默认使用GBK编码，linux默认使用UTF-8编码】
+           if(strtoupper(substr(PHP_OS,0,3))==='WIN'){ //如果是windows服务器，则保存成GBK编码格式
+                $filePath = './upload/excel/'.convertGBK($filename);
+           }else{ //如果不是，则保存成UTF-8格式
+                $filePath = './upload/excel/'.convertUTF8($filename);
+           }
+           $objWriter->save($filePath);
            $returnJson = [];
            $returnJson['code'] = 1;
            $returnJson['msg'] = '导出成功！';

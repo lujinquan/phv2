@@ -131,8 +131,13 @@ class Design extends Admin
         // header("Content-Transfer-Encoding:binary");
         // $objWriter->save('php://output');
         // 
-        // 方案二：先保存在服务器，然后返回文件路径
-        $filePath = './upload/excel/'.convertGBK($filename); //以GBK编码保存文件到服务器，解决中文名乱码问题
+        // 方案二：先保存在服务器，然后返回文件路径【注意windows默认使用GBK编码，linux默认使用UTF-8编码】
+        if(strtoupper(substr(PHP_OS,0,3))==='WIN'){ //如果是windows服务器，则保存成GBK编码格式
+            $filePath = './upload/excel/'.convertGBK($filename);
+       }else{ //如果不是，则保存成UTF-8格式
+            $filePath = './upload/excel/'.convertUTF8($filename);
+       }
+
         $objWriter->save($filePath);
 
         $returnJson = [];
