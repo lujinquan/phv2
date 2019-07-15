@@ -506,7 +506,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                     layer.msg('请设置data-href参数');
                     return false;
                 }
-console.log($('.checkbox-ids:checked'));
+                console.log($('.checkbox-ids:checked'));
                 if ($('.checkbox-ids:checked').length <= 0) {
                     var checkStatus = table.checkStatus(tableObj);
                     if (checkStatus.data.length <= 0) {
@@ -533,6 +533,68 @@ console.log($('.checkbox-ids:checked'));
                         if (res.code != 0) {
                             location.reload();
                         } 
+                    });
+                });
+            };
+        if (that.hasClass('confirm')) {
+            var tips = that.attr('tips') ? that.attr('tips') : '您确定要执行此操作吗？';
+            layer.confirm(tips, {title:false, closeBtn:0}, function(index){
+                code(that);
+                layer.close(index);
+            });
+        } else {
+           code(that); 
+        }
+        return false;
+    });
+
+    /**
+     * 列表页批量excel导出操作按钮组
+     * @attr href 操作地址
+     * @attr data-table table容器ID
+     * @class confirm 类似系统confirm
+     * @attr tips confirm提示内容
+     */
+    $(document).on('click', '.j-page-excel-btns', function(){
+        var that = $(this),
+            query = '',
+            code = function(that) {
+                var href = that.attr('href') ? that.attr('href') : that.attr('data-href');
+                var tableObj = that.attr('data-table') ? that.attr('data-table') : 'dataTable';
+                //获取主键
+                var witchid = that.attr('data-id') ? that.attr('data-id') : 'id';
+                if (!href) {
+                    layer.msg('请设置data-href参数');
+                    return false;
+                }
+                console.log($('.checkbox-ids:checked'));
+                if ($('.checkbox-ids:checked').length <= 0) {
+                    var checkStatus = table.checkStatus(tableObj);
+                    if (checkStatus.data.length <= 0) {
+                        layer.msg('请选择要操作的数据');
+                        return false;
+                    }
+                    for (var i in checkStatus.data) {
+                        if (i > 0) {
+                            query += '&';
+                        }
+                        query += 'id[]='+checkStatus.data[i][witchid];
+                    }
+                } else {
+                    if (that.parents('form')[0]) {
+                        query = that.parents('form').serialize();
+                    } else {
+                        query = $('#pageListForm').serialize();
+                    }
+                }
+
+                layer.msg('数据提交中...',{time:500000});
+                $.post(href, query, function(output) {
+                    layer.msg(output.msg, {}, function(){
+                        if(output.code){ //成功则直接下载                      
+                            document.location.href = output.data;
+                        }
+                        //console.log(output);
                     });
                 });
             };

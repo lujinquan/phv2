@@ -90,3 +90,38 @@ if (!function_exists('bubble_sort')) {
 		return $sort;
 	}
 }
+
+
+if (!function_exists('convertUTF8')) {
+
+	function convertUTF8($str){
+	    if (empty($str)) {
+	        return $str;
+	    }
+	    $code = mb_detect_encoding($str);     //$code为当前字符的字符编码
+
+	    if ($code == 'UFT-8') {
+	        return $str;
+	    } else {
+	        return iconv($code, 'utf-8', $str);
+	    }
+	}
+
+}
+
+if (!function_exists('convertGBK')) {
+
+	function convertGBK($str){
+	    if (empty($str)) {
+	        return $str;
+	    }
+	    $code = mb_detect_encoding($str);     //$code为当前字符的字符编码
+
+	    if ($code == 'GBK') {
+	        return $str;
+	    } else {
+	        return iconv($code, 'GBK', $str);
+	    }
+	}
+
+}
