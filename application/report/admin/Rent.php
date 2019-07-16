@@ -138,7 +138,7 @@ class Rent extends Admin
 
             foreach($tableData as $ak => $a){ 
 
-                $objActSheet->getRowDimension($ak+1)->setRowHeight(16);//设置行高度
+                $objActSheet->getRowDimension($ak+1)->setRowHeight(18);//设置行高度
 
                 foreach($a as $bk => $b){
     
@@ -148,9 +148,9 @@ class Rent extends Admin
                         $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);//设置填充颜色
                         $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->getStartColor()->setRGB('E6E6E6'); //设置填充颜色
 
-                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), ' ' . $values[$bk] . ' ');  //写入标题
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
                     }else{
-                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), ' ' . $b . ' ');
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), $b);
                     }
      
                 }
