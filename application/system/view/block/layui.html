@@ -8,7 +8,9 @@
     }).use('global');
     // 载入全局系统参数
     var paramsJson = document.getElementById("paramsJson").getAttribute('params');
-    var params = JSON.parse(paramsJson);
-    var instLevel = document.getElementById("paramsJson").getAttribute('isShowInst');
-    var isShowInst = (instLevel == 3) ? true : false; 
+    if(paramsJson){
+        var params = JSON.parse(paramsJson);
+        var instLevel = document.getElementById("paramsJson").getAttribute('isShowInst');
+        var isShowInst = (instLevel == 3) ? true : false;
+    }   
 </script>

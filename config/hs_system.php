@@ -36,7 +36,14 @@ return [
         'base'      => '基础',
         'sys'       => '系统',
         'upload'    => '上传',
-        'databases'  => '数据库',
+        'databases' => '数据库',
+    ],
+    // 系统设置分组
+    'cparam_group'   => [
+        'record'  => '档案',
+        'rent'    => '租金',
+        'deal'    => '异动',
+        'extra'   => '其他',
     ],
     // 系统标准模块
     'modules' => ['system', 'common', 'index', 'install', 'hisiphp'],

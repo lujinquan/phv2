@@ -202,7 +202,7 @@ class User extends Admin
             return $this->success('修改成功');
         }
 
-        $row = UserModel::where('id', $id)->field('id,username,role_id,inst_id,inst_ids,nick,email,mobile,auth,status')->find()->toArray();
+        $row = UserModel::where('id', $id)->field('id,username,role_id,inst_id,inst_ids,intro,nick,email,mobile,auth,status')->find()->toArray();
         if (!$row['auth']) {
             $auth = RoleModel::where('id', $row['role_id'])->value('auth');
             $row['auth'] = json_decode($auth);

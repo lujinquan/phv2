@@ -17,6 +17,7 @@ use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemLog as LogModel;
 use app\system\model\SystemAffiche as AfficheModel;
+use app\system\model\SystemAutoExecute as AutoExecuteModel;
 use app\common\model\Cparam as ParamModel;
 use app\order\model\OpOrder as OpOrderModel;
 use app\house\model\Tenant as TenantModel;
@@ -91,6 +92,10 @@ class Admin extends Common
             $affiche = $afficheModel->getAffiche();//halt($affiches);
             $this->assign('affiche',$affiche);
             
+            // 自动执行的文件【待优化】
+            $AutoExecuteModel = new AutoExecuteModel;
+            $AutoExecuteModel->autocomplete();
+
             // 如果不是ajax请求，则读取菜单
             if (!$this->request->isAjax()) {
                 $breadCrumbs = [];
