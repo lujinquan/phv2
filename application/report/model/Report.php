@@ -34,7 +34,7 @@ class Report extends Model
         }
         //$where[] = ['rent_order_receive','eq',rent_order_paid];
         $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-        $fields = 'a.house_id,a.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+        $fields = 'a.house_id,a.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];
         $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->limit(500)->select();
         //dump($where);halt($baseData);
@@ -49,6 +49,8 @@ class Report extends Model
             $data[$b['house_id']]['address'] = $b['ban_address'];
             $data[$b['house_id']]['tenant'] = $b['tenant_name'];
             $data[$b['house_id']]['use'] = $params['uses'][$b['house_use_id']];
+            $data[$b['house_id']]['owner'] = $params['uses'][$b['ban_owner_id']];
+            $data[$b['house_id']]['inst'] = $params['uses'][$b['house_use_id']];
             if(!isset($data[$b['house_id']]['total'])){
               $data[$b['house_id']]['total'] = 0;  
             }

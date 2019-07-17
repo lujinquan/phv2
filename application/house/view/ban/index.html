@@ -55,7 +55,7 @@
 		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
 			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
-              <button class="layui-btn" lay-submit lay-filter="formDemo">
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
                   <i class="layui-icon">&#xe615;</i>
                   搜索
               </button>
@@ -90,6 +90,7 @@
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,page: true //开启分页
             ,limit: 10
+            ,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
             ,text: {
                 none : '暂无相关数据'
             }

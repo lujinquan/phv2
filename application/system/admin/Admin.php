@@ -656,7 +656,7 @@ class Admin extends Common
     {
         if ($this->request->isAjax()) {
 
-            $where = $this->request->post();
+            $queryWhere = $this->request->get();
             
             $queryType = input('param.type', 'house');
             $queryTypeArr = ['house','ban','tenant'];
@@ -666,7 +666,7 @@ class Admin extends Common
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
 
-            $where = $where?$where:[];
+            $where = [];
 
             switch ($queryType) {
                 case 'ban':
@@ -677,27 +677,27 @@ class Admin extends Common
                         ['ban_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的房屋
                     ];
                     
-                    if(isset($where['ban_number']) && $where['ban_number']){ //查询楼栋编号
-                        $where[] = ['ban_number','like','%'.$where['ban_number'].'%'];
+                    if(isset($queryWhere['ban_number']) && $queryWhere['ban_number']){ //查询楼栋编号
+                        $where[] = ['ban_number','like','%'.$queryWhere['ban_number'].'%'];
                     }
-                    if(isset($where['ban_address']) && $where['ban_address']){ //查询楼栋地址
-                        $where['ban'][] = ['ban_address','like','%'.$where['ban_address'].'%'];
+                    if(isset($queryWhere['ban_address']) && $queryWhere['ban_address']){ //查询楼栋地址
+                        $where['ban'][] = ['ban_address','like','%'.$queryWhere['ban_address'].'%'];
                     }
-                    if(isset($where['ban_inst_id']) && $where['ban_inst_id']){ //查询机构
-                        $where[] = ['ban_inst_id','in',config('inst_ids')[$where['ban_inst_id']]];
+                    if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
+                        $where[] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
                     }
-                    if(isset($where['ban_status'])){ //查询房屋状态
-                        $where[] = ['ban_status','eq',$where['ban_status']];
+                    if(isset($queryWhere['ban_status'])){ //查询房屋状态
+                        $where[] = ['ban_status','eq',$queryWhere['ban_status']];
                     }
-
+//halt($where);
                     $BanModel = new BanModel;
 
-                    $fields = 'ban_id,ban_number,ban_address,ban_owner_id,ban_damage_id,ban_struct_id';
+                    $fields = 'ban_id,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id';
 
                     $data = [];
                     //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
                     $data['data'] = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
-                    $data['count'] = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
+                    $data['count'] = $BanModel->where($where)->count();
 
                     break;
 
@@ -709,27 +709,27 @@ class Admin extends Common
                         ['tenant_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的租户
                     ];
                     
-                    if(isset($where['tenant_number']) && $where['tenant_number']){ //查询租户编号
-                        $where[] = ['tenant_number','like','%'.$where['tenant_number'].'%'];
+                    if(isset($queryWhere['tenant_number']) && $queryWhere['tenant_number']){ //查询租户编号
+                        $where[] = ['tenant_number','like','%'.$queryWhere['tenant_number'].'%'];
                     }
-                    if(isset($where['tenant_name']) && $where['tenant_name']){ //查询租户姓名
-                        $where['ban'][] = ['tenant_name','like','%'.$where['tenant_name'].'%'];
+                    if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
+                        $where['ban'][] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
                     }
-                    if(isset($where['tenant_inst_id']) && $where['tenant_inst_id']){ //查询机构
-                        $where[] = ['tenant_inst_id','in',config('inst_ids')[$where['tenant_inst_id']]];
+                    if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
+                        $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
                     }
-                    if(isset($where['tenant_status'])){ //查询房屋状态
-                        $where[] = ['tenant_status','eq',$where['tenant_status']];
+                    if(isset($queryWhere['tenant_status'])){ //查询房屋状态
+                        $where[] = ['tenant_status','eq',$queryWhere['tenant_status']];
                     }
                     
                     $TenantModel = new TenantModel;
 
-                    $fields = 'tenant_id,tenant_number,tenant_name,tenant_tel,tenant_card';
+                    $fields = 'tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card';
 
                     $data = [];
                     //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
                     $data['data'] = $TenantModel->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
-                    $data['count'] = $TenantModel->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+                    $data['count'] = $TenantModel->where($where)->count();
 
                     break;
 
@@ -742,20 +742,20 @@ class Admin extends Common
                     ];
                     $where['tenant'] = [
                     ];
-                    if(isset($where['house_number']) && $where['house_number']){ //查询房屋编号
-                        $where['house'][] = ['house_number','like','%'.$where['house_number'].'%'];
+                    if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
+                        $where['house'][] = ['house_number','like','%'.$queryWhere['house_number'].'%'];
                     }
-                    if(isset($where['tenant_name']) && $where['tenant_name']){ //查询租户姓名
-                        $where['tenant'][] = ['tenant_name','like','%'.$where['tenant_name'].'%'];
+                    if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
+                        $where['tenant'][] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
                     }
-                    if(isset($where['ban_address']) && $where['ban_address']){ //查询楼栋地址
-                        $where['ban'][] = ['ban_address','like','%'.$where['ban_address'].'%'];
+                    if(isset($queryWhere['ban_address']) && $queryWhere['ban_address']){ //查询楼栋地址
+                        $where['ban'][] = ['ban_address','like','%'.$queryWhere['ban_address'].'%'];
                     }
-                    if(isset($where['ban_inst_id']) && $where['ban_inst_id']){ //查询机构
-                        $where['ban'][] = ['ban_inst_id','in',config('inst_ids')[$where['ban_inst_id']]];
+                    if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
+                        $where['ban'][] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
                     }
-                    if(isset($where['house_status'])){ //查询房屋状态
-                        $where['house'][] = ['house_status','eq',$where['house_status']];
+                    if(isset($queryWhere['house_status'])){ //查询房屋状态
+                        $where['house'][] = ['house_status','eq',$queryWhere['house_status']];
                     }
                     
                     $HouseModel = new HouseModel;
@@ -776,7 +776,7 @@ class Admin extends Common
                          'ban'=> function($query)use($where){ //注意闭包传参的方式
                              $query->where($where['ban']);
                          },
-                         ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
+                         ],'left')->where($where['house'])->count();
 
                     break;
                 

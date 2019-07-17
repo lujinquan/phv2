@@ -620,10 +620,11 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             arr = that.serializeArray(), 
             where = new Array(),
             dataTable = that.attr('data-table') ? that.attr('data-table') : 'dataTable';
+
         for(var i in arr) {
             where[arr[i].name] = arr[i].value;
         }
-
+//console.log(dataTable);console.log(where);
         table.reload(dataTable, {
             page: true,
             url: that.attr('action'),

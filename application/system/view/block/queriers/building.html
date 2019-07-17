@@ -8,7 +8,7 @@
 </style>
 <div class="j-table-content">
 <div class="page-toolbar j-page-toolbar clearfix">
-      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+      <form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=ban"  method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline" style="width:150px;">
 				  <select name="ban_inst_id">
@@ -21,7 +21,6 @@
 			  <div class="layui-input-inline j-input-margin" style="width:150px;">
 				  <input type="text" name="ban_address" placeholder="地址" class="layui-input">
 			  </div>
-			  <input type="hidden" name="group" value="" class="layui-input">
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
@@ -35,7 +34,7 @@
       </form>
   </div>
 {include file="system@block/layui" /}
-<table id="dataTable" lay-filter='dataTable' lay-filter="dataTable"></table>
+<table id="dataTable" lay-filter='dataTable'></table>
 </div>
 <script type="text/javascript">
 	var conId;
@@ -44,8 +43,7 @@
         var table = layui.table
 		    ,$ = layui.$;
         table.render({
-			id: 'idTest'
-            ,elem: '#dataTable'
+			elem: '#dataTable'
             //,skin: 'line' //行边框风格
             //,even: true //开启隔行背景
             //,size: 'sm' //小尺寸的表格
@@ -53,24 +51,27 @@
             //,height: 'full-20' //浏览器最大高度
             ,toolbar: true
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
-            ,url: '{:url("house/Ban/index")}' //数据接口
+            ,url: '{:url("system/Admin/queryData")}?type=ban' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'ban_number', width: 110, align:'center', title: '楼栋编号'}
-				,{field: 'ban_damage_id', width: 100, align:'center', title: '完损等级', templet: function(d) {
+                {field: 'ban_number', width: 110, title: '楼栋编号'}
+                ,{field: 'ban_inst_id', width: 120, title: '管段', hide: isShowInst, templet: function(d) {
+                    return params.insts[d.ban_inst_id];
+                }}
+				,{field: 'ban_damage_id', width: 100, title: '完损等级', templet: function(d) {
 				    return params.damages[d.ban_damage_id];
 				}}
-				,{field: 'ban_struct_id', width: 100, align:'center', title: '结构类别', templet: function(d) {
+				,{field: 'ban_struct_id', width: 100, title: '结构类别', templet: function(d) {
 				    return params.structs[d.ban_struct_id];
 				}}
-                ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
+                ,{field: 'ban_owner_id', width: 80, title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'ban_address', width: 140, align:'center', title: '地址'}
+                ,{field: 'ban_address', width: 140, title: '地址'}
             ]]
             ,done:function(res,curr,count){
                
@@ -93,6 +94,7 @@
 		  $(this).attr("title",titles)
 		});
     });
+
 	var callbackdata = function () {
          return data;
     }

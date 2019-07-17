@@ -8,7 +8,7 @@
 </style>
 <div class="j-table-content">
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=house" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline" style="width:150px;">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
@@ -16,14 +16,12 @@
 				<div class="layui-input-inline" style="width:120px;padding-left:5px">
 					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:150px;padding-left:5px">
-					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
-				</div>
+				
 				<div class="layui-input-inline" style="width:150px;padding-left:5px">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
 					<select name="ban_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -32,22 +30,6 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
-						{volist name="params['owners']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
-					<select name="house_use_id">
-						<option value="">使用性质</option>
-						{volist name="params['uses']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
 				<input type="hidden" name="" value="" class="layui-input">
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -79,8 +61,9 @@
 				,
 			toolbar: true,
 			defaultToolbar: false //设置右边筛选，导出，打印显示
+
 				,
-			url: '{:url("house/House/index")}' //数据接口
+			url: '{:url("system/Admin/queryData")}?type=house' //数据接口
 				,
 			page: true //开启分页
 				,
@@ -94,10 +77,6 @@
 						field: 'house_number',
 						width: 140,
 						title: '房屋编号'
-					}, {
-						field: 'ban_number',
-						width: 110,
-						title: '楼栋编号'
 					}, {
 						field: 'tenant_name',
 						width: 100,
@@ -119,7 +98,7 @@
 						}
 					}, {
 						field: 'house_use_id',
-						width: 100,
+						width: 90,
 						title: '使用性质',
 						templet: function(d) {
 							return params.uses[d.house_use_id];
@@ -132,24 +111,6 @@
 						field: 'house_area',
 						width: 80,
 						title: '建面'
-					}, {
-						field: 'house_lease_area',
-						width: 100,
-						title: '计租面积'
-					}, {
-						field: '',
-						width: 80,
-						title: '单元',
-						templet: function(d) {
-							return d.house_unit_id + '/' + d.ban_units;
-						}
-					}, {
-						field: '',
-						width: 80,
-						title: '楼层',
-						templet: function(d) {
-							return d.house_floor_id + '/' + d.ban_floors;
-						}
 					}
 
 				]
