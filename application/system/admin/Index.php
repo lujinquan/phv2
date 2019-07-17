@@ -65,6 +65,11 @@ class Index extends Admin
 	{
 		return $this->fetch('block/queriers/house');
 	}
+	//异动注销查询器
+	public function cancellation()
+	{
+		return $this->fetch('block/queriers/cancellation');
+	}
     /**
      * 欢迎首页
      * @author Lucas <598936602@qq.com>

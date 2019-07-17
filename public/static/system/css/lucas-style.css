@@ -122,9 +122,14 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .time-axis-date span{position: absolute;right: -18px;top: 35%;display: block;width: 10px;height: 10px;border-radius: 100%;background-color:#0084FF;}
 /*---------- 状态条 S ----------*/
 .j-status-bar ul{display: inline-block;margin:10px 0 30px;width: 100%;}
-.j-status-bar li{ text-align: center;  height: 6px; background: #0084FF;border-radius: 4px;position: relative;}
-.j-status-bar li i{ width: 20px; height: 20px; position: absolute; left: 50%; margin-left: -10px;top:-10px;}
-.j-status-bar li p{ padding-top: 15px;color:rgba(0,132,255,1); font:bold 14px 'MicrosoftYaHei';}
+.j-status-bar li{ text-align: center;  height: 6px; background: #C6D2DF;border-radius: 4px;position: relative;}
+.j-status-bar li.on{background: #0084FF;}
+.j-status-bar li i{ width: 20px; height: 20px;line-height: 20px;position: absolute; left: 50%; margin-left: -10px;top:-6px; color:#fff;background: rgba(198,210,223,1);
+    border-radius: 50%;}
+.j-status-bar li.on i{ width: 20px; height: 20px;line-height: 20px;position: absolute; left: 50%; margin-left: -10px;top:-6px; color:#fff;background: rgba(0,132,255,1);
+    border-radius: 50%;}
+.j-status-bar li p{ padding-top: 15px;color:#333333; font:bold 14px 'MicrosoftYaHei';}
+.j-status-bar li.on p{ padding-top: 15px;color:rgba(0,132,255,1); font:bold 14px 'MicrosoftYaHei';}
 /* ----------状态条 E ----------*/
 /*----------回复 S----------*/
 .j-reply-textarea{border:#ADBECB 1px solid;}
@@ -216,6 +221,22 @@ b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text
 .j-explain-box ul{ background:#F4F7FD; padding: 15px;}
 .j-explain-box li{line-height:25px;}
 .layui-elem-field.j-field-box.j-bottom{ margin: 30px 0 0;}
+/* 工单分类 */
+.j-class-setup{padding:0 20px 20px;}
+.j-class-setup .j-class-con{ border:#D8D8D8 1px solid ;}
+.j-class-setup .j-class-con .j-list{ border-right:#D8D8D8 1px solid ;}
+.j-class-setup .j-class-con .on .j-list{ border-right: 0;}
+.j-class-setup .j-class-con .j-list .j-title{ font: 20px/50px  'MicrosoftYaHei-Bold'; border-bottom:#D8D8D8 1px solid ; padding: 0 30px;}
+.j-class-setup .j-class-con .j-list .j-class-list{ height: 550px;overflow-y: auto;cursor: pointer;}
+.j-class-setup .j-class-con .j-list .j-class-list li{font:16px/40px 'MicrosoftYaHei'; color:#4A4A4A;padding: 0 30px;position: relative;}
+.j-class-setup .j-class-con .j-list .j-class-list li .j-function{position: absolute; right:20px; top:0px;}
+.j-class-setup .j-class-con .j-list .j-class-list li.on{background: #F0F1F5;}
+.j-class-setup  .j-function i.j-edit{ color: #03CBBF;}
+.j-class-setup  .j-function i.j-delete{ color: #FF0000; margin-left: 10px;}
+.j-class-setup .j-class-add .j-add-ico.on i.j-lost{ display: inline-block;}
+.j-class-setup .j-class-add .j-add-ico.on i.j-plus{ display: none;}
+.j-class-setup .j-class-add .j-add-ico{ color: #0084FF; font-size: 16px; padding-left: 30px;}
+.j-class-setup .j-class-add .j-add-con{padding: 0 30px;}
 /*----------新建工单 E----------*/
 /*----------弹框样式 S----------*/
 .j-frame-class{padding: 15px 15px 0;}
@@ -301,6 +322,10 @@ opacity: .8color: #333;}
 .report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #666;} 
 .report td,.report th{padding:0.5rem 0;}
 .report {width:100%;}
+/* 业务办理 S */
+.j-status-result{background:rgba(42,96,228,0.05); margin: 20px 45px 40px; padding: 20px 30px 20px;}
+.j-status-result li{font: 14px/35px 'MicrosoftYaHei'; color: #666;}
+/* 业务办理 E */
 /* 根据浏览器宽度设置头部导航右边内容 */
 @media screen and (max-width: 1250px) { 
  .head-info .j-display{ display: none;}
