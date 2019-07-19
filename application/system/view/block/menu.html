@@ -116,13 +116,13 @@
                         </dd>
                         {volist name="vv['childs']" id="vvv"}
                         <dd>
-                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']}</a><i data-href="{:url('system/menu/del?id='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i>
+                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon']) && $vvv['icon']"}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']}</a><i data-href="{:url('system/menu/del?id='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i>
                         </dd>
                         {/volist}
                     {else /}
                         {volist name="vv['childs']" id="vvv"}
                         <dd>
-                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon'])"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}<i class="{$vvv['icon']}"></i>&nbsp;&nbsp;{/if} {$vvv['title']} &nbsp;&nbsp;{if condition="json_decode($vvv['tip'],true)[ADMIN_ID]"}<b class="j-news-num">{:json_decode($vvv['tip'],true)[ADMIN_ID]}</b>{/if}</a>
+                            <a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'], $vvv['param'])}{else /}{$vvv['url']}{/if}">{if condition="file_exists('.'.$vvv['icon']) && $vvv['icon']"}<img src="{$vvv['icon']}" width="16" height="16" />{else /}&nbsp;&nbsp;{/if} {$vvv['title']} &nbsp;&nbsp;{if condition="json_decode($vvv['tip'],true)[ADMIN_ID]"}<b class="j-news-num">{:json_decode($vvv['tip'],true)[ADMIN_ID]}</b>{/if}</a>
                         </dd>
                         {/volist}
                     {/if}
