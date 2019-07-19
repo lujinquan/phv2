@@ -30,6 +30,27 @@ class Publics extends Common
     {
         $model = new UserModel;
         if ($this->request->isPost()) {
+
+            /*关联1.0登录代码     开始 》》》*/
+            $key = input('key');
+            $name = input('username');
+            if($key && $name){
+                $re = $model->where([['username','eq',$username]])->find();
+                //halt($re);
+                if($re){
+                    $results = [];
+                    $results['code'] = 1;
+                    $results['msg'] = '工单系统登录成功！';
+                    $results['url'] = get_domain().url('index/index');
+                    $results['user_id'] = $re;
+                    $results['key'] = md5(md5($re));
+                    //$reuslts['data'][] = ['url' => url('index/index')];
+                    return json($results);
+                }
+                exit;
+            }
+            /*关联1.0登录代码 （注意删除if和else）    结束 《《《*/
+
             $username = $this->request->post('username/s');
             $password = $this->request->post('password/s');
 
