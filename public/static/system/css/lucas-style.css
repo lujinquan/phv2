@@ -25,6 +25,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-btn-orange{ background: #F9B048;}/*  */
 .layui-btn-grass{ background: #55C151;}
 .layui-btn-gray{background:#B6B9BE;}
+.j-form-box .layui-btn-normal.on{ background: #9B9B9B;}
 /* ----------按钮颜色 E----------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
@@ -135,8 +136,17 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-reply-textarea{border:#ADBECB 1px solid;}
 .j-reply-textarea textarea{ width: 100%; box-sizing: border-box; padding: 15px; font-size: 14px; color: #000;border: 0;resize:none}
 .j-upload-size{ background:#F3F6FD ; height: 40px; line-height: 40px; padding: 0 15px;}
+.j-upload-size .j-upload_img{cursor: pointer;}
 .j-upload-size i{margin-right: 10px;}
 .j-upload-size span{ color: #8592A3;}
+.j-upload-size .j-phrase{position: relative;cursor: pointer;}
+.j-upload-size .j-phrase .j-phrase-list{position:absolute; top:-139px; right: 0;width:400px; height: 120px;overflow-y: auto; box-shadow:0px 1px 6px 0px rgba(0,0,0,0.17);border-radius:4px; padding: 10px 0;}
+.j-upload-size .j-phrase .j-phrase-list li{ font: 10px/24px 'MicrosoftYaHei'; color: #333; padding: 0 10px; cursor: pointer;}
+.j-upload-size .j-phrase .j-phrase-list li.on{background: #0084FF; color: #fff;}
+.j-upload-size .j-phrase .j-list-img{position: absolute;right: 30px;bottom:29px;}
+.j-upload-size span.j-phrase-name i{margin-left:5px; font-size: 16px;}
+.j-upload-size span.j-phrase-name.on .j-icon-shangjiantou{ display:inline-block;}
+.j-upload-size span.j-phrase-name.on .j-icon-xiajiantou{ display: none;}
 /*----------回复 E----------*/
 .j-form-box{padding: 0 15px;}
 /* ----------详情样式 E ----------*/
@@ -265,6 +275,10 @@ opacity: .8color: #333;}
 .j-chart-box .product-ul li{float: left; margin-left: 20px; border-bottom: #fff 3px solid; color: #9B9B9B; font-size: 16px; font-family: '微软雅黑';padding-bottom: 5px;}
 .j-chart-box .product-ul li.cur{border-bottom: #4786DA 3px solid; color:#4786DA;}
 .j-chart-right {padding-right: 100px;}
+.j-seized-list .j-seized-box{ background: url(../image/j-seized-line.jpg) repeat-x;border-radius: 4px;height: 90px; text-align: center; color: #fff;}
+.j-seized-list .j-seized-box h1{ font:bold 14px/20px 'MicrosoftYaHei-Bold'; padding: 10px 15px 5px; overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+.j-seized-list .j-seized-box .j-number{ font-size: 30px;}
+.j-seized-list .j-seized-box .j-number i{ font-size: 14px;font-style:normal; margin-left: 10px;}
 /*------------------ 工单数据E ----------------*/
 /*------------------ 站内信 S ----------------*/
 .layui-nav .j-mail-box .layui-nav-more{ display: none;}

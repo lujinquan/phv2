@@ -16,13 +16,41 @@
 			</div>
           </div>
           <div class="layui-col-md6">
-            <div  class="j-list-box j-list2">
+            <!-- <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
             		{:isset($data['partOne'][ADMIN_ID]['acceptIng'])?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][39]['acceptIng'] + $data['partOne'][40]['acceptIng'])}<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
-            </div>
+            </div> -->
+			<div class="j-seized-list">
+				<ul class="layui-row layui-col-space15">
+					<li  class="layui-col-md6">
+					  <div class="j-seized-box">
+						<h1 title="待运行管理中心处理">待运行管理中心处理</h1>
+						<div class="j-number">12<i>个</i></div>
+					  </div>
+					</li>
+					<li  class="layui-col-md6">
+					  <div class="j-seized-box">
+						<h1 title="待技术服务中心处理">待技术服务中心处理</h1>
+						<div class="j-number">12<i>个</i></div>
+					  </div>
+					</li>
+					<li  class="layui-col-md6">
+					  <div class="j-seized-box">
+						<h1 title="待经管科处理">待经管科处理</h1>
+						<div class="j-number">12<i>个</i></div>
+					  </div>
+					</li>
+					<li  class="layui-col-md6">
+					  <div class="j-seized-box">
+						<h1 title="待发起人确认">待发起人确认</h1>
+						<div class="j-number">12<i>个</i></div>
+					  </div>
+					</li>
+				</ul>
+			</div>
           </div>
         </div>
 		<div class="layui-row layui-col-space15">
