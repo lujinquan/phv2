@@ -234,19 +234,23 @@ b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text
 /* 工单分类 */
 .j-class-setup{padding:0 20px 20px;}
 .j-class-setup .j-class-con{ border:#D8D8D8 1px solid ;}
+.j-class-setup .j-class-con .j-class-li{ width: 20%; float: left;}
 .j-class-setup .j-class-con .j-list{ border-right:#D8D8D8 1px solid ;}
 .j-class-setup .j-class-con .on .j-list{ border-right: 0;}
-.j-class-setup .j-class-con .j-list .j-title{ font: 20px/50px  'MicrosoftYaHei-Bold'; border-bottom:#D8D8D8 1px solid ; padding: 0 30px;}
-.j-class-setup .j-class-con .j-list .j-class-list{ height: 550px;overflow-y: auto;cursor: pointer;}
-.j-class-setup .j-class-con .j-list .j-class-list li{font:16px/40px 'MicrosoftYaHei'; color:#4A4A4A;padding: 0 30px;position: relative;}
-.j-class-setup .j-class-con .j-list .j-class-list li .j-function{position: absolute; right:20px; top:0px;}
-.j-class-setup .j-class-con .j-list .j-class-list li.on{background: #F0F1F5;}
+.j-class-setup .j-class-con .j-list .j-title{ font:bold 16px/50px  'MicrosoftYaHei-Bold'; border-bottom:#D8D8D8 1px solid ; padding: 0 30px;}
+.j-class-setup .j-class-con .j-list .j-class-list,.j-class-setup .j-class-con .j-list .j-class-annexes{ height: 550px;overflow-y: auto;cursor: pointer;position: relative;}
+.j-class-setup .j-class-con .j-list .j-class-list li,.j-class-setup .j-class-con .j-list .j-class-annexes li{font:14px/40px 'MicrosoftYaHei'; color:#4A4A4A;padding: 0 30px;position: relative;}
+.j-class-setup .j-class-con .j-list .j-class-list li .j-function,.j-class-setup .j-class-con .j-list .j-class-annexes li .j-function{position: absolute; right:20px; top:0px;}
+.j-class-setup .j-class-con .j-list .j-class-list li.on,.j-class-setup .j-class-con .j-list .j-class-annexes li.on{background: #F0F1F5;}
 .j-class-setup  .j-function i.j-edit{ color: #03CBBF;}
 .j-class-setup  .j-function i.j-delete{ color: #FF0000; margin-left: 10px;}
 .j-class-setup .j-class-add .j-add-ico.on i.j-lost{ display: inline-block;}
 .j-class-setup .j-class-add .j-add-ico.on i.j-plus{ display: none;}
-.j-class-setup .j-class-add .j-add-ico{ color: #0084FF; font-size: 16px; padding-left: 30px;}
-.j-class-setup .j-class-add .j-add-con{padding: 0 30px;}
+.j-class-setup .j-class-add .j-add-ico{ color: #0084FF; font-size: 14px; padding-left: 30px;}
+.j-class-setup .j-class-add .j-add-con{padding: 0 30px;margin-top: 10px;}
+.j-class-setup .j-class-add .j-add-con .j-add-hold{margin-top: 10px;}
+.j-class-setup .layui-btn.j-addenda-btn{ background: #fff; color: #0084FF;border-top:#D8D8D8 1px solid ;height: 50px; font: 16px/50px 'MicrosoftYaHei'; width: 100%; position: absolute; bottom: 1px;}
+.j-class-setup .layui-textarea{width: 90%; margin: 20px auto 0;}
 /*----------新建工单 E----------*/
 /*----------弹框样式 S----------*/
 .j-frame-class{padding: 15px 15px 0;}
