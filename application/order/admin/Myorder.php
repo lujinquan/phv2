@@ -125,4 +125,11 @@ class Myorder extends Admin
             return $this->success('确认成功',url('index'));
         }
     }
+
+    public function edit() 
+    {
+        if ($this->request->isPost()) {
+        }
+        return $this->fetch();
+    }
 }

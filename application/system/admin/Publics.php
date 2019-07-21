@@ -35,18 +35,21 @@ class Publics extends Common
             $key = input('key');
             $name = input('username');
             if($key && $name){
-                $re = $model->where([['username','eq',$username]])->find();
-                //halt($re);
+                $re = $model->where([['username','eq',$name]])->find();
+                $results = [];
                 if($re){
-                    $results = [];
                     $results['code'] = 1;
                     $results['msg'] = '工单系统登录成功！';
                     $results['url'] = get_domain().url('index/index');
-                    $results['user_id'] = $re;
+                    $results['user_id'] = $re['id'];
                     $results['key'] = md5(md5($re));
                     //$reuslts['data'][] = ['url' => url('index/index')];
-                    return json($results);
+                    
+                }else{
+                    $results['code'] = 0;
+                    $results['msg'] = '请联系超级管理员开通工单权限！';
                 }
+                return json($results);
                 exit;
             }
             /*关联1.0登录代码 （注意删除if和else）    结束 《《《*/

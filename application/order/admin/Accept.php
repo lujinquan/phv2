@@ -11,6 +11,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\order\admin;
+use app\order\model\OpType;
 use app\order\model\OpOrder as OpOrderModel;
 use app\system\admin\Admin;
 use app\system\model\SystemAffiche;
@@ -148,6 +149,18 @@ class Accept extends Admin
             }
             return $this->success('提交成功');       
         }
+        $opType = new OpType;
+        $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->select()->toArray();
+        $opResultArr = [];
+        foreach($opTypesArr as $op){
+            if($op['pid'] === 0){ //顶级
+                $opResultArr[$op['id']] = $op;
+            }else{
+               $opResultArr[$op['pid']]['children'][] = $op; 
+            }
+
+        }
+        $this->assign('opResultArr',$opResultArr);
         return $this->fetch();
     }
 
@@ -178,7 +191,7 @@ class Accept extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
-//halt($row);
+
         $this->assign('data_info', $row);
         return $this->fetch();
     }
@@ -238,6 +251,35 @@ class Accept extends Admin
             $systemAffiche->create_time  = time();
             $systemAffiche->save();
             return $this->success($msg . '成功', url('index'));
+        }
+    }
+
+    /**
+     * 退至发起人
+     * @return [type] [description]
+     */
+    public function backToFirst() 
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $result = $this->validate($data,'OpOrder.sceneBackToFirst');
+            if ($result !== true) {
+                return $this->error($result);
+            }
+            $OporderModel = new OporderModel();
+            $orderRow = $OporderModel->find($data['id']);
+            if($orderRow['back_times'] > 0){
+                return $this->error('您已退回过'.$orderRow['back_times'].'次！');
+            }else{
+                $filData = $OporderModel->dataFilter($data,'back');
+                //halt($filData);
+                if (!$OporderModel->allowField(true)->update($filData)){
+                    return $this->error('退回失败');
+                }
+                return $this->success('退回成功');
+            }
+            
+
         }
     }
 

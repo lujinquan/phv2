@@ -40,6 +40,8 @@ class OpOrder extends Validate
         // 转交工单
         'sceneTransfer'  =>  ['transfer_to','replay'],   
         // 完结工单     
-        'sceneEnd'  =>  ['replay'],     
+        'sceneEnd'  =>  ['replay'],  
+        // 退回至发起人     
+        'sceneBackToFirst'  =>  ['replay'],    
     ];
 }

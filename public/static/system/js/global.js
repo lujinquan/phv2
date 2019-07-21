@@ -376,6 +376,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 return false;
             }
             $.get(href, function(res) {
+                console.log(res);
                 if (res.code == 0) {
                     layer.msg(res.msg);
                 } else {

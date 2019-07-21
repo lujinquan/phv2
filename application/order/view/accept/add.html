@@ -90,10 +90,6 @@
 	var upurl2 = "{:url('system/Api/upload')}?input=carded&group=ban&water=no"; //影像资料上传图片地址
 	var duotu = true; //是否为多图上传true false
 	// 问题类型
-	layui.config({
-	    base: '__PUBLIC_JS__/mods/ajaxCascader/',
-
-	});
 	layui.use(['jquery', 'laydate', 'upload', 'form','ajaxCascader'], function() {
 		var laydate = layui.laydate,
 			$ = layui.$,
@@ -102,7 +98,9 @@
 			cascader = layui.ajaxCascader;
         //问题分类数据
 		cascader.load({
-		    elem:'#demo2'                     
+		    elem:'#demo2' 
+		    ,showlast:true
+		    ,clicklast:true                    
 		    ,data:[
 		        {value:1,label:"楼栋基础数据",children:[
 		            {value:111,label:"地址修改"},
@@ -114,6 +112,8 @@
 		       ]},
 		    ]
 		});
+
+
 		// 监听选中的事件
 		cascader.on('click','#demo2',function(){
 		    // 获取当前已选中的数据,可单独使用

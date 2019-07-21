@@ -28,6 +28,7 @@
   </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+       <a href="{:url('edit')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">补充资料</a>
     <a href="{:url('detail')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>  
 </script>
 <script type="text/javascript">
@@ -54,7 +55,7 @@
                 ,{field: 'status_info', width: 180, align:'center', title: '状态'}
                 ,{field: 'ctime', width: 180, align:'center', title: '创建时间'}
                 ,{field: 'nick', width: 100, align:'center', title: '发起人'}
-                ,{title: '操作', width: 80, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 140, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

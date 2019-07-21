@@ -125,7 +125,7 @@ class OpOrder extends SystemBase
                 $data['inst_id'] = INST;
                 $data['imgs'] = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
                 $data['duid'] = ADMIN_ID;
-                $data['op_order_number'] = random(12,1);
+                $data['op_order_number'] = random(18,1);
                 $jsondata[] = [
                     'FromUid' => ADMIN_ID, 
                     'Img' => '',
@@ -243,6 +243,35 @@ class OpOrder extends SystemBase
                 $data['ftime'] = time();
 
                 break;
+            // 退回至发起人
+            case 'back':
+                $find = $this->get($data['id']);
+                $jsonarr = json_decode($find['jsondata'],true);
+                $comp = $find['cuid'];
+                // 【更新】经手人+
+                if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
+                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp; // 完结的转交人就是，申请人
+                    $action = '退至';
+                }else{ //写入 转交人id
+                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
+                    $action = '退至';
+                }
+                $jsonarr[] = [
+                    'FromUid' => ADMIN_ID,
+                    'Img' => '',
+                    'ToUid' => $comp,
+                    'Desc' => $data['replay'],
+                    'Time' => time(),
+                    'Action' => $action,
+                ];
+                // 【更新】序列化数据
+                $data['jsondata'] = json_encode($jsonarr);
+                $data['back_times'] = $find['back_times'] + 1;
+                $data['op_order_number'] = $find['op_order_number'];
+                unset($data['replay']);
+                unset($data['transfer_to']);
+                break;
+
             default:
                 # code...
                 break;
