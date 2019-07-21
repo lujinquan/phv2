@@ -36,11 +36,10 @@ class OpType extends SystemBase
      * @param $value
      * @return array
      */
-    public function getFiletypesAttr($value)
-    {
-        //halt($value);
-        return $value?explode(',',$value):'';
-    }
+    // public function getFiletypesAttr($value)
+    // {
+    //     return $value?explode(',',$value):'';
+    // }
 
 
 }

@@ -11,6 +11,8 @@
 // +----------------------------------------------------------------------
 
 namespace app\order\admin;
+
+use think\Db;
 use app\order\model\OpType;
 use app\order\model\OpOrder as OpOrderModel;
 use app\system\admin\Admin;
@@ -151,15 +153,22 @@ class Accept extends Admin
         }
         $opType = new OpType;
         $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->select()->toArray();
+        $fileArr = Db::name('file_type')->column('id,file_type,file_name');
         $opResultArr = [];
+        $opFileArr = [];
         foreach($opTypesArr as $op){
+            $opFileArr[$op['id']] = $op['filetypes'];
             if($op['pid'] === 0){ //顶级
                 $opResultArr[$op['id']] = $op;
             }else{
                $opResultArr[$op['pid']]['children'][] = $op; 
+
             }
 
         }
+        //halt($opFileArr);
+        $this->assign('fileArr',$fileArr);
+        $this->assign('opFileArr',$opFileArr);
         $this->assign('opResultArr',$opResultArr);
         return $this->fetch();
     }
