@@ -55,6 +55,7 @@ class Grouporder extends Admin
             $data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
+            
             return json($data);
 
         }

@@ -272,6 +272,38 @@ class OpOrder extends SystemBase
                 unset($data['transfer_to']);
                 break;
 
+            // 补充资料
+            case 'addfiles':
+                $find = $this->get($data['id']);
+                $findDuids = explode(',',$find['duid']);
+                $imgs = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
+                $comp = $findDuids[1];
+                //$jsonarr = json_decode($find['jsondata'],true);
+                // 【更新】经手人+
+                
+                $data['duid'] = $find['duid'].','.$comp;
+                
+                //halt($data);
+            
+                $jsonarr[] = [
+                    'FromUid' => ADMIN_ID,
+                    'Img' => $img,
+                    'ToUid' => $comp,
+                    'Desc' => '',
+                    'Time' => time(),
+                    'Action' => '转交至',
+                ];
+                // 【更新】序列化数据
+                $data['op_order_number'] = $find['op_order_number'];
+                $data['jsondata'] = json_encode($jsonarr);
+
+                //$filtData = [];
+                //$filtData['id'] = $data['id'];
+                $filtData['imgs'] = $find->getData('imgs').','.$imgs;
+                //unset($data['replay']);
+                //unset($data['transfer_to']);
+                break;
+
             default:
                 # code...
                 break;

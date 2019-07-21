@@ -1,2 +1,325 @@
+<form class="layui-form" action="{url('edit)}" method="post">
+	<!-- 新建工单 S -->
+	<div class="j-details-box layui-form">
+		<div class="layui-row layui-form-item layui-col-space90">
+			<fieldset class="layui-elem-field layui-field-title j-field-box j-bottom">
+				<legend>补充资料</legend>
+			</fieldset>
+			<div class="layui-col-md6">
+				<div class="layui-row layui-form-item layui-col-space100">
+					<div class="layui-col-md12">
+						<div class="j-form-label"><i class="red">*</i>问题类型</div>
+						<div class="j-input-inline">
+						
+							
+							
+							{volist name="opResultArr" id="v"}
+							
+								{volist name="v['children']" id="vv"}
+								{if condition="$vv['id'] == $data_info['op_order_type']"}
+								<input type="text" value="{$vv['title']}" autocomplete="off" readonly class="layui-input">
+								{/if}
+								{/volist}
+							
+							{/volist}
+
+						
+		
+							<!-- <cascader id="demo2"></cascader> -->
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="id" value="{$data_info['id']}">
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<label class="j-form-label"><i class="red"></i>租户编号</label>
+						<div class="j-input-inline">
+							<input type="text" value="{$data_info['tenant_number']}" readonly class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<label class="j-form-label"><i class="red"></i>房屋编号</label>
+						<div class="j-input-inline">
+							<input type="text" value="{$data_info['house_number']}" readonly class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<label class="j-form-label"><i class="red"></i>楼栋编号</label>
+						<div class="j-input-inline">
+							<input type="text" value="{$data_info['ban_number']}" readonly class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<div class="j-enclosure-label clearfix"><i class="red">*</i> 问题描述</div>
+						<div class="j-enclosure-text clearfix">
+							<div class="j-textarea-border">
+								<textarea class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer">{$data_info['remark']}</textarea>
+								<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<div class="j-enclosure-label clearfix"><i class="red"></i> 原附件</div>
+						<div class="j-enclosure-text clearfix">
+						
+							<ul class="j-enclosure-box j-viewer-img">
+								{volist name="data_info['imgs']" id="vo"}
+							<li>
+								<img data-original="{$vo}" src="{$vo}" />
+							</li>
+							{/volist}
+							</ul>
+						
+						</div>
+					</div>
+				</div>
+				
+				{volist name="fileArr" id="v"}
+				<div class="layui-row layui-form-item hide layui-col-space90 j-data-search" data-id="{$v['id']}">
+					<div class="layui-col-md12">
+						<div class="j-enclosure-upload clearfix">
+							<div class="j-enclosure-label">{$v['file_name']}</div>
+							<div class="j-enclosure-label j-uplode-icon">
+								<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+								<button type="button" class="layui-btn layui-btn-primary j-upload-file" id="{$v['file_type']}">上传图片</button>
+							</div>
+							<div class="layui-form-mid layui-word-aux">限制3M</div>
+						</div>
+						<div class="j-enclosure-img clearfix">
+							<div id="upload_img_list{$v['id']}" class="upload_img_list"> </div>
+						</div>
+					</div>
+				</div>
+				{/volist}
+				
+				<div class="layui-row layui-form-item layui-col-space90 j-files-end">
+					<div class="j-margin-btn">
+						<button class="layui-btn layui-btn-primary">取消</button>
+						<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6 j-explain-box">
+				<h1><i class="red">*</i>工单分类说明：</h1>
+				<ul>
+					<li>
+						1、<b>楼栋基础数据:</b>
+						<p>地址修改 / 总楼层</p>
+					</li>
+					<li>
+						2、<b>楼栋基础数据:</b>
+						<p>房屋居住层修改 / 房屋绑定错误楼栋的 / 结构修改 / 计租表拆分单元号修改</p>
+					</li>
+					<li>
+						3、<b>租户信息</b>
+						<p>租户信息修改</p>
+					</li>
+					<li>
+						4、<b>租金管理</b>
+					</li>
+					<li>
+						5、<b>计租表</b>
+						<p>加计租金修改</p>
+					</li>
+					<li>
+						6、<b>租约</b>
+						<p>租约申请时信息有误 / 租约打印格式</p>
+					</li>
+					<li>
+						7、<b>异动</b>
+						<p> 别字更正 / 租金调整0.2 0.3 0.4 0.5 / 租金调整0.1 / 楼栋调整 / 租金追加调整 / 管段调整 / 房屋调整 / 注销 / 新发租 / 分户 / 陈欠核销 / 暂停计租 / 空租 /租金减免</p>
+					</li>
+					<li>
+						8、<b>报表数据</b>
+						<p> 产权统计 / 房屋统计 / 月租金报表</p>
+					</li>
+					<li>
+						9、<b>后台修改</b>
+						<p>错误撤回</p>
+					</li>
+					<li>
+						10、<b>意见反馈</b>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!--新建工单 E -->
+</form>
 {include file="system@block/layui" /}
-补充资料的页面
+<script type="text/javascript">
+	 //影像资料上传图片地址
+	var duotu = true; //是否为多图上传true false
+	// 问题类型
+	layui.use(['jquery', 'laydate', 'upload', 'form','ajaxCascader'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form
+			cascader = layui.ajaxCascader;
+			
+	        //问题分类数据
+			// cascader.load({
+			//     elem:'#demo2' 
+			//     ,showlast:true
+			//     ,clicklast:true                    
+			//     ,data:[
+			//         {value:1,label:"楼栋基础数据",children:[
+			//             {value:111,label:"地址修改"},
+			// 			{value:112,label:"总楼层修改"}
+			//         ]},
+			//         {value:2,label:"房屋基础数据",children:[
+			//            {value:113,label:"地址修改2"},
+			//        	{value:114,label:"总楼层修改2"}
+			//        ]},
+			//     ]
+			// });
+
+
+			// // 监听选中的事件
+			// cascader.on('click','#demo2',function(){
+			//     // 获取当前已选中的数据,可单独使用
+			//     console.log(cascader.getChooseData('#demo2'))
+			// });
+			//影像资料
+			// 监听下拉框，如果角色为运营中心则，显示多选机构框
+		    //form.on('select(select-fileter)', function(data){
+		      
+		      //console.log(data.value); //得到被选中的值
+		      //console.log(data.othis); //得到美化后的DOM对象
+
+		      var data_id = {$data_info['op_order_type']};
+		      var fileArr = {:json_encode($fileArr)};
+		      var opFileArr = {:json_encode($opFileArr)};
+		      //console.log(opFileArr[data.value]);
+		      //console.log(fileArr);
+		      var str = opFileArr[data_id]; //这是一字符串 
+		      
+		      if(str){
+		      	var strs= new Array(); //定义一数组 
+				strs=str.split(","); //字符分割 
+
+				$(".j-data-search").addClass('hide');
+				$fileStr = '';
+				for (i=0;i<strs.length ;i++){ 
+					//console.log(strs[i]); //附件中文名
+					// console.log(fileArr[i].file_type); //附件英文名
+					// console.log(fileArr[i].id); //附件类型id
+
+					//待解决的问题！动态dom无法render
+					// $fileStr += '<div class="layui-row layui-form-item layui-col-space90">\
+					// 	<div class="layui-col-md12">\
+					// 		<div class="j-enclosure-upload clearfix">\
+					// 			<div class="j-enclosure-label">'+ fileArr[strs[i]].file_name +'</div>\
+					// 			<div class="j-enclosure-label j-uplode-icon">\
+					// 				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传\
+					// 				<button type="button" class="layui-btn layui-btn-primary" id="'+ fileArr[strs[i]].file_type +'">上传图片</button>\
+					// 			</div>\
+					// 			<div class="layui-form-mid layui-word-aux">限制1M</div>\
+					// 		</div>\
+					// 		<div class="j-enclosure-img clearfix">\
+					// 			<div id="upload_img_list'+ fileArr[strs[i]].id +'" class="upload_img_list"> </div>\
+					// 		</div>\
+					// 	</div>\
+					// </div>';
+
+					$(".j-data-search[data-id="+strs[i]+"]").removeClass('hide');
+				} 
+
+				$('.j-files-end').before($fileStr);
+		      }
+				
+		      //console.log($('#op_order_type').data('id'));
+		    //});
+
+		    var fileArr = {:json_encode($fileArr)};
+
+
+			for(i in fileArr){
+
+				var name= fileArr[i].file_type;
+				var fileid= fileArr[i].id;
+				var upurl2 = "{:url('system/Api/upload')}?input="+ fileid +"&group=ban&water=no";
+				
+				
+				//console.log(fileid);
+				upload.render({
+					//elem: '.j-upload-file',
+					elem: '#'+name,
+					url: upurl2,
+					//accept:'images',
+					multiple: true,
+					field: fileid,
+					choose: function(obj){
+						//console.log(1);
+					    //将每次选择的文件追加到文件队列
+					    // var files = obj.pushFile();
+					    
+					    // //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+					    // obj.preview(function(index, file, result){
+					    //   console.log(index); //得到文件索引
+					    //   console.log(file); //得到文件对象
+					    //   console.log(result); //得到文件base64编码，比如图片
+					      
+					    //   //obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
+					      
+					    //   //这里还可以做一些 append 文件列表 DOM 的操作
+					      
+					    //   //obj.upload(index, file); //对上传失败的单个文件重新上传，一般在某个事件中使用
+					    //   //delete files[index]; //删除列表中对应的文件，一般在某个事件中使用
+					    // });
+					  },
+					before: function(obj) {
+						layer.msg('图片上传中...', {
+							icon: 16,
+							shade: 0.01,
+							time: 0
+						})
+					},
+					done: function(res) {
+						//console.log(res);console.log(fileid);
+						layer.close(layer.msg()); //关闭上传提示窗口
+						if (duotu == true) {
+							//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+							$('#upload_img_list'+res.data.name).append('<dd class="item_img" id="' + res.data.file +
+								'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+								'" class="img" ><input type="hidden" name="carded[]" value="' + res.data.file + '" /></dd>');
+						} else {
+							//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+							$('#upload_img_list'+res.data.name).html('<dd class="item_img" id="' + res.data.file +
+								'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+								'" class="img" ><input type="hidden" name="carded" value="' + res.data.file + '" /></dd>');
+						}
+					}
+				});
+			}
+			
+			/*
+			删除上传图片
+			*/
+			$(document).on("click", ".upload_img_list dd i", function() {
+				$(this).parents("dd").remove();
+			})
+	});
+
+	function keypress() {
+		var text1 = document.getElementById("j_answer").value;
+		var maxLen = document.getElementById("j_answer").cols * document.getElementById("j_answer").rows;
+		var len; //记录剩余字符串的长度
+		if (text1.length >= maxLen) {
+			document.getElementById("j_answer").value = text1.substr(0, maxLen); //只显示起始位-末尾；substr（起始位，末尾)
+			len = 0;
+		} else {
+			len = maxLen - text1.length;
+		}
+		document.getElementById("pinglun").innerText = len;
+	}
+</script>

@@ -11,8 +11,11 @@
 // +----------------------------------------------------------------------
 
 namespace app\order\admin;
+
 use app\system\admin\Admin;
 use app\system\model\SystemUser as UserModel;
+use think\Db;
+use app\order\model\OpType;
 use app\order\model\OpOrder as OpOrderModel;
 
 class Myorder extends Admin
@@ -37,6 +40,13 @@ class Myorder extends Admin
 	            	if(!$v['dtime']){
 						$v['status_info'] = '处理中';
 	            	}
+                    $v['ifadd'] = false;
+                    $end = explode(',',$v['duid']);
+                    $currid = end($end);
+                    //halt($currid);
+                    if(!$v['dtime'] && ($currid == ADMIN_ID)){
+                        $v['ifadd'] = true; //显示补充按钮
+                    }
 	            }
             }else{
 				foreach($temps as &$v){
@@ -45,6 +55,7 @@ class Myorder extends Admin
 					$v['nick'] = UserModel::where([['id','eq',$yunyin_uid]])->value('nick');
 	            }
             }
+
             //halt($temps);
             //halt($temps);
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
@@ -128,8 +139,45 @@ class Myorder extends Admin
 
     public function edit() 
     {
+        $id = input('id/d');
         if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $OporderModel = new OporderModel();
+            $row = $OporderModel->get($data['id']);
+            
+            if(!$imgs){
+                return $this->error('请补充资料!');
+            }
+            
+            $filData = $OporderModel->dataFilter($data,'addfiles');
+            halt($filtData);
+            if (!$OporderModel->allowField(true)->update($data)) {
+                return $this->error('确认失败');
+            }
+            return $this->success('确认成功',url('index'));
         }
+        $OporderModel = new OporderModel();
+        $row = $OporderModel->get($id);
+        $opType = new OpType;
+        $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->select()->toArray();
+        $fileArr = Db::name('file_type')->column('id,file_type,file_name');
+        $opResultArr = [];
+        $opFileArr = [];
+        foreach($opTypesArr as $op){
+            $opFileArr[$op['id']] = $op['filetypes'];
+            if($op['pid'] === 0){ //顶级
+                $opResultArr[$op['id']] = $op;
+            }else{
+               $opResultArr[$op['pid']]['children'][] = $op; 
+
+            }
+
+        }
+        //halt($row);
+        $this->assign('data_info',$row);
+        $this->assign('fileArr',$fileArr);
+        $this->assign('opFileArr',$opFileArr);
+        $this->assign('opResultArr',$opResultArr);
         return $this->fetch();
     }
 }
