@@ -230,6 +230,7 @@ b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text
 .j-explain-box h1 i{ margin-right: 8px;font-style: normal;}
 .j-explain-box ul{ background:#F4F7FD; padding: 15px;}
 .j-explain-box li{line-height:25px;}
+.j-explain-box li p{color: #4A4A4A; padding-left: 24px;}
 .layui-elem-field.j-field-box.j-bottom{ margin: 30px 0 0;}
 /* 工单分类 */
 .j-class-setup{padding:0 20px 20px;}
