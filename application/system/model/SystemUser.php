@@ -261,13 +261,54 @@ class SystemUser extends Model
     public function isLogin() 
     {
         $user = session('admin_user');
-        if (isset($user['uid'])) {
-            if (!self::where('id', $user['uid'])->find()) {
+
+        /*关联1.0登录代码     开始 》》》*/
+        $user_id = input('user_id');
+        $secret = input('secret');
+        if($user_id && $secret){
+            if(!$secret == md5(md5($user_id))){
                 return false;
             }
-            return session('admin_user_sign') == $this->dataSign($user) ? $user : false;
+            $user = self::find($user_id);
+            $role = RoleModel::where('id', $user->role_id)->find()->toArray();
+            $login = [];
+            $login['uid'] = $user->id;
+            $login['role_id'] = $user->role_id;
+            $login['inst_id'] = $user->inst_id;
+            $login['inst_level'] = $user->inst_level;
+            $login['inst_ids'] = $user->inst_ids;
+            $login['role_name'] = $role['name'];
+            $login['nick'] = $user->nick;
+            cookie('hisi_iframe', (int)$user->iframe);
+            // 主题设置
+            self::setTheme(isset($user->theme) ? $user->theme : 0);
+            self::getThemes(true);
+            // 缓存角色权限
+            session('role_auth_'.$user->role_id, $user->auth ? json_decode($user->auth, true) : json_decode($role['auth'], true));
+            // 缓存登录信息
+            session('admin_user', $login);
+            session('admin_user_sign', $this->dataSign($login));
+            // 缓存用户表基础数据
+            $users = $this->with('role')->where([['status','eq','1']])->select();
+            $usersArr = [];
+            foreach($users as $v){
+                $usersArr[$v['id']] = $v;
+            }
+            //halt($users);
+            session('systemusers',$usersArr);
+            return $login;
+        /*关联1.0登录代码 （注意删除if和else）    结束 《《《*/
+
+        }else{
+           if (isset($user['uid'])) {
+                if (!self::where('id', $user['uid'])->find()) {
+                    return false;
+                }
+                return session('admin_user_sign') == $this->dataSign($user) ? $user : false;
+            }
+            return false;
         }
-        return false;
+        
     }
 
     /**
