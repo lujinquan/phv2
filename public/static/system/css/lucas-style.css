@@ -252,6 +252,10 @@ b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text
 .j-class-setup .j-class-add .j-add-con .j-add-hold{margin-top: 10px;}
 .j-class-setup .layui-btn.j-addenda-btn{ background: #fff; color: #0084FF;border-top:#D8D8D8 1px solid ;height: 50px; font: 16px/50px 'MicrosoftYaHei'; width: 100%; position: absolute; bottom: 1px;}
 .j-class-setup .layui-textarea{width: 90%; margin: 20px auto 0;}
+/*新增工单新*/
+.j-add-workorder{padding: 20px;}
+.j-add-workorder .j-input-list .layui-form-checkbox[lay-skin=primary]{ display: inline-block;float: left; margin: 10px 0 0 20px;min-width: 150px;}
+.j-add-workorder .layui-form-checked i,.j-add-workorder .layui-form-checked:hover i{ color: #fff!important;}
 /*----------新建工单 E----------*/
 /*----------弹框样式 S----------*/
 .j-frame-class{padding: 15px 15px 0;}

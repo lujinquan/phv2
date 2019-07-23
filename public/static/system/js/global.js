@@ -65,7 +65,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         var that = $(this);
         if (!that.hasClass('ai-zhankaicaidan')) {
             that.addClass('ai-zhankaicaidan').removeClass('ai-shouqicaidan');
-            $('#switchNav').animate({width:'43px'}, 100).addClass('close').hover(function() {
+            $('#switchNav').animate({width:'0'}, 100).addClass('close').hover(function() {
                 if (that.hasClass('ai-zhankaicaidan')) {
                     $(this).animate({width:'200px'}, 300);
                     $('#switchNav .fold-mark').removeClass('fold-mark');
@@ -73,11 +73,11 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 }
             },function() {
                 if (that.hasClass('ai-zhankaicaidan')) {
-                    $(this).animate({width:'43px'}, 300);
+                    $(this).animate({width:'0'}, 300);
                     $('#switchNav .layui-nav-item').addClass('fold-mark').removeClass('layui-nav-itemed');
                 }
             });
-            $('#switchBody,.footer').animate({left:'43px'}, 100);
+            $('#switchBody,.footer').animate({left:'0'}, 100);
             $('#switchNav .layui-nav-item').addClass('fold-mark').removeClass('layui-nav-itemed');
         } else {
             $('a[href="'+window.localStorage.getItem("adminNavTag")+'"]').parent('dd').addClass('layui-this').parents('li').addClass('layui-nav-itemed').siblings('li').removeClass('layui-nav-itemed');
