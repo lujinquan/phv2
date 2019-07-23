@@ -10,21 +10,23 @@
 					<div class="layui-col-md12">
 						<div class="j-form-label"><i class="red">*</i>问题类型</div>
 						<div class="j-input-inline">
-						<select name="op_order_type" lay-filter="select-fileter" id="op_order_type" lay-search>
+						<!-- <select name="op_order_type" lay-filter="select-fileter" id="op_order_type" lay-search>
 							<option value="">可以模糊搜索</option>
 							
 							{volist name="opResultArr" id="v"}
 							<optgroup label="{$v['title']}">
+								{if condition="isset($v['children'])"}
 								{volist name="v['children']" id="vv"}
 								<option class="file-types" value="{$vv['id']}" remark="{$vv['remark']}" filetypes="{$vv['filetypes']}">{$vv['title']}</option>
 								
 								{/volist}
+								{/if}
 							</optgroup>
 							{/volist}
 
-						</select>
+						</select> -->
 		
-							<!-- <cascader id="demo2"></cascader> -->
+							<cascader id="demo2"></cascader>
 						</div>
 					</div>
 				</div>
@@ -147,21 +149,23 @@
 			form = layui.form
 			cascader = layui.ajaxCascader;
 			
+			
+
 	        //问题分类数据
-// 			 cascader.load({
-// 			     elem:'#demo2' 
-// 			     ,clicklast:true                    
-// 			     ,data:[
-// 			         {value:1,label:"楼栋基础数据",children:[
-// 			             {value:111,label:"地址修改"},
-// 			 			{value:112,label:"总楼层修改"}
-// 			         ]},
-// 			         {value:2,label:"房屋基础数据",children:[
-// 			            {value:113,label:"地址修改2"},
-// 			        	{value:114,label:"总楼层修改2"}
-// 			        ]},
-// 			     ]
-// 			 });
+			 cascader.load({
+			     elem:'#demo2' 
+			     ,clicklast:true                    
+			     ,data:[
+			         {value:1,label:"楼栋基础数据",children:[
+			             {value:111,label:"地址修改"},
+			 			{value:112,label:"总楼层修改"}
+			         ]},
+			         {value:2,label:"房屋基础数据",children:[
+			            {value:113,label:"地址修改2"},
+			        	{value:114,label:"总楼层修改2"}
+			        ]},
+			     ]
+			 });
 
 
 // 			 //监听选中的事件

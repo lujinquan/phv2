@@ -41,5 +41,38 @@ class OpType extends SystemBase
     //     return $value?explode(',',$value):'';
     // }
 
+    public function checkWhere($data)
+    {
+        if(!$data){
+            $data = request()->param();
+        }
+        $where = [];
+        // 检索分类名称
+        if(isset($data['title']) && $data['title']){
+            $where[] = ['title','like','%'.$data['title'].'%'];
+        }
 
+        //$instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        $where[] = ['status','eq',1];
+
+        return $where;
+    }
+
+    /**
+     * 数据过滤
+     * @param  [type] $data [传入数据]
+     * @return [type]
+     */
+    public function dataFilter($data)
+    {
+        $data['house_cuid'] = ADMIN_ID;
+        if(isset($data['files'])){
+            $data['filetypes'] = implode(',',$data['files']).',13';
+        } 
+        unset($data['files']);
+        if(isset($data['keyids'])){
+            $data['keyids'] = implode(',',$data['keyids']);
+        }
+        return $data; 
+    }
 }

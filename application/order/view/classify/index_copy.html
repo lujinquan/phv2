@@ -1,0 +1,48 @@
+<form class="layui-form" action="{url('add')}" method="post">
+  <div class="j-details-box floorWrap">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i></label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_name" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>分类名称</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_tel" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_card" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>类型级别</label>
+			<div class="j-input-inline">
+				<select name="tenant_inst_id" class="field-cid" type="select" required>
+				    <option value="">请选择</option>
+				    <option value="0">顶级分类</option>
+				    <option value="0">次级分类</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	 <div class="layui-row layui-form-item layui-col-space90">
+	 	<div class="j-margin-btn">
+	 		<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+	 		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+	 	</div>
+	 </div>
+  </div>
+</form>
+{include file="system@block/layui" /}

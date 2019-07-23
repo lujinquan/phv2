@@ -1,0 +1,75 @@
+<form class="layui-form" action="{url('add')}" method="post">
+  <div class="j-details-box floorWrap">
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>父级分类</label>
+			<div class="j-input-inline">
+				<select name="pid" class="field-cid" type="select" lay-filter="select-fileter" required>
+				    <option value="">请选择</option>
+				    <option value="0">顶级分类</option>
+				    {volist name="titlesFirstClass" id="v"}
+				    <option value="{$key}">{$v}</option>
+				    {/volist}
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>分类名称</label>
+			<div class="j-input-inline">
+				<input type="text" name="title" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90 j-not-show">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>提示内容</label>
+			<div class="j-input-inline">
+				<input type="text" name="remark" value="" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90 j-not-show">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>上传附件类型</label>
+			{volist name="files" id="v"}
+			{if condition="$key != 13"}
+			<input type="checkbox" name="files[]" class="renttable" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$key}、{$v}"><br>
+			{/if}
+		    {/volist}
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90 j-not-show">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>必填编号</label>
+			{volist name="params['key_ids']" id="v"}
+			<input type="checkbox" name="keyids[]" class="renttable" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$key}、{$v}"><br>
+			{/volist}
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+	 	<div class="j-margin-btn">
+	 		<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+	 		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+	 	</div>
+	 </div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+		$ = layui.$,
+		upload = layui.upload,
+		form = layui.form;
+		form.on('select(select-fileter)', function(data){
+			if(data.value == 0){ //如果是顶级分类
+				$('.j-not-show').addClass('hide');
+			}else{
+				$('.j-not-show').removeClass('hide');
+			}
+			data.value
+		})
+	});
+</script>

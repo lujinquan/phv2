@@ -1,175 +1,89 @@
-<div class="j-class-setup">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
-		<legend>分类设置</legend>
-	</fieldset>
-	<div class="layui-row j-class-con">
-		<div class="j-class-li">
-		  <div class="j-list">
-			  <h1 class="j-title">一级分类</h1>
-			  <div class="j-class-list">
-				  <ul>
-				  	<li><span>楼栋基础数据</span></li>
-					<li><span>房屋基础数据</span></li>
-					<li><span>租户信息</span></li>
-					<li><span>租金管理</span></li>
-				  </ul>
-				  <div class="j-class-add">
-					  <div class="j-add-ico clearfix">
-						  <i class="layui-icon j-plus layui-icon-add-circle-fine"></i>
-						  <i class="layui-icon j-lost layui-icon-close hide"></i>
-						  添加分类选项
-						  </div>
-					    <div class="j-add-con hide">
-						  <div class="j-add-input"><input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入分类名称" class="layui-input"></div>
-						  <div class="j-add-hold">
-							  <button type="button" class="layui-btn">保存</button>
-						  </div>
-						</div>
-				  </div>
-			  </div>
-		  </div>
+<div class="j-table-content">
+	<div class="layui-btn-container j-container-margin">
+		<div class="layui-btn-container">		
+			<a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增分类</button></a>
 		</div>
-		<div class="j-class-li">
-		  <div class="j-list">
-			  <h1 class="j-title">二级分类</h1>
-			  <div class="j-class-list">
-				  <ul>
-					<li><span>地址修改</span></li>
-					<li><span>总楼层修改</span></li>
-				  </ul>
-				  <div class="j-class-add">
-					  <div class="j-add-ico clearfix">
-						  <i class="layui-icon j-plus layui-icon-add-circle-fine"></i>
-						  <i class="layui-icon j-lost layui-icon-close hide"></i>
-						  添加分类选项
-						  </div>
-						<div class="j-add-con hide">
-						  <div class="j-add-input"><input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入分类名称" class="layui-input"></div>
-						  <div class="j-add-hold">
-							  <button type="button" class="layui-btn">保存</button>
-						  </div>
-						</div>
-				  </div>
-			  </div>
-		  </div>
-		</div>
-		<div class="j-class-li">
-		 <div class="j-list">
-			  <h1 class="j-title">附件选择</h1>
-			  <div class="j-class-annexes">
-				  <ul>
-					<li><input type="checkbox" name="annexes" lay-skin="annexes" title="" checked=""><span>地址修改</span></li>
-					<li><input type="checkbox" name="annexes" lay-skin="annexes" title=""><span>总楼层修改</span></li>
-				  </ul>
-				  <div class="j-class-add">
-					  <div class="j-add-ico clearfix">
-						  <i class="layui-icon j-plus layui-icon-add-circle-fine"></i>
-						  <i class="layui-icon j-lost layui-icon-close hide"></i>
-						  添加分类选项
-						  </div>
-						<div class="j-add-con hide">
-						  <div class="j-add-input"><input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入分类名称" class="layui-input"></div>
-						  <div class="j-add-hold">
-							  <button type="button" class="layui-btn">保存</button>
-						  </div>
-						</div>
-				  </div>
-			  </div>
-		 </div>
-		</div>
-		<div class="j-class-li">
-		  <div class="j-list">
-			  <h1 class="j-title">表单选择</h1>
-			  <div class="j-class-annexes">
-				  <ul>
-					<li><input type="checkbox" name="annexes" lay-skin="annexes" title="" checked=""><span>用户ID</span></li>
-					<li><input type="checkbox" name="annexes" lay-skin="annexes" title=""><span>楼栋编号</span></li>
-				  </ul>
-				  <div class="j-class-add">
-					  <div class="j-add-ico clearfix">
-						  <i class="layui-icon j-plus layui-icon-add-circle-fine"></i>
-						  <i class="layui-icon j-lost layui-icon-close hide"></i>
-						  添加分类选项
-						  </div>
-						<div class="j-add-con hide">
-						  <div class="j-add-input"><input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入分类名称" class="layui-input"></div>
-						  <div class="j-add-hold">
-							  <button type="button" class="layui-btn">保存</button>
-						  </div>
-						</div>
-				  </div>
-			  </div>
-		  </div>
-		</div>
-		<div class="j-class-li">
-		  <div class="j-list">
-			  <h1 class="j-title">分类说明</h1>
-			  <div class="j-class-annexes">
-				<form class="layui-form" action="" lay-filter="example">
-				  <textarea placeholder="补充描述..." class="layui-textarea" name="desc"></textarea>
-				  <button class="layui-btn j-addenda-btn" lay-submit="" lay-filter="demo1">保存</button>
-				</from>
-			  </div>
-		  </div>
-		</div>
- 
-        <!--新分类  -->
-		
-  </div>
-</div>
-{include file="system@block/layui" /}
-<script type="text/javascript">
-	$(".j-class-con .j-class-li:last").addClass("on");
-	//点击添加分类
-	$(".j-class-con .j-class-li").each(function(){
-        var that = $(this);
-		that.find(".j-add-ico").click(function(){
-			$(this).toggleClass("on");//切换加减图标
-			that.find(".j-add-con").toggle();//添加分类显示隐藏
-		})
-		that.find(".j-add-hold .layui-btn").click(function(){
-			that.find(".j-add-ico").removeClass("on");
-			that.find(".j-add-con").hide();
-			var name = that.find(".layui-input").val();
-			console.log(name);
-			that.find(".j-class-list ul").append("<li><span>" + name + "</span></li>");
-			that.find(".j-class-annexes ul").append("<li><input type='checkbox' name='annexes' lay-skin='annexes' title=''><span>" + name + "</span></li>");
-			that.find(".layui-input").val("");
-		})
-	})
-	//分类选择
-	$(".j-class-list,.j-class-annexes").on("click","li",function(){
-		var $html = "<div class='j-function'><i class='j-edit layui-icon layui-icon-edit'></i><i class='j-delete layui-icon layui-icon-delete'></i></div>"
-		$(this).addClass("on").siblings().removeClass("on");
-		//$(this).siblings('li').remove('.j-function');  // 删除其他兄弟元素的样式
-		$(this).parents(".j-class-li").find(".j-class-list li .j-function,.j-class-annexes li .j-function").remove();
-		$(this).append($html);
-		
-	})
-	//删除当前分类
-	$(".j-class-list,.j-class-annexes").on("click","i.j-delete",function(){
-        $(this).parents("li").remove();
-	})
-	//编辑分类
-	$(".j-class-list,.j-class-annexes").on("click","i.j-edit",function(){
-		var td = $(this).parents("li").find("span"); 
-		var txt = td.text(); 
-		var input = $("<input type='text' value='" + txt + "'/>"); 
-		td.html(input); 
-		input.click(function() { return false; }); 
-        //获取焦点 
-        input.trigger("focus"); 
-		//文本框失去焦点后提交内容，重新变为文本 
-		input.blur(function() { 
-		  var newtxt = $(this).val(); 
-		  //判断文本有没有修改 
-		  if (newtxt != txt) { 
-		   td.html(newtxt); 
-		  } 
-		  else 
-		  { 
-		   td.html(newtxt); 
-		  }
-		}); 
-	});
+	</div>
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline" style="width:150px;">
+					<input type="text" name="title" placeholder="分类名称" class="layui-input">
+				</div>	
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    <a  data-href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-tr-del">删除</a>
 </script>
+</div>
+<script type="text/javascript">
+layui.use(['table', 'jquery'], function() {
+		var table = layui.table;
+		table.render({
+			elem: '#dataTable'
+				//,height: 550
+				//,height: 'full-20' //浏览器最大高度
+				,
+			toolbar: true,
+			defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+				,
+			url: '{:url("order/Classify/index")}' //数据接口
+				,
+			page: true //开启分页
+				,
+			limit: 10,
+			text: {
+				none: '暂无相关数据'
+			},
+			cols: [
+				[ //表头
+					{
+						type: 'checkbox',
+						fixed: 'left'
+					}, {
+						field: 'title',
+						width: 140,
+						title: '分类名称'
+					}, {
+						field: 'pid',
+						width: 140,
+						title: '父级分类'
+					}, {
+						field: 'remark',
+						
+						title: '分类描述'
+					}, {
+						field: 'filetypes',
+						width: 300,
+						title: '需上传的附件类型',
+					}, {
+						title: '操作',
+						width: 200,
+						templet: '#buttonTpl',
+						fixed: 'right'
+					}
+				]
+			],
+			done: function(res, curr, count) {
+
+			}
+		});
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+	});
+	</script>

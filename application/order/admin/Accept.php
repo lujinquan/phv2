@@ -158,7 +158,7 @@ class Accept extends Admin
         $opFileArr = [];
         foreach($opTypesArr as $op){
             $opFileArr[$op['id']] = $op['filetypes'];
-            if($op['pid'] === 0){ //顶级
+            if($op['pid'] == 0){ //顶级
                 $opResultArr[$op['id']] = $op;
             }else{
                $opResultArr[$op['pid']]['children'][] = $op; 
@@ -166,7 +166,7 @@ class Accept extends Admin
             }
 
         }
-        //halt($opFileArr);
+        //halt($opResultArr);
         $this->assign('fileArr',$fileArr);
         $this->assign('opFileArr',$opFileArr);
         $this->assign('opResultArr',$opResultArr);
