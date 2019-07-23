@@ -42,11 +42,11 @@ class OpOrder extends SystemBase
      * @param $value
      * @return array
      */
-    public function getImgsAttr($value)
-    {
-        //halt($value);
-        return $value?explode(',',$value):'';
-    }
+    // public function getImgsAttr($value)
+    // {
+    //     //halt($value);
+    //     //return $value?explode(',',$value):'';
+    // }
 
     public function checkWhere($data,$type='accept')
     {
@@ -123,7 +123,7 @@ class OpOrder extends SystemBase
             case 'add':
                 $data['cuid'] = ADMIN_ID;
                 $data['inst_id'] = INST;
-                $data['imgs'] = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
+                $data['imgs'] = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(18,1);
                 $jsondata[] = [
@@ -147,8 +147,8 @@ class OpOrder extends SystemBase
                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
                 }
                 //halt($data);
-                if(isset($data['reply']) && $data['reply']){
-                    $img = implode(',',$data['reply']);
+                if(isset($data['file']) && $data['file']){
+                    $img = implode(',',$data['file']);
                 }else{
                     $img = '';
                 }
@@ -275,33 +275,26 @@ class OpOrder extends SystemBase
             // 补充资料
             case 'addfiles':
                 $find = $this->get($data['id']);
+                $jsonarr = json_decode($find['jsondata'],true);
+
                 $findDuids = explode(',',$find['duid']);
-                $imgs = (isset($data['carded']) && $data['carded'])?implode(',',$data['carded']):'';
+                $imgs = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
                 $comp = $findDuids[1];
-                //$jsonarr = json_decode($find['jsondata'],true);
+halt($imgs);
                 // 【更新】经手人+
-                
                 $data['duid'] = $find['duid'].','.$comp;
-                
-                //halt($data);
-            
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
-                    'Img' => $img,
+                    'Img' => $imgs,
                     'ToUid' => $comp,
                     'Desc' => '',
                     'Time' => time(),
                     'Action' => '转交至',
                 ];
+                //halt($jsonarr);
                 // 【更新】序列化数据
                 $data['op_order_number'] = $find['op_order_number'];
                 $data['jsondata'] = json_encode($jsonarr);
-
-                //$filtData = [];
-                //$filtData['id'] = $data['id'];
-                $filtData['imgs'] = $find->getData('imgs').','.$imgs;
-                //unset($data['replay']);
-                //unset($data['transfer_to']);
                 break;
 
             default:

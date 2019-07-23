@@ -28,10 +28,8 @@
   </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-  
-       <a href="{:url('edit')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">补充资料</a>
-  
-    <a href="{:url('detail')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>  
+    <a href="{:url('detail')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a> 
+    <a href="{:url('edit')}?group=j&id={{ d.id }}" class="layui-btn {{ d.ifadd }} layui-btn-xs layui-btn-primary">补充资料</a>  
 </script>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
@@ -47,9 +45,7 @@
             }
             ,cols: [[ //表头
                 {field: 'op_order_number', width: 180, align:'center', title: '工单编号'}
-                ,{field: 'op_order_type', width: 140, align:'center', title: '工单类型', templet: function(d) {
-                    return params.op_order_type[d.op_order_type];
-                }} 
+                ,{field: 'op_order_type_name', width: 140, align:'center', title: '工单类型'} 
                 ,{field: 'inst_id', minWidth: 120, align:'center', title: '机构', templet: function(d) {
                     return params.insts[d.inst_id];
                 }}

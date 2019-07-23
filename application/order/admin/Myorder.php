@@ -16,6 +16,8 @@ use app\system\admin\Admin;
 use app\system\model\SystemUser as UserModel;
 use think\Db;
 use app\order\model\OpType;
+use app\system\model\SystemAffiche;
+use app\common\model\SystemAnnex;
 use app\order\model\OpOrder as OpOrderModel;
 
 class Myorder extends Admin
@@ -29,7 +31,8 @@ class Myorder extends Admin
             $getData = $this->request->get();
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData,'myorder');
-            
+            $opTypeModel = new OpType;
+            $opTypeArr = $opTypeModel->column('id,title');
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('dtime desc,ctime desc')->limit($limit)->select();
             if($getData['group'] == 'j'){
@@ -40,21 +43,27 @@ class Myorder extends Admin
 	            	if(!$v['dtime']){
 						$v['status_info'] = '处理中';
 	            	}
-                    $v['ifadd'] = false;
-                    $end = explode(',',$v['duid']);
-                    $currid = end($end);
+                    $duidArr = explode(',',$v['duid']);
+                    $currid = end($duidArr);
                     //halt($currid);
-                    if(!$v['dtime'] && ($currid == ADMIN_ID)){
-                        $v['ifadd'] = true; //显示补充按钮
+                    if(!$v['dtime'] && ($currid == ADMIN_ID) && (count($duidArr )>1)){
+                        $v['status_info'] = '补充资料';
+                        $v['ifadd'] = ''; 
+                    }else{
+                        $v['ifadd'] = 'j-visibility';
                     }
+                    $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
 	            }
+
             }else{
 				foreach($temps as &$v){
 					$uids = explode(',',$v['duid']);
                     $yunyin_uid = $uids[1];
 					$v['nick'] = UserModel::where([['id','eq',$yunyin_uid]])->value('nick');
+                    $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
 	            }
             }
+            
 
             //halt($temps);
             //halt($temps);
@@ -92,15 +101,12 @@ class Myorder extends Admin
         $duid = explode(',',$row['duid']);
         $current_uid = array_pop($duid);
 
-        // 工单状态
-        //$current_nick = UserModel::where([['id','eq',$current_uid]])->value('nick');
-        //halt($row);
         $row['jsondata'] = json_decode($row['jsondata'],true);
         $temp = $row['jsondata'];
         if($temp){
            foreach($temp as &$v){
                 if($v['Img']){
-                    $v['Img'] = explode(',',$v['Img']);
+                    $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }
             } 
         }
@@ -111,7 +117,13 @@ class Myorder extends Admin
             $row['status_info'] = '处理中';
         }else{
             $row['status_info'] = '已完结';
-        }//halt($row);
+        }
+        $row['imgs'] = SystemAnnex::changeFormat($row['imgs']);
+
+        //工单类型
+        $opTypeModel = new OpType;
+        $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
+ //halt($row);
         $this->assign('group',input('group','j'));
         $this->assign('current_uid',$current_uid);
         $this->assign('data_info',$row);
@@ -145,16 +157,26 @@ class Myorder extends Admin
             $OporderModel = new OporderModel();
             $row = $OporderModel->get($data['id']);
             
-            if(!$imgs){
+            if(!isset($data['file'])){
                 return $this->error('请补充资料!');
             }
             
             $filData = $OporderModel->dataFilter($data,'addfiles');
-            halt($filtData);
-            if (!$OporderModel->allowField(true)->update($data)) {
-                return $this->error('确认失败');
+            //halt($filData);
+            if (!$OporderModel->allowField(true)->update($filData)) {
+                return $this->error('补充失败');
             }
-            return $this->success('确认成功',url('index'));
+            // $systemAffiche               = new SystemAffiche;
+            // $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
+
+            // $systemAffiche->title        = '【' . session('admin_user.nick') . '】补充完附件，待您处理！';
+            // $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+            // $systemAffiche->from_user_id = '*';
+            // $systemAffiche->url = '/admin.php/order/accept/index.html';
+            // $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
+            // $systemAffiche->create_time  = time();
+            // $systemAffiche->save();
+            return $this->success('补充成功',url('index'));
         }
         $OporderModel = new OporderModel();
         $row = $OporderModel->get($id);
@@ -173,6 +195,7 @@ class Myorder extends Admin
             }
 
         }
+        $row['imgs'] = SystemAnnex::changeFormat($row['imgs']);
         //halt($row);
         $this->assign('data_info',$row);
         $this->assign('fileArr',$fileArr);

@@ -17,6 +17,7 @@ use app\order\model\OpType;
 use app\order\model\OpOrder as OpOrderModel;
 use app\system\admin\Admin;
 use app\system\model\SystemAffiche;
+use app\common\model\SystemAnnex;
 use app\system\model\SystemUser as UserModel;
 
 /**
@@ -42,6 +43,8 @@ class Accept extends Admin
             $data  = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select()->toArray();
             $inst_ids = explode(',',session('admin_user.inst_ids'));
+            $opTypeModel = new OpType;
+            $opTypeArr = $opTypeModel->column('id,title');
 
             //‘转交至’状态的数据排在前面,‘待处理’状态的数据排在后面，且同状态的按照创建时间倒序排列
             $i = 1;
@@ -54,10 +57,12 @@ class Accept extends Admin
                     if (!in_array($v['inst_id'],$inst_ids)) {
                         unset($temps[$k]);
                     } else {   
+                        $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                         $v['status_info'] = '待处理';
                         $v['order_sort'] = $j;
                         $j++;
                     }
+
                     
                 } else {
                     $uids = explode(',', $v['duid']);
@@ -66,6 +71,7 @@ class Accept extends Admin
                     if ($current_uid != ADMIN_ID) { //保证是待受理的工单
                         unset($temps[$k]);
                     } else {
+                        $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                         $current_nick     = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
                         $v['status_info'] = '转交至'. $current_nick;
                         $v['order_sort'] = $i;
@@ -188,7 +194,7 @@ class Accept extends Admin
         if ($temp) {
             foreach ($temp as &$v) {
                 if ($v['Img']) {
-                    $v['Img'] = explode(',', $v['Img']);
+                    $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }
             }
         }
@@ -200,7 +206,10 @@ class Accept extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
-
+        //工单类型
+        $opTypeModel = new OpType;
+        $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
+        $row['imgs'] = SystemAnnex::changeFormat($row['imgs']);
         $this->assign('data_info', $row);
         return $this->fetch();
     }
@@ -240,9 +249,7 @@ class Accept extends Admin
                 (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['reply']);
             }
             //$userRow                     = UserModel::where([['id', 'eq', $data['thransfer_to']]])->find();
-            $systemAffiche               = new SystemAffiche;
             
-
             if (isset($filData['dtime']) && $filData['dtime']) { //最终转给申请人的工单
                 $contentMsg = '确认';
                 $url = '/admin.php/order/myorder/index.html';
@@ -250,6 +257,7 @@ class Accept extends Admin
                 $contentMsg = '处理';
                 $url = '/admin.php/order/accept/index.html';
             }
+            $systemAffiche               = new SystemAffiche;
             $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
 
             $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
@@ -285,7 +293,7 @@ class Accept extends Admin
                 if (!$OporderModel->allowField(true)->update($filData)){
                     return $this->error('退回失败');
                 }
-                return $this->success('退回成功');
+                return $this->success('退回成功',url('index'));
             }
             
 

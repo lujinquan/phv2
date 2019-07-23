@@ -16,7 +16,7 @@
             <ul class="j-enclosure-box j-viewer-img">
               {volist name="data_info['imgs']" id="vo"}
               <li>
-                <img data-original="{$vo}" src="{$vo}" />
+                <img data-original="{$vo['file']}" src="{$vo['file']}" />
               </li>
               {/volist}
             </ul>
@@ -44,7 +44,7 @@
                   <h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
                   <font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['ToUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
                   <div class="j-remarks">
-                    备注：{$v['Desc']}
+                    <label class="layui-btn layui-btn-xs layui-btn-warm">备注</label> {$v['Desc']}
                   </div>
                   {if condition="$v['Img']"}
                   {volist name="$v['Img']" id="vo"}
@@ -67,9 +67,9 @@
 									<span class="j-phrase-name">常用语<i class="layui-icon iconfont  j-icon-xiajiantou"></i><i class="layui-icon iconfont j-icon-shangjiantou hide"></i></span>
 									<div class="j-phrase-list hide">
 										<ul>
-											<li>您好，您的工单已处理完毕，请查收！</li>
-											<li>您好，您的工单信息不足，请补充材料！</li>
-											<li>您好，您的工单信息不足，请补充材料！</li>
+											{volist name="params['op_words']" id="v"}
+                      <li>{$v}</li>
+                      {/volist}
 										</ul>
 									</div>
 									<img class="j-list-img hide" src="__ADMIN_IMG__/j-phrase-angle.png" />
@@ -119,7 +119,7 @@
         <p>{$data_info['nick']}</p>
       </dd>
       <dd>
-        <h1>运行人员</h1>
+        <h1>运行管理中心</h1>
         <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]['nick']:''}</p>
       </dd>
       <dd>
@@ -128,7 +128,7 @@
       </dd>
       <dd>
         <h1>问题类型</h1>
-        <p>{$params['op_order_type'][$data_info['op_order_type']]}</p>
+        <p>{$data_info['op_order_type_name']}</p>
       </dd>
     </dl>
     <dl class="clearfix">
@@ -161,7 +161,7 @@
         <select name="transfer_to" id="transfer_to">
           <option value="">请选择工单受理人</option>
           {if condition="ADMIN_ROLE != 10"}
-          <optgroup label="技术部">
+          <optgroup label="技术服务中心">
             <option value="41" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
           </optgroup>
           {/if}
@@ -176,7 +176,7 @@
           </optgroup>
           {/if}
           {if condition="ADMIN_ROLE != 11"}
-          <optgroup label="运营部">
+          <optgroup label="运行管理中心">
             <option value="39" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
             <option value="40" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
           </optgroup>
@@ -266,8 +266,14 @@
 		    offset: 'auto',
 		    closeBtn:false
 		  }, function(index){
-		     $("#initiator").addClass("on").attr("disabled","disabled");
-				 layer.close(index);
+		     var data = $('.layui-form').serialize();
+        $.post('/admin.php/order/accept/backToFirst.html',  data ,function(res) {
+              layer.msg(res.msg);
+              if (res.code) {
+                  //$("#initiator").addClass("on").attr("disabled","disabled");
+                  layer.close(index);
+              }
+          });
 		  }, function(index){
 		    layer.close(index);
 		  });

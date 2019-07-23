@@ -16,7 +16,7 @@
                     <ul class="j-enclosure-box j-viewer-img">
                         {volist name="data_info['imgs']" id="vo"}
                         <li>
-                          <img data-original="{$vo}" src="{$vo}" />
+                          <img data-original="{$vo['file']}" src="{$vo['file']}" />
                         </li>
                         {/volist}
                     </ul>
@@ -44,11 +44,11 @@
                                      <h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
                   <font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['ToUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
                                      <div class="j-remarks">
-                                         备注：{$v['Desc']}
+                                         <label class="layui-btn layui-btn-xs layui-btn-warm">备注</label> {$v['Desc']}
                                      </div>
                                      {if condition="$v['Img']"}
                                      {volist name="$v['Img']" id="vo"}
-                                     <img data-original="{$vo}" src="{$vo}" />
+                                     <img data-original="{$vo['file']}" src="{$vo['file']}" />
                                      {/volist}
                                      {/if}
                                  </div>
@@ -56,28 +56,6 @@
                              {/volist}
                         <ul>
                     </div>
-                    <!-- <div class="j-axis-main clearfix">
-                         <ul class="time-axis">
-                             <li class="time-axis-item">
-                                 <div class="time-axis-date"><span></span></div>
-                                 <div class="time-axis-title">
-                                     <h1>运行人员 【郑湾】 于2019-02-12 14:43:47 转交至 技术员【卢金圈】；</h1>
-                                     <div class="j-remarks">
-                                         备注：无法处理，XXXXXXXX
-                                     </div>
-                                 </div>
-                             </li>
-                             <li class="time-axis-item">
-                                 <div class="time-axis-date"><span></span></div>
-                                 <div class="time-axis-title">
-                                     <h1>技术员 【卢金圈】 于2019-02-12 15:05:15 转交至 运行人员【郑湾】；</h1>
-                                     <div class="j-remarks">
-                                         备注：无法处理，XXXXXXXX
-                                     </div>
-                                 </div>
-                            </li>
-                        <ul>
-                    </div> -->
                   </div>
               </div>
           </div>
@@ -108,7 +86,7 @@
                   <p>{$data_info['nick']}</p>
               </dd>
               <dd>
-                  <h1>运行人员</h1>
+                  <h1>运行管理中心</h1>
                   <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]['nick']:''}</p>
               </dd>
               <dd>
@@ -117,7 +95,7 @@
               </dd>
               <dd>
                   <h1>问题类型</h1>
-                  <p>{$params['op_order_type'][$data_info['op_order_type']]}</p>
+                  <p>{$data_info['op_order_type_name']}</p>
               </dd>
           </dl>
           <dl class="clearfix">

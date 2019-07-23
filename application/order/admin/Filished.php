@@ -11,7 +11,10 @@
 // +----------------------------------------------------------------------
 
 namespace app\order\admin;
+
 use app\system\admin\Admin;
+use app\order\model\OpType;
+use app\common\model\SystemAnnex;
 use app\system\model\SystemUser as UserModel;
 use app\order\model\OpOrder as OpOrderModel;
 
@@ -31,6 +34,8 @@ class Filished extends Admin
             $where = $OpOrderModel->checkWhere($getData, 'filished');
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+            $opTypeModel = new OpType;
+            $opTypeArr = $opTypeModel->column('id,title');
             $i = 1;
             $j = 1000;
             $p = 10000;
@@ -39,7 +44,8 @@ class Filished extends Admin
                     unset($temps[$k]);
                 }
                 if (strpos($v['duid'], ',') === false) {
-                    $v['status_info'] = '待运营中心处理';
+                    $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
+                    $v['status_info'] = '待运营管理中心处理';
                     $v['order_sort'] = $j;
                     $j++;
                 } else {
@@ -48,6 +54,7 @@ class Filished extends Admin
                     if ($current_uid == ADMIN_ID) { //保证是待受理的工单
                         unset($temps[$k]);
                     } else {
+                        $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                         $current_nick = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
                         if ($v['ftime']) { // 如果方管员已确认表示已完结
                             $v['status_info'] = '已完结';
@@ -100,7 +107,7 @@ class Filished extends Admin
         if ($temp) {
             foreach ($temp as & $v) {
                 if ($v['Img']) {
-                    $v['Img'] = explode(',', $v['Img']);
+                    $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }
             }
         }
@@ -113,7 +120,9 @@ class Filished extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
-        //halt($row);
+        $opTypeModel = new OpType;
+        $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
+        $row['imgs'] = SystemAnnex::changeFormat($row['imgs']);
         $this->assign('data_info', $row);
         return $this->fetch();
     }

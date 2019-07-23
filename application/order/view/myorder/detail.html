@@ -16,7 +16,7 @@
 					<ul class="j-enclosure-box j-viewer-img">
 						{volist name="data_info['imgs']" id="vo"}
 						<li>
-							<img data-original="{$vo}" src="{$vo}" />
+							<img data-original="{$vo['file']}" src="{$vo['file']}" />
 						</li>
 						{/volist}
 					</ul>
@@ -38,7 +38,7 @@
 					<div class="j-axis-main clearfix">
 						 <ul class="time-axis">
 						 	{volist name="data_info['jsondata']" id="v"}
-						 	{if condition="($v['Action'] == '提交') || ($v['Action'] == '转交回') || ($v['Action'] == '确认完结工单')"}
+						 	
 							 <li class="time-axis-item">
 								 <div class="time-axis-date"><span></span></div>
 								 <div class="time-axis-title">
@@ -49,12 +49,12 @@
 									 </div>
 									{if condition="$v['Img']"}
                                     {volist name="$v['Img']" id="vo"}
-                                    <img src="{$vo}" />
+                                    <img src="{$vo['file']}" />
                                     {/volist}
                                     {/if}
 								 </div>
 							 </li>
-							 {/if}
+							 
 							 {/volist}
 						<ul>
 					</div>
@@ -67,10 +67,13 @@
 			<div class="j-form-box clearfix">
 				<div class="fl">
 					<a href="{:url('index')}?group={$group}" class="layui-btn layui-btn-normal">返回</a>
-					{if condition="($current_uid == ADMIN_ID && $data_info['dtime'] && $group=='j')"}
-					<button type="button" class="layui-btn layui-btn-grass" id="complete" >确认工单</button>
-					{/if}
+					
 				</div>
+				{if condition="($current_uid == ADMIN_ID && $data_info['dtime'] && $group=='j')"}
+				<div class="fr">
+					<button type="button" class="layui-btn layui-btn-grass" id="complete" >确认完结</button>
+				</div>
+				{/if}
 			</div>	
          </div>
 		</form>
@@ -92,7 +95,7 @@
 				  <p>{$data_info['nick']}</p>
 			  </dd>
 			  <dd>
-				  <h1>运行人员</h1>
+				  <h1>运行管理中心</h1>
 				  <p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]['nick']:''}</p>
 			  </dd>
 			  <dd>
@@ -101,7 +104,7 @@
 			  </dd>
 			  <dd>
 				  <h1>问题类型</h1>
-				  <p>{$params['op_order_type'][$data_info['op_order_type']]}</p>
+				  <p>{$data_info['op_order_type_name']}</p>
 			  </dd>
 		  </dl>
 		  <dl class="clearfix">

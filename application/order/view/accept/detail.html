@@ -17,7 +17,7 @@
 						<ul class="j-enclosure-box j-viewer-img">
 							{volist name="data_info['imgs']" id="vo"}
 						<li>
-							<img data-original="{$vo}" src="{$vo}" />
+							<img data-original="{$vo['file']}" src="{$vo['file']}" />
 						</li>
 						{/volist}
 						</ul>
@@ -45,11 +45,11 @@
 									<h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
 									<font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['ToUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
 									<div class="j-remarks">
-										备注：{$v['Desc']}
+										<label class="layui-btn layui-btn-xs layui-btn-warm">备注</label> {$v['Desc']}
 									</div>
 									{if condition="$v['Img']"}
                                     {volist name="$v['Img']" id="vo"}
-                                    <img data-original="{$vo}" src="{$vo}" />
+                                    <img data-original="{$vo['file']}" src="{$vo['file']}" />
                                     {/volist}
                                     {/if}
 								</div>
@@ -80,7 +80,7 @@
 						<div class="layui-row layui-form-item layui-col-space90">
 							<div class="layui-col-md12">
 								<div class="j-enclosure-img clearfix">
-									<div id="upload_img_list3" class="upload_img_list"> </div>
+									<div id="upload_img_list14" class="upload_img_list"> </div>
 								</div>
 							</div>
 						</div>
@@ -95,8 +95,8 @@
         			<a href="{:url('index')}" class="layui-btn layui-btn-normal">返回</a>
         		</div>
         		<div class="fr">
-					<button type="button" class="layui-btn layui-btn-normal {if condition="$data_info['back_times']"}on{/if}" id="initiator" {if condition="$data_info['back_times']"}disabled{/if}>退至发起人</button>	
         			{if condition="ADMIN_ROLE == 11"}
+        			<button type="button" class="layui-btn layui-btn-normal {if condition="$data_info['back_times']"}on{/if}" id="initiator" {if condition="$data_info['back_times']"}disabled{/if}>退至发起人</button>
 					<button type="button" class="layui-btn layui-btn-orange" id="handover" >转交工单</button>
 					{/if}
 					<button type="button" class="layui-btn layui-btn-grass" id="complete" >完成工单</button>
@@ -123,7 +123,7 @@
 				<p>{$data_info['nick']}</p>
 			</dd>
 			<dd>
-				<h1>运行人员</h1>
+				<h1>运行管理中心</h1>
 				<p>{$data_info['jsondata'][1]?$systemusers[$data_info['jsondata'][1]['FromUid']]['nick']:''}</p>
 			</dd>
 			<dd>
@@ -132,7 +132,7 @@
 			</dd>
 			<dd>
 				<h1>问题类型</h1>
-				<p>{$params['op_order_type'][$data_info['op_order_type']]}</p>
+				<p>{$data_info['op_order_type_name']}</p>
 			</dd>
 		</dl>
 		<dl class="clearfix">
@@ -165,24 +165,24 @@
 				<select name="transfer_to" id="transfer_to">
 					<option value="">请选择工单受理人</option>
 					{if condition="ADMIN_ROLE != 10"}
-					<optgroup label="技术部">
-						<option value="41" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
+					<optgroup label="技术服务中心">
+						<option value="83" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
 					</optgroup>
 					{/if}
 					{if condition="ADMIN_ROLE != 12"}
 					<optgroup label="产品部">
-						<option value="16" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
+						<option value="58" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
 					</optgroup>
 					{/if}
 					{if condition="ADMIN_ROLE != 9"}
 					<optgroup label="经管科">
-						<option value="42" {if condition="session('admin_user.nick') == '叶慧丽' || $data_info['nick'] == '叶慧丽'"}disabled{/if}>叶慧丽</option>
+						<option value="97" {if condition="session('admin_user.nick') == '叶惠丽' || $data_info['nick'] == '叶惠丽'"}disabled{/if}>叶惠丽</option>
 					</optgroup>
 					{/if}
 					{if condition="ADMIN_ROLE != 11"}
-					<optgroup label="运营部">
-						<option value="39" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
-						<option value="40" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
+					<optgroup label="运行管理中心">
+						<option value="81" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
+						<option value="82" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
 					</optgroup>
 					{/if}
 
@@ -194,7 +194,7 @@
     {include file="system@block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
     <script>
-		var upurl = "{:url('system/Api/upload')}?input=reply&group=ban&water=no"; //影像资料上传图片地址
+		var upurl = "{:url('system/Api/upload')}?input=ReplyPaper&group=order&water=no&data_id=14"; //影像资料上传图片地址
 		var duotu = true; //是否为多图上传true false
     	layui.use(['form', 'func', 'upload'], function() {
     		var $ = layui.jquery, form = layui.form,upload = layui.upload;
@@ -275,10 +275,9 @@
 	            layer.msg(res.msg);
 	            if (res.code) {
 	                //$("#initiator").addClass("on").attr("disabled","disabled");
-				 layer.close(index);
+				 parent.location.href = res.url;
 	            }
 	        });
-		     $
 		  }, function(index){
 		    layer.close(index);
 		  });
@@ -301,7 +300,7 @@
 			elem: '.j-upload_img',
 			url: upurl,
 			multiple: duotu,
-			field: 'reply',
+			field: 'ReplyPaper',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -313,14 +312,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list14').append('<dd class="item_img" id="' + res.data.data_id +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="reply[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list14').html('<dd class="item_img" id="' + res.data.data_id +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="reply" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})

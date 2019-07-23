@@ -11,7 +11,10 @@
 // +----------------------------------------------------------------------
 
 namespace app\order\admin;
+
 use app\system\admin\Admin;
+use app\order\model\OpType;
+use app\common\model\SystemAnnex;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\order\model\OpOrder as OpOrderModel;
@@ -29,27 +32,17 @@ class Grouporder extends Admin
             $getData = $this->request->get();
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData,'grouporder');  
+            $opTypeModel = new OpType;
+            $opTypeArr = $opTypeModel->column('id,title');
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
             foreach($temps as $k => &$v){
                 if(strpos($v['duid'],',') === false){
                     $v['status_info'] = '待处理';
+                    $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                 }else{
                     unset($temps[$k]);
                 }
-                // else{
-                //     $uids = explode(',',$v['duid']);
-
-                //     $current_uid = array_pop($uids);
-                //     $find = UserModel::where([['id','eq',$current_uid]])->field('nick,role_id')->find();
-                //     // 如果是运营中心
-                //     if($find['role_id'] == 11 && ADMIN_ROLE == 11){
-                //         $v['status_info'] = '转交至'.$find['nick'];
-                //     }else{
-                //         unset($temps[$k]);
-                //     }
-                    
-                // }
             }
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
@@ -95,7 +88,7 @@ class Grouporder extends Admin
         if($temp){
            foreach($temp as &$v){
                 if($v['Img']){
-                    $v['Img'] = explode(',',$v['Img']);
+                    $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }
             } 
         }
@@ -107,7 +100,9 @@ class Grouporder extends Admin
         }else{
             $row['status_info'] = '已完结';
         }
-    
+        $opTypeModel = new OpType;
+        $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
+        $row['imgs'] = SystemAnnex::changeFormat($row['imgs']);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

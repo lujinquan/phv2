@@ -160,15 +160,18 @@ class SystemAnnex extends Model
 
         // 文件存放路径
         $filePath = '/upload/'.$group.'/'.$type.'/';
-
+        //halt($file);
+        //取消已上传的附件检测功能
         // 如果文件已经存在，直接返回数据
-        $res = self::where('hash', $file->hash())->find();
-        if ($res) {
-            return self::result('文件已存在上传成功。', $from, 1, $res);
-        }
+        // $res = self::where('hash', $file->hash())->find();
+        // if ($res) { 
+        //     return self::result('文件已存在上传成功。', $from, 1, $res);
+        // }
 
         // 执行上传
-        $upfile = $file->rule('md5')->move('.'.$filePath);
+        $upfile = $file->rule('date')->move('.'.$filePath);
+        //dump($upfile);
+        //halt($upfile);
         if ( !is_file('.'.$filePath.$upfile->getSaveName()) ) {
             return self::result('文件上传失败！', $from);
         }
@@ -189,7 +192,8 @@ class SystemAnnex extends Model
         ];
 
         // 记录入库
-        self::create($data);
+        $res = self::create($data);
+        
         $group_info = GroupModel::where('name', $group)->find();
         if (!$group_info) {
             GroupModel::create(['name' => $group]);
@@ -302,6 +306,7 @@ class SystemAnnex extends Model
         if ($fullPath) {
             $data['file'] = get_domain().$data['file'];
         }
+        $data['id'] = $res['id'];
 
         return self::result('文件上传成功。', $from, 1, $data);
 
@@ -394,14 +399,31 @@ class SystemAnnex extends Model
         return $arr;
 
     }
+    /**
+     * [改变附件的格式]
+     * @param  string $before [description]
+     * @param  string $after  [description]
+     * @param  array  $data   [description]
+     * @return [type]         [description]
+     */
+    public static function changeFormat($data = [], $oldType = 'id',$newType = 'file'){
+        if($data){
+
+            $result = self::where([[$oldType,'in',$data]])->field('id,name,title,file')->select();
+   
+            return $result;
+        }else{
+            return '附件为空！';
+        }
+    }
 
     /**
      * 更新附件的过期时间
      * @param  [type] $file [值，多个值之间用逗号分隔或数组形式]
-     * @param  string $type [名，默认file，可选hash，id]
+     * @param  string $type [名，默认id，可选hash，file]
      * @return [type]       [description]
      */
-    public function updateAnnexEtime($file ,$type = 'file')
+    public function updateAnnexEtime($file ,$type = 'id')
     {
         if(!in_array($type,['file','hash','id'])){
             return '参数名不合法！';
