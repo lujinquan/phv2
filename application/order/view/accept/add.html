@@ -235,6 +235,7 @@
 					//elem: '.j-upload-file',
 					elem: '#'+name,
 					url: upurl2,
+					 size: 3072,
 					//accept:'images',
 					multiple: true,
 					field: fileid,
@@ -258,11 +259,12 @@
 					    // });
 					  },
 					before: function(obj) {
-						layer.msg('图片上传中...', {
-							icon: 16,
-							shade: 0.01,
-							time: 0
-						})
+							layer.msg('图片上传中...', {
+								icon: 16,
+								shade: 0.01,
+								time: 0
+							})
+						
 					},
 					done: function(res) {
 						//console.log(res);console.log(fileid);
