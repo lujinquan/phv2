@@ -122,7 +122,7 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
         var that = $(this), _form = that.parents('form'),
             account = $('input[name="username"]').val(),
             pwd = $('input[name="password"]').val(),
-            token = $('input[name="__token__"]').val();
+            token = $('input[name="__token__"]').val(),
             captcha = $('input[name="captcha"]').val();
 
         layer.msg('数据提交中...',{time:500000});

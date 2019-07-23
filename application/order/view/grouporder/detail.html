@@ -1,7 +1,7 @@
 <style>
   .page-tab-content{ background: none;padding: 0;overflow-x: hidden;}
 </style>
-<link rel="stylesheet" href="__PUBLIC_JS__/Viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <div class="layui-row layui-col-space10 j-row-box">
   <div class="layui-col-md9 j-back-gray j-border-radius10 clearfix">
     <form class="layui-form" action="transfer" method="post">
@@ -187,7 +187,7 @@
       </form>
     </div>
     {include file="system@block/layui" /}
-    <script type="text/javascript" src="__PUBLIC_JS__/Viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+    <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
     <script>
 			var upurl = "{:url('system/Api/upload')}?input=groupreply&group=ban&water=no"; //影像资料上传图片地址
 			var duotu = true; //是否为多图上传true false
