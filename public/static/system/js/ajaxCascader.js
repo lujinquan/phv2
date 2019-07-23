@@ -291,7 +291,8 @@ layui.define(["jquery"], function (exports) {
     // mouseenter能正常执行程序
     // click则不行
     // store.model.on('mouseenter','li',function(){
-    store.model.on('click', 'li', function () {
+    //store.model.on('click', 'li', function () { 选哪级都可以
+		store.model.on('click', '.cascader-ul:eq(1) li', function () {
       _this.getChooseData();
       store.showCascader = !store.showCascader;
       store.model.slideUp(_this.param.time);
