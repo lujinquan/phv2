@@ -120,7 +120,7 @@
 			</dd>
 			<dd>
 				<h1>发起人</h1>
-				<p>{$data_info['nick']}</p>
+				<p>{$data_info['nick']}（{$params['insts'][$data_info['inst_id']]}）</p>
 			</dd>
 			<dd>
 				<h1>运行管理中心</h1>
@@ -138,12 +138,16 @@
 		<dl class="clearfix">
 			<dt><i class="layui-icon layui-icon-username"></i>用户信息</dt>
 			<dd>
-				<h1>姓名</h1>
-				<p>{$data_info['nick']}</p> 
+				<h1>租户编号</h1>
+				<p>{$data_info['tenant_number']}</p> 
 			</dd>
 			<dd>
-				<h1>管段</h1>
-				<p>{$params['insts'][$data_info['inst_id']]}</p> 
+				<h1>房屋编号</h1>
+				<p>{$data_info['house_number']}</p> 
+			</dd>
+			<dd>
+				<h1>楼栋编号</h1>
+				<p>{$data_info['ban_number']}</p> 
 			</dd>
 		</dl>
 	</div>
@@ -231,9 +235,11 @@
 		                if (res.code == 0) { 
 		                    setTimeout(function(){
 		                        that.removeClass('disabled').text('确认');
-		                    }, 3000);
+		                    }, 2000);
 		                } else {
-	                        location.href = res.url;
+	                        setTimeout(function(){
+		                        parent.location.href = res.url;
+		                    }, 2000);
 		                }
 		    		}
 		    	});
@@ -271,11 +277,11 @@
 		  }, function(index){
 		  	var data = $('.layui-form').serialize();
 		  	$.post('/admin.php/order/accept/backToFirst.html',  data ,function(res) {
-
-	            layer.msg(res.msg);
+	            layer.msg(res.msg);   
 	            if (res.code) {
-	                //$("#initiator").addClass("on").attr("disabled","disabled");
-				 parent.location.href = res.url;
+	                setTimeout(function(){
+                        parent.location.href = res.url;
+                    }, 2000);
 	            }
 	        });
 		  }, function(index){

@@ -116,7 +116,7 @@
       </dd>
       <dd>
         <h1>发起人</h1>
-        <p>{$data_info['nick']}</p>
+        <p>{$data_info['nick']}（{$params['insts'][$data_info['inst_id']]}）</p>
       </dd>
       <dd>
         <h1>运行管理中心</h1>
@@ -134,12 +134,16 @@
     <dl class="clearfix">
       <dt><i class="layui-icon layui-icon-username"></i>用户信息</dt>
       <dd>
-        <h1>姓名</h1>
-        <p>{$data_info['nick']}</p> 
+        <h1>租户编号</h1>
+        <p>{$data_info['tenant_number']}</p> 
       </dd>
       <dd>
-        <h1>管段</h1>
-        <p>{$params['insts'][$data_info['inst_id']]}</p> 
+        <h1>房屋编号</h1>
+        <p>{$data_info['house_number']}</p> 
+      </dd>
+      <dd>
+        <h1>楼栋编号</h1>
+        <p>{$data_info['ban_number']}</p> 
       </dd>
     </dl>
   </div>
@@ -162,23 +166,23 @@
           <option value="">请选择工单受理人</option>
           {if condition="ADMIN_ROLE != 10"}
           <optgroup label="技术服务中心">
-            <option value="41" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
+            <option value="83" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
           </optgroup>
           {/if}
           {if condition="ADMIN_ROLE != 12"}
           <optgroup label="产品部">
-            <option value="16" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
+            <option value="58" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
           </optgroup>
           {/if}
           {if condition="ADMIN_ROLE != 9"}
           <optgroup label="经管科">
-            <option value="42" {if condition="session('admin_user.nick') == '叶慧丽'"}disabled{/if}>叶慧丽</option>
+            <option value="97" {if condition="session('admin_user.nick') == '叶惠丽'"}disabled{/if}>叶惠丽</option>
           </optgroup>
           {/if}
           {if condition="ADMIN_ROLE != 11"}
           <optgroup label="运行管理中心">
-            <option value="39" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
-            <option value="40" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
+            <option value="81" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
+            <option value="82" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
           </optgroup>
           {/if}
         </select>
@@ -231,7 +235,9 @@
                       that.removeClass('disabled').text('确认');
                   }, 3000);
               } else {
-                    location.href = res.url;
+                  setTimeout(function(){
+                      parent.location.href = res.url;
+                  }, 2000);
               }
             }
           });
@@ -270,8 +276,9 @@
         $.post('/admin.php/order/accept/backToFirst.html',  data ,function(res) {
               layer.msg(res.msg);
               if (res.code) {
-                  //$("#initiator").addClass("on").attr("disabled","disabled");
-                  layer.close(index);
+                  setTimeout(function(){
+                      parent.location.href = res.url;
+                  }, 2000);
               }
           });
 		  }, function(index){
