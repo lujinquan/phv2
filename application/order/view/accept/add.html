@@ -7,7 +7,7 @@
 			</fieldset>
 			<div class="layui-col-md6">
 				<div class="layui-row layui-form-item layui-col-space100">
-					<div class="layui-col-md6">
+					<div class="layui-col-md12">
 						<div class="j-form-label"><i class="red">*</i>问题类型</div>
 						<div class="j-input-inline">
 						<select name="op_order_type" lay-filter="select-fileter" id="op_order_type" lay-search>
@@ -29,7 +29,10 @@
 							<!-- <cascader id="demo2"></cascader> -->
 						</div>
 					</div>
-					<div class="layui-col-md6 j-remark">
+					
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12 j-remark hide">
 						
 					</div>
 				</div>
@@ -184,7 +187,8 @@
 		      var fileArr = {:json_encode($fileArr)};
 		      var opFileArr = {:json_encode($opFileArr)};
 		      //console.log(opTypesArr);
-		      $('.j-remark').html('<font color="red">'+opTypesArr[data.value].remark+'</font>');
+			   $('.j-remark').show();
+		      $('.j-remark').html('<i class="layui-icon layui-icon-tips"></i><font color="red">'+opTypesArr[data.value].remark+'</font>');
 	
 		      var str = opFileArr[data.value]; //这是一字符串 
 		      

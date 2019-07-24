@@ -703,10 +703,18 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 		 }
 		});
 	//图片加载失败显示默认图片
-    $(".layui-body img").one("error", function(e){  //加入相应的图片类名
-             $(this).attr("src", "/upload/order/image/20190724/1beceea5b5551925067dccf1e09e0235.jpg");
-        });			
+    document.addEventListener("error", function (e) {
 
+		var elem = e.target;
+		if (elem.tagName.toLowerCase() == "img") {
+
+			elem.src = "../image/add_img.png";
+		}
+	}, true);	
+    
+	$("img").one("error", function(e){
+		 $(this).attr("src", "../image/image/add_img.png");
+	});
 
 });
 function bytesToSize(bytes) {  
