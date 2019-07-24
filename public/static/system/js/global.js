@@ -709,7 +709,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 img.attr("src", "/static/system/image/add_img.png");
             });
         });
-
+  })
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
 　　var k = 1024;
