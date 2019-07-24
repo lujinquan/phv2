@@ -45,7 +45,7 @@
 									 <h1>{$systemusers[$v['FromUid']]['role']['name']} 【{$systemusers[$v['FromUid']]['nick']}】 于 {$v['Time']|date='Y-m-d H:i'} 
 									<font style="color:blue;">{$v['Action']} </font>{if condition="$v['ToUid']"} {$systemusers[$v['ToUid']]['role']['name']} 【{$systemusers[$v['ToUid']]['nick']}】 {/if}</h1>
 									 <div class="j-remarks">
-										 备注：{$v['Desc']}
+										 <label class="layui-btn layui-btn-xs layui-btn-warm">备注</label> {$v['Desc']}
 									 </div>
 									{if condition="$v['Img']"}
                                     {volist name="$v['Img']" id="vo"}

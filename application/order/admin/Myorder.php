@@ -123,7 +123,7 @@ class Myorder extends Admin
         //工单类型
         $opTypeModel = new OpType;
         $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
- //halt($row);
+        //halt($row);
         $this->assign('group',input('group','j'));
         $this->assign('current_uid',$current_uid);
         $this->assign('data_info',$row);
@@ -162,10 +162,12 @@ class Myorder extends Admin
             }
             
             $filData = $OporderModel->dataFilter($data,'addfiles');
-            //halt($filData);
+            
+            //dump($row);halt($filData);
             if (!$OporderModel->allowField(true)->update($filData)) {
                 return $this->error('补充失败');
             }
+            
             // $systemAffiche               = new SystemAffiche;
             // $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
 

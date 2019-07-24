@@ -293,6 +293,16 @@ class Accept extends Admin
                 if (!$OporderModel->allowField(true)->update($filData)){
                     return $this->error('退回失败');
                 }
+
+                $systemAffiche               = new SystemAffiche;
+                $systemAffiche->title        = '【' . session('admin_user.nick') . '】退至给您的工单待补充资料！';
+                $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】退至给您的工单待补充资料！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+                $systemAffiche->from_user_id = '*';
+                $systemAffiche->url = '/admin.php/order/myorder/index.html';
+                $systemAffiche->to_user_id   = '|' . $orderRow['cuid'] . '|';
+                $systemAffiche->create_time  = time();
+                $systemAffiche->save();
+
                 return $this->success('退回成功',url('index'));
             }
             

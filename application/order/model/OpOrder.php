@@ -280,7 +280,7 @@ class OpOrder extends SystemBase
                 $findDuids = explode(',',$find['duid']);
                 $imgs = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
                 $comp = $findDuids[1];
-halt($imgs);
+//halt($imgs);
                 // 【更新】经手人+
                 $data['duid'] = $find['duid'].','.$comp;
                 $jsonarr[] = [
