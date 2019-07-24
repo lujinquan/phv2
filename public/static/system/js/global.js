@@ -705,7 +705,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 	//图片加载失败显示默认图片
     $("img").each(function() {
             var img = $(this);
-            img.error(function() {
+            img.one("error", function(e){
                 img.attr("src", "/static/system/image/add_img.png");
             });
         });
