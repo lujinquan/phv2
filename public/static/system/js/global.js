@@ -691,11 +691,24 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 	            }
 	        });
 	});
+	//判断是否有滚动条，显示图片查看关闭按钮
+		$(".j-viewer-img").on("click","img",function(){
+		 var obj=document.getElementById("switchBody");
+		 if(obj.scrollHeight>obj.clientHeight){
+		 	$(".layui-row").addClass("on");
+		 }
+		 else
+		 {
+			$(".layui-row").removeClass("on");
+		 }
+		});
+	//图片加载失败显示默认图片
+    $(".layui-body img").one("error", function(e){  //加入相应的图片类名
+             $(this).attr("src", "/upload/order/image/20190724/1beceea5b5551925067dccf1e09e0235.jpg");
+        });			
+
 
 });
-
-
-
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
 　　var k = 1024;

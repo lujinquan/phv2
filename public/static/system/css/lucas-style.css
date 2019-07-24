@@ -32,6 +32,8 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}
 .tangram-suggestion-main{ z-index: 9999;/* 百度地图搜索 */}
+/* 大图查看关闭按钮样式 */
+.layui-row.on .viewer-button{ right: -26px;}
 /* 登陆 S */
 .layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
 .layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}
@@ -116,7 +118,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .time-axis{margin: 0;padding: 0;position: relative;}
 .time-axis:before{content: '';position: absolute;left:12px;top: 8px;width: 1px;height: 100%;background-color: #E4E4E4;}
 .time-axis-item{list-style: none;padding-left:30px;position: relative;line-height: 45px;font-size: 14px;color: #141414;}
-.time-axis-item img{width:120px; height: 112px; border-radius: 10px; margin-right: 15px;}
+.time-axis-item img{width:120px; height: 112px; border-radius: 10px; margin:0 15px 15px 0;}
 .time-axis-title{position: relative;top:-5px;}
 .time-axis-title h1,.time-axis-title .j-remarks{ font:bold 14px/19px 'MicrosoftYaHei'; color: #666;}
 .time-axis-title .j-remarks{ padding: 10px 0 20px;}
