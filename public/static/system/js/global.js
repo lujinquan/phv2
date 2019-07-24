@@ -703,20 +703,13 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 		 }
 		});
 	//图片加载失败显示默认图片
-    document.addEventListener("error", function (e) {
+    $("img").each(function() {
+            var img = $(this);
+            img.error(function() {
+                img.attr("src", "/static/system/image/add_img.png");
+            });
+        });
 
-		var elem = e.target;
-		if (elem.tagName.toLowerCase() == "img") {
-
-			elem.src = "../image/add_img.png";
-		}
-	}, true);	
-    
-	$("img").one("error", function(e){
-		 $(this).attr("src", "../image/image/add_img.png");
-	});
-
-});
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
 　　var k = 1024;
