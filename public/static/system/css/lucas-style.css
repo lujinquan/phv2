@@ -121,7 +121,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .time-axis-item img{width:120px; height: 112px; border-radius: 10px; margin:0 15px 15px 0;}
 .time-axis-title{position: relative;top:-5px;}
 .time-axis-title h1,.time-axis-title .j-remarks{ font:bold 14px/19px 'MicrosoftYaHei'; color: #666;}
-.time-axis-title .j-remarks{ padding: 10px 0 20px;}
+.time-axis-title .j-remarks{ padding: 10px 0 20px;table-layout: fixed;word-break: break-all;}
 .time-axis-title .j-remarks .layui-btn-xs{ height: 16px; line-height: 16px;}
 .time-axis-title .j-remarks .layui-btn{ font-size:10px ;}
 .time-axis-date{position: absolute;left: 0;top: 0;color: #666;}
