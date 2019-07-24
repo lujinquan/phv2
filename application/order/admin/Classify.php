@@ -99,7 +99,7 @@ class Classify extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'OpType.sceneForm');
+            $result = $this->validate($data, 'OpType.sceneEdit');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -111,9 +111,9 @@ class Classify extends Admin
             }
             // 入库
             if (!$opTypeModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('编辑失败');
             }
-            return $this->success('添加成功');
+            return $this->success('编辑成功');
         }
         $files = Db::name('file_type')->column('id,file_name');
         $opTypeModel = new OpType;

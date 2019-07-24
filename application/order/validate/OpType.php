@@ -35,6 +35,8 @@ class OpType extends Validate
     protected $scene = [
         //新增
         'sceneForm'  =>  ['pid','title'],
+        //新增
+        'sceneEdit'  =>  ['pid'],
     
     ];
 }

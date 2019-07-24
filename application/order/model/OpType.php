@@ -68,6 +68,8 @@ class OpType extends SystemBase
         $data['house_cuid'] = ADMIN_ID;
         if(isset($data['files'])){
             $data['filetypes'] = implode(',',$data['files']).',13';
+        }else{
+            $data['filetypes'] = '13';
         } 
         unset($data['files']);
         if(isset($data['keyids'])){

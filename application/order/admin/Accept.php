@@ -158,7 +158,7 @@ class Accept extends Admin
             return $this->success('提交成功');       
         }
         $opType = new OpType;
-        $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->select()->toArray();
+        $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->column('id,title,pid,keyids,filetypes,remark');
         $fileArr = Db::name('file_type')->column('id,file_type,file_name');
         $opResultArr = [];
         $opFileArr = [];
@@ -173,6 +173,7 @@ class Accept extends Admin
 
         }
         //halt($opResultArr);
+        $this->assign('opTypesArr',$opTypesArr);
         $this->assign('fileArr',$fileArr);
         $this->assign('opFileArr',$opFileArr);
         $this->assign('opResultArr',$opResultArr);

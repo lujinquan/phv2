@@ -35,7 +35,7 @@ class SystemNotice extends Model
     }
 
     public function getCuidAttr($value){
-        return session('systemusers')[$value];
+        return session('systemusers')[$value]['role']['name'];
     }
 
     // public function getContentAttr($value){

@@ -31,6 +31,7 @@ class Notice extends Admin
      */
     public function index()
     {
+        //halt(session('systemusers'));
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);

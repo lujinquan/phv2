@@ -7,7 +7,7 @@
 			</fieldset>
 			<div class="layui-col-md6">
 				<div class="layui-row layui-form-item layui-col-space100">
-					<div class="layui-col-md12">
+					<div class="layui-col-md6">
 						<div class="j-form-label"><i class="red">*</i>问题类型</div>
 						<div class="j-input-inline">
 						<select name="op_order_type" lay-filter="select-fileter" id="op_order_type" lay-search>
@@ -28,6 +28,9 @@
 		
 							<!-- <cascader id="demo2"></cascader> -->
 						</div>
+					</div>
+					<div class="layui-col-md6 j-remark">
+						
 					</div>
 				</div>
 				<div class="layui-row layui-form-item layui-col-space90">
@@ -176,14 +179,13 @@
 			//影像资料
 			// 监听下拉框，如果角色为运营中心则，显示多选机构框
 		    form.on('select(select-fileter)', function(data){
-		      
-		      //console.log(data.value); //得到被选中的值
-		      //console.log(data.othis); //得到美化后的DOM对象
 
+			  var opTypesArr = {:json_encode($opTypesArr)};
 		      var fileArr = {:json_encode($fileArr)};
 		      var opFileArr = {:json_encode($opFileArr)};
-		      //console.log(opFileArr[data.value]);
-		      //console.log(fileArr);
+		      //console.log(opTypesArr);
+		      $('.j-remark').html('<font color="red">'+opTypesArr[data.value].remark+'</font>');
+	
 		      var str = opFileArr[data.value]; //这是一字符串 
 		      
 		      if(str){
