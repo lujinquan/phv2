@@ -168,16 +168,16 @@ class Myorder extends Admin
                 return $this->error('补充失败');
             }
             
-            // $systemAffiche               = new SystemAffiche;
-            // $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
+            $systemAffiche               = new SystemAffiche;
+            $duidArr = explode(',',$row['duid']);
 
-            // $systemAffiche->title        = '【' . session('admin_user.nick') . '】补充完附件，待您处理！';
-            // $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
-            // $systemAffiche->from_user_id = '*';
-            // $systemAffiche->url = '/admin.php/order/accept/index.html';
-            // $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
-            // $systemAffiche->create_time  = time();
-            // $systemAffiche->save();
+            $systemAffiche->title        = '【' . session('admin_user.nick') . '】已补充完附件，待您处理！';
+            $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】已补充完附件，待您处理！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+            $systemAffiche->from_user_id = '*';
+            $systemAffiche->url = '/admin.php/order/accept/index.html';
+            $systemAffiche->to_user_id   = '|' . $duidArr[1] . '|';
+            $systemAffiche->create_time  = time();
+            $systemAffiche->save();
             return $this->success('补充成功',url('index'));
         }
         $OporderModel = new OporderModel();
