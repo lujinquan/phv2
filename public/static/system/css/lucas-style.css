@@ -108,7 +108,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-enclosure-box li img{width:120px; height: 112px; border-radius: 10px;}
 .j-info-box dl{ padding: 35px  35px 0;}
 .j-info-box dt{font-weight: bold; color: #333;font-family: 'MicrosoftYaHei';}
-.j-info-box dt i{ margin-right: 5px;}
+.j-info-box dt i{ margin-right: 5px;color:#9B9B9B;}
 .j-info-box dd{ margin-top: 20px;}
 .j-info-box dd h1{font-size:14px;color:rgba(133,146,163,1);line-height:19px;}
 .j-info-box dd p{color: #333; font-family: 'MicrosoftYaHei';padding-top: 3px;}
@@ -121,7 +121,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .time-axis-title h1,.time-axis-title .j-remarks{ font:bold 14px/19px 'MicrosoftYaHei'; color: #666;}
 .time-axis-title .j-remarks{ padding: 10px 0 20px;}
 .time-axis-title .j-remarks .layui-btn-xs{ height: 16px; line-height: 16px;}
-.time-axis-title .j-remarks .layui-btn{ font-size: 10px;}
+.time-axis-title .j-remarks .layui-btn{ font-size:10px ;}
 .time-axis-date{position: absolute;left: 0;top: 0;color: #666;}
 .time-axis-date span{position: absolute;right: -18px;top: 35%;display: block;width: 10px;height: 10px;border-radius: 100%;background-color:#0084FF;}
 /*---------- 状态条 S ----------*/
