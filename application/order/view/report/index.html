@@ -10,7 +10,7 @@
             <div  class="j-list-box j-list1">
 				<h1 class="j-title">待受理工单</h1>
 				<div class="j-Statistics">
-					{:isset($data['partOne'][ADMIN_ID]['accept'])?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][39]['accept'] + $data['partOne'][40]['accept'])}<i>个</i>
+					{:isset($data['partOne'][ADMIN_ID]['accept'])?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][81]['accept'] + $data['partOne'][82]['accept'])}<i>个</i>
 				</div>
 				<img src="__ADMIN_IMG__/j-Clip.png" />
 			</div>
@@ -19,7 +19,7 @@
             <!-- <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
-            		{:isset($data['partOne'][ADMIN_ID]['acceptIng'])?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][39]['acceptIng'] + $data['partOne'][40]['acceptIng'])}<i>个</i>
+            		{:isset($data['partOne'][ADMIN_ID]['acceptIng'])?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][81]['acceptIng'] + $data['partOne'][82]['acceptIng'])}<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
             </div> -->
@@ -58,7 +58,7 @@
 		      <div  class="j-list-box j-list3">
 		      	<h1 class="j-title">已完结工单</h1>
 		      	<div class="j-Statistics">
-		      		{:isset($data['partOne'][ADMIN_ID]['end'])?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][39]['end'] + $data['partOne'][40]['end'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['end'])?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][81]['end'] + $data['partOne'][82]['end'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
 		      </div>
@@ -67,7 +67,7 @@
 		      <div  class="j-list-box j-list4">
 		      	<h1 class="j-title">全部工单</h1>
 		      	<div class="j-Statistics">
-		      		{:isset($data['partOne'][ADMIN_ID]['all'])?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][39]['all'] + $data['partOne'][40]['all'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['all'])?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][81]['all'] + $data['partOne'][82]['all'])}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-Fill.png" />
 		      </div>
@@ -84,7 +84,7 @@
 				  <!-- <li class="cur">全部</li>
 				  <li class="">郑湾</li>
 				  <li class="">刘丹</li> -->
-				  <li class="{if condition="ADMIN_ID != 39 && ADMIN_ID != 40"}cur{/if} product-li">全部</li>
+				  <li class="{if condition="ADMIN_ID != 81 && ADMIN_ID != 82"}cur{/if} product-li">全部</li>
 				  {volist name="operateAdmins" id='vo'}
 
 				  <li class="{if condition="$vo['id'] == ADMIN_ID"}cur{/if} product-li">{$vo['nick']}</li>
@@ -93,7 +93,7 @@
 			  </div>
 		  </div>
 		  <div class="product-con">
-		  <div class="product-box clearfix" data-id="{ADMIN_ID}" {if condition="ADMIN_ID != 39 && ADMIN_ID != 40"}style="display: none;"{/if}></div>
+		  <div class="product-box clearfix" data-id="{ADMIN_ID}" {if condition="ADMIN_ID != 81 && ADMIN_ID != 82"}style="display: none;"{/if}></div>
 		  	{volist name="operateAdmins" id='vo'}
 			<div class="product-box clearfix" data-id="{$vo['id']}" {if condition="$vo['id'] == ADMIN_ID"}style="display: none;"{/if}></div>
 			{/volist}
@@ -349,7 +349,7 @@
 				grid: {
 					x: '50',
 					x2: '30',
-					y: '40',
+					y: '82',
 					y2: '50',
 					left:5,
 					right: 100,
@@ -419,14 +419,14 @@
 					{
 						name:'刘丹',
 						type:'line',
-						data:values[39],
+						data:values[81],
 						symbol:'emptyCircle',
 						symbolSize:10
 					},
 					{
 						name:'郑湾',
 						type:'line',
-						data:values[40],
+						data:values[82],
 						symbol:'emptyCircle',
 						symbolSize:10
 					}
@@ -443,10 +443,10 @@
 		function myChartPie(data,adminID){
 			var myChart = echarts.init(document.getElementById('mainPie'));
 			 
-			if(adminID != 39 && adminID != 40){
-				var main1Value = data[39].accept + data[40].accept;
-				var main2Value = data[39].acceptIng + data[40].acceptIng;
-				var main3Value = data[39].end + data[40].end;
+			if(adminID != 81 && adminID != 82){
+				var main1Value = data[81].accept + data[82].accept;
+				var main2Value = data[81].acceptIng + data[82].acceptIng;
+				var main3Value = data[81].end + data[82].end;
 			}else{
 				var main1Value = data[adminID].accept;
 			    var main2Value = data[adminID].acceptIng;
@@ -461,7 +461,7 @@
 					subtext: (parseInt(main1Value) + parseInt(main2Value) + parseInt(main3Value))+'个',
 					align: 'center',
 					x: '36%',
-					y: '40%',
+					y: '82%',
 					textStyle: {
 						fontWeight: 'normal',
 						fontSize: 14,
@@ -490,7 +490,7 @@
 						name: '工单受理状态分析图',
 						type: 'pie',
 						radius: ['34%', '70%'], 
-						center: ['40%', '50%'],
+						center: ['82%', '50%'],
 						label : {
 							normal : {
 								//饼形图显示格式

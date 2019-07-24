@@ -247,19 +247,19 @@ class OpOrder extends SystemBase
             case 'back':
                 $find = $this->get($data['id']);
                 $jsonarr = json_decode($find['jsondata'],true);
-                $comp = $find['cuid'];
+                $imgs = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
+
                 // 【更新】经手人+
                 if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
-                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp; // 完结的转交人就是，申请人
-                    $action = '退至';
+                    $data['duid'] = $find['duid'].','.ADMIN_ID.','.$find['cuid']; // 完结的转交人就是，申请人
                 }else{ //写入 转交人id
-                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
-                    $action = '退至';
+                    $data['duid'] = $find['duid'].','.$find['cuid'];  // 完结的转交人就是，申请人
                 }
+                $action = '退至';
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
-                    'Img' => '',
-                    'ToUid' => $comp,
+                    'Img' => $imgs,
+                    'ToUid' => $find['cuid'],
                     'Desc' => $data['replay'],
                     'Time' => time(),
                     'Action' => $action,

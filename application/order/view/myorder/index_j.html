@@ -46,12 +46,12 @@
             ,cols: [[ //表头
                 {field: 'op_order_number', width: 180, align:'center', title: '工单编号'}
                 ,{field: 'op_order_type_name', width: 140, align:'center', title: '工单类型'} 
-                ,{field: 'inst_id', minWidth: 120, align:'center', title: '机构', templet: function(d) {
+                ,{field: 'inst_id', width: 120, align:'center', title: '机构', templet: function(d) {
                     return params.insts[d.inst_id];
                 }}
-                ,{field: 'remark', width: 300, align:'center', title: '问题详情'}
+                ,{field: 'remark', minWidth: 200, align:'center', title: '问题详情'}
                 ,{field: 'status_info', width: 180, align:'center', title: '状态'}
-                ,{field: 'ctime', width: 180, align:'center', title: '创建时间'}
+                ,{field: 'ctime', width: 150, align:'center', title: '创建时间'}
                 ,{field: 'nick', width: 100, align:'center', title: '发起人'}
                 ,{title: '操作', width: 140, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
