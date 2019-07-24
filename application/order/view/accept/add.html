@@ -187,8 +187,14 @@
 		      var fileArr = {:json_encode($fileArr)};
 		      var opFileArr = {:json_encode($opFileArr)};
 		      //console.log(opTypesArr);
-			   $('.j-remark').show();
-		      $('.j-remark').html('<i class="layui-icon layui-icon-tips"></i><font color="red">'+opTypesArr[data.value].remark+'</font>');
+			   
+			   if(opTypesArr[data.value].remark){
+			   	 $('.j-remark').show();
+			   	 $('.j-remark').html('<i class="layui-icon layui-icon-tips"></i><font color="red">'+opTypesArr[data.value].remark+'</font>');
+			   }else{
+			   	 $('.j-remark').hide();
+			   }
+		      
 	
 		      var str = opFileArr[data.value]; //这是一字符串 
 		      
