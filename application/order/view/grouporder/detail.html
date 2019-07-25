@@ -16,7 +16,7 @@
             <ul class="j-enclosure-box j-viewer-img">
               {volist name="data_info['imgs']" id="vo"}
               <li>
-                <img data-original="{$vo['file']}" src="{$vo['file']}" />
+                <img data-original="{$vo['file']}" src="{$vo['file']}" />{$vo['file_name']}
               </li>
               {/volist}
             </ul>

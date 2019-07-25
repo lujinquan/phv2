@@ -5,19 +5,28 @@ use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
 
 /**
- * 租金订单
+ * 租金应缴
  */
 class Rent extends Admin
 {
 
     public function index()
     {
+
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
             $RentModel = new RentModel;
-            $where = $RentModel->checkWhere($getData);
+
+            $res = $RentModel->configRentOrder(); //生成本月份订单
+            //halt($res);
+            if(!$res){
+                $this->error('本月份订单生成失败！');
+            }
+
+            $where = $RentModel->checkWhere($getData,'rent');
+            
             $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
             $data = [];
             $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();

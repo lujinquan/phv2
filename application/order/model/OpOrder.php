@@ -123,7 +123,7 @@ class OpOrder extends SystemBase
             case 'add':
                 $data['cuid'] = ADMIN_ID;
                 $data['inst_id'] = INST;
-                $data['imgs'] = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
+                //$data['imgs'] = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(18,1);
                 $jsondata[] = [

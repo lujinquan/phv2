@@ -13,11 +13,11 @@
 namespace app\order\admin;
 
 use app\system\admin\Admin;
-use app\system\model\SystemUser as UserModel;
-use think\Db;
 use app\order\model\OpType;
-use app\system\model\SystemAffiche;
 use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
+use app\system\model\SystemAffiche;
+use app\system\model\SystemUser as UserModel;
 use app\order\model\OpOrder as OpOrderModel;
 
 class Myorder extends Admin
@@ -184,7 +184,8 @@ class Myorder extends Admin
         $row = $OporderModel->get($id);
         $opType = new OpType;
         $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->select()->toArray();
-        $fileArr = Db::name('file_type')->column('id,file_type,file_name');
+        $annexTypeModel = new SystemAnnexType;
+        $fileArr = $annexTypeModel->column('id,file_type,file_name');
         $opResultArr = [];
         $opFileArr = [];
         foreach($opTypesArr as $op){
