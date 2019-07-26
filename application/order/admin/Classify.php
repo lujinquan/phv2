@@ -12,8 +12,8 @@
 
 namespace app\order\admin;
 
-use think\Db;
 use app\order\model\OpType;
+use app\common\model\SystemAnnexType;
 use app\order\model\OpOrder as OpOrderModel;
 use app\system\admin\Admin;
 use app\system\model\SystemAffiche;
@@ -40,7 +40,8 @@ class Classify extends Admin
             $data = [];
             $temps = $opTypeModel->where($where)->order('ctime desc')->select()->toArray();
             $titles = $opTypeModel->column('id,title');
-            $files = Db::name('file_type')->column('id,file_name');
+            $annexTypeModel = new SystemAnnexType;
+            $files = $annexTypeModel->column('id,file_name');
 			foreach ($temps as $k => &$v) {
 				if($v['filetypes']){
 					$filetyps = explode(',',$v['filetypes']);
@@ -86,7 +87,8 @@ class Classify extends Admin
             }
             return $this->success('添加成功');
         }
-        $files = Db::name('file_type')->column('id,file_name');
+        $annexTypeModel = new SystemAnnexType;
+        $files = $annexTypeModel->column('id,file_name');
         $opTypeModel = new OpType;
         $titlesFirstClass = $opTypeModel->where([['pid','eq',0]])->column('id,title');
         $this->assign('files',$files);
@@ -115,7 +117,8 @@ class Classify extends Admin
             }
             return $this->success('编辑成功');
         }
-        $files = Db::name('file_type')->column('id,file_name');
+        $annexTypeModel = new SystemAnnexType;
+        $files = $annexTypeModel->column('id,file_name');
         $opTypeModel = new OpType;
         $titlesFirstClass = $opTypeModel->where([['pid','eq',0]])->column('id,title');
         $this->assign('files',$files);

@@ -1,0 +1,87 @@
+
+
+  <div class="layui-row">
+    <div class="layui-col-md6">
+      <table class="layui-table" lay-skin="line">
+        <colgroup>
+            <col width="40%">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">系统信息</th>
+            </tr> 
+        </thead>
+        <tbody>
+            <tr>
+                <td>公房系统版本</td>
+                <td>V {:config('hisiphp.version')}</td>
+            </tr>
+            <tr>
+                <td>MySql版本</td>
+                <td>MySql {:db()->query('select version() as version')[0]['version']}</td>
+            </tr>
+            <tr>
+                <td>PHP版本</td>
+                <td>PHP {$Think.const.PHP_VERSION} </td>
+            </tr>
+            <tr>
+                <td>服务器环境</td>
+                <td>{$Think.const.PHP_OS} / {$_SERVER["SERVER_SOFTWARE"]}</td>
+            </tr>
+            <tr>
+                <td>服务器默认时区</td>
+                <td>{if condition="ini_get('date.timezone')"}{:ini_get('date.timezone')}{else /}未设置{/if}</td>
+            </tr>
+            <tr>
+                <td>错误日志文件</td>
+                <td>{if condition="ini_get('error_log ')"}{:ini_get('error_log ')}{else /}未设置{/if}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="layui-col-md6">
+      <table class="layui-table" lay-skin="line">
+        <colgroup>
+            <col width="40%">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">PHP配置</th>
+            </tr> 
+        </thead>
+        <tbody>
+            <tr>
+                <td>允许单文件上传最大</td>
+                <td>{:ini_get('upload_max_filesize')}</td>
+            </tr>
+            <tr>
+                <td>post能传递的最大数据</td>
+                <td>{:ini_get('post_max_size')}</td>
+            </tr>
+            <tr>
+                <td>是否已开启安全模式</td>
+                <td>{if condition="ini_get('save_mode')"}是{else /}否{/if}</td>
+            </tr>
+            <tr>
+                <td>单个脚本最大执行时间</td>
+                <td>{:ini_get('max_execution_time')}s</td>
+            </tr>
+            <tr>
+                <td>是否报告内存泄漏</td>
+                <td>{if condition="ini_get('report_memleaks')"}是{else /}否{/if}</td>
+            <tr>
+                <td>是否允许使用dl函数</td>
+                <td>{if condition="ini_get('enable_dl')"}是{else /}否{/if}</td>
+            </tr>
+            <tr>
+                <td>socket接口的超时时间</td>
+                <td>{:ini_get('default_socket_timeout')}s</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+  </div>
+ 
+{include file="block/layui" /}

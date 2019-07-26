@@ -29,6 +29,11 @@ class SystemAnnex extends Model
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
+    public function systemAnnexType()
+    {
+        return $this->hasOne('system_annex_type', 'id', 'data_id')->bind('file_type,file_name');
+    }
+
     /**
      * [兼容旧版]附件上传
      * @param string $from 来源
@@ -121,7 +126,7 @@ class SystemAnnex extends Model
             default:// 默认使用layui.upload上传控件
                 break;
         }
-
+        //halt(ini_get('upload_max_filesize'));
         $file = request()->file($input);
 
         $data = [];
@@ -406,11 +411,10 @@ class SystemAnnex extends Model
      * @param  array  $data   [description]
      * @return [type]         [description]
      */
-    public static function changeFormat($data = [], $oldType = 'id',$newType = 'file'){
+    public static function changeFormat($data = []){
         if($data){
 
-            $result = self::where([[$oldType,'in',$data]])->field('id,name,title,file')->select();
-   
+            $result = self::with('system_annex_type')->where([['id','in',$data]])->field('id,data_id,file')->select();
             return $result;
         }else{
             return '附件为空！';

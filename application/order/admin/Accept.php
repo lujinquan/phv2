@@ -12,13 +12,13 @@
 
 namespace app\order\admin;
 
-use think\Db;
 use app\order\model\OpType;
-use app\order\model\OpOrder as OpOrderModel;
 use app\system\admin\Admin;
 use app\system\model\SystemAffiche;
 use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 use app\system\model\SystemUser as UserModel;
+use app\order\model\OpOrder as OpOrderModel;
 
 /**
  * 待受理工单，权限限开放给【运营中心 + 技术部 + 经管科】
@@ -118,11 +118,32 @@ class Accept extends Admin
             if ($result !== true) {
                 return $this->error($result);
             }
-            $OporderModel = new OporderModel();
+            // 验证必传资料是否上传
+            $opType = new OpType;
+            $requireStr = $opType->where([['id','eq',$data['op_order_type']]])->value('filetypes');
+            $annexTypeModel = new SystemAnnexType;
+            $fileArr = $annexTypeModel->where([['id','in',$requireStr]])->field('file_type,file_name')->select();
+
+            // $requireStr = Db::name('op_type')->where([['id','eq',$data['op_order_type']]])->value('filetypes');
+            // $fileArr = Db::name('file_type')->where([['id','in',$requireStr]])->field('file_type,file_name')->select();
+            $data['imgs'] = '';
+            foreach($fileArr as $f){
+                if($f['file_type'] != 'Extra'){
+                    if(!isset($data[$f['file_type']])){
+                        return $this->error('请提交资料“'.$f['file_name'].'”');
+                    }
+                    foreach($data[$f['file_type']] as $d){
+                        $data['imgs'] .=  (','.$d);
+                    }
+                }
+            }
+            $data['imgs'] = $data['imgs']?substr($data['imgs'],1):'';
+      
+            
             // 数据过滤
+            $OporderModel = new OporderModel();
             $filData = $OporderModel->dataFilter($data);
 
-            
             //halt($filData);
             $row     = $OporderModel->allowField(true)->create($filData);
             if (!$row) {
@@ -159,7 +180,8 @@ class Accept extends Admin
         }
         $opType = new OpType;
         $opTypesArr = $opType->where([['status','eq',1]])->order('sort')->column('id,title,pid,keyids,filetypes,remark');
-        $fileArr = Db::name('file_type')->column('id,file_type,file_name');
+        $annexTypeModel = new SystemAnnexType;
+        $fileArr = $annexTypeModel->column('id,file_type,file_name');
         $opResultArr = [];
         $opFileArr = [];
         foreach($opTypesArr as $op){
