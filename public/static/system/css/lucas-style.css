@@ -106,7 +106,8 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-row-box{ overflow: hidden;}
 .j-row-box .j-left,.j-row-box .j-right{ margin-bottom: -9999px;padding-bottom: 9999px;}
 .j-card-header{font-size:14px;font-weight:bold;color:rgba(133,146,163,1);line-height:19px; padding:25px 15px 0;}
-.j-enclosure-box li{ float: left; margin:15px 10px 0 0; width:120px; height: 112px;}
+.j-card-header.no{padding:15px 15px 0;}
+.j-enclosure-box li{ float: left; margin:15px 10px 0 0; width:120px;}
 .j-enclosure-box li img{width:120px; height: 112px; border-radius: 10px;}
 .j-info-box dl{ padding: 35px  35px 0;}
 .j-info-box dt{font-weight: bold; color: #333;font-family: 'MicrosoftYaHei';}
@@ -126,6 +127,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .time-axis-title .j-remarks .layui-btn{ font-size:10px ;}
 .time-axis-date{position: absolute;left: 0;top: 0;color: #666;}
 .time-axis-date span{position: absolute;right: -18px;top: 35%;display: block;width: 10px;height: 10px;border-radius: 100%;background-color:#0084FF;}
+.j-enclosure-box .j-file-name{ text-align: center; font:13px/35px 'MicrosoftYaHei'; color: #999;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 /*---------- 状态条 S ----------*/
 .j-status-bar ul{display: inline-block;margin:10px 0 30px;width: 100%;}
 .j-status-bar li{ text-align: center;  height: 6px; background: #C6D2DF;border-radius: 4px;position: relative;}
@@ -153,7 +155,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-upload-size span.j-phrase-name.on .j-icon-shangjiantou{ display:inline-block;}
 .j-upload-size span.j-phrase-name.on .j-icon-xiajiantou{ display: none;}
 /*----------回复 E----------*/
-.j-form-box{padding: 0 15px;}
+.j-form-box{padding: 10px 15px 0;}
 /* ----------详情样式 E ----------*/
 
 /*----------房屋档案详情 S----------*/

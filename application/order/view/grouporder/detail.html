@@ -16,12 +16,13 @@
             <ul class="j-enclosure-box j-viewer-img">
               {volist name="data_info['imgs']" id="vo"}
               <li>
-                <img data-original="{$vo['file']}" src="{$vo['file']}" />{$vo['file_name']}
+                <img data-original="{$vo['file']}" src="{$vo['file']}" />
+								<p class="j-file-name">{$vo['file_name']}</p>
               </li>
               {/volist}
             </ul>
           </div>
-          <h1 class="j-card-header">状态：</h1>
+          <h1 class="j-card-header no">状态：</h1>
           <div class="layui-card-body clearfix">
             <!-- 状态条显示 S -->
           <!-- <div class="j-status-bar">
