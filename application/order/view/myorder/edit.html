@@ -1,6 +1,4 @@
-<style>
-	.page-tab-content{ background: none;padding: 0;overflow-x: hidden;}
-</style>
+
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="{url('edit)}" method="post">
 	<!-- 新建工单 S -->
@@ -63,9 +61,17 @@
 						<div class="j-enclosure-label clearfix"><i class="red">*</i> 问题描述</div>
 						<div class="j-enclosure-text clearfix">
 							<div class="j-textarea-border">
-								<textarea class="j-textarea" rows="10" name="remark" onKeyUp="keypress()" id="j_answer">{$data_info['remark']}</textarea>
+								<textarea class="j-textarea" rows="10" name="remark" readonly onKeyUp="keypress()" id="j_answer">{$data_info['remark']}</textarea>
 								<div class="j-size"><label id="pinglun">200</label><span>/</span><label>200</label></div>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-row layui-form-item layui-col-space90">
+					<div class="layui-col-md12">
+						<label class="j-form-label"><i class="red"></i> 问题补充描述</label>
+						<div class="j-input-inline">
+							<input type="text" name="remark_add" value="" class="layui-input">
 						</div>
 					</div>
 				</div>

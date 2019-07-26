@@ -13,6 +13,7 @@
 namespace app\order\model;
 
 use app\system\model\SystemBase;
+use app\order\model\OpType;
 use app\system\model\SystemUser as UserModel;
 use app\common\model\Cparam as ParamModel;
 
@@ -287,7 +288,7 @@ class OpOrder extends SystemBase
                     'FromUid' => ADMIN_ID,
                     'Img' => $imgs,
                     'ToUid' => $comp,
-                    'Desc' => '',
+                    'Desc' => $data['remark_add'],
                     'Time' => time(),
                     'Action' => '转交至',
                 ];
@@ -356,7 +357,18 @@ class OpOrder extends SystemBase
         $operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick,inst_ids')->select();
 
         $params = ParamModel::getCparams();
-        $opTypes = array_keys($params['op_order_type']);
+        $opType = new OpType;
+        $opTypes = $opType->where([['status','eq',1]])->field('id,title,pid')->select()->toArray();
+        $opTypeArr = [];
+        foreach($opTypes as $k => $p){
+            if($p['pid'] == 0){ 
+                $opTypeArr[$p['id']] = $p;
+            }else{
+                $opTypeArr[$p['pid']]['children'][] = $p['id'];
+            }
+        }
+        //dump($opTypes);halt($opTypeArr);
+        //$opTypes = array_keys($params['op_order_type']);
         $inZys = array_keys($params['insts_zy']);
         $inLds = array_keys($params['insts_ld']);
 
@@ -373,7 +385,11 @@ class OpOrder extends SystemBase
         foreach($operateAdmins as $key => $v){ //遍历运营人员
 
             $result['partOne'][$v['id']]['accept'] = 0;
-            $result['partOne'][$v['id']]['acceptIng'] = 0;
+            //$result['partOne'][$v['id']]['acceptIng'] = 0;
+            $result['partOne'][$v['id']]['yunxin'] = 0;
+            $result['partOne'][$v['id']]['jishu'] = 0;
+            $result['partOne'][$v['id']]['jinguan'] = 0;
+            $result['partOne'][$v['id']]['faqi'] = 0;
             $result['partOne'][$v['id']]['end'] = 0;
             $result['partOne'][$v['id']]['all'] = 0;
 
@@ -395,7 +411,16 @@ class OpOrder extends SystemBase
                         if($ftime){
                             $result['partOne'][$v['id']]['end']++;  //已完结
                         }else{
-                            $result['partOne'][$v['id']]['acceptIng']++; //受理中
+                            if(end($uids) == 97){
+                                $result['partOne'][$v['id']]['jinguan']++;
+                            }elseif(end($uids) == 83){
+                                $result['partOne'][$v['id']]['jishu']++;
+                            }elseif(end($uids) == 81 || end($uids) == 82){
+                                $result['partOne'][$v['id']]['yunxin']++;
+                            }else{
+                                $result['partOne'][$v['id']]['faqi']++;
+                            }
+                            //$result['partOne'][$v['id']]['acceptIng']++; //受理中
                         }
                         $result['partOne'][$v['id']]['all']++; //全部
                     }
@@ -442,23 +467,26 @@ class OpOrder extends SystemBase
 
                 
                 // 第三部分（柱状图）    
-                if($key == 0){
-                    //dump($inZys);dump($inLds);halt();
-                    foreach($opTypes as $o){
-                        if(!isset($result['partThree']['zy'][$o])){
-                            $result['partThree']['zy'][$o] = 0;
+                if($key == 0){//halt($opTypeArr);
+                    //dump($inZys);dump($inLds);
+                    foreach($opTypeArr as $o){
+                        if(!isset($result['partThree']['zy'][$o['id']])){
+                            $result['partThree']['zy'][$o['id']] = 0;
                         }
-                        if(!isset($result['partThree']['ld'][$o])){
-                            $result['partThree']['ld'][$o] = 0;
+                        if(!isset($result['partThree']['ld'][$o['id']])){
+                            $result['partThree']['ld'][$o['id']] = 0;
                         }
-                        if($o == $op['op_order_type']){
-                            if(in_array($op['inst_id'],$inZys)){ //紫阳所
-                                $result['partThree']['zy'][$op['op_order_type']]++;
+                        if($o['children']){
+                            if(in_array($op['op_order_type'],$o['children'])){
+                                if(in_array($op['inst_id'],$inZys)){ //紫阳所
+                                    $result['partThree']['zy'][$o['id']]++;
+                                }
+                                if(in_array($op['inst_id'],$inLds)){ //粮道所
+                                    $result['partThree']['ld'][$o['id']]++;
+                                } 
                             }
-                            if(in_array($op['inst_id'],$inLds)){ //粮道所
-                                $result['partThree']['ld'][$op['op_order_type']]++;
-                            } 
                         }
+                        
                         
                     }
                 }

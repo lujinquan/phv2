@@ -19,7 +19,7 @@
             <!-- <div  class="j-list-box j-list2">
             	<h1 class="j-title">受理中工单</h1>
             	<div class="j-Statistics">
-            		{:isset($data['partOne'][ADMIN_ID]['acceptIng'])?$data['partOne'][ADMIN_ID]['acceptIng']:($data['partOne'][81]['acceptIng'] + $data['partOne'][82]['acceptIng'])}<i>个</i>
+            		<i>个</i>
             	</div>
             	<img src="__ADMIN_IMG__/j-Group5.png" />
             </div> -->
@@ -28,25 +28,25 @@
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待运行管理中心处理">待运行管理中心处理</h1>
-						<div class="j-number">12<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['yunxin'])?$data['partOne'][ADMIN_ID]['yunxin']:($data['partOne'][81]['yunxin'] + $data['partOne'][82]['yunxin'])}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待技术服务中心处理">待技术服务中心处理</h1>
-						<div class="j-number">12<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jishu'])?$data['partOne'][ADMIN_ID]['jishu']:($data['partOne'][81]['jishu'] + $data['partOne'][82]['jishu'])}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待经管科处理">待经管科处理</h1>
-						<div class="j-number">12<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jinguan'])?$data['partOne'][ADMIN_ID]['jinguan']:($data['partOne'][81]['jinguan'] + $data['partOne'][82]['jinguan'])}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待发起人确认">待发起人确认</h1>
-						<div class="j-number">12<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['faqi'])?$data['partOne'][ADMIN_ID]['yunxin']:($data['partOne'][81]['faqi'] + $data['partOne'][82]['faqi'])}<i>个</i></div>
 					  </div>
 					</li>
 				</ul>
@@ -225,13 +225,13 @@
 
 		    //柱状图数据
 		    var dataThree = {:json_encode($data['partThree'])};
-		    var params = {:json_encode($params)};
+		    var opTypeArr = {:json_encode($opTypeArr)};
 		    var shadowKeys = new Array();
 		    var zyValues = new Array()
 		    var ldValues = new Array()
 		     
-		    for(var s in params.op_order_type){
-		      	shadowKeys.push(params.op_order_type[s]);
+		    for(var s in opTypeArr){
+		      	shadowKeys.push(opTypeArr[s]);
 		    }
 		    for(var t in dataThree.zy){
 		      	zyValues.push(dataThree.zy[t]);
@@ -239,6 +239,7 @@
 		    for(var u in dataThree.ld){
 		      	ldValues.push(dataThree.ld[u]);
 		    }
+		    console.log(shadowKeys);
 		    myChartShadow(shadowKeys,zyValues,ldValues);
               
 		});
