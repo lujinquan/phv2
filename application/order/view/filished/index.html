@@ -1,5 +1,7 @@
-<div class="page-toolbar">
+<div class="j-table-content j-no-title">
+<div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+      <div class="j-search-fl layui-col-md8  fl">
         <div class="layui-input-inline" style="width:150px;">
             <input type="text" name="op_order_number" placeholder="工单编号" class="layui-input">
         </div>
@@ -11,13 +13,19 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="margin-left:10px;">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                <i class="layui-icon">&#xe615;</i>
-                搜索
-            </button>
-            <button type="reset" class="layui-btn">重置</button>
-        </div>
+      </div>
+      <div class="j-search-fr layui-col-md4 fr">
+         <div class="layui-input-inline fr">
+            <div class="layui-input-inline" style="margin-left:10px;">
+                <button type="reset" class="layui-btn j-btn-reset">重置</button>
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                    <i class="layui-icon">&#xe615;</i>
+                    搜索
+                </button>
+                <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+            </div>
+          </div>
+     </div>
     </form>
 </div>
 {include file="system@block/layui" /}
@@ -30,12 +38,15 @@
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>  
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
         var table = layui.table;
         table.render({
             elem: '#dataTable'
             ,height: 550
+            ,toolbar: true     
+            ,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
             ,url: '{:url("order/Filished/index")}' //数据接口
             ,page: true //开启分页
             ,limit: 10
