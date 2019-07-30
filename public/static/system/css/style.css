@@ -34,17 +34,17 @@ body{background-color:#f5f5f5;margin:0;padding:0;}
 #form-icon-preview {float:left;width:34px;height:36px;line-height:36px;font-size:30px!important;border:1px solid #e6e6e6;text-align:center;border-radius:3px}
 .help-tips {cursor:pointer}
 .layui-header,.layui-side {z-index:900}
-.header-logo {width:165px;height:45px;line-height:45px;text-indent:30px;color:#c2c2c2;font-size:16px}
-.header-fold {width:50px;height:45px;line-height:45px;text-align:center;color:#fff;}
+.header-logo {width:165px;height:50px;line-height:50px;text-indent:30px;color:#c2c2c2;font-size:16px}
+.header-fold {width:50px;height:50px;line-height:50px;text-align:center;color:#fff;}
 .header-fold a {color:#fff}
 #foldSwitch{font-size:24px!important;}
-.head-info .layui-nav-child {top:45px}
+.head-info .layui-nav-child {top:50px}
 .head-info .layui-nav-item a {padding:0 10px}
 .main-nav {padding:0}
 .main-nav .layui-nav-item a {font-size:15px;padding:0;margin:0 15px}
 .footer {line-height:44px;padding:0 10px;color:#666}
 .footer a {color:#5c90d2}
-#switchNav {position:fixed;left:0;top:45px;z-index:99999}
+#switchNav {position:fixed;left:0;top:50px;z-index:99999}
 #switchNav .layui-nav-child dd {position:relative}
 #switchNav .layui-nav-child dd .j-del-menu {position:absolute;right:10px;top:3px;font-size:18px;color:#999;cursor:pointer}
 #switchNav .layui-nav-child dd .j-del-menu:hover {color:#fff}
