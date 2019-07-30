@@ -8,22 +8,21 @@
 // +----------------------------------------------------------------------
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
-namespace app\common\model;
 
-use think\Model;
+namespace app\system\validate;
+
+use think\Validate;
+
 /**
- * 附件类型模型
- * @package app\common\model
+ * 配置验证器
+ * @package app\system\validate
  */
-class SystemAnnexType extends Model
+class SystemAnnexType extends Validate
 {
-	// 定义时间戳字段名
-    protected $createTime = 'ctime';
-    // 自动写入时间戳
-    protected $autoWriteTimestamp = true;
-
-    public function tenant()
-    {
-        return $this->hasOne('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_tel,tenant_card');
-    }
+    //定义验证规则
+    protected $rule = [
+        'file_name|附件分类名称'	=> 'require|unique:system_annex_type',
+        'file_type|英文标识' => 'require|unique:system_annex_type',
+        
+    ];
 }

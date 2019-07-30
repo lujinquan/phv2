@@ -1,0 +1,51 @@
+<form class="layui-form" action="{url('add')}" method="post">
+  <div class="j-details-box floorWrap">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>新增附件分类</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space120">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>分类名称</label>
+			<div class="j-input-inline">
+				<input type="text" name="file_name" value="{$data_info['file_name']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="layui-row layui-form-item layui-col-space120">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>英文标识</label>
+			<div class="j-input-inline">
+				<input type="text" name="file_type" value="{$data_info['file_type']}" readonly autocomplete="off" class="layui-input">
+			</div>
+
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space120">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>附件备注</label>
+			<div class="j-input-inline">
+				<input type="text" name="file_remark" value="{$data_info['file_remark']}" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	 <input type="hidden" name="id" value="{$data_info['id']}">
+	 <div class="layui-row layui-form-item layui-col-space90">
+	 	<div class="j-margin-btn">
+	 		<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+	 		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+	 	</div>
+	 </div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+
+	});
+</script>

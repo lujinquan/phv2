@@ -26,7 +26,7 @@
 
 						</select>
 		
-							<!-- <cascader id="demo2"></cascader> -->
+							<cascader id="demo2"></cascader>
 						</div>
 					</div>
 					
@@ -157,21 +157,26 @@
 			
 
 
-	   //      //问题分类数据
-			 // cascader.load({
-			 //     elem:'#demo2' 
-			 //     ,clicklast:true                    
-			 //     ,data:[
-			 //         {value:1,label:"楼栋基础数据",children:[
-			 //             {value:111,label:"地址修改"},
-			 // 			{value:112,label:"总楼层修改"}
-			 //         ]},
-			 //         {value:2,label:"房屋基础数据",children:[
-			 //            {value:113,label:"地址修改2"},
-			 //        	{value:114,label:"总楼层修改2"}
-			 //        ]},
-			 //     ]
-			 // });
+	        //问题分类数据
+			 cascader.load({
+			     elem:'#demo2' 
+			     ,clicklast:true    
+			     ,prop:{
+			         value:'value',                       //【可选】定义接口需要取得的值的名称字段【默认:value】
+			         label:'label',                       //【可选】定义接口显示的名称字段  【默认：label】
+			         children:'children'                  //【可选】定义接口子集的名称字段 【默认：children】
+			    }                
+			     ,data:[
+			         {value:1,label:"楼栋基础数据",children:[
+			             {value:111,label:"地址修改"},
+			 			{value:112,label:"总楼层修改"}
+			         ]},
+			         {value:2,label:"房屋基础数据",children:[
+			            {value:113,label:"地址修改2"},
+			        	{value:114,label:"总楼层修改2"}
+			        ]},
+			     ]
+			 });
 
 
 // 			 //监听选中的事件

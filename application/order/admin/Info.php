@@ -48,7 +48,7 @@ class Info extends Admin
 	    	
 	    	foreach($temps as $k => &$v){
 	    		$uids = explode(',',$v['duid']);
-	    		if($uids[1] == 39){ //刘丹
+	    		if($uids[1] == 81){ //刘丹
 	    			$data['data'][0]['orderTotal']++;
 	    			if($v['ftime']){
 						$data['data'][0]['orderEndTotal']++;
@@ -60,7 +60,7 @@ class Info extends Admin
 	    			$data['data'][0]['orderTurnTotal'] += count($uids);
 	    			
 	    		}
-	    		if($uids[1] == 40){ //郑湾
+	    		if($uids[1] == 82){ //郑湾
 	    			$data['data'][1]['orderTotal']++;
 	    			if($v['ftime']){
 						$data['data'][0]['orderEndTotal']++;
@@ -78,7 +78,7 @@ class Info extends Admin
 		        $data['data'][0]['orderTurnPercent'] = 0; //平均流转节点
 		        $data['data'][0]['orderTimePercent'] = 0; //平均处理时长
 	        }else{
-				$data['data'][0]['orderEndPercent'] = ($data['data'][0]['orderEndTotal'] / $data['data'][0]['orderTotal'])*100 .'%'; //完结率
+				$data['data'][0]['orderEndPercent'] = round($data['data'][0]['orderEndTotal'] / $data['data'][0]['orderTotal'],2)*100 .'%'; //完结率
 		        $data['data'][0]['orderTurnPercent'] = round($data['data'][0]['orderPointTotal'] / $data['data'][0]['orderTotal']); //平均流转节点
 		        $data['data'][0]['orderTimePercent'] = round($data['data'][0]['orderTimeTotal'] / $data['data'][0]['orderTotal']); //平均处理时长
 	        }
