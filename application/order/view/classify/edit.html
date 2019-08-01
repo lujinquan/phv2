@@ -36,7 +36,6 @@
 			<div class="j-input-inline j-input-list">
 			{volist name="files" id="v"}
 			{if condition="$key != 13"}
-
 			<input type="checkbox" name="files[]" class="renttable" lay-filter="filter" {if condition="in_array($key,$data_info['filetypes'])"}checked{/if} value="{$key}" lay-skin="primary" title="{$key}、{$v}">
 			{/if}
 		    {/volist}
@@ -48,11 +47,12 @@
 			<label class="j-form-label"><i class="red"></i>必填编号</label>
 			<div class="j-input-inline j-input-list">
 				{volist name="params['key_ids']" id="v"}
-				<input type="checkbox" name="keyids[]" class="renttable" lay-filter="filter" {if condition="in_array($key,$data_info['filetypes'])"}checked{/if} value="{$key}" lay-skin="primary" title="{$key}、{$v}">
+				<input type="checkbox" name="keyids[]" class="renttable" lay-filter="filter" {if condition="in_array($key,$data_info['keyids'])"}checked{/if} value="{$key}" lay-skin="primary" title="{$key}、{$v}">
 				{/volist}
 			</div>
 		</div>
 	</div>
+	<input type="hidden" name="id" value="{$data_info['id']}">
 	 <div class="layui-row layui-form-item layui-col-space90">
 	 	<div class="j-margin-btn">
 	 		<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>

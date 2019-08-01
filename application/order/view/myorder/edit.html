@@ -32,30 +32,18 @@
 					</div>
 				</div>
 				<input type="hidden" name="id" value="{$data_info['id']}">
+				{volist name="params['key_ids']" id="v"}
+				{if condition="$data_info['key_number'][$key]"}
 				<div class="layui-row layui-form-item layui-col-space90">
-					<div class="layui-col-md12">
-						<label class="j-form-label"><i class="red"></i>租户编号</label>
-						<div class="j-input-inline">
-							<input type="text" value="{$data_info['tenant_number']}" readonly class="layui-input">
+						<div class="layui-col-md12">
+							<label class="j-form-label"><i class="red"></i>{$v}</label>
+							<div class="j-input-inline">
+								<input type="text" value="{$data_info['key_number'][$key]}" readonly class="layui-input">
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="layui-row layui-form-item layui-col-space90">
-					<div class="layui-col-md12">
-						<label class="j-form-label"><i class="red"></i>房屋编号</label>
-						<div class="j-input-inline">
-							<input type="text" value="{$data_info['house_number']}" readonly class="layui-input">
-						</div>
-					</div>
-				</div>
-				<div class="layui-row layui-form-item layui-col-space90">
-					<div class="layui-col-md12">
-						<label class="j-form-label"><i class="red"></i>楼栋编号</label>
-						<div class="j-input-inline">
-							<input type="text" value="{$data_info['ban_number']}" readonly class="layui-input">
-						</div>
-					</div>
-				</div>
+				{/if}
+				{/volist}
 				<div class="layui-row layui-form-item layui-col-space90">
 					<div class="layui-col-md12">
 						<div class="j-enclosure-label clearfix"><i class="red">*</i> 问题描述</div>

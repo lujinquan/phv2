@@ -229,6 +229,7 @@ class Accept extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
+        //halt($row);
         //工单类型
         $opTypeModel = new OpType;
         $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');

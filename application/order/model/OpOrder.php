@@ -31,6 +31,7 @@ class OpOrder extends SystemBase
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i',
         'ftime' => 'timestamp:Y-m-d H:i',
+        'key_number' =>  'json',
     ];
 
     public function SystemUser()
@@ -136,6 +137,7 @@ class OpOrder extends SystemBase
                     'Action' => '提交',
                 ];
                 $data['jsondata'] = json_encode($jsondata);
+                $data['key_number'] = json_encode($data['key_number']);
                 break;
             // 转交工单
             case 'transfer':

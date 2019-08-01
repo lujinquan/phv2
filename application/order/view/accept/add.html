@@ -26,7 +26,7 @@
 
 						</select>
 		
-							<cascader id="demo2"></cascader>
+							<!-- <cascader id="demo2"></cascader> -->
 						</div>
 					</div>
 					
@@ -36,15 +36,17 @@
 						
 					</div>
 				</div>
-				<div class="layui-row layui-form-item layui-col-space90">
+				{volist name="params['key_ids']" id="v"}
+				<div class="layui-row layui-form-item hide j-key-ids layui-col-space90" data-id="{$key}">
 					<div class="layui-col-md12">
-						<label class="j-form-label"><i class="red"></i>租户编号</label>
+						<label class="j-form-label"><i class="red"></i>{$v}</label>
 						<div class="j-input-inline">
-							<input type="text" name="tenant_number" autocomplete="off"  class="layui-input">
+							<input type="text" name="key_number[{$key}]" autocomplete="off"  class="layui-input">
 						</div>
 					</div>
 				</div>
-				<div class="layui-row layui-form-item layui-col-space90">
+				{/volist}
+				<!-- <div class="layui-row layui-form-item layui-col-space90">
 					<div class="layui-col-md12">
 						<label class="j-form-label"><i class="red"></i>房屋编号</label>
 						<div class="j-input-inline">
@@ -59,7 +61,7 @@
 							<input type="text" name="ban_number" autocomplete="off"  class="layui-input">
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<div class="layui-row layui-form-item layui-col-space90">
 					<div class="layui-col-md12">
 						<div class="j-enclosure-label clearfix"><i class="red">*</i> 问题描述</div>
@@ -153,11 +155,12 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form
-			cascader = layui.ajaxCascader;
+			
 			
 
 
-	        //问题分类数据
+	        /*//问题分类数据
+	        cascader = layui.ajaxCascader;
 			 cascader.load({
 			     elem:'#demo2' 
 			     ,clicklast:true    
@@ -176,7 +179,7 @@
 			        	{value:114,label:"总楼层修改2"}
 			        ]},
 			     ]
-			 });
+			 });*/
 
 
 // 			 //监听选中的事件
@@ -191,8 +194,20 @@
 			  var opTypesArr = {:json_encode($opTypesArr)};
 		      var fileArr = {:json_encode($fileArr)};
 		      var opFileArr = {:json_encode($opFileArr)};
-		      //console.log(opTypesArr);
-			   
+		      console.log(opTypesArr);
+			   var keyids = opTypesArr[data.value].keyids; //这是一字符串
+
+		
+		      $(".j-key-ids").addClass('hide');
+		      if(keyids){ //动态显示关键编号
+		      	var keyidArr = new Array(); //定义一数组 
+				keyidArr = keyids.split(","); //字符分割 
+				
+				for (i=0;i<keyidArr.length ;i++){ 
+					$(".j-key-ids[data-id="+keyidArr[i]+"]").removeClass('hide');
+				} 
+		      }
+
 			   if(opTypesArr[data.value].remark){
 			   	 $('.j-remark').show();
 			   	 $('.j-remark').html('<i class="layui-icon layui-icon-tips"></i><font color="red">'+opTypesArr[data.value].remark+'</font>');
@@ -200,7 +215,6 @@
 			   	 $('.j-remark').hide();
 			   }
 		      
-	
 		      var str = opFileArr[data.value]; //这是一字符串 
 		      
 		      if(str){
