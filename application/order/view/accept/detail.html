@@ -138,18 +138,14 @@
 		</dl>
 		<dl class="clearfix">
 			<dt><i class="layui-icon iconfont j-icon-yonghu"></i>用户信息</dt>
+			{volist name="params['key_ids']" id="v"}
+			{if condition="$data_info['key_number'][$key]"}
 			<dd>
-				<h1>租户编号</h1>
-				<p>{$data_info['tenant_number']}</p> 
+				<h1>{$v}</h1>
+				<p>{$data_info['key_number'][$key]}</p> 
 			</dd>
-			<dd>
-				<h1>房屋编号</h1>
-				<p>{$data_info['house_number']}</p> 
-			</dd>
-			<dd>
-				<h1>楼栋编号</h1>
-				<p>{$data_info['ban_number']}</p> 
-			</dd>
+			{/if}
+			{/volist}
 		</dl>
 	</div>
 </div>

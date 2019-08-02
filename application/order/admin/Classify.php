@@ -112,7 +112,7 @@ class Classify extends Admin
                 return $this->error($filData);
             }
             // 入库
-            if (!$opTypeModel->allowField(true)->create($filData)) {
+            if (!$opTypeModel->allowField(true)->update($filData)) {
                 return $this->error('编辑失败');
             }
             return $this->success('编辑成功');
