@@ -1,4 +1,5 @@
-  //画圈按钮  
+  
+	//画圈按钮  
   var drawBtn = document.getElementById('draw');
   //退出画圈按钮
   var exitBtn = document.getElementById('exit');
@@ -29,7 +30,7 @@ window.onload = function(){
 	map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 	initMapMarkers(map);
 	bindEvents(map);
-}
+	}
 	//===================
 function initMapMarkers(map){
 	var xy = [
@@ -48,6 +49,7 @@ function initMapMarkers(map){
 	   var label = new BMap.Label(xy[i].z , { offset: new BMap.Size(20, -10) });
 	   marker.setLabel(label);
 	   markerList.push(marker);
+		 
 	}
 	//最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
 	var markerClusterer = new BMapLib.MarkerClusterer(map,
@@ -68,17 +70,29 @@ function initMapMarkers(map){
   function bindEvents(map) {
     //开始画圈绑定事件
     drawBtn.addEventListener('click', function (e) {
-      //禁止地图移动点击等操作
-      map.disableDragging(); //	禁用地图拖拽
-      map.disableScrollWheelZoom();// 禁用滚轮放大缩小
-      map.disableDoubleClickZoom();// 禁用双击放大
-      map.disableKeyboard();// 禁用键盘操作
-      map.setDefaultCursor('crosshair'); // 设置地图默认的鼠标指针样式。参数cursor应符合CSS的cursor属性规范
-      //设置标志位进入画圈状态
-      isInDrawing = true;
+			if(map.getZoom()<= 13)
+			{
+				 layer.msg("请放大地图后使用画图找房！");
+			}
+			else{
+				  //$(".BMapLabel").hide();
+					$("#draw").hide();
+					$("#exit").show();
+					//禁止地图移动点击等操作
+					map.disableDragging(); //	禁用地图拖拽
+					map.disableScrollWheelZoom();// 禁用滚轮放大缩小
+					map.disableDoubleClickZoom();// 禁用双击放大
+					map.disableKeyboard();// 禁用键盘操作
+					map.setDefaultCursor('crosshair'); // 设置地图默认的鼠标指针样式。参数cursor应符合CSS的cursor属性规范
+					//设置标志位进入画圈状态
+					isInDrawing = true;    
+			}
     });
     //退出画圈按钮绑定事件
     exitBtn.addEventListener('click', function (e) {
+			$(".BMapLabel").show();
+			$("#draw").show();
+			$("#exit").hide();
       //恢复地图移动点击等操作
       map.enableDragging(); // 启用地图拖拽
       map.enableScrollWheelZoom();
@@ -141,17 +155,17 @@ function initMapMarkers(map){
         polygonAfterDraw = polygon
         //计算房屋对于多边形的包含情况
         var ret = caculateEstateContainedInPolygon(polygonAfterDraw);
+				console.log(ret);
         //更新dom结构
         oUl.innerHTML = '';
         var fragment = document.createDocumentFragment();
         for (var i = 0; i < ret.length; i++) {
           var li = document.createElement('li');
           li.innerText ? li.innerText = ret[i] : li.textContent = ret[i];
-          // fragment.appendChild(li);  展示所选内容
-		           console.log(li.innerText)   //打印所选内容
+          //fragment.appendChild(li);  //展示所选内容
+		      //console.log(li.innerText);   //打印所选内容
         }
         oUl.appendChild(fragment);
-		
       }
     });
   }
@@ -226,17 +240,6 @@ function initMapMarkers(map){
     })
     return estateListAfterDrawing
 }
-//判断画图找房按钮显示问题
-$("#draw").click(function(){
-	$("#draw").hide();
-	$("#exit").show();
-	//$(".BMapLabel").hide();
-})
-$("#exit").click(function(){
-	$("#draw").show();
-	$("#exit").hide();
-	//$(".BMapLabel").show();
-})
 //左边详情显示隐藏
 $(document).ready(function() { 
 		//$('#j-houseList').addClass("active");
