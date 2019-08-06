@@ -117,7 +117,7 @@ class Index extends Admin
         Dir::delDir($path.'cache');
         Dir::delDir($path.'temp');
         Dir::delDir($path.'log');
-        (new \app\common\model\SystemAnnex)->clearAnnex();
+        //(new \app\common\model\SystemAnnex)->clearAnnex();
 
         return $this->success('清除成功');
     }
