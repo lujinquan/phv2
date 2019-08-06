@@ -49,8 +49,8 @@ class Report extends Model
             $data[$b['house_id']]['address'] = $b['ban_address'];
             $data[$b['house_id']]['tenant'] = $b['tenant_name'];
             $data[$b['house_id']]['use'] = $params['uses'][$b['house_use_id']];
-            $data[$b['house_id']]['owner'] = $params['uses'][$b['ban_owner_id']];
-            $data[$b['house_id']]['inst'] = $params['uses'][$b['house_use_id']];
+            $data[$b['house_id']]['owner'] = $params['owners'][$b['ban_owner_id']];
+            $data[$b['house_id']]['inst'] = $params['insts'][$b['ban_inst_id']];
             if(!isset($data[$b['house_id']]['total'])){
               $data[$b['house_id']]['total'] = 0;  
             }
