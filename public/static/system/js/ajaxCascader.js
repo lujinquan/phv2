@@ -20,7 +20,7 @@ layui.define(["jquery"], function (exports) {
   function Private() {
     //页面初始化默认值
     this.param = {
-
+      //name: 'test',
       height: 38,
       prop: {
         value: "value",
@@ -73,12 +73,11 @@ layui.define(["jquery"], function (exports) {
       store.data = options.data;
     }
     // 存储结束
-
     if (store.cascaderDom.next().hasClass('cascader-all')) {
       store.cascaderDom.next().remove();
     }
     // 渲染主dom
-    store.cascaderDom.after("\n\t\t\t<div class=\"cascader-all\" style=\"width:" + this.param.width + "px;\">\n\t\t\t\t<input type=\"text\" name=\"op_order_type\" class=\"layui-input cascader-input\" placeholder=\"" + param.placeholder + "\" readonly style=\"width:" + this.param.width + "px;height:" + this.param.height + "px;\">\n\t\t\t\t<i class=\"layui-icon layui-icon-down cascader-i\" style=\"top:" + this.param.height / 2 + "px;\"></i>\n\t\t\t\t<div class=\"cascader-model\" style=\"z-index:" + this.store.zIndex + ";display:flex;\">\n\t\t\t\t</div>\n\t\t\t</div>\n \t\t");
+    store.cascaderDom.after("\n\t\t\t<div class=\"cascader-all\" style=\"width:" + this.param.width + "px;\">\n\t\t\t\t<input type=\"text\" class=\"layui-input cascader-input\" placeholder=\"" + param.placeholder + "\" readonly style=\"width:" + this.param.width + "px;height:" + this.param.height + "px;\">\n\t\t\t\t<i class=\"layui-icon layui-icon-down cascader-i\" style=\"top:" + this.param.height / 2 + "px;\"></i>\n\t\t\t\t<div class=\"cascader-model\" style=\"z-index:" + this.store.zIndex + ";display:flex;\">\n\t\t\t\t</div>\n\t\t\t</div>\n \t\t");
 
     // 判断elem是否存在以及是否正确，elem必填
     if (!options.elem || options.elem == "") {

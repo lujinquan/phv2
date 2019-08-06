@@ -50,7 +50,7 @@
 			   </div>
 			   <div class="j-title-tab clearfix">
 				  <ul>
-					  <li class="j-tab-size cur">未读</li>
+					  <li class="j-tab-size cur wei-du">未读</li>
 					  <li class="j-tab-size">已读</li>
 				  </ul> 
 			   </div>
@@ -170,6 +170,7 @@
 	$(".j-title-con li").on('click', function(){
         var id = $(this).attr('data-id');
         var flag = $(this).attr('data-flag'); 
+        console.log(flag);
         if(flag === 'unreads'){
             $('#reads').append(this);
             var affSum = $('.aff-sum').text();

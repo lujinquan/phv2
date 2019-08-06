@@ -102,7 +102,7 @@ class Filished extends Admin
         // 工单状态
         $current_nick = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
         //halt($row);
-        $row['jsondata'] = json_decode($row['jsondata'], true);
+        //$row['jsondata'] = json_decode($row['jsondata'], true);
         $temp = $row['jsondata'];
         if ($temp) {
             foreach ($temp as & $v) {

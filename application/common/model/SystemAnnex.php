@@ -183,7 +183,7 @@ class SystemAnnex extends Model
 
         $fileCount  = 1;
         $fileSize   = round($upfile->getInfo('size')/1024, 2);
-
+        
         $data = [
             'name'      => $input,
             'file'      => $filePath.str_replace('\\', '/', $upfile->getSaveName()),
@@ -193,7 +193,9 @@ class SystemAnnex extends Model
             'size'      => $fileSize,
             'group'     => $group,
             'ctime'     => request()->time(),
-            'etime'     => request()->time() + 3600*24,
+            //待解决的问题
+            //dump(config('upload.upload_clear_time'));halt(request()->time() + config('upload.upload_clear_time'));
+            'etime'     => request()->time() + 3600*24*7,
         ];
 
         // 记录入库

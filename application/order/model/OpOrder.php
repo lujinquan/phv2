@@ -32,6 +32,7 @@ class OpOrder extends SystemBase
         'ctime' => 'timestamp:Y-m-d H:i',
         'ftime' => 'timestamp:Y-m-d H:i',
         'key_number' =>  'json',
+        'jsondata' =>  'json',
     ];
 
     public function SystemUser()
@@ -105,11 +106,17 @@ class OpOrder extends SystemBase
         if(isset($data['op_order_type']) && $data['op_order_type']){
             $where[] = ['op_order_type','eq',$data['op_order_type']];
         }
+        // 检索工单月份
+        if(isset($data['ctime']) && $data['ctime']){
+            $startDate = $data['ctime'].'-01';
+            $endDate = strtotime('+1 month',strtotime($data['ctime']));
+            $where[] = ['ctime','between time',[$startDate,$endDate]];
+        }
         //检索管段
         // $insts = config('inst_ids');
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];
-
+//halt($where);
         return $where;
     }
 
@@ -124,8 +131,7 @@ class OpOrder extends SystemBase
             // 新增
             case 'add':
                 $data['cuid'] = ADMIN_ID;
-                $data['inst_id'] = INST;
-                //$data['imgs'] = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
+                $data['inst_id'] = INST; 
                 $data['duid'] = ADMIN_ID;
                 $data['op_order_number'] = random(18,1);
                 $jsondata[] = [
@@ -136,20 +142,18 @@ class OpOrder extends SystemBase
                     'Time' => time(),
                     'Action' => '提交',
                 ];
-                $data['jsondata'] = json_encode($jsondata);
-                $data['key_number'] = json_encode($data['key_number']);
+                $data['jsondata'] = $jsondata;
                 break;
             // 转交工单
             case 'transfer':
                 $find = $this->get($data['id']);
-                $jsonarr = json_decode($find['jsondata'],true);
+                $jsonarr = $find['jsondata'];
                 // 【更新】经手人+
                 if(count($jsonarr) == 1){ //如果序列化数据为空，表示由运营人员刚接手(写入运营人员id + 转交人id)
                     $data['duid'] = $find['duid'].','.ADMIN_ID.','.$data['transfer_to']; 
                 }else{ //写入 转交人id
                    $data['duid'] = $find['duid'].','.$data['transfer_to'];
                 }
-                //halt($data);
                 if(isset($data['file']) && $data['file']){
                     $img = implode(',',$data['file']);
                 }else{
@@ -165,32 +169,24 @@ class OpOrder extends SystemBase
                 ];
                 // 【更新】序列化数据
                 $data['op_order_number'] = $find['op_order_number'];
-                $data['jsondata'] = json_encode($jsonarr);
+                $data['jsondata'] = $jsonarr;
                 unset($data['replay']);
-                //unset($data['transfer_to']);
                 break;
-
             // 完成工单
             case 'complete':
 
                 $find = $this->get($data['id']);
-
-                $jsonarr = json_decode($find['jsondata'],true);
-
-                if(isset($data['reply']) && $data['reply']){
-                    $img = implode(',',$data['reply']);
+                $jsonarr = $find['jsondata'];
+                if(isset($data['file']) && $data['file']){
+                    $img = implode(',',$data['file']);
                 }else{
                     $img = '';
                 }
-
                 // 如果不是运营中心的人，那么此处的完成工单指的是默认转交回去
                 if(ADMIN_ROLE != 11){
                     $findDuids = explode(',',$find['duid']);
                     $comp = $findDuids[1];
-                   
-                    //$data['duid'] = $find['duid'].','.ADMIN_ID.','.$comp;  // 完结的转交人就是，申请人
-                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人
-                    
+                    $data['duid'] = $find['duid'].','.$comp;  // 完结的转交人就是，申请人   
                     $jsonarr[] = [
                         'FromUid' => ADMIN_ID,
                         'Img' => $img,
@@ -200,7 +196,7 @@ class OpOrder extends SystemBase
                         'Action' => '转交回',
                     ];
                     // 【更新】序列化数据
-                    $data['jsondata'] = json_encode($jsonarr);
+                    $data['jsondata'] = $jsonarr;
                 }else{
                     $comp = $find['cuid'];
                     // 【更新】经手人+
@@ -220,7 +216,7 @@ class OpOrder extends SystemBase
                         'Action' => $action,
                     ];
                     // 【更新】序列化数据
-                    $data['jsondata'] = json_encode($jsonarr);
+                    $data['jsondata'] = $jsonarr;
                     $data['dtime'] = time(); 
                 }
                 $data['transfer_to'] = $comp;
@@ -231,8 +227,7 @@ class OpOrder extends SystemBase
             case 'affirm':
 
                 $find = $this->get($data['id']);
-                $jsonarr = json_decode($find['jsondata'],true);
-
+                $jsonarr = $find['jsondata'];
                 $jsonarr[] = [
                     'FromUid' => ADMIN_ID,
                     'Img' => '',
@@ -242,14 +237,13 @@ class OpOrder extends SystemBase
                     'Action' => '确认完结工单',
                 ];
                 // 【更新】序列化数据
-                $data['jsondata'] = json_encode($jsonarr);
+                $data['jsondata'] = $jsonarr;
                 $data['ftime'] = time();
-
                 break;
             // 退回至发起人
             case 'back':
                 $find = $this->get($data['id']);
-                $jsonarr = json_decode($find['jsondata'],true);
+                $jsonarr = $find['jsondata'];
                 $imgs = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
 
                 // 【更新】经手人+
@@ -268,7 +262,7 @@ class OpOrder extends SystemBase
                     'Action' => $action,
                 ];
                 // 【更新】序列化数据
-                $data['jsondata'] = json_encode($jsonarr);
+                $data['jsondata'] = $jsonarr;
                 $data['back_times'] = $find['back_times'] + 1;
                 $data['op_order_number'] = $find['op_order_number'];
                 unset($data['replay']);
@@ -278,12 +272,10 @@ class OpOrder extends SystemBase
             // 补充资料
             case 'addfiles':
                 $find = $this->get($data['id']);
-                $jsonarr = json_decode($find['jsondata'],true);
-
+                $jsonarr = $find['jsondata'];
                 $findDuids = explode(',',$find['duid']);
                 $imgs = (isset($data['file']) && $data['file'])?implode(',',$data['file']):'';
                 $comp = $findDuids[1];
-//halt($imgs);
                 // 【更新】经手人+
                 $data['duid'] = $find['duid'].','.$comp;
                 $jsonarr[] = [
@@ -294,12 +286,10 @@ class OpOrder extends SystemBase
                     'Time' => time(),
                     'Action' => '转交至',
                 ];
-                //halt($jsonarr);
                 // 【更新】序列化数据
                 $data['op_order_number'] = $find['op_order_number'];
-                $data['jsondata'] = json_encode($jsonarr);
+                $data['jsondata'] = $jsonarr;
                 break;
-
             default:
                 # code...
                 break;
@@ -387,7 +377,7 @@ class OpOrder extends SystemBase
         foreach($operateAdmins as $key => $v){ //遍历运营人员
 
             $result['partOne'][$v['id']]['accept'] = 0;
-            //$result['partOne'][$v['id']]['acceptIng'] = 0;
+            $result['partOne'][$v['id']]['acceptIng'] = 0;
             $result['partOne'][$v['id']]['yunxin'] = 0;
             $result['partOne'][$v['id']]['jishu'] = 0;
             $result['partOne'][$v['id']]['jinguan'] = 0;
@@ -422,7 +412,7 @@ class OpOrder extends SystemBase
                             }else{
                                 $result['partOne'][$v['id']]['faqi']++;
                             }
-                            //$result['partOne'][$v['id']]['acceptIng']++; //受理中
+                            $result['partOne'][$v['id']]['acceptIng']++; //受理中
                         }
                         $result['partOne'][$v['id']]['all']++; //全部
                     }

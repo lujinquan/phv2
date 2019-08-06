@@ -183,22 +183,30 @@ class Accept extends Admin
         $annexTypeModel = new SystemAnnexType;
         $fileArr = $annexTypeModel->column('id,file_type,file_name');
         $opResultArr = [];
+        $opAjaxTypeArr = [];
         $opFileArr = [];
-        foreach($opTypesArr as $op){
-            $opFileArr[$op['id']] = $op['filetypes'];
-            if($op['pid'] == 0){ //顶级
-                $opResultArr[$op['id']] = $op;
-            }else{
-               $opResultArr[$op['pid']]['children'][] = $op; 
-
+        $i = 0;
+        foreach($opTypesArr as $v){    
+            $opFileArr[$v['id']] = $v['filetypes'];
+            if($v['pid'] == 0){
+                $opAjaxTypeArr[$i]['value'] = $v['id'];
+                $opAjaxTypeArr[$i]['label'] = $v['title'];
+                foreach($opTypesArr as $v1){
+                    if($v1['pid'] == $v['id']){
+                        $opAjaxTypeArr[$i]['children'][] = [
+                            'value'=>$v1['id'],
+                            'label'=>$v1['title'],
+                        ];
+                    }
+                }
+                $i++;
             }
-
         }
-        //halt($opResultArr);
+        //halt($opFileArr);
+        $this->assign('opAjaxTypeArr',$opAjaxTypeArr);
         $this->assign('opTypesArr',$opTypesArr);
         $this->assign('fileArr',$fileArr);
         $this->assign('opFileArr',$opFileArr);
-        $this->assign('opResultArr',$opResultArr);
         return $this->fetch();
     }
 
@@ -212,7 +220,6 @@ class Accept extends Admin
         $duid        = explode(',', $row['duid']);
         $current_uid = array_pop($duid);
 
-        $row['jsondata'] = json_decode($row['jsondata'], true);
         $temp            = $row['jsondata'];
         if ($temp) {
             foreach ($temp as &$v) {
@@ -229,7 +236,6 @@ class Accept extends Admin
         } else {
             $row['status_info'] = '已完结';
         }
-        //halt($row);
         //工单类型
         $opTypeModel = new OpType;
         $row['op_order_type_name'] = $opTypeModel->where([['id','eq',$row['op_order_type']]])->value('title');
@@ -313,7 +319,7 @@ class Accept extends Admin
                 return $this->error('您已退回过'.$orderRow['back_times'].'次！');
             }else{
                 $filData = $OporderModel->dataFilter($data,'back');
-                //dump($data);halt($filData);
+
                 if (!$OporderModel->allowField(true)->update($filData)){
                     return $this->error('退回失败');
                 }
@@ -330,7 +336,6 @@ class Accept extends Admin
                 return $this->success('退回成功',url('index'));
             }
             
-
         }
     }
 

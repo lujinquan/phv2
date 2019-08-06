@@ -83,7 +83,7 @@ class Grouporder extends Admin
         // 缺少一个判断，需要判断当前工单是否为当前角色待处理的工单【优化】
         $duid = explode(',',$row['duid']);
         $current_uid = array_pop($duid);
-        $row['jsondata'] = json_decode($row['jsondata'],true);
+        //$row['jsondata'] = json_decode($row['jsondata'],true);
         $temp = $row['jsondata'];
         if($temp){
            foreach($temp as &$v){

@@ -101,7 +101,6 @@ class Myorder extends Admin
         $duid = explode(',',$row['duid']);
         $current_uid = array_pop($duid);
 
-        $row['jsondata'] = json_decode($row['jsondata'],true);
         $temp = $row['jsondata'];
         if($temp){
            foreach($temp as &$v){
