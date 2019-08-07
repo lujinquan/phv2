@@ -98,12 +98,12 @@ class Rent extends Admin
 
             $tableData = [];
             //设置字段的排序
-            $sort = ['number','address','tenant','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
+            $sort = ['number','address','tenant','inst','owner','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
             //标题
-            $values = ['房屋编号','地址','户名','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
+            $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
             $sortFlip = array_flip($sort);
             //将数组重新按一定顺序组装成数值型键值对数组
-            $y = 0;
+            $y = 0;//halt($table);
             foreach($table as $s){
                 foreach($s as $u => $o){
                     $tableData[$y][$sortFlip[$u]] = $o;

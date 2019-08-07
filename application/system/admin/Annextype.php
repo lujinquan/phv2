@@ -85,7 +85,7 @@ class Annextype extends Admin
             if (!$systemAnnexTypeModel->allowField(true)->update($data)) {
                 return $this->error('编辑失败');
             }
-            return $this->success('编辑成功');
+            return $this->success('编辑成功',url('index'));
         }
         $id = input('param.id/d');
         $row = $systemAnnexTypeModel->find($id);

@@ -19,10 +19,10 @@
             <a href="javascript:;">工单 &nbsp;</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
                 {if condition="$addOrderAuthBool"}
-                <dd><a target="_blank" href="{:url('order/accept/add')}">提交工单</a></dd>
+                <dd><a href="{:url('order/accept/add')}">提交工单</a></dd>
                 {/if}
                 {if condition="$myOrderAuthBool"}
-                <dd><a target="_blank" href="{:url('order/myorder/index')}">我的工单</a></dd>
+                <dd><a href="{:url('order/myorder/index')}">我的工单</a></dd>
                 {/if}
             </dl>
         </li>

@@ -22,6 +22,10 @@ class SystemAnnexType extends Model
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
+    protected $type = [
+        'ctime' => 'timestamp:Y-m-d H:i',
+    ];
+
     public function tenant()
     {
         return $this->hasOne('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_tel,tenant_card');
