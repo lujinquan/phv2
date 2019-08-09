@@ -60,7 +60,7 @@
         var table = layui.table;
         table.render({
             elem: '#dataTable'
-            ,height: 550
+            //,height: 550
             ,url: '{:url("index")}'
             ,page: true 
             ,limit: 10
@@ -70,6 +70,7 @@
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'rent_order_number', width: 240, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_date', width: 140, align:'center', title: '账单期'}
                 ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -79,11 +80,9 @@
                 ,{field: 'house_use_id', width: 100, align:'center', title: '使用性质', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'rent_order_receive', width: 140, align:'center', title: '账单金额'}
-                ,{field: 'rent_order_paid', width: 140, align:'center', title: '已支付金额'}
-                ,{field: 'rent_order_date', width: 140, align:'center', title: '账单期'}
-                ,{field: 'ban_address', width: 140, align:'center', title: '地址'}
                 ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
+                ,{field: 'ban_address', width: 140, align:'center', title: '地址'}
+                ,{field: 'rent_order_receive', width: 140, align:'center', title: '应收租金'}
                 ,{title: '操作', minWidth: 100,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){

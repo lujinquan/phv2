@@ -437,17 +437,8 @@ class SystemAnnex extends Model
         if(!$file){
             return '附件值不能为空！';
         }
-        if(is_array($file)){
-            $where = [[$type,'in',$file]];
-        }else{
-            if(strpos($file,',',1)){ //如果值为多个
-                $where = [[$type,'eq',$file]];
-            }else{
-                $where = [[$type,'eq',$file]];
-            } 
-        }
-        
-        $res = self::where($where)->setField('etime',0); //将附件的过期时间设为永不过期
+        //halt($file);
+        $res = self::where([[$type,'in',$file]])->update(['etime'=>0]); //将附件的过期时间设为永不过期
         if($res !== false){
             return '过期时间更新成功！';
         }else{

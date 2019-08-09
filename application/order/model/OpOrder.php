@@ -239,6 +239,7 @@ class OpOrder extends SystemBase
                 // 【更新】序列化数据
                 $data['jsondata'] = $jsonarr;
                 $data['ftime'] = time();
+                $data['status'] = 1;
                 break;
             // 退回至发起人
             case 'back':

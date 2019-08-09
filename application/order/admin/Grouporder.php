@@ -14,7 +14,9 @@ namespace app\order\admin;
 
 use app\system\admin\Admin;
 use app\order\model\OpType;
+use app\system\model\SystemAffiche;
 use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\order\model\OpOrder as OpOrderModel;
@@ -55,25 +57,25 @@ class Grouporder extends Admin
         return $this->fetch();
     }
 
-    public function add()
-    {
-        if ($this->request->isPost()) {
-            $data = $this->request->post();
-            // 数据验证
-            $result = $this->validate($data, 'OpOrder.sceneForm');
-            if($result !== true) {
-                return $this->error($result);
-            }
-            $OporderModel = new OporderModel();
-            // 数据过滤
-            $filData = $OporderModel->dataFilter($data);
-            if (!$OporderModel->allowField(true)->create($filData)) {
-                return $this->error('提交失败');
-            }
-            return $this->success('提交成功',url('Myorder/index'));
-        }
-        return $this->fetch();
-    }
+    // public function add()
+    // {
+    //     if ($this->request->isPost()) {
+    //         $data = $this->request->post();
+    //         // 数据验证
+    //         $result = $this->validate($data, 'OpOrder.sceneForm');
+    //         if($result !== true) {
+    //             return $this->error($result);
+    //         }
+    //         $OporderModel = new OporderModel();
+    //         // 数据过滤
+    //         $filData = $OporderModel->dataFilter($data);
+    //         if (!$OporderModel->allowField(true)->create($filData)) {
+    //             return $this->error('提交失败');
+    //         }
+    //         return $this->success('提交成功',url('Myorder/index'));
+    //     }
+    //     return $this->fetch();
+    // }
 
     // 待受理的详情
     public function detail()
@@ -137,6 +139,28 @@ class Grouporder extends Admin
             if (!$OporderModel->allowField(true)->update($filData)) {
                 return $this->error($msg.'失败');
             }
+                        if(isset($filData['file'])){ //如果上传了附件，且提交成功，就修改附件的过期时间为0
+                (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['file']);
+            }
+            //$userRow                     = UserModel::where([['id', 'eq', $data['thransfer_to']]])->find();
+            
+            if (isset($filData['dtime']) && $filData['dtime']) { //最终转给申请人的工单
+                $contentMsg = '确认';
+                $url = '/admin.php/order/myorder/index.html';
+            } else {
+                $contentMsg = '处理';
+                $url = '/admin.php/order/accept/index.html';
+            }
+            $systemAffiche               = new SystemAffiche;
+            $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
+
+            $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
+            $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';
+            $systemAffiche->from_user_id = '*';
+            $systemAffiche->url = $url;
+            $systemAffiche->to_user_id   = '|' . $data['transfer_to'] . '|';
+            $systemAffiche->create_time  = time();
+            $systemAffiche->save();
             return $this->success($msg.'成功',url('index'));
         }
     }

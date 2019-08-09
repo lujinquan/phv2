@@ -1,1 +1,127 @@
+<div class="page-toolbar">
+    <div class="layui-btn-container j-container-margin">
+        <div class="layui-btn-container">       
+            <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
+        </div>
+    </div>
+    <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+            <div class="j-search-fl layui-col-md8  fl">
+                <div class="layui-input-inline" style="width:150px;">
+                    <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+                </div>  
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+                </div>
+                {if condition="INST_LEVEL != 3"}
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <select name="ban_inst_id">
+                        <option value="">机构</option>
+                        {volist name=":config('inst_check_names')[INST]" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <select name="ban_owner_id">
+                        <option value="">产别</option>
+                        {volist name="params['owners']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <select name="house_use_id">
+                        <option value="">使用性质</option>
+                        {volist name="params['uses']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <select name="pay_type">
+                        <option value="">支付方式</option>
+                        {volist name="params['pay_type']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div> 
+                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                    <input type="text" name="ctime" placeholder="日期范围" id="test6" class="layui-input">
+                </div> 
+            </div>
+            <div class="j-search-fr layui-col-md4 fr">
+                <div class="layui-input-inline fr">
+                    <div class="layui-input-inline" style="margin-left:10px;">
+                        <button type="reset" class="layui-btn j-btn-reset">重置</button>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                            <i class="layui-icon">&#xe615;</i>
+                            搜索
+                        </button>
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="toolbar">
+  <div class="layui-btn-container">
+
+  </div>
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+
+    <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+</script>
+<script type="text/javascript">
+    layui.use(['table','jquery','laydate'], function() {
+        var table = layui.table;
+        var laydate = layui.laydate;
+        table.render({
+            elem: '#dataTable'
+            ,height: 550
+            ,url: '{:url("index")}'
+            ,page: true 
+            ,totalRow:true
+            ,limit: 10
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left', totalRowText: '合计'}
+                ,{field: 'house_number', width: 140, align:'center', title: '房屋编号'} 
+                ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
+                    return params.insts[d.ban_inst_id];
+                }}
+                ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
+                    return params.owners[d.ban_owner_id];
+                }}
+                ,{field: 'house_use_id', width: 100, align:'center', title: '使用性质', templet: function(d) {
+                    return params.uses[d.house_use_id];
+                }}
+                ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+                ,{field: 'pay_type', width: 100, align:'center', title: '缴纳方式', templet: function(d) {
+                    return params.pay_type[d.pay_type];
+                }}
+                ,{field: 'ctime', width: 160, align:'center', title: '充值时间'}
+                ,{field: 'pay_rent', width: 100, align:'center', totalRow: true ,title: '充值金额'}
+                //,{title: '操作', minWidth: 100,align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        },isShowInst)
+        //日期范围
+        laydate.render({
+            elem: '#test6'
+            //,range: true
+            ,range: '~'
+        });
+    });
+    
+</script>

@@ -131,15 +131,16 @@ class Accept extends Admin
                 if($f['file_type'] != 'Extra'){
                     if(!isset($data[$f['file_type']])){
                         return $this->error('请提交资料“'.$f['file_name'].'”');
-                    }
+                    } 
+                }
+                if(isset($data[$f['file_type']])){
                     foreach($data[$f['file_type']] as $d){
                         $data['imgs'] .=  (','.$d);
                     }
                 }
             }
             $data['imgs'] = $data['imgs']?substr($data['imgs'],1):'';
-      
-            
+          
             // 数据过滤
             $OporderModel = new OporderModel();
             $filData = $OporderModel->dataFilter($data);
@@ -275,8 +276,8 @@ class Accept extends Admin
                 return $this->error($msg . '失败');
             }
 
-            if(isset($filData['reply'])){ //如果上传了附件，且提交成功，就修改附件的过期时间为0
-                (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['reply']);
+            if(isset($filData['file'])){ //如果上传了附件，且提交成功，就修改附件的过期时间为0
+                (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['file']);
             }
             //$userRow                     = UserModel::where([['id', 'eq', $data['thransfer_to']]])->find();
             
@@ -322,6 +323,10 @@ class Accept extends Admin
 
                 if (!$OporderModel->allowField(true)->update($filData)){
                     return $this->error('退回失败');
+                }
+
+                if(isset($filData['file'])){ //如果上传了附件，且退回成功，就修改附件的过期时间为0
+                    (new \app\common\model\SystemAnnex)->updateAnnexEtime($filData['file']);
                 }
 
                 $systemAffiche               = new SystemAffiche;
