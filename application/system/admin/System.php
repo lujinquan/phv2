@@ -41,7 +41,7 @@ class System extends Admin
             } else {
                 $ids = $data['id'] = '';
             }
-
+//halt($data);
             unset($data['upload']);// 清除上传字段
             
             // token 验证
@@ -124,6 +124,7 @@ class System extends Admin
             $arr['url'] = '?group='.$key;
             $tabData['menu'][] = $arr;
         }
+        //halt(config('sys.config_group'));
         $map = [];
         $map['group'] = $group;
         $map['status'] = 1;

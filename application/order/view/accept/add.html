@@ -13,8 +13,7 @@
 							<cascader id="demo2"></cascader>
 							<input type="hidden" name="op_order_type" id="cascader-v" value="">
 						</div>
-					</div>
-					
+					</div>	
 				</div>
 				<div class="layui-row layui-form-item layui-col-space90">
 					<div class="layui-col-md12 j-remark hide">
@@ -79,7 +78,7 @@
 				<div class="layui-row layui-form-item layui-col-space90 j-files-end">
 					<div class="j-margin-btn">
 						<button class="layui-btn layui-btn-primary">取消</button>
-						<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+						<button type="submit" class="layui-btn upload_btn" lay-data="{pop: false, refresh: true, jump: false, callback: null}" lay-submit lay-filter="formSubmit">提交</button>
 					</div>
 				</div>
 			</div>

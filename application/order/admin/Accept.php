@@ -99,6 +99,14 @@ class Accept extends Admin
         return $this->fetch();
     }
 
+    public function turnForm()
+    {
+        $id = input('param.id/d');
+        $row = OpOrderModel::with(['SystemUser'])->get($id);
+        $this->assign('data_info', $row);
+        return $this->fetch();
+    }
+
     /**
      * 待受理工单列表
      * @author Lucas <598936602@qq.com>

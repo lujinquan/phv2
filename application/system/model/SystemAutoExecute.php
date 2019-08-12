@@ -34,7 +34,7 @@ class SystemAutoExecute extends Model
             $overdueTime = $this->overdueTime;
             $compTime = $op['dtime'] + $overdueTime;
             if($curTime >= $compTime){
-                $jsonarr = json_decode($op['jsondata'],true);
+                $jsonarr = $op['jsondata'];
                 $jsonarr[] = [
                     'FromUid' => $op['cuid'],
                     'Img' => '',

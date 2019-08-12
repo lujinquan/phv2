@@ -297,15 +297,19 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
     /**
      * 监听表单提交
      * @attr action 请求地址
+     * 例如：<button type="submit" class="layui-btn upload_btn" lay-submit lay-filter="formSubmit">提交</button>
+     * 
      * @attr data-form 表单DOM
      */
     form.on('submit(formSubmit)', function(data) {
         var _form = '', 
-            that = $(this), 
-            text = that.text(),
+            that = $(this), //button标签
+            text = that.text(), //return 提交
             options = {pop: false, refresh: true, jump: false, callback: null};
+        //如果button属性data-form有值，则表单 = data-form值
         if ($(this).attr('data-form')) {
             _form = $(that.attr('data-form'));
+        //如果不存在，则获取父元素的form标签
         } else {
             _form = that.parents('form');
         }
@@ -330,13 +334,14 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             success: function(res) {
                 that.text(res.msg);
                 if (res.code == 0) {
-                    that.prop('disabled', false).removeClass('layui-btn-normal').addClass('layui-btn-danger');
+                    that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
                     setTimeout(function(){
+                        that.prop('disabled', false);
                         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
                     }, 3000);
                 } else {
                     setTimeout(function() {
-                        that.text(text).prop('disabled', false);
+                        that.text(text);
                         if (options.callback) {
                             options.callback(that, res);
                         }
@@ -354,6 +359,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                                 location.reload();
                             }
                         }
+                        //that.prop('disabled', false);  //防止多次提交
                     }, 3000);
                 }
             }

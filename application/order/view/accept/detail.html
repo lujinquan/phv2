@@ -98,7 +98,7 @@
         		<div class="fr">
         			{if condition="ADMIN_ROLE == 11"}
         			<button type="button" class="layui-btn layui-btn-normal {if condition="$data_info['back_times']"}on{/if}" id="initiator" {if condition="$data_info['back_times']"}disabled{/if}>退至发起人</button>
-					<button type="button" class="layui-btn layui-btn-orange" id="handover" >转交工单</button>
+					<button type="button" class="layui-btn layui-btn-orange j-iframe-po" hisi-data="{width: '470px', height: '500px'}" href="{:url('turnForm')}?id={$data_info['id']}" id="handover" title="转交工单">转交工单</button>
 					{/if}
 					<button type="button" class="layui-btn layui-btn-grass" id="complete" >完成工单</button>
 					
@@ -151,47 +151,7 @@
 </div>
 </div>
 
-<style>
-	.j-frame-class{padding: 15px 15px 0;}
-	.j-frame-class .j-frame-label{ font-size: 16px; color:rgba(74,74,74,1); line-height: 40px; margin-bottom: 10px;}
-	.layui-layer-title{font-size: 16px; font-weight: bold;}
-	.j-frame-class .layui-form-select dl dd.layui-this{background-color:#0084FF;}
-	.j-frame-class .layui-form-select dl dt{ font-size: 14px;}
-</style>
-<div class="row j-frame-class" style="display:none" id="show_div">
-	<form class="layui-form" >
-		<div class="layui-form-item">
-			<label class="j-frame-label">工单受理人</label>
-			<div class="j-input-block">
-				<select name="transfer_to" id="transfer_to">
-					<option value="">请选择工单受理人</option>
-					{if condition="ADMIN_ROLE != 10"}
-					<optgroup label="技术服务中心">
-						<option value="83" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
-					</optgroup>
-					{/if}
-					{if condition="ADMIN_ROLE != 12"}
-					<optgroup label="产品部">
-						<option value="58" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
-					</optgroup>
-					{/if}
-					{if condition="ADMIN_ROLE != 9"}
-					<optgroup label="经管科">
-						<option value="97" {if condition="session('admin_user.nick') == '叶惠丽' || $data_info['nick'] == '叶惠丽'"}disabled{/if}>叶惠丽</option>
-					</optgroup>
-					{/if}
-					{if condition="ADMIN_ROLE != 11"}
-					<optgroup label="运行管理中心">
-						<option value="81" {if condition="session('admin_user.nick') == '郑湾'"}disabled{/if}>郑湾</option>
-						<option value="82" {if condition="session('admin_user.nick') == '刘丹'"}disabled{/if}>刘丹</option>
-					</optgroup>
-					{/if}
 
-				</select>
-			</div>
-		</div>
-    	</form>
-    </div>
     {include file="system@block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
     <script>
@@ -203,13 +163,15 @@
 		    //转交工单
 		    $("#handover").on("click",function(){
 		    	layer.open({
-		    		type: 1,
+		    		type: 2,
 		    		btn: ["确定","取消"],
-		    		zIndex: 10,
+		    		//shadeClose:true,
+		    		//zIndex: 1,
 		    		title: ['转交工单'],
-		    		area: ['400px','500px'],
+		    		scrollbar: false,
+		    		area: ['400px','550px'],
 		    		offset: 'auto',
-		    		content: $('#show_div'),
+		    		content: "{:url('turnForm')}?hisi_iframe=yes",
 		    		yes: function(index, layero){
 		    			var data = $('.layui-form').serialize();
 		    			//console.log($('.layui-layer-btn0').hasClass('disabled'));
