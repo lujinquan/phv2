@@ -10,11 +10,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline layui-col-md2" style="width:120px;">
 					<select name="tenant_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -23,13 +23,13 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline layui-col-md2" style="width:150px;padding-left:5px">
-					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_name j-input-margin" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2" style="width:170px;padding-left:5px">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="tenant_card" placeholder="身份证号" class="layui-input">
 				</div>
 				<input type="hidden" name="group" value="{$group}" class="layui-input">
@@ -88,15 +88,18 @@
 						fixed: 'left'
 					}, {
 						field: 'tenant_number',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '租户编号'
 					}, {
 						field: 'tenant_name',
-						width: 240,
+						minWidth: 240,
+						align:'center',
 						title: '租户姓名'
 					}, {
 						field: 'tenant_inst_id',
-						width: 140,
+						minWidth: 140,
+						align:'center',
 						title: '管段',
 						hide: isShowInst,
 						templet: function(d) {
@@ -104,15 +107,18 @@
 						}
 					}, {
 						field: 'tenant_tel',
-						width: 140,
+						minWidth: 140,
+						align:'center',
 						title: '联系方式'
 					}, {
 						field: 'tenant_card',
-						width: 180,
+						minWidth: 180,
 						title: '身份证号'
 					}, {
 						title: '操作',
-						minWidth: 180,
+						Width: 260,
+						minWidth: 260,
+						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
 					}

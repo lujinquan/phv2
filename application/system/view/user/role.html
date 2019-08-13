@@ -1,3 +1,12 @@
+<div class="j-table-content j-no-search">
+	<div class="layui-btn-container j-container-margin">
+		<div class="layui-btn-container">
+		<a href="{:url('addRole')}" class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>添加</a>
+		<button data-href="{:url('statusRole?val=1')}" class="layui-btn  hisi-page-btns layui-bg-green" data-table="dataTable"><i class="layui-icon layui-icon-play"></i>启用</button>
+		<button data-href="{:url('statusRole?val=0')}" class="layui-btn  hisi-page-btns layui-bg-red" data-table="dataTable"><i class="layui-icon layui-icon-pause"></i>禁用</button>
+		<button data-href="{:url('delRole')}" class="layui-btn layui-btn-gray hisi-page-btns confirm j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+		</div>
+	</div>
 <table id="dataTable"></table>
 
 {include file="block/layui" /}
@@ -12,14 +21,8 @@
 </script>
 
 <script type="text/html" id="toolbar">
-    <div class="layui-btn-group fl">
-        <a href="{:url('addRole')}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine">&nbsp;添加</a>
-        <a data-href="{:url('statusRole?val=1')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns layui-icon layui-icon-play" data-table="dataTable">&nbsp;启用</a>
-        <a data-href="{:url('statusRole?val=0')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns layui-icon layui-icon-pause" data-table="dataTable">&nbsp;禁用</a>
-        <a data-href="{:url('delRole')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns confirm layui-icon layui-icon-close red">&nbsp;删除</a>
-    </div>
 </script>
-
+</div>
 <script type="text/javascript">
     layui.use(['table'], function() {
         var table = layui.table;
@@ -31,15 +34,15 @@
             ,text: {
                 none : '暂无相关数据'
             }
-            ,toolbar: '#toolbar'
-            ,defaultToolbar: ['filter']
+           // ,toolbar: '#toolbar'
+            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'name',width: 160, title: '角色名称'}
-                ,{field: 'intro',width: 400, title: '角色简介'}
-                ,{field: 'ctime',width: 180, title: '创建时间'}
-                ,{field: 'status',width: 100, title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', minWidth: 100,templet: '#buttonTpl'}
+                ,{field: 'name',minWidth: 160, align:'center',title: '角色名称'}
+                ,{field: 'intro',minWidth: 400,align:'center', title: '角色简介'}
+                ,{field: 'ctime',minWidth: 180, align:'center',title: '创建时间'}
+                ,{field: 'status',minWidth: 100,align:'center', title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', minWidth: 260,Width: 260,align:'center',templet: '#buttonTpl'}
             ]]
         });
     });

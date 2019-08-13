@@ -1,3 +1,12 @@
+<div class="j-table-content j-no-search">
+	<div class="layui-btn-container j-container-margin">
+		<div class="layui-btn-container">
+		<a href="{:url('add?group='.input('param.group'))}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>添加</button></a>
+		<button data-href="{:url('status?val=1')}" class="layui-btn  hisi-page-btns layui-bg-green" data-table="dataTable"><i class="layui-icon layui-icon-play"></i>启用</button>
+		<button data-href="{:url('status?val=0')}" class="layui-btn  hisi-page-btns layui-bg-red" data-table="dataTable"><i class="layui-icon layui-icon-pause"></i>禁用</button>
+		<button data-href="{:url('del')}" class="layui-btn layui-btn-gray hisi-page-btns confirm j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+		</div>
+	</div>
 <table id="dataTable"></table>
 {include file="block/layui" /}
 <script type="text/html" title="状态模板" id="statusTpl">
@@ -17,14 +26,8 @@
 </script>
 
 <script type="text/html" id="toolbar">
-    <div class="layui-btn-group fl">
-        <a href="{:url('add?group='.input('param.group'))}" class="layui-btn layui-btn-primary layui-btn-sm layui-icon layui-icon-add-circle-fine">&nbsp;添加</a>
-        <a data-href="{:url('status?val=1')}" class="layui-btn layui-btn-primary layui-btn-sm hisi-page-btns layui-icon layui-icon-play" data-table="dataTable">&nbsp;启用</a>
-        <a data-href="{:url('status?val=0')}" class="layui-btn layui-btn-primary layui-btn-sm hisi-page-btns layui-icon layui-icon-pause" data-table="dataTable">&nbsp;禁用</a>
-        <a data-href="{:url('del')}" class="layui-btn layui-btn-primary layui-btn-sm hisi-page-btns confirm layui-icon layui-icon-close red">&nbsp;删除</a>
-    </div>
 </script>
-
+</div>
 <script type="text/javascript">
     layui.use(['table', 'jquery', 'layer'], function() {
         var table = layui.table, formType = {:json_encode(form_type())}, 
@@ -39,16 +42,16 @@
             ,text: {
                 none : '暂无相关数据'
             }
-            ,toolbar: '#toolbar'
-            ,defaultToolbar: ['filter']
+            //,toolbar: '#toolbar'
+            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'name', title: '标识'}
-                ,{field: 'title', title: '标题'}
-                ,{field: 'type', title: '类型', width: 100}
-                ,{field: 'sort', title: '排序', width: 80, templet: '#sortTpl'}
-                ,{field: 'status', title: '状态', width: 100, templet: '#statusTpl'}
-                ,{title: '操作', width: 120, templet: '#buttonTpl'}
+                ,{field: 'name',minWidth: 150, align:'center', title: '标识'}
+                ,{field: 'title',minWidth: 300, align:'center', title: '标题'}
+                ,{field: 'type', title: '类型', minWidth: 100, align:'center'}
+                ,{field: 'sort', title: '排序', minWidth: 100, align:'center', templet: '#sortTpl'}
+                ,{field: 'status', title: '状态', minWidth: 150, align:'center', templet: '#statusTpl'}
+                ,{title: '操作', minWidth: 260, Width: 260,align:'center', templet: '#buttonTpl'}
             ]]
         });
 

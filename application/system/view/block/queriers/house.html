@@ -6,7 +6,7 @@
 	.page-tab-content{margin: 0;}
 	/*------------------ iframe页面去共用部分样式 E ----------------*/
 </style>
-<div class="j-table-content">
+<div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=house" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
@@ -75,15 +75,18 @@
 				[ //表头
 					{
 						field: 'house_number',
-						width: 140,
+						minWidth: 140,
+						align:'center',
 						title: '房屋编号'
 					}, {
 						field: 'tenant_name',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '租户姓名'
 					}, {
 						field: 'ban_inst_id',
-						width: 120,
+						minWidth: 120,
+						align:'center',
 						title: '管段',
 						hide: isShowInst,
 						templet: function(d) {
@@ -91,25 +94,29 @@
 						}
 					}, {
 						field: 'ban_owner_id',
-						width: 60,
+						minWidth: 60,
+						align:'center',
 						title: '产别',
 						templet: function(d) {
 							return params.owners[d.ban_owner_id];
 						}
 					}, {
 						field: 'house_use_id',
-						width: 90,
+						minWidth: 90,
+						align:'center',
 						title: '使用性质',
 						templet: function(d) {
 							return params.uses[d.house_use_id];
 						}
 					}, {
 						field: 'ban_address',
-						width: 200,
+						minWidth: 200,
+						align:'center',
 						title: '地址'
 					}, {
 						field: 'house_area',
-						width: 80,
+						minWidth: 80,
+						align:'center',
 						title: '建面'
 					}
 

@@ -1,4 +1,4 @@
-<div class="j-details-box floorWrap layui-form">
+<div class="j-details-box j-no-border floorWrap layui-form">
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
     <legend>基本信息</legend>
   </fieldset>
@@ -82,6 +82,11 @@
   		</div>
   	</div>
    {/volist}
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="j-margin-btn">
+  		<a href="{:url('index')}?group=n" class="layui-btn">返回</a>
+  	</div>
   </div>
 </div>
 {include file="system@block/layui" /}

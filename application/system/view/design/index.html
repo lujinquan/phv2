@@ -1,3 +1,9 @@
+<div class="j-table-content j-no-searchs">
+	<div class="layui-btn-container j-container-margin">
+		<div class="layui-btn-container">
+		<button data-href="{:url('export')}" data-id="Name"  class="layui-btn  j-page-excel-btns"><i class="layui-icon layui-icon-download-circle"></i>导出表</button>
+		</div>
+	</div>	
 <table id="dataTable"></table>
 {include file="block/layui" /}
 
@@ -8,11 +14,9 @@
 </script>
 
 <script type="text/html" id="toolbar">
-    <div class="layui-btn-group fl">
-        <a data-href="{:url('export')}" data-id="Name" class="layui-btn layui-btn-primary layui-btn-sm j-page-excel-btns">导出表</a>
-    </div>
-</script>
 
+</script>
+</div>
 <script type="text/javascript">
     layui.use(['table'], function() {
         var table = layui.table;
@@ -25,35 +29,35 @@
             ,text: {
                 none : '暂无相关数据'
             }
-            ,toolbar: '#toolbar'
-            ,defaultToolbar: ['filter']
+            //,toolbar: '#toolbar'
+            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'Name', title: '表名',width:200}
-                ,{field: 'Comment', title: '备注', width: 180}
-                // ,{field: 'Version', title: '版本', width: 80}
-                ,{field: 'Rows', title: '数据量/条', width: 120,templet: function(d) {
+                ,{field: 'Name', title: '表名',minWidth:200,align:'center'}
+                ,{field: 'Comment', title: '备注', minWidth: 180,align:'center'}
+                // ,{field: 'Version', title: '版本', minWidth: 80,align:'center'}
+                ,{field: 'Rows', title: '数据量/条', minWidth: 120,align:'center',templet: function(d) {
                     return d.Rows;
                 }}
-                ,{field: 'Engine', title: '引擎',sort: true, width: 100}
-                ,{field: 'Data_length', title: '大小', sort: true,width: 100, templet: function(d) {
+                ,{field: 'Engine', title: '引擎',sort: true, minWidth: 100,align:'center'}
+                ,{field: 'Data_length', title: '大小', sort: true,minWidth: 100, align:'center',templet: function(d) {
                     return bytesToSize(d.Data_length);
                 }}
-                // ,{field: 'Max_data_length', title: '可容最大数据量', sort: true,width: 180, templet: function(d) {
+                // ,{field: 'Max_data_length', title: '可容最大数据量', sort: true,minWidth: 180,align:'center' ,templet: function(d) {
                 //     return bytesToSize(d.Max_data_length);
                 // }}
-                ,{field: 'Avg_row_length', title: '平均每条', sort: true,width: 120, templet: function(d) {
+                ,{field: 'Avg_row_length', title: '平均每条', sort: true,minWidth: 120,align:'center' ,templet: function(d) {
                     return bytesToSize(d.Avg_row_length);
                 }}
-                ,{field: 'Index_length', title: '索引大小', sort: true,width: 120, templet: function(d) {
+                ,{field: 'Index_length', title: '索引大小', sort: true,minWidth: 120,align:'center', templet: function(d) {
                     return bytesToSize(d.Index_length);
                 }}
-                ,{field: 'Check_time', title: '最近检查表时间', width: 160}
-                ,{field: 'Data_free', title: '冗余', width: 100, templet: function(d) {
+                ,{field: 'Check_time', title: '最近检查表时间', minWidth: 160,align:'center'}
+                ,{field: 'Data_free', title: '冗余', minWidth: 100,align:'center', templet: function(d) {
                     return bytesToSize(d.Data_free);
                 }}
                 
-                ,{title: '操作', minWidth: 100, templet: '#buttonTpl'}
+                ,{title: '操作', minWidth: 260,align:'center',Width: 260, templet: '#buttonTpl'}
             ]]
         });
     });

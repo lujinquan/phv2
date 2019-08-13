@@ -1,11 +1,12 @@
+<div class="j-table-content j-no-search">
+	
 <table id="dataTable"></table>
 {include file="block/layui" /}
 <script type="text/html" id="buttonTpl">
-    <div class="layui-btn-group">
-        <a data-href="{:url('import')}?id={{ d.id }}" class="layui-btn layui-btn-primary layui-btn-sm j-ajax">恢复</a>
-        <a data-href="{:url('del?')}?id={{ d.id }}" class="layui-btn layui-btn-primary layui-btn-sm j-ajax">删除</a>
-    </div>
+        <a data-href="{:url('import')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">恢复</a>
+        <a data-href="{:url('del?')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-ajax">删除</a>
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table'], function() {
         var table = layui.table;
@@ -19,14 +20,14 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'name', title: '备份名称'}
-                ,{field: 'part', title: '备份卷数', width: 100}
-                ,{field: 'compress', title: '备份压缩', width: 100}
-                ,{field: 'size', title: '备份大小', width: 100, templet: function(d) {
+                {field: 'name', title: '备份名称',minWidth: 200, align:'center'}
+                ,{field: 'part', title: '备份卷数', minWidth: 100, align:'center'}
+                ,{field: 'compress', title: '备份压缩', minWidth: 100, align:'center'}
+                ,{field: 'size', title: '备份大小', minWidth: 100,align:'center', templet: function(d) {
                     return parseInt(d.size / 1024) + 'KB';
                 }}
-                ,{field: 'time', title: '备份时间', width: 170}
-                ,{title: '操作', width: 120, templet: '#buttonTpl'}
+                ,{field: 'time', title: '备份时间', minWidth: 170, align:'center'}
+                ,{title: '操作', minWidth: 260, Width: 260, align:'center',templet: '#buttonTpl'}
             ]]
         });
     });

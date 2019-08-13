@@ -10,20 +10,20 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline" style="width:150px;">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -32,7 +32,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
@@ -40,7 +40,7 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="house_use_id">
 						<option value="">使用性质</option>
 						{volist name="params['uses']" id="v"}
@@ -101,19 +101,23 @@
 						fixed: 'left'
 					}, {
 						field: 'house_number',
-						width: 140,
+						minWidth: 140,
+						align:'center',
 						title: '房屋编号'
 					}, {
 						field: 'ban_number',
-						width: 110,
+						minWidth: 110,
+						align:'center',
 						title: '楼栋编号'
 					}, {
 						field: 'tenant_name',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '租户姓名'
 					}, {
 						field: 'ban_inst_id',
-						width: 120,
+						minWidth: 120,
+						align:'center',
 						title: '管段',
 						hide: isShowInst,
 						templet: function(d) {
@@ -121,40 +125,47 @@
 						}
 					}, {
 						field: 'ban_owner_id',
-						width: 60,
+						minWidth: 60,
 						title: '产别',
+						align:'center',
 						templet: function(d) {
 							return params.owners[d.ban_owner_id];
 						}
 					}, {
 						field: 'house_use_id',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '使用性质',
 						templet: function(d) {
 							return params.uses[d.house_use_id];
 						}
 					}, {
 						field: 'ban_address',
-						width: 200,
+						minWidth: 200,
+						align:'center',
 						title: '地址'
 					}, {
 						field: 'house_area',
-						width: 80,
+						minWidth: 80,
+						align:'center',
 						title: '建面'
 					}, {
 						field: 'house_lease_area',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '计租面积'
 					}, {
 						field: '',
-						width: 80,
+						minWidth: 80,
+						align:'center',
 						title: '单元',
 						templet: function(d) {
 							return d.house_unit_id + '/' + d.ban_units;
 						}
 					}, {
 						field: '',
-						width: 80,
+						align:'center',
+						minWidth: 80,
 						title: '楼层',
 						templet: function(d) {
 							return d.house_floor_id + '/' + d.ban_floors;
@@ -163,7 +174,9 @@
 
 					, {
 						title: '操作',
-						minWidth: 230,
+						Width: 260,
+						minWidth: 260,
+						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
 					}

@@ -1,5 +1,5 @@
 <form class="layui-form" action="{url('add')}" method="post">
-  <div class="j-details-box floorWrap">
+  <div class="j-details-box j-no-border floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
 		</fieldset>
@@ -154,7 +154,7 @@
 		</div>
 		<!-- 房间信息 -->
 		<table class="layui-table ">
-		<thead>
+		<thead class="j-table-center">
 			<tr>
 				<th>房屋类型</th>
 				<th>房间编号</th>
@@ -173,7 +173,7 @@
 				<th>操作</th>
 			</tr> 
 		</thead>
-		<tbody>
+		<tbody  class="j-table-center">
 <!-- 			<tr>
 				<td>卧室</td>
 				<td>65181</td>
@@ -208,6 +208,9 @@
 				<td>{$vo['baseinfo']['room_cou_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
 				<td>
+					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
+					
+					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
 				{if condition="$group == 'n'"}
 					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
 					

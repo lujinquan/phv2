@@ -1,16 +1,18 @@
-<div class="page-toolbar">
+<div class="j-table-content j-no-title">
+  <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
-        <div class="layui-input-inline" style="width:150px;">
+	  <div class="j-search-fl layui-col-md8  fl">
+        <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
         </div>
-        <div class="layui-input-inline" style="width:150px;padding-left:5px">
+        <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="rent_order_number" placeholder="订单编号" class="layui-input">
         </div>
-        <div class="layui-input-inline" style="width:150px;padding-left:5px">
+        <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="ban_address" placeholder="地址" class="layui-input">
         </div>
         {if condition="INST_LEVEL != 3"}
-        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+        <div class="layui-input-inline" style="width:120px;">
             <select name="ban_inst_id">
                 <option value="">机构</option>
                 {volist name=":config('inst_check_names')[INST]" id="v"}
@@ -19,7 +21,7 @@
               </select>
         </div>
         {/if}
-        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+        <div class="layui-input-inline" style="width:120px;">
             <select name="ban_owner_id">
                 <option value="">产别</option>
                 {volist name="params['owners']" id="v"}
@@ -27,7 +29,7 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="width:120px;padding-left:5px">
+        <div class="layui-input-inline" style="width:120px;">
             <select name="house_use_id">
                 <option value="">使用性质</option>
                 {volist name="params['uses']" id="v"}
@@ -35,26 +37,30 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="margin-left:10px;">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                <i class="layui-icon">&#xe615;</i>
-                搜索
-            </button>
-            <button type="reset" class="layui-btn">重置</button>
+	    </div>
+        <div class="j-search-fr layui-col-md4 fr">
+        	<div class="layui-input-inline fr">
+        		<div class="layui-input-inline" style="margin-left:10px;">
+        			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+        			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+        				<i class="layui-icon">&#xe615;</i>
+        				搜索
+        			</button>
+        			<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+        		</div>
+        	</div>
         </div>
     </form>
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="toolbar">
-  <div class="layui-btn-container">
-
-  </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 
     <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
         var table = layui.table;
@@ -62,6 +68,8 @@
             elem: '#dataTable'
             //,height: 550
             ,url: '{:url("index")}'
+			,toolbar: '#toolbar'
+			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
             ,page: true 
             ,limit: 10
             ,text: {
@@ -69,25 +77,25 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'rent_order_number', width: 240, align:'center', title: '订单编号'}
-                ,{field: 'rent_order_date', width: 140, align:'center', title: '账单期'}
-                ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
+                ,{field: 'rent_order_number', minWidth: 200, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_date', minWidth: 120, align:'center', title: '账单期'}
+                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
-                ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
+                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'house_use_id', width: 100, align:'center', title: '使用性质', templet: function(d) {
+                ,{field: 'house_use_id', minWidth: 80, align:'center', title: '使用性质', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
-                ,{field: 'ban_address', width: 140, align:'center', title: '地址'}
-                ,{field: 'rent_order_receive', width: 100, align:'center', title: '应收租金'}
-                ,{field: 'rent_order_paid', width: 100, align:'center', title: '已缴租金'}
-                ,{field: 'is_invoice', width: 140, align:'center', title: '发票', templet: function(d) {
+                ,{field: 'tenant_name', minWidth: 100, align:'center', title: '租户姓名'}
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金'}
+                ,{field: 'rent_order_paid', minWidth: 100, align:'center', title: '已缴租金'}
+                ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
                     return params.is_invoice[d.is_invoice];
                 }}
-                ,{title: '操作', minWidth: 100,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', minWidth: 200,Width: 200,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

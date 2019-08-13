@@ -67,7 +67,7 @@
             <!--单选-->
             <div class="layui-col-md4">
                 <label class="j-form-label">{$v['title']}</label>
-                <div class="j-input-inline">
+                <div class="j-input-inline j-input-radio">
                     {volist name="v['options']" id="vv"}<input type="radio" name="id[{$v['id']}]" value="{$key}" title="{$vv}" {if condition="$key eq $v['value']"}checked{/if}>
                     {/volist}
                 </div>

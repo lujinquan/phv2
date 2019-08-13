@@ -1,6 +1,7 @@
+<div class="j-table-content">
 <table id="dataTable"></table>
 {include file="block/layui" /}
-
+</div>
 <script type="text/javascript">
     layui.use(['table'], function() {
         var table = layui.table;
@@ -16,12 +17,12 @@
             //,toolbar: '#toolbar'
             //,defaultToolbar: ['filter']
             ,cols: [[ //表头
-				{field: 'Field', title: '字段名',width:140}
-                ,{field: 'Type', title: '字段类型',width:180}
-                ,{field: 'Null', title: '是否为空',width:100}
-                ,{field: 'Key', title: '键',width:80}
-                ,{field: 'Default', title: '默认值',width:100}
-                ,{field: 'Comment', title: '备注',width:180}
+				{field: 'Field', title: '字段名',minWidth:140,align:'center'}
+                ,{field: 'Type', title: '字段类型',minWidth:180,align:'center'}
+                ,{field: 'Null', title: '是否为空',minWidth:100,align:'center'}
+                ,{field: 'Key', title: '键',minWidth:80,align:'center'}
+                ,{field: 'Default', title: '默认值',minWidth:100,align:'center'}
+                ,{field: 'Comment', title: '备注',minWidth:180,align:'center'}
                 // ,{title: '操作', minWidth: 100, templet: '#buttonTpl'}
             ]]
         });

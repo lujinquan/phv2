@@ -1,20 +1,20 @@
-<div class="page-toolbar">
-    <div class="layui-btn-container j-container-margin">
-        <div class="layui-btn-container">       
-            <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
-        </div>
-    </div>
-    <div class="page-toolbar j-page-toolbar clearfix">
+ <div class="j-table-content j-no-tab">
+	 <div class="layui-btn-container j-container-margin">
+	     <div class="layui-btn-container">       
+	         <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
+	     </div>
+	 </div>
+ <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
             <div class="j-search-fl layui-col-md8  fl">
-                <div class="layui-input-inline" style="width:150px;">
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
                 </div>  
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="ban_address" placeholder="地址" class="layui-input">
                 </div>
                 {if condition="INST_LEVEL != 3"}
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline" style="width:120px;">
                     <select name="ban_inst_id">
                         <option value="">机构</option>
                         {volist name=":config('inst_check_names')[INST]" id="v"}
@@ -23,7 +23,7 @@
                     </select>
                 </div>
                 {/if}
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline" style="width:120px;">
                     <select name="ban_owner_id">
                         <option value="">产别</option>
                         {volist name="params['owners']" id="v"}
@@ -31,7 +31,7 @@
                         {/volist}
                     </select>
                 </div>
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline" style="width:120px;">
                     <select name="house_use_id">
                         <option value="">使用性质</option>
                         {volist name="params['uses']" id="v"}
@@ -39,7 +39,7 @@
                         {/volist}
                     </select>
                 </div>
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline" style="width:120px;">
                     <select name="pay_type">
                         <option value="">支付方式</option>
                         {volist name="params['pay_type']" id="v"}
@@ -47,36 +47,33 @@
                         {/volist}
                     </select>
                 </div> 
-                <div class="layui-input-inline" style="width:150px;padding-left:5px">
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="ctime" placeholder="日期范围" id="test6" class="layui-input">
                 </div> 
             </div>
             <div class="j-search-fr layui-col-md4 fr">
-                <div class="layui-input-inline fr">
-                    <div class="layui-input-inline" style="margin-left:10px;">
-                        <button type="reset" class="layui-btn j-btn-reset">重置</button>
-                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                            <i class="layui-icon">&#xe615;</i>
-                            搜索
-                        </button>
-                        
-                    </div>
-                </div>
+            	<div class="layui-input-inline fr">
+            		<div class="layui-input-inline" style="margin-left:10px;">
+            			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+            			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+            				<i class="layui-icon">&#xe615;</i>
+            				搜索
+            			</button>
+            			<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+            		</div>
+            	</div>
             </div>
         </form>
-    </div>
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="toolbar">
-  <div class="layui-btn-container">
-
-  </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 
     <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery','laydate'], function() {
         var table = layui.table;
@@ -85,6 +82,8 @@
             elem: '#dataTable'
             ,height: 550
             ,url: '{:url("index")}'
+			,toolbar: true
+			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
             ,page: true 
             ,totalRow:true
             ,limit: 10

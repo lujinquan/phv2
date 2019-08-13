@@ -1,5 +1,7 @@
-<div class="page-toolbar">
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+	  <div class="j-search-fl layui-col-md8  fl">
         <div class="layui-input-inline" style="width:150px;">
             <input type="text" name="op_order_number" placeholder="工单编号" class="layui-input">
         </div>
@@ -11,26 +13,28 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="margin-left:10px;">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
-                <i class="layui-icon">&#xe615;</i>
-                搜索
-            </button>
-            <button type="reset" class="layui-btn">重置</button>
-        </div>
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
+		  <div class="layui-input-inline fr">
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+		      <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+		          <i class="layui-icon">&#xe615;</i>
+		          搜索
+		      </button>
+			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+		  </div>
+		</div>
     </form>
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="toolbar">
-  <div class="layui-btn-container">
-
-  </div>
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     <a href="{:url('detail')}?group=j&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a> 
     <a href="{:url('edit')}?group=j&id={{ d.id }}" class="layui-btn {{ d.ifadd }} layui-btn-xs layui-btn-primary">补充资料</a>  
 </script>
+</div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
         var table = layui.table;
@@ -38,22 +42,24 @@
             elem: '#dataTable'
             ,height: 550
             ,url: '{:url("order/Myorder/index")}?group=j' //数据接口
+			,toolbar: true
+			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,page: true //开启分页
             ,limit: 10
             ,text: {
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'op_order_number', width: 180, align:'center', title: '工单编号'}
-                ,{field: 'op_order_type_name', width: 140, align:'center', title: '工单类型'} 
-                ,{field: 'inst_id', width: 120, align:'center', title: '机构', templet: function(d) {
+                {field: 'op_order_number', minWidth: 180, align:'center', title: '工单编号'}
+                ,{field: 'op_order_type_name', minWidth: 140, align:'center', title: '工单类型'} 
+                ,{field: 'inst_id', minWidth: 120, align:'center', title: '机构', templet: function(d) {
                     return params.insts[d.inst_id];
                 }}
                 ,{field: 'remark', minWidth: 200, align:'center', title: '问题详情'}
-                ,{field: 'status_info', width: 180, align:'center', title: '状态'}
-                ,{field: 'ctime', width: 150, align:'center', title: '创建时间'}
-                ,{field: 'nick', width: 100, align:'center', title: '发起人'}
-                ,{title: '操作', width: 140, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'status_info', minWidth: 180, align:'center', title: '状态'}
+                ,{field: 'ctime', minWidth: 150, align:'center', title: '创建时间'}
+                ,{field: 'nick', minWidth: 100, align:'center', title: '发起人'}
+                ,{title: '操作', minWidth: 260, Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

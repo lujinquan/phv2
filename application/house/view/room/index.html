@@ -2,17 +2,17 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline" style="width:150px;">
+				<div class="layui-input-inline j-input-margin" style="width:150px;">
 					<input type="text" name="room_number" placeholder="房间编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -21,7 +21,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="room_type">
 						<option value="">房间类型</option>
 						{volist name="params['roomtypes']" id="v"}
@@ -74,15 +74,18 @@
 						fixed: 'left'
 					}, {
 						field: 'room_number',
-						width: 110,
+						minWidth: 110,
+						align:'center',
 						title: '房间编号'
 					}, {
 						field: 'ban_number',
-						width: 110,
+						minWidth: 110,
+						align:'center',
 						title: '楼栋编号'
 					}, {
 						field: 'ban_inst_id',
-						width: 120,
+						minWidth: 120,
+						align:'center',
 						title: '管段',
 						hide: isShowInst,
 						templet: function(d) {
@@ -97,27 +100,34 @@
 						}
 					}, {
 						field: 'ban_address',
-						width: 300,
+						minWidth: 300,
+						align:'center',
 						title: '地址'
 					}, {
 						field: 'room_door',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '间号'
 					}, {
 						field: 'room_unit_id',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '单元号'
 					}, {
 						field: 'room_floor_id',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '层次'
 					}, {
 						field: 'room_use_area',
-						width: 100,
+						minWidth: 100,
+						align:'center',
 						title: '使用面积'
 					}, {
 						title: '操作',
-						minWidth: 80,
+						Width: 260,
+						minWidth: 260,
+						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
 					}

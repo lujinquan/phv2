@@ -6,7 +6,7 @@
 	.page-tab-content{margin: 0;}
 	/*------------------ iframe页面去共用部分样式 E ----------------*/
 </style>
-<div class="j-table-content">
+<div class="j-table-content j-no-title">
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=tenant"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
@@ -60,11 +60,11 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'tenant_number', width:100, title: '租户ID'}
-                ,{field: 'tenant_name', width: 240, title: '租户姓名'}
-				,{field: 'tenant_tel', width: 140, title: '联系方式'}
-				,{field: 'tenant_card', width: 180, title: '身份证号'}
-                ,{field: 'tenant_inst_id', width: 140, title: '管段', hide: isShowInst, templet: function(d) {
+                {field: 'tenant_number', minWidth:100,align:'center', title: '租户ID'}
+                ,{field: 'tenant_name', minWidth: 240,align:'center', title: '租户姓名'}
+				,{field: 'tenant_tel', minWidth: 140,align:'center', title: '联系方式'}
+				,{field: 'tenant_card', minWidth: 180,align:'center', title: '身份证号'}
+                ,{field: 'tenant_inst_id', minWidth: 140,align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.tenant_inst_id];
                 }}
                 

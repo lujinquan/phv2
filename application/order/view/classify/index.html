@@ -1,4 +1,4 @@
-<div class="j-table-content">
+<div class="j-table-content  j-no-tab">
 	<div class="layui-btn-container j-container-margin">
 		<div class="layui-btn-container">		
 			<a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增分类</button></a>
@@ -19,7 +19,7 @@
 							<i class="layui-icon">&#xe615;</i>
 							搜索
 						</button>
-						
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
 					</div>
 				</div>
 			</div>
@@ -45,6 +45,8 @@ layui.use(['table', 'jquery'], function() {
 			url: '{:url("order/Classify/index")}' //数据接口
 				,
 			page: true //开启分页
+			,toolbar: true
+			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 				,
 			limit: 10,
 			text: {
@@ -57,23 +59,29 @@ layui.use(['table', 'jquery'], function() {
 						fixed: 'left'
 					}, {
 						field: 'title',
-						width: 140,
+						minWidth: 120,
+						align:'center',
 						title: '分类名称'
 					}, {
 						field: 'pid',
-						width: 140,
+						minWidth: 120,
+						align:'center',
 						title: '父级分类'
 					}, {
 						field: 'remark',
-						
-						title: '分类描述'
+						title: '分类描述',
+						minWidth: 350,
+						align:'center',
 					}, {
 						field: 'filetypes',
-						width: 300,
+						minWidth: 300,
+						align:'center',
 						title: '需上传的附件类型',
 					}, {
 						title: '操作',
-						width: 200,
+						minWidth: 260,
+						width: 260,
+						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
 					}

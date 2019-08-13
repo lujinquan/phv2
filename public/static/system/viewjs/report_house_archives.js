@@ -6,7 +6,7 @@ var section_name_end = section_name.indexOf(')');
 section_name = section_name.substring(section_name_start,section_name_end);
 var time_span = $('#timeYear').val().split('-');
 $('.time').text(time_span[0]+'年'+time_span[1]+'月');
-};
+}
 $("#yueQuery").click(function() {
     $('.Wsdj:gt(0)').remove();
     $('.Syxz:gt(0)').remove();

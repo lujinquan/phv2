@@ -1,14 +1,17 @@
-
+<div class="j-table-content j-no-searchs">
+<div class="layui-btn-container j-container-margin">
+	<div class="layui-btn-container">
+	<button data-href="{:url('del?table=admin_log')}" class="layui-btn layui-btn-gray hisi-page-btns confirm j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+	<a href="{:url('clear')}" refresh="yes" class="layui-btn  hisi-page-btns layui-bg-red j-ajax confirm" data-table="dataTable"><i class="layui-icon layui-icon-delete"></i>清空所有</a>
+	</div>
+</div>	
 <table id="dataTable"></table>
 
 <script type="text/html" id="toolbar">
-    <div class="layui-btn-group fl">
-        <a data-href="{:url('del?table=admin_log')}" class="layui-btn layui-btn-primary layui-btn-sm j-page-btns confirm layui-icon layui-icon-delete">删除</a>
-        <a href="{:url('clear')}" refresh="yes" class="layui-btn layui-btn-primary layui-btn-sm j-ajax confirm layui-icon layui-icon-delete">清空所有</a>
-    </div>
 </script>
 
 {include file="block/layui" /}
+</div>
 <script type="text/javascript">
     layui.use(['table'], function() {
         var table = layui.table;
@@ -22,21 +25,21 @@
             ,text: {
                 none : '暂无相关数据'
             }
-            ,toolbar: '#toolbar'
-            ,defaultToolbar: ['filter']
+            //,toolbar: '#toolbar'
+            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'uid', title: '操作者', templet: function(d) {
+                ,{field: 'uid', title: '操作者',align:'center', templet: function(d) {
                     return '<a href="{:url()}?uid='+ d.uid +'&page=1" class="hisi-table-a-filter">' + d.user.nick + '</a>';
                 }}
-                ,{field: 'title', title: '操作名称'}
-                ,{field: 'url', title: '操作地址', templet: function(d) {
+                ,{field: 'title', title: '操作名称',align:'center'}
+                ,{field: 'url', title: '操作地址',align:'center',  templet: function(d) {
                     return '<a href="' + d.url + '">' + d.url + '</a>';
                 }}
-                ,{field: 'remark', title: '操作备注'}
-                ,{field: 'count', title: '操作统计'}
-                ,{field: 'ip', title: 'IP地址'}
-                ,{field: 'mtime', title: '最近访问'}
+                ,{field: 'remark', title: '操作备注',align:'center'}
+                ,{field: 'count', title: '操作统计',align:'center'}
+                ,{field: 'ip', title: 'IP地址',align:'center'}
+                ,{field: 'mtime', title: '最近访问',align:'center'}
             ]]
         });
     });

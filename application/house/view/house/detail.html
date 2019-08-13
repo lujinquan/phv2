@@ -1,6 +1,6 @@
 {include file="system@block/layui" /}
 {if condition="$group == 'y'"}
-  <div class="j-details-box floorWrap layui-form">
+  <div class="j-details-box j-no-border floorWrap layui-form">
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -96,7 +96,7 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">返回</a>
+			<a href="{:url('index')}?group=n" class="layui-btn">返回</a>
 		</div>
 	</div>
   </div>
@@ -154,8 +154,8 @@
 		   ,$ = layui.$;
         table.render({
             elem: '#dataTable'
-            ,skin: 'line' //行边框风格
-            ,even: true //开启隔行背景
+            //,skin: 'line' //行边框风格
+            //,even: true //开启隔行背景
             ,height: 500
             ,url: '{:url("house/House/detail")}?id={$data_info["house_id"]}&group={$group}' //数据接口
             ,page: true //开启分页
@@ -164,14 +164,14 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {field: 'house_tai_id', width: 120,title: '<span class="e-title">业务ID</span>'}
-                ,{field: 'house_tai_type', width: 110, title: '<span class="e-title">业务类型</span>', templet: function(d) {
+                {field: 'house_tai_id', minWidth: 120,align:'center',title: '<span class="e-title">业务ID</span>'}
+                ,{field: 'house_tai_type', minWidth: 110,align:'center', title: '<span class="e-title">业务类型</span>', templet: function(d) {
                     return params.house_tai_type[d.house_tai_type];
                 }}
-                ,{field: 'tenant_name', width: 100, title: '<span class="e-title">租户姓名</span>'}
-                ,{field: 'house_tai_ctime', width: 180, title: '<span class="e-title">操作时间</span>'}
-                ,{field: 'nick', width: 120, title: '<span class="e-title">操作人</span>'}
-                ,{field: 'house_tai_remark', width: 140, title: '<span class="e-title">备注</span>'}
+                ,{field: 'tenant_name', minWidth: 100,align:'center', title: '<span class="e-title">租户姓名</span>'}
+                ,{field: 'house_tai_ctime', minWidth: 180,align:'center', title: '<span class="e-title">操作时间</span>'}
+                ,{field: 'nick', minWidth: 120,align:'center', title: '<span class="e-title">操作人</span>'}
+                ,{field: 'house_tai_remark', minWidth: 140,align:'center', title: '<span class="e-title">备注</span>'}
             ]]
             ,done:function(res,curr,count){
                
