@@ -12,7 +12,7 @@
         <label class="layui-form-label">管辖机构</label>
         <div class="layui-inline">
             {volist name=":config('inst_check_names')[INST]" id="v"}
-                <input type="checkbox" name="inst_ids[]" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$v}" {if condition="$formData['inst_ids']"}{if condition="in_array($key,$formData['inst_ids'])"}checked{/if}{/if}><br>
+                <input type="checkbox" name="inst_ids[]" lay-filter="filter" value="{$key}" lay-skin="primary" title="{$v}" {if condition="isset($formData['inst_ids']) && $formData['inst_ids']"}{if condition="in_array($key,$formData['inst_ids'])"}checked{/if}{/if}><br>
             {/volist}
         </div>
     </div>

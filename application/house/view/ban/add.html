@@ -5,7 +5,6 @@
 		<li class="current"><a href="#item1"><i>1</i><b>楼栋信息</b></a></li>
 		<li><a href="#item2"><i>2</i><b>房屋信息</b></a></li>
 		<li><a href="#item3"><i>3</i><b>状态选择</b></a></li>
-		<li><a href="#item4"><i>4</i><b>附件信息</b></a></li>
 	</ul>
 </div>
 <!-- 楼层导航 E -->
@@ -17,13 +16,8 @@
 				<legend>楼栋信息</legend>
 			</fieldset>
 			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<div class="j-form-label">楼栋编号</div>
-					<div class="j-input-inline">
-						<input type="text" id="number" name="number" value="1005001001" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md8">
+				
+				<div class="layui-col-md12">
 					<div class="j-form-label"><i class="red">*</i>楼栋地址</div>
 					<div class="j-input-inline">
 						<input type="text" id="ban_address" name="ban_address" autocomplete="off" class="layui-input">
@@ -31,46 +25,25 @@
 				</div>
 			</div>
 			<div class="layui-row layui-form-item layui-col-space90">
+				{if condition="INST_LEVEL < 3"}
 				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>机构名称</label>
+					<label class="j-form-label"><i class="red">*</i>管段</label>
 					<div class="j-input-inline">
-						<select id="mechanism" name="mechanism" lay-search="">
+						<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
 							<option value="">请选择</option>
-							<option value="1">机构1</option>
-							<option value="2">机构2</option>
-							<option value="3">机构3</option>
+							{volist name=":config('inst_data_names')[INST]" id="v"}
+							<option value="{$key}">{$v}</option>
+							{/volist}
 						</select>
 					</div>
 				</div>
+				{/if}
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>楼栋产别</label>
 					<div class="j-input-inline">
 						<select id="ban_owner_id" name="ban_owner_id" class="field-cid" type="select">
 							<option value="">请选择</option>
 							{volist name="params['owners']" id="v" key="k"}
-							<option value="{$k}">{$v}</option>
-							{/volist}
-						</select>
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>使用性质</label>
-					<div class="j-input-inline">
-						<select id="mechanism" name="mechanism" lay-search="">
-							<option value="">请选择</option>
-							<option value="1">性质1</option>
-							<option value="2">性质2</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>完损等级</label>
-					<div class="j-input-inline">
-						<select id="ban_damage_id" name="ban_damage_id" class="field-cid" type="select">
-							<option value="">请选择</option>
-							{volist name="params['damages']" id="v" key="k"}
 							<option value="{$k}">{$v}</option>
 							{/volist}
 						</select>
@@ -85,6 +58,36 @@
 							<option value="{$k}">{$v}</option>
 							{/volist}
 						</select>
+					</div>
+				</div>
+				<!-- <div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>使用性质</label>
+					<div class="j-input-inline">
+						<select id="mechanism" name="mechanism" lay-search="">
+							<option value="">请选择</option>
+							
+							<option value="{$k}">{$v}</option>
+							
+						</select>
+					</div>
+				</div> -->
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>完损等级</label>
+					<div class="j-input-inline">
+						<select id="ban_damage_id" name="ban_damage_id" class="field-cid" type="select">
+							<option value="">请选择</option>
+							{volist name="params['damages']" id="v" key="k"}
+							<option value="{$k}">{$v}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
+				<div class="layui-col-md4">
+					<label class="j-form-label">栋系数</label>
+					<div class="j-input-inline">
+						<input type="text" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-md4">
@@ -122,45 +125,27 @@
 						<input type="text" id="starting_floor" name="starting_floor" autocomplete="off" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-md4">
+				<!-- <div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>总户数</label>
 					<div class="j-input-inline">
 						<input type="text" id="sum_house" name="sum_house" autocomplete="off" class="layui-input">
 					</div>
-				</div>
-				<div class="layui-col-md4">
+				</div> -->
+				<!-- <div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>拆迁状态</label>
 					<div class="j-input-inline">
 						<input type="text" id="demolition_status" name="demolition_status" autocomplete="off" class="layui-input">
 					</div>
-				</div>
-			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label">栋系数</label>
-					<div class="j-input-inline">
-						<input type="text" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
+				</div> -->
+				
+				<div class="layui-col-md8">
 					<label class="j-form-label"><i class="red">*</i>产权来源</label>
 					<div class="j-input-inline">
 						<input type="text" id="ban_property_source" name="ban_property_source" autocomplete="off" class="layui-input">
 					</div>
 				</div>
-				{if condition="INST_LEVEL < 3"} <div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>管段</label>
-					<div class="j-input-inline">
-						<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
-							<option value="">请选择</option>
-							{volist name=":config('inst_data_names')[INST]" id="v"}
-							<option value="{$key}">{$v}</option>
-							{/volist}
-						</select>
-					</div>
 			</div>
-			{/if}
-		</div>
+			
 	</div>
 	<div id="item2" class="item">
 		<fieldset class="layui-elem-field layui-field-title j-field-box">

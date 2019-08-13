@@ -38,8 +38,7 @@ class Ban extends Validate
     //定义验证场景
     protected $scene = [
         //新增
-        'sceneForm'  =>  ['ban_struct_id','ban_damage_id','ban_owner_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_address'],
-        // //修改
-        // 'edit'  =>  ['ban_struct_id'],    
+        'sceneForm'  =>  ['ban_address','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year'],
+          
     ];
 }
