@@ -10,8 +10,8 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-
 namespace app\house\admin;
+
 use think\Db;
 use app\system\admin\Admin;
 use app\house\model\House as HouseModel;
@@ -115,9 +115,9 @@ class House extends Admin
             }
             // 入库
             if (!$HouseModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('新增失败');
             }
-            return $this->success('添加成功');
+            return $this->success('新增成功');
         }
         return $this->fetch();
     }
@@ -268,7 +268,5 @@ class House extends Admin
                 $str .= '("' .$k .'","'.$a . '"),';
             }
         }
-        // $re = Db::execute("insert into ".config('database.prefix')."house_room (room_number,house_number) values " . rtrim($str, ','));
-        // halt($re);
     }
 }

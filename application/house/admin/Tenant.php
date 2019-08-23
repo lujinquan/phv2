@@ -10,8 +10,8 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-
 namespace app\house\admin;
+
 use app\system\admin\Admin;
 use app\house\model\Tenant as TenantModel;
 
@@ -70,9 +70,9 @@ class Tenant extends Admin
             }
             // 入库
             if (!$TenantModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('新增失败');
             }
-            return $this->success('添加成功');
+            return $this->success('新增成功');
         }
         return $this->fetch();
     }

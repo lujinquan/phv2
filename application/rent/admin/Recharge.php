@@ -1,4 +1,15 @@
 <?php
+
+// +----------------------------------------------------------------------
+// | 基于ThinkPHP5开发
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016-2021 http://www.mylucas.com.cn
+// +----------------------------------------------------------------------
+// | 基础框架永久免费开源
+// +----------------------------------------------------------------------
+// | Author: Lucas <598936602@qq.com>，开发者QQ群：*
+// +----------------------------------------------------------------------
+
 namespace app\rent\admin;
 
 use think\Db;
@@ -20,7 +31,7 @@ class Recharge extends Admin
             $RechargeModel = new RechargeModel;
             $where = $RechargeModel->checkWhere($getData);
 
-            $fields = "a.house_id,a.tenant_id,a.pay_rent,a.pay_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.house_id,a.tenant_id,a.pay_rent,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
@@ -36,6 +47,7 @@ class Recharge extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
+            //halt($data);
             // 数据验证
             $result = $this->validate($data, 'Recharge.add');
             if($result !== true) {
@@ -49,9 +61,9 @@ class Recharge extends Admin
             }
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('充值失败');
             }
-            return $this->success('添加成功');
+            return $this->success('充值成功');
         }
         return $this->fetch();
     }

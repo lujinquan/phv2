@@ -13,6 +13,8 @@ class Recharge extends Model
     protected $pk = 'id';
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
+    // 定义时间戳字段名
+    protected $createTime = 'ctime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
@@ -81,7 +83,7 @@ class Recharge extends Model
         $data['house_id'] = $row['house_id'];
         $data['tenant_id'] = $row['tenant_id'];
         $data['pay_number'] = $data['house_number'].random();
-        unset($data['id']);
+        unset($data['id'],$data['house_number']);
         return $data;
     }
 

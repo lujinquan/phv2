@@ -10,8 +10,8 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-
 namespace app\house\admin;
+
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
 use app\common\model\Cparam as ParamModel;

@@ -10,8 +10,8 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-
 namespace app\house\admin;
+
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
@@ -66,7 +66,7 @@ class Room extends Admin
  
             // 入库room表
             if (!$RoomModel->allowField(true)->save($filData)) {
-                return $this->error('添加失败');
+                return $this->error('新增失败');
             }
 
             // 补充房间计算租金，入库room表
@@ -84,7 +84,7 @@ class Room extends Admin
             $HouseRoomModel = new HouseRoomModel;
             $HouseRoomModel->saveAll($filData['house_room']);
 
-            return $this->success('添加成功');
+            return $this->success('新增成功');
         }
         $this->assign('data_info',$row);
     	return $this->fetch('add');
@@ -106,10 +106,10 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
- // halt($filData);
+
             // 入库room表
             if (!$RoomModel->allowField(true)->update($filData)) {
-                return $this->error('添加失败');
+                return $this->error('修改失败');
             }
 
             // 补充房间计算租金，=更新room表

@@ -83,9 +83,9 @@ class Classify extends Admin
             }
             // 入库
             if (!$opTypeModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('新增失败');
             }
-            return $this->success('添加成功');
+            return $this->success('新增成功');
         }
         $annexTypeModel = new SystemAnnexType;
         $files = $annexTypeModel->column('id,file_name');

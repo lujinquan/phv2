@@ -10,7 +10,7 @@ class Rent extends Model
 	// 设置模型名称
     protected $name = 'rent_order';
     // 设置主键
-    protected $pk = 'rent_id';
+    protected $pk = 'rent_order_id';
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
@@ -69,6 +69,7 @@ class Rent extends Model
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
                 $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
                 $where[] = ['rent_order_date','eq',date('Ym')];
+                $where[] = ['is_deal','eq',0];
                 break;
 
             //租金欠缴的查询

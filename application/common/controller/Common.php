@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\common\controller;
+
 use View;
 use think\Controller;
 

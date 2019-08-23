@@ -10,8 +10,8 @@
 // | Author: Lucas <598936602@qq.com>，开发者QQ群：*
 // +----------------------------------------------------------------------
 
-
 namespace app\house\admin;
+
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
@@ -76,9 +76,9 @@ class Ban extends Admin
             }
             // 入库
             if (!$BanModel->allowField(true)->create($filData)) {
-                return $this->error('添加失败');
+                return $this->error('新增失败');
             }
-            return $this->success('添加成功');
+            return $this->success('新增成功');
         }
         return $this->fetch();
     }
@@ -161,8 +161,4 @@ class Ban extends Admin
         return $this->fetch();
     }
 
-    public function ceshi()
-    {
-        return $this->fetch();
-    }
 }
