@@ -207,10 +207,7 @@
 				<td>{$vo['baseinfo']['floor_point']}</td>
 				<td>{$vo['baseinfo']['room_cou_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
-				<td>
-					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
-					
-					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+				<td>	
 				{if condition="$group == 'n'"}
 					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '600px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
 					
