@@ -1,4 +1,10 @@
 <div class="j-table-content j-no-title">
+    <div class="layui-btn-container j-container-margin">
+         <div class="layui-btn-container">       
+             <!-- <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>缴费</button></a> -->
+             <!-- <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>按上期缴纳</button></a> -->
+         </div>
+     </div>
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
@@ -93,7 +99,7 @@
                 ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
-                ,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
+                //,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                
