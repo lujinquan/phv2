@@ -22,8 +22,8 @@ class House extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'ban_number|楼栋编号' => 'require|existInBan',
-        'tenant_number|租户编号' => 'require|existInTenant',
+        'ban_id|楼栋编号' => 'require|existInBan',
+        'tenant_id|租户编号' => 'require|existInTenant',
         'house_unit_id|单元号' => 'require|number',
         'house_floor_id|楼层号' => 'require|number',
         'house_use_id|使用性质' => 'require|number',
@@ -36,20 +36,20 @@ class House extends Validate
 
     protected function existInBan($value, $rule='', $data)
   	{
-  		$row = BanModel::where([['ban_number','eq',$value]])->value('ban_id');
+  		$row = BanModel::where([['ban_id','eq',$value]])->value('ban_id');
       	return $row?true:'楼栋编号格式错误';	
   	}
 
   	protected function existInTenant($value, $rule='', $data)
   	{
-  		$row = TenantModel::where([['tenant_number','eq',$value]])->value('tenant_id');
+  		$row = TenantModel::where([['tenant_id','eq',$value]])->value('tenant_id');
       	return $row?true:'租户编号格式错误';	
   	}
 
     //定义验证场景
     protected $scene = [
         //新增
-        'sceneForm'  =>  ['ban_number','tenant_number','house_unit_id','house_floor_id','house_use_id'],
+        'sceneForm'  =>  ['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id'],
          
     ];
 }

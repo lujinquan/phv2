@@ -11,6 +11,7 @@
 namespace app\common\model;
 
 use app\common\model\SystemAnnexGroup as GroupModel;
+use app\common\model\SystemAnnexType;
 use think\Model;
 use think\Image;
 use think\File;
@@ -183,12 +184,12 @@ class SystemAnnex extends Model
 
         $fileCount  = 1;
         $fileSize   = round($upfile->getInfo('size')/1024, 2);
-        
+        $AnnexModel = new SystemAnnexType;
         $data = [
             'name'      => $input,
             'file'      => $filePath.str_replace('\\', '/', $upfile->getSaveName()),
             'hash'      => $upfile->hash(),
-            'data_id'   => input('param.data_id', 0),
+            'data_id'   => $AnnexModel->where([['file_type','eq',$input]])->value('id'),
             'type'      => $type,
             'size'      => $fileSize,
             'group'     => $group,

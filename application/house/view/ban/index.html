@@ -68,10 +68,10 @@
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     {if condition="$group == 'x'"}
-	<a href="{:url('edit')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+	<a href="{:url('edit')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
-    <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
-    <a href="{:url('struct')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">结构</a>
+    <a href="{:url('detail')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+    <a href="{:url('struct')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">结构</a>
 </script>
 </div>
 <script type="text/javascript">

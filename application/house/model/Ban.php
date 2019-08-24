@@ -1,6 +1,7 @@
 <?php
 namespace app\house\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 
 class Ban extends SystemBase
@@ -74,10 +75,10 @@ class Ban extends SystemBase
 
     public function dataFilter($data)
     {
-        if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
-            $data['ban_inst_id'] = $data['ban_inst_id'];
-        }else{
-            $data['ban_inst_id'] = INST;
+
+        $data['ban_inst_pid'] = Db::name('base_inst')->where([['inst_id','eq',$data['ban_inst_id']]])->value('inst_pid');
+        if(isset($data['file']) && $data['file']){
+            $data['ban_imgs'] = implode(',',$data['file']);
         }
         $data['ban_cuid'] = ADMIN_ID;
 
@@ -85,10 +86,6 @@ class Ban extends SystemBase
         $maxBanID = self::where([['ban_number', 'like', $banID . '%']])->max('ban_number');
         $data['ban_number'] = $maxBanID?$maxBanID + 1:$banID . '001'; 
        
-        if($data['ban_inst_id'] < 4){
-            return '请选择正确的管段';
-        }else{
-            return $data;
-        }
+        return $data;
     }
 }

@@ -11,6 +11,15 @@
 					<b class="j-explain-search j-ban_number">查询</b>
 				</div>
 			</div>
+			<input type="hidden" id="ban_id" name="ban_id" value="">
+			<div class="layui-col-md8">
+				<label class="j-form-label"><i class="red"></i>楼栋地址</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_address" value="" readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>租户编号</label>
 				<div class="j-input-inline">
@@ -18,10 +27,17 @@
 					<b class="j-explain-search j-tenant_number">查询</b>
 				</div>
 			</div>
+			<input type="hidden" id="tenant_id" name="tenant_id" value="">
 			<div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>门牌号</label>
+				<label class="j-form-label"><i class="red"></i>租户姓名</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_door" name="house_door" value=""  autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_name" readonly value=""  autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>身份证号</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_card" value=""  readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -66,7 +82,7 @@
 				</div>
 			</div>
 		</div>
-		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>补充信息</legend>
 		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
@@ -82,8 +98,8 @@
 					<input type="text" id="weidu" name="weidu" autocomplete="off" id="weidu" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
+		</div> -->
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label">地址查询</label>
 				<div class="j-input-inline">
@@ -95,7 +111,7 @@
 			<div class="layui-col-md8">
 				<div class="j-map-height" style="width:100%;height:300px;" id="allmap"></div>
 			</div>
-		</div>
+		</div> -->
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
@@ -105,8 +121,8 @@
   </div>
 </form>
 {include file="system@block/layui" /}
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
+<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script> -->
 <script type="text/javascript">
 	layui.use(['table','layer'], function() {
 			var table = layui.table
@@ -128,7 +144,9 @@
 				var row = window["layui-layer-iframe" + index].callbackdata();
 				console.log(row);
 				layer.close(index);
-				$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+				$("#ban_number").val(row.ban_number);//获取楼栋编号
+				$("#ban_address").val(row.ban_address);
+		 		$("#ban_id").val(row.ban_id);
 			},btn2: function(index, layero){
 				layer.close(index);
 			}
@@ -149,7 +167,10 @@
 		 				var row = window["layui-layer-iframe" + index].tenantdata();
 		 				console.log(row);
 		 				layer.close(index);
-		 				$("input[name='tenant_number']").val(row.tenant_number);//获取租户编号
+		 				$("#tenant_number").val(row.tenant_number);//获取租户编号
+		 				$("#tenant_name").val(row.tenant_name);
+		 				$("#tenant_card").val(row.tenant_card);
+		 				$("#tenant_id").val(row.tenant_id);
 		 			},btn2: function(index, layero){
 		 				layer.close(index);
 		 			}

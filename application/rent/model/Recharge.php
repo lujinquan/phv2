@@ -59,8 +59,8 @@ class Recharge extends Model
             $where[] = ['b.house_use_id','eq',$data['house_use_id']];
         }
         // 检索【收欠】支付方式
-        if(isset($data['pay_type']) && $data['pay_type']){
-            $where[] = ['a.pay_type','eq',$data['pay_type']];
+        if(isset($data['pay_way']) && $data['pay_way']){
+            $where[] = ['a.pay_way','eq',$data['pay_way']];
         }
         // 检索【收欠】支付时间
         if(isset($data['ctime']) && $data['ctime']){

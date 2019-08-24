@@ -4,7 +4,7 @@
 		<li class="current"><a href="#item1"><i>1</i><b>楼栋信息</b></a></li>
 		<li><a href="#item2"><i>2</i><b>房屋信息</b></a></li>
 		<li><a href="#item3"><i>3</i><b>状态选择</b></a></li>
-		<li><a href="#item4"><i>4</i><b>附件信息</b></a></li>
+		<!-- <li><a href="#item4"><i>4</i><b>附件信息</b></a></li> -->
 	</ul>
 </div>
 <!-- 楼层导航 E -->
@@ -18,7 +18,7 @@
 		<div class="layui-col-md4">
 			<div class="j-form-label">楼栋编号</div>
 			<div class="j-input-inline">
-				<input type="text" id="number" name="number" value="" autocomplete="off" class="layui-input">
+				<input type="text" id="number" name="number" value="{$data_info['ban_number']}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md8">
@@ -30,13 +30,13 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>机构名称</label>
+			<label class="j-form-label"><i class="red">*</i>管段</label>
 			<div class="j-input-inline">
 				<select id="mechanism" name="mechanism" lay-search="">
 					<option value="">请选择</option>
-					<option value="1">机构1</option>
-					<option value="2">机构2</option>
-					<option value="3">机构3</option>
+					{volist name=":config('inst_data_names')[INST]" id="v"}
+					<option value="{$key}" {if condition="$key == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
+					{/volist}
 				</select>
 			</div>
 		</div>
@@ -52,15 +52,17 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>使用性质</label>
+			<label class="j-form-label"><i class="red">*</i>结构类别</label>
 			<div class="j-input-inline">
-				<select id="mechanism" name="mechanism" lay-search="">
-					<option value="">请选择</option>
-					<option value="1">性质1</option>
-					<option value="2">性质2</option>
+				<select name="ban_struct_id" class="field-cid" type="select">
+				    <option value="">请选择</option>
+				    {volist name="params['structs']" id="v"}
+				    <option value="{$key}" {if condition="$key == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
+				    {/volist}
 				</select>
 			</div>
 		</div>
+		
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
@@ -75,16 +77,11 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>结构类别</label>
-			<div class="j-input-inline">
-				<select name="ban_struct_id" class="field-cid" type="select">
-				    <option value="">请选择</option>
-				    {volist name="params['structs']" id="v"}
-				    <option value="{$key}" {if condition="$key == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
-				    {/volist}
-				</select>
+				<label class="j-form-label">栋系数</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
+				</div>
 			</div>
-		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>建成年份</label>
 			<div class="j-input-inline">
@@ -112,7 +109,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
+	<!-- <div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">起始楼层</label>
 			<div class="j-input-inline">
@@ -131,31 +128,16 @@
 				<input type="text" id="demolition_status" name="demolition_status" value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">栋系数</label>
-				<div class="j-input-inline">
-					<input type="text" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>产权来源</label>
+			
+			<div class="layui-col-md8">
+				<label class="j-form-label"><i class="red"></i>产权来源</label>
 				<div class="j-input-inline">
 					<input type="text" name="ban_property_source" value="{$data_info['ban_property_source']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>管段</label>
-				<div class="j-input-inline">
-					<select name="ban_inst_id" class="field-cid" type="select" required>
-					    <option value="">请选择</option>
-					    {volist name=":config('inst_data_names')[INST]" id="v"}
-					    <option value="{$key}" {if condition="$key == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
-					    {/volist}
-					</select>
-				</div>
-		</div>
+		
 	</div>
    </div>
    <div id="item2" class="item">
@@ -166,23 +148,23 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="area_use" name="area_use" value="" autocomplete="off" class="layui-input">
+					<input type="text" id="area_use" name="ban_use_area" value="{$data_info['ban_use_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>占地面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="area_covered" name="area_covered" value="" autocomplete="off" class="layui-input">
+					<input type="text" id="area_covered" name="ban_cover_area" value="{$data_info['ban_cover_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>证载面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="proof_area" name="proof_area" value="" autocomplete="off" class="layui-input">
+					<input type="text" id="proof_area" name="ban_actual_area" value="{$data_info['ban_actual_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>企业建面</label>
 				<div class="j-input-inline">
@@ -241,24 +223,24 @@
 					<input type="text" id="civil_original" name="civil_original" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>企业栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="enterprise_number" name="enterprise_number" autocomplete="off" class="layui-input">
+					<input type="text" id="enterprise_number" name="enterprise_number" value="{$data_info['ban_career_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>机关栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="office_number" name="office_number" autocomplete="off" class="layui-input">
+					<input type="text" id="office_number" name="office_number" value="{$data_info['ban_party_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>民用栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="civil_number" name="civil_number" autocomplete="off" class="layui-input">
+					<input type="text" id="civil_number" name="civil_number" value="{$data_info['ban_civil_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -267,7 +249,7 @@
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>状态选择</legend>
 		</fieldset>
-		<div class="layui-row layui-form-item layui-col-space90">
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">历史优秀建筑</label>
 				<div class="j-input-inline j-input-radio">
@@ -289,27 +271,27 @@
 					<input type="radio" name="reform" value="否" title="否">
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
+			<!-- <div class="layui-col-md4">
 				<label class="j-form-label">产权分割</label>
 				<div class="j-input-inline j-input-radio">
 					<input type="radio" name="division" value="是" title="是" checked="">
 					<input type="radio" name="division" value="否" title="否">
 				</div>
-			</div>
+			</div> -->
 			<div class="layui-col-md4">
 				<label class="j-form-label">电梯</label>
 				<div class="j-input-inline j-input-radio">
-					<input type="radio" name="lift" value="是" title="是" checked="">
-					<input type="radio" name="lift" value="否" title="否">
+					<input type="radio" name="lift" value="是" title="是" {if condition="$data_info['ban_is_levator']"}checked{/if}>
+					<input type="radio" name="lift" value="否" title="否" {if condition="!$data_info['ban_is_levator']"}checked{/if}>
 				</div>
 			</div>
 			<div class="layui-col-md4 j-lengthen">
 				<label class="j-form-label">一层为架空层或木地板住房</label>
 				<div class="j-input-inline j-input-radio">
-					<input type="radio" name="special" value="是" title="是" checked="">
-					<input type="radio" name="special" value="否" title="否">
+					<input type="radio" name="special" value="是" title="是" {if condition="$data_info['ban_is_first']"}checked{/if}>
+					<input type="radio" name="special" value="否" title="否" {if condition="!$data_info['ban_is_first']"}checked{/if}>
 				</div>
 			</div>
 		</div>
@@ -372,6 +354,20 @@
    			<div class="j-enclosure-img clearfix">
    				<div id="upload_img_list1" class="upload_img_list"> </div>
    			</div>
+   			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'LandCard'"}
+					<li>
+						<img src="{$v['file']}" />
+					</li>
+					{/if}
+					{/volist}
+					<!-- <li>
+						<img src="__ADMIN_IMG__/add_img.png" />
+					</li> -->
+				</ul>
+			</div>
    		</div>
    		<div class="layui-col-md6">
    			<div class="j-enclosure-upload clearfix">
@@ -385,6 +381,17 @@
    			<div class="j-enclosure-img clearfix">
    				<div id="upload_img_list2" class="upload_img_list"> </div>
    			</div>
+   			<div class="j-enclosure-img j-viewer-img clearfix">
+		    	<ul>
+		    		{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'RealestateCard'"}
+					<li>
+						<img src="{$v['file']}" />
+					</li>
+					{/if}
+					{/volist}
+		    	</ul>
+		    </div>
    		</div>
    	</div>
    	<div class="layui-row layui-form-item layui-col-space90">
@@ -400,6 +407,17 @@
    			<div class="j-enclosure-img clearfix">
    				<div id="upload_img_list3" class="upload_img_list"> </div>
    			</div>
+   			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ImagingData'"}
+					<li>
+						<img src="{$v['file']}" />
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
    		</div>
    		<div class="layui-upload">
    
@@ -410,7 +428,7 @@
 	<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}" class="layui-btn layui-btn-primary">取消</a>
+			<a href="{:url('index')}?group={$group}" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 		</div>
 	</div>
@@ -420,9 +438,9 @@
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
 <script>
-	var upurl = "{:url('system/Api/upload')}?input=landCard&group=ban&water=no"; //土地证电子版上传图片地址
-	var upurl1 = "{:url('system/Api/upload')}?input=realestateCard&group=ban&water=no"; //不动产电子版上传图片地址
-	var upurl2 = "{:url('system/Api/upload')}?input=imagingData&group=ban&water=no"; //影像资料上传图片地址
+	var upurl = "{:url('system/Api/upload')}?input=LandCard&group=ban&water=no"; //土地证电子版上传图片地址
+	var upurl1 = "{:url('system/Api/upload')}?input=RealestateCard&group=ban&water=no"; //不动产电子版上传图片地址
+	var upurl2 = "{:url('system/Api/upload')}?input=ImagingData&group=ban&water=no"; //影像资料上传图片地址
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
         var laydate = layui.laydate,
@@ -446,7 +464,7 @@
 			url: upurl,
 			size: 1024,
 			multiple: duotu,
-			field: 'landCard',
+			field: 'LandCard',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -458,14 +476,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="landCard[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="landCard" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -475,7 +493,7 @@
 			url: upurl1,
 			size: 1024,
 			multiple: duotu,
-			field: 'realestateCard',
+			field: 'RealestateCard',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -487,14 +505,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="realestateCard[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="realestateCard" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -504,7 +522,7 @@
 			url: upurl2,
 			size: 1024,
 			multiple: duotu,
-			field: 'imagingData',
+			field: 'ImagingData',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -516,14 +534,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="imagingData[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="imagingData" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})

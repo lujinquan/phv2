@@ -14,6 +14,8 @@ namespace app\house\admin;
 
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
+use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 
@@ -100,7 +102,10 @@ class Ban extends Admin
             return $this->success('修改成功');
         }
         $id = input('param.id/d');
+        $group = input('param.group');
+        $this->assign('group',$group);
         $row = BanModel::get($id);
+        $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch('form');
     }
@@ -108,7 +113,11 @@ class Ban extends Admin
     public function detail()
     {
         $id = input('param.id/d');
+        $group = input('param.group');
         $row = BanModel::get($id);
+        $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
+        //halt($row);
+        $this->assign('group',$group);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

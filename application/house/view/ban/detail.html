@@ -5,7 +5,7 @@
 		<li class="current"><a href="#item1"><i>1</i><b>楼栋信息</b></a></li>
 		<li><a href="#item2"><i>2</i><b>房屋信息</b></a></li>
 		<li><a href="#item3"><i>3</i><b>状态选择</b></a></li>
-		<li><a href="#item4"><i>4</i><b>附件信息</b></a></li>
+		<!-- <li><a href="#item4"><i>4</i><b>附件信息</b></a></li> -->
 	</ul>
 </div>
 <div class="j-details-box j-no-border floorWrap layui-form">
@@ -20,11 +20,17 @@
 				<input type="text" name="number" value="{$data_info['ban_number']}" disabled="disabled" autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		<div class="layui-col-md8">
+		<div class="layui-col-md4">
 		  <div class="j-form-label"><i class="red">*</i>楼栋地址</div> 
 		  <div class="j-input-inline">
 			<input type="text" name="address"  value="{$data_info['ban_address']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">栋系数</label> 
+			<div class="j-input-inline">
+				<input type="text" name="coefficient" value="{$data_info['ban_ratio']}" disabled="disabled" autocomplete="off" class="layui-input">
+			</div>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
@@ -41,11 +47,17 @@
 		  </div>
 		</div>
 		<div class="layui-col-md4">
+		  <label class="j-form-label"><i class="red">*</i>产权来源</label> 
+		  <div class="j-input-inline">
+			<input type="text" name="property" value="{$data_info['ban_property_source']}" disabled="disabled"  autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		<!-- <div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>使用性质</label> 
 		  <div class="j-input-inline">
 			<input type="text" name="nature" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
-		</div>
+		</div> -->
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
@@ -88,39 +100,21 @@
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">起始楼层</label> 
-			<div class="j-input-inline">
-				<input type="text" name="starting_floor" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md4">
+		
+		<!-- <div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>总户数</label> 
 		  <div class="j-input-inline">
 			<input type="text" name="sum_house" disabled="disabled" value="系统无当前字段" autocomplete="off" class="layui-input">
 		  </div>
-		</div>
-		<div class="layui-col-md4">
+		</div> -->
+		<!-- <div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>拆迁状态</label> 
 		  <div class="j-input-inline">
 			<input type="text" name="demolition_status" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
-		</div>
+		</div> -->
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">栋系数</label> 
-			<div class="j-input-inline">
-				<input type="text" name="coefficient" value="{$data_info['ban_ratio']}" disabled="disabled" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md4">
-		  <label class="j-form-label"><i class="red">*</i>产权来源</label> 
-		  <div class="j-input-inline">
-			<input type="text" name="property" value="{$data_info['ban_property_source']}" disabled="disabled"  autocomplete="off" class="layui-input">
-		  </div>
-		</div>
-	</div>
+	
   </div>
   <div id="item2" class="item">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -136,13 +130,13 @@
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>占地面积</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="area_covered" value="系统无当前字段" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="area_covered" value="{$data_info['ban_cover_area']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 		<div class="layui-col-md4">
 		  <label class="j-form-label"><i class="red">*</i>证载面积</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="proof_area" value="系统无当前字段" disabled="disabled" autocomplete="off" class="layui-input">
+			<input type="text" name="proof_area" value="{$data_info['ban_actual_area']}" disabled="disabled" autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -269,7 +263,7 @@
 			<input type="radio" name="lift" value="否" title="否" disabled="disabled" {if condition="!$data_info['ban_is_levator']"}checked{/if}>
 		  </div>
 		</div>
-		<div class="layui-col-md4 j-lengthen">
+		<div class="layui-col-md6 j-lengthen">
 		  <label class="j-form-label">一层为架空层或木地板住房</label> 
 		  <div class="j-input-inline j-input-radio">
 			<input type="radio" name="special" value="是" title="是" disabled="disabled" {if condition="$data_info['ban_is_first']"}checked{/if}>
@@ -305,7 +299,7 @@
 		<div class="layui-col-md6">
 		  <label class="j-form-label">土地证号</label> 
 		  <div class="j-input-inline">
-			<input type="text" name="certificate_number" value="系统无当前字段" disabled="disabled"  autocomplete="off" class="layui-input">
+			<input type="text" name="certificate_number" value="{$data_info['ban_land_id']}" disabled="disabled"  autocomplete="off" class="layui-input">
 		  </div>
 		</div>
 	</div>
@@ -314,12 +308,16 @@
 			<div class="j-enclosure-label clearfix">土地证电子版</div>
 			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
+					{volist name="$data_info['ban_imgs']" id="v"}		
+					{if condition="$v['file_type'] == 'LandCard'"}
 					<li>
-						<img src="__ADMIN_IMG__/add_img.png" />
+						<img src="{$v['file']}" />
 					</li>
-					<li>
+					{/if}
+					{/volist}
+					<!-- <li>
 						<img src="__ADMIN_IMG__/add_img.png" />
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
@@ -327,12 +325,13 @@
 		    <div class="j-enclosure-label clearfix">不动产电子版</div>
 		    <div class="j-enclosure-img j-viewer-img clearfix">
 		    	<ul>
-		    		<li>
-		    			<img src="__ADMIN_IMG__/add_img.png" />
-		    		</li>
-		    		<li>
-		    			<img src="__ADMIN_IMG__/add_img.png" />
-		    		</li>
+		    		{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'RealestateCard'"}
+					<li>
+						<img src="{$v['file']}" />
+					</li>
+					{/if}
+					{/volist}
 		    	</ul>
 		    </div>
 		</div>
@@ -342,16 +341,20 @@
 			<div class="j-enclosure-label clearfix">影像资料</div>
 			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
+					{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ImagingData'"}
 					<li>
-						<img src="__ADMIN_IMG__/add_img.png" />
+						<img src="{$v['file']}" />
 					</li>
+					{/if}
+					{/volist}
 				</ul>
 			</div>
 		</div>
 	</div>
   </div>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn"><button class="layui-btn">返回</button></div>
+		<div class="j-margin-btn"><a href="{:url('index')}?group={$group}" class="layui-btn">返回</a></div>
 	</div>
 </div>
 <!-- 详情 E -->

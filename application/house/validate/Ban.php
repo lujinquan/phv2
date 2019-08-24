@@ -20,14 +20,22 @@ class Ban extends Validate
 {
     //定义验证规则
     protected $rule = [
-        'ban_struct_id|结构类别' => 'require|number',
-        'ban_damage_id|完损等级' => 'require|number',
+        'ban_address|楼栋地址' => 'require', 
+        'ban_inst_id|管段' => 'require',
         'ban_owner_id|产别' => 'require|number',
-        'ban_units|单元数' => 'require|number',
-        'ban_floors|楼层数' => 'require|number',
+        'ban_struct_id|结构类别' => 'require|number',
+        'ban_damage_id|完损等级' => 'require|number',   
         'ban_ratio|栋系数' => 'float',
         'ban_build_year|建成年份' => 'require|date',
-        'ban_address|地址' => 'require',   
+        'ban_door|栋号' => 'require|number',
+        'ban_units|单元数' => 'require|number|gt:0',
+        'ban_floors|楼层数' => 'require|number|gt:0',
+        'ban_career_num|企业栋数' => 'require|in:0,1', 
+        'ban_party_num|机关栋数' => 'require|in:0,1', 
+        'ban_civil_num|民用栋数' => 'require|in:0,1', 
+        'ban_gpsx|经度' => 'require', 
+        'ban_gpsy|纬度' => 'require', 
+        'ban_property_id|产权证号' => 'require',
     ];
 
     //定义验证提示
@@ -38,7 +46,7 @@ class Ban extends Validate
     //定义验证场景
     protected $scene = [
         //新增
-        'sceneForm'  =>  ['ban_address','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year'],
+        'sceneForm'  =>  ['ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id'],
           
     ];
 }

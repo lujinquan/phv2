@@ -1,111 +1,129 @@
-<form class="layui-form" action="{url('edit')}" method="post">
+<form class="layui-form" action="{url('add')}" method="post">
 	<div class="j-details-box floorWrap">
-			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-				<legend>基本信息</legend>
-			</fieldset>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
-					<div class="j-input-inline">
-						<input type="text" name="ban_number" value="{$data_info['ban_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>租户编号</label>
-					<div class="j-input-inline">
-						<input type="text" name="tenant_number" value="{$data_info['tenant_number']}" placeholder="双击选择" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>门牌号</label>
-					<div class="j-input-inline">
-						<input type="text" name="house_door" value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
-					</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_number" name="ban_number" value="{$data_info['ban_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<b class="j-explain-search j-ban_number">查询</b>
 				</div>
 			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>单元号</label>
-					<div class="j-input-inline">
-						<input type="text" name="house_unit_id" value="{$data_info['house_unit_id']}" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>楼层号</label>
-					<div class="j-input-inline">
-						<input type="text" name="house_floor_id" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>使用性质</label>
-					<div class="j-input-inline">
-						<select name="house_use_id" class="field-cid" type="select">
-						    <option value="">请选择</option>
-						    {volist name="params['uses']" id="v"}
-						    <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
-						    {/volist}
-						</select>
-					</div>
+			<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
+			<div class="layui-col-md8">
+				<label class="j-form-label"><i class="red"></i>楼栋地址</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_address" value="{$data_info['ban_address']}" readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label">房屋原价</label>
-					<div class="j-input-inline">
-						<input type="text" name="house_oprice" value="{$data_info['house_oprice']}" autocomplete="off" class="layui-input">
-						<b class="j-explain-name">元</b>
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label">建筑面积</label>
-					<div class="j-input-inline">
-						<input type="text" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input">
-						<b class="j-explain-name">m²</b>
-					</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>租户编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_number" name="tenant_number" value="{$data_info['tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<b class="j-explain-search j-tenant_number">查询</b>
 				</div>
 			</div>
-			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-				<legend>补充信息</legend>
-			</fieldset>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>经度</label>
-					<div class="j-input-inline">
-						<input type="text" id="jingdu" name="jingdu" autocomplete="off" id="jingdu" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>纬度</label>
-					<div class="j-input-inline">
-						<input type="text" id="weidu" name="weidu" autocomplete="off" id="weidu" class="layui-input">
-					</div>
+			<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>租户姓名</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_name" readonly value="{$data_info['tenant_name']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md8">
-					<label class="j-form-label">地址查询</label>
-					<div class="j-input-inline">
-						<input type="text" id="suggestId" name="address" size="30" value="" class="layui-input" />
-					</div>  
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>身份证号</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_card" value="{$data_info['tenant_card']}"  readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md8">
-					<div class="j-map-height" style="width:100%;height:300px;" id="allmap"></div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>单元号</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_unit_id" name="house_unit_id" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="j-margin-btn">
-					<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-					<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>楼层号</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_floor_id" name="house_floor_id" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<input type="hidden" name="house_id" value="{$data_info['house_id']}">
-	</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>使用性质</label>
+				<div class="j-input-inline">
+					<select name="house_use_id" class="field-cid" type="select">
+					    <option value="">请选择</option>
+					    {volist name="params['uses']" id="v"}
+					    <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
+					    {/volist}
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋原价</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">建筑面积</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_area" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">m²</b>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="house_id" value="{$data_info['house_id']}">
+		<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>补充信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>经度</label>
+				<div class="j-input-inline">
+					<input type="text" id="jingdu" name="jingdu" autocomplete="off" id="jingdu" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>纬度</label>
+				<div class="j-input-inline">
+					<input type="text" id="weidu" name="weidu" autocomplete="off" id="weidu" class="layui-input">
+				</div>
+			</div>
+		</div> -->
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label">地址查询</label>
+				<div class="j-input-inline">
+					<input type="text" id="suggestId" name="address" size="30" value="" class="layui-input" />
+				</div>  
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<div class="j-map-height" style="width:100%;height:300px;" id="allmap"></div>
+			</div>
+		</div> -->
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<a href="{:url('index')}?group={$group}" class="layui-btn layui-btn-primary">取消</a>
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+			</div>
+		</div>
+  </div>
 </form>
 {include file="system@block/layui" /}
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
+<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script> -->
 <script type="text/javascript">
 	layui.use(['table','layer'], function() {
 			var table = layui.table
@@ -113,7 +131,7 @@
 				,layer = layui.layer;
       
 	      //双击获取楼栋查询器
-		  $(".layui-form").on('dblclick','input[name="ban_number"]',function(){
+		  $(".layui-form").on('click','.j-ban_number',function(){
 		 layer.open({
 			title: '楼栋查询器'
 			,type: 2
@@ -127,14 +145,16 @@
 				var row = window["layui-layer-iframe" + index].callbackdata();
 				console.log(row);
 				layer.close(index);
-				$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+				$("#ban_number").val(row.ban_number);//获取楼栋编号
+				$("#ban_address").val(row.ban_address);
+		 		$("#ban_id").val(row.ban_id);
 			},btn2: function(index, layero){
 				layer.close(index);
 			}
 		  });
 		 })
 		 //双击获取租户查询器
-		  $(".layui-form").on('dblclick','input[name="tenant_number"]',function(){
+		  $(".layui-form").on('click','.j-tenant_number',function(){
 		 layer.open({
 		 			title: '租户查询器'
 		 			,type: 2
@@ -148,7 +168,10 @@
 		 				var row = window["layui-layer-iframe" + index].tenantdata();
 		 				console.log(row);
 		 				layer.close(index);
-		 				$("input[name='tenant_number']").val(row.tenant_number);//获取租户编号
+		 				$("#tenant_number").val(row.tenant_number);//获取租户编号
+		 				$("#tenant_name").val(row.tenant_name);
+		 				$("#tenant_card").val(row.tenant_card);
+		 				$("#tenant_id").val(row.tenant_id);
 		 			},btn2: function(index, layero){
 		 				layer.close(index);
 		 			}

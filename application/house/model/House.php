@@ -3,6 +3,7 @@ namespace app\house\model;
 
 use app\system\model\SystemBase;
 use app\house\model\Room as RoomModel;
+use app\house\model\Tenant as TenantModel;
 
 class House extends SystemBase
 {
