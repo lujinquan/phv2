@@ -73,7 +73,7 @@ $("#yueQuery").click(function() {
    console.log(querytyp);
      $.ajax({
       type: "POST",
-      url: "/ph/Api/queryHouseReport",
+      url: "/admin.php/report/house/archives",
 	  async:true,// 同步异步
       data: {OwnerType:owner,TubulationID:tubulation,QueryType:querytyp,month:time},
       success: function(res){

@@ -57,7 +57,7 @@
 		{if condition="$group == 'x'"}
 	<a href="{:url('edit')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
-    <a href="{:url('detail')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+    <a href="{:url('detail')}?group={$group}&id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 </div>
 <script type="text/javascript">

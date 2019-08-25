@@ -15,7 +15,10 @@
 				<div class="layui-input-inline">
 					<select name="structure">
 						<option value="">结构类别</option>
-						<option value="1">结构类别1</option>
+						
+						{volist name="params['structs']" id="v" key="k"}
+							<option value="{$k}">{$v}</option>
+							{/volist}
 					</select>
 				</div>
 			</li>
@@ -23,7 +26,9 @@
 				<div class="layui-input-inline">
 					<select name="agency">
 						<option value="">机构名称</option>
-						<option value="1">机构名称1</option>
+						{volist name=":config('inst_data_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
 					</select>
 				</div>
 			</li>
@@ -31,7 +36,9 @@
 				<div class="layui-input-inline">
 					<select name="nature">
 						<option value="">使用性质</option>
-						<option value="1">使用性质1</option>
+						{volist name="params['uses']" id="v"}
+					    <option value="{$key}">{$v}</option>
+					    {/volist}
 					</select>
 				</div>
 			</li>
@@ -39,7 +46,9 @@
 				<div class="layui-input-inline">
 					<select name="damaged">
 						<option value="">完损等级</option>
-						<option value="1">完损等级1</option>
+						{volist name="params['damages']" id="v" key="k"}
+						<option value="{$k}">{$v}</option>
+						{/volist}
 					</select>
 				</div>
 			</li>
@@ -47,7 +56,9 @@
 				<div class="layui-input-inline">
 					<select name="differentiation">
 						<option value="">产别</option>
-						<option value="1">产别1</option>
+						{volist name="params['owners']" id="v" key="k"}
+						<option value="{$k}">{$v}</option>
+						{/volist}
 					</select>
 				</div>
 			</li>
@@ -138,7 +149,7 @@
     <a href="#" class="layui-btn layui-btn-xs layui-btn-normal">计租表</a>
 </script>
 {include file="system@block/layui" /}
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/map/js/draw.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/map/js/maplib.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/map/js/textIconOverlay.js?v={:config('hisiphp.version')}"></script>

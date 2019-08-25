@@ -113,10 +113,10 @@ class Ban extends Admin
     public function detail()
     {
         $id = input('param.id/d');
-        $group = input('param.group');
         $row = BanModel::get($id);
         $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
         //halt($row);
+        $group = input('param.group');
         $this->assign('group',$group);
         $this->assign('data_info',$row);
         return $this->fetch();

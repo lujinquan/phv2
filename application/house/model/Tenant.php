@@ -1,6 +1,7 @@
 <?php
 namespace app\house\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 
 class Tenant extends SystemBase
@@ -21,6 +22,11 @@ class Tenant extends SystemBase
     public function house()
     {
         return $this->belongsTo('hosue', 'house_number', 'house_number')->bind('house_id');
+    }
+
+    public function SystemUser()
+    {
+        return $this->hasOne('app\system\model\SystemUser', 'id', 'tenant_cuid')->bind('nick,inst_id');
     }
 
     public function checkWhere($data)
@@ -55,17 +61,12 @@ class Tenant extends SystemBase
 
     public function dataFilter($data)
     {
-        if(isset($data['tenant_inst_id']) && $data['tenant_inst_id']){
-            $data['tenant_inst_id'] = $data['tenant_inst_id'];
-        }else{
-            $data['tenant_inst_id'] = INST;
+        $data['tenant_inst_pid'] = Db::name('base_inst')->where([['inst_id','eq',$data['tenant_inst_id']]])->value('inst_pid');
+        if(isset($data['file']) && $data['file']){
+            $data['tenant_imgs'] = implode(',',$data['file']);
         }
         $data['tenant_cuid'] = ADMIN_ID;
         $data['tenant_number'] = (self::max('tenant_number') + 1);
-        if($data['tenant_inst_id'] < 4){
-            return '请选择正确的管段';
-        }else{
-            return $data;
-        }
+        return $data;  
     }
 }

@@ -13,6 +13,10 @@
 namespace app\house\admin;
 
 use app\system\admin\Admin;
+use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
+use app\rent\model\Rent as RentModel;
+use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 
 class Tenant extends Admin
@@ -95,6 +99,7 @@ class Tenant extends Admin
         }
         $id = input('param.id/d');
         $row = TenantModel::get($id);
+        $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch('form');
     }
@@ -102,7 +107,18 @@ class Tenant extends Admin
     public function detail()
     {
         $id = input('param.id/d');
-        $row = TenantModel::get($id);
+        $row = TenantModel::with(['system_user'])->find($id);
+        $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
+        // 获取租户的余额
+        $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
+
+        //获取租户的合计欠租情况
+        $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
+        $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
+        
+        $group = input('param.group');
+        $this->assign('group',$group);
+
         $this->assign('data_info',$row);
         return $this->fetch();
     }

@@ -33,13 +33,13 @@
   	<div class="layui-col-md4">
   	  <label class="j-form-label">账户余额</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="tenant_balance" value="" disabled="disabled"  autocomplete="off" class="layui-input">
+  		<input type="text" name="tenant_balance" value="{$data_info['tenant_balance']}" disabled="disabled"  autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">欠租金额</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="tenant_arrears" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  		<input type="text" name="tenant_arrears" value="{$data_info['rent_order_unpaid']}" disabled="disabled" autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   </div>
@@ -50,30 +50,30 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">登记人</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="register_name" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  			<input type="text" name="register_name" value="{$data_info['nick']}" disabled="disabled" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">登记机构</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="register_bodies" value="" disabled="disabled"  autocomplete="off" class="layui-input">
+  		<input type="text" name="register_bodies" value="{$params.insts[$data_info['inst_id']]}" disabled="disabled"  autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">登陆时间</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="register_time" value="" disabled="disabled" autocomplete="off" class="layui-input">
+  		<input type="text" name="register_time" value="{$data_info['tenant_ctime']}" disabled="disabled" autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   </div>
-  <div class="layui-row layui-form-item layui-col-space90">
+  <!-- <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md4">
   		<label class="j-form-label">更新时间</label> 
   		<div class="j-input-inline">
   			<input type="text" name="register_update" value="" disabled="disabled" autocomplete="off" class="layui-input">
   		</div>
   	</div>
-  </div>
+  </div> -->
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
     <legend>补充附件</legend>
   </fieldset>
@@ -82,9 +82,16 @@
 			<div class="j-enclosure-label clearfix">身份证正面</div>
 			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
-					<li>
+          {volist name="$data_info['tenant_imgs']" id="v"}   
+          {if condition="$v['file_type'] == 'Positiveid'"}
+          <li>
+            <img src="{$v['file']}" />
+          </li>
+          {/if}
+          {/volist}
+					<!-- <li>
 						<img src="__ADMIN_IMG__/add_img.png" />
-					</li>
+					</li> -->
 				</ul>
 			</div>
    	</div>
@@ -92,15 +99,22 @@
 		<div class="j-enclosure-label clearfix">身份证反面</div>
 		<div class="j-enclosure-img j-viewer-img clearfix">
 			<ul>
-				<li>
+        {volist name="$data_info['tenant_imgs']" id="v"}   
+          {if condition="$v['file_type'] == 'Backid'"}
+          <li>
+            <img src="{$v['file']}" />
+          </li>
+          {/if}
+          {/volist}
+				<!-- <li>
 					<img src="__ADMIN_IMG__/add_img.png" />
-				</li>
+				</li> -->
 			</ul>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn">返回</a>
+			<a href="{:url('index')}?group={$group}" class="layui-btn">返回</a>
 		</div>
 	</div>
    </div>

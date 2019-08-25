@@ -5,39 +5,43 @@
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">租户姓名</label>
+			<label class="j-form-label"><i class="red">*</i>租户姓名</label>
 			<div class="j-input-inline">
 				<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">联系电话</label>
+			<label class="j-form-label"><i class="red">*</i>联系电话</label>
 			<div class="j-input-inline">
 				<input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">身份证号</label>
+			<label class="j-form-label"><i class="red">*</i>身份证号</label>
 			<div class="j-input-inline">
 				<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
-	{if condition="INST_LEVEL < 3"}
+	
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">管段</label>
-			<div class="j-input-inline">
-				<select name="tenant_inst_id" class="field-cid" type="select" required>
-				    <option value="">请选择</option>
-				    {volist name="params['insts']" id="v"}
-				    <option value="{$key}" {if condition="$key == $data_info['tenant_inst_id']"}selected{/if}>{$v}</option>
-				    {/volist}
-				</select>
-			</div>
+		<label class="j-form-label"><i class="red">*</i>管段</label>
+		<div class="j-input-inline">
+			{if condition="INST_LEVEL < 3"}
+			<select id="ban_inst_id" name="tenant_inst_id" class="field-cid" type="select" required>
+				<option value="">请选择</option>
+				{volist name=":config('inst_data_names')[INST]" id="v"}
+				<option value="{$key}" {if condition="$key == $data_info['tenant_inst_id']"}selected{/if}>{$v}</option>
+				{/volist}
+			</select>
+			{else /}
+			<input type="text" name="tenant_inst_id" value="{$params.insts[INST_LEVEL]}" autocomplete="off" class="layui-input">
+			{/if}
 		</div>
 	</div>
-	{/if}
+	</div>
+	
 	<input type="hidden" name="tenant_id" value="{$data_info['tenant_id']}">
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>补充附件</legend>
@@ -55,6 +59,17 @@
 			<div class="j-enclosure-img clearfix">
 				<div id="upload_img_list3" class="upload_img_list"> </div>
 			</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+		          {volist name="$data_info['tenant_imgs']" id="v"}   
+		          {if condition="$v['file_type'] == 'Positiveid'"}
+		          <li>
+		            <img src="{$v['file']}" />
+		          </li>
+		          {/if}
+		          {/volist}
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
@@ -70,11 +85,22 @@
 			<div class="j-enclosure-img clearfix">
 				<div id="upload_img_list4" class="upload_img_list"> </div>
 			</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+		          {volist name="$data_info['tenant_imgs']" id="v"}   
+		          {if condition="$v['file_type'] == 'Backid'"}
+		          <li>
+		            <img src="{$v['file']}" />
+		          </li>
+		          {/if}
+		          {/volist}
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="{:url('index')}?group=x" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 		</div>
 	</div>
