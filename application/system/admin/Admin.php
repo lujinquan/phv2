@@ -79,6 +79,8 @@ class Admin extends Common
 
             }
 
+            $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+
             // 更新工单中心的待受理工单(每个用户在刷新页面的时候，会对待受理工单节点更新)
             $acceptMenu = MenuModel::get('215');
             $acceptMenuTip = json_decode($acceptMenu['tip'],true);
@@ -138,7 +140,9 @@ class Admin extends Common
                 // ];
                 // current 可不传
                 // $this->assign('hisiTabData', ['menu' => $hisiTabData, 'current' => 'system/index/index']);
+                
                 $this->assign('hisiTabData', '');
+                $this->assign('http_type', $http_type);
                 // 表单数据默认变量名
                 $this->assign('formData', '');
                 $this->assign('login', $login);

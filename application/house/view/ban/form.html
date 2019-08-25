@@ -435,7 +435,7 @@
   </div>
 </form>
 {include file="system@block/layui" /}
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
+<script type="text/javascript" src="{$http_type}api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
 <script>
 	var upurl = "{:url('system/Api/upload')}?input=LandCard&group=ban&water=no"; //土地证电子版上传图片地址
