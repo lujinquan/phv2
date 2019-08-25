@@ -72,7 +72,7 @@ class Rent extends Admin
 
         foreach($nowRents as $key => $v){
             if(!in_array($key,$lastRents)){
-                $data[] = ['rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
+                $data[] = ['is_deal'=>1,'rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
             }
         }
         //halt($data);
@@ -95,7 +95,7 @@ class Rent extends Admin
     {
         $ids = $this->request->param('id/a'); 
         $ptime = time();       
-        $res = RentModel::where([['rent_order_id','in',$ids]])->update(['ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        $res = RentModel::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')]);
         if($res){
             $this->success('缴费成功');
         }else{
