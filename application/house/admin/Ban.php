@@ -94,6 +94,9 @@ class Ban extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            if(isset($data['file']) && $data['file']){
+                $data['ban_imgs'] = implode(',',$data['file']);
+            }
             $BanModel = new BanModel();
             // 入库
             if (!$BanModel->allowField(true)->update($data)) {

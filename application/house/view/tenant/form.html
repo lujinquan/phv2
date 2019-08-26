@@ -57,18 +57,18 @@
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
 			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list3" class="upload_img_list"> </div>
-			</div>
-			<div class="j-enclosure-img j-viewer-img clearfix">
-				<ul>
-		          {volist name="$data_info['tenant_imgs']" id="v"}   
-		          {if condition="$v['file_type'] == 'Positiveid'"}
-		          <li>
-		            <img src="{$v['file']}" />
-		          </li>
-		          {/if}
-		          {/volist}
-				</ul>
+				<div id="upload_img_list3" class="upload_img_list">
+					{volist name="$data_info['tenant_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'Positiveid'"}
+					<dd class="item_img" id="">
+						<div class="operate">
+							<i  class="layui-icon-close-fill layui-icon"></i>
+						</div>
+						<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+					</dd>
+					{/if}
+					{/volist}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -83,18 +83,18 @@
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
 			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list4" class="upload_img_list"> </div>
-			</div>
-			<div class="j-enclosure-img j-viewer-img clearfix">
-				<ul>
-		          {volist name="$data_info['tenant_imgs']" id="v"}   
-		          {if condition="$v['file_type'] == 'Backid'"}
-		          <li>
-		            <img src="{$v['file']}" />
-		          </li>
-		          {/if}
-		          {/volist}
-				</ul>
+				<div id="upload_img_list4" class="upload_img_list">
+					{volist name="$data_info['tenant_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'Backid'"}
+					<dd class="item_img" id="">
+						<div class="operate">
+							<i  class="layui-icon-close-fill layui-icon"></i>
+						</div>
+						<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+					</dd>
+					{/if}
+					{/volist}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -108,8 +108,8 @@
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript">
-	var upurl2 = "{:url('system/Api/upload')}?input=positiveid&group=ban&water=no"; //身份证正面上传图片地址
-	var upurl3 = "{:url('system/Api/upload')}?input=backid&group=ban&water=no"; //身份证反面上传图片地址
+	var upurl2 = "{:url('system/Api/upload')}?input=Positiveid&group=ban&water=no"; //身份证正面上传图片地址
+	var upurl3 = "{:url('system/Api/upload')}?input=Backid&group=ban&water=no"; //身份证反面上传图片地址
 	var duotu = false; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,
@@ -123,7 +123,7 @@
 			url: upurl2,
 			size: 1024,
 			multiple: duotu,
-			field: 'positiveid',
+			field: 'Positiveid',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -135,14 +135,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="positiveid[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="positiveid" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -152,7 +152,7 @@
 			url: upurl3,
 			size: 1024,
 			multiple: duotu,
-			field: 'backid',
+			field: 'Backid',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -164,14 +164,14 @@
 				layer.close(layer.msg()); //关闭上传提示窗口
 				if (duotu == true) {
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list4').append('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list4').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="backid[]" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list4').html('<dd class="item_img" id="' + res.data.file +
+					$('#upload_img_list4').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="backid" value="' + res.data.file + '" /></dd>');
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})

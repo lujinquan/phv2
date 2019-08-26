@@ -90,6 +90,9 @@ class Tenant extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            if(isset($data['file']) && $data['file']){
+                $data['tenant_imgs'] = implode(',',$data['file']);
+            }
             $TenantModel = new TenantModel();
             // 入库
             if (!$TenantModel->allowField(true)->update($data)) {
