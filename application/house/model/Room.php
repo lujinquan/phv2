@@ -27,7 +27,7 @@ class Room extends SystemBase
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_number', 'ban_number')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id,ban_is_first');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id,ban_is_first');
     }
 
     // 待优化
@@ -46,7 +46,7 @@ class Room extends SystemBase
         $where['room'] = [['room_status','eq',1],['room_pub_num','>',2]];
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
-            $where['ban'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
+            $where['room'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){

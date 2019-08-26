@@ -30,7 +30,7 @@ class Room extends Admin
             $getData = $this->request->get();
             $RoomModel = new RoomModel;
             $where = $RoomModel->checkWhere($getData);
-            
+            //halt($where);
             $data = [];
             $data['data'] = $RoomModel->withJoin(['ban'=> function($query)use($where){ //注意闭包传参的方式
                      $query->where($where['ban']);

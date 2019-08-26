@@ -93,47 +93,47 @@
 				      	</div>\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>楼层号数</h1>\
-				      	  <p>1</p>\
+				      	  <p>' + forData.house_floor_id +'</p>\
 				      	</div>\
 				      </div>\
 				      <div class="layui-row">\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>单元号数</h1>\
-				      	  <p>1</p>\
+				      	  <p>' + forData.house_unit_id +'</p>\
 				      	</div>\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>门牌号</h1>\
-				      	  <p>' + forData.house_id +'</p>\
+				      	  <p>' + forData.house_door +'</p>\
 				      	</div>\
 				      </div>\
 				      <div class="layui-row">\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>月租金</h1>\
-				      	  <p>15.82</p>\
+				      	  <p>' + forData.house_pre_rent +'</p>\
 				      	</div>\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>原价</h1>\
-				      	  <p>0.00</p>\
+				      	  <p>' + forData.house_oprice +'</p>\
 				      	</div>\
 				      </div>\
 				      <div class="layui-row">\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>使用面积</h1>\
-				      	  <p>0.00</p>\
+				      	  <p>' + forData.house_use_area +'</p>\
 				      	</div>\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>建筑面积</h1>\
-				      	  <p>0.00</p>\
+				      	  <p>' + forData.house_area +'</p>\
 				      	</div>\
 				      </div>\
 				      <div class="layui-row">\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
 				      	  <h1>泵费</h1>\
-				      	  <p>90.00</p>\
+				      	  <p>' + forData.house_pump_rent +'</p>\
 				      	</div>\
 				      	<div class="layui-col-md3 layui-col-md-offset2">\
-				      	  <h1>房屋基数</h1>\
-				      	  <p>暂无</p>\
+				      	  <h1>房屋租差</h1>\
+				      	  <p>' + forData.house_diff_rent +'</p>\
 				      	</div>\
 				      </div>';
 	};
@@ -159,13 +159,11 @@
 			form = layui.form;
 	    //监听楼层改变
 		form.on('select(sel-floor)', function(data){
-             console.log(data);
-         });
-		$(document).ready(function() {
-			$.ajax({
+             console.log(data.value);
+             $.ajax({
 				type: 'post',
 				url: '{:url("house/Ban/struct")}',
-				data: "id=" + id + "&unit_id" + unit_id,
+				data: "id=" + id + "&unit_id=" + data.value,
 				success: function(datas) {
 					var forData = datas.data;
 					/* console.log(forData); */
@@ -179,7 +177,29 @@
 						}
 						str += '</ul></dd></dl>';
 					}
-					$('.j-structure-con').append(str);
+					$('.j-structure-con').html(str);
+				}
+			});
+         });
+		$(document).ready(function() {
+			$.ajax({
+				type: 'post',
+				url: '{:url("house/Ban/struct")}',
+				data: "id=" + id + "&unit_id=" + unit_id,
+				success: function(datas) {
+					var forData = datas.data;
+					/* console.log(forData); */
+					var str = '';
+					for (var item in forData) {
+						str += '<dl class="clearfix"><dt>' + item + '</dt><dd><ul>';
+						/* console.log(forData[item]); */
+						for (var i in forData[item]) {
+							// console.log(forData[item][i]);
+							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + i + '</li>';
+						}
+						str += '</ul></dd></dl>';
+					}
+					$('.j-structure-con').html(str);
 				}
 			});
 		});

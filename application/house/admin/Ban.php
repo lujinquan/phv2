@@ -144,7 +144,7 @@ class Ban extends Admin
             $id = input('param.id/d');
             $unitID = input('param.unit_id/d',1);
             $row = BanModel::get($id);
-            $houseArr = HouseModel::with(['tenant'])->where([['ban_id','eq',$id],['house_unit_id','eq',$unitID]])->field('house_floor_id,house_id,tenant_id')->order('house_floor_id asc')->select();
+            $houseArr = HouseModel::with(['tenant'])->where([['ban_id','eq',$id],['house_unit_id','eq',$unitID]])->field('house_unit_id,house_floor_id,house_id,tenant_id,house_door,house_pre_rent,house_oprice,house_area,house_use_area,house_pump_rent,house_diff_rent')->order('house_floor_id asc')->select();
             $tempHouseArr = [];
             //dump($row['ban_floors']);halt($houseArr);
             
@@ -154,6 +154,16 @@ class Ban extends Admin
                         $tempHouseArr[$j][] = [
                             'house_id' => $h['house_id'],
                             'tenant_name' => $h['tenant_name'],
+                            'house_unit_id' => $h['house_unit_id'],
+                            'house_floor_id' => $h['house_floor_id'],
+                            'house_door' => $h['house_door'],
+                            'house_pre_rent' => $h['house_pre_rent'],
+                            'house_oprice' => $h['house_oprice'],
+                            'house_area' => $h['house_area'],
+                            'house_use_area' => $h['house_use_area'],
+                            'house_pump_rent' => $h['house_pump_rent'],
+                            'house_diff_rent' => $h['house_diff_rent'],
+                            //'tenant_name' => $h['tenant_name'],
                         ];
                     } 
                 }
@@ -161,6 +171,7 @@ class Ban extends Admin
                     $tempHouseArr[$j] = [];
                 }
             }
+            //halt($tempHouseArr);
             $data = [];
             $data['data'] = $tempHouseArr;
             $data['code'] = 0;

@@ -21,7 +21,7 @@ class Tenant extends SystemBase
 
     public function house()
     {
-        return $this->belongsTo('hosue', 'house_number', 'house_number')->bind('house_id');
+        return $this->belongsTo('house', 'house_number', 'house_number')->bind('house_id');
     }
 
     public function SystemUser()

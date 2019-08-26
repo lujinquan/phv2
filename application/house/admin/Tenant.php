@@ -111,6 +111,9 @@ class Tenant extends Admin
     {
         $id = input('param.id/d');
         $row = TenantModel::with(['system_user'])->find($id);
+        if(!$row){
+            return $this->error('当前租户不存在！');
+        }
         $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
         // 获取租户的余额
         $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
