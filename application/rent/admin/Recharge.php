@@ -14,6 +14,7 @@ namespace app\rent\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\house\model\House as HouseModel;
 use app\rent\model\Recharge as RechargeModel;
 
 /**
@@ -63,6 +64,7 @@ class Recharge extends Admin
             if (!$RechargeModel->allowField(true)->create($filData)) {
                 return $this->error('充值失败');
             }
+            HouseModel::where([['house_id','eq',$filData['house_id']]])->setInc('house_balance',$filData['pay_rent']);
             return $this->success('充值成功');
         }
         return $this->fetch();
