@@ -213,6 +213,7 @@ b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text
  display: inline-block;font:12px/14px '';text-align: center;margin-right: 12px;
  }
  .j-floor-nav .navWrap li b{ line-height: 28px;display: inline-block;}
+ .j-details-box .item{margin-top: -20px;padding-top:20px;}
 /*楼层导航 E*/
 /*----------房屋档案详情 E----------*/
 /*楼栋结构 S*/

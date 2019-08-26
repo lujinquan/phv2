@@ -537,11 +537,12 @@
 	function nowDate() {
 		var now = new Date();
 		return "'" + now.getFullYear() + "'";
-	}
+	};
 	//图片查看
-	/* $(".j-viewer-img").on("click",function(){
-		$(this).viewer({
-		   	url: 'data-original',
-		 });
-	}) */
+		$(".j-enclosure-imgs").on("click",".j-viewer-img",function(){
+			$(this).viewer({
+				url: 'data-original'
+			 });
+			 $(this).viewer('update');
+		})
 </script>
