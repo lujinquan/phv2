@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -131,8 +132,8 @@
 				</div>
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
-			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list4" class="upload_img_list"> </div>
+			<div class="j-enclosure-imgs clearfix">
+				<div id="upload_img_list4" class="upload_img_list j-viewer-img"> </div>
 			</div>
 		</div>
 	</div>
@@ -150,8 +151,8 @@
 				</div>
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
-			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list2" class="upload_img_list"> </div>
+			<div class="j-enclosure-imgs clearfix">
+				<div id="upload_img_list2" class="upload_img_list j-viewer-img"> </div>
 			</div>
 		</div>
 	</div>
@@ -165,8 +166,8 @@
 				</div>
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
-			<div class="j-enclosure-img clearfix">
-				<div id="upload_img_list3" class="upload_img_list"> </div>
+			<div class="j-enclosure-imgs clearfix">
+				<div id="upload_img_list3" class="upload_img_list j-viewer-img"> </div>
 			</div>
 		</div>
 	</div>
@@ -211,6 +212,7 @@
   </div>
 </form>
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__ADMIN_VIEWJS__/deal_cancel_apply.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	var upurl2 = "{:url('system/Api/upload')}?input=enclosure1&group=ban&water=no"; //附件1

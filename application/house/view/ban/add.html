@@ -355,11 +355,11 @@
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md6">
+			<div class="layui-col-md6 j-upload-from">
 				<div class="j-enclosure-upload clearfix">
 					<div class="j-enclosure-label">土地证电子版</div>
 					<div class="j-enclosure-label j-uplode-icon">
-						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<i><img name="no" src="/static/system/image/Group8.png"></i>点击上传
 						<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
 					</div>
 					<div class="layui-form-mid layui-word-aux">限制1M</div>
@@ -538,11 +538,5 @@
 		var now = new Date();
 		return "'" + now.getFullYear() + "'";
 	};
-	//图片查看
-		$(".j-enclosure-imgs").on("click",".j-viewer-img",function(){
-			$(this).viewer({
-				url: 'data-original'
-			 });
-			 $(this).viewer('update');
-		})
+	
 </script>

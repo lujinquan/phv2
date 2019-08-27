@@ -725,3 +725,17 @@ function bytesToSize(bytes) {
 　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 　　//toPrecision(3) 后面保留两位小数，如1.00GB  
 } 
+//添加编辑附件上传图片查看
+$(".j-viewer-img").on("click",function(){
+	$(this).viewer({
+		url: 'data-original',
+	 });
+	 $(this).viewer('update');
+})
+
+/* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
+    $(this).viewer({
+     		url: 'data-original',
+     	 });
+     	 $(this).viewer('update');
+  }); */

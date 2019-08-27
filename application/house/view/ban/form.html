@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <!-- 楼层导航 S -->
 <div class="j-floor-nav">
 	<ul class="navWrap">
@@ -351,8 +352,8 @@
    				</div>
    				<div class="layui-form-mid layui-word-aux">限制1M</div>
    			</div>
-   			<div class="j-enclosure-img clearfix">
-   				<div id="upload_img_list1" class="upload_img_list">
+   			<div class="j-enclosure-imgs clearfix">
+   				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
    					{volist name="$data_info['ban_imgs']" id="v"}
 					{if condition="$v['file_type'] == 'LandCard'"}
 					<dd class="item_img" id="">
@@ -376,8 +377,8 @@
    				</div>
    				<div class="layui-form-mid layui-word-aux">限制1M</div>
    			</div>
-   			<div class="j-enclosure-img clearfix">
-   				<div id="upload_img_list2" class="upload_img_list"> 
+   			<div class="j-enclosure-imgs clearfix">
+   				<div id="upload_img_list2" class="upload_img_list j-viewer-img"> 
    					{volist name="$data_info['ban_imgs']" id="v"}
 					{if condition="$v['file_type'] == 'RealestateCard'"}
 					<dd class="item_img" id="">
@@ -402,8 +403,8 @@
    				</div>
    				<div class="layui-form-mid layui-word-aux">限制1M</div>
    			</div>
-   			<div class="j-enclosure-img clearfix">
-   				<div id="upload_img_list3" class="upload_img_list">
+   			<div class="j-enclosure-imgs clearfix">
+   				<div id="upload_img_list3" class="upload_img_list j-viewer-img">
    					{volist name="$data_info['ban_imgs']" id="v"}
 					{if condition="$v['file_type'] == 'ImagingData'"}
 					<dd class="item_img" id="">
@@ -432,6 +433,7 @@
 {include file="system@block/layui" /}
 <script type="text/javascript" src="{$http_type}api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script>
 	var upurl = "{:url('system/Api/upload')}?input=LandCard&group=ban&water=no"; //土地证电子版上传图片地址
 	var upurl1 = "{:url('system/Api/upload')}?input=RealestateCard&group=ban&water=no"; //不动产电子版上传图片地址
