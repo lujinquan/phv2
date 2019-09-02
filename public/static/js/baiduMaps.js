@@ -3,11 +3,11 @@ function G(id) {
 }
 var lng = document.getElementById('jingdu');
 var lat = document.getElementById('weidu');
-var map = new BMap.Map("allmap");
+var map = new BMap.Map("allmap",{minZoom:11,maxZoom:17});
 var point = new BMap.Point(114.334286,30.560728);
 map.centerAndZoom(point,13);
 map.enableScrollWheelZoom(true);// 允许鼠标滑轮放大缩小 
- 
+
 var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
     {"input" : "suggestId"
     ,"location" : map

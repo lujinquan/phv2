@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="{url('add')}" method="post">
 	<!-- 新建工单 S -->
 	<div class="j-details-box layui-form">
@@ -68,8 +69,8 @@
 							</div>
 							<div class="layui-form-mid layui-word-aux">限制3M</div>
 						</div>
-						<div class="j-enclosure-img clearfix">
-							<div id="upload_img_list{$v['id']}" class="upload_img_list"> </div>
+						<div class="j-enclosure-imgs clearfix">
+							<div id="upload_img_list{$v['id']}" class="upload_img_list j-viewer-img"> </div>
 						</div>
 					</div>
 				</div>
@@ -130,6 +131,7 @@
 	<!--新建工单 E -->
 </form>
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	 //影像资料上传图片地址
 	var duotu = true; //是否为多图上传true false
