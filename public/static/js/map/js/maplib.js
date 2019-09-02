@@ -459,6 +459,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
         this._clusterMarker = new BMapLib.TextIconOverlay(this._center, {name:'七零一社区',value : this._markers.length+'栋', household : '12'+'户'}, {"styles":this._markerClusterer.getStyles()});
         //this._map.addOverlay(this._clusterMarker);
     }
+    
 
     /**
      * 向该聚合添加一个标记。
