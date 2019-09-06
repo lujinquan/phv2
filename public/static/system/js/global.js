@@ -698,16 +698,24 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 	        });
 	});
 	//判断是否有滚动条，显示图片查看关闭按钮
-		$(".j-viewer-img").on("click","img",function(){
-		 var obj=document.getElementById("switchBody");
-		 if(obj.scrollHeight>obj.clientHeight){
-		 	$(".layui-row").addClass("on");
-		 }
-		 else
-		 {
-			$(".layui-row").removeClass("on");
-		 }
-		});
+	$(".j-viewer-img").on("click","img",function(){
+	 var obj=document.getElementById("switchBody");
+	 if(obj.scrollHeight>obj.clientHeight){
+	 	$(".layui-row").addClass("on");
+	 }
+	 else
+	 {
+		$(".layui-row").removeClass("on");
+	 }
+	});
+
+    //添加编辑附件上传图片查看
+    $(".j-viewer-img").on("click",function(){
+        $(this).viewer({
+            url: 'data-original',
+         });
+         $(this).viewer('update');
+    })
 	//图片加载失败显示默认图片
     $("img").each(function() {
             var img = $(this);
@@ -725,13 +733,7 @@ function bytesToSize(bytes) {
 　　return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
 　　//toPrecision(3) 后面保留两位小数，如1.00GB  
 } 
-//添加编辑附件上传图片查看
-$(".j-viewer-img").on("click",function(){
-	$(this).viewer({
-		url: 'data-original',
-	 });
-	 $(this).viewer('update');
-})
+
 
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
