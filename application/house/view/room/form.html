@@ -106,7 +106,7 @@ layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
     
     $('.lu-add').click(function(){
-        var html = '<div class="layui-col-md4"><label class="j-form-label"><i class="red">*</i>绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
+        var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
         $('.lu-add').parent().before(html);
     });
     $('.e-house').on('click','.lu-del',function(){

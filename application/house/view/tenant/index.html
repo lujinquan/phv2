@@ -54,7 +54,7 @@
 
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		{if condition="$group == 'x'"}
+	{if condition="$group == 'x'"}
 	<a href="{:url('edit')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
     <a href="{:url('detail')}?group={$group}&id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
@@ -66,6 +66,8 @@
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table;
+		var isHide = ('{$group}' == 'x')?false:true;
+		
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -75,9 +77,11 @@
 				defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 			,url: '{:url("house/Tenant/index")}?group={$group}' //数据接口
 				,
+
 			page: true //开启分页
 				,
 			limit: 10,
+			limits: [10,20,30,40,50,100,300,500,1000],
 			text: {
 				none: '暂无相关数据'
 			},
@@ -85,6 +89,7 @@
 				[ //表头
 					{
 						type: 'checkbox',
+						hide: isHide,
 						fixed: 'left'
 					}, {
 						field: 'tenant_number',
@@ -127,6 +132,6 @@
 			done: function(res, curr, count) {
 
 			}
-		}, isShowInst)
+		}, isShowInst,isHide)
 	});
 </script>

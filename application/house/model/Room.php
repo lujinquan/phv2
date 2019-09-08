@@ -89,6 +89,7 @@ class Room extends SystemBase
         $temp = array_filter($data['house_number']);
         $data['room_pub_num'] = count($temp);
         //计租面积
+        //halt($data);
         $data['room_lease_area'] = $this->room_lease_area($data['room_type'],$data['room_use_area'],count($temp));
         
         //构造house_room关联表数据

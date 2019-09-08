@@ -48,7 +48,7 @@ class Room extends Admin
     public function add()
     {   
         $id = input('param.id/d');
-        $row = HouseModel::get($id);
+        $row = HouseModel::with('ban')->get($id);
     	if ($this->request->isPost()) {
             $data = $this->request->post();
 
@@ -63,7 +63,7 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
- 
+ //halt($filData);
             // 入库room表
             if (!$RoomModel->allowField(true)->save($filData)) {
                 return $this->error('新增失败');

@@ -29,9 +29,10 @@ class House extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
+            //halt($getData);
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
-            
+            //halt($where);
             $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
             $data = [];
             //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
@@ -92,6 +93,7 @@ class House extends Admin
             ]
         ];
         $tabData['current'] = url('?group='.$group);
+        $this->assign('ban_number',input('param.ban_number',''));
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
