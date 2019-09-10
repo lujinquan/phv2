@@ -22,7 +22,7 @@ class House extends SystemBase
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id,ban_is_levator');
     }
 
     public function tenant()
@@ -122,7 +122,7 @@ class House extends SystemBase
         if(in_array($houseid,array(666,888,999))){
             return 0;
         }
-        $row = $this->find($houseid);
+        $row = self::with('ban')->find($houseid);
         $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_id');
 
         //halt($row->house_room()->column('room_id'));

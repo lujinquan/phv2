@@ -78,26 +78,21 @@
 <script type="text/javascript">
 	layui.use(['table', 'jquery'], function() {
 		var table = layui.table;
+		var isHide = ('{$group}' == 'x')?false:true;
 		table.render({
-			elem: '#dataTable'
-				//,height: 550
-				//,height: 'full-20' //浏览器最大高度
-				,
+			elem: '#dataTable',
 			toolbar: true,
-			defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
-				,
-			url: '{:url("house/House/index")}?group={$group}' //数据接口
-				,
-			page: true //开启分页
-				,
+			defaultToolbar: ['filter','exports','print'], //设置右边筛选，导出，打印显示
+			url: '{:url("house/House/index")}?group={$group}&ban_number={$ban_number}', //数据接口
+			page: true, //开启分页
 			limit: 10,
-			text: {
-				none: '暂无相关数据'
-			},
+			limits: [10,20,30,40,50,100,300,500,1000],
+			text: {none: '暂无相关数据'},
 			cols: [
 				[ //表头
 					{
 						type: 'checkbox',
+						hide: isHide,
 						fixed: 'left'
 					}, {
 						field: 'house_number',
@@ -185,7 +180,7 @@
 			done: function(res, curr, count) {
 
 			}
-		}, isShowInst);
+		}, isShowInst,isHide);
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 	});
 </script>

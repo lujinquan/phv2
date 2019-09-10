@@ -297,7 +297,7 @@ class Accept extends Admin
                 $url = '/admin.php/order/accept/index.html';
             }
             $systemAffiche               = new SystemAffiche;
-            $data['transfer_to'] = $data['transfer_to']?$data['transfer_to']:$filData['transfer_to'];
+            $data['transfer_to'] = (isset($data['transfer_to']) && $data['transfer_to'])?$data['transfer_to']:$filData['transfer_to'];
 
             $systemAffiche->title        = '【' . session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！';
             $systemAffiche->content      = '一条【'. session('admin_user.nick') . '】转交给您的工单待'.$contentMsg.'！工单编号：' . $filData['op_order_number'] . '。请您尽快处理！';

@@ -38,7 +38,7 @@ class Myorder extends Admin
             if($getData['group'] == 'j'){
             	foreach($temps as &$v){
 	            	if($v['dtime'] && !$v['ftime']){
-						$v['status_info'] = '待确认';
+						$v['status_info'] = '<button class="layui-btn layui-btn-xs layui-btn-danger">待确认</button>';
 	            	}
 	            	if(!$v['dtime']){
 						$v['status_info'] = '处理中';

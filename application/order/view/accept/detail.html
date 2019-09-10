@@ -174,13 +174,17 @@
 		    		content: "{:url('turnForm')}?hisi_iframe=yes",
 		    		yes: function(index, layero){
 		    			var data = $('.layui-form').serialize();
-		    			//console.log($('.layui-layer-btn0').hasClass('disabled'));
+		    			var transferDom = document.getElementById('layui-layer-iframe1').contentWindow.document.getElementsByClassName('layui-this'); //获取弹出iframe下的选中状态元素 
+						var transfer_to = $(transferDom).attr('lay-value'); 
+		    			var dataNew = $.param({transfer_to:transfer_to})+'&'+data;
+	
 						if(!$('.layui-layer-btn0').hasClass('disabled')){
 							$('.layui-layer-btn0').addClass('disabled').text('提交中...');
-							formSubmit('post',"{:url('transfer')}",data,index);
+							formSubmit('post',"{:url('transfer')}",dataNew,index);
 						}
 					}
 				});
+				
 		    })
 		    function formSubmit(type,url,data,index){
 		    	$.ajax({
@@ -294,8 +298,9 @@
 		$(document).on("click", ".upload_img_list dd i", function() {
 			$(this).parents("dd").remove();
 		})
+		$('.j-viewer-img').viewer({
+		   	url: 'data-original',
+		 });
 	});
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
+	
 	</script>

@@ -29,16 +29,12 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>管段</label>
 					<div class="j-input-inline">
-						{if condition="INST_LEVEL < 3"}
 						<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
 							<option value="">请选择</option>
 							{volist name=":config('inst_data_names')[INST]" id="v"}
 							<option value="{$key}">{$v}</option>
 							{/volist}
 						</select>
-						{else /}
-						<input type="text" name="ban_inst_id" value="{$params.insts[INST_LEVEL]}" autocomplete="off" class="layui-input">
-						{/if}
 					</div>
 				</div>
 				

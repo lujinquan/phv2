@@ -10,7 +10,9 @@
 			<div class="j-input-inline">
 				<select name="cancel_class" class="field-cid">
 					<option value="0">请选择</option>
-					<option value="1">房屋出售</option>
+					{volist name="params['cancels']" id="v" key="k"}
+					<option value="{$k}">{$v}</option>
+					{/volist}
 				</select>
 			</div>
 		</div>
@@ -24,7 +26,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
-				<input type="text" name="cancel_address" value="" autocomplete="off" class="layui-input">
+				<input type="text" name="cancel_address" value="" autocomplete="off" class="layui-input" readonly>
 			</div>
 		</div>
 	</div>

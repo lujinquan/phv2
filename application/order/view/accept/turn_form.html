@@ -6,11 +6,11 @@
 	.j-frame-class .layui-form-select dl dt{ font-size: 14px;}
 </style>
 <div class="row j-frame-class">
-	<form class="layui-form" >
+	<form class="layui-form" id="test" >
 		<div class="layui-form-item">
 			<label class="j-frame-label">工单受理人</label>
 			<div class="j-input-block">
-				<select name="transfer_to" id="transfer_to">
+				<select name="transfer_to" id="transfer_to" lay-filter="transfer">
 					<option value="">请选择工单受理人</option>
 					{if condition="ADMIN_ROLE != 10"}
 					<optgroup label="技术服务中心">

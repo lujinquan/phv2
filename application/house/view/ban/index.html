@@ -72,19 +72,16 @@
     {/if}
     <a href="{:url('detail')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('struct')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">结构</a>
+    <a target="_blank" href="{:url('house/index')}?group={$group}&ban_number={{ d.ban_number }}" class="layui-btn layui-btn-xs layui-btn-normal">房屋</a>
 </script>
 </div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
         var table = layui.table
 		    ,$ = layui.$;
+        var isHide = ('{$group}' == 'x')?false:true;
         table.render({
             elem: '#dataTable'
-            //,skin: 'line' //行边框风格
-            //,even: true //开启隔行背景
-            //,size: 'sm' //小尺寸的表格
-            //,height: 550
-            //,height: 'full-20' //浏览器最大高度
             ,toolbar: true
 			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
@@ -95,7 +92,7 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
+                {type: 'checkbox', hide: isHide ,fixed: 'left'}
                 ,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
                 ,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
@@ -127,7 +124,7 @@
             ,done:function(res,curr,count){
                console.log(res);
             }
-        },isShowInst);
+        },isShowInst,isHide);
 		
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		/* $(".layui-table tr").each(function(){
