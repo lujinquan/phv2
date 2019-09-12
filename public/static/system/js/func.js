@@ -1,4 +1,4 @@
-/***** HisiPHP By http://www.mylucas.com.cn *****/
+/***** http://www.mylucas.com.cn *****/
 layui.define(['jquery', 'form'], function(exports) {
     var $ = layui.jquery, form = layui.form;
     var obj = {

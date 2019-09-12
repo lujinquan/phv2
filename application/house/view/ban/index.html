@@ -110,13 +110,13 @@
                     return params.structs[d.ban_struct_id];
                 }}
                 ,{field: 'ban_civil_area', minWidth: 80, align:'center', title: '合建面',templet: function(d) {
-                    return parseFloat(d.ban_civil_area) + parseFloat(d.ban_party_area) + parseFloat(d.ban_career_area);
+                    return (parseFloat(d.ban_civil_area) + parseFloat(d.ban_party_area) + parseFloat(d.ban_career_area)).toFixed(2);
                 }}
                 ,{field: 'ban_civil_rent', minWidth: 80, align:'center', title: '合规租',templet: function(d) {
-                    return parseFloat(d.ban_civil_rent) + parseFloat(d.ban_party_rent) + parseFloat(d.ban_career_rent);
+                    return (parseFloat(d.ban_civil_rent) + parseFloat(d.ban_party_rent) + parseFloat(d.ban_career_rent)).toFixed(2);
                 }}
                 ,{field: 'ban_civil_oprice', minWidth: 100, align:'center', title: '合原价',templet: function(d) {
-                    return parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice);
+                    return (parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice)).toFixed(2);
                 }}
                 ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积'}
                 ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}

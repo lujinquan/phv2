@@ -27,7 +27,7 @@ class House extends SystemBase
 
     public function tenant()
     {
-        return $this->hasOne('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_tel,tenant_card');
+        return $this->hasOne('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_number,tenant_tel,tenant_card');
     }
 
     public function house_room()

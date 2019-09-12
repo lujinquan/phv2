@@ -17,7 +17,7 @@ class HouseTai extends SystemBase
 
     public function tenant()
     {
-        return $this->belongsTo('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name');
+        return $this->belongsTo('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_number');
     }
 
     public function SystemUser()

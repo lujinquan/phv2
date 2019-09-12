@@ -221,7 +221,6 @@ class House extends Admin
             $data['msg'] = '';
             return json($data);
         }
-   
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);

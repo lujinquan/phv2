@@ -724,6 +724,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             });
         });
   })
+
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
 　　var k = 1024;
@@ -734,6 +735,12 @@ function bytesToSize(bytes) {
 　　//toPrecision(3) 后面保留两位小数，如1.00GB  
 } 
 
+function toFixed(num, s) {
+    var times = Math.pow(10, s);
+    var des = num * times + 0.5;
+    des = parseInt(des, 10) / times;
+    return des + '';
+}
 
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
