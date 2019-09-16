@@ -1,1 +1,131 @@
-{include file="system@block/layui" /}
+<div class="j-table-content">
+	<div class="layui-btn-container j-container-margin">
+		<div class="layui-btn-container">
+
+		</div>
+	</div>
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
+				</div>
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+					<select name="tenant_inst_id">
+						<option value="">机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+				</div>
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
+				</div>
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_card" placeholder="身份证号" class="layui-input">
+				</div>
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<script type="text/html" id="toolbar">
+
+	</script>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+</script>
+</div>
+<script type="text/javascript">
+	layui.use(['table', 'jquery'], function() {
+		var $ = layui.$;
+		var s = $('#dataTable').attr('params');
+		var params = JSON.parse(s);
+		var table = layui.table;
+		
+		
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,
+				defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			,url: '{:url("Lease/index")}' //数据接口
+				,
+
+			page: true //开启分页
+				,
+			limit: 10,
+			limits: [10,20,30,40,50,100,300,500,1000],
+			text: {
+				none: '暂无相关数据'
+			},
+			cols: [
+				[ //表头
+					{
+						field: 'change_order_number',
+						width: 240,
+						align:'center',
+						title: '异动编号'
+					}, {
+						field: 'szno',
+						width: 200,
+						align:'center',
+						title: '租约编号'
+					}, {
+						field: 'tenant_name',
+						width: 100,
+						align:'center',
+						title: '租户姓名'
+					}, {
+						field: 'ban_inst_id',
+						width: 160,
+						align:'center',
+						title: '管段',
+						hide: isShowInst,
+						templet: function(d) {
+							return params.insts[d.ban_inst_id];
+						}
+					}, {
+						field: 'tenant_tel',
+						width: 140,
+						align:'center',
+						title: '联系方式'
+					}, {
+						field: 'tenant_card',
+						width: 180,
+						title: '身份证号'
+					}, {
+						title: '操作',
+						Width: 260,
+						minWidth: 260,
+						align:'center',
+						templet: '#buttonTpl',
+						fixed: 'right'
+					}
+				]
+			],
+			done: function(res, curr, count) {
+
+			}
+		},isShowInst)
+	});
+</script>

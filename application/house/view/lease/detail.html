@@ -1,0 +1,12 @@
+{include file="system@block/layui" /}
+租约详情页面
+<script type="text/javascript">
+	layui.use(['table','jquery'], function() {
+        var table = layui.table
+		   ,$ = layui.$;
+		var id = {$id};
+		$.get('/admin.php/house/lease/detail', {'id':id}, function(res) {
+            console.log(res);
+        });
+	});
+</script>
