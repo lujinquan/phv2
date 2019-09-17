@@ -8,6 +8,13 @@ var time_span = $('#timeYear').val().split('-');
 $('.time').text(time_span[0]+'年'+time_span[1]+'月');
 } */
 $("#yueQuery").click(function() {
+    archives_data();
+})
+
+archives_data();
+
+function archives_data(){
+  
     $('.Wsdj:gt(0)').remove();
     $('.Syxz:gt(0)').remove();
     $('.gig:gt(0)').remove();
@@ -17,11 +24,11 @@ $("#yueQuery").click(function() {
     var OwnerTyp_number = $('#OwnerTyp').val();
     var QueryTyp_number = $('#QueryTyp').val();
     var TubulationI_number = $('#TubulationI option:selected').val();
-    console.log(TubulationI_number);
-   var time_span = $('#timeYear').val().split('-');
+
+    var time_span = $('#timeYear').val().split('-');
     //$('#DOwnerTyp').text($('#OwnerTyp option').eq(OwnerTyp_number).text());
     $('#DOwnerTyp').text($('#OwnerTyp option:selected').text());
-    $('.DQueryType').text($('#QueryTyp option').eq(QueryTyp_number).text());
+    $('.DQueryType').text($("#QueryTyp option:selected").text());
     $('.time').text(time_span[0]+'年'+time_span[1]+'月');
     $('#below_com').text($('#TubulationI option:selected').text()||section_name);
     
@@ -29,6 +36,7 @@ $("#yueQuery").click(function() {
     var tubulation = $('#TubulationI').val();
     var querytyp = $('#QueryTyp').val();
     var time = $('#timeYear').val();
+    //console.log(time);
     if (querytyp == 1) {
         $('.one').show();
         $('.two').hide();
@@ -70,18 +78,18 @@ $("#yueQuery").click(function() {
 
     //     console.log(res);
     // })
-   console.log(querytyp);
+   //console.log(querytyp);
      $.ajax({
       type: "POST",
       url: "/admin.php/report/house/archives",
-	  async:true,// 同步异步
-      data: {OwnerType:owner,TubulationID:tubulation,QueryType:querytyp,month:time},
+    async:true,// 同步异步
+      data: {owner:owner,inst:tubulation,type:querytyp,month:time},
       success: function(res){
-        res=JSON.parse(res);
-        console.log(res);
-        var add_number = res.data.data.below;
-        var arr=res.data.data.top;
-          console.log(arr);
+        //res=JSON.parse(res);
+        //console.log(res);
+        var add_number = res.data.below;
+        var arr=res.data.top;
+        //console.log(arr);
         var aIndex =[];
         if(add_number[2]){
           $('#below_one').text(add_number[2]);
@@ -102,7 +110,7 @@ $("#yueQuery").click(function() {
         for(var i in arr ){
            aIndex.push(i);
         }
-        console.log(aIndex);
+        //console.log(aIndex);
         for(var a=0;a<aIndex.length;a++){
             $('.one').append($('.Wsdj').eq(0).clone());
             $('.Wsdj:gt(0)').show();
@@ -164,4 +172,4 @@ $("#yueQuery").click(function() {
     }
       
    });
-})
+}

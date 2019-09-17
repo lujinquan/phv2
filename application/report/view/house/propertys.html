@@ -2,16 +2,24 @@
   <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" >
   		<div class="j-search-fl layui-col-md8  fl">
+  			<div class="layui-input-inline" style="width:160px;">
+                <select name="inst" id="OwnerTyp" lay-filter="owner_id">
+                    <option value="">机构</option>
+                    <option value="1" {if condition="INST == 1"}selected{/if}>武昌区公司</option>
+                    <option value="2" {if condition="INST == 2"}selected{/if}>紫阳所</option>
+                    <option value="3" {if condition="INST == 3"}selected{/if}>粮道所</option> 
+                </select>
+            </div>
             <div class="layui-input-inline" style="width:120px;">
-                <select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
+                <select name="owner" id="OwnerID" lay-filter="owner_id">
                     <option value="">产别</option>
-                    {volist name="params['owners']" id="v" key="k"}
-                    <option value="{$k}">{$v}</option>
+                    {volist name="owerLst" id="v"}
+                    <option value="{$key}" {if condition="$key == 11"}selected{/if}>{$v}</option>
                     {/volist}
                 </select>
             </div>
             <div class="layui-input-inline" style="width:120px;padding-left:5px">
-                <input type="text" name="query_month" value="" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+                <input type="text" name="month" value="" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
             </div>
           </div>
   		
@@ -31,11 +39,11 @@
         </form>
     </div>
 	<div class="j-report-con">
-	  <h1 class="j-report-title">武汉市房地局直管公房产权（<span id="DOwnerTyp"></span>）情况综合统计表</h1>
+	  <h1 class="j-report-title">武汉市房地局直管公房产权（<span class="DOwnerTyp"></span>）情况综合统计表</h1>
 	  <div class="j-report-table">
 	    <ul>
-			  <li class="j-bold-size">产别:<span class=" DQueryType">按房屋价值</span></li>
-			  <li class="j-bold-size">填报单位:<span class="fontsize"></span></li>
+			  <li class="j-bold-size">产别:<span class="OwnerID"></span></li>
+			  <li class="j-bold-size">填报单位:<span class="fontsize DOwnerTyp"></span></li>
 			  <li class="j-bold-size">填报时间:<span class="time"></span></li>
 	    </ul>
 		<table class="layui-table" id="PropertyForm">
@@ -61,66 +69,66 @@
 		                <td rowspan="1" colspan="2" >建筑面积</td>
 		            </tr>
 		            <tr>
-		                <td rowspan="1" colspan="1" >1</td>
-		                <td rowspan="1" colspan="2" >2</td>
-		                <td rowspan="1" colspan="1" >3</td>
-		                <td rowspan="1" colspan="2" >4</td>
-		                <td rowspan="1" colspan="1" >5</td>
-		                <td rowspan="1" colspan="2" >6</td>
-		                <td rowspan="1" colspan="1" >7</td>
-		                <td rowspan="1" colspan="2" >8</td>
+		                <td rowspan="1" colspan="1" id="zongji_num"></td>
+		                <td rowspan="1" colspan="2" id="zongji_area"></td>
+		                <td rowspan="1" colspan="1" id="daiguan_num"></td>
+		                <td rowspan="1" colspan="2" id="daiguan_area"></td>
+		                <td rowspan="1" colspan="1" id="tuoguan_num"></td>
+		                <td rowspan="1" colspan="2" id="tuoguan_area"></td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="2" ></td>
 		            </tr>
 		            <tr>
 		                <td rowspan="4" colspan="2" class="am-text-middle">本期房屋增减</td>
-		                <td rowspan="1" colspan="6" class="am-text-middle">年房屋增加<span style="padding: 0 5px">9</span>栋，建筑面积<span style="padding: 0 5px"></span>10㎡</td>
-		                <td rowspan="1" colspan="9" class="am-text-middle">年度房减少<span style="padding: 0 5px">11</span>栋，建筑面积<span style="padding: 0 5px"></span>12㎡</td>
+		                <td rowspan="1" colspan="6" class="am-text-middle">年房屋增加<span style="padding: 0 5px" id="ban_num_inc"></span>栋，建筑面积<span style="padding: 0 5px" id="ban_area_inc"></span>㎡</td>
+		                <td rowspan="1" colspan="9" class="am-text-middle">年度房减少<span style="padding: 0 5px" id="ban_num_dec"></span>栋，建筑面积<span style="padding: 0 5px" id="ban_area_dec"></span>㎡</td>
 		            </tr>
 		            <tr>
 		                <td rowspan="1" colspan="1" >接管</td>
-		                <td rowspan="1" colspan="1" >13栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="jieguan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="jieguan_area"></td>
 		                <td rowspan="1" colspan="1" >合建</td>
-		                <td rowspan="1" colspan="1" >15栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="hejian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="hejian_area"></td>
 		                <td rowspan="1" colspan="1" >公房出售</td>
-		                <td rowspan="1" colspan="1" >17栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="chushou_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chushou_area"></td>
 		                <td rowspan="1" colspan="1" >拆迁</td>
-		                <td rowspan="1" colspan="1" >19栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="chaiqian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chaiqian_area"></td>
 		            </tr>
 		            <tr>
 		                <td rowspan="1" colspan="1" >危改还建</td>
-		                <td rowspan="1" colspan="1" >21栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="huanjian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="huanjian_area"></td>
 		                <td rowspan="1" colspan="1" >加改扩</td>
-		                <td rowspan="1" colspan="1" >23栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="jiagai_num">栋</td>
+		                <td rowspan="1" colspan="1" id="jiagai_area"></td>
 		                <td rowspan="1" colspan="1" >危改拆除</td>
-		                <td rowspan="1" colspan="1" >25栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="chaichu_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chaichu_area"></td>
 		                <td rowspan="1" colspan="1" >房屋划转</td>
-		                <td rowspan="1" colspan="1" >27栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="huazhuan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="huazhuan_area"></td>
 		            </tr>
 		            <tr>
 		                <td rowspan="1" colspan="1" >新建</td>
-		                <td rowspan="1" colspan="1" >29栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="xinjian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="xinjian_area"></td>
 		                <td rowspan="1" colspan="1" >其他</td>
-		                <td rowspan="1" colspan="1" >31栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="qita_inc_num">栋</td>
+		                <td rowspan="1" colspan="1" id="qita_inc_area"></td>
 		                <td rowspan="1" colspan="1" >落私发还</td>
-		                <td rowspan="1" colspan="1" >33栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="fahuan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="fahuan_area"></td>
 		                <td rowspan="1" colspan="1" >其他</td>
-		                <td rowspan="1" colspan="1" >35栋</td>
-		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="1" id="qita_dec_num">栋</td>
+		                <td rowspan="1" colspan="1" id="qita_dec_area"></td>
 		            </tr>
 		            <tr>
 		                <td rowspan="1" colspan="3" class="am-text-middle">已登记房屋</td>
-		                <td rowspan="1" colspan="2" class="am-text-middle">37栋</td>
-		                <td rowspan="1" colspan="4" class="am-text-middle">建筑面积<span style="padding: 0 5px"></span>38㎡</td>
+		                <td rowspan="1" colspan="2" class="am-text-middle" id="dengji_num">栋</td>
+		                <td rowspan="1" colspan="4" class="am-text-middle">建筑面积<span style="padding: 0 5px" id="dengji_area"></span>㎡</td>
 		                <td rowspan="1" colspan="5" class="am-text-middle">备注：<span style="padding: 0 5px"></span></td>
 		            </tr>
 		
@@ -154,10 +162,81 @@
 		var section_name_start = section_name.indexOf('(')+1;
 		var section_name_end = section_name.indexOf(')');
 		section_name = section_name.substring(section_name_start,section_name_end);
-		var time_span = $('#timeYear').val().split('-');
-		$('.time').text(time_span[0]+'年'+time_span[1]+'月');
+
 		
+		var data = $('form').serialize();
+		$('#yueQuery').click(function(){
+			var data = $(this).parents('form').serialize();
+			$.get("{:url()}", data ,function(res){
+				//console.log(res.code);
+				if(res.code == 1){
+					insert_data(res);
+				}else{
+					layer.msg(res.msg);
+					//$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
+				}
+			});
+		});
+
+		$.get("{:url()}", data,function(res){
+			if(res.code == 1){
+				insert_data(res);
+			}else{
+				layer.msg(res.msg);
+			}
+		});
+
     });
+
+    function insert_data(res){
+
+    	var time_span = $('#timeYear').val().split('-');
+		$('.time').text(' '+time_span[0]+'年'+time_span[1]+'月');
+		$(".DQueryType,.DOwnerTyp").text(' '+$("#OwnerTyp option:selected").text());
+		$(".DQueryType,.OwnerID").text(' '+$("#OwnerID option:selected").text());
+
+    	$('#zongji_num').text(res.data[0][0]);
+	    $('#zongji_area').text(res.data[0][1]);
+	    $('#daiguan_num').text(res.data[0][2]);
+	    $('#daiguan_area').text(res.data[0][3]);
+	    $('#tuoguan_num').text(res.data[0][4]);
+	    $('#tuoguan_area').text(res.data[0][5]);
+
+	    $('#ban_num_inc').text(res.data[1][0]);
+	    $('#ban_area_inc').text(res.data[1][1]);
+	    $('#ban_num_dec').text(res.data[1][2]);
+	    $('#ban_area_dec').text(res.data[1][3]);
+
+	    $('#jieguan_num').text(res.data[2][0]+' 栋');
+	    $('#jieguan_area').text(res.data[2][1]);
+	    $('#hejian_num').text(res.data[2][2]+' 栋');
+	    $('#hejian_area').text(res.data[2][3]);
+	    $('#chushou_num').text(res.data[2][4]+' 栋');
+	    $('#chushou_area').text(res.data[2][5]);
+	    $('#chaiqian_num').text(res.data[2][6]+' 栋');
+	    $('#chaiqian_area').text(res.data[2][7]);
+
+	    $('#huanjian_num').text(res.data[3][0]+' 栋');
+	    $('#huanjian_area').text(res.data[3][1]);
+	    $('#jiagai_num').text(res.data[3][2]+' 栋');
+	    $('#jiagai_area').text(res.data[3][3]);
+	    $('#chaichu_num').text(res.data[3][4]+' 栋');
+	    $('#chaichu_area').text(res.data[3][5]);
+	    $('#huazhuan_num').text(res.data[3][6]+' 栋');
+	    $('#huazhuan_area').text(res.data[3][7]);
+
+	    $('#xinjian_num').text(res.data[4][0]+' 栋');
+	    $('#xinjian_area').text(res.data[4][1]);
+	    $('#qita_inc_num').text(res.data[4][2]+' 栋');
+	    $('#qita_inc_area').text(res.data[4][3]);
+	    $('#fahuan_num').text(res.data[4][4]+' 栋');
+	    $('#fahuan_area').text(res.data[4][5]);
+	    $('#qita_dec_num').text(res.data[4][6]+' 栋');
+	    $('#qita_dec_area').text(res.data[4][7]);
+
+	    $('#dengji_num').text(res.data[5][0]+' 栋');
+	    $('#dengji_area').text(res.data[5][1]);
+    }
 	//打印
 	function  click_print(){
 	 $(".j-report-con").jqprint();
