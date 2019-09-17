@@ -1,2 +1,367 @@
+<!-- 使用权变更申请 -->
+<form class="layui-form" action="" method="post">
+	<div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<label class="j-form-label">房屋编号</label>
+				<div class="j-input-inline j-tips">
+					<input type="text" id="ban_number" name="ban_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<b class="j-explain-search j-ban_number">查询</b>
+				</div>
+				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>使用权变更完全后，愿租约自动失效！</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md6">
+				<div class="j-column-box">
+					<div class="j-column-title clearfix">
+						当前信息
+					</div>
+					<div class="j-column-con clearfix">
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户ID</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_id"  value=""  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户姓名</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_name"  value=""  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">身份证号</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_idnumbers"  value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90 j-tips-boxs j-visibility">
+							<div class="layui-col-md12">
+								<div class="j-input-inline j-tips-show">
+									<a href="javascript:;">
+										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6">
+				<div class="j-column-box">
+					<div class="j-column-title clearfix">
+						新租户信息
+					</div>
+					<div class="j-column-con clearfix">
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户ID</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_number_new" name="tenant_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+									<b class="j-explain-search j-tenant_number">查询</b>
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户姓名</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_name_new"  value=""  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">身份证号</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_card_new"  value=""  lay-verify="require|verifynewid" placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
+							<div class="layui-col-md12">
+								<div class="j-input-inline j-tips-show">
+									<a href="javascript:;">
+										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">变更类型</label>
+				<div class="j-input-inline">
+					<select name="tenant_class" class="field-cid" type="select">
+					    <option value="1">交易转让</option>
+					    <option value="2">亲属转让</option>
+						<option value="3">正常过户</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">转让金额</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_money" name="tenant_money" value="" placeholder="编辑金额" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">转让原因</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_reason" name="tenant_reason" value="" placeholder="编辑原因" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>填报信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">书面申请报告</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制1M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list3" class="upload_img_list j-viewer-img"> </div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">审批表</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制1M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">其他</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制1M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list2" class="upload_img_list j-viewer-img"> </div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<a href="{:url('index')}?group=x" class="layui-btn layui-btn-primary">取消</a>
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+			</div>
+		</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
-
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	var upurl = "{:url('system/Api/upload')}?input=Approvalform&group=ban&water=no"; //审批表
+	var upurl1 = "{:url('system/Api/upload')}?input=Usufructother&group=ban&water=no"; //其他
+	var upurl2 = "{:url('system/Api/upload')}?input=Application&group=ban&water=no"; //书面申请报告
+	var duotu = true; //是否为多图上传true false
+	layui.use(['jquery','table','layer', 'upload','form'], function() {
+			var table = layui.table
+			    ,form = layui.form
+				,$ = layui.jquery
+				,upload = layui.upload
+				,layer = layui.layer;
+      
+	      //获取楼栋查询器
+		  $(".layui-form").on('click','.j-ban_number',function(){
+		 layer.open({
+			title: '房屋查询器'
+			,type: 2
+			,offset: 'auto'
+			,area: ['70%', '60%']
+			, btn:false
+			,pageTabs: false
+			,content: '{:url('system/index/house')}'
+			,btn: ['确定','关闭']
+			,yes: function(index, layero){
+				var row = window["layui-layer-iframe" + index].hoesedata();
+				console.log(row);
+				layer.close(index);
+				$("#ban_number").val(row.house_number);//获取楼栋编号
+				$("#tenant_name").val(row.tenant_name);//当前租户姓名
+			},btn2: function(index, layero){
+				layer.close(index);
+			}
+		  });
+		 })	
+		  //获取租户查询器
+		   $(".layui-form").on('click','.j-tenant_number',function(){
+		  layer.open({
+					title: '租户查询器'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('system/index/tenant')}'
+					,btn: ['确定','关闭']
+					,yes: function(index, layero){
+						var row = window["layui-layer-iframe" + index].tenantdata();
+						console.log(row);
+						layer.close(index);
+						$("#tenant_number_new").val(row.tenant_number);//获取租户编号
+						$("#tenant_name_new").val(row.tenant_name);
+						$("#tenant_card_new").val(row.tenant_card);
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
+		   });
+		  })
+		  //书面申请报告
+		  upload.render({
+		  	elem: '#upload_img3',
+		  	url: upurl2,
+		  	size: 1024,
+		  	multiple: duotu,
+		  	field: 'Application',
+		  	before: function(obj) {
+		  		layer.msg('图片上传中...', {
+		  			icon: 16,
+		  			shade: 0.01,
+		  			time: 0
+		  		})
+		  	},
+		  	done: function(res) {
+		  		layer.close(layer.msg()); //关闭上传提示窗口
+		  		if (duotu == true) {
+		  			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+		  		} else {
+		  			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
+		  		}
+		  	}
+		  })
+		  //审批表
+		  upload.render({
+		  	elem: '#upload_img1',
+		  	url: upurl,
+		  	size: 1024,
+		  	multiple: duotu,
+		  	field: 'Approvalform',
+		  	before: function(obj) {
+		  		layer.msg('图片上传中...', {
+		  			icon: 16,
+		  			shade: 0.01,
+		  			time: 0
+		  		})
+		  	},
+		  	done: function(res) {
+		  		layer.close(layer.msg()); //关闭上传提示窗口
+		  		if (duotu == true) {
+		  			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+		  		} else {
+		  			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
+		  		}
+		  	}
+		  })
+		  //其他
+		  upload.render({
+		  	elem: '#upload_img2',
+		  	url: upurl1,
+		  	size: 1024,
+		  	multiple: duotu,
+		  	field: 'Usufructother',
+		  	before: function(obj) {
+		  		layer.msg('图片上传中...', {
+		  			icon: 16,
+		  			shade: 0.01,
+		  			time: 0
+		  		})
+		  	},
+		  	done: function(res) {
+		  		layer.close(layer.msg()); //关闭上传提示窗口
+		  		if (duotu == true) {
+		  			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+		  		} else {
+		  			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+		  			$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
+		  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+		  				'" class="img" ><input type="hidden" name="file" value="' + res.data.id + '" /></dd>');
+		  		}				
+		  	}
+		  })
+		  /*
+		  删除上传图片
+		  */
+		  $(document).on("click", ".upload_img_list dd i", function() {
+		  	$(this).parents("dd").remove();
+		  })
+		  //自定义表单验证
+		  form.verify({
+			  //验证当前信息身份证号
+			   verifyidnumber: function (value) {
+				    if(value.length <= 0){
+				           $(".j-tips-boxs").removeClass("j-visibility");
+				     }
+					 else{
+						 $(".j-tips-boxs").addClass("j-visibility");
+					 }
+			   },
+			   //验证新租户身份证号
+			   verifynewid: function (value) {
+				   if(value.length <= 0){
+				          $(".j-tips-newboxs").removeClass("j-visibility");
+				    }
+				    else{
+				   	 $(".j-tips-newboxs").addClass("j-visibility");
+				    }
+			   }
+		  });  
+	});
+</script>

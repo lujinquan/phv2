@@ -184,6 +184,11 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
 .j-details-box .layui-form-item .j-input-inline{padding-left: 122px; position: relative;left: -2px;/* font-weight: bold; */color: #666;}
+.j-details-box .layui-form-item .j-input-inline.j-tips{ padding-left: initial; float: left;width: 22%;}/* 表单后面带提示 */
+.j-details-box .layui-form-item .j-input-inline.j-tips-show i{color: #FF8700;margin: 0 5px 0 10px;}/* 提示信息 */
+.j-details-box .layui-form-item .j-input-inline.j-tips-show a{color: #FF8700; font-size: 12px; font-weight: bold;}
+.layui-form-mid.j-size-class{  font-weight: bold; color: #FF8700!important;}
+.layui-form-mid.j-size-class i{ color: #FF8700;  margin:0 5px 0 10px;}
 .j-details-box .layui-form-item .j-input-inline.j-input-radio{padding-left: 142px; font-weight: inherit;}
 .j-details-box .layui-form-item .j-lengthen .j-input-inline.j-input-radio{padding-left: 212px; font-weight: inherit;}
 .j-details-box .layui-input,.j-details-box .layui-select,.j-details-box .layui-textarea{border:1px solid rgba(198,210,223,1);}
@@ -350,6 +355,12 @@ opacity: .8color: #333;}
 .j-record .j-title .j-tab li.j-line{ box-sizing: border-box; border-right: #ccc 1px solid; padding-right: 10px;}
 .j-record .j-record-name li{font:bold 16px/35px 'MicrosoftYaHei-Bold'; color: #4A4A4A;}
 /*------------------ 公告 E ----------------*/
+/* ------------------ 使用权变更 S ----------------- */
+.j-column-box{box-sizing: border-box;border: 1px solid rgba(198,210,223,1);}
+.j-column-box .j-column-title{ background: rgba(240,241,245,1); height: 40px; font:bold 14px/40px ''; text-indent: 20px; color: #8592A3;}
+.j-column-box .j-column-con{ padding:20px;}
+.layui-elem-field.j-field-box.j-no-borde{margin: 20px 0 20px;border: 0;}
+/* ------------------ 使用权变更 E ----------------- */
 #switchNav{ padding-bottom: 40px;}
 .j-home-help{position: absolute; bottom:15px; width: 100%; text-align: center; font-size: 12px;}/* 帮助中心入口 */
 .j-home-help a{color: #999; }
