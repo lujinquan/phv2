@@ -253,6 +253,7 @@
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].callbackdata();
 						var rows = window["layui-layer-iframe" + index].callbackdatas();
+						var trData = '';
 						//console.log(row);
 						//console.log(rows);
 						layer.close(index);
@@ -264,15 +265,16 @@
 						$("#floor_areaofuse").text(row.ban_use_area);//获取表格使用面积
 						$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
 						$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
+						$('.j-house-box tbody').html('');
 						//房屋信息
 						for(var i=0;i<rows.length;i++) {
 						var trData ='<tr>\
-										<td id="house_number">'+rows[i].house_number+'</td>\
-										<td id="house_lessee">'+rows[i].tenant_name+'</td>\
-										<td id="house_original">'+rows[i].house_oprice+'</td>\
-										<td id="house_builtuparea">'+rows[i].house_area+'</td>\
-										<td id="house_prescribed">'+rows[i].house_pre_rent+'</td>\
-										<td id="house_rentalarea">'+rows[i].house_lease_area+'</td>\
+										<td class="house_number">'+rows[i].house_number+'</td>\
+										<td class="house_lessee">'+rows[i].tenant_name+'</td>\
+										<td class="house_original">'+rows[i].house_oprice+'</td>\
+										<td class="house_builtuparea">'+rows[i].house_area+'</td>\
+										<td class="house_prescribed">'+rows[i].house_pre_rent+'</td>\
+										<td class="house_rentalarea">'+rows[i].house_lease_area+'</td>\
 									</tr>';
 						$('.j-house-box tbody').append(trData);
 					  }

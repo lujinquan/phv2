@@ -1,1 +1,141 @@
+<!-- 暂停记租申请 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>楼栋查询</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search j-ban_number">查询</b>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_address" value="" placeholder="请输入地址" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>楼栋产别</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_come" value="" placeholder="请输入楼栋产别" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_nature" value="" placeholder="请输入使用性质" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>结构类别</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_structure" value="" placeholder="请输入结构类别" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>完损等级</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_loss_grade" value="" placeholder="请输入完损等级" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>暂停月租金</label>
+			<div class="j-input-inline">
+				<input type="number" name="suspend_money" value="" lay-verify="required|number" lay-verify="required" placeholder="请输入暂停月租金金额"  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md8">
+			<label class="j-form-label">异动事由</label>
+			<div class="j-input-inline">
+				<input type="text" name="suspend_cause" value="" placeholder="请填写原因" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>房屋明细</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>房屋编号</th>
+		    <th>承租人</th>
+		    <th>使用性质</th>
+		    <th>月租金</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+	    
+	 </tbody>
+	</table>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		//获取楼栋查询器
+		 $(".layui-form").on('click','.j-ban_number',function(){
+		layer.open({
+					title: '楼栋查询器'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '90%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('system/index/cancellation')}'
+					,btn: ['确定','关闭']
+					,yes: function(index, layero){
+						var row = window["layui-layer-iframe" + index].callbackdata();
+						var rows = window["layui-layer-iframe" + index].callbackdatas();
+						var HousePrerent = 0;
+						console.log(row);
+						console.log(rows);
+						layer.close(index);
+						$('.j-house-box tbody').html('');
+						//房屋信息
+							for(var i=0;i<rows.length;i++) {
+							var trData ='<tr>\
+											<td class="house_number">'+rows[i].house_number+'</td>\
+											<td class="house_lessee">'+rows[i].tenant_name+'</td>\
+											<td class="house_nature">'+rows[i].house_use_id+'</td>\
+											<td class="house_monthly_rent">'+rows[i].house_pre_rent+'</td>\
+										</tr>';
+							$('.j-house-box tbody').append(trData);
+							HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
+						}
+						//楼栋信息
+							$("input[name='suspend_seach']").val(row.ban_number);//获取楼栋编号
+							$("input[name='suspend_address']").val(row.ban_address);//获取楼栋地址
+							$("input[name='suspend_come']").val(row.ban_owner_id);//获取楼栋产别
+							$("input[name='suspend_nature']").val('使用性质');//获取楼栋使用性质
+							$("input[name='suspend_structure']").val(row.ban_struct_id);//获取楼栋结构类别
+							$("input[name='suspend_loss_grade']").val(row.ban_damage_id);//获取楼栋完损等级
+							$("input[name='suspend_money']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
+
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
+		 });
+		})
+
+	});
+</script>
