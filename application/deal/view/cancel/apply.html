@@ -41,7 +41,7 @@
 	<fieldset  class="layui-elem-field layui-field-title j-field-box">
 		<legend>基数异动</legend>
 	</fieldset>
-		<table  class="layui-table">
+		<table  class="layui-table hide">
 		  <thead>
 			  <tr>
 			    <th>楼栋编号</th>
@@ -81,10 +81,30 @@
 			</tr>
 		  </tbody>
 		</table>
+	    <table  class="layui-table">
+	      <thead>
+	    	  <tr>
+	    	    <th>楼栋编号</th>
+	    	    <th>规定租金</th>
+	    	    <th>使用面积</th>
+	    	    <th>建筑面积</th>
+	    	    <th>房屋原价</th>
+	    	  </tr>
+	      </thead>
+	      <tbody>
+	        <tr>
+	      	  <td id="floor_number"></td>
+	    	  <td id="floor_prescribed"></td>
+	    	  <td id="floor_areaofuse"></td>
+	    	  <td id="floor_builtuparea"></td>
+	    	  <td id="floor_original"></td>
+	        </tr>
+	      </tbody>
+	    </table>
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>注销明细</legend>
 	</fieldset>
-	<table  class="layui-table">
+	<table  class="layui-table j-house-box">
 	  <thead>
 		  <tr>
 		    <th>房屋编号</th>
@@ -96,14 +116,7 @@
 		  </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-			<td>10020050010001</td>
-			<td>杨文胜</td>
-			<td>0</td>
-			<td>0</td>
-			<td>61.6</td>
-			<td>41.06</td>
-		</tr>
+	    
 	 </tbody>
 	</table>
 	<div class="j-cancel-show hide">
@@ -239,10 +252,30 @@
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].callbackdata();
-						console.log(row);
+						var rows = window["layui-layer-iframe" + index].callbackdatas();
+						//console.log(row);
+						//console.log(rows);
 						layer.close(index);
 						$("input[name='cancel_seach']").val(row.ban_number);//获取楼栋编号
 						$("input[name='cancel_address']").val(row.ban_address);//获取地址
+						//楼栋信息
+						$("#floor_number").text(row.ban_number);//获取表格楼栋编号
+						$("#floor_prescribed").text(row.ban_civil_rent);//获取表格规定租金
+						$("#floor_areaofuse").text(row.ban_use_area);//获取表格使用面积
+						$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
+						$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
+						//房屋信息
+						for(var i=0;i<rows.length;i++) {
+						var trData ='<tr>\
+										<td id="house_number">'+rows[i].house_number+'</td>\
+										<td id="house_lessee">'+rows[i].tenant_name+'</td>\
+										<td id="house_original">'+rows[i].house_oprice+'</td>\
+										<td id="house_builtuparea">'+rows[i].house_area+'</td>\
+										<td id="house_prescribed">'+rows[i].house_pre_rent+'</td>\
+										<td id="house_rentalarea">'+rows[i].house_lease_area+'</td>\
+									</tr>';
+						$('.j-house-box tbody').append(trData);
+					  }
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

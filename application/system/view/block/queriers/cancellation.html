@@ -4,6 +4,7 @@
 	.layui-layout-admin .layui-body{top: 0;bottom: 0;}
 	.layui-body{left: 0;}
 	.page-tab-content{margin: 0;}
+	.j-table-content .layui-table-box{ min-height: auto;}
 	/*------------------ iframe页面去共用部分样式 E ----------------*/
 </style>
 <div class="j-table-content">
@@ -41,6 +42,7 @@
 <script type="text/javascript">
 	var conId;
 	var data;
+	var datas;
     layui.use(['table','jquery'], function() {
         var table = layui.table
 		    ,$ = layui.$;
@@ -57,7 +59,7 @@
 			//,defaultToolbar: false//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}' //数据接口
             ,page: true //开启分页
-            ,limit: 10
+            ,limit: 5
             ,text: {
                 none : '暂无相关数据'
             }
@@ -78,114 +80,117 @@
                
             }
         },isShowInst);
-        //房屋查询
-        table.render({
-        	elem: '#dataTable2'
-        		//,height: 550
-        		//,height: 'full-20' //浏览器最大高度
-        	,toolbar: true
-			,defaultToolbar: false //设置右边筛选，导出，打印显示
-        	,url: '{:url("house/House/index")}' //数据接口
-        	,page: true //开启分页
-        	,limit: 10
-        	,text: {
-        		none: '暂无相关数据'
-        	},
-        	cols: [
-        		[ //表头
-				{
-					type: 'checkbox',
-					fixed: 'left'
-				},{
-        				field: 'house_number',
-        				minWidth: 140,
-						align:'center',
-        				title: '房屋编号'
-        			}, {
-        				field: 'ban_number',
-        				minWidth: 110,
-						align:'center',
-        				title: '楼栋编号'
-        			}, {
-        				field: 'tenant_name',
-        				minWidth: 80,
-						align:'center',
-        				title: '租户姓名'
-        			}, {
-        				field: 'ban_inst_id',
-        				minWidth: 100,
-						align:'center',
-        				title: '管段',
-        				hide: isShowInst,
-        				templet: function(d) {
-        					return params.insts[d.ban_inst_id];
-        				}
-        			}, {
-        				field: 'ban_owner_id',
-        				minWidth: 60,
-						align:'center',
-        				title: '产别',
-        				templet: function(d) {
-        					return params.owners[d.ban_owner_id];
-        				}
-        			}, {
-        				field: 'house_use_id',
-        				minWidth: 80,
-						align:'center',
-        				title: '使用性质',
-        				templet: function(d) {
-        					return params.uses[d.house_use_id];
-        				}
-        			}, {
-        				field: 'ban_address',
-        				minWidth: 200,
-						align:'center',
-        				title: '地址'
-        			}, {
-        				field: 'house_area',
-        				minWidth: 80,
-						align:'center',
-        				title: '建面'
-        			}, {
-        				field: 'house_lease_area',
-        				minWidth: 100,
-        				title: '计租面积'
-        			}, {
-        				field: '',
-        				minWidth: 80,
-						align:'center',
-        				title: '单元',
-        				templet: function(d) {
-        					return d.house_unit_id + '/' + d.ban_units;
-        				}
-        			}, {
-        				field: '',
-        				minWidth: 80,
-						align:'center',
-        				title: '楼层',
-        				templet: function(d) {
-        					return d.house_floor_id + '/' + d.ban_floors;
-        				}
-        			}
-        
-        		]
-        	],
-        	done: function(res, curr, count) {
-				
-        	}
-        }, isShowInst);
 		  //监听行单击事件（单击事件为：rowDouble）
 			table.on('row(dataTable1)',function(obj){
 				data = obj.data;
 				conId = data.id;
-				console.log(data);
+				//console.log(data);
 				//标注选中样式
 				obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+				
+				
+				//房屋查询
+				table.render({
+					elem: '#dataTable2'
+						//,height: 550
+						//,height: 'full-20' //浏览器最大高度
+					,toolbar: true
+					,defaultToolbar: false //设置右边筛选，导出，打印显示
+					,url: '{:url("house/House/index")}?ban_number='+data.ban_number //数据接口
+					,page: true //开启分页
+					,limit: 10
+					,text: {
+						none: '暂无相关数据'
+					},
+					cols: [
+						[ //表头
+						{
+							type: 'checkbox',
+							fixed: 'left'
+						},{
+								field: 'house_number',
+								minWidth: 140,
+								align:'center',
+								title: '房屋编号'
+							}, {
+								field: 'ban_number',
+								minWidth: 110,
+								align:'center',
+								title: '楼栋编号'
+							}, {
+								field: 'tenant_name',
+								minWidth: 80,
+								align:'center',
+								title: '租户姓名'
+							}, {
+								field: 'ban_inst_id',
+								minWidth: 100,
+								align:'center',
+								title: '管段',
+								hide: isShowInst,
+								templet: function(d) {
+									return params.insts[d.ban_inst_id];
+								}
+							}, {
+								field: 'ban_owner_id',
+								minWidth: 60,
+								align:'center',
+								title: '产别',
+								templet: function(d) {
+									return params.owners[d.ban_owner_id];
+								}
+							}, {
+								field: 'house_use_id',
+								minWidth: 80,
+								align:'center',
+								title: '使用性质',
+								templet: function(d) {
+									return params.uses[d.house_use_id];
+								}
+							}, {
+								field: 'ban_address',
+								minWidth: 200,
+								align:'center',
+								title: '地址'
+							}, {
+								field: 'house_area',
+								minWidth: 80,
+								align:'center',
+								title: '建面'
+							}, {
+								field: 'house_lease_area',
+								minWidth: 100,
+								title: '计租面积'
+							}, {
+								field: '',
+								minWidth: 80,
+								align:'center',
+								title: '单元',
+								templet: function(d) {
+									return d.house_unit_id + '/' + d.ban_units;
+								}
+							}, {
+								field: '',
+								minWidth: 80,
+								align:'center',
+								title: '楼层',
+								templet: function(d) {
+									return d.house_floor_id + '/' + d.ban_floors;
+								}
+							}
+				
+						]
+					],
+					done: function(res, curr, count) {
+						
+					}
+				}, isShowInst);
+				
 			});
 			table.on('checkbox(dataTable2)', function(obj){
               var checkStatus = table.checkStatus('dataTable2');
-              var data = checkStatus.data;
-              console.log(data);
+              datas = checkStatus.data;
+              //console.log(datas);
           });
 
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
@@ -193,4 +198,7 @@
 	var callbackdata = function () {
          return data;
     }
+	var callbackdatas = function () {
+	     return datas;
+	}
 </script>
