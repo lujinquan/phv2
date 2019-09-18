@@ -201,6 +201,35 @@ from phv1.ph_lease_change_order;
 update phv2.ph_change_lease_back a,phv2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update phv2.ph_change_lease_back a,phv2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 
+
+
+/**
+ * 18、同步异动统计表[ph_rent_table => ph_change_table]
+ * 字段：异动编号、异动类型、新发类型、注销类型、所id、管段、产别、使用性质、影响租金、影响建面、影响使面、影响原价、影响栋数、以前月租金、以前年租金、租户编号、房屋编号、楼栋编号、异动日期、状态
+ */
+drop table if exists phv2.ph_change_table_back;
+create table phv2.ph_change_table_back like phv2.ph_change_table;
+# 同步数据
+insert into phv2.ph_change_table_back 
+(change_order_number,change_type,change_send_type,change_cancel_type,inst_pid,inst_id,new_inst_id,owner_id,use_id,change_rent,change_area,change_use_area,change_oprice,change_ban_num,change_month_rent,change_year_rent,tenant_id,house_id,ban_id,order_date,change_status) 
+select 
+ChangeOrderID,ChangeType,NewSendRentType,CancelType,InstitutionPID,InstitutionID,NewInstitutionID,OwnerType,UseNature,InflRent,Area,UseArea,Oprice,ChangeNum,OldMonthRent,OldYearRent,TenantID,HouseID,BanID,OrderDate,Status
+from phv1.ph_rent_table;
+
+
+
+/**
+ * 17、补充ph_change_table表 
+ */
+update phv2.ph_change_table_back a,phv2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+update phv2.ph_change_table_back a,phv2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update phv2.ph_change_table_back a,phv2.ph_ban_back b set a.ban_id = b.house_id where a.ban_id = b.ban_number;
+
+
+
+
+
+
 /*CREATE FUNCTION str_for_substr (num int, str varchar(50000)) RETURNS VARCHAR (100)
 BEGIN
 	RETURN (

@@ -2,34 +2,31 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 	      <form class="layui-form layui-form-pane" >
 			<div class="j-search-fl layui-col-md8  fl">
-	          <div class="layui-input-inline" style="width:120px;">
+	          <div class="layui-input-inline" style="width:140px;">
 	              <select name="inst_id" id="TubulationI" lay-filter="inst_id">
-	                  <option value="">机构</option>
 	                  {volist name="params['insts']" id="v" key="k"}
-	                  <option value="{$k}">{$v}</option>
+	                  <option value="{$k}" {if condition="INST == $k"}selected{/if}>{$v}</option>
 	                  {/volist}
 	              </select>
 	          </div>
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
 	              <select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
-	                  <option value="">产别</option>
-	                  {volist name="params['owners']" id="v" key="k"}
-	                  <option value="{$k}">{$v}</option>
+	                  {volist name="owerLst" id="v"}
+	                  <option value="{$key}" {if condition="$key == 1"}selected{/if}>{$v}</option>
 	                  {/volist}
 	              </select>
 	          </div>
-			  <div class="layui-input-inline" style="width:120px;padding-left:5px">
+			  <div class="layui-input-inline" style="width:140px;padding-left:5px">
 			      <select name="owner_id" id="QueryTyp" lay-filter="owner_id">
-			          <option value="">类型</option>
 			          <option value="1">按完损等级</option>
 			          <option value="2">按使用性质</option>
 			          <option value="3">按所属机构</option>
 			          <option value="4">按建成年份</option>
-			          <option value="5">按房屋价值</option>
+			          <option value="5" selected>按房屋价值</option>
 			      </select>
 			  </div>
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
-	              <input type="text" name="query_month" value="" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+	              <input type="text" name="query_month" value="{:date('Y-m')}" placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
 	          </div>
 	        </div>
 			
@@ -53,7 +50,7 @@
 		  <h1 class="j-report-title">武汉市房地局经管房产统计（<span id="DOwnerTyp">市属</span>）报表</h1>
 		  <div class="j-report-table">
 			  <ul>
-				  <li><div class=" DQueryType j-bold-size">按房屋价值</div></li>
+				  <li><div class="DQueryType j-bold-size">按房屋价值</div></li>
 				  <li><div class="time j-bold-size"></div></li>
 				  <li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
 			  </ul>
@@ -408,6 +405,7 @@
 <script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <!-- 打印 E -->
 <script>
+
     layui.use(['jquery', 'laydate', 'element','table'], function(){
         var laydate = layui.laydate,
 		    $ = layui.$
@@ -420,13 +418,6 @@
 			,value: new Date() 
             ,isInitValue: true
         });
-		
-		var section_name = $('#userName').text();
-		var section_name_start = section_name.indexOf('(')+1;
-		var section_name_end = section_name.indexOf(')');
-		section_name = section_name.substring(section_name_start,section_name_end);
-		var time_span = $('#timeYear').val().split('-');
-		$('.time').text(time_span[0]+'年'+time_span[1]+'月');
 		
     });
 	//打印
