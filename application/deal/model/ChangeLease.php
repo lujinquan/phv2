@@ -43,4 +43,16 @@ class ChangeLease extends SystemBase
         $where[] = ['a.change_status','eq',1];
         return $where;
     }
+
+    public function detail($id)
+    {
+        
+    }
+
+    public static function process($id)
+    {
+        
+    }
+
+
 }

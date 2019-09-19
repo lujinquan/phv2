@@ -21,7 +21,7 @@ class Changeuse extends Admin
             $ChangeUseModel = new ChangeUseModel;
             $where = $ChangeUseModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_type,a.old_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.change_use_type,a.old_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
@@ -57,9 +57,18 @@ class Changeuse extends Admin
         return $this->fetch();
     }
 
+    public function detail()
+    {
+        $id = $this->request->param('id');
+        $ChangeUseModel = new ChangeUseModel;
+        $row = $ChangeUseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
     public function record()
     {
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             
         }
         return $this->fetch();

@@ -3,26 +3,9 @@
 namespace app\deal\model;
 
 use app\system\model\SystemBase;
-use app\common\model\SystemAnnex;
-use app\common\model\SystemAnnexType;
-use app\house\model\House as HouseModel;
-use app\house\model\Tenant as TenantModel;
 
-class ChangeUse extends SystemBase
+class Process extends SystemBase
 {
-	// 设置模型名称
-    protected $name = 'change_use';
-
-    // 自动写入时间戳
-    protected $autoWriteTimestamp = true;
-
-    // 定义时间戳字段名
-    protected $createTime = 'ctime';
-
-    protected $type = [
-        'ctime' => 'timestamp:Y-m-d H:i:s',
-        'json_line' => 'json',
-    ];
 
     public function tenant()
     {
@@ -80,36 +63,8 @@ class ChangeUse extends SystemBase
             $data['change_imgs'] = implode(',',$data['file']);
         }
         $data['change_order_number'] = '113'.random(10,1);
-        $data['json_line'] = [];
-        $data['json_line'][] = [
-            'step' => 1,
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
         $data['cuid'] = ADMIN_ID;
         return $data; 
     }
 
-    public function detail($id)
-    {
-        $row = self::get($id);
-        $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
-        $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['old_tenant_id']]])->field('tenant_number,tenant_card')->find();
-        $row['old_tenant_number'] = $oldTenantRow['tenant_number'];
-        $row['old_tenant_card'] = $oldTenantRow['tenant_card'];
-        $newTenantRow = TenantModel::where([['tenant_id','eq',$row['new_tenant_id']]])->field('tenant_number,tenant_card')->find();
-        $row['new_tenant_number'] = $newTenantRow['tenant_number'];
-        $row['new_tenant_card'] = $newTenantRow['tenant_card'];
-        //$process_config = ['失败','成功','待房管员处理','待经租会计处理','待经管所长处理','待经管科处理'];
-        //halt($row);
-        return $row;
-    }
-
-    public static function process($id)
-    {
-        
-    }
 }

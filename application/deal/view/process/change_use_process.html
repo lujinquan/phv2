@@ -1,0 +1,224 @@
+<!-- 使用权变更审核 -->
+<form class="layui-form" action="" method="post">
+	<div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_number" name="" value="{$data_info['house_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md6">
+				<div class="j-column-box">
+					<div class="j-column-title clearfix">
+						当前信息
+					</div>
+					<div class="j-column-con clearfix">
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户ID</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_id"  value="{$data_info['old_tenant_number']}" readonly placeholder=""  autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户姓名</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_name"  value="{$data_info['old_tenant_name']}" readonly  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">身份证号</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_idnumbers"  value="{$data_info['old_tenant_card']}" readonly   placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-md6">
+				<div class="j-column-box">
+					<div class="j-column-title clearfix">
+						新租户信息
+					</div>
+					<div class="j-column-con clearfix">
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户ID</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_number_new" name="tenant_number" value="{$data_info['new_tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">租户姓名</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_name_new"  value="{$data_info['new_tenant_name']}" readonly  placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<div class="layui-row layui-form-item layui-col-space90">
+							<div class="layui-col-md12">
+								<label class="j-form-label">身份证号</label>
+								<div class="j-input-inline">
+									<input type="text" id="tenant_card_new"  value="{$data_info['new_tenant_card']}" readonly placeholder="" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+						<!-- <div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
+							<div class="layui-col-md12">
+								<div class="j-input-inline j-tips-show">
+									<a href="javascript:;">
+										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
+									</a>
+								</div>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">变更类型</label>
+				<div class="j-input-inline">
+					
+					<input type="text" id="tenant_money" name="tenant_money" value="{$params.usetypes[$data_info['change_use_type']]}" readonly placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">转让金额</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_money" name="tenant_money" value="{$data_info['transfer_rent']}" readonly placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label">转让原因</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_reason" name="tenant_reason" value="{$data_info['change_remark']}" readonly placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>填报信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">书面申请报告</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeApplication'"}
+						<li>
+							<img src="{$v['file']}">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+			    </div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">审批表</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeApproval'"}
+						<li>
+							<img src="{$v['file']}">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+			    </div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">其他</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeOther'"}
+						<li>
+							<img src="{$v['file']}">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+			    </div>
+			</div>
+		</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>审批状态</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					{volist name="$data_info['json_line']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于{$v['time']} {$v['action']}；</li>
+					{/volist}
+					<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<button type="submit" class="layui-btn">通过</button>
+				<a href="{:url('index')}?group=x" class="layui-btn layui-btn-primary">不通过</a>
+			</div>
+		</div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	layui.use(['jquery','table','layer', 'upload','form'], function() {
+			var table = layui.table
+			    ,form = layui.form
+				,$ = layui.jquery
+				,upload = layui.upload
+				,layer = layui.layer; 
+	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+</script>

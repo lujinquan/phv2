@@ -235,7 +235,7 @@ drop table if exists phv2.ph_change_use_back;
 create table phv2.ph_change_use_back like phv2.ph_change_use;
 # 同步数据
 insert into phv2.ph_change_use_back 
-(change_order_number,change_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
+(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
 select 
 ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,UserNumber,Status
 from phv1.ph_use_change_order;

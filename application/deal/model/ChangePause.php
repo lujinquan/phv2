@@ -8,10 +8,10 @@ use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 
-class ChangeUse extends SystemBase
+class ChangePause extends SystemBase
 {
 	// 设置模型名称
-    protected $name = 'change_use';
+    protected $name = 'change_pause';
 
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;

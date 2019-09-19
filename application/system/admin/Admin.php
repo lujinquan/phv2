@@ -122,6 +122,8 @@ class Admin extends Common
                 $this->assign('hisiTabType', 0);
                 // 获取所有参数
                 $params = ParamModel::getCparams();
+                //$users = session('systemusers');
+                //halt($users[47]);
                 $this->assign('inst_level',INST_LEVEL);
                 $this->assign('params',$params);
                 $this->assign('systemusers',session('systemusers'));
