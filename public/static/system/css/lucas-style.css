@@ -187,6 +187,8 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .layui-form-item .j-input-inline.j-tips{ padding-left: initial; float: left;width: 22%;}/* 表单后面带提示 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show i{color: #FF8700;margin: 0 5px 0 10px;}/* 提示信息 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show a{color: #FF8700; font-size: 12px; font-weight: bold;}
+.j-tips-red{color: #f00;}
+.j-tips-red i{color: #f00;margin: 0 5px 0 10px;}
 .layui-form-mid.j-size-class{  font-weight: bold; color: #FF8700!important;}
 .layui-form-mid.j-size-class i{ color: #FF8700;  margin:0 5px 0 10px;}
 .j-details-box .layui-form-item .j-input-inline.j-input-radio{padding-left: 142px; font-weight: inherit;}

@@ -1,194 +1,162 @@
-<!-- 信息单 -->
-<form class="layui-form" action="" method="post">
-	<div class="j-details-box floorWrap">
-		<div class="j-report-con">
-			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-no-border">
-			</fieldset>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md6">
-					<label class="j-form-label">机构</label>
-					<div class="j-input-inline">
-						<input type="text" id="ban_mechanism" name="ban_mechanism" value="相关部门机构"  readonly autocomplete="off" class="layui-input">
-					</div>
+<div class="j-table-content j-no-title">
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="reduction_address" placeholder="填写楼栋地址" class="layui-input">
 				</div>
-				<div class="layui-col-md6">
-					<label class="j-form-label">异动编号</label>
-					<div class="j-input-inline">
-						<input type="text" id="ban_movable" name="ban_movable" value="2019085626644116420"  readonly autocomplete="off" class="layui-input">
+				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+					<select name="house_use_id">
+						<option value="">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="reduction_name" placeholder="租户名称" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="reduction_class">
+						<option value="">减免类型</option>
+						<option value="">减免类型1</option>
+						<option value="">减免类型2</option>
+					</select>
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="reduction_money" placeholder="减免金额" class="layui-input">
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="reduction_complete_time" id="date"  placeholder="完成时间" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="reduction_effective_time" id="date1"  placeholder="生效时间" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
 					</div>
 				</div>
 			</div>
-			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-				<legend>基础信息</legend>
-			</fieldset>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md6">
-					<label class="j-form-label">房屋编号</label>
-					<div class="j-input-inline">
-						<input type="text" id="ban_number" name="ban_number" value="123456789"  readonly autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md6">
-					<label class="j-form-label">楼栋地址</label>
-					<div class="j-input-inline">
-						<input type="text" id="ban_address" name="ban_address" value="粮道街32号….."  readonly autocomplete="off" class="layui-input">
-					</div>
-				</div>
-			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md6">
-					<div class="j-column-box">
-						<div class="j-column-title clearfix">
-							当前信息
-						</div>
-						<div class="j-column-con clearfix">
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">租户ID</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_id"  value="1234567889" readonly placeholder=""  autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">租户姓名</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_name"  value="张三" readonly  placeholder="" autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">身份证号</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_idnumbers"  value="421089199806185628" readonly   placeholder="" autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="layui-col-md6">
-					<div class="j-column-box">
-						<div class="j-column-title clearfix">
-							新租户信息
-						</div>
-						<div class="j-column-con clearfix">
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">租户ID</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_number_new" name="tenant_number" value="123456789" placeholder="点击查询" readonly autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">租户姓名</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_name_new"  value="123456789" readonly  placeholder="" autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-							<div class="layui-row layui-form-item layui-col-space90">
-								<div class="layui-col-md12">
-									<label class="j-form-label">身份证号</label>
-									<div class="j-input-inline">
-										<input type="text" id="tenant_card_new"  value="123456789" readonly placeholder="" autocomplete="off" class="layui-input">
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="layui-row layui-form-item layui-col-space90">
-				<div class="layui-col-md4">
-					<label class="j-form-label">变更类型</label>
-					<div class="j-input-inline">
-						<select name="tenant_class" class="field-cid" type="select">
-							<option value="1">交易转让</option>
-							<option value="2">亲属转让</option>
-							<option value="3">正常过户</option>
-						</select>
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label">转让金额</label>
-					<div class="j-input-inline">
-						<input type="text" id="tenant_money" name="tenant_money" value="1000" readonly placeholder="编辑金额" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-md4">
-					<label class="j-form-label">转让原因</label>
-					<div class="j-input-inline">
-						<input type="text" id="tenant_reason" name="tenant_reason" value="因家庭原因" readonly placeholder="编辑原因" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-			</div>
-			<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-				<legend>审批记录</legend>
-			</fieldset>
-			<div class="layui-row layui-form-item layui-col-space90">
-			   <div class="j-status-bar">
-					<ul>
-						<li class="layui-col-xs2 on">
-							<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-							<p>房管员</p>
-						</li>
-						<li class="layui-col-xs2 on">
-							<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-							<p>经租会计</p>
-						</li>
-						<li class="layui-col-xs2">
-							<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-							<p>经租所长</p>
-						</li>
-						<li class="layui-col-xs2">
-							<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-							<p>经管科</p>
-						</li>
-					</ul>
-				</div>
-				<div class="j-status-result">
-					<ul>
-						<li>房管员［程彩虹］于2019-08-30 08:56:38 申请；</li>
-						<li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="j-margin-btn">
-				<a href="/admin.php/deal/process/index.html?group=x" class="layui-btn layui-btn-primary">取消</a>
-			</div>
-		</div>
-  </div>
-</form>
-{include file="system@block/layui" /}
-<!-- 图片查看 -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
-<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
-<!-- 打印 S -->
-<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
-<!-- 打印 E -->
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<script type="text/html" id="toolbar"></script>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">信息单</a>
+    </script>
+</div>
 <script type="text/javascript">
-	/*上传参数设定*/
-	layui.use(['jquery','table','layer', 'upload','form'], function() {
-			var table = layui.table
-			    ,form = layui.form
-				,$ = layui.jquery
-				,upload = layui.upload
-				,layer = layui.layer; 
+	layui.use(['table', 'jquery','laydate'], function() {
+		var $ = layui.$;
+		var s = $('#dataTable').attr('params');
+		var params = JSON.parse(s);
+		var table = layui.table
+		   ,laydate = layui.laydate;
+		
+		//日期
+		  laydate.render({
+		    elem: '#date'
+		  });
+		  //日期
+		    laydate.render({
+		      elem: '#date1'
+		    });
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			    ,url: '{:url()}' //数据接口
+				,page: true //开启分页
+				,limit: 10
+			   ,limits: [10,20,30,40,50,100,300,500,1000]
+			  ,text: {
+					none: '暂无相关数据'
+			  }
+			  ,cols: [
+				[ //表头 
+				 {
+						field: 'reduction_address',
+						width: 150,
+						align:'center',
+						title: '楼栋地址', 
+					}, {
+						field: 'reduction_nature',
+						width: 120,
+						align:'center',
+						title: '使用性质', 
+						templet: function(d) {
+		                    return params.uses[d.ban_inst_id];
+		                }
+					}, {
+						field: 'reduction_use_type',
+						width: 120,
+						align:'center',
+						title: '产别', 
+						templet: function(d) {
+		                    return params.owners[d.change_use_type];
+		                }
+					}, 
+					{
+						field: 'reduction_tenant',
+						width: 120,
+						align:'center',
+						title: '租户', 
+					},
+					{
+						field: 'reduction_class',
+						width: 120,
+						align:'center',
+						title: '减免类型'
+					}, 
+					{
+						field: 'reduction_money',
+						width: 120,
+						align:'center',
+						title: '减免金额'
+					}
+					,{
+						field: 'ctime',
+						align:'center',
+						width: 160,
+						title: '完成时间'
+					}, 
+					{
+						field: 'effective_ctime',
+						align:'center',
+						width: 160,
+						title: '生效时间'
+					}, {
+						title: '操作',
+						Width: 180,
+						minWidth: 120,
+						align:'center',
+						templet: '#buttonTpl',
+						fixed: 'right'
+					}
+				]
+			],
+			done: function(res, curr, count) {
+
+			}
+		},isShowInst)
 	});
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
-	 //打印
-	 function  click_print(){
-	  $(".j-report-con").jqprint();
-	 }
 </script>
