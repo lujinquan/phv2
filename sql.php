@@ -71,15 +71,15 @@ update phv1.ph_room a,phv2.ph_ban_back b set a.BanID = b.ban_id where a.BanID = 
 
 /**
  * 7、同步房间表[ph_room => ph_room_back]
- * 字段：房间编号、房间类型、规租、计算租金、间号、单元号、楼层号、使用面积、建面、计租面积
+ * 字段：房间编号、房间类型、规租、计算租金、间号、单元号、楼层号、使用面积、建面、计租面积、状态
  */
 drop table if exists phv2.ph_room_back;
 create table phv2.ph_room_back like phv2.ph_room;
 # 同步数据
 insert into phv2.ph_room_back 
-(room_number,ban_id,room_type,room_pre_rent,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area) 
+(room_number,ban_id,room_type,room_pre_rent,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area,room_status) 
 select 
-RoomID,BanID,RoomType,RoomPrerent,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea
+RoomID,BanID,RoomType,RoomPrerent,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea,Status
 from phv1.ph_room;
 
 
@@ -227,7 +227,27 @@ update phv2.ph_change_table_back a,phv2.ph_ban_back b set a.ban_id = b.house_id 
 
 
 
+/**
+ * 19、同步使用权变更表[ph_use_change_order => ph_change_use]
+ * 字段：异动编号、变更类型、转让金额、房屋编号、原租户编号、原租户姓名、新租户编号、新租户姓名、备注、失败原因、附件、创建时间、状态
+ */
+drop table if exists phv2.ph_change_use_back;
+create table phv2.ph_change_use_back like phv2.ph_change_use;
+# 同步数据
+insert into phv2.ph_change_use_back 
+(change_order_number,change_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
+select 
+ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,UserNumber,Status
+from phv1.ph_use_change_order;
 
+
+/**
+ * 20、补充ph_change_use表 
+ */
+update phv2.ph_change_use_back a,phv2.ph_tenant_back b set a.old_tenant_id = b.tenant_id where a.old_tenant_id = b.tenant_number;
+update phv2.ph_change_use_back a,phv2.ph_tenant_back b set a.new_tenant_id = b.tenant_id where a.new_tenant_id = b.tenant_number;
+update phv2.ph_change_use_back a,phv2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update phv2.ph_change_use_back a,phv2.ph_system_user b set a.cuid = b.id where a.cuid = b.number;
 
 
 /*CREATE FUNCTION str_for_substr (num int, str varchar(50000)) RETURNS VARCHAR (100)
