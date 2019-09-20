@@ -80,7 +80,7 @@
         var laydate = layui.laydate;
         table.render({
             elem: '#dataTable'
-            ,height: 550
+            //,height: 550
             ,url: '{:url("index")}'
 			,toolbar: true
 			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
@@ -88,7 +88,7 @@
             ,totalRow:true
             ,limit: 10
             ,text: {
-                none : '暂无相关数据'
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left', totalRowText: '合计'}

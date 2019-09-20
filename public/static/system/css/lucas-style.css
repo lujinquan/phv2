@@ -34,6 +34,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .tangram-suggestion-main{ z-index: 9999;/* 百度地图搜索 */}
 /* 大图查看关闭按钮样式 */
 .layui-row.on .viewer-button{ right: -26px;}
+.j-no-content,.j-no-contents{text-align: center; line-height: 200px; color: #999; font-size: 14px;}/* 表格无数据 */
+.j-no-content i,.j-no-contents i{ /* color: #FFB800; */font-size: 24px;}
+.j-no-contents{line-height: 450px;}
 /* 登陆 S */
 .layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
 .layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}

@@ -65,7 +65,12 @@
             elem: '#query_month'
             ,type: 'month'
 			,value: new Date() 
-			,isInitValue: true
+			,isInitValue: true,
+			ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
         });
 		//搜索
 		function datajson(data){
