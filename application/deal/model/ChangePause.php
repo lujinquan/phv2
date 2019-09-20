@@ -21,18 +21,14 @@ class ChangePause extends SystemBase
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
-        'json_line' => 'json',
+        'child_json' => 'json',
     ];
 
-    public function tenant()
-    {
-        return $this->hasOne('app\house\model\Tenant', 'tenant_id', 'tenant_id')->bind('tenant_number,tenant_tel,tenant_card');
-    }
+    protected $processAction = ['审批不通过','审批成功','打回修改','初审通过','审批通过','终审通过'];
 
-    public function house()
-    {
-        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent');
-    }
+    protected $processDesc = ['失败','成功','待房管员打回修改','待经租会计初审','待经管所长审批','待经管科长终审'];
+
+    protected $processRole = ['2'=>'4','3'=>6,'4'=>8,'5'=>9];
 
     public function checkWhere($data,$type)
     {
@@ -79,16 +75,29 @@ class ChangePause extends SystemBase
         if(isset($data['file']) && $data['file']){
             $data['change_imgs'] = implode(',',$data['file']);
         }
-        $data['change_order_number'] = '113'.random(10,1);
-        $data['json_line'] = [];
-        $data['json_line'][] = [
+        $data['change_status'] = 3;
+        $data['cuid'] = ADMIN_ID;
+        $data['change_type'] = 03; //使用权变更
+        $data['change_order_number'] = date('Ym').'03'.random(14);
+        $data['child_json'] = [];
+        $data['child_json'][] = [
             'step' => 1,
             'action' => '提交申请',
             'time' => date('Y-m-d H:i:s'),
             'uid' => ADMIN_ID,
             'img' => '',
         ];
-        $data['cuid'] = ADMIN_ID;
+        if($data['house_id']){
+            $houseids = explode(',',$data['house_id']);
+            $data['data_line'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
+        }
+
+        // 审批表数据
+        $processRoles = $this->processRole;
+        $processDescs = $this->processDesc;
+        $data['change_desc'] = $processDescs[3];
+        $data['curr_role'] = $processRoles[3];
+        
         return $data; 
     }
 

@@ -63,7 +63,7 @@ class User extends Admin
                 $where[] = ['username', 'like', "%{$keyword}%"];
             }
 
-            $data['data'] = UserModel::with('role')->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = UserModel::with('role')->where($where)->page($page)->limit($limit)->order('inst_id asc')->select();
             //halt($data['data']);
             $data['count'] = UserModel::where($where)->count('id');
             $data['code'] = 0;

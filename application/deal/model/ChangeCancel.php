@@ -21,7 +21,8 @@ class ChangeCancel extends SystemBase
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
-        'json_line' => 'json',
+        'child_json' => 'json',
+        'data_json' => 'json',
     ];
 
     public function tenant()
@@ -80,8 +81,8 @@ class ChangeCancel extends SystemBase
             $data['change_imgs'] = implode(',',$data['file']);
         }
         $data['change_order_number'] = '113'.random(10,1);
-        $data['json_line'] = [];
-        $data['json_line'][] = [
+        $data['child_json'] = [];
+        $data['child_json'][] = [
             'step' => 1,
             'action' => '提交申请',
             'time' => date('Y-m-d H:i:s'),

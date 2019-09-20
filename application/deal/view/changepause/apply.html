@@ -8,7 +8,9 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼栋查询</label>
 			<div class="j-input-inline">
-				<input type="text" name="suspend_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="text" name="ban_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" name="ban_id" value="">
+				<input type="hidden" name="house_id" value="">
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
 		</div>
@@ -49,7 +51,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">暂停月租金</label>
 			<div class="j-input-inline">
-				<input type="number" name="suspend_money" readonly value="" lay-verify="required|number" lay-verify="required" placeholder="请输入暂停月租金金额"  autocomplete="off" class="layui-input">
+				<input type="number" name="change_pause_rent" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -61,6 +63,7 @@
 			</div>
 		</div>
 	</div>
+
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>房屋明细</legend>
 	</fieldset>
@@ -70,7 +73,7 @@
 		    <th>房屋编号</th>
 		    <th>承租人</th>
 		    <th>使用性质</th>
-		    <th>月租金</th>
+		    <th>月租金(含租差、泵费)</th>
 		  </tr>
 	  </thead>
 	  <tbody>
@@ -79,7 +82,7 @@
 	</table>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 		</div>
 	</div>
@@ -92,7 +95,7 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
-			console.log(params);
+			//console.log(params);
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
 		layer.open({
@@ -114,7 +117,10 @@
 						$('.j-house-box tbody').html('');
 							//房屋信息
 							if(rows){
+								var houseidData = '';
+								var houseidData = '';
 								for(var i=0;i<rows.length;i++) {
+								houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
 												<td class="house_number">'+rows[i].house_number+'</td>\
 												<td class="house_lessee">'+rows[i].tenant_name+'</td>\
@@ -122,17 +128,21 @@
 												<td class="house_monthly_rent">'+rows[i].house_pre_rent+'</td>\
 											</tr>';
 								$('.j-house-box tbody').append(trData);
+
 								HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
 							}
+							houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
+							$("input[name='house_id']").val(houseidData);//获取楼栋编号
 							
 						}
 						//楼栋信息
-							$("input[name='suspend_seach']").val(row.ban_number);//获取楼栋编号
+							$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+							$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
 							$("input[name='ban_address']").val(row.ban_address);//获取楼栋地址
 							$("input[name='ban_owner_id']").val(params.owners[row.ban_owner_id]);//获取楼栋产别
 							$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取楼栋结构类别
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
-							$("input[name='suspend_money']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
+							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
 
 					},btn2: function(index, layero){
 						layer.close(index);

@@ -1,18 +1,17 @@
-<div class="j-table-content j-no-title">
+<div class="j-table-content j-no-tab">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="change_number" placeholder="变更编号" class="layui-input">
-				</div>
-				<div class="layui-input-inline layui-col-md2" style="width:120px;">
-					<select name="tenant_inst_id">
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline layui-col-md2" style="width:140px;">
+					<select name="ban_inst_id">
 						<option value="">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
+				{/if}
 				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
@@ -21,14 +20,11 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="change_money" placeholder="金额" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:160px;">
+					<input type="text" name="old_tenant_name" placeholder="原租户" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="change_name" placeholder="申请人" class="layui-input">
-				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="change_time" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
+					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -47,13 +43,14 @@
 	</div>
 	{include file="system@block/layui" /}
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
-	<script type="text/html" id="toolbar">
-	</script>
+	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-      <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">信息单</a>
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
 <script type="text/javascript">
+	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待经租会计初审','4':'待经管所长审批','5':'待经管科终审'};
+	//console.log(process_config[2]);
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
@@ -71,7 +68,7 @@
 			toolbar: '#toolbar'
 				// ,defaultToolbar: ['print']
 				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
-			    ,url: '{:url("Lease/index")}' //数据接口
+			    ,url: '{:url()}' //数据接口
 				,page: true //开启分页
 				,limit: 10
 			   ,limits: [10,20,30,40,50,100,300,500,1000]
@@ -79,57 +76,71 @@
 					none: '暂无相关数据'
 			  }
 			  ,cols: [
-				[ //表头
-					{
-						type: 'checkbox',
-						fixed: 'left'
-					}, 
+				[ //表头 
 					{
 						field: 'change_id',
-						width: 120,
+						width: 60,
 						align:'center',
-						title: '#'
-					},
-					{
-						field: 'change_order_number',
-						width: 240,
-						align:'center',
-						title: '变更编号'
+						title: '#', templet:function(d){
+		                    return d.LAY_INDEX ;
+		                }
 					}, {
-						field: 'change_address',
-						width: 200,
+						field: 'ban_address',
+						width: 180,
 						align:'center',
 						title: '楼栋地址'
 					}, {
-						field: 'change_owner_id',
-						width: 100,
+						field: 'ban_owner_id',
+						width: 80,
 						align:'center',
-						title: '产别'
+						title: '产别', 
+						templet: function(d) {
+		                    return params.owners[d.ban_owner_id];
+		                }
 					}, {
-						field: 'change_formality',
-						width: 130,
+						field: 'ban_inst_id',
+						hide: isShowInst,
+						width: 120,
 						align:'center',
-						title: '转让形式'
+						title: '申请机构', 
+						templet: function(d) {
+		                    return params.insts[d.ban_inst_id];
+		                }
 					}, {
-						field: 'change_name',
+						field: 'change_use_type',
+						width: 120,
+						align:'center',
+						title: '转让形式', 
+						templet: function(d) {
+		                    return params.usetypes[d.change_use_type];
+		                }
+					}, {
+						field: 'old_tenant_name',
 						width: 120,
 						align:'center',
 						title: '原租户姓名'
-					}
-					, {
-						field: 'change_time',
+					}, {
+						field: 'ctime',
 						align:'center',
-						width: 180,
+						width: 160,
 						title: '申请时间'
 					}, {
-						field: 'change_state',
+						field: 'nick',
 						align:'center',
-						width: 200,
-						title: '审核状态'
+						width: 100,
+						title: '申请人'
+					}, {
+						field: 'change_status',
+						align:'center',
+						width: 160,
+						title: '审核状态', 
+						templet: function(d) {
+		                    return process_config[d.change_status];
+		                }
 					}, {
 						title: '操作',
-						Width: 260,
-						minWidth: 260,
+						Width: 180,
+						minWidth: 120,
 						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'

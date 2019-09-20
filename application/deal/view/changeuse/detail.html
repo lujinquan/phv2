@@ -197,12 +197,6 @@
 			</div>
 		</div>
 		<input type="hidden" name="id" value="{$data_info['id']}">
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="j-margin-btn">
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
-				<a href="javascript:;" class="layui-btn layui-btn-primary" id="handover">不通过</a>
-			</div>
-		</div>
   </div>
 </form>
 {include file="system@block/layui" /}
@@ -212,59 +206,11 @@
 <script type="text/javascript">
 	/*上传参数设定*/
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
-		var table = layui.table
-		    ,form = layui.form
-			,$ = layui.jquery
-			,upload = layui.upload
-			,layer = layui.layer; 
-
-		//转交工单
-	    $("#handover").on("click",function(){
-	    	layer.open({
-	    		type: 1,
-	    		btn: ["确定","取消"],
-	    		title: ['审批不通过原因'],
-	    		scrollbar: false,
-	    		area: ['400px','400px'],
-	    		offset: 'auto',
-	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='试一下哟'></div>",
-	    		yes: function(index, layero){
-					
-					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=13';
-					if(!$('.layui-layer-btn0').hasClass('disabled')){
-						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
-						formSubmit('post',"{:url()}",data,index);
-					}
-
-				}
-			});
-			
-	    })
-
-	    function formSubmit(type,url,data,index){
-	    	$.ajax({
-	    		type: type,
-	    		url: url,
-	    		data: data,
-	    		success: function(res) {
-	    			console.log(res);
-	    			var that = $('.layui-layer-btn0');
-					that.text(res.msg);
-	                if (res.code == 0) { 
-	                    setTimeout(function(){
-	                        that.removeClass('disabled').text('确认');
-	                    }, 2000);
-	                } else {
-                        setTimeout(function(){
-	                        parent.location.href = res.url;
-	                    }, 2000);
-	                }
-	    		}
-	    	});
-	    	return false;
-	    }
-
+			var table = layui.table
+			    ,form = layui.form
+				,$ = layui.jquery
+				,upload = layui.upload
+				,layer = layui.layer; 
 	});
 	//图片查看
 	$('.j-viewer-img').viewer({

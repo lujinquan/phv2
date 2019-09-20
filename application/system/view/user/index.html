@@ -40,21 +40,21 @@
             //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'username', minWidth: 90, title: '用户名', align:'center'}
-                ,{field: 'inst_id', minWidth: 120, align:'center', title: '机构', hide: isShowInst, templet: function(d) {
+                ,{field: 'username', width: 90, title: '用户名', align:'center'}
+                ,{field: 'inst_id', width: 120, align:'center', title: '机构', hide: isShowInst, templet: function(d) {
                     return params.insts[d.inst_id];
                 }}
-                ,{field: 'nick', minWidth: 90,title: '昵称'}
-                ,{field: 'role_id', minWidth: 100,align:'center',title: '角色', templet:function(d){
+                ,{field: 'nick', width: 90,title: '昵称'}
+                ,{field: 'role_id', width: 120,align:'center',title: '角色', templet:function(d){
                     return d.role.name;
                 }}
-                ,{field: 'mobile', minWidth: 120,align:'center',title: '手机'}
-                ,{field: 'email', minWidth: 180, align:'center',title: '邮箱'}
-                ,{field: 'last_login_time', minWidth: 150,align:'center', title: '最后登陆时间'}
-                ,{field: 'last_login_ip', minWidth: 120,align:'center',title: '最后登陆IP'}
+                ,{field: 'mobile', width: 120,align:'center',title: '手机'}
+                ,{field: 'email', width: 170, align:'center',title: '邮箱'}
+                ,{field: 'last_login_time', width: 160,align:'center', title: '最后登陆时间'}
+                ,{field: 'last_login_ip', width: 120,align:'center',title: '最后登陆IP'}
                 ,{field: 'intro', minWidth: 160,align:'center',title: '简介'}
-                ,{field: 'status',minWidth: 100,align:'center', title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'status',width: 100,align:'center', title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', width: 160,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
         });
     });
