@@ -142,8 +142,7 @@
 							$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取楼栋结构类别
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
 							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
-							if(	$('.j-house-box tbody').html()=='')
-							{
+							if(	$('.j-house-box tbody').html()==''){
 								$('.j-house-box tbody').html("<tr><td colspan='4'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}
 
