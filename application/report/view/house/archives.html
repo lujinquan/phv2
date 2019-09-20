@@ -416,7 +416,12 @@
             elem: '#timeYear'
             ,type: 'month'
 			,value: new Date() 
-            ,isInitValue: true
+            ,isInitValue: true,
+			ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
         });
 		
     });

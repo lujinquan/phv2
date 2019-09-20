@@ -76,9 +76,7 @@
 		    <th>月租金(含租差、泵费)</th>
 		  </tr>
 	  </thead>
-	  <tbody>
-	    
-	 </tbody>
+	  <tbody><tr><td colspan="4"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
@@ -114,7 +112,7 @@
 						// console.log(row);
 						// console.log(rows);
 						layer.close(index);
-						$('.j-house-box tbody').html('');
+						$('.j-house-box tbody').html("");
 							//房屋信息
 							if(rows){
 								var houseidData = '';
@@ -127,6 +125,7 @@
 												<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
 												<td class="house_monthly_rent">'+rows[i].house_pre_rent+'</td>\
 											</tr>';
+
 								$('.j-house-box tbody').append(trData);
 
 								HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
@@ -143,6 +142,10 @@
 							$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取楼栋结构类别
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
 							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
+							if(	$('.j-house-box tbody').html()=='')
+							{
+								$('.j-house-box tbody').html("<tr><td colspan='4'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+							}
 
 					},btn2: function(index, layero){
 						layer.close(index);
