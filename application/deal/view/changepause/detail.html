@@ -1,4 +1,4 @@
-<!-- 暂停记租审核 -->
+<!-- 暂停记租详情 -->
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -11,8 +11,6 @@
 				<input type="text" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
@@ -25,7 +23,6 @@
 				<input type="text" value="{$params.owners[$data_info['ban_info']['ban_owner_id']]}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
@@ -142,3 +139,19 @@
   </div>
 </form>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	layui.use(['jquery','table','layer','form'], function() {
+			var table = layui.table
+			    ,form = layui.form
+				,$ = layui.jquery
+				,layer = layui.layer; 
+	});
+	//图片查看
+		$('.j-viewer-img').viewer({
+			url: 'data-original',
+		 });
+</script>

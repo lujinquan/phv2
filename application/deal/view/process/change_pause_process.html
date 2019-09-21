@@ -157,6 +157,9 @@
   </div>
 </form>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	var upurl = "{:url('system/Api/upload')}?input=ChangePauseUpload&group=ban&water=no"; //资料上传
 	var duotu = true; //是否为多图上传true false
@@ -247,4 +250,8 @@
 			$(this).parents("dd").remove();
 		})
 	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
 </script>
