@@ -105,6 +105,7 @@ class Changeuse extends Admin
         }
         
         if($row->delete()){
+            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
             $this->success('删除成功');
         }else{
             $this->error('删除失败');

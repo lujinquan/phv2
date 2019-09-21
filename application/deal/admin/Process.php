@@ -68,13 +68,13 @@ class Process extends Admin
         if($this->request->isPost()) {
             $data = $this->request->post();
             $PorcessModel = new ProcessModel;
+            //halt($data);
             $res = $PorcessModel->process($change_type,$data);
             if (!$res) {
                 return $this->error('审批失败');
             }
             return $this->success('审批成功',url('index'));
         }
-
 
 
         switch ($change_type) {
@@ -85,6 +85,9 @@ class Process extends Admin
                 # code...
                 break;
             case '3': //暂停计租
+                $ChangePauseModel = new ChangePauseModel;
+                $row = $ChangePauseModel->detail($id);
+                $this->assign('data_info',$row);
                 return $this->fetch('change_pause_process');
                 break;
             case '4':
@@ -148,7 +151,10 @@ class Process extends Admin
                 # code...
                 break;
             case '3': //暂停计租
-                return $this->fetch('change_pause_process');
+                $ChangePauseModel = new ChangePauseModel;
+                $row = $ChangePauseModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('Changepause/detail');
                 break;
             case '4':
                 # code...

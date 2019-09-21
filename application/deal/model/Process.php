@@ -4,6 +4,7 @@ namespace app\deal\model;
 
 use app\system\model\SystemBase;
 use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangePause as ChangePauseModel;
 
 class Process extends SystemBase
 {
@@ -88,8 +89,9 @@ class Process extends SystemBase
                 case '2':
                     # code...
                     break;
-                case '3':
-                    # code...
+                case '3': // 暂停计租
+                    $ChangePauseModel = new ChangePauseModel;
+                    $result = $ChangePauseModel->process($data);
                     break;
                 case '4':
                     # code...
@@ -122,7 +124,7 @@ class Process extends SystemBase
                     # code...
                     break;
 
-                case '13':
+                case '13': // 使用权变更
                     $ChangeUseModel = new ChangeUseModel;
                     $result = $ChangeUseModel->process($data);
 

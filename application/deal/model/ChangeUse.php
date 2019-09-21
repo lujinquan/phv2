@@ -31,7 +31,7 @@ class ChangeUse extends SystemBase
 
     protected $processDesc = ['失败','成功','待房管员打回修改','待经租会计初审','待经管所长审批','待经管科长终审'];
 
-    protected $processRole = ['2'=>'4','3'=>6,'4'=>8,'5'=>9];
+    protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
 
     public function tenant()
     {
@@ -160,7 +160,7 @@ class ChangeUse extends SystemBase
         $changeUseUpdateData = $processUpdateData = [];
 
         /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
-        if(!isset($data['change_reason']) && ($changeuseRow['change_status'] < $finalStep)){halt(1);
+        if(!isset($data['change_reason']) && ($changeuseRow['change_status'] < $finalStep)){
             $changeUseUpdateData['change_status'] = $changeuseRow['change_status'] + 1;
             $changeUseUpdateData['child_json'] = $changeuseRow['child_json'];
             $changeUseUpdateData['child_json'][] = [

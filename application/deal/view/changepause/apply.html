@@ -73,10 +73,12 @@
 		    <th>房屋编号</th>
 		    <th>承租人</th>
 		    <th>使用性质</th>
-		    <th>月租金(含租差、泵费)</th>
+		    <th>规定租金</th>
+		    <th>租差</th>
+		    <th>泵费</th>
 		  </tr>
 	  </thead>
-	  <tbody><tr><td colspan="4"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
+	  <tbody><tr><td colspan="6"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
@@ -123,7 +125,9 @@
 												<td class="house_number">'+rows[i].house_number+'</td>\
 												<td class="house_lessee">'+rows[i].tenant_name+'</td>\
 												<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
-												<td class="house_monthly_rent">'+rows[i].house_pre_rent+'</td>\
+												<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
+												<td class="house_diff_rent">'+rows[i].house_diff_rent+'</td>\
+												<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
 											</tr>';
 
 								$('.j-house-box tbody').append(trData);
@@ -143,7 +147,7 @@
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
 							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
 							if(	$('.j-house-box tbody').html()==''){
-								$('.j-house-box tbody').html("<tr><td colspan='4'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+								$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}
 
 					},btn2: function(index, layero){

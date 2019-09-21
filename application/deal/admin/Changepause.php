@@ -66,10 +66,32 @@ class Changepause extends Admin
         return $this->fetch();
     }
 
+    public function detail()
+    {
+        $id = $this->request->param('id');
+        $ChangePauseModel = new ChangePauseModel;
+        $row = $ChangePauseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
     public function record()
     {
     	if ($this->request->isAjax()) {
-            
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $ChangePauseModel = new ChangePauseModel;
+            $where = $ChangePauseModel->checkWhere($getData,'record');
+            //halt($where);
+            $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $data = [];
+            $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            //halt($data['data']);
+            $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
         }
         return $this->fetch();
     }
@@ -84,6 +106,7 @@ class Changepause extends Admin
         }
         
         if($row->delete()){
+            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
             $this->success('删除成功');
         }else{
             $this->error('删除失败');

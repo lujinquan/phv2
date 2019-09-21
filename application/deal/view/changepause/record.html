@@ -62,6 +62,7 @@
     </script>
 </div>
 <script type="text/javascript">
+	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待经租会计初审','4':'待经管所长审批','5':'待经管科终审'};
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
@@ -83,7 +84,7 @@
 			toolbar: '#toolbar'
 				// ,defaultToolbar: ['print']
 				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
-			    ,url: '{:url("Lease/index")}' //数据接口
+			    ,url: '{:url()}' //数据接口
 				,page: true //开启分页
 				,limit: 10
 			   ,limits: [10,20,30,40,50,100,300,500,1000]
@@ -93,59 +94,60 @@
 			  ,cols: [
 				[ //表头
 					{
-						type: 'checkbox',
-						fixed: 'left'
-					}, 
-					{
-						field: '', align:'center',minWidth:80, title: '#', templet:function(d){
+						field: '', align:'center',width:60, title: '#', templet:function(d){
 						     return d.LAY_INDEX ;
 						}
 					},
 					{
-						field: 'suspend_address',
-						width: 240,
+						field: 'ban_address',
+						width: 180,
 						align:'center',
 						title: '楼栋地址'
 					}, {
-						field: 'suspend_mechanism',
+						field: 'ban_inst_id',
+						hide: isShowInst,
 						width: 160,
 						align:'center',
-						title: '申请机构'
+						title: '申请机构', 
+						templet: function(d) {
+		                    return params.insts[d.ban_inst_id];
+		                }
 					}, {
-						field: 'suspend_owner_id',
-						width: 100,
+						field: 'ban_owner_id',
+						width: 80,
 						align:'center',
-						title: '产别'
+						title: '产别', 
+						templet: function(d) {
+		                    return params.owners[d.ban_owner_id];
+		                }
 					}, {
-						field: 'suspend_nature',
-						width: 130,
-						align:'center',
-						title: '使用性质'
-					}, {
-						field: 'suspend_monthly_rent',
+						field: 'change_pause_rent',
 						width: 120,
 						align:'center',
 						title: '暂停月租金'
 					}
 					, {
-						field: 'suspend_complete_time',
+						field: 'ftime',
 						align:'center',
-						width: 180,
+						width: 160,
 						title: '完成时间'
 					}, {
-						field: 'suspend_effective_time',
+						field: 'ctime',
 						align:'center',
-						width: 180,
-						title: '生效时间'
+						width: 160,
+						title: '创建时间'
 					}, {
-						field: 'suspend_state',
+						field: 'change_status',
 						align:'center',
 						width: 100,
-						title: '审核状态'
+						title: '审核状态', 
+						templet: function(d) {
+		                    return process_config[d.change_status];
+		                }
 					}, {
 						title: '操作',
-						Width: 260,
-						minWidth: 260,
+						Width: 180,
+						minWidth: 120,
 						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
