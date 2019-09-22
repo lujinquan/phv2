@@ -116,7 +116,6 @@
 							//房屋信息
 							if(rows){
 								var houseidData = '';
-								var houseidData = '';
 								for(var i=0;i<rows.length;i++) {
 								houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
@@ -133,7 +132,7 @@
 								HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
 							}
 							houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
-							$("input[name='house_id']").val(houseidData);//获取楼栋编号
+							$("input[name='house_id']").val(houseidData);//获取房屋编号
 							
 						}
 						//楼栋信息

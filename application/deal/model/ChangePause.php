@@ -169,7 +169,7 @@ class ChangePause extends SystemBase
             $processUpdateData['curr_role'] = $processRoles[$changePauseUpdateData['change_status']];
         }
 
-        /* 如果审批通过，且为终审：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
+        /* 如果审批通过，且为终审：更新暂停计租表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
         if(!isset($data['change_reason']) && ($changepauseRow['change_status'] == $finalStep)){
             $changePauseUpdateData['change_status'] = 1;
             $changePauseUpdateData['ftime'] = time();
@@ -221,8 +221,8 @@ class ChangePause extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
-        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        // 将涉及的所有房屋，设置成暂停计租状态
+        HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
         
     }
 }
