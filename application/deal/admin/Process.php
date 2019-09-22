@@ -12,8 +12,8 @@ use app\deal\model\ChangeName as ChangeNameModel;
 use app\deal\model\ChangeNew as ChangeNewModel;
 use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
+use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
-use app\deal\model\ChangePause as ChangePauseModel;
 
 /**
  * 审核
