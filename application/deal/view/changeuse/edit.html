@@ -1,4 +1,4 @@
-<!-- 使用权变更申请 -->
+<!-- 使用权变更修改 -->
 <form class="layui-form" action="" method="post">
 	<div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
@@ -8,9 +8,9 @@
 			<div class="layui-col-md12">
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
-					<input type="hidden" id="house_id" name="house_id">
-					<b class="j-explain-search j-house_number">查询</b>
+					<input type="text" id="house_number" name="house_number" value="{$data_info['house_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
+					<input type="hidden" name="id" value="{$data_info['id']}">
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>使用权变更完全后，原租约自动失效！</div>
 			</div>
@@ -26,8 +26,8 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户ID</label>
 								<div class="j-input-inline">
-									<input type="text" id="old_tenant_number" value="" readonly placeholder="" autocomplete="off" class="layui-input">
-									<input type="hidden" id="old_tenant_id" name="old_tenant_id">
+									<input type="text" id="old_tenant_number" value="{$data_info['old_tenant_number']}" readonly placeholder="" autocomplete="off" class="layui-input">
+									<input type="hidden" id="old_tenant_id" name="old_tenant_id" value="{$data_info['old_tenant_id']}">
 								</div>
 							</div>
 						</div>
@@ -35,7 +35,7 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户姓名</label>
 								<div class="j-input-inline">
-									<input type="text" id="old_tenant_name" name="old_tenant_name" value="" readonly placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="old_tenant_name" name="old_tenant_name" value="{$data_info['old_tenant_name']}" readonly placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
@@ -43,14 +43,14 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 身份证号</label>
 								<div class="j-input-inline">
-									<input type="text" id="old_tenant_card" name="old_tenant_card" readonly value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="old_tenant_card" name="old_tenant_card" readonly value="{$data_info['old_tenant_card']}" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-boxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="{:url('house/tenant/index')}" id="old_tenant_info" target="_blank">
+									<a href="javascript:;">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -69,8 +69,8 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户ID</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_number" name="new_tenant_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
-									<input type="hidden" id="new_tenant_id" name="new_tenant_id">
+									<input type="text" id="new_tenant_number" name="new_tenant_number" value="{$data_info['new_tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+									<input type="hidden" id="new_tenant_id" name="new_tenant_id" value="{$data_info['new_tenant_id']}">
 									<b class="j-explain-search j-tenant_number">查询</b>
 								</div>
 							</div>
@@ -79,7 +79,7 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户姓名</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_name" name="new_tenant_name" readonly value=""  placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="new_tenant_name" name="new_tenant_name" readonly value="{$data_info['new_tenant_name']}"  placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
@@ -87,14 +87,14 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 身份证号</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_card" name="new_tenant_card" readonly value=""  lay-verify="require|verifynewid" placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="new_tenant_card" name="new_tenant_card" readonly value="{$data_info['new_tenant_card']}"  lay-verify="require|verifynewid" placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="{:url('house/tenant/index')}" id="new_tenant_info" target="_blank">
+									<a href="javascript:;">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -110,7 +110,7 @@
 				<div class="j-input-inline">
 					<select name="change_use_type" class="field-cid" type="select">
 					    {volist name="params['usetypes']" id="v"}
-					    <option value="{$key}">{$v}</option>
+					    <option value="{$key}" {if condition="$data_info['change_use_type'] == $key"}selected{/if}>{$v}</option>
 					    {/volist}
 					</select>
 				</div>
@@ -118,7 +118,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">转让金额</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_money" name="transfer_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_money" name="transfer_rent" value="{$data_info['transfer_rent']}" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			
@@ -127,7 +127,7 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label">转让原因</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_reason" name="change_remark" value="" placeholder="" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_reason" name="change_remark" value="{$data_info['change_remark']}" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -145,8 +145,19 @@
 					<div class="layui-form-mid layui-word-aux">限制1M</div>
 				</div>
 				<div class="j-enclosure-imgs clearfix">
-					<div id="upload_img_list3" class="upload_img_list j-viewer-img"> </div>
-				</div>
+	   				<div id="upload_img_list3" class="upload_img_list j-viewer-img">
+	   					{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeApplication'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+	   				</div>
+	   			</div>
 			</div>
 			<div class="layui-upload">
 			</div>
@@ -162,8 +173,19 @@
 					<div class="layui-form-mid layui-word-aux">限制1M</div>
 				</div>
 				<div class="j-enclosure-imgs clearfix">
-					<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
-				</div>
+	   				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
+	   					{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeApproval'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+	   				</div>
+	   			</div>
 			</div>
 			<div class="layui-upload">
 			</div>
@@ -179,8 +201,19 @@
 					<div class="layui-form-mid layui-word-aux">限制1M</div>
 				</div>
 				<div class="j-enclosure-imgs clearfix">
-					<div id="upload_img_list2" class="upload_img_list j-viewer-img"> </div>
-				</div>
+	   				<div id="upload_img_list2" class="upload_img_list j-viewer-img">
+	   					{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'UseChangeOther'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+	   				</div>
+	   			</div>
 			</div>
 			<div class="layui-upload">
 			</div>
@@ -211,7 +244,7 @@
 				,upload = layui.upload
 				,layer = layui.layer;
       
-	      //获取楼栋查询器
+/*	      //获取楼栋查询器
 		  $(".layui-form").on('click','.j-house_number',function(){
 		 layer.open({
 			title: '房屋查询器'
@@ -220,7 +253,7 @@
 			,area: ['70%', '60%']
 			, btn:false
 			,pageTabs: false
-			,content: '{:url('system/index/house')}'+'?change_type=13'
+			,content: '{:url('system/index/house')}'
 			,btn: ['确定','关闭']
 			,yes: function(index, layero){
 				var row = window["layui-layer-iframe" + index].hoesedata();
@@ -236,7 +269,7 @@
 				layer.close(index);
 			}
 		  });
-		 })	
+		 })	*/
 		  //获取租户查询器
 		   $(".layui-form").on('click','.j-tenant_number',function(){
 		  layer.open({
@@ -244,20 +277,18 @@
 					,type: 2
 					,offset: 'auto'
 					,area: ['70%', '60%']
-					, btn:false
+					,btn:false
 					,pageTabs: false
 					,content: '{:url('system/index/tenant')}'
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].tenantdata();
 						console.log(row);
-						href="{:url('house/tenant/index')}?tenant_number="
 						layer.close(index);
 						$("#new_tenant_id").val(row.tenant_id);//获取租户id
 						$("#new_tenant_number").val(row.tenant_number);//获取租户编号
 						$("#new_tenant_name").val(row.tenant_name);
 						$("#new_tenant_card").val(row.tenant_card);
-						//$("#new_tenant_info").attr('href','/admin.php/house/tenant/index?tenant_number='+row.tenant_number);
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

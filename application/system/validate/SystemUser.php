@@ -28,7 +28,7 @@ class SystemUser extends Validate
         'password|密码'   => 'require|length:32|confirm',
         'mobile|手机号'   => 'requireWith:mobile|regex:^1\d{10}',
         'username|用户名' => 'require|unique:system_user',
-        '__token__'      => 'require|token',
+        //'__token__'      => 'require|token',
     ];
 
     //定义验证提示

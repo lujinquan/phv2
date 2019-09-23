@@ -319,6 +319,12 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         } else if (that.attr('lay-data')) {
             options = new Function('return '+ that.attr('lay-data'))();
         }
+        var formData = _form.serialize();
+        var j_data = that.attr('j-data');
+        if (j_data){
+            j_data = (new Function("return " + j_data))();
+            formData = $.param(j_data) + '&' + formData;
+        }
 
         /* CKEditor专用 */
         if (typeof(CKEDITOR) != 'undefined') {
@@ -330,7 +336,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         $.ajax({
             type: "POST",
             url: _form.attr('action'),
-            data: _form.serialize(),
+            data: formData,
             success: function(res) {
                 that.text(res.msg);
                 if (res.code == 0) {
@@ -340,8 +346,10 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
                     }, 3000);
                 } else {
+                    that.removeClass('layui-btn-normal').addClass('layui-bg-green');
                     setTimeout(function() {
                         that.text(text);
+                        that.removeClass('layui-bg-green');
                         if (options.callback) {
                             options.callback(that, res);
                         }

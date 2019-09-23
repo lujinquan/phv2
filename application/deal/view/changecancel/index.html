@@ -1,6 +1,7 @@
 <div class="j-table-content j-no-tab">
 	<div class="layui-btn-container j-container-margin">
-	    <div class="layui-btn-container">       
+	    <div class="layui-btn-container"> 
+	    {if condition="in_array(278,$auths)"}      
 	        <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>注销申请</button></a>
 	    </div>
 	</div>
@@ -98,10 +99,10 @@
 		                    return params.owners[d.ban_owner_id];
 		                }
 					}, 
-					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '注销规租'},
-					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '注销建面'},
-					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '注销使面'},
-					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '注销原价'},
+					{field: 'cancel_rent',minWidth: 120,align:'center',title: '注销规租'},
+					{field: 'cancel_area',minWidth: 120,align:'center',title: '注销建面'},
+					{field: 'cancel_use_area',minWidth: 120,align:'center',title: '注销使面'},
+					{field: 'cancel_oprice',minWidth: 120,align:'center',title: '注销原价'},
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'}, 
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
 						templet: function(d) {

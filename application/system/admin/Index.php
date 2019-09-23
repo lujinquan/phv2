@@ -63,6 +63,8 @@ class Index extends Admin
 	 //房屋选择器
 	public function house()
 	{
+        $change_type = input('param.change_type'); // 
+        $this->assign('change_type',$change_type);
 		return $this->fetch('block/queriers/house');
 	}
 	//异动注销查询器

@@ -1,0 +1,313 @@
+<!-- 租金减免年审/申请列表 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search j-ban_number">查询</b>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_class" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_id" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_address" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_nature" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">月租金</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_monthly_rent" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_tenant" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_idnumber" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">电话</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_tel" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免类型</label>
+  		<div class="j-input-inline">
+  			<select name="reduction_class" class="field-cid">
+  				<option value="0">请选择</option>
+  				<option value="0">低保户</option>
+				<option value="0">老红军</option>
+  			</select>
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" name="reduction_waiver_amount" value="" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" name="reduction_card_number" value="" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>资料上传</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">身份证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				<li>
+  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+  				</li>
+  				<li>
+  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+  				</li>
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">户口本</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				<li>
+  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+  				</li>
+  				<li>
+  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+  				</li>
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租约</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				<li>
+  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+  				</li>
+  				<li>
+  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+  				</li>
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">低保证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				<li>
+  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+  				</li>
+  				<li>
+  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+  				</li>
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租房保障申请表</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				<li>
+  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+  				</li>
+  				<li>
+  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+  				</li>
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>补充资料</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">资料上传</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+  		<div class="j-enclosure-imgs clearfix">
+  			<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
+  		</div>
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+		</div>
+	</div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	var upurl = "{:url('system/Api/upload')}?input=Additional&group=change&water=no"; //补充资料
+	var duotu = true; //是否为多图上传true false
+	console.log(params);
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		//获取楼栋查询器
+		 $(".layui-form").on('click','.j-ban_number',function(){
+			layer.open({
+						title: '房屋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '60%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/house')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							var row = window["layui-layer-iframe" + index].hoesedata();
+							console.log(row);
+							layer.close(index);
+							//楼栋信息
+								$("input[name='reduction_seach']").val(row.house_number);//获取房屋编号
+								$("input[name='reduction_class']").val(params.owners[row.ban_owner_id]);//获取产别
+								$("input[name='reduction_id']").val(row.ban_number);//获取楼栋编号
+								$("input[name='reduction_address']").val(row.ban_address);//获取楼栋地址
+								$("input[name='reduction_nature']").val(params.uses[row.house_use_id]);//获取楼栋使用性质
+								$("input[name='reduction_monthly_rent']").val(row.house_pre_rent);//获取月租金
+								$("input[name='reduction_tenant']").val(row.tenant_name);//获取租户
+								$("input[name='reduction_idnumber']").val(row.tenant_card);//获取身份证号
+								$("input[name='reduction_tel']").val(row.tenant_tel);//获取电话
+
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})
+		//双击查询记租表
+		 $(".layui-form").on('click','.j-rent-list',function(){
+			 layer.open({
+			 			title: '记租表'
+			 			,type: 2
+			 			,offset: 'auto'
+			 			,area: ['70%', '60%']
+			 			, btn:false
+			 			,pageTabs: false
+			 			,content: '{:url('system/index/house')}'
+			 			,btn: ['确定','关闭']
+			 			,yes: function(index, layero){
+			 				layer.close(index);
+			 			},btn2: function(index, layero){
+			 				layer.close(index);
+			 			}
+			  });
+		 })
+        //补充资料
+        upload.render({
+        	elem: '#upload_img1',
+        	url: upurl,
+        	size: 1024,
+        	multiple: duotu,
+        	field: 'Additional',
+        	before: function(obj) {
+        		layer.msg('图片上传中...', {
+        			icon: 16,
+        			shade: 0.01,
+        			time: 0
+        		})
+        	},
+        	done: function(res) {
+        		layer.close(layer.msg()); //关闭上传提示窗口
+        		if (duotu == true) {
+        			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+        			$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
+        				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        		} else {
+        			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+        			$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
+        				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        		}
+        	}
+        })
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+</script>

@@ -55,6 +55,7 @@ class Admin extends Common
         if (!$login['uid']) {
             return $this->error('请登陆之后在操作', ROOT_DIR.config('sys.admin_path'));
         }
+
         define('INST',session('admin_user.inst_id'));
         define('INST_LEVEL',session('admin_user.inst_level'));
         if (!defined('ADMIN_ID')) {
@@ -103,6 +104,8 @@ class Admin extends Common
                 $breadCrumbs = [];
                 $menuParents = ['pid' => 1];
 
+                $auths = session('role_auth_'.ADMIN_ROLE)?session('role_auth_'.ADMIN_ROLE):[];
+
                 if ($curMenu['id']) {
                     $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                     $menuParents = current($breadCrumbs);
@@ -127,14 +130,16 @@ class Admin extends Common
                 $this->assign('inst_level',INST_LEVEL);
                 $this->assign('params',$params);
                 $this->assign('systemusers',session('systemusers'));
+                // 当前用户的权限
+                $this->assign('auths',$auths);
                 $this->assign('paramsJson',json_encode($params));
-
+//halt($auths);
                 //当前用户是否拥有“提交工单”权限
-                $addOrderAuthBool = RoleModel::checkAuth(218);
-                $this->assign('addOrderAuthBool',$addOrderAuthBool);
+                //$addOrderAuthBool = RoleModel::checkAuth(218);
+                $this->assign('addOrderAuthBool',in_array(218,$auths));
                 //当前用户是否拥有“我的工单”权限
-                $myOrderAuthBool = RoleModel::checkAuth(219);
-                $this->assign('myOrderAuthBool',$myOrderAuthBool);
+                //$myOrderAuthBool = RoleModel::checkAuth(219);
+                $this->assign('myOrderAuthBool',in_array(219,$auths));
                 //halt(json_encode($params));
                 // tab切换数据
                 // $hisiTabData = [
@@ -665,6 +670,7 @@ class Admin extends Common
             $queryWhere = $this->request->get();
             
             $queryType = input('param.type', 'house');
+            $changeType = input('param.change_type');
             $queryTypeArr = ['house','ban','tenant'];
             if(!in_array($queryType,$queryTypeArr)){
                 return '查询器类型不合法';
@@ -695,7 +701,7 @@ class Admin extends Common
                     if(isset($queryWhere['ban_status'])){ //查询房屋状态
                         $where[] = ['ban_status','eq',$queryWhere['ban_status']];
                     }
-//halt($where);
+
                     $BanModel = new BanModel;
 
                     $fields = 'ban_id,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id';
@@ -764,6 +770,19 @@ class Admin extends Common
                         $where['house'][] = ['house_status','eq',$queryWhere['house_status']];
                     }
                     
+                    if($changeType){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
+                        switch ($changeType) {
+                            case 13: //使用权变更
+                                $where['house'][] = ['house_status','eq',1];
+                                break;
+                            
+                            default:
+                                # code...
+                                break;
+                        }
+                        
+                    }
+
                     $HouseModel = new HouseModel;
 
                     $fields = 'house_id,house_balance,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';

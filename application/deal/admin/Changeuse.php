@@ -39,7 +39,7 @@ class Changeuse extends Admin
     	if ($this->request->isAjax()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Changeuse.sceneForm');
+            $result = $this->validate($data, 'Changeuse.form');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -54,14 +54,59 @@ class Changeuse extends Admin
             if (!$useRow) {
                 return $this->error('申请失败');
             }
-            // 入库审批表
-            $ProcessModel = new ProcessModel;
-            $filData['change_id'] = $useRow['id'];
-            if (!$ProcessModel->allowField(true)->create($filData)) {
-                return $this->error('未知错误');
+            if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $filData['change_id'] = $useRow['id'];
+                if (!$ProcessModel->allowField(true)->create($filData)) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }else{
+                $msg = '保存成功';
             }
-            return $this->success('申请成功',url('index'));
+            return $this->success($msg,url('index'));
         }
+        return $this->fetch();
+    }
+
+    public function edit()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'Changeuse.edit');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $ChangeUseModel = new ChangeUseModel;
+            // 数据过滤
+            $filData = $ChangeUseModel->dataFilter($data);
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            // 入库使用权变更表
+            $useRow = $ChangeUseModel->allowField(true)->update($filData);
+            if (!$useRow) {
+                return $this->error('申请失败');
+            }
+            if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $filData['change_id'] = $useRow['id'];
+                if (!$ProcessModel->allowField(true)->create($filData)) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }else{
+                $msg = '保存成功';
+            }
+            return $this->success($msg,url('index'));
+        }
+        $id = $this->request->param('id');
+        $ChangeUseModel = new ChangeUseModel;
+        $row = $ChangeUseModel->detail($id);
+        $this->assign('data_info',$row);
         return $this->fetch();
     }
 

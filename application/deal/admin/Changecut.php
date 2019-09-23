@@ -1,5 +1,7 @@
 <?php
+
 namespace app\deal\admin;
+
 use app\system\admin\Admin;
 
 /**
@@ -13,7 +15,24 @@ class Changecut extends Admin
     	if ($this->request->isAjax()) {
             
         }
-        return $this->fetch();
+        $group = input('group','x');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '租金减免',
+                'url' => '?group=x',
+            ],
+            [
+                'title' => '租金减免年审',
+                'url' => '?group=y',
+            ],
+        ];
+        $tabData['current'] = url('?group='.$group);
+        //$this->assign('ban_number',input('param.ban_number',''));
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
+        return $this->fetch('index_'.$group);
     }
 
     public function apply()
@@ -21,7 +40,8 @@ class Changecut extends Admin
     	if ($this->request->isAjax()) {
             
         }
-        return $this->fetch();
+        $group = input('group','x');
+        return $this->fetch('apply_'.$group);
     }
 
     public function record()
@@ -29,6 +49,23 @@ class Changecut extends Admin
     	if ($this->request->isAjax()) {
             
         }
-        return $this->fetch();
+        $group = input('group','x');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '租金减免',
+                'url' => '?group=x',
+            ],
+            [
+                'title' => '租金减免年审',
+                'url' => '?group=y',
+            ],
+        ];
+        $tabData['current'] = url('?group='.$group);
+        //$this->assign('ban_number',input('param.ban_number',''));
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
+        return $this->fetch('record_'.$group);
     }
 }

@@ -22,7 +22,7 @@ class Changecancel extends Admin
             $ChangeCancelModel = new ChangeCancelModel;
             $where = $ChangeCancelModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_cancel')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
