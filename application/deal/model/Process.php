@@ -3,8 +3,15 @@
 namespace app\deal\model;
 
 use app\system\model\SystemBase;
-use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeBan as ChangeBanModel;
+use app\deal\model\ChangeCancel as ChangeCancelModel;
+use app\deal\model\ChangeLease as ChangeLeaseModel;
+use app\deal\model\ChangeName as ChangeNameModel;
+use app\deal\model\ChangeNew as ChangeNewModel;
+use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
+use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
+use app\deal\model\ChangeUse as ChangeUseModel;
 
 class Process extends SystemBase
 {
@@ -83,50 +90,61 @@ class Process extends SystemBase
     {
         $process = self::where([['change_type','eq',$change_type],['change_id','eq',$data['id']]])->find();
         switch ($change_type) {
-                case '1':
-                    # code...
+                case '1': // 租金减免
+                    $ChangeCutModel = new ChangeCutModel;
+                    $result = $ChangeCutModel->process($data);
                     break;
-                case '2':
-                    # code...
+                case '2': // 空租
+                    
                     break;
                 case '3': // 暂停计租
                     $ChangePauseModel = new ChangePauseModel;
                     $result = $ChangePauseModel->process($data);
                     break;
-                case '4':
-                    # code...
+                case '4': // 陈欠核销
+                    $ChangeOffsetModel = new ChangeOffsetModel;
+                    $result = $ChangeOffsetModel->process($data);
                     break;
-                case '5':
-                    # code...
-                    break;
-
-                case '6':
-                    # code...
-                    break;
-                case '7':
-                    # code...
+                case '5': // 房改
+                   
                     break;
 
-                case '8':
-                    # code...
+                case '6': // 维修
+                   
                     break;
-                case '9':
-                    # code...
-                    break;
-                case '10':
-                    # code...
+                case '7': // 新发租
+                    $ChangeNewModel = new ChangeNewModel;
+                    $result = $ChangeNewModel->process($data);
                     break;
 
-                case '11':
-                    # code...
+                case '8': // 注销
+                    $ChangeCancelModel = new ChangeCancelModel;
+                    $result = $ChangeCancelModel->process($data);
                     break;
-                case '12':
-                    # code...
+                case '9': // 房屋调整
+                    $ChangeHouseModel = new ChangeHouseModel;
+                    $result = $ChangeHouseModel->process($data);
+                    break;
+                case '10': // 管段调整
+                   
+                    break;
+
+                case '11': // 租金追加调整
+                    $ChangeRentAddModel = new ChangeRentAddModel;
+                    $result = $ChangeRentAddModel->process($data);
+                    break;
+                case '12': //租金调整
+                    
                     break;
 
                 case '13': // 使用权变更
                     $ChangeUseModel = new ChangeUseModel;
                     $result = $ChangeUseModel->process($data);
+
+                    break;
+                case '14': // 楼栋调整
+                    $ChangeBanModel = new ChangeBanModel;
+                    $result = $ChangeBanModel->process($data);
 
                     break;
                 default:

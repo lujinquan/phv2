@@ -223,7 +223,7 @@ from phv1.ph_rent_table;
  */
 update phv2.ph_change_table_back a,phv2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update phv2.ph_change_table_back a,phv2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update phv2.ph_change_table_back a,phv2.ph_ban_back b set a.ban_id = b.house_id where a.ban_id = b.ban_number;
+update phv2.ph_change_table_back a,phv2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
 
 
 
