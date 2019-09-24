@@ -1,1 +1,210 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline j-tips">
+				<input type="text" id="house_number" name="house_number" readonly="" value="10215874452561" placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="hidden" name="ban_id" value="">
+				<input type="hidden" name="house_id" value="">
+			</div>
+		</div>
+	</div>
+		<table  class="layui-table">
+		  <thead>
+			  <tr>
+			    <th>房屋编号</th>
+			    <th>楼栋地址</th>
+			    <th>机构</th>
+			    <th>产别</th>
+			    <th>使用性质</th>
+			    <th>租户姓名</th>
+			    <th>规定租金</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		  	  <td id="house_numbers">10900903920519</td>
+			  <td id="building_address">工程营69号</td>
+			  <td id="mechanism">紫阳所08管段</td>
+	    	  <td id="yield_differentiation">区属</td>
+	    	  <td id="nature_usage">住宅</td>
+	    	  <td id="tenant_name">李双</td>
+			  <td id="prescribed_rent">65.5</td>
+		    </tr>
+		  </tbody>
+		</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>核销类型</th>
+		    <th>以前年</th>
+		    <th>以前月</th>
+		    <th>本月</th>
+		    <th>总金额</th>
+		  </tr>
+	  </thead>
+	 <tbody>
+	   <tr>
+	 	  <td id="write_type">金额</td>
+		  <td id="before_year">2358</td>
+		  <td id="before_month">524</td>
+		  <td id="this_month">65.5</td>
+		  <td id="total_sum">2947.5</td>
+	   </tr>
+	 </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>明细信息</legend>
+	</fieldset>
+	<table id="dataTable" lay-filter='dataTable'></table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>填报信息</legend>
+	</fieldset>
+    <div class="layui-row layui-form-item layui-col-space90">
+      	<div class="layui-col-md12">
+      		<div class="j-enclosure-label clearfix">身份证信息</div>
+      		<div class="j-enclosure-img j-viewer-img clearfix">
+      			<ul>
+      				<li>
+      					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+      				</li>
+      				<li>
+      					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+      				</li>
+      			</ul>
+      	    </div>
+      	</div>
+    </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+      	<div class="layui-col-md12">
+      		<div class="j-enclosure-label clearfix">租约</div>
+      		<div class="j-enclosure-img j-viewer-img clearfix">
+      			<ul>
+      				<li>
+      					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+      				</li>
+      				<li>
+      					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+      				</li>
+      			</ul>
+      	    </div>
+      	</div>
+    </div>
+	<div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">报告</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+	  				<li>
+	  					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
+	  				</li>
+	  				<li>
+	  					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
+	  				</li>
+	  			</ul>
+	  	    </div>
+	  	</div>
+	</div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  	 <legend>审批状态</legend>
+  </fieldset> 
+  <div class="layui-row layui-form-item layui-col-space90">
+  		   <div class="j-status-bar">
+  				<ul>
+  					<li class="layui-col-xs2 on">
+  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+  						<p>房管员</p>
+  					</li>
+  					<li class="layui-col-xs2 ">
+  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+  						<p>经租会计</p>
+  					</li>
+  					<li class="layui-col-xs2 ">
+  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+  						<p>经租所长</p>
+  					</li>
+  					<li class="layui-col-xs2 ">
+  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+  						<p>经管科</p>
+  					</li>
+  				</ul>
+  			</div>
+  			<div class="j-status-result">
+  				<ul>
+  					<li>房管员［孙莲］于2019-09-19 10:03:19 房管员提交申请；</li>
+  				</ul>
+  			</div>
+  	</div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+			<a href="javascript:;" class="layui-btn layui-btn-primary j-not-pass">不通过</a>
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-warm">打回</a>
+		</div>
+	  </div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	var upurl = "{:url('system/Api/upload')}?input=Idnumber&group=change&water=no"; //身份证信息
+	var upurl1 = "{:url('system/Api/upload')}?input=lease&group=change&water=no"; //租约
+	var upurl2 = "{:url('system/Api/upload')}?input=Presentation&group=change&water=no"; //报告
+	var duotu = true; //是否为多图上传true false
+	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+     table.render({
+         elem: '#dataTable'
+         //,height: 550
+     	//,toolbar: '#toolbar'
+     	//,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+         ,url: '{:url("rent/Unpaid/index")}'
+         ,page: false 
+         ,limit: 100000000
+         ,text: {
+             none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+         }
+         ,cols: [[ //表头
+             //{type: 'checkbox', fixed: 'left'},
+             {field: 'rent_order_number',minWidth: 200, align:'center', title: '订单编号'}
+             ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
+                 return params.insts[d.ban_inst_id];
+             }}
+             ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
+                 return params.owners[d.ban_owner_id];
+             }}
+             ,{field: 'house_use_id', minWidth: 100, align:'center', title: '使用性质', templet: function(d) {
+                 return params.uses[d.house_use_id];
+             }}
+             ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '账单金额'}
+             ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已支付金额'}
+             ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
+             ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+             ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
+             //,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
+         ]]
+         ,done:function(res,curr,count){
+            
+         }
+     },isShowInst)
+
+	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+		url: 'data-original',
+	 });
+</script>
