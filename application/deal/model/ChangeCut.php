@@ -5,14 +5,15 @@ namespace app\deal\model;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
+use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 
-class ChangeUse extends SystemBase
+class ChangeCut extends SystemBase
 {
 	// 设置模型名称
-    protected $name = 'change_use';
+    protected $name = 'change_cut';
 
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
@@ -24,7 +25,6 @@ class ChangeUse extends SystemBase
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
-        'data_json' => 'json',
     ];
 
     protected $processAction = ['审批不通过','审批成功','打回修改','初审通过','审批通过','终审通过'];
@@ -35,12 +35,12 @@ class ChangeUse extends SystemBase
 
     public function tenant()
     {
-        return $this->hasOne('app\house\model\Tenant', 'tenant_id', 'tenant_id')->bind('tenant_number,tenant_tel,tenant_card');
+        return $this->hasOne('app\house\model\Tenant', 'tenant_id', 'tenant_id')->bind('tenant_number,tenant_tel,tenant_card,tenant_name');
     }
 
     public function house()
     {
-        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent');
+        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent,ban_id,house_use_id');
     }
 
     public function checkWhere($data,$type)
@@ -64,8 +64,8 @@ class ChangeUse extends SystemBase
                 break;
         }
         // 检索原租户
-        if(isset($data['old_tenant_name']) && $data['old_tenant_name']){
-            $where[] = ['a.old_tenant_name','like','%'.$data['old_tenant_name'].'%'];
+        if(isset($data['tenant_name']) && $data['enant_name']){
+            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
@@ -101,44 +101,55 @@ class ChangeUse extends SystemBase
      */
     public function dataFilter($data)
     {
-        if(isset($data['file']) && $data['file']){
-            $data['change_imgs'] = implode(',',$data['file']);
-        }
-        $data['change_status'] = 3;
-        $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 13; //使用权变更
-        $data['change_order_number'] = date('Ym').'13'.random(14);
-        $data['child_json'] = [];
-        $data['child_json'][] = [
-            'success' => 1, 
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
+        if($data['group'] == 'x'){
 
-        // 审批表数据
-        $data['ban_id'] = HouseModel::where([['house_id','eq',$data['house_id']]])->value('ban_id');
-        $processRoles = $this->processRole;
-        $processDescs = $this->processDesc;
-        $data['change_desc'] = $processDescs[3];
-        $data['curr_role'] = $processRoles[3];
+            if(isset($data['file']) && $data['file']){
+                $data['change_imgs'] = implode(',',$data['file']);
+            }
+            if(isset($data['id'])){
+                $row = $this->get($data['id']); 
+                if($row['is_back']){ //如果打回过
+                    $data['child_json'] = $row['child_json'];
+                }
+                
+            }
+            if($data['save_type'] == 'save'){ //保存
+                $data['change_status'] = 2;
+            }else{ //保存并提交
+                $data['change_status'] = 3;
+            }
+            
+            $data['child_json'][] = [
+                'success' => 1, 
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ]; 
+
+            $data['cuid'] = ADMIN_ID;
+            $data['change_type'] = 1; //减免
+            $data['change_order_number'] = date('Ym').'01'.random(14);
+
+            // 审批表数据
+            $data['ban_id'] = HouseModel::where([['house_id','eq',$data['house_id']]])->value('ban_id');
+            $processRoles = $this->processRole;
+            $processDescs = $this->processDesc;
+            $data['change_desc'] = $processDescs[3];
+            $data['curr_role'] = $processRoles[3];
+
+        }else{
+
+        }
         
         return $data; 
     }
 
     public function detail($id)
     {
-        $row = self::get($id);
+        $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
-        $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['old_tenant_id']]])->field('tenant_number,tenant_card')->find();
-        $row['old_tenant_number'] = $oldTenantRow['tenant_number'];
-        $row['old_tenant_card'] = $oldTenantRow['tenant_card'];
-        $newTenantRow = TenantModel::where([['tenant_id','eq',$row['new_tenant_id']]])->field('tenant_number,tenant_card')->find();
-        $row['new_tenant_number'] = $newTenantRow['tenant_number'];
-        $row['new_tenant_card'] = $newTenantRow['tenant_card'];
-
+        $row['ban_info'] = BanModel::get($row['ban_id']);//halt($row);
         return $row;
     }
 
@@ -146,7 +157,7 @@ class ChangeUse extends SystemBase
     {
        
         // 判断是否通过
-        $changeuseRow = self::get($data['id']);
+        $changeRow = self::get($data['id']);
 
         // 获取最后一步的step
         $processRoles = $this->processRole;
@@ -157,67 +168,87 @@ class ChangeUse extends SystemBase
         // 获取审批描述
         $processDescs = $this->processDesc;
 
-        $changeUseUpdateData = $processUpdateData = [];
+        $changeUpdateData = $processUpdateData = [];
 
-        /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
-        if(!isset($data['change_reason']) && ($changeuseRow['change_status'] < $finalStep)){
-            $changeUseUpdateData['change_status'] = $changeuseRow['change_status'] + 1;
-            $changeUseUpdateData['child_json'] = $changeuseRow['child_json'];
-            $changeUseUpdateData['child_json'][] = [
+        /*  如果是打回  */
+        if(isset($data['back_reason'])){
+            $changeUpdateData['change_status'] = 2;
+            $changeUpdateData['is_back'] = 1;
+            $changeUpdateData['child_json'] = $changeRow['child_json'];
+            $changeUpdateData['child_json'][] = [
                 'success' => 1,
-                'action' => $processActions[$changeUseUpdateData['change_status']],
+                'action' => $processActions[2].'，原因：'.$data['back_reason'],
                 'time' => date('Y-m-d H:i:s'),
                 'uid' => ADMIN_ID,
                 'img' => '',
             ];
-            // 更新使用权变更表
-            $changeuseRow->allowField(['child_json','change_status'])->save($changeUseUpdateData, ['id' => $data['id']]);;
-            // 更新审批表
-            $processUpdateData['change_desc'] = $processDescs[$changeUseUpdateData['change_status']];
-            $processUpdateData['curr_role'] = $processRoles[$changeUseUpdateData['change_status']];
-        }
 
-        /* 如果审批通过，且为终审：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
-        if(!isset($data['change_reason']) && ($changeuseRow['change_status'] == $finalStep)){
-            $changeUseUpdateData['change_status'] = 1;
-            $changeUseUpdateData['ftime'] = time();
-            $changeUseUpdateData['child_json'] = $changeuseRow['child_json'];
-            $changeUseUpdateData['child_json'][] = [
-                'success' => 1,
-                'action' => $processActions[$changeUseUpdateData['change_status']],
-                'time' => date('Y-m-d H:i:s'),
-                'uid' => ADMIN_ID,
-                'img' => '',
-            ];
             // 更新使用权变更表
-            $changeuseRow->allowField(['child_json','change_status','ftime'])->save($changeUseUpdateData, ['id' => $data['id']]);
-            //终审成功后的数据处理
-            $this->finalDeal($changeuseRow);
+            $changeRow->allowField(['child_json','is_back','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
             // 更新审批表
-            $processUpdateData['change_desc'] = $processDescs[$changeUseUpdateData['change_status']];
-            $processUpdateData['ftime'] = $changeUseUpdateData['ftime'];
-            $processUpdateData['status'] = 0;
-        }
+            $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+            $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
+        }else{
+            /* 如果审批通过，且非终审：更新子表的child_json、change_status，更新审批表change_desc、curr_role */
+            if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+                $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
+                    'success' => 1,
+                    'action' => $processActions[$changeRow['change_status']],
+                    'time' => date('Y-m-d H:i:s'),
+                    'uid' => ADMIN_ID,
+                    'img' => '',
+                ];
 
-        
-        /* 如果审批不通过：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role */
-        if(isset($data['change_reason'])){
-            $changeUseUpdateData['change_status'] = 0;
-            $changeUseUpdateData['ftime'] = time();
-            $changeUseUpdateData['child_json'] = $changeuseRow['child_json'];
-            $changeUseUpdateData['child_json'][] = [
-                'success' => 0,
-                'action' => $processActions[$changeUseUpdateData['change_status']],
-                'time' => date('Y-m-d H:i:s'),
-                'uid' => ADMIN_ID,
-                'img' => '',
-            ];
-            // 更新使用权变更表
-            $changeuseRow->allowField(['child_json','change_status','ftime'])->save($changeUseUpdateData, ['id' => $data['id']]);
-            // 更新审批表
-            $processUpdateData['change_desc'] = $processDescs[$changeUseUpdateData['change_status']];
-            $processUpdateData['ftime'] = $changeUseUpdateData['ftime'];
-            $processUpdateData['status'] = 0;
+                // 更新使用权变更表
+                $changeRow->allowField(['child_json','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                // 更新审批表
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
+
+            /* 如果审批通过，且为终审：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
+            }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
+
+                $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
+                    'success' => 1,
+                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'time' => date('Y-m-d H:i:s'),
+                    'uid' => ADMIN_ID,
+                    'img' => '',
+                ];
+                // 更新使用权变更表
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                //终审成功后的数据处理
+                $this->finalDeal($changeRow);
+                // 更新审批表
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
+                $processUpdateData['status'] = 0;
+
+            /* 如果审批不通过：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role */
+            }else if(isset($data['change_reason'])){
+                $changeUpdateData['change_status'] = 0;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
+                    'success' => 0,
+                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$data['change_reason'],
+                    'time' => date('Y-m-d H:i:s'),
+                    'uid' => ADMIN_ID,
+                    'img' => '',
+                ];
+                // 更新使用权变更表
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                // 更新审批表
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
+                $processUpdateData['status'] = 0;                
+            }
+
         }
 
         return $processUpdateData;

@@ -13,7 +13,10 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="text" name="house_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" id="house_id" name="house_id">
+				<input type="hidden" id="tenant_id" name="tenant_id">
+				<input type="hidden" name="group" value="x">
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
 		</div>
@@ -83,7 +86,7 @@
   </fieldset>
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md4">
-  		<label class="j-form-label">减免类型</label>
+  		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
   			<select name="cut_type" class="field-cid">
   				<option value="">请选择</option>
@@ -94,7 +97,7 @@
   		</div>
   	</div>
   	<div class="layui-col-md4">
-  		<label class="j-form-label">减免金额</label>
+  		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
   			<input type="number" name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
@@ -196,8 +199,9 @@
   </div>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+				<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+				<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
   </div>
@@ -234,6 +238,8 @@
 							layer.close(index);
 							//楼栋信息
 								$("input[name='house_number']").val(row.house_number);//获取房屋编号
+								$("#house_id").val(row.house_id);
+								$("#tenant_id").val(row.tenant_id);
 								$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别
 								$("#reduction_id").val(row.ban_number);//获取楼栋编号
 								$("#reduction_address").val(row.ban_address);//获取楼栋地址
