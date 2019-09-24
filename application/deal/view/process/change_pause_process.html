@@ -190,14 +190,19 @@
 	    		btn: ["确定","取消"],
 	    		title: ['审批不通过原因'],
 	    		scrollbar: false,
-	    		area: ['400px','400px'],
+	    		area: ['400px','200px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='试一下哟'></div>",
+	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
 					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
-					if(!$('.layui-layer-btn0').hasClass('disabled')){
+					if($('#change_reason').val()==''){
+						layer.tips('原因不能为空！', '#change_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -213,14 +218,19 @@
 	    		btn: ["确定","取消"],
 	    		title: ['打回原因'],
 	    		scrollbar: false,
-	    		area: ['400px','400px'],
+	    		area: ['400px','200px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
 					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
-					if(!$('.layui-layer-btn0').hasClass('disabled')){
+					if($('#back_reason').val()==''){
+						layer.tips('原因不能为空！', '#back_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
