@@ -189,6 +189,14 @@
 		  				</ul>
 		  			</div>
 		  	</div>	
+		  	<input type="hidden" name="id" value="{$data_info['id']}">
+		  <div class="layui-row layui-form-item layui-col-space90">
+				<div class="j-margin-btn">
+					<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+					<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+					<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+				</div>
+		</div>
 	  </div>
   </div>
 </form>
@@ -197,7 +205,63 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
+	/*上传参数设定*/
+	layui.use(['jquery','table','layer', 'upload','form'], function() {
+			var table = layui.table
+			    ,form = layui.form
+				,$ = layui.jquery
+				,upload = layui.upload
+				,layer = layui.layer;
+
+			//审批不通过
+	    $("#handover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['审批不通过原因'],
+	    		scrollbar: false,
+	    		area: ['400px','400px'],
+	    		offset: 'auto',
+	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='不通过原因'></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=17';
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','400px'],
+	    		offset: 'auto',
+	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=17';
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+	});
+	//图片查看
 		$('.j-viewer-img').viewer({
 		   	url: 'data-original',
 		 });
+	
 </script>
