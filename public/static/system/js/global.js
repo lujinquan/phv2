@@ -750,6 +750,29 @@ function toFixed(num, s) {
     return des + '';
 }
 
+function formSubmit(type,url,data,index){
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+                success: function(res) {
+                    console.log(res);
+                    var that = $('.layui-layer-btn0');
+                    that.text(res.msg);
+                    if (res.code == 0) { 
+                        setTimeout(function(){
+                            that.removeClass('disabled').text('确认');
+                        }, 2000);
+                    } else {
+                        setTimeout(function(){
+                            parent.location.href = res.url;
+                        }, 2000);
+                    }
+                }
+            });
+            return false;
+        }
+
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
      		url: 'data-original',

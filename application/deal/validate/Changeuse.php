@@ -32,12 +32,15 @@ class Changeuse extends Validate
         'new_tenant_name|新租户姓名' => 'require',
         'new_tenant_card|新租户身份证号' => 'require',
         'change_use_type|变更类型' => 'require',      
+        'transfer_rent|转让金额' => 'float',      
     ];
 
     //定义验证提示
     protected $message = [
         'id.require' => '异动单号未知错误！',
+        
         'new_tenant_id.different' => '新租户不能与原租户相同！',
+        'transfer_rent.float' => '转让金额格式不正确！',
     ];
 
     // 判断当前房屋是否可以申请使用权变更
@@ -58,13 +61,13 @@ class Changeuse extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['house_id','old_tenant_id','old_tenant_name','old_tenant_card','new_tenant_id','new_tenant_name','new_tenant_card','change_use_type']);
+        return $this->only(['house_id','old_tenant_id','old_tenant_name','old_tenant_card','new_tenant_id','new_tenant_name','new_tenant_card','change_use_type','transfer_rent']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['new_tenant_id','new_tenant_name','new_tenant_card','change_use_type']);
+        return $this->only(['new_tenant_id','new_tenant_name','new_tenant_card','change_use_type','transfer_rent']);
     }
 
     

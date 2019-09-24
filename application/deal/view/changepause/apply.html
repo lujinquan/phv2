@@ -46,12 +46,6 @@
 				<input type="number" name="change_pause_rent" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		<!-- <div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>使用性质</label>
-			<div class="j-input-inline">
-				<input type="text" name="suspend_nature" value="" placeholder="请输入使用性质" lay-verify="required" autocomplete="off" class="layui-input">
-			</div>
-		</div> -->
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
@@ -61,7 +55,6 @@
 			</div>
 		</div>
 	</div>
-
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>房屋明细</legend>
 	</fieldset>
@@ -81,7 +74,8 @@
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
   </div>

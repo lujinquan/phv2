@@ -51,13 +51,18 @@
 	<script type="text/html" id="toolbar">
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	  {{#  if (d.change_status == 3) { }}
-		<!-- <a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">删除</a> -->
+	  	{{#  if (d.change_status == 2) { }}
+		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+		{{# if (d.is_back == 0){ }}
 		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 		{{#  } else { }}
-		<!-- <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary">删除</a> -->
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{{# } }}
+		{{#  } else { }}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{#  } }}
-      <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
 <script type="text/javascript">
@@ -68,8 +73,6 @@
 		var params = JSON.parse(s);
 		var table = layui.table
 		   ,laydate = layui.laydate;
-		
-		//日期
 		  laydate.render({
 		    elem: '#date'
 		  });
@@ -87,12 +90,6 @@
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [[ 
-				  //表头
-					/* {
-						field: '', align:'center',width:60, title: '#', templet:function(d){
-						     return d.LAY_INDEX ;
-						}
-					}, */
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
 						templet: function(d) {
@@ -113,9 +110,6 @@
 					}, 
 					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
-			done: function(res, curr, count) {
-
-			}
 		},isShowInst)
 	});
 </script>

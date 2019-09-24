@@ -199,8 +199,9 @@
 		<input type="hidden" name="id" value="{$data_info['id']}">
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
-				<a href="javascript:;" class="layui-btn layui-btn-primary" id="handover">不通过</a>
+				<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+				<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
 			</div>
 		</div>
   </div>
@@ -227,11 +228,34 @@
 	    		scrollbar: false,
 	    		area: ['400px','400px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='试一下哟'></div>",
+	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='不通过原因'></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
 					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=13';
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','400px'],
+	    		offset: 'auto',
+	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=13';
 					if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);

@@ -24,11 +24,12 @@ class Changepause extends Validate
     //定义验证规则
     protected $rule = [	
         'ban_id|楼栋编号' => 'require',     
+        'house_id|房屋编号' => 'require',     
     ];
 
     //定义验证提示
     protected $message = [
-        // 'username.require' => '请输入账户名称',
+        'house_id.require' => '房屋信息不能为空！',
         // 'role_id.require'  => '请选择角色分组',
     ];
 
@@ -37,13 +38,13 @@ class Changepause extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['ban_id']);
+        return $this->only(['ban_id','house_id']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['post']);
+        return $this->only(['ban_id','house_id']);
     }
 
     

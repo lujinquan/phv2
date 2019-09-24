@@ -4,6 +4,8 @@ namespace app\deal\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangePause as ChangePauseModel;
 
@@ -39,7 +41,7 @@ class Changepause extends Admin
     	if ($this->request->isAjax()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Changepause.sceneForm');
+            $result = $this->validate($data, 'Changepause.form');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -49,20 +51,75 @@ class Changepause extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+//halt($filData);
             // 入库
             $pauseRow = $ChangePauseModel->allowField(true)->create($filData);
             if (!$pauseRow) {
                 return $this->error('申请失败');
             }
-
-            // 入库审批表
-            $ProcessModel = new ProcessModel;
-            $filData['change_id'] = $pauseRow['id'];
-            if (!$ProcessModel->allowField(true)->create($filData)) {
-                return $this->error('未知错误');
+            if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $filData['change_id'] = $pauseRow['id'];
+                if (!$ProcessModel->allowField(true)->create($filData)) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }else{
+                $msg = '保存成功';
             }
-            return $this->success('申请成功',url('index'));
+            return $this->success($msg,url('index'));
         }
+        return $this->fetch();
+    }
+
+    public function edit()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'Changepause.edit');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $ChangePauseModel = new ChangePauseModel;
+            // 数据过滤
+            $filData = $ChangePauseModel->dataFilter($data);
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            // 入库使用权变更表
+            $row = $ChangePauseModel->allowField(true)->update($filData);
+            if (!$row) {
+                return $this->error('申请失败');
+            }
+            //halt($useRow);
+            if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $filData['change_id'] = $row['id'];
+                if (!$ProcessModel->allowField(true)->create($filData)) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $process = $ProcessModel->where([['change_type','eq',3],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                if (!$process) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }else{
+                $msg = '保存成功';
+            }
+            return $this->success($msg,url('index'));
+        }
+        $id = $this->request->param('id');
+        $ChangePauseModel = new ChangePauseModel;
+        $row = $ChangePauseModel->detail($id);
+        $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
+        $this->assign('data_info',$row);
         return $this->fetch();
     }
 
@@ -71,6 +128,7 @@ class Changepause extends Admin
         $id = $this->request->param('id');
         $ChangePauseModel = new ChangePauseModel;
         $row = $ChangePauseModel->detail($id);
+        $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

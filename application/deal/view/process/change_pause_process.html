@@ -96,6 +96,20 @@
 				</div>
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
+			<div class="j-enclosure-imgs clearfix">
+	   				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
+	   					{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'ChangePauseUpload'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+	   				</div>
+	   			</div>
 			{/if}
 			<div class="j-enclosure-imgs clearfix">
 				<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
@@ -131,7 +145,7 @@
 				</li>
 				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
 					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-					<p>经租所长</p>
+					<p>经管所长</p>
 				</li>
 				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
 					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
@@ -150,8 +164,9 @@
    	<input type="hidden" name="id" value="{$data_info['id']}">
   	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
-			<a href="javascript:;" class="layui-btn layui-btn-primary" id="handover">不通过</a>
+			<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+			<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
 		</div>
 	</div>
   </div>
@@ -191,28 +206,30 @@
 			});
 	    })
 
-	    function formSubmit(type,url,data,index){
-	    	$.ajax({
-	    		type: type,
-	    		url: url,
-	    		data: data,
-	    		success: function(res) {
-	    			console.log(res);
-	    			var that = $('.layui-layer-btn0');
-					that.text(res.msg);
-	                if (res.code == 0) { 
-	                    setTimeout(function(){
-	                        that.removeClass('disabled').text('确认');
-	                    }, 2000);
-	                } else {
-                        setTimeout(function(){
-	                        parent.location.href = res.url;
-	                    }, 2000);
-	                }
-	    		}
-	    	});
-	    	return false;
-	    }
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','400px'],
+	    		offset: 'auto',
+	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+
 
         //资料上传
         upload.render({

@@ -109,6 +109,7 @@
 				<label class="j-form-label"><i class="red">*</i> 变更类型</label>
 				<div class="j-input-inline">
 					<select name="change_use_type" class="field-cid" type="select">
+						<option value="">请选择</option>
 					    {volist name="params['usetypes']" id="v"}
 					    <option value="{$key}">{$v}</option>
 					    {/volist}
