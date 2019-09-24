@@ -8,8 +8,9 @@
 			<div class="layui-col-md12">
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<input type="hidden" id="house_id" name="house_id">
+					<input type="hidden" id="tenant_id" name="tenant_id">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>别字更正后，原租约自动失效！</div>
@@ -27,7 +28,6 @@
 								<label class="j-form-label"><i class="red">*</i> 租户ID</label>
 								<div class="j-input-inline">
 									<input type="text" id="old_tenant_number" value="" readonly placeholder="" autocomplete="off" class="layui-input">
-									<input type="hidden" id="old_tenant_id" name="old_tenant_id">
 								</div>
 							</div>
 						</div>
@@ -43,14 +43,14 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 身份证号</label>
 								<div class="j-input-inline">
-									<input type="text" id="old_tenant_card" name="old_tenant_card" readonly value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="old_tenant_card" readonly value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-boxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="javascript:;">
+									<a href="{:url('house/tenant/index')}" id="old_tenant_info" target="_blank">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -69,8 +69,7 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户ID</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_number" name="new_tenant_number" value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
-									<input type="hidden" id="new_tenant_id" name="new_tenant_id">
+									<input type="text" id="new_tenant_number" value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
 								</div>
 							</div>
 						</div>
@@ -86,14 +85,14 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 身份证号</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_card" name="new_tenant_card" readonly value=""  lay-verify="require|verifynewid" placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="new_tenant_card" readonly value=""  lay-verify="require|verifynewid" placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="javascript:;">
+									<a href="{:url('house/tenant/index')}" id="old_tenant_info" target="_blank">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -185,8 +184,8 @@
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-				<a href="javascript:;" class="layui-btn">保存</a>
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+				<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+				<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 			</div>
 		</div>
   </div>
@@ -197,10 +196,10 @@
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	/*上传参数设定*/
-	var upurl = "{:url('system/Api/upload')}?input=UseChangeApproval&group=change&water=no"; //审批表
-	var upurl1 = "{:url('system/Api/upload')}?input=Uselease&group=change&water=no"; //租约
-	var upurl2 = "{:url('system/Api/upload')}?input=UseIdcards&group=change&water=no"; //身份证信息
-	var upurl3 = "{:url('system/Api/upload')}?input=UsePresentation&group=change&water=no"; //申请报告
+	var upurl = "{:url('system/Api/upload')}?input=NameChangeApproval&group=change&water=no"; //审批表
+	var upurl1 = "{:url('system/Api/upload')}?input=HouseApplicationForm&group=change&water=no"; //租约
+	var upurl2 = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证信息
+	var upurl3 = "{:url('system/Api/upload')}?input=NameChangeApplication&group=change&water=no"; //申请报告
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
 			var table = layui.table
@@ -222,11 +221,11 @@
 			,btn: ['确定','关闭']
 			,yes: function(index, layero){
 				var row = window["layui-layer-iframe" + index].hoesedata();
-				console.log(row);
+				//console.log(row);
 				layer.close(index);
 				$("#house_id").val(row.house_id);//获取楼栋id
 				$("#house_number").val(row.house_number);//获取楼栋编号
-				$("#old_tenant_id").val(row.tenant_id);//获取租户id
+				$("#tenant_id").val(row.tenant_id);//获取租户id
 				$("#old_tenant_number,#new_tenant_number").val(row.tenant_number);//当前租户编号
 				$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
 				$("#old_tenant_card,#new_tenant_card").val(row.tenant_card);//当前租户身份证号
@@ -241,7 +240,7 @@
 		  	url: upurl2,
 		  	size: 1024,
 		  	multiple: duotu,
-		  	field: 'UseIdcards',
+		  	field: 'TenantReIDCard',
 		  	before: function(obj) {
 		  		layer.msg('图片上传中...', {
 		  			icon: 16,
@@ -270,7 +269,7 @@
 		  	url: upurl,
 		  	size: 1024,
 		  	multiple: duotu,
-		  	field: 'UseChangeApproval',
+		  	field: 'NameChangeApproval',
 		  	before: function(obj) {
 		  		layer.msg('图片上传中...', {
 		  			icon: 16,
@@ -299,7 +298,7 @@
 		  	url: upurl1,
 		  	size: 1024,
 		  	multiple: duotu,
-		  	field: 'Uselease',
+		  	field: 'HouseApplicationForm',
 		  	before: function(obj) {
 		  		layer.msg('图片上传中...', {
 		  			icon: 16,
@@ -328,7 +327,7 @@
 		  	url: upurl3,
 		  	size: 1024,
 		  	multiple: duotu,
-		  	field: 'UsePresentation',
+		  	field: 'NameChangeApplication',
 		  	before: function(obj) {
 		  		layer.msg('图片上传中...', {
 		  			icon: 16,

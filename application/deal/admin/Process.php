@@ -14,6 +14,8 @@ use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
 use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
 /**
  * 审核
@@ -158,6 +160,18 @@ class Process extends Admin
                 $this->assign('data_info',$row);
                 return $this->fetch('change_ban_process');
                 break;
+            case '16': // 租金减免年审
+                $ChangeCutYearModel = new ChangeCutYearModel;
+                $row = $ChangeCutYearModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('change_cut_year_process');
+                break;
+            case '17': // 别字更正
+                $ChangeNameModel = new ChangeNameModel;
+                $row = $ChangeNameModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('change_name_process');
+                break;
             default:
                 # code...
                 break;
@@ -247,6 +261,18 @@ class Process extends Admin
                 $row = $ChangeBanModel->detail($id);
                 $this->assign('data_info',$row);
                 return $this->fetch('Changeuse/detail');
+                break;
+            case '16': // 租金减免年审
+                $ChangeCutYearModel = new ChangeCutYearModel;
+                $row = $ChangeNameModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('Changecutyear/detail');
+                break;
+            case '17': // 别字更正
+                $ChangeNameModel = new ChangeNameModel;
+                $row = $ChangeNameModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('Changename/detail');
                 break;
             default:
                 # code...

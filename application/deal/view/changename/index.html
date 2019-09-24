@@ -59,12 +59,17 @@
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		{{#  if (d.change_status == 3) { }}
+		{{#  if (d.change_status == 2) { }}
+		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+		{{# if (d.is_back == 0){ }}
 		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{{# } }}
+		{{#  } else { }}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{#  } }}
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">修改</a>
 		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
@@ -95,14 +100,9 @@
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [
-				[ 
-					//表头 
-					/* {field: 'change_id',minWidth: 60,align:'center',title: '#', templet:function(d){
-		                    return d.LAY_INDEX ;
-		                }
-					}, */
+				[  
 					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号'}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
@@ -114,7 +114,7 @@
 		                }
 					}, 
 					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '原姓名'}, 
-					{field: 'new_name',minWidth: 120,align:'center',title: '新姓名'}, 
+					{field: 'new_tenant_name',minWidth: 120,align:'center',title: '新姓名'}, 
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {

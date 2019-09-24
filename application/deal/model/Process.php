@@ -12,6 +12,8 @@ use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
 use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
 class Process extends SystemBase
 {
@@ -147,7 +149,15 @@ class Process extends SystemBase
                     $result = $ChangeBanModel->process($data);
 
                     break;
-                default:
+                case '16': // 租金减免年审
+                    $ChangeCutYearModel = new ChangeCutYearModel;
+                    $result = $ChangeCutYearModel->process($data);
+                    break;
+                case '17': // 别字更正
+                    $ChangeNameModel = new ChangeNameModel;
+                    $result = $ChangeNameModel->process($data);
+                    break;
+                    default:
                     # code...
                     break;
             }

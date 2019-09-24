@@ -129,7 +129,7 @@ class SystemAnnex extends Model
         }
         //halt(ini_get('upload_max_filesize'));
         $file = request()->file($input);
-
+//halt($file);
         $data = [];
         if (empty($file)) {
             return self::result('未找到上传的文件(文件大小可能超过php.ini默认2M限制)！', $from);

@@ -1,4 +1,4 @@
-<div class="j-table-content j-no-title">
+<div class="j-table-content j-no-tab">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
@@ -35,16 +35,6 @@
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="effective_time" id="date1"  placeholder="生效时间" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="ban_owner_id">
-						<option value="">状态</option>
-						<option value="1">成功</option>
-						<option value="2">失败</option>
-					</select>
-				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -64,12 +54,6 @@
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		{{#  if (d.change_status == 3) { }}
-		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
-		{{#  } else { }}
-		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
-		{{#  } }}
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">修改</a>
 		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
@@ -100,14 +84,9 @@
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [
-				[ 
-					//表头 
-					/* {field: 'change_id',minWidth: 60,align:'center',title: '#', templet:function(d){
-		                    return d.LAY_INDEX ;
-		                }
-					}, */
+				[  
 					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号'}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
@@ -118,9 +97,9 @@
 		                    return params.owners[d.ban_owner_id];
 		                }
 					}, 
-					{field: 'new_name',minWidth: 120,align:'center',title: '新姓名'}, 
+					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '原姓名'}, 
+					{field: 'new_tenant_name',minWidth: 120,align:'center',title: '新姓名'}, 
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
-					{field: 'effective_time',align:'center',minWidth: 160,title: '生效时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
