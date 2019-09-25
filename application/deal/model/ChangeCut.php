@@ -169,7 +169,7 @@ class ChangeCut extends SystemBase
         $processDescs = $this->processDesc;
 
         $changeUpdateData = $processUpdateData = [];
-
+//halt($data);
         /*  如果是打回  */
         if(isset($data['back_reason'])){
             $changeUpdateData['change_status'] = 2;
@@ -191,6 +191,15 @@ class ChangeCut extends SystemBase
         }else{
             /* 如果审批通过，且非终审：更新子表的child_json、change_status，更新审批表change_desc、curr_role */
             if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+
+                //如果是第二步经租会计（则可以修改附件）
+                if($changeRow['change_status'] == 3){ 
+                    if(isset($data['file']) && $data['file']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    }
+                }
+
+
                 $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
@@ -202,7 +211,7 @@ class ChangeCut extends SystemBase
                 ];
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
@@ -220,10 +229,12 @@ class ChangeCut extends SystemBase
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
+                //终审成功后的数据处理
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
-                //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -261,7 +272,7 @@ class ChangeCut extends SystemBase
     private function finalDeal($finalRow)
     {
         //halt($finalRow);
-        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         
     }
 

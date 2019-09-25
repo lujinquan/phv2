@@ -204,14 +204,6 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	/*上传参数设定*/
-	layui.use(['jquery','table','layer', 'upload','form'], function() {
-			var table = layui.table
-			    ,form = layui.form
-				,$ = layui.jquery
-				,upload = layui.upload
-				,layer = layui.layer; 
-	});
 	//图片查看
 	$('.j-viewer-img').viewer({
 	   	url: 'data-original',

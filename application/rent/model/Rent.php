@@ -52,6 +52,7 @@ class Rent extends Model
                 if(isset($data['tenant_name']) && $data['tenant_name']){
                     $where[] = ['tenant_name','like','%'.$data['tenant_name'].'%'];
                 }
+
                 // 检索【楼栋】地址
                 if(isset($data['ban_address']) && $data['ban_address']){
                     $where[] = ['ban_address','like','%'.$data['ban_address'].'%'];
@@ -77,6 +78,10 @@ class Rent extends Model
                 // 检索月【租金】订单编号
                 if(isset($data['rent_order_number']) && $data['rent_order_number']){
                     $where[] = ['rent_order_number','like','%'.$data['rent_order_number'].'%'];
+                }
+                // 检索【房屋】编号
+                if(isset($data['house_number']) && $data['house_number']){
+                    $where[] = ['house_number','like','%'.$data['house_number'].'%'];
                 }
                 // 检索【租户】姓名
                 if(isset($data['tenant_name']) && $data['tenant_name']){

@@ -11,7 +11,7 @@
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
@@ -32,10 +32,7 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="original_name"   placeholder="租户姓名" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="write_money"   placeholder="核销金额" autocomplete="off" class="layui-input">
+					<input type="text" name="tenant_name"   placeholder="租户姓名" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
@@ -66,12 +63,17 @@
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		{{#  if (d.change_status == 3) { }}
+		{{#  if (d.change_status == 2) { }}
+		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+		{{# if (d.is_back == 0){ }}
 		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{{# } }}
+		{{#  } else { }}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{#  } }}
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">修改</a>
 		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
@@ -104,32 +106,29 @@
 			  }
 			  ,cols: [
 				[ 
-					//表头 
-					/* {field: 'change_id',minWidth: 60,align:'center',title: '#', templet:function(d){
-		                    return d.LAY_INDEX ;
-		                }
-					}, */
-					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'house_number',width: 140,align:'center',title: '房屋编号', totalRowText: '合计'}, 
+					{field: 'ban_address',width: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
 					    }
 					},
-					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', 
+					{field: 'ban_owner_id',width: 80,align:'center',title: '产别', 
 						templet: function(d) {
 		                    return params.owners[d.ban_owner_id];
 		                }
 					}, 
-					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '租户姓名'},  
-					{field: 'write_amount',minWidth: 120,align:'center',title: '核销金额', totalRow: true},  
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
-					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
+					{field: 'tenant_name',width: 120,align:'center',title: '租户姓名'},  
+					{field: 'before_year_rent',width: 140,align:'center',title: '核销以前年金额', totalRow: true},  
+					{field: 'before_month_rent',width: 140,align:'center',title: '核销以前月金额', totalRow: true},  
+					{field: 'this_month_rent',width: 120,align:'center',title: '核销当月金额', totalRow: true},  
+					{field: 'ctime',align:'center',width: 160,title: '申请时间'},
+					{field: 'change_status',align:'center',width: 160,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',width:180,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
 

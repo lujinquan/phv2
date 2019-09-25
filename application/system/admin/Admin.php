@@ -22,6 +22,7 @@ use app\common\model\Cparam as ParamModel;
 use app\order\model\OpOrder as OpOrderModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\House as HouseModel;
+use app\rent\model\Rent as RentModel;
 use app\house\model\Ban as BanModel;
 use think\Db;
 
@@ -772,6 +773,12 @@ class Admin extends Common
                     
                     if($changeType){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
                         switch ($changeType) {
+                            case 4: //陈欠核销 【待优化】
+                                $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
+                                //halt($houseids);
+                                $where['house'][] = ['house_id','in',$houseids];
+                                $where['house'][] = ['house_status','eq',1];
+                                break;
                             case 13: //使用权变更
                                 $where['house'][] = ['house_status','eq',1];
                                 break;

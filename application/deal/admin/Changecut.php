@@ -162,7 +162,7 @@ class Changecut extends Admin
         $ChangeCutModel = new ChangeCutModel;
         $row = $ChangeCutModel->detail($id);
         $this->assign('data_info',$row);
-        return $this->fetch('apply_'.$group);
+        return $this->fetch('detail_'.$group);
     }
 
     public function record()
@@ -173,7 +173,7 @@ class Changecut extends Admin
             $getData = $this->request->get();
             if($group = 'x'){
                 $ChangeCutModel = new ChangeCutModel;
-                $where = $ChangeCutModel->checkWhere($getData,'apply');
+                $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
                 $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
                 $data = [];

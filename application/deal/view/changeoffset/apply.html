@@ -9,12 +9,18 @@
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline j-tips">
 				<input type="text" id="house_number" name="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
-				<input type="hidden" name="ban_id" value="">
-				<input type="hidden" name="house_id" value="">
+				<input type="hidden" id="ban_id" name="ban_id" value="">
+				<input type="hidden" id="house_id" name="house_id" value="">
+				<input type="hidden" id="tenant_id" name="tenant_id" value="">
+				<input type="hidden" id="rent_order_date" name="rent_order_date" value="">
+				<input type="hidden" id="before_year_copy" name="before_year_rent" value="">
+				<input type="hidden" id="before_month_copy" name="before_month_rent" value="">
+				<input type="hidden" id="this_month_copy" name="this_month_rent" value="">
 				<b class="j-explain-search j-house_number">查询</b>
 			</div>
 			<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>可以核销当月订单</div>
 		</div>
+
 	</div>
 		<table  class="layui-table">
 		  <thead>
@@ -123,9 +129,9 @@
     </div>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-			<a href="javascript:;" class="layui-btn">保存</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
   </div>
@@ -135,9 +141,9 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl = "{:url('system/Api/upload')}?input=Idnumber&group=change&water=no"; //身份证信息
-	var upurl1 = "{:url('system/Api/upload')}?input=lease&group=change&water=no"; //租约
-	var upurl2 = "{:url('system/Api/upload')}?input=Presentation&group=change&water=no"; //报告
+	var upurl = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证信息
+	var upurl1 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //租约
+	var upurl2 = "{:url('system/Api/upload')}?input=ChangeOffsetUpload&group=change&water=no"; //报告
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		var table = layui.table
@@ -154,12 +160,17 @@
 					,area: ['70%', '60%']
 					, btn:false
 					,pageTabs: false
-					,content: '{:url('system/index/house')}'
+					,content: '{:url('system/index/house')}?change_type=4'
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].hoesedata();
-						console.log(row);
+						//console.log(row);
 						layer.close(index);
+						var hosue_number = row.house_number;
+						$("#house_number").val(row.house_number);//获取房屋编号
+						$("#house_id").val(row.house_id);//获取房屋id
+						$("#ban_id").val(row.ban_id);//获取楼栋id
+						$("#tenant_id").val(row.tenant_id);//获取租户id
 						$("#house_number").val(row.house_number);//获取房屋编号
 						$("#house_numbers").text(row.house_number);//获取房屋编号
 						$("#building_address").text(row.ban_address);//获取楼栋地址
@@ -173,9 +184,9 @@
 						    //,height: 550
 							,toolbar: '#toolbar'
 							,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
-						    ,url: '{:url("rent/Unpaid/index")}'
+						    ,url: '{:url("rent/Unpaid/index")}?house_number='+row.house_number
 						    ,page: false 
-						    ,limit: 100000000
+						    ,limit: 100
 						    ,text: {
 						        none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 						    }
@@ -201,7 +212,7 @@
 						    ,done:function(res,curr,count){
 						       
 						    }
-						},isShowInst)
+						},isShowInst,house_number)
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
@@ -220,9 +231,9 @@
 				    months = ("0" + (myDate.getMonth() + 1)).slice(-2),//获取当前月
 					jdates = years+''+months;
 			    // console.log(jdates);
-                //console.log(data.length);
+                //console.log(data);
                 //console.log(obj.data.rent_order_receive);
-				console.log(previousmonths3 );
+				//console.log(previousmonths3 );
 				if(data.length<=0)
 				{
 					$("#before_year").text(0);
@@ -231,6 +242,7 @@
 					$("#total_sum").text(0);
 					
 				}
+				var rent_order_date = '';
 				for(var i=0;i<data.length;i++) {
 					//判断本月
 					if(data[i].rent_order_date==jdates){
@@ -247,12 +259,21 @@
 						previousmonths += parseFloat(data[i].rent_order_receive) * 100;
 						$("#before_year").text(previousmonths.toFixed(2) / 100);
 					}
-	
+
+					rent_order_date += ',' + data[i].rent_order_date;
+
 				}
+				rent_order_date = rent_order_date.replace(/^(\s|,)+|(\s|,)+$/g, '');
+				$("input[name='rent_order_date']").val(rent_order_date); //获取被选中的订单
 				//总额
 				var  before_year =  parseFloat($("#before_year").text()).toFixed(2)*100,
 				     before_month = parseFloat($("#before_month").text()).toFixed(2)*100,
 					 this_month = parseFloat($("#this_month").text()).toFixed(2)*100;
+
+					 $("#before_year_copy").val(before_year);
+				     $("#before_month_copy").val(before_month);
+					 $("#this_month_copy").val(this_month);
+
 				previousmonths3 = before_year+before_month+this_month;
 				$("#total_sum").text(previousmonths3.toFixed(2) / 100);
           });
@@ -262,7 +283,7 @@
 			url: upurl,
 			size: 1024,
 			multiple: duotu,
-			field: 'Idnumber',
+			field: 'TenantReIDCard',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -291,7 +312,7 @@
 			url: upurl1,
 			size: 1024,
 			multiple: duotu,
-			field: 'lease',
+			field: 'HouseForm',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -320,7 +341,7 @@
 			url: upurl2,
 			size: 1024,
 			multiple: duotu,
-			field: 'Presentation',
+			field: 'ChangeOffsetUpload',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
