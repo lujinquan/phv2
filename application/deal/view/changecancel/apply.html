@@ -63,7 +63,7 @@
 	    	  <td class="cancel_before_2" id="floor_areaofuse"></td>
 	    	  <td class="cancel_before_3" id="floor_builtuparea"></td>
 	    	  <td class="cancel_before_4" id="floor_original"></td>
-			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
+			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
 		    </tr>
 			<tr>
 			  <td></td>
@@ -191,8 +191,9 @@
 
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
   </div>
