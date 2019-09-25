@@ -1,0 +1,380 @@
+<!-- 租金减免审核 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-tips-red"><i class="layui-icon layui-icon-tips"></i>申请租金减免时，请确认租户信息完整且房屋无欠租。</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">房屋编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['house_number']}" placeholder=""   readonly autocomplete="off" class="layui-input j-rent-list">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$params['owners'][$data_info['ban_info']['ban_owner_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['ban_info']['ban_number']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['ban_info']['ban_address']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$params['uses'][$data_info['house_use_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">月租金</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['house_pre_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_name']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_card']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">电话</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_tel']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免类型</label>
+  		<div class="j-input-inline">
+			<input type="text" value="{$params.cuttypes[$data_info['cut_type']]}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" value="{$data_info['cut_rent']}" readonly placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" value="{$data_info['cut_rent_number']}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>资料上传</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">身份证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'TenantReIDCard'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">户口本</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Residence'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租约</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'HouseForm'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">低保证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Lowassurance'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租房保障申请表</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Housingsecurity'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		{if condition="$data_info['change_status'] == 3"}
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">会审单</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list2" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'ChangeCutForm'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+		{/if}
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+	 <legend>审批状态</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  		   <div class="j-status-bar">
+  				<ul>
+  					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+  				</ul>
+  			</div>
+  			<div class="j-status-result">
+  				<ul>
+  					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
+  				</ul>
+  			</div>
+  	</div>
+  	<input type="hidden" name="id" value="{$data_info['id']}">	
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+			<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+		</div>
+	</div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	var upurl1 = "{:url('system/Api/upload')}?input=ChangeCutForm&group=change&water=no"; //会审单
+	var duotu = true; //是否为多图上传true false
+	console.log(params);
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		
+		 $(".layui-form").on('click','.j-not-pass',function(){
+			layer.open({
+						title: '房屋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '60%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/house')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							layer.close(index);
+		
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})
+
+		 //审批不通过
+	    $("#handover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['审批不通过原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
+					if($('#change_reason').val()==''){
+						layer.tips('原因不能为空！', '#change_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
+					if($('#back_reason').val()==''){
+						layer.tips('原因不能为空！', '#back_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+		
+		//会审单
+		upload.render({
+			elem: '#upload_img2',
+			url: upurl1,
+			size: 1024,
+			multiple: duotu,
+			field: 'ChangeCutForm',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+</script>
