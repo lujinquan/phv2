@@ -1,1 +1,167 @@
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline j-tips">
+				<input type="text" id="house_number" name="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="hidden" name="ban_id" value="">
+				<input type="hidden" name="house_id" value="">
+				<b class="j-explain-search j-house_number">查询</b>
+			</div>
+		</div>
+	</div>
+		<table  class="layui-table">
+		  <thead>
+			  <tr>
+			    <th>房屋编号</th>
+			    <th>楼栋地址</th>
+			    <th>机构</th>
+			    <th>产别</th>
+			    <th>使用性质</th>
+			    <th>租户姓名</th>
+			    <th>规定租金</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		  	  <td id="house_numbers">&nbsp;</td>
+			  <td id="building_address">&nbsp;</td>
+			  <td id="mechanism">&nbsp;</td>
+	    	  <td id="yield_differentiation">&nbsp;</td>
+	    	  <td id="nature_usage">&nbsp;</td>
+	    	  <td id="tenant_name">&nbsp;</td>
+			  <td id="prescribed_rent">&nbsp;</td>
+		    </tr>
+		  </tbody>
+		</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>核销类型</th>
+		    <th>以前年</th>
+		    <th>以前月</th>
+		  </tr>
+	  </thead>
+	 <tbody>
+	   <tr>
+	 	  <td id="write_type">金额</td>
+		  <td id="before_year"><input type="number" name="before_year_money" lay-verify="required" value=""  placeholder="请输入以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input type="number" name="before_month_money" lay-verify="required" value="" placeholder="请输入以前月金额" class="layui-input"></td>
+	   </tr>
+	 </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>填报信息</legend>
+	</fieldset>
+    <div class="layui-row layui-form-item layui-col-space90">
+    	<div class="layui-col-md12">
+    		<div class="j-enclosure-upload clearfix">
+    			<div class="j-enclosure-label">票据</div>
+    			<div class="j-enclosure-label j-uplode-icon">
+    				<i><img src="/static/system/image/Group8.png"></i>点击上传
+    				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+    			</div>
+    			<div class="layui-form-mid layui-word-aux">限制1M</div>
+    		</div>
+    		<div class="j-enclosure-imgs clearfix">
+    			<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
+    		</div>
+    	</div>
+    	<div class="layui-upload">
+    	</div>
+    </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="javascript:;" class="layui-btn">保存</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	var upurl = "{:url('system/Api/upload')}?input=Bills&group=change&water=no"; //票据
+	var duotu = true; //是否为多图上传true false
+	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+		//获取房屋查询器
+		 $(".layui-form").on('click','.j-house_number',function(){
+			layer.open({
+					title: '房屋查询器'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('system/index/house')}'
+					,btn: ['确定','关闭']
+					,yes: function(index, layero){
+						var row = window["layui-layer-iframe" + index].hoesedata();
+						console.log(row);
+						layer.close(index);
+						$("#house_number").val(row.house_number);//获取房屋编号
+						$("#house_numbers").text(row.house_number);//获取房屋编号
+						$("#building_address").text(row.ban_address);//获取楼栋地址
+						$("#mechanism").text(params.insts[row.ban_inst_id]);//获取机构
+						$("#yield_differentiation").text(params.owners[row.ban_owner_id]);//获取产别
+						$("#nature_usage").text(params.uses[row.house_use_id]);//获取使用性质
+						$("#tenant_name").text(row.tenant_name);//获取租户姓名
+						$("#prescribed_rent").text(row.house_pre_rent);//获取规定租金
+
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
+			 });
+		})	
+		//身份证信息
+		upload.render({
+			elem: '#upload_img1',
+			url: upurl,
+			size: 1024,
+			multiple: duotu,
+			field: 'Bills',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+</script>

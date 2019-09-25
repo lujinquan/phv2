@@ -1,1 +1,202 @@
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search j-ban_number">查询</b>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md8">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_address" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">发租类型</label>
+			<div class="j-input-inline">
+				<select name="reduction_class" class="field-cid">
+					<option value="0">请选择</option>
+					<option value="1">接管</option>
+					<option value="2">危改还建</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">单元号</label>
+			<div class="j-input-inline">
+				<input type="text" name="unit_number" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">层次</label>
+			<div class="j-input-inline">
+				<input type="text" name="arrangement" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">门牌号</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_numbers" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_idnumber" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_tel" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+    <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_class" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_nature" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">建筑面积</label>
+			<div class="j-input-inline">
+				<input type="text" name="builtup_area" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租面积</label>
+			<div class="j-input-inline">
+				<input type="text" name="rental_area" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">房屋原价</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_originalprice" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">规定租金</label>
+			<div class="j-input-inline">
+				<input type="text" name="prescribed_rent" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">月租金</label>
+			<div class="j-input-inline">
+				<input type="text" name="monthly_rent" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" name="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+			</div>
+		</div>
+	</div>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit="" lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit="" lay-filter="formSubmit">保存并提交</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	//console.log(params);
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		//获取房屋查询器
+		 $(".layui-form").on('click','.j-ban_number',function(){
+			layer.open({
+						title: '房屋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '60%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/house')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							var row = window["layui-layer-iframe" + index].hoesedata();
+							console.log(row);
+							layer.close(index);
+							//楼栋信息
+								$("input[name='reduction_seach']").val(row.house_number);//获取房屋编号
+								$("input[name='reduction_address']").val(row.ban_address);//获取楼栋地址
+								$("input[name='unit_number']").val(row.house_unit_id);//获取单元号
+								$("input[name='arrangement']").val(row.house_floor_id);//获取层次
+								$("input[name='house_numbers']").val(row.house_door);//获取门牌号
+								$("input[name='tenant']").val(row.tenant_name);//获取租户
+								$("input[name='reduction_idnumber']").val(row.tenant_card);//获取身份证号
+								$("input[name='reduction_tel']").val(row.tenant_tel);//获取电话
+								$("input[name='builtup_area']").val(row.house_area);//获取建筑面积
+								$("input[name='rental_area']").val(row.house_lease_area);//获取计租面积
+								$("input[name='house_originalprice']").val(row.house_oprice);//获取房屋原价
+								$("input[name='prescribed_rent']").val(row.house_pre_rent);//获取规定租金
+								$("input[name='reduction_class']").val(params.owners[row.ban_owner_id]);//获取产别
+								$("input[name='reduction_nature']").val(params.uses[row.house_use_id]);//获取楼栋使用性质
+								$("input[name='monthly_rent']").val(row.house_pre_rent);//获取月租金
+								
+
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})
+		//双击查询记租表
+		 $(".layui-form").on('click','.j-rent-list',function(){
+			 layer.open({
+			 			title: '记租表'
+			 			,type: 2
+			 			,offset: 'auto'
+			 			,area: ['70%', '60%']
+			 			, btn:false
+			 			,pageTabs: false
+			 			,content: '{:url('system/index/house')}'
+			 			,btn: ['确定','关闭']
+			 			,yes: function(index, layero){
+			 				layer.close(index);
+			 			},btn2: function(index, layero){
+			 				layer.close(index);
+			 			}
+			  });
+		 })
+        
+	});
+</script>

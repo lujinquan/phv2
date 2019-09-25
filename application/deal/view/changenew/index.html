@@ -1,1 +1,158 @@
-{include file="system@block/layui" /}
+<div class="j-table-content j-no-tab">
+	 <div class="layui-btn-container j-container-margin">
+	     <div class="layui-btn-container">       
+	         <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新发租申请</button></a>
+	     </div>
+	 </div>
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+				</div>
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="original_name"   placeholder="租户" autocomplete="off" class="layui-input">
+				</div>
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_inst_id">
+						<option value="">申请机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="prescribed_rent"   placeholder="规定租金" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="rental_area"   placeholder="计租面积" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="approval_status">
+						<option value="">状态</option>
+						<option value="1">审批状态1</option>
+						<option value="2">审批状态2</option>
+					</select>
+				</div>
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<script type="text/html" id="toolbar"></script>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+		{{#  if (d.change_status == 3) { }}
+		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+		{{#  } else { }}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{{#  } }}
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">修改</a>
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+    </script>
+</div>
+<script type="text/javascript">
+	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待经租会计初审','4':'待经管所长审批','5':'待经管科终审'};
+	layui.use(['table', 'jquery','laydate'], function() {
+		var $ = layui.$;
+		var s = $('#dataTable').attr('params');
+		var params = JSON.parse(s);
+		var table = layui.table
+		   ,laydate = layui.laydate;
+		
+		//日期
+		  laydate.render({
+		    elem: '#date'
+		  });
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			    ,url: '{:url()}' //数据接口
+				,page: true //开启分页
+				,limit: 10
+			   ,limits: [10,20,30,40,50,100,300,500,1000]
+			   ,totalRow: true
+			  ,text: {
+					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+			  }
+			  ,cols: [
+				[ 
+					//表头 
+					/* {field: 'change_id',minWidth: 60,align:'center',title: '#', templet:function(d){
+		                    return d.LAY_INDEX ;
+		                }
+					}, */
+					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
+					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
+						templet: function(d) {
+					        return params.owners[d.ban_owner_id];
+					    }
+					}, 
+					{field: 'house_use_id',minWidth: 80,align:'center',title: '使用性质',
+						templet: function(d) {
+							return params.uses[d.house_use_id];
+						}
+					},
+					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '租户'},  
+					{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构', 
+						templet: function(d) {
+							return params.structs[d.ban_struct_id];
+						}
+					},
+					{field: 'ban_damage_id', minWidth: 100, align:'center', title: '完损等级', 
+						templet: function(d) {
+							return params.damages[d.ban_damage_id];
+						}
+					},
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构',
+						templet: function(d) {
+					        return params.insts[d.ban_inst_id];
+					    }
+					},
+					{field: 'prescribed_rents',minWidth: 120,align:'center',title: '规定租金', totalRow: true},  
+					{field: 'original_prices',minWidth: 120,align:'center',title: '原价', totalRow: true},  
+					{field: 'builtup_areas',minWidth: 120,align:'center',title: '建筑面积', totalRow: true},  
+					{field: 'rental-areas',minWidth: 120,align:'center',title: '计租面积', totalRow: true}, 
+					{field: 'monthly_rents',minWidth: 120,align:'center',title: '月租金', totalRow: true}, 
+					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
+					{field: 'change_status',align:'center',minWidth: 160,title: '状态', 
+						templet: function(d) {
+		                    return process_config[d.change_status];
+		                }
+					}, 
+					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+				]],
+			done: function(res, curr, count) {
+
+			}
+		},isShowInst)
+	});
+</script>
