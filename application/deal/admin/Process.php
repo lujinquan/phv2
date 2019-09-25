@@ -193,7 +193,7 @@ class Process extends Admin
                 $ChangeCutModel = new ChangeCutModel;
                 $row = $ChangeCutModel->detail($id);
                 $this->assign('data_info',$row);
-                return $this->fetch('Changecut/detail');
+                return $this->fetch('Changecut/detail_x');
                 break;
             case '2': // 空租
                 # code...
