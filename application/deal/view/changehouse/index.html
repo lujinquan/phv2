@@ -1,1 +1,121 @@
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-boxs">
+	  <thead>
+		  <tr>
+		    <th>异动类别</th>
+		    <th>原管段</th>
+		    <th>新管段</th>
+		  </tr>
+	  </thead>
+	 <tbody>
+	   <tr>
+	 	  <td id="write_type">管段调整</td>
+		  <td id="before_year"><input type="number" name="before_year_money" lay-verify="required" value=""  placeholder="请输入以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input type="number" name="before_month_money" lay-verify="required" value="" placeholder="请输入以前月金额" class="layui-input"></td>
+	   </tr>
+	 </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动明细</legend>
+	</fieldset>
+    <a href="javascript:;"  class="layui-btn j-house_number"><i class="layui-icon layui-icon-add-1"></i>添加调整楼栋</a>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>房屋编号</th>
+		    <th>承租人</th>
+		    <th>房屋原价</th>
+		    <th>建筑面积</th>
+		    <th>规定租金</th>
+		    <th>计租面积</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+	    <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
+	 </tbody>
+	</table>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="javascript:;" class="layui-btn">保存</a>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+		//获取房屋查询器
+		 $(".layui-form").on('click','.j-house_number',function(){
+			layer.open({
+						title: '楼栋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '90%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/cancellation')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							var row = window["layui-layer-iframe" + index].callbackdata();
+							var rows = window["layui-layer-iframe" + index].callbackdatas();
+							var trData = '';
+							//console.log(row);
+							//console.log(rows);
+							layer.close(index);
+							$('.j-house-box tbody').html("");
+							$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+							$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
+							$("#ban_address").val(row.ban_address);//获取地址
+							//楼栋信息
+							$("#floor_number").text(row.ban_number);//获取表格楼栋编号
+							$("#floor_prescribed").text(row.ban_civil_rent);//获取表格规定租金
+							$("#floor_areaofuse").text(row.ban_use_area);//获取表格使用面积
+							$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
+							$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
+							$('.j-house-box tbody').html('');
+							$('#changes_floor_prescribed').text($('#floor_prescribed').text());//规定租金
+							$('#changes_floor_areaofuse').text($('#floor_areaofuse').text());//使用面积
+							$('#changes_floor_builtuparea').text($('#floor_builtuparea').text()); //建筑面积
+							$('#changes_floor_original').text($('#floor_original').text());//房屋原价
+							//房屋信息
+							if(rows){
+								var houseidData = '';
+								for(var i=0;i<rows.length;i++) {
+									houseidData += ','+rows[i].house_id;
+									var trData ='<tr>\
+												<td class="house_number">'+rows[i].house_number+'</td>\
+												<td class="house_lessee">'+rows[i].tenant_name+'</td>\
+												<td class="house_original">'+rows[i].house_oprice+'</td>\
+												<td class="house_builtuparea">'+rows[i].house_area+'</td>\
+												<td class="house_prescribed">'+rows[i].house_pre_rent+'</td>\
+												<td class="house_rentalarea">'+rows[i].house_lease_area+'</td>\
+											</tr>';
+								$('.j-house-box tbody').append(trData);
+							  }
+							  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
+								$("input[name='house_id']").val(houseidData);//获取房屋编号
+							}
+							if(	$('.j-house-box tbody').html()==''){
+								$(".j-house-box,.j-house-title").hide();
+							}
+							else{
+								$(".j-house-box,.j-house-title").show();
+							}
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})	
+	});
+</script>
