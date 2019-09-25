@@ -792,7 +792,7 @@ class Admin extends Common
 
                     $HouseModel = new HouseModel;
 
-                    $fields = 'house_id,house_balance,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+                    $fields = 'house_id,house_balance,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area,(house_pre_rent + house_diff_rent + house_pump_rent) as house_yue_rent';
 
                     $data = [];
                     //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）

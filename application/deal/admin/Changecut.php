@@ -165,6 +165,24 @@ class Changecut extends Admin
         return $this->fetch('detail_'.$group);
     }
 
+    /**
+     * 取消减免
+     * @return [type] [description]
+     */
+    public function calloff()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            //halt($data);
+        }
+        $id = $this->request->param('id');
+        $ChangeCutModel = new ChangeCutModel;
+        $row = $ChangeCutModel->detail($id);
+        $this->assign('data_info',$row);
+        //halt($row);
+        return $this->fetch('callof');
+    }
+
     public function record()
     {
     	if ($this->request->isAjax()) {
@@ -211,17 +229,16 @@ class Changecut extends Admin
     public function del()
     {
         $id = $this->request->param('id');       
-
         $row = ChangeCutModel::get($id);
-        if($row['change_status'] != 3){
-            $this->error('已被审批，无法删除！');
-        }
-        
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
         }else{
-            $this->error('删除失败');
+            $this->error('已被审批，无法删除！');
         }
     }
 }

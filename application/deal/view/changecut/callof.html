@@ -8,19 +8,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_address" value="解放路486" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" value="{$data_info['ban_info']['ban_address']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">租户</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_tenant" value="张三" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" value="{$data_info['tenant_name']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">减免类型</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_class" value="低保户" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" value="{$params.cuttypes[$data_info['cut_type']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -28,21 +28,27 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">减免金额</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_money" value="60.00" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" value="{$data_info['cut_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">减免到期</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_date" value="2019-10-01" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" name="reduction_date" value="" placeholder=""   readonly autocomplete="off" class="layui-input" required>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">减免证件号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['cut_rent_number']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
-			<label class="j-form-label">取消原因</label>
+			<label class="j-form-label"><i class="red">*</i>取消原因</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_reason" value="" placeholder="请填写原因" autocomplete="off" class="layui-input">
+				<input type="text" name="calloff_remark" value="" placeholder="请填写原因" autocomplete="off" class="layui-input" required>
 			</div>
 		</div>
 	</div>
@@ -66,9 +72,10 @@
   	<div class="layui-upload">
   	</div>
   </div>
+  <input type="hidden" name="id" value="{$data_info['id']}">
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 		</div>
 	</div>
@@ -77,9 +84,8 @@
 {include file="system@block/layui" /}
 <script type="text/javascript">
 	/*上传参数设定*/
-	var upurl = "{:url('system/Api/upload')}?input=Presentation&group=change&water=no"; //取消报告
+	var upurl = "{:url('system/Api/upload')}?input=CalloffForm&group=change&water=no"; //取消报告
 	var duotu = true; //是否为多图上传true false
-	console.log(params);
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,
 			$ = layui.$,
@@ -92,7 +98,7 @@
         	url: upurl,
         	size: 1024,
         	multiple: duotu,
-        	field: 'Presentation',
+        	field: 'CalloffForm',
         	before: function(obj) {
         		layer.msg('图片上传中...', {
         			icon: 16,

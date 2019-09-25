@@ -156,18 +156,31 @@ class Changepause extends Admin
 
     public function del()
     {
-        $id = $this->request->param('id');       
+        // $id = $this->request->param('id');       
 
-        $row = ChangePauseModel::get($id);
-        if($row['change_status'] != 3){
-            $this->error('已被审批，无法删除！');
-        }
+        // $row = ChangePauseModel::get($id);
+        // if($row['change_status'] != 3){
+        //     $this->error('已被审批，无法删除！');
+        // }
         
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
+        // if($row->delete()){
+        //     ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+        //     $this->success('删除成功');
+        // }else{
+        //     $this->error('删除失败');
+        // }
+
+        $id = $this->request->param('id');       
+        $row = ChangePauseModel::get($id);
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
         }else{
-            $this->error('删除失败');
+            $this->error('已被审批，无法删除！');
         }
     }
 

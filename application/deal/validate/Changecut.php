@@ -32,8 +32,7 @@ class Changecut extends Validate
 
     //定义验证提示
     protected $message = [
-        'id.require' => '异动单号未知错误！',
-        
+        'id.require' => '异动单号未知错误！',    
         'new_tenant_id.different' => '新租户不能与原租户相同！',
         'transfer_rent.float' => '转让金额格式不正确！',
     ];
@@ -41,14 +40,18 @@ class Changecut extends Validate
     // 判断当前房屋是否可以申请使用权变更
     protected function isAllow($value, $rule='', $data)
   	{
+        //halt($data);
         $msg = '';
-        $houseStatus = HouseModel::where([['house_id','eq',$value]])->value('house_status');
-        if($houseStatus != 1){
+        $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,(house_pre_rent+house_diff_rent+house_pump_rent) as house_yue_rent')->find();
+        if($find['house_status'] != 1){
             $msg = '房屋状态异常！';
         }
   		$row = ChangeUseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
+        }
+        if($find['house_yue_rent'] < $data['cut_rent']){
+            $msg = '减免金额不能大于月租金！';
         }
       	return $msg?$msg:true;
   	}
