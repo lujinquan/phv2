@@ -123,7 +123,33 @@ class ChangeCancel extends SystemBase
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 8; //使用权变更
         $data['change_order_number'] = date('Ym').'08'.random(14);
-        //$banRow = BanModel::get($data['ban_id']);
+        
+        $banRow = BanModel::get($data['ban_id']);
+        // $data['change_json'] = [
+        //     'before' => [
+        //         'ban_total_rent' => bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]),
+        //         'ban_total_use_area' => $banRow['ban_use_area'],
+        //         'ban_total_area' => bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]),
+        //         'ban_total_oprice' => bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]),
+        //     ],
+        //     'change' => [
+        //         'ban_total_rent' => $data['cancel_rent'],
+        //         'ban_total_use_area' => $data['cancel_use_area'],
+        //         'ban_total_area' => $data['cancel_area'],
+        //         'ban_total_oprice' => $data['cancel_oprice'],
+        //     ]
+        // ];
+
+        $data['change_json']['before']['ban_total_rent'] = bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]);
+        $data['change_json']['before']['ban_total_use_area'] = $banRow['ban_use_area'];
+        $data['change_json']['before']['ban_total_area'] = bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]);
+        $data['change_json']['before']['ban_total_oprice'] = bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]);
+
+        $data['change_json']['after']['ban_total_rent'] = bcsub($data['change_json']['before']['ban_total_rent'],$data['cancel_rent'],2);
+        $data['change_json']['after']['ban_total_use_area'] = bcsub($data['change_json']['before']['ban_total_use_area'],$data['cancel_use_area'],2);
+        $data['change_json']['after']['ban_total_area'] = bcsub($data['change_json']['before']['ban_total_area'],$data['cancel_area'],2);
+        $data['change_json']['after']['ban_total_oprice'] = bcsub($data['change_json']['before']['ban_total_oprice'],$data['cancel_oprice'],2);
+
 
         if($data['house_id']){
             $houseids = explode(',',$data['house_id']);

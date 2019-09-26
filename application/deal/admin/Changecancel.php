@@ -15,6 +15,8 @@ class Changecancel extends Admin
 
     public function index()
     {
+        // $arr = [1.88,3.02,4.98,6.01,1.77];
+        // halt(bcaddMerge($arr,2));
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -139,7 +141,7 @@ class Changecancel extends Admin
             $ChangeCancelModel = new ChangeCancelModel;
             $where = $ChangeCancelModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.is_back,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_cancel')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);

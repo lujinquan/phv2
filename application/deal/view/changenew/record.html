@@ -57,13 +57,7 @@
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		{{#  if (d.change_status == 3) { }}
-		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
-		{{#  } else { }}
-		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
-		{{#  } }}
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">修改</a>
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     </script>
 </div>
 <script type="text/javascript">
@@ -99,13 +93,8 @@
 			  }
 			  ,cols: [
 				[ 
-					//表头 
-					/* {field: 'change_id',minWidth: 60,align:'center',title: '#', templet:function(d){
-		                    return d.LAY_INDEX ;
-		                }
-					}, */
 					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
@@ -116,7 +105,7 @@
 							return params.uses[d.house_use_id];
 						}
 					},
-					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '租户'},  
+					{field: 'tenant_name',minWidth: 120,align:'center',title: '租户'},  
 					{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构', 
 						templet: function(d) {
 							return params.structs[d.ban_struct_id];
@@ -132,19 +121,19 @@
 					        return params.insts[d.ban_inst_id];
 					    }
 					},
-					{field: 'prescribed_rents',minWidth: 120,align:'center',title: '规定租金', totalRow: true},  
-					{field: 'original_prices',minWidth: 120,align:'center',title: '原价', totalRow: true},  
-					{field: 'builtup_areas',minWidth: 120,align:'center',title: '建筑面积', totalRow: true},  
-					{field: 'rental-areas',minWidth: 120,align:'center',title: '计租面积', totalRow: true}, 
-					{field: 'monthly_rents',minWidth: 120,align:'center',title: '月租金', totalRow: true}, 
+					{field: 'house_pre_rent',minWidth: 120,align:'center',title: '规定租金', totalRow: true},  
+					{field: 'house_oprice',minWidth: 120,align:'center',title: '原价', totalRow: true},  
+					{field: 'house_area',minWidth: 120,align:'center',title: '建筑面积', totalRow: true},  
+					{field: 'house_lease_area',minWidth: 120,align:'center',title: '计租面积', totalRow: true}, 
+					{field: 'house_pre_rent',minWidth: 120,align:'center',title: '月租金', totalRow: true}, 
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{field: 'completion_times',align:'center',minWidth: 160,title: '完成时间'},
-					{field: 'effective_times',align:'center',minWidth: 160,title: '生效时间'},
+					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
+					//{field: 'effective_times',align:'center',minWidth: 160,title: '生效时间'},
 					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {

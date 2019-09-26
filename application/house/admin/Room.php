@@ -63,7 +63,7 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
- //halt($filData);
+            //halt($filData);
             // 入库room表
             if (!$RoomModel->allowField(true)->save($filData)) {
                 return $this->error('新增失败');

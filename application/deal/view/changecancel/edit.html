@@ -57,13 +57,13 @@
 		  </thead>
 		  <tbody>
 		    <tr>
-		  	  <td id="floor_number"></td>
+		  	  <td id="floor_number">{$data_info['ban_info']['ban_number']}</td>
 			  <td>异动前</td>
-			  <td class="cancel_before_1" id="floor_prescribed"></td>
-	    	  <td class="cancel_before_2" id="floor_areaofuse"></td>
-	    	  <td class="cancel_before_3" id="floor_builtuparea"></td>
-	    	  <td class="cancel_before_4" id="floor_original"></td>
-			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
+			  <td class="cancel_before_1" id="floor_prescribed">{$data_info['change_json']['before']['ban_total_rent']}</td>
+	    	  <td class="cancel_before_2" id="floor_areaofuse">{$data_info['change_json']['before']['ban_total_use_area']}</td>
+	    	  <td class="cancel_before_3" id="floor_builtuparea">{$data_info['change_json']['before']['ban_total_area']}</td>
+	    	  <td class="cancel_before_4" id="floor_original">{$data_info['change_json']['before']['ban_total_oprice']}</td>
+			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" {if condition="$data_info['cancel_ban']"}checked{/if} value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
 		    </tr>
 			<tr>
 			  <td></td>
@@ -76,10 +76,10 @@
 			<tr>
 			  <td></td>
 			  <td>异动后</td>
-			  <td class="cancel_after_1" id="changes_floor_prescribed"></td>
-			  <td class="cancel_after_2" id="changes_floor_areaofuse"></td>
-			  <td class="cancel_after_3" id="changes_floor_builtuparea"></td>
-			  <td class="cancel_after_4" id="changes_floor_original"></td>
+			  <td class="cancel_after_1" id="changes_floor_prescribed">{$data_info['change_json']['after']['ban_total_rent']}</td>
+			  <td class="cancel_after_2" id="changes_floor_areaofuse">{$data_info['change_json']['after']['ban_total_use_area']}</td>
+			  <td class="cancel_after_3" id="changes_floor_builtuparea">{$data_info['change_json']['after']['ban_total_area']}</td>
+			  <td class="cancel_after_4" id="changes_floor_original">{$data_info['change_json']['after']['ban_total_oprice']}</td>
 			</tr>
 		  </tbody>
 		</table>
@@ -198,7 +198,7 @@
 			</div>
 		</div>
 	</div>
-
+<input type="hidden" name="id" value="{$data_info['id']}">
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>

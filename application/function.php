@@ -125,3 +125,28 @@ if (!function_exists('convertGBK')) {
 	}
 
 }
+
+/**
+ * 多个数精度相加，保留x位
+ * @param  $[str] [<description>]
+ */
+if (!function_exists('bcaddMerge')) {
+
+	function bcaddMerge($arr,$x = 2){
+		if(!is_array($arr) || !is_numeric($x)){
+			return '参数错误';
+		}
+		$count = count($arr);
+	    if ($count == 0) {
+	        return 0;
+	    }elseif($count == 1){
+	    	return $arr[0];
+	    }else{
+	    	for($i=1;$i<$count;$i++){
+	    		$arr[$i] = bcadd($arr[$i-1],$arr[$i],$x);
+	    	}
+	    	return array_pop($arr);
+	    }  
+	}
+
+}

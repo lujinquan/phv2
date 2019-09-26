@@ -265,32 +265,32 @@
 			});
 	    })
 
-	    function formSubmit(type,url,data,index){
-	    	$.ajax({
-	    		type: type,
-	    		url: url,
-	    		data: data,
-	    		success: function(res) {
-	    			console.log(res);
-	    			var that = $('.layui-layer-btn0');
-					that.text(res.msg);
-	                if (res.code == 0) { 
-	                	that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
-	                    setTimeout(function(){
-	                        //that.removeClass('disabled').text('确认');
-	                        that.removeClass('disabled layui-btn-danger').addClass('layui-btn-normal').text('确认');
-	                    }, 2000);
-	                } else {
-	                	that.removeClass('layui-btn-normal').addClass('layui-bg-green');
-                        setTimeout(function(){
-                        	that.removeClass('layui-bg-green');
-	                        parent.location.href = res.url;
-	                    }, 2000);
-	                }
-	    		}
-	    	});
-	    	return false;
-	    }
+	    // function formSubmit(type,url,data,index){
+	    // 	$.ajax({
+	    // 		type: type,
+	    // 		url: url,
+	    // 		data: data,
+	    // 		success: function(res) {
+	    // 			console.log(res);
+	    // 			var that = $('.layui-layer-btn0');
+					// that.text(res.msg);
+	    //             if (res.code == 0) { 
+	    //             	that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
+	    //                 setTimeout(function(){
+	    //                     //that.removeClass('disabled').text('确认');
+	    //                     that.removeClass('disabled layui-btn-danger').addClass('layui-btn-normal').text('确认');
+	    //                 }, 2000);
+	    //             } else {
+	    //             	that.removeClass('layui-btn-normal').addClass('layui-bg-green');
+     //                    setTimeout(function(){
+     //                    	that.removeClass('layui-bg-green');
+	    //                     parent.location.href = res.url;
+	    //                 }, 2000);
+	    //             }
+	    // 		}
+	    // 	});
+	    // 	return false;
+	    // }
 
 	});
 	//图片查看
