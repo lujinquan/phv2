@@ -25,6 +25,7 @@ class ChangeCancel extends SystemBase
         'ctime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
+        'change_json' => 'json',
     ];
 
     protected $processAction = ['审批不通过','审批成功','打回修改','初审通过','审批通过','终审通过'];
@@ -122,10 +123,11 @@ class ChangeCancel extends SystemBase
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 8; //使用权变更
         $data['change_order_number'] = date('Ym').'08'.random(14);
+        //$banRow = BanModel::get($data['ban_id']);
 
         if($data['house_id']){
             $houseids = explode(',',$data['house_id']);
-            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
+            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_area,house_use_area,house_oprice,house_lease_area')->select()->toArray();
         }
 
         // 审批表数据

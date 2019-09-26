@@ -43,7 +43,7 @@ class Room extends SystemBase
         }
         $where = [];
         $where['ban'] = [];
-        $where['room'] = [['room_status','eq',1],['room_pub_num','>',2]];
+        $where['room'] = [['room_status','eq',1]];
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
             $where['room'][] = ['ban_number','like','%'.$data['ban_number'].'%'];

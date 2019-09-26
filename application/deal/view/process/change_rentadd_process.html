@@ -8,9 +8,8 @@
 		<div class="layui-col-md12">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline j-tips">
-				<input type="text" id="house_number" name="house_number" readonly value="1157489498494" placeholder="" autocomplete="off" class="layui-input">
-				<input type="hidden" name="ban_id" value="">
-				<input type="hidden" name="house_id" value="">
+				<input type="text" id="house_number" name="house_number" readonly value="{$data_info['house_info']['house_number']}" placeholder="" autocomplete="off" class="layui-input">
+				<input type="hidden" name="id" value="{$data_info['id']}">
 			</div>
 		</div>
 	</div>
@@ -28,13 +27,13 @@
 		  </thead>
 		  <tbody>
 		    <tr>
-		  	  <td id="house_numbers">10900903920519</td>
-			  <td id="building_address">工程营69号</td>
-			  <td id="mechanism">紫阳所08管段</td>
-	    	  <td id="yield_differentiation">区属</td>
-	    	  <td id="nature_usage">住宅</td>
-	    	  <td id="tenant_name">李双</td>
-			  <td id="prescribed_rent">65.5</td>
+		  	  <td id="house_numbers">&nbsp;{$data_info['house_info']['house_number']}</td>
+			  <td id="building_address">&nbsp;{$data_info['ban_info']['ban_address']}</td>
+			  <td id="mechanism">&nbsp;{$params.insts[$data_info['ban_info']['ban_inst_id']]}</td>
+	    	  <td id="yield_differentiation">&nbsp;{$params.owners[$data_info['ban_info']['ban_owner_id']]}</td>
+	    	  <td id="nature_usage">&nbsp;{$params.uses[$data_info['house_info']['house_use_id']]}</td>
+	    	  <td id="tenant_name">&nbsp;{$data_info['tenant_info']['tenant_name']}</td>
+			  <td id="prescribed_rent">&nbsp;{$data_info['house_info']['house_pre_rent']}</td>
 		    </tr>
 		  </tbody>
 		</table>
@@ -52,8 +51,8 @@
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input type="number" name="before_year_money"   value="100.00" readonly placeholder="请输入以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input type="number" name="before_month_money" value="80.00" readonly  placeholder="请输入以前月金额" class="layui-input"></td>
+		  <td id="before_year"><input type="number" value="{$data_info['before_year_rent']}" readonly class="layui-input"></td>
+		  <td id="before_month"><input type="number" value="{$data_info['before_month_rent']}" readonly class="layui-input"></td>
 	   </tr>
 	 </tbody>
 	</table>
@@ -65,12 +64,13 @@
    		<div class="j-enclosure-label clearfix">票据</div>
    		<div class="j-enclosure-img j-viewer-img clearfix">
    			<ul>
-   				<li>
-   					<img src="/upload/ban/image/20190917/530e20820c40465858863a391626656d.png">
-   				</li>
-   				<li>
-   					<img src="/upload/ban/image/20190917/43e37b86505f7528d20237da2c45d537.png">
-   				</li>
+   				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'RentAddPaper'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
    			</ul>
    	    </div>
    	</div>
@@ -81,27 +81,29 @@
    <div class="layui-row layui-form-item layui-col-space90">
    		   <div class="j-status-bar">
    				<ul>
-   					<li class="layui-col-xs2 on">
-   						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-   						<p>房管员</p>
-   					</li>
-   					<li class="layui-col-xs2 ">
-   						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-   						<p>经租会计</p>
-   					</li>
-   					<li class="layui-col-xs2 ">
-   						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-   						<p>经租所长</p>
-   					</li>
-   					<li class="layui-col-xs2 ">
-   						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-   						<p>经管科</p>
-   					</li>
+   					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
    				</ul>
    			</div>
    			<div class="j-status-result">
    				<ul>
-   					<li>房管员［孙莲］于2019-09-19 10:03:19 房管员提交申请；</li>
+   					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
    				</ul>
    			</div>
    	</div>
@@ -138,13 +140,12 @@
 				yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=11';
 					if($('#change_reason').val()==''){
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
 						});
-					}
-					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -166,7 +167,7 @@
 				yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=11';
 					if($('#back_reason').val()==''){
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1

@@ -7,9 +7,10 @@
 		<div class="layui-col-md12">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline j-tips">
-				<input type="text" id="house_number" name="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="text" id="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="">
 				<input type="hidden" name="house_id" value="">
+				<input type="hidden" name="tenant_id" value="">
 				<b class="j-explain-search j-house_number">查询</b>
 			</div>
 		</div>
@@ -44,7 +45,7 @@
 	<table  class="layui-table j-house-box">
 	  <thead>
 		  <tr>
-		    <th>核销类型</th>
+		    <th>追加类型</th>
 		    <th>以前年</th>
 		    <th>以前月</th>
 		  </tr>
@@ -52,8 +53,8 @@
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input type="number" name="before_year_money" lay-verify="required" value=""  placeholder="请输入以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input type="number" name="before_month_money" lay-verify="required" value="" placeholder="请输入以前月金额" class="layui-input"></td>
+		  <td id="before_year"><input type="number" name="before_year_rent" lay-verify="required" value=""  placeholder="请输入追加以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input type="number" name="before_month_rent" lay-verify="required" value="" placeholder="请输入追加以前月金额" class="layui-input"></td>
 	   </tr>
 	 </tbody>
 	</table>
@@ -79,9 +80,9 @@
     </div>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-			<a href="javascript:;" class="layui-btn">保存</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
   </div>
@@ -91,7 +92,7 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl = "{:url('system/Api/upload')}?input=Bills&group=change&water=no"; //票据
+	var upurl = "{:url('system/Api/upload')}?input=RentAddPaper&group=change&water=no"; //票据
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		var table = layui.table
@@ -115,6 +116,9 @@
 						console.log(row);
 						layer.close(index);
 						$("#house_number").val(row.house_number);//获取房屋编号
+						$("input[name='house_id']").val(row.house_id);//获取房屋id
+						$("input[name='ban_id']").val(row.ban_id);//获取楼栋编号
+						$("input[name='tenant_id']").val(row.tenant_id);//获取房屋编号
 						$("#house_numbers").text(row.house_number);//获取房屋编号
 						$("#building_address").text(row.ban_address);//获取楼栋地址
 						$("#mechanism").text(params.insts[row.ban_inst_id]);//获取机构
@@ -134,7 +138,7 @@
 			url: upurl,
 			size: 1024,
 			multiple: duotu,
-			field: 'Bills',
+			field: 'RentAddPaper',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
