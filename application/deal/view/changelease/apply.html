@@ -764,13 +764,14 @@
 						,btn: ['确定','关闭']
 						,yes: function(index, layero){
 							var row = window["layui-layer-iframe" + index].hoesedata();
-							console.log(row);
+							//console.log(row);
 							layer.close(index);
-							$("#house_number").val(row.house_number);//获取房屋编号
-                            $.get('/admin.php/house/lease/detail', {'id':id}, function(res) {
-                            	var table = JSON.parse(res.data.change_data_line);
-                            	$('#rent_straight').text(res.data.szno);
-                            	$('#applyAddress').text('房屋坐落：武昌区');
+							//$("#house_number").val(row.house_number);//获取房屋编号
+                            $.get('/admin.php/system/api/lease_house_info', {'id':row.house_id}, function(res) {
+                            var table = res.data;
+                            	console.log('租约表详情数据：',res);//return false;
+                            	$('#rent_straight').val(table.house.house_szno);
+                            	/*$('#applyAddress').text('房屋坐落：武昌区');
                             	$('#applyStruct').text('钢混');
                             	$('#applyHouseFloor').text('5');
                             	$('#applyLiveFloor').text('2');
@@ -898,7 +899,7 @@
                             	$('#applyRoom20_data5').text(table.applyRoom20_data5);
                             	$('#applyRoom21_data1').text(table.applyRoom21_data1);
                             	$('#applyRoom21_data2').text(table.applyRoom21_data2);
-                            	$('#applyRoom21_data3').text(table.applyRoom21_data3);
+                            	$('#applyRoom21_data3').text(table.applyRoom21_data3);*/
                                 //console.log(res);
                             });
 						},btn2: function(index, layero){

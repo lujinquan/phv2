@@ -15,6 +15,10 @@ use app\common\controller\Common;
 use app\system\model\SystemAffiche as AfficheModel;
 use app\common\model\SystemAnnex as AnnexModel;
 use app\common\model\Cparam as CparamModel;
+use app\house\model\House as HouseModel;
+use app\house\model\Room as RoomModel;
+use app\house\model\FloorPoint as FloorPointModel;
+use app\deal\model\ChangeLease as ChangeLeaseModel;
 use app\system\model\SystemNotice;
 use app\system\model\SystemHelp;
 use think\Db;
@@ -165,6 +169,110 @@ class Api extends Common
     public function upload($from = 'input', $group = 'sys', $water = '', $thumb = '', $thumb_type = '', $input = 'file')
     {
         return json(AnnexModel::upload($from, $group, $water, $thumb, $thumb_type, $input));
+    }
+
+    public function lease_house_info()
+    {
+        $id = input('param.id/d');
+
+        $result = [];
+
+        $result['house'] = HouseModel::with(['tenant','ban'])->get($id);
+
+        if(empty($result['house'])){
+            return jsons('4000','参数错误');
+        }
+
+        $val = Db::name('system_config')->where([['name','eq','szno']])->value('value');
+
+        $result['house']['house_szno'] = $result['house']['house_szno'].$val;
+        
+        $result['house']['total_use_area'] = 0;
+        $result['house']['total_lease_area'] = 0;
+        $result['house']['total_room_month'] = 0;
+        $result['house']['hall_rent'] = 0;
+        $result['house']['toilet_rent'] = 0;
+        $result['house']['aisle_rent'] = 0;
+        $result['house']['kitchen_rent'] = 0;
+        $result['house']['below_five_num_rent'] = 0.5 * $result['house']['house_below_five_num'];
+        $result['house']['more_five_num_rent'] = 1 * $result['house']['house_more_five_num'];
+
+        $result['house']['change_remark'] = ChangeLeaseModel::where([['house_id','eq',$id],['change_status','eq',1]])->order('ctime desc')->value('change_remark');
+
+        //获取当前房屋的房间
+        $roomids = $result['house']->house_room()->where([['house_room_status','<=',1]])->column('room_id'); 
+        $rooms = RoomModel::where([['room_id','in',$roomids]])->select();
+
+        //halt($rooms);
+
+        if(empty($rooms)){
+            $rooms = array();
+        }else{
+            $i = 0;
+            $j = 0;
+            $k = 0;
+            $result['house']['hall'] = 0;
+            $result['house']['toilet'] = 0;
+            $result['house']['inner_aisle'] = 0;
+            $result['house']['kitchen'] = 0;
+            foreach($rooms as &$v){
+                //$row = Db::name('room_amend')->where(['RoomID'=>$v['RoomID'],'HouseID'=>$houseid])->find();
+                //if($row){
+                $v['room_lease_area'] = round($v['room_lease_area'],2);
+                   //$v['RoomRentMonth'] = $row['RoomRentMonth'];
+                //}
+                switch ($v['room_pub_num']) {
+                    case 1:
+                        $v['room_pub_num'] = '独';
+                        $i += $v['room_use_area'];
+                        $j += $v['room_lease_area'];
+                        $k += $v['room_cou_rent'];
+                        $room[] = $v;
+                        break;
+                    case 2:
+                        $v['room_pub_num'] = '共';
+                        $i += $v['room_use_area'];
+                        $j += $v['room_lease_area'];
+                        $k += $v['room_cou_rent'];
+                        $room[] = $v;
+                        break;
+                    default:
+                        if($v['room_type'] == 5){ //三户共用厅堂
+                            $result['house']['hall'] += 1;
+                        }elseif($v['room_type'] == 2){ //三户共用卫生间
+                            $result['house']['toilet'] += 1;
+                        }elseif($v['room_type'] == 3){ //三户共用室内走道
+                            $result['house']['innerAisle'] += 1;
+                        }elseif($v['room_type'] == 6){ //三户共用厨房
+                            $result['house']['kitchen'] += 1;
+                        }
+                    break;
+                }
+             
+            }
+
+            $result['house']['hall_rent'] = 0.5 * $result['house']['hall'];
+            $result['house']['toilet_rent'] = 0.5 * $result['house']['toilet'];
+            $result['house']['inner_aisle_rent'] = 0.5 * $result['house']['inner_aisle'];
+            $result['house']['kitchen_rent'] = 0.5 * $result['house']['kitchen'];
+
+            $result['house']['kotal_use_area'] = $i;
+            $result['house']['total_lease_area'] = $j;
+            $s = $result['house']['hall_rent'] + $result['house']['toilet_rent'] + $result['house']['inner_aisle_rent'] + $result['house']['kitchen_rent'] + $k + $result['house']['below_five_num_rent'] + $result['house']['more_five_num_rent'];
+            $result['house']['total_room_month'] = round($s,1);
+            $result['house']['heding_room_month'] = round($s,1);
+        }
+
+        $result['house']['pump_cost'] = $result['house']['house_pump_rent'];
+        $result['house']['heding_room_month'] = round(($result['house']['heding_room_month'] + $result['house']['house_pump_rent'] + $result['house']['house_diff_rent']),1);
+
+        $result['room'] = isset($room)?$room:array();
+
+        $data = [];
+        $data['data'] = $result;
+        $data['code'] = 0;
+        $data['msg'] = '获取成功！';
+        return json($data);
     }
 
 }

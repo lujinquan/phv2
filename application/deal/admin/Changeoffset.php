@@ -78,7 +78,7 @@ class Changeoffset extends Admin
         if ($this->request->isAjax()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Changepause.edit');
+            $result = $this->validate($data, 'Changeoffset.edit');
             if($result !== true) {
                 return $this->error($result);
             }
