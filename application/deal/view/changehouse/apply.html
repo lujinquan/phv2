@@ -43,7 +43,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">居住层</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_floor_id" readonly value="" autocomplete="off" class="layui-input">
+					<input type="text" name="house_floor_layer" readonly value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -183,10 +183,10 @@
 	  <thead>
 		  <tr>
 		    <th>基本情况</th>
+		    <th class="cancel">建设面积</th>
 		    <th class="cancel">规定租金</th>
 		    <th class="cancel">使用面积</th>
-		    <th class="cancel">建筑面积</th>
-		    <th class="cancel">房屋原价</th>
+		    <th class="cancel">原价</th>
 		  </tr>
 	  </thead>
 	  <tbody>
@@ -200,8 +200,8 @@
 		<tr>
 		  <td>异动</td>
 		  <td><input type="number" class="layui-input cancel_change cancel_change_1" id="cancel_rent" name="cancel_rent" value="" autocomplete="off" class="layui-input" required></td>
-		  <td><input type="number" class="layui-input cancel_change cancel_change_2" id="cancel_use_area" name="cancel_use_area" value="" autocomplete="off" class="layui-input" required></td>
-		  <td><input type="number" class="layui-input cancel_change cancel_change_3" id="cancel_area" name="cancel_area" value="" autocomplete="off" class="layui-input" required></td>
+		  <td id="cancel_before_2edit"></td>
+		  <td id="cancel_before_3edit"></td>
 		  <td><input type="number" class="layui-input ancel_change cancel_change_4" id="cancel_oprice" name="cancel_oprice" value="" autocomplete="off" class="layui-input" required></td>
 		</tr>
 		<tr>
@@ -252,7 +252,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("input[name='tenant_number']").val(params.structs[row.ban_struct_id]);//获取房屋结构
 					$("input[name='house_door']").val(row.ban_floors);//获取楼层数量
 					$("input[name='house_unit_id']").val(row.tenant_name);//获取租户
-					$("input[name='house_floor_id']").val(row.house_floor_id);//获取居住层
+					$("input[name='house_floor_layer']").val(row.house_floor_id);//获取居住层
 					$("input[name='ban_owner_id']").val(params.owners[row.ban_owner_id]);//获取产别
 					$("input[name='ban_address']").val(row.ban_address);//获取房屋地址
 					$("input[name='house_oprice']").val(row.house_use_area);//获取实有面积

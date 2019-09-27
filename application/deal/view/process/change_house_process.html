@@ -1,2 +1,326 @@
 <!-- 房屋调整审核 -->
+<form class="layui-form" action="{url('add')}" method="post">
+  <div class="j-details-box  floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+				<div class="j-input-inline j-tips">
+					<input type="text" id="house_number" name="house_number" readonly value="10020050010004" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux j-size-class"></div>
+			</div>
+		</div>
+        <div class="layui-row layui-form-item layui-col-space90">
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">楼栋编号</label>
+        		<div class="j-input-inline">
+        			<input type="text" readonly value="1002005001" placeholder="" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">房屋结构</label>
+        		<div class="j-input-inline">
+        			<input type="text" readonly value="钢混" placeholder="" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        	<div class="layui-col-md4">
+        		<label class="j-form-label">楼层数量</label>
+        		<div class="j-input-inline">
+        			<input type="text" readonly value="3" autocomplete="off" class="layui-input">
+        		</div>
+        	</div>
+        </div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">租户</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="82.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">居住层</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="2" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">产别</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="区属" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋地址</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="解放路486" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">实有面积</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="54.66" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">计租面积</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="54.66" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">规定租金</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="82.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">计算租金</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="82.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">租差</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="0.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">泵费</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="0.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">租金减免</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="0.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">协议租金</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="0.00" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">电梯</label>
+				<div class="j-input-inline">
+					<input type="text" readonly value="0" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>房间信息</legend>
+		</fieldset>
+		<div class="layui-row">
+			  <a href="{:url('house/room/add')}?id=14542" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
+		</div>
+		<!-- 房间信息 -->
+		<table class="layui-table ">
+		<thead class="j-table-center">
+			<tr>
+				<th>房屋类型</th>
+				<th>房间编号</th>
+				<th>间号</th>
+				<th>绑定楼栋</th>
+				<th>绑定房屋</th>
+				<th>产别</th>
+				<th>单元号</th>
+				<th>层次</th>
+				<th>实有面积</th>
+				<th>基价折减</th>
+				<th>计租面积</th>
+				<th>层次调解率</th>
+				<th>计算租金</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr> 
+		</thead>
+		<tbody  class="j-table-center">
+			<tr>
+				<td>卫生间</td>
+				<td>165758</td>
+				<td>1</td>
+				<td>1080010577</td>
+				<td>10800105778916</td>
+				<td>区属</td>
+				<td>1</td>
+				<td>1</td>
+				<td>2.00</td>
+				<td>30%</td>
+				<td>0.00</td>
+				<td>100%</td>
+				<td>0.50</td>
+				<td colspan="2">未确认</td>
+		    </tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>10800104802018</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td colspan="2"></td>
+			</tr>
+		</tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动信息</legend>
+	</fieldset>
+	<table  class="layui-table">
+	  <thead>
+		  <tr>
+		    <th>基本情况</th>
+		    <th class="cancel">建设面积</th>
+		    <th class="cancel">规定租金</th>
+		    <th class="cancel">使用面积</th>
+		    <th class="cancel">原价</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+		  <td>异动前</td>
+		  <td class="cancel_before_1" id="floor_prescribed">120.00</td>
+		  <td class="cancel_before_2" id="floor_areaofuse">100.00</td>
+		  <td class="cancel_before_3" id="floor_builtuparea">110.00</td>
+		  <td class="cancel_before_4" id="floor_original">100.00</td>
+	    </tr>
+		<tr>
+		  <td>异动</td>
+		  <td>10</td>
+		  <td id="cancel_before_2edit">-10</td>
+		  <td id="cancel_before_3edit">10</td>
+		  <td>-10</td>
+		</tr>
+		<tr>
+		  <td>异动后</td>
+		  <td class="cancel_after_1" id="changes_floor_prescribed">130.00</td>
+		  <td class="cancel_after_2" id="changes_floor_areaofuse">90.00</td>
+		  <td class="cancel_after_3" id="changes_floor_builtuparea">120.00</td>
+		  <td class="cancel_after_4" id="changes_floor_original">90.00</td>
+		</tr>
+	  </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+	 <legend>审批状态</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 on">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 ">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 ">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 ">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					<li>房管员［孙莲］于2019-09-19 10:03:19 房管员提交申请；</li>
+				</ul>
+			</div>
+	</div>
+    <div class="layui-row layui-form-item layui-col-space90">
+    	<div class="j-margin-btn">
+    		<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+    		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+    		<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+    	</div>
+    </div>
+</div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+  var table = layui.table
+      ,form = layui.form
+  	,$ = layui.jquery
+  	,upload = layui.upload
+  	,layer = layui.layer;
+	//审批不通过
+	$("#handover").on("click",function(){
+		layer.open({
+			type: 1,
+			btn: ["确定","取消"],
+			title: ['审批不通过原因'],
+			scrollbar: false,
+			area: ['400px','200px'],
+			offset: 'auto',
+			content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+			yes: function(index, layero){
+				
+				var formData = $('.layui-form').serialize();
+				var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
+				if($('#change_reason').val()==''){
+					layer.tips('原因不能为空！', '#change_reason', {
+					  tips: 1
+					});
+				}
+				else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+					formSubmit('post',"{:url()}",data,index);
+				}
+	
+			}
+		});
+	})
+	
+	//打回
+	$("#backover").on("click",function(){
+		layer.open({
+			type: 1,
+			btn: ["确定","取消"],
+			title: ['打回原因'],
+			scrollbar: false,
+			area: ['400px','200px'],
+			offset: 'auto',
+			content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+			yes: function(index, layero){
+				
+				var formData = $('.layui-form').serialize();
+				var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
+				if($('#back_reason').val()==''){
+					layer.tips('原因不能为空！', '#back_reason', {
+					  tips: 1
+					});
+				}
+				else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+					formSubmit('post',"{:url()}",data,index);
+				}
+	
+			}
+		});
+	})	
+})
+</script>
