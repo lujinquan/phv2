@@ -7,13 +7,15 @@
     .outerControl table{width:100%;border-spacing:0;border-top:1px solid #e6e6e6;border-right:1px solid #e6e6e6;text-align: center;}
     .outerControl td,.outerControl th{height:24px;border-left:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;font-size:14px;}
 	.outerControl th{font-weight: bold; color: #666;}
-    .pzqk input{width:80px;}
+    .pzqk input{width:80%;}
 	.j-input-margin{padding-bottom: 50px;}
 	.j-input-margin input{margin: 0;}
 	.layui-form-select dl dd{text-align: left;}
 	.layui-table tbody tr:hover,.layui-table-click,.layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table[lay-even] tr:nth-child(even) {
 	    background-color: transparent;
 	}
+	table.fwClass input{ width:80%; min-width: 50px;}
+	table.fwClass .layui-select-title input{width:100%!important;}
 /*    .fwClass input {width: 120px;height: 16px;line-height: 16px;} 
     .remark{width:100%;padding:5px;text-align:left;}
     .remark label{font-size:14px;font-weight:400;}
@@ -139,70 +141,70 @@
 			</thead>
 			<tbody>
 			<tr>
-				<td rowspan="4" colspan="2">卧室</td>
+				<td rowspan="4" colspan="2" width="100">卧室</td>
 				<td>
 					<input readonly class="jianhao" type="text" name="applyRoom1_data1" id="applyRoom1_data1" value="" truetype="textinput" style="font-family: 微软雅黑; font-size: 13px;"></td>
 				<td>
-					<input readonly type="" name="applyRoom1_data2" id="applyRoom1_data2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="7"></td>
+					<input readonly type="" name="applyRoom1_data2" id="applyRoom1_data2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="7"></td>
 				<td>
-					<input readonly type="" name="applyRoom1_data3" id="applyRoom1_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="8"></td>
+					<input readonly type="" name="applyRoom1_data3" id="applyRoom1_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="8"></td>
 				<td>
-					<input readonly type="" name="applyRoom1_data4" id="applyRoom1_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="9"></td>
+					<input readonly type="" name="applyRoom1_data4" id="applyRoom1_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="9"></td>
 				<td rowspan="4">三户以上共用</td>
 				<td>厅（堂）</td>
 				<td>0.50/个</td>
 				<td>
 					<input readonly type="" name="applyRoom1_data5" id="applyRoom1_data5" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="10"></td>
 				<td>
-					<input readonly type="" name="applyRoom1_data6" id="applyRoom1_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="11"></td>
+					<input readonly type="" name="applyRoom1_data6" id="applyRoom1_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="11"></td>
 			</tr>
 			<tr>
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom2_data1" id="applyRoom2_data1" value=""></td>
 				<td>
-					<input readonly type="" name="applyRoom2_data2" id="applyRoom2_data2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="12"></td>
+					<input readonly type="" name="applyRoom2_data2" id="applyRoom2_data2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="12"></td>
 				<td>
-					<input readonly type="" name="applyRoom2_data3" id="applyRoom2_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="13"></td>
+					<input readonly type="" name="applyRoom2_data3" id="applyRoom2_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="13"></td>
 				<td>
-					<input readonly type="" name="applyRoom2_data4" id="applyRoom2_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="14"></td>
+					<input readonly type="" name="applyRoom2_data4" id="applyRoom2_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="14"></td>
 				<td>厨房</td>
 				<td>0.50/个</td>
 				<td>
 					<input readonly type="" name="applyRoom2_data5" id="applyRoom2_data5" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="15"></td>
 				<td>
-					<input readonly type="" name="applyRoom2_data6" id="applyRoom2_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="16"></td>
+					<input readonly type="" name="applyRoom2_data6" id="applyRoom2_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="16"></td>
 			</tr>
 			<tr>
 				<td>
 					<input readonly class="jianhao" type="text" name="applyRoom3_data1" id="applyRoom3_data1" truetype="textinput" style="font-family: 微软雅黑; font-size: 13px;"></td>
 				<td>
-					<input readonly type="" name="applyRoom3_data2" id="applyRoom3_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="17"></td>
+					<input readonly type="" name="applyRoom3_data2" id="applyRoom3_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="17"></td>
 				<td>
-					<input readonly type="" name="applyRoom3_data3" id="applyRoom3_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="18"></td>
+					<input readonly type="" name="applyRoom3_data3" id="applyRoom3_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="18"></td>
 				<td>
-					<input readonly type="" name="applyRoom3_data4" id="applyRoom3_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="19"></td>
+					<input readonly type="" name="applyRoom3_data4" id="applyRoom3_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="19"></td>
 				<td>卫生间</td>
 				<td>0.50/个</td>
 				<td>
 					<input readonly type="" name="applyRoom3_data5" id="applyRoom3_data5" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="20"></td>
 				<td>
-					<input readonly type="" name="applyRoom3_data6" id="applyRoom3_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="21"></td>
+					<input readonly type="" name="applyRoom3_data6" id="applyRoom3_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="21"></td>
 			</tr>
 			<tr>
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom4_data1" id="applyRoom4_data1"></td>
 				<td>
-					<input readonly type="" name="applyRoom4_data2" id="applyRoom4_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="22"></td>
+					<input readonly type="" name="applyRoom4_data2" id="applyRoom4_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="22"></td>
 				<td>
-					<input readonly type="" name="applyRoom4_data3" id="applyRoom4_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="23"></td>
+					<input readonly type="" name="applyRoom4_data3" id="applyRoom4_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="23"></td>
 				<td>
-					<input readonly type="" name="applyRoom4_data4" id="applyRoom4_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="24"></td>
+					<input readonly type="" name="applyRoom4_data4" id="applyRoom4_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="24"></td>
 				<td>室内走道</td>
 				<td>0.50/个</td>
 				<td>
 					<input readonly type="" name="applyRoom4_data5" id="applyRoom4_data5" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="25"></td>
 				<td>
-					<input readonly type="" name="applyRoom4_data6" id="applyRoom4_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="26"></td>
+					<input readonly type="" name="applyRoom4_data6" id="applyRoom4_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="26"></td>
 			</tr>
 			<tr>
 				<td rowspan="2">厅堂</td>
@@ -210,47 +212,47 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom5_data2" id="applyRoom5_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom5_data3" id="applyRoom5_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="27"></td>
+					<input readonly type="" name="applyRoom5_data3" id="applyRoom5_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="27"></td>
 				<td>
-					<input readonly type="" name="applyRoom5_data4" id="applyRoom5_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="28"></td>
+					<input readonly type="" name="applyRoom5_data4" id="applyRoom5_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="28"></td>
 				<td>
-					<input readonly type="" name="applyRoom5_data5" id="applyRoom5_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="29"></td>
+					<input readonly type="" name="applyRoom5_data5" id="applyRoom5_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="29"></td>
 				<td rowspan="2">高1至1.7米搁楼</td>
 				<td>5m²以下</td>
 				<td>0.50/个</td>
 				<td>
 					<input readonly type="" name="applyRoom5_data6" id="applyRoom5_data6" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="30"></td>
 				<td>
-					<input readonly type="" name="applyRoom5_data7" id="applyRoom5_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="31"></td>
+					<input readonly type="" name="applyRoom5_data7" id="applyRoom5_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="31"></td>
 			</tr>
 			<tr>
 				<td><input readonly type="text" name="applyRoom6_data1" value="共" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;"></td>
 				<td>
-					<input readonly class="jianhao" type="" name="applyRoom6_data2" id="applyRoom6_data2"></td>
+					<input readonly class="jianhao" type="" name="applyRoom6_data2" id="applyRoom6_data2" value=""></td>
 				<td>
-					<input readonly type="" name="applyRoom6_data3" id="applyRoom6_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="32"></td>
+					<input readonly type="" name="applyRoom6_data3" id="applyRoom6_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="32"></td>
 				<td>
-					<input readonly type="" name="applyRoom6_data4" id="applyRoom6_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="33"></td>
+					<input readonly type="" name="applyRoom6_data4" id="applyRoom6_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="33"></td>
 				<td>
-					<input readonly type="" name="applyRoom6_data5" id="applyRoom6_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="34"></td>
+					<input readonly type="" name="applyRoom6_data5" id="applyRoom6_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="34"></td>
 				<td>5m²以上</td>
 				<td>1.00/个</td>
 				<td>
 					<input readonly type="" name="applyRoom6_data6" id="applyRoom6_data6" value="0" class="validate[custom[onlyNumber]]" inputmode="positiveDecimal" yzid="35"></td>
 				<td>
-					<input readonly type="" name="applyRoom6_data7" id="applyRoom6_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1();gethj2()" yzid="36"></td>
+					<input readonly type="" name="applyRoom6_data7" id="applyRoom6_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="36"></td>
 			</tr>
 			<tr>
 				<td rowspan="2">厨房</td>
 				<td><input readonly type="text" name="applyRoom7_data1" value="独" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;"></td>
 				<td>
-					<input readonly class="jianhao" type="" name="applyRoom7_data2" id="applyRoom7_data2" value=""></td>
+					<input readonly class="jianhao" type="text" name="applyRoom7_data2" id="applyRoom7_data2" value=""></td>
 				<td>
-					<input readonly type="" name="applyRoom7_data3" id="applyRoom7_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="37"></td>
+					<input readonly type="text" name="applyRoom7_data3" id="applyRoom7_data3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="37"></td>
 				<td>
-					<input readonly type="" name="applyRoom7_data4" id="applyRoom7_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="38"></td>
+					<input readonly type="text" name="applyRoom7_data4" id="applyRoom7_data4" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="38"></td>
 				<td>
-					<input readonly type="" name="applyRoom7_data5" id="applyRoom7_data5" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="39"></td>
+					<input readonly type="text" name="applyRoom7_data5" id="applyRoom7_data5" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="39"></td>
 				 <td colspan="2">二次供水
 	<!--                         <input readonly type="text" name="applyRoom7_data6" id="applyRoom7_data6" value="二次供水" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;"> -->
 				</td>
@@ -267,19 +269,19 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom8_data2" id="applyRoom8_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom8_data3" id="applyRoom8_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="42"></td>
+					<input readonly type="" name="applyRoom8_data3" id="applyRoom8_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="42"></td>
 				<td>
-					<input readonly type="" name="applyRoom8_data4" id="applyRoom8_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="43"></td>
+					<input readonly type="" name="applyRoom8_data4" id="applyRoom8_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="43"></td>
 				<td>
-					<input readonly type="" name="applyRoom8_data5" id="applyRoom8_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="44"></td>
+					<input readonly type="" name="applyRoom8_data5" id="applyRoom8_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="44"></td>
 				<td colspan="2">
 					<input type="text" name="applyRoom8_data6" id="applyRoom8_data6" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td><input type="text" name="applyRoom8_data7" id="applyRoom8_data7" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;"></td>
 				<td>
-					<input type="" name="applyRoom8_data8" id="applyRoom8_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj2()" yzid="45"></td>
+					<input type="" name="applyRoom8_data8" id="applyRoom8_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="45"></td>
 				<td>
-					<input type="" name="applyRoom8_data9" id="applyRoom8_data9" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj2()" yzid="46"></td>
+					<input type="" name="applyRoom8_data9" id="applyRoom8_data9" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="46"></td>
 				
 			</tr>
 			<tr>
@@ -288,11 +290,11 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom9_data2" id="applyRoom9_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom9_data3" id="applyRoom9_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="47"></td>
+					<input readonly type="" name="applyRoom9_data3" id="applyRoom9_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="47"></td>
 				<td>
-					<input readonly type="" name="applyRoom9_data4" id="applyRoom9_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="48"></td>
+					<input readonly type="" name="applyRoom9_data4" id="applyRoom9_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="48"></td>
 				<td>
-					<input readonly type="" name="applyRoom9_data5" id="applyRoom9_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="49"></td>
+					<input readonly type="" name="applyRoom9_data5" id="applyRoom9_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="49"></td>
 				<td colspan="2"></td>
 				<td></td>
 				<td></td>
@@ -303,11 +305,11 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom10_data2" id="applyRoom10_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom10_data3" id="applyRoom10_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="50"></td>
+					<input readonly type="" name="applyRoom10_data3" id="applyRoom10_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="50"></td>
 				<td>
-					<input readonly type="" name="applyRoom10_data4" id="applyRoom10_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="51"></td>
+					<input readonly type="" name="applyRoom10_data4" id="applyRoom10_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="51"></td>
 				<td>
-					<input readonly type="" name="applyRoom10_data5" id="applyRoom10_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="52"></td>
+					<input readonly type="" name="applyRoom10_data5" id="applyRoom10_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="52"></td>
 				<td colspan="2"></td>
 				<td></td>
 				<td></td>
@@ -319,11 +321,11 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom11_data2" id="applyRoom11_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom11_data3" id="applyRoom11_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="53"></td>
+					<input readonly type="" name="applyRoom11_data3" id="applyRoom11_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="53"></td>
 				<td>
-					<input readonly type="" name="applyRoom11_data4" id="applyRoom11_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="54"></td>
+					<input readonly type="" name="applyRoom11_data4" id="applyRoom11_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="54"></td>
 				<td>
-					<input readonly type="" name="applyRoom11_data5" id="applyRoom11_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="55"></td>
+					<input readonly type="" name="applyRoom11_data5" id="applyRoom11_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="55"></td>
 				<td></td>
 				<td style="font-weight:bold;">间号</td>
 				<td style="font-weight:bold;">实有面积（m²）</td>
@@ -335,11 +337,11 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom12_data2" id="applyRoom12_data2"></td>
 				<td>
-					<input readonly type="" name="applyRoom12_data3" id="applyRoom12_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="56"></td>
+					<input readonly type="" name="applyRoom12_data3" id="applyRoom12_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="56"></td>
 				<td>
-					<input readonly type="" name="applyRoom12_data4" id="applyRoom12_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="57"></td>
+					<input readonly type="" name="applyRoom12_data4" id="applyRoom12_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="57"></td>
 				<td>
-					<input readonly type="" name="applyRoom12_data5" id="applyRoom12_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="58"></td>
+					<input readonly type="" name="applyRoom12_data5" id="applyRoom12_data5" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="58"></td>
 				<td>高1.7至2.2米搁楼</td>
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom12_data6" id="applyRoom12_data6"></td>
@@ -355,57 +357,57 @@
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom13_data1" id="applyRoom13_data1"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data2" id="applyRoom13_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="62"></td>
+					<input readonly type="" name="applyRoom13_data2" id="applyRoom13_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="62"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data3" id="applyRoom13_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="63"></td>
+					<input readonly type="" name="applyRoom13_data3" id="applyRoom13_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="63"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data4" id="applyRoom13_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="64"></td>
+					<input readonly type="" name="applyRoom13_data4" id="applyRoom13_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="64"></td>
 				<td rowspan="3">无封闭阳台</td>
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom13_data5" id="applyRoom13_data5"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data6" id="applyRoom13_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="65"></td>
+					<input readonly type="" name="applyRoom13_data6" id="applyRoom13_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="65"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data7" id="applyRoom13_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="66"></td>
+					<input readonly type="" name="applyRoom13_data7" id="applyRoom13_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="66"></td>
 				<td>
-					<input readonly type="" name="applyRoom13_data8" id="applyRoom13_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="67"></td>
+					<input readonly type="" name="applyRoom13_data8" id="applyRoom13_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="67"></td>
 			</tr>
 
 		   <tr>
 				 <td>
 					<input readonly class="jianhao" type="" name="applyRoom14_data1" id="applyRoom14_data1"></td>
 				<td>
-					<input readonly type="" name="applyRoom14_data2" id="applyRoom14_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="68"></td>
+					<input readonly type="" name="applyRoom14_data2" id="applyRoom14_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="68"></td>
 				<td>
-					<input readonly type="" name="applyRoom14_data3" id="applyRoom14_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="69"></td>
+					<input readonly type="" name="applyRoom14_data3" id="applyRoom14_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="69"></td>
 				<td>
-					<input readonly type="" name="applyRoom14_data4" id="applyRoom14_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="70"></td>
+					<input readonly type="" name="applyRoom14_data4" id="applyRoom14_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="70"></td>
 			   <td>
 					<input readonly class="jianhao" type="" name="applyRoom14_data5" id="applyRoom14_data5"></td>  
 			   <td>
-					<input readonly type="" name="applyRoom14_data6" id="applyRoom14_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="71"></td>
+					<input readonly type="" name="applyRoom14_data6" id="applyRoom14_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="71"></td>
 				<td>
-					<input readonly type="" name="applyRoom14_data7" id="applyRoom14_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="72"></td>
+					<input readonly type="" name="applyRoom14_data7" id="applyRoom14_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="72"></td>
 				<td>
-					<input readonly type="" name="applyRoom14_data8" id="applyRoom14_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="73"></td>
+					<input readonly type="" name="applyRoom14_data8" id="applyRoom14_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="73"></td>
 			</tr>
 			<tr>
 				 <td>
 					<input readonly class="jianhao" type="" name="applyRoom15_data1" id="applyRoom15_data1"></td>
 				<td>
-					<input readonly type="" name="applyRoom15_data2" id="applyRoom15_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="74"></td>
+					<input readonly type="" name="applyRoom15_data2" id="applyRoom15_data2" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="74"></td>
 				<td>
-					<input readonly type="" name="applyRoom15_data3" id="applyRoom15_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="75"></td>
+					<input readonly type="" name="applyRoom15_data3" id="applyRoom15_data3" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="75"></td>
 				<td>
-					<input readonly type="" name="applyRoom15_data4" id="applyRoom15_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="76"></td>
+					<input readonly type="" name="applyRoom15_data4" id="applyRoom15_data4" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="76"></td>
 				<td>
 					<input readonly class="jianhao" type="" name="applyRoom15_data5" id="applyRoom15_data5"></td> 
 				<td>
-					<input readonly type="" name="applyRoom15_data6" id="applyRoom15_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="77"></td>
+					<input readonly type="" name="applyRoom15_data6" id="applyRoom15_data6" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="77"></td>
 				<td>
-					<input readonly type="" name="applyRoom15_data7" id="applyRoom15_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="78"></td>
+					<input readonly type="" name="applyRoom15_data7" id="applyRoom15_data7" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal"  yzid="78"></td>
 				<td>
-					<input readonly type="" name="applyRoom15_data8" id="applyRoom15_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" yzid="79"></td>
+					<input readonly type="" name="applyRoom15_data8" id="applyRoom15_data8" value="0" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" yzid="79"></td>
 			</tr>
 			
 			 <tr>
@@ -443,13 +445,13 @@
 					<input type="text" name="applyRoom17_data2" id="applyRoom17_data2" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom17_data3" id="applyRoom17_data3" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom17_data3" id="applyRoom17_data3" value="0" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom17_data4" id="applyRoom17_data4" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom17_data4" id="applyRoom17_data4" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom17_data5" id="applyRoom17_data5" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom17_data5" id="applyRoom17_data5" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 			</tr>
 			<tr>
@@ -460,13 +462,13 @@
 					<input type="text" name="applyRoom18_data2" id="applyRoom18_data2" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom18_data3" id="applyRoom18_data3" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom18_data3" id="applyRoom18_data3" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom18_data4" id="applyRoom18_data4" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom18_data4" id="applyRoom18_data4" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom18_data5" id="applyRoom18_data5" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom18_data5" id="applyRoom18_data5" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 			</tr>
 			<tr>
@@ -477,13 +479,13 @@
 					<input type="text" name="applyRoom19_data2" id="applyRoom19_data2" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom19_data3" id="applyRoom19_data3" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom19_data3" id="applyRoom19_data3" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom19_data4" id="applyRoom19_data4" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom19_data4" id="applyRoom19_data4" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 				<td>
-					<input type="text" name="applyRoom19_data5" id="applyRoom19_data5" value="0" onblur="gethj1()" truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
+					<input type="text" name="applyRoom19_data5" id="applyRoom19_data5" value="0"  truetype="textinput" class="textinput" style="font-family: 微软雅黑; font-size: 13px;">
 				</td>
 			</tr>
 			<tr>
@@ -498,7 +500,7 @@
 					<input readonly type="" name="applyRoom20_data4" id="applyRoom20_data4" value="" readonly="true"></td>
 				<td colspan="2">核定月租金</td>
 				<td colspan="3">
-					¥<input readonly style="width: 150px; font-family: 微软雅黑; font-size: 13px;" type="text" name="applyRoom20_data5" id="applyRoom20_data5" value="" class="validate[custom[onlyNumberWide]] textinput" onblur="gethdyzj()" truetype="textinput" yzid="80">元</td>
+					¥<input readonly style="width: 150px; font-family: 微软雅黑; font-size: 13px;" type="text" name="applyRoom20_data5" id="applyRoom20_data5" value="" class="validate[custom[onlyNumberWide]] textinput"  truetype="textinput" yzid="80">元</td>
 			</tr>
 			<tr>
 				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" name="applyRoom21_data1" id="applyRoom21_data1">
@@ -626,6 +628,8 @@
 						</div>
 						<div class="layui-col-md6 hide">
 							<input type="text" id="editing_reason" name="editing_reason" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input">
+							<input type="hidden" class="applyText_other" name="applyText_other" />
+							<input type="hidden" class="applyText_other" name="Recorde" />
 						</div>
 					</div>
 					
@@ -737,6 +741,7 @@
 	var upurl1 = "{:url('system/Api/upload')}?input=Determines&group=change&water=no"; //住宅租约
 	var upurl2 = "{:url('system/Api/upload')}?input=IDcards&group=change&water=no"; //身份证
 	var duotu = true; //是否为多图上传true false
+	console.log(params)
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
 		var table = layui.table
 			,form = layui.form
@@ -764,144 +769,270 @@
 						,btn: ['确定','关闭']
 						,yes: function(index, layero){
 							var row = window["layui-layer-iframe" + index].hoesedata();
+							var mydate = new Date(),
+							    myyear = mydate.getFullYear(),
+							    mymonth = mydate.getMonth()+1,
+								myday = mydate.getDate();
 							//console.log(row);
 							layer.close(index);
 							//$("#house_number").val(row.house_number);//获取房屋编号
                             $.get('/admin.php/system/api/lease_house_info', {'id':row.house_id}, function(res) {
-                            var table = res.data;
-                            	console.log('租约表详情数据：',res);//return false;
-                            	$('#rent_straight').val(table.house.house_szno);
-                            	/*$('#applyAddress').text('房屋坐落：武昌区');
-                            	$('#applyStruct').text('钢混');
-                            	$('#applyHouseFloor').text('5');
-                            	$('#applyLiveFloor').text('2');
-                            	$('#applyRentName').text(res.data.tenant_name);
-								$('#applyRentTel').text('承租人电话');
-                            	$('#applyRentNumber').text(res.data.tenant_card);
-                            	$('#applyRentName1').text('监护人 姓名:张三');
-                            	$('#applyRentNumber1').text('监护人身份证号:4203...');
-                            	$('#applyYear').text(res.data.ctime.substring(0,4));
-                            	$('#applyMonth').text(res.data.ctime.substring(5,7));
-                            	$('#applyDay').text(res.data.ctime.substring(8,10));
-                            	$('#applyRoom1_data1').text(table.applyRoom1_data1);
-                            	$('#applyRoom1_data2').text(table.applyRoom1_data2);
-                            	$('#applyRoom1_data3').text(table.applyRoom1_data3);
-                            	$('#applyRoom1_data4').text(table.applyRoom1_data4);
-                            	$('#applyRoom1_data5').text(table.applyRoom1_data5);
-                            	$('#applyRoom1_data6').text(table.applyRoom1_data6);
-                            	$('#applyRoom2_data1').text(table.applyRoom2_data1);
-                            	$('#applyRoom2_data2').text(table.applyRoom2_data2);
-                            	$('#applyRoom2_data3').text(table.applyRoom2_data3);
-                            	$('#applyRoom2_data4').text(table.applyRoom2_data4);
-                            	$('#applyRoom2_data5').text(table.applyRoom2_data5);
-                            	$('#applyRoom2_data6').text(table.applyRoom2_data6);
-                            	$('#applyRoom3_data1').text(table.applyRoom3_data1);
-                            	$('#applyRoom3_data2').text(table.applyRoom3_data2);
-                            	$('#applyRoom3_data3').text(table.applyRoom3_data3);
-                            	$('#applyRoom3_data4').text(table.applyRoom3_data4);
-                            	$('#applyRoom3_data5').text(table.applyRoom3_data5);
-                            	$('#applyRoom3_data6').text(table.applyRoom3_data6);
-                            	$('#applyRoom4_data1').text(table.applyRoom4_data1);
-                            	$('#applyRoom4_data2').text(table.applyRoom4_data2);
-                            	$('#applyRoom4_data3').text(table.applyRoom4_data3);
-                            	$('#applyRoom4_data4').text(table.applyRoom4_data4);
-                            	$('#applyRoom4_data5').text(table.applyRoom4_data5);
-                            	$('#applyRoom4_data6').text(table.applyRoom4_data6);
-                            	$('#applyRoom5_data2').text(table.applyRoom5_data2);
-                            	$('#applyRoom5_data3').text(table.applyRoom5_data3);
-                            	$('#applyRoom5_data4').text(table.applyRoom5_data4);
-                            	$('#applyRoom5_data5').text(table.applyRoom5_data5);
-                            	$('#applyRoom6_data6').text(table.applyRoom6_data6);
-                            	$('#applyRoom7_data7').text(table.applyRoom7_data7);
-                            	$('#applyRoom6_data2').text(table.applyRoom6_data2);
-                            	$('#applyRoom6_data3').text(table.applyRoom6_data3);
-                            	$('#applyRoom6_data4').text(table.applyRoom6_data4);
-                            	$('#applyRoom6_data5').text(table.applyRoom6_data5);
-                            	$('#applyRoom7_data2').text(table.applyRoom7_data2);
-                            	$('#applyRoom7_data3').text(table.applyRoom7_data3);
-                            	$('#applyRoom7_data4').text(table.applyRoom7_data4);
-                            	$('#applyRoom7_data5').text(table.applyRoom7_data5);
-                            	$('#applyRoom8_data2').text(table.applyRoom8_data2);
-                            	$('#applyRoom8_data3').text(table.applyRoom8_data3);
-                            	$('#applyRoom8_data4').text(table.applyRoom8_data4);
-                            	$('#applyRoom8_data5').text(table.applyRoom8_data5);
-                            	$('#applyRoom9_data2').text(table.applyRoom9_data2);
-                            	$('#applyRoom9_data3').text(table.applyRoom9_data3);
-                            	$('#applyRoom9_data4').text(table.applyRoom9_data4);
-                            	$('#applyRoom9_data5').text(table.applyRoom9_data5);
-                            	$('#applyRoom10_data2').text(table.applyRoom10_data2);
-                            	$('#applyRoom10_data3').text(table.applyRoom10_data3);
-                            	$('#applyRoom10_data4').text(table.applyRoom10_data4);
-                            	$('#applyRoom10_data5').text(table.applyRoom10_data5);
-                            	$('#applyRoom11_data2').text(table.applyRoom11_data2);
-                            	$('#applyRoom11_data3').text(table.applyRoom11_data3);
-                            	$('#applyRoom11_data4').text(table.applyRoom11_data4);
-                            	$('#applyRoom11_data5').text(table.applyRoom11_data5);
-                            	$('#applyRoom12_data2').text(table.applyRoom12_data2);
-                            	$('#applyRoom12_data3').text(table.applyRoom12_data3);
-                            	$('#applyRoom12_data4').text(table.applyRoom12_data4);
-                            	$('#applyRoom12_data5').text(table.applyRoom12_data5);
-                            	$('#applyRoom12_data6').text(table.applyRoom12_data6);
-                            	$('#applyRoom12_data7').text(table.applyRoom12_data7);
-                            	$('#applyRoom12_data8').text(table.applyRoom12_data8);
-                            	$('#applyRoom12_data9').text(table.applyRoom12_data9);
-                            	$('#applyRoom13_data1').text(table.applyRoom13_data1);
-                            	$('#applyRoom13_data2').text(table.applyRoom13_data2);
-                            	$('#applyRoom13_data3').text(table.applyRoom13_data3);
-                            	$('#applyRoom13_data4').text(table.applyRoom13_data4);
-                            	$('#applyRoom13_data5').text(table.applyRoom13_data5);
-                            	$('#applyRoom13_data6').text(table.applyRoom13_data6);
-                            	$('#applyRoom13_data7').text(table.applyRoom13_data7);
-                            	$('#applyRoom13_data8').text(table.applyRoom13_data8);
-                            	$('#applyRoom14_data1').text(table.applyRoom14_data1);
-                            	$('#applyRoom14_data2').text(table.applyRoom14_data2);
-                            	$('#applyRoom14_data3').text(table.applyRoom14_data3);
-                            	$('#applyRoom14_data4').text(table.applyRoom14_data4);
-                            	$('#applyRoom14_data5').text(table.applyRoom14_data5);
-                            	$('#applyRoom14_data6').text(table.applyRoom14_data6);
-                            	$('#applyRoom14_data7').text(table.applyRoom14_data7);
-                            	$('#applyRoom14_data8').text(table.applyRoom14_data8);
-                            	$('#applyRoom15_data1').text(table.applyRoom15_data1);
-                            	$('#applyRoom15_data2').text(table.applyRoom15_data2);
-                            	$('#applyRoom15_data3').text(table.applyRoom15_data3);
-                            	$('#applyRoom15_data4').text(table.applyRoom15_data4);
-                            	$('#applyRoom15_data5').text(table.applyRoom15_data5);
-                            	$('#applyRoom15_data6').text(table.applyRoom15_data6);
-                            	$('#applyRoom15_data7').text(table.applyRoom15_data7);
-                            	$('#applyRoom15_data8').text(table.applyRoom15_data8);
-                            	$('#applyRoom16_data1').text(table.applyRoom16_data1);
-                            	$('#applyRoom16_data2').text(table.applyRoom16_data2);
-                            	$('#applyRoom16_data3').text(table.applyRoom16_data3);
-                            	$('#applyRoom16_data4').text(table.applyRoom16_data4);
-                            	$('#applyRoom16_data5').text(table.applyRoom16_data5);
-                            	$('#applyRoom16_data6').text(table.applyRoom16_data6);
-                            	$('#applyRoom16_data7').text(table.applyRoom16_data7);
-                            	$('#applyRoom16_data8').text(table.applyRoom16_data8);
-                            	$('#applyRoom17_data1').text(table.applyRoom17_data1);
-                            	$('#applyRoom17_data2').text(table.applyRoom17_data2);
-                            	$('#applyRoom17_data3').text(table.applyRoom17_data3);
-                            	$('#applyRoom17_data4').text(table.applyRoom17_data4);
-                            	$('#applyRoom17_data5').text(table.applyRoom17_data5);
-                            	$('#applyRoom18_data1').text(table.applyRoom18_data1);
-                            	$('#applyRoom18_data2').text(table.applyRoom18_data2);
-                            	$('#applyRoom18_data3').text(table.applyRoom18_data3);
-                            	$('#applyRoom18_data4').text(table.applyRoom18_data4);
-                            	$('#applyRoom18_data5').text(table.applyRoom18_data5);
-                            	$('#applyRoom19_data1').text(table.applyRoom19_data1);
-                            	$('#applyRoom19_data2').text(table.applyRoom19_data2);
-                            	$('#applyRoom19_data3').text(table.applyRoom19_data3);
-                            	$('#applyRoom19_data4').text(table.applyRoom19_data4);
-                            	$('#applyRoom19_data5').text(table.applyRoom19_data5);
-                            	$('#applyRoom20_data1').text(table.applyRoom20_data1);
-                            	$('#applyRoom20_data2').text(table.applyRoom20_data2);
-                            	$('#applyRoom20_data3').text(table.applyRoom20_data3);
-                            	$('#applyRoom20_data4').text(table.applyRoom20_data4);
-                            	$('#applyRoom20_data5').text(table.applyRoom20_data5);
-                            	$('#applyRoom21_data1').text(table.applyRoom21_data1);
-                            	$('#applyRoom21_data2').text(table.applyRoom21_data2);
-                            	$('#applyRoom21_data3').text(table.applyRoom21_data3);*/
-                                //console.log(res);
-                            });
+								//console.log('租约表详情数据：',res);//return false;
+                                // res = JSON.parse(res);
+                            	//console.log(res);
+								$('#house_number').val(res.data.house.house_number);
+                            	$('#rent_straight').val(res.data.house.house_szno);
+                            	$('#applyAddress').val(res.data.house.ban_address);
+                            	$('#applyStruct').val(params.structs[res.data.house.ban_struct_id]);
+                            	$('#applyHouseFloor').val(res.data.house.ban_floors);
+								$('#applyLiveFloor').val(res.data.house.house_floor_id);
+								$('#applyRentName').val(res.data.house.tenant_name);
+								$('#applyRentTel').val(res.data.house.tenant_tel);
+								$('#applyRentNumber').val(res.data.house.tenant_card);
+								$('#applyRentName1').val('监护人 姓名:张三');
+								$('#applyRentNumber1').val('监护人身份证号:4203...');
+								$('#applyYear').val(myyear);
+								$('#applyMonth').val(mymonth);
+								$('#applyDay').val(myday);
+								$('.applyYear').text(myyear);
+								$('.applyMonth').text(mymonth);
+								$('.applyDay').text(myday);
+                            	$('#applyRoom1_data5').val(res.data.house.hall);
+                            	$('#applyRoom1_data6').val(res.data.house.hall_rent);
+                            	$('#applyRoom2_data5').val(res.data.house.kitchen);
+                            	$('#applyRoom2_data6').val(res.data.house.kitchen_rent);
+                            	$('#applyRoom3_data5').val(res.data.house.toilet);
+                            	$('#applyRoom3_data6').val(res.data.house.toilet_rent);
+                            	$('#applyRoom4_data5').val(res.data.house.inner_aisle);
+                            	$('#applyRoom4_data6').val(res.data.house.inner_aisle_rent);
+                            	$('#applyRoom5_data6').val(res.data.house.below_five_num);//没有参数
+                            	$('#applyRoom5_data7').val(res.data.house.below_five_num_rent);
+                            	$('#applyRoom6_data6').val(res.data.house.more_five_num);//没有参数
+                            	$('#applyRoom6_data7').val(res.data.house.more_five_num_rent);
+                            	if(parseInt(res.data.house.pump_cost) != 0){
+                            		$('#applyRoom7_data8').val(res.data.house.total_lease_area);
+                            	}else{
+                            		$('#applyRoom7_data8').val(0);
+                            	}
+                            		
+                            	$('#applyRoom7_data9').val(res.data.house.pump_cost);
+                            	$('#applyRoom20_data2').val(res.data.house.total_use_area);
+                            	$('#applyRoom20_data3').val(res.data.house.total_lease_area);
+                            	$('#applyRoom20_data4').val(res.data.house.total_room_month);
+                            	$('#applyRoom20_data5').val(res.data.house.heding_room_month);
+                            	var ws = 1;
+                            	var fb = 13;
+                            	var wfb = 13;
+                            	var bg = 16,
+                            		flag_12 = 0,//高1.7至2.2米搁楼标识（1个）
+                            		flag_13 = 0;//无封闭阳台标识（3个）
+                            	res.data.room.sort(function(a,b){
+                            		return b.room_type - a.room_type;
+                            	});
+                            	//console.log(res.data.room);
+                            	for(var i = 0;i < res.data.room.length;i++){
+                            		var this_data = res.data.room[i];//$('#applyRoom7_data2').val(this_data.room_number);
+									console.log(res.data.room[i]);
+                            		switch(this_data.room_type){
+                            			case 1:
+                            				$('#applyRoom'+ws+'_data1').val(this_data.room_number);
+                            				$('#applyRoom'+ws+'_data2').val(this_data.room_use_area);
+                            				$('#applyRoom'+ws+'_data3').val(this_data.room_lease_area);
+                            				$('#applyRoom'+ws+'_data4').val(this_data.room_rent_month);//没有参数
+                            				if(ws < 4){
+                            					ws++;
+                            				}
+                            				break;
+                            			case 2:
+                            				if(this_data.room_pub_num =="独"){
+                            					$('#applyRoom9_data2').val(this_data.room_number);
+                            					$('#applyRoom9_data3').val(this_data.room_use_area);
+                            					$('#applyRoom9_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom9_data5').val(this_data.room_rent_month);//没有参数
+                            				}else{
+                            					$('#applyRoom10_data2').val(this_data.room_number);
+                            					$('#applyRoom10_data3').val(this_data.room_use_area);
+                            					$('#applyRoom10_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom10_data5').val(this_data.room_rent_month);//没有参数
+                            				}
+                            				break;
+                            			case 3:
+                            				if(this_data.room_pub_num =="独"){
+                            					$('#applyRoom11_data2').val(this_data.room_number);
+                            					$('#applyRoom11_data3').val(this_data.room_use_area);
+                            					$('#applyRoom11_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom11_data5').val(this_data.room_rent_month);//没有参数
+                            				}else{
+                            					$('#applyRoom12_data2').val(this_data.room_number);
+                            					$('#applyRoom12_data3').val(this_data.room_use_area);
+                            					$('#applyRoom12_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom12_data5').val(this_data.room_rent_month);//没有参数
+                            				}
+                            				break;
+                            			case 4:
+                            				$('#applyRoom'+fb+'_data1').val(this_data.room_number);
+                            				$('#applyRoom'+fb+'_data2').val(this_data.room_use_area);
+                            				$('#applyRoom'+fb+'_data3').val(this_data.room_lease_area);
+                            				$('#applyRoom'+fb+'_data4').val(this_data.room_rent_month);//没有参数
+                            				fb++;
+                            				break;
+                            			case 5:
+                            				if(this_data.room_pub_num =="独"){
+                            					$('#applyRoom5_data2').val(this_data.room_number);
+                            					$('#applyRoom5_data3').val(this_data.room_use_area);
+                            					$('#applyRoom5_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom5_data5').val(this_data.room_rent_month);//没有参数
+                            				}else{
+                            					$('#applyRoom6_data2').val(this_data.room_number);
+                            					$('#applyRoom6_data3').val(this_data.room_use_area);
+                            					$('#applyRoom6_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom6_data5').val(this_data.room_rent_month);//没有参数
+                            				}
+                            				break;
+                            			case 6:
+                            				if(this_data.room_pub_num =="独"){
+                            					$('#applyRoom7_data2').val(this_data.room_number);
+                            					$('#applyRoom7_data3').val(this_data.room_use_area);
+                            					$('#applyRoom7_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom7_data5').val(this_data.room_rent_month);//没有参数
+                            				}else{
+                            					$('#applyRoom8_data2').val(this_data.room_number);
+                            					$('#applyRoom8_data3').val(this_data.room_use_area);
+                            					$('#applyRoom8_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom8_data5').val(this_data.room_rent_month);//没有参数
+                            				}
+                            				break;
+                            			case 7:
+                            				if(bg < 20){
+                            					$('#applyRoom'+bg+'_data1').val('');
+                            					$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
+                            					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            					bg++;
+                            				}
+                            				break;
+                            			case 8:
+                            					if(flag_13 < 3){
+                            						$('#applyRoom'+wfb+'_data5').val(this_data.room_number);
+                            						$('#applyRoom'+wfb+'_data6').val(this_data.room_use_area);
+                            						$('#applyRoom'+wfb+'_data7').val(this_data.room_lease_area);
+                            						$('#applyRoom'+wfb+'_data8').val(this_data.room_rent_month);
+                            						wfb++;
+                            						flag_13++;
+                            					}else{
+                            						$('#applyRoom'+bg+'_data1').val('无封闭阳台');
+                            						$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
+                            						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
+                            						$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            						if(bg < 19){
+                            							bg++;
+                            						}
+                            					}
+                            				break;
+                            			case 9:
+                            					$('#applyRoom'+bg+'_data1').val('高2.20米以上搁楼');
+                            					$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
+                            					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
+                            					$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            					if(bg < 19){
+                            						bg++;
+                            					}
+                            				break;
+                            			case 10:
+                            					if(flag_12 < 1){
+                            						$('#applyRoom12_data6').val(this_data.room_number);
+                            						$('#applyRoom12_data7').val(this_data.room_use_area);
+                            						$('#applyRoom12_data8').val(this_data.room_lease_area);
+                            						$('#applyRoom12_data9').val(this_data.room_rent_month);
+                            						flag_12++;
+                            					}else{
+                            						$('#applyRoom'+bg+'_data1').val('高1.7至2.2米搁楼');
+                            						$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
+                            						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
+                            						$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            						if(bg < 19){
+                            							bg++;
+                            						}
+                            					}
+                            				break;
+                            		}
+                            	}
+                            	
+                            	/* $('.input_remark').off('blur');
+                                $('.input_remark').blur(function(){
+                                	var str_new = $('.remark label').text() + '&nbsp&nbsp'
+                                	 + $('.remark select option:selected').text() + '&nbsp&nbsp'
+                                	 + $('.input_remark').val();
+                                	
+                                	if(res.data.house.Recorde != ''){
+                                		str_new = str_new + ';' + res.data.house.Recorde;
+                                	}
+                                	$('.applyText_other').val(str_new);
+                                	console.log(str_new);
+                                });
+                            		
+                            	$('.remark p').remove();
+                                var recorde_array = res.data.house.Recorde.split(';');
+                            	for(var i = 0,length = recorde_array.length;i < length; i++){
+                            		$('.remark').append($('<p>'+recorde_array[i]+'</p>'));
+                            	}
+                                $('.remark select').off('change');
+                                $('.remark select').change(function(){
+                                	if($(this).val() == "3" || $(this).val() == "4"){
+                                		$.get('/ph/Api/lease_use?HouseID'+$('#leaseHouseInput').val(),function(res){
+                                			res = JSON.parse(res);
+                                			$('.input_remark').val(res.data.recorde).show();
+                                		})
+                                	}else if($(this).val() == "6"){
+                                		$('.input_remark').show();
+                                	}else{
+                                		$('.input_remark').hide();
+                                	}
+                            		
+                            		
+                                	var str_new = $('.remark label').text() + '&nbsp&nbsp' 
+                                	+ $('.remark select option:selected').text() + '&nbsp&nbsp' 
+                                	+ $('.input_remark').val();
+                                	
+                                	if(res.data.house.Recorde != ''){
+                                		str_new = str_new + ';' + res.data.house.Recorde;
+                                	}
+                                	$('.applyText_other').val(str_new);
+                                	//console.log(str_new);
+                                }) */
+                            })
+                            
+                            
+                            /* var data = $('#MyForm').serializeArray();;
+                            var formData = fileTotall.getArrayFormdata();
+                            if(!formData){
+                            	formData = new FormData();
+                            }
+                            for(var i = 0;i < data.length;i++){
+                            	formData.append(data[i].name,data[i].value);
+                            }
+                            		
+                            formData.append('houseID',$('#leaseHouseInput').val());
+                            formData.append('applyReason',$('.applyReason').val()); 
+                            $.ajax({
+                                type: "post",
+                                url: "/ph/LeaseApply/add",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(res) {
+                                    res = JSON.parse(res);
+                                    layer.msg(res.msg,{time:4000});
+                                    if(res.retcode == '2000'){
+                                        location.reload();
+                                    }
+                                }
+                            }); */
+                            
 						},btn2: function(index, layero){
 							layer.close(index);
 						}
