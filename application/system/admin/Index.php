@@ -72,6 +72,11 @@ class Index extends Admin
 	{
 		return $this->fetch('block/queriers/cancellation');
 	}
+	//楼栋选择器多选
+	public function cancellations()
+	{
+		return $this->fetch('block/queriers/cancellations');
+	}
     /**
      * 欢迎首页
      * @author Lucas <598936602@qq.com>

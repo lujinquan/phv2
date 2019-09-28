@@ -1,121 +1,164 @@
-<form class="layui-form" action="" method="post" >
-  <div class="j-details-box floorWrap">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
-		<legend>基本信息</legend>
-	</fieldset>
-	<table  class="layui-table j-house-boxs">
-	  <thead>
-		  <tr>
-		    <th>异动类别</th>
-		    <th>原管段</th>
-		    <th>新管段</th>
-		  </tr>
-	  </thead>
-	 <tbody>
-	   <tr>
-	 	  <td id="write_type">管段调整</td>
-		  <td id="before_year"><input type="number" name="before_year_money" lay-verify="required" value=""  placeholder="请输入以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input type="number" name="before_month_money" lay-verify="required" value="" placeholder="请输入以前月金额" class="layui-input"></td>
-	   </tr>
-	 </tbody>
-	</table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>异动明细</legend>
-	</fieldset>
-    <a href="javascript:;"  class="layui-btn j-house_number"><i class="layui-icon layui-icon-add-1"></i>添加调整楼栋</a>
-	<table  class="layui-table j-house-box">
-	  <thead>
-		  <tr>
-		    <th>房屋编号</th>
-		    <th>承租人</th>
-		    <th>房屋原价</th>
-		    <th>建筑面积</th>
-		    <th>规定租金</th>
-		    <th>计租面积</th>
-		  </tr>
-	  </thead>
-	  <tbody>
-	    <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
-	 </tbody>
-	</table>
-  <div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
-			<a href="javascript:;" class="layui-btn">保存</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
-		</div>
+<div class="j-table-content j-no-tab">
+	<div class="layui-btn-container j-container-margin">
+	    <div class="layui-btn-container">       
+	        <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>房屋调整申请</button></a>
+	    </div>
 	</div>
-  </div>
-</form>
-{include file="system@block/layui" /}
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="building_number" placeholder="楼栋编号" class="layui-input">
+				</div>
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					  <select name="ban_inst_id">
+						  <option value="">机构</option>
+						  {volist name=":config('inst_check_names')[INST]" id="v"}
+						  <option value="{$key}">{$v}</option>
+						  {/volist}
+						</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					  <select name="ban_owner_id">
+						  <option value="">产别</option>
+						  {volist name="params['owners']" id="v"}
+						  <option value="{$key}">{$v}</option>
+						  {/volist}
+						</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					  <select name="ban_damage_id">
+						  <option value="">完损等级</option>
+						  {volist name="params['damages']" id="v"}
+						  <option value="{$key}">{$v}</option>
+						  {/volist}
+						</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_struct_id">
+					  <option value="">结构类别</option>
+					  {volist name="params['structs']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+					<select name="house_use_id">
+						<option value="">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+                <div class="layui-input-inline layui-col-md2" style="width:120px;">
+                	<select name="house_use_id">
+                		<option value="">审批状态</option>
+                		<option value="1">审批状态1</option>
+                	</select>
+                </div>
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<script type="text/html" id="toolbar">
+	</script>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	  	{{#  if (d.change_status == 2) { }}
+	  	<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+	  	{{# if (d.is_back == 0){ }}
+	  	<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+	  	{{#  } else { }}
+	  	<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+	  	{{# } }}
+	  	{{#  } else { }}
+	  	<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+	  	<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+	  	{{#  } }}
+	  	<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+    </script>
+</div>
 <script type="text/javascript">
-	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+	var process_config = {'2':'待房管员处理','3':'待经租会计补充资料','4':'待经管所长处理','5':'待经管科处理'};
+	console.log(params);
+	layui.use(['table', 'jquery','laydate'], function() {
+		var $ = layui.$;
+		var s = $('#dataTable').attr('params');
+		var params = JSON.parse(s);
 		var table = layui.table
-		    ,form = layui.form
-			,$ = layui.jquery
-			,upload = layui.upload
-			,layer = layui.layer;
-		//获取房屋查询器
-		 $(".layui-form").on('click','.j-house_number',function(){
-			layer.open({
-						title: '楼栋查询器'
-						,type: 2
-						,offset: 'auto'
-						,area: ['70%', '90%']
-						, btn:false
-						,pageTabs: false
-						,content: '{:url('system/index/cancellation')}'
-						,btn: ['确定','关闭']
-						,yes: function(index, layero){
-							var row = window["layui-layer-iframe" + index].callbackdata();
-							var rows = window["layui-layer-iframe" + index].callbackdatas();
-							var trData = '';
-							//console.log(row);
-							//console.log(rows);
-							layer.close(index);
-							$('.j-house-box tbody').html("");
-							$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
-							$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
-							$("#ban_address").val(row.ban_address);//获取地址
-							//楼栋信息
-							$("#floor_number").text(row.ban_number);//获取表格楼栋编号
-							$("#floor_prescribed").text(row.ban_civil_rent);//获取表格规定租金
-							$("#floor_areaofuse").text(row.ban_use_area);//获取表格使用面积
-							$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
-							$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
-							$('.j-house-box tbody').html('');
-							$('#changes_floor_prescribed').text($('#floor_prescribed').text());//规定租金
-							$('#changes_floor_areaofuse').text($('#floor_areaofuse').text());//使用面积
-							$('#changes_floor_builtuparea').text($('#floor_builtuparea').text()); //建筑面积
-							$('#changes_floor_original').text($('#floor_original').text());//房屋原价
-							//房屋信息
-							if(rows){
-								var houseidData = '';
-								for(var i=0;i<rows.length;i++) {
-									houseidData += ','+rows[i].house_id;
-									var trData ='<tr>\
-												<td class="house_number">'+rows[i].house_number+'</td>\
-												<td class="house_lessee">'+rows[i].tenant_name+'</td>\
-												<td class="house_original">'+rows[i].house_oprice+'</td>\
-												<td class="house_builtuparea">'+rows[i].house_area+'</td>\
-												<td class="house_prescribed">'+rows[i].house_pre_rent+'</td>\
-												<td class="house_rentalarea">'+rows[i].house_lease_area+'</td>\
-											</tr>';
-								$('.j-house-box tbody').append(trData);
-							  }
-							  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
-								$("input[name='house_id']").val(houseidData);//获取房屋编号
-							}
-							if(	$('.j-house-box tbody').html()==''){
-								$(".j-house-box,.j-house-title").hide();
-							}
-							else{
-								$(".j-house-box,.j-house-title").show();
-							}
-						},btn2: function(index, layero){
-							layer.close(index);
+		   ,laydate = layui.laydate;
+		
+		//日期
+		  laydate.render({
+		    elem: '#date'
+		  });
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			    ,url: '{:url()}' //数据接口
+				,page: true //开启分页
+				,limit: 10
+			   ,limits: [10,20,30,40,50,100,300,500,1000]
+			  ,text: {
+					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+			  }
+			  ,cols: [[ 
+				  //表头
+					/* {
+						field: '', align:'center',width:60, title: '#', templet:function(d){
+						     return d.LAY_INDEX ;
 						}
-			 });
-		})	
+					}, */
+					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号'}, 
+					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'},
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '机构',
+						templet: function(d) {
+					        return params.insts[d.ban_inst_id];
+					    }
+					}, 
+					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'},
+					{field: 'nature_usage',minWidth: 100,align:'center',title: '使用性质',
+						templet: function(d) {
+					        return params.uses[d.house_use_id];
+					    }
+					}, 
+					{field: 'ban_owner_id',minWidth: 100,align:'center',title: '产别',
+						templet: function(d) {
+					        return params.owners[d.ban_owner_id];
+					    }
+					}, 
+					{field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'},
+                    {field: 'unit_number',minWidth: 100,align:'center',title: '单元号'},
+					{field: 'floor_number',minWidth: 100,align:'center',title: '楼层号'},
+					{field: 'brand_number',minWidth: 100,align:'center',title: '门牌号'},
+					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
+						templet: function(d) {
+		                    return process_config[d.change_status];
+		                }
+					}, 
+					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+				]],
+			done: function(res, curr, count) {
+
+			}
+		},isShowInst)
 	});
 </script>

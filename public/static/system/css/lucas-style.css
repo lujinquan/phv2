@@ -22,6 +22,7 @@ position: absolute; right: 15px;top:50%; margin-top: -7px;
 a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-table-cell span{ font-weight: bold;}
 .j-open-reason{ padding: 20px; box-sizing: border-box;}/* 业务办理审核不通过原因 */
+.layui-table td.j-table-back{ background: #f2f2f2!important;} /* 自定义表格背景色*/
 /*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}/*  */
