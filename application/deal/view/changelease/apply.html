@@ -34,7 +34,10 @@
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
+					<input type="hidden" id="tenant_id" name="tenant_id">
+					<input type="hidden" id="tenant_name" name="tenant_name">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>租约申请成功后，原租约自动失效！</div>
@@ -42,7 +45,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>租直NO</label>
 				<div class="j-input-inline">
-					<input type="text" id="rent_straight" name="rent_straight" value="" readonly placeholder="" autocomplete="off" class="layui-input">
+					<input type="text" id="rent_straight" name="szno" value="" readonly placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -606,16 +609,16 @@
 			<tr>
 				<td colspan="7">
 					<p style="margin: 60px 0 30px 0;"><span style="font-size: 20px; width: 50px; border-bottom: 3px double #333333;">附记</span></p>
-					<div class="remark j-visibility">
+					<!-- <div class="remark j-visibility">
 						<input style="display:none;" placeholder="备注" class="input_remark" />
 						<input type="hidden" class="applyText_other" name="applyText_other" />
 						<input type="hidden" class="applyText_other" name="Recorde" />
-					</div>
+					</div> -->
 					<div class="layui-row layui-form-item layui-col-space15 j-input-margin">
 						<div class="layui-col-md4">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
-								<select name="reason" lay-filter="reason">
+								<select name="applyType" lay-filter="reason">
 									<option>请选择</option>
 									<option value="1">老证换新证</option>
 									<option value="2">遗失补发</option>
@@ -627,9 +630,9 @@
 							</div>
 						</div>
 						<div class="layui-col-md6 hide">
-							<input type="text" id="editing_reason" name="editing_reason" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input">
-							<input type="hidden" class="applyText_other" name="applyText_other" />
-							<input type="hidden" class="applyText_other" name="Recorde" />
+							<input type="text" id="editing_reason" name="change_remark" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input">
+							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
+							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
 						</div>
 					</div>
 					
@@ -666,7 +669,7 @@
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md12">
 				<div class="j-enclosure-upload clearfix">
-					<div class="j-enclosure-label">记租表</div>
+					<div class="j-enclosure-label">计租表</div>
 					<div class="j-enclosure-label j-uplode-icon">
 						<i><img src="/static/system/image/Group8.png"></i>点击上传
 						<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
@@ -718,14 +721,15 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i>换租原因</label>
 				<div class="j-input-inline">
-					<input type="text" id="change_reasons" name="hange_reasons"  lay-verify="required" value=""  placeholder="请输入原因" autocomplete="off" class="layui-input">
+					<input type="text" id="change_reasons" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+				<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+				<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 			</div>
 		</div>
 	  </div>
@@ -737,9 +741,9 @@
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	/*上传参数设定*/
-	var upurl = "{:url('system/Api/upload')}?input=Renttable&group=change&water=no"; //计租表
-	var upurl1 = "{:url('system/Api/upload')}?input=Determines&group=change&water=no"; //住宅租约
-	var upurl2 = "{:url('system/Api/upload')}?input=IDcards&group=change&water=no"; //身份证
+	var upurl = "{:url('system/Api/upload')}?input=Houselease&group=change&water=no"; //计租表
+	var upurl1 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //住宅租约
+	var upurl2 = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证
 	var duotu = true; //是否为多图上传true false
 	console.log(params)
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
@@ -781,6 +785,10 @@
                                 // res = JSON.parse(res);
                             	//console.log(res);
 								$('#house_number').val(res.data.house.house_number);
+								$('#ban_id').val(res.data.house.ban_id);
+								$('#house_id').val(res.data.house.house_id);
+								$('#tenant_id').val(res.data.house.tenant_id);
+								$('#tenant_name').val(res.data.house.tenant_name);
                             	$('#rent_straight').val(res.data.house.house_szno);
                             	$('#applyAddress').val(res.data.house.ban_address);
                             	$('#applyStruct').val(params.structs[res.data.house.ban_struct_id]);
@@ -789,8 +797,8 @@
 								$('#applyRentName').val(res.data.house.tenant_name);
 								$('#applyRentTel').val(res.data.house.tenant_tel);
 								$('#applyRentNumber').val(res.data.house.tenant_card);
-								$('#applyRentName1').val('监护人 姓名:张三');
-								$('#applyRentNumber1').val('监护人身份证号:4203...');
+								// $('#applyRentName1').val('监护人 姓名:张三');
+								// $('#applyRentNumber1').val('监护人身份证号:4203...');
 								$('#applyYear').val(myyear);
 								$('#applyMonth').val(mymonth);
 								$('#applyDay').val(myday);
@@ -805,9 +813,9 @@
                             	$('#applyRoom3_data6').val(res.data.house.toilet_rent);
                             	$('#applyRoom4_data5').val(res.data.house.inner_aisle);
                             	$('#applyRoom4_data6').val(res.data.house.inner_aisle_rent);
-                            	$('#applyRoom5_data6').val(res.data.house.below_five_num);//没有参数
+                            	$('#applyRoom5_data6').val(res.data.house.house_below_five_num);//没有参数
                             	$('#applyRoom5_data7').val(res.data.house.below_five_num_rent);
-                            	$('#applyRoom6_data6').val(res.data.house.more_five_num);//没有参数
+                            	$('#applyRoom6_data6').val(res.data.house.house_more_five_num);//没有参数
                             	$('#applyRoom6_data7').val(res.data.house.more_five_num_rent);
                             	if(parseInt(res.data.house.pump_cost) != 0){
                             		$('#applyRoom7_data8').val(res.data.house.total_lease_area);
@@ -835,97 +843,97 @@
 									console.log(res.data.room[i]);
                             		switch(this_data.room_type){
                             			case 1:
-                            				$('#applyRoom'+ws+'_data1').val(this_data.room_number);
+                            				$('#applyRoom'+ws+'_data1').val(this_data.room_door);
                             				$('#applyRoom'+ws+'_data2').val(this_data.room_use_area);
                             				$('#applyRoom'+ws+'_data3').val(this_data.room_lease_area);
-                            				$('#applyRoom'+ws+'_data4').val(this_data.room_rent_month);//没有参数
+                            				$('#applyRoom'+ws+'_data4').val(this_data.room_cou_rent);//没有参数
                             				if(ws < 4){
                             					ws++;
                             				}
                             				break;
                             			case 2:
                             				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom9_data2').val(this_data.room_number);
+                            					$('#applyRoom9_data2').val(this_data.room_door);
                             					$('#applyRoom9_data3').val(this_data.room_use_area);
                             					$('#applyRoom9_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom9_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom9_data5').val(this_data.room_cou_rent);//没有参数
                             				}else{
-                            					$('#applyRoom10_data2').val(this_data.room_number);
+                            					$('#applyRoom10_data2').val(this_data.room_door);
                             					$('#applyRoom10_data3').val(this_data.room_use_area);
                             					$('#applyRoom10_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom10_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom10_data5').val(this_data.room_cou_rent);//没有参数
                             				}
                             				break;
                             			case 3:
                             				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom11_data2').val(this_data.room_number);
+                            					$('#applyRoom11_data2').val(this_data.room_door);
                             					$('#applyRoom11_data3').val(this_data.room_use_area);
                             					$('#applyRoom11_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom11_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom11_data5').val(this_data.room_cou_rent);//没有参数
                             				}else{
-                            					$('#applyRoom12_data2').val(this_data.room_number);
+                            					$('#applyRoom12_data2').val(this_data.room_door);
                             					$('#applyRoom12_data3').val(this_data.room_use_area);
                             					$('#applyRoom12_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom12_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom12_data5').val(this_data.room_cou_rent);//没有参数
                             				}
                             				break;
                             			case 4:
-                            				$('#applyRoom'+fb+'_data1').val(this_data.room_number);
+                            				$('#applyRoom'+fb+'_data1').val(this_data.room_door);
                             				$('#applyRoom'+fb+'_data2').val(this_data.room_use_area);
                             				$('#applyRoom'+fb+'_data3').val(this_data.room_lease_area);
-                            				$('#applyRoom'+fb+'_data4').val(this_data.room_rent_month);//没有参数
+                            				$('#applyRoom'+fb+'_data4').val(this_data.room_cou_rent);//没有参数
                             				fb++;
                             				break;
                             			case 5:
                             				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom5_data2').val(this_data.room_number);
+                            					$('#applyRoom5_data2').val(this_data.room_door);
                             					$('#applyRoom5_data3').val(this_data.room_use_area);
                             					$('#applyRoom5_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom5_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom5_data5').val(this_data.room_cou_rent);//没有参数
                             				}else{
-                            					$('#applyRoom6_data2').val(this_data.room_number);
+                            					$('#applyRoom6_data2').val(this_data.room_door);
                             					$('#applyRoom6_data3').val(this_data.room_use_area);
                             					$('#applyRoom6_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom6_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom6_data5').val(this_data.room_cou_rent);//没有参数
                             				}
                             				break;
                             			case 6:
                             				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom7_data2').val(this_data.room_number);
+                            					$('#applyRoom7_data2').val(this_data.room_door);
                             					$('#applyRoom7_data3').val(this_data.room_use_area);
                             					$('#applyRoom7_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom7_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom7_data5').val(this_data.room_cou_rent);//没有参数
                             				}else{
-                            					$('#applyRoom8_data2').val(this_data.room_number);
+                            					$('#applyRoom8_data2').val(this_data.room_door);
                             					$('#applyRoom8_data3').val(this_data.room_use_area);
                             					$('#applyRoom8_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom8_data5').val(this_data.room_rent_month);//没有参数
+                            					$('#applyRoom8_data5').val(this_data.room_cou_rent);//没有参数
                             				}
                             				break;
                             			case 7:
                             				if(bg < 20){
                             					$('#applyRoom'+bg+'_data1').val('');
-                            					$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            					$('#applyRoom'+bg+'_data2').val(this_data.room_door);
                             					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
                             					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            					$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
                             					bg++;
                             				}
                             				break;
                             			case 8:
                             					if(flag_13 < 3){
-                            						$('#applyRoom'+wfb+'_data5').val(this_data.room_number);
+                            						$('#applyRoom'+wfb+'_data5').val(this_data.room_door);
                             						$('#applyRoom'+wfb+'_data6').val(this_data.room_use_area);
                             						$('#applyRoom'+wfb+'_data7').val(this_data.room_lease_area);
-                            						$('#applyRoom'+wfb+'_data8').val(this_data.room_rent_month);
+                            						$('#applyRoom'+wfb+'_data8').val(this_data.room_cou_rent);
                             						wfb++;
                             						flag_13++;
                             					}else{
                             						$('#applyRoom'+bg+'_data1').val('无封闭阳台');
-                            						$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            						$('#applyRoom'+bg+'_data2').val(this_data.room_door);
                             						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
                             						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            						$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            						$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
                             						if(bg < 19){
                             							bg++;
                             						}
@@ -933,27 +941,27 @@
                             				break;
                             			case 9:
                             					$('#applyRoom'+bg+'_data1').val('高2.20米以上搁楼');
-                            					$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            					$('#applyRoom'+bg+'_data2').val(this_data.room_door);
                             					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
                             					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            					$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
                             					if(bg < 19){
                             						bg++;
                             					}
                             				break;
                             			case 10:
                             					if(flag_12 < 1){
-                            						$('#applyRoom12_data6').val(this_data.room_number);
+                            						$('#applyRoom12_data6').val(this_data.room_door);
                             						$('#applyRoom12_data7').val(this_data.room_use_area);
                             						$('#applyRoom12_data8').val(this_data.room_lease_area);
-                            						$('#applyRoom12_data9').val(this_data.room_rent_month);
+                            						$('#applyRoom12_data9').val(this_data.room_cou_rent);
                             						flag_12++;
                             					}else{
                             						$('#applyRoom'+bg+'_data1').val('高1.7至2.2米搁楼');
-                            						$('#applyRoom'+bg+'_data2').val(this_data.room_number);
+                            						$('#applyRoom'+bg+'_data2').val(this_data.room_door);
                             						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
                             						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            						$('#applyRoom'+bg+'_data5').val(this_data.room_rent_month);
+                            						$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
                             						if(bg < 19){
                             							bg++;
                             						}
@@ -1044,7 +1052,7 @@
 			url: upurl2,
 			size: 1024,
 			multiple: duotu,
-			field: 'IDcards',
+			field: 'TenantReIDCard',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -1067,13 +1075,13 @@
 				}
 			}
 		})
-		//记租表
+		//计租表
 		upload.render({
 			elem: '#upload_img1',
 			url: upurl,
 			size: 1024,
 			multiple: duotu,
-			field: 'Renttable',
+			field: 'Houselease',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
@@ -1102,7 +1110,7 @@
 			url: upurl1,
 			size: 1024,
 			multiple: duotu,
-			field: 'Determines',
+			field: 'HouseForm',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,

@@ -116,10 +116,10 @@ class Changelease extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
-        $row = $ChangeLeaseModel->detail($id);
+        // $ChangeLeaseModel = new ChangeLeaseModel;
+        // $row = $ChangeLeaseModel->detail($id);
         //halt($row);
-        $this->assign('data_info',$row);
+        $this->assign('id',$id);
         return $this->fetch();
     }
 
@@ -127,6 +127,14 @@ class Changelease extends Admin
     {
         $id = $this->request->param('id');
         $ChangeLeaseModel = new ChangeLeaseModel;
+        if ($this->request->isAjax()) {
+            $data = [];
+            $data['data'] = $ChangeLeaseModel->detail($id);
+            $data['msg'] = '获取成功！';
+            $data['code'] = 0;
+            return json($data);
+        }
+        
         $row = $ChangeLeaseModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
