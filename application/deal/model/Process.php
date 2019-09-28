@@ -11,6 +11,7 @@ use app\deal\model\ChangeNew as ChangeNewModel;
 use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
 use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
+use app\deal\model\ChangeInst as ChangeInstModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 use app\deal\model\ChangeCutYear as ChangeCutYearModel;
@@ -128,7 +129,8 @@ class Process extends SystemBase
                     $result = $ChangeHouseModel->process($data);
                     break;
                 case '10': // 管段调整
-                   
+                    $ChangeInstModel = new ChangeInstModel;
+                    $result = $ChangeInstModel->process($data);
                     break;
 
                 case '11': // 租金追加调整

@@ -1,0 +1,139 @@
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-boxs">
+	  <thead>
+		  <tr>
+		    <th>异动类别</th>
+		    <th>原管段</th>
+		    <th>新管段</th>
+		  </tr>
+	  </thead>
+	 <tbody>
+	   <tr>
+	 	  <td id="write_type">管段调整</td>
+		  <td id="raw_pipesection">{$params.insts[$data_info['old_inst_id']]}</td>
+		  <td id="new_pipesection">{$params.insts[$data_info['new_inst_id']]}</td>
+	   </tr>
+	 </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动明细</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>楼栋编号</th>
+		    <th>楼栋地址</th>
+		    <th>栋数</th>
+		    <th>建筑面积</th>
+		    <th>规定租金</th>
+			<th>原价</th>
+			<th>使用面积</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+	    {volist name="$data_info['data_json']" id="v"}
+	    <tr>
+			<td class="building_number">{$v['ban_number']}</td>
+			<td class="building_address">{$v['ban_address']}</td>
+			<td class="building_buildings">{$v['ban_num']}</td>
+			<td class="builtup_area">{$v['ban_area']}</td>
+			<td class="prescribed_rent">{$v['ban_rent']}</td>
+			<td class="original_price">{$v['ban_oprice']}</td>
+			<td class="areaof_use">{$v['ban_use_area']}</td>
+		</tr>
+		{/volist}
+		
+	 </tbody>
+	</table>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>异动信息</legend>
+  </fieldset>
+  <table  class="layui-table j-house-boxs">
+    <tbody>
+      <tr>
+		  <td>管段</td>
+		  <td>紫阳01</td>
+		  <td id="pipe_segment">紫阳02</td>
+	  </tr>
+	  <tr>
+		  <td>栋数</td>
+		  <td id="number_buildings_old">-12</td>
+		  <td id="number_buildings_new">12</td>
+	  </tr>
+	  <tr>
+		  <td>户数</td>
+		  <td id="households_old">-121</td>
+		  <td id="households_new">121</td>
+	  </tr>
+	  <tr>
+		  <td>建筑面积</td>
+		  <td id="builtup_area_old">-100.02</td>
+		  <td id="builtup_area_new">100.02</td>
+	  </tr>
+	  <tr>
+		  <td>规定租金</td>
+		  <td id="prescribed_rent_old">-98.0</td>
+		  <td id="prescribed_rent_new">98.0</td>
+	  </tr>
+	  <tr>
+		  <td>原价</td>
+		  <td id="original_price_old">-120000</td>
+		  <td id="original_price_new">120000</td>
+	  </tr>
+	  <tr>
+		  <td>使用面积</td>
+		  <td id="area_use_old">-150.00</td>
+		  <td id="area_use_new">150.00</td>
+	  </tr>
+   </tbody>
+  </table>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  	 <legend>审批状态</legend>
+  </fieldset> 
+  <div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
+					<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+				</ul>
+			</div>
+  	</div>
+  	  <input type="hidden" name="id" value="{$data_info['id']}">
+  </div>
+</form>
+{include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+	});
+</script>

@@ -1,0 +1,201 @@
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-boxs">
+	  <thead>
+		  <tr>
+		    <th>异动类别</th>
+		    <th>原管段</th>
+		    <th>新管段</th>
+		  </tr>
+	  </thead>
+	 <tbody>
+	   <tr>
+	 	  <td id="write_type">管段调整</td>
+		  <td id="raw_pipesection">{$params.insts[$data_info['old_inst_id']]}</td>
+		  <td id="new_pipesection">{$params.insts[$data_info['new_inst_id']]}</td>
+	   </tr>
+	 </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动明细</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>楼栋编号</th>
+		    <th>楼栋地址</th>
+		    <th>栋数</th>
+		    <th>建筑面积</th>
+		    <th>规定租金</th>
+			<th>原价</th>
+			<th>使用面积</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+	    {volist name="$data_info['data_json']" id="v"}
+	    <tr>
+			<td class="building_number">{$v['ban_number']}</td>
+			<td class="building_address">{$v['ban_address']}</td>
+			<td class="building_buildings">{$v['ban_num']}</td>
+			<td class="builtup_area">{$v['ban_area']}</td>
+			<td class="prescribed_rent">{$v['ban_rent']}</td>
+			<td class="original_price">{$v['ban_oprice']}</td>
+			<td class="areaof_use">{$v['ban_use_area']}</td>
+		</tr>
+		{/volist}
+		
+	 </tbody>
+	</table>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>异动信息</legend>
+  </fieldset>
+  <table  class="layui-table j-house-boxs">
+    <tbody>
+      <tr>
+		  <td>管段</td>
+		  <td>紫阳01</td>
+		  <td id="pipe_segment">紫阳02</td>
+	  </tr>
+	  <tr>
+		  <td>栋数</td>
+		  <td id="number_buildings_old">-12</td>
+		  <td id="number_buildings_new">12</td>
+	  </tr>
+	  <tr>
+		  <td>户数</td>
+		  <td id="households_old">-121</td>
+		  <td id="households_new">121</td>
+	  </tr>
+	  <tr>
+		  <td>建筑面积</td>
+		  <td id="builtup_area_old">-100.02</td>
+		  <td id="builtup_area_new">100.02</td>
+	  </tr>
+	  <tr>
+		  <td>规定租金</td>
+		  <td id="prescribed_rent_old">-98.0</td>
+		  <td id="prescribed_rent_new">98.0</td>
+	  </tr>
+	  <tr>
+		  <td>原价</td>
+		  <td id="original_price_old">-120000</td>
+		  <td id="original_price_new">120000</td>
+	  </tr>
+	  <tr>
+		  <td>使用面积</td>
+		  <td id="area_use_old">-150.00</td>
+		  <td id="area_use_new">150.00</td>
+	  </tr>
+   </tbody>
+  </table>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  	 <legend>审批状态</legend>
+  </fieldset> 
+  <div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
+					<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+				</ul>
+			</div>
+  	</div>
+  	  <input type="hidden" name="id" value="{$data_info['id']}">
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="j-margin-btn">
+  		<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+  		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+  		<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+  	</div>
+  </div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+			//审批不通过
+			$("#handover").on("click",function(){
+				layer.open({
+					type: 1,
+					btn: ["确定","取消"],
+					title: ['审批不通过原因'],
+					scrollbar: false,
+					area: ['400px','200px'],
+					offset: 'auto',
+					content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+					yes: function(index, layero){
+						
+						var formData = $('.layui-form').serialize();
+						var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=10';
+						if($('#change_reason').val()==''){
+							layer.tips('原因不能为空！', '#change_reason', {
+							  tips: 1
+							});
+						}
+						else if(!$('.layui-layer-btn0').hasClass('disabled')){
+							$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+							formSubmit('post',"{:url()}",data,index);
+						}
+			
+					}
+				});
+			})
+			
+			//打回
+			$("#backover").on("click",function(){
+				layer.open({
+					type: 1,
+					btn: ["确定","取消"],
+					title: ['打回原因'],
+					scrollbar: false,
+					area: ['400px','200px'],
+					offset: 'auto',
+					content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+					yes: function(index, layero){
+						
+						var formData = $('.layui-form').serialize();
+						var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=10';
+						if($('#back_reason').val()==''){
+							layer.tips('原因不能为空！', '#back_reason', {
+							  tips: 1
+							});
+						}
+						else if(!$('.layui-layer-btn0').hasClass('disabled')){
+							$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+							formSubmit('post',"{:url()}",data,index);
+						}
+			
+					}
+				});
+			})
+	});
+</script>

@@ -14,6 +14,7 @@ use app\deal\model\ChangeOffset as ChangeOffsetModel;
 use app\deal\model\ChangePause as ChangePauseModel;
 use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeInst as ChangeInstModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
@@ -135,7 +136,10 @@ class Process extends Admin
                 return $this->fetch('change_house_process');
                 break;
             case '10': // 管段调整
-                
+                $ChangeInstModel = new ChangeInstModel;
+                $row = $ChangeInstModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('change_inst_process');
                 break;
 
             case '11': // 租金追加调整
@@ -237,7 +241,10 @@ class Process extends Admin
                 return $this->fetch('Changehouse/detail');
                 break;
             case '10': // 管段调整
-                # code...
+                $ChangeInstModel = new ChangeInstModel;
+                $row = $ChangeInstModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('Changeinst/detail');
                 break;
 
             case '11': // 租金追加调整
