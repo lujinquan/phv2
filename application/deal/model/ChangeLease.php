@@ -31,9 +31,9 @@ class ChangeLease extends SystemBase
 
     protected $processAction = ['审批不通过','审批成功','打回','初审通过','审批通过','审批通过','发证','提交签字'];
 
-    protected $processDesc = ['失败','成功','打回','待资料员补充资料','待经管所长审批','待经管科长审批','待经租会计发证','待房管员提交签字'];
+    protected $processDesc = ['失败','成功','打回','待资料员补充初审','待经管所长审批','待经管科长审批','待经租会计发证','待房管员提交签字'];
 
-    protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
+    protected $processRole = ['2'=>4,'3'=>5,'4'=>8,'5'=>9,'6'=>6,'7'=>4];
 
     public function checkWhere($data,$type)
     {
@@ -97,6 +97,7 @@ class ChangeLease extends SystemBase
      */
     public function dataFilter($data)
     {
+
         if(isset($data['file']) && $data['file']){
             $data['change_imgs'] = implode(',',$data['file']);
         }
@@ -287,23 +288,21 @@ class ChangeLease extends SystemBase
             'applyReason' => $data['applyReason'],
             'applyType' => $data['applyType'],            
         ];
-
         if($data['save_type'] == 'save'){ //保存
             $data['change_status'] = 2;
         }else{ //保存并提交
             $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'step' => 1,
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
         }
         $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 18; //暂停计租
-        $data['change_order_number'] = date('Ym').'18'.random(14);
-        $data['child_json'][] = [
-            'step' => 1,
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
-        
+        $data['change_type'] = 18; //租约管理
+        $data['change_order_number'] = date('Ym').'18'.random(14); 
 
         // 审批表数据
         $processRoles = $this->processRole;
@@ -321,6 +320,7 @@ class ChangeLease extends SystemBase
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
+        //halt($row);
         return $row;
     }
 

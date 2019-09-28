@@ -24,7 +24,7 @@ class Changelease extends Validate
     //定义验证规则
     protected $rule = [	
         'id|异动单号' => 'require',     
-        'house_id|房屋编号' => 'require',      
+        'house_id|房屋编号' => 'require|isAllow',      
     ];
 
     //定义验证提示
@@ -32,7 +32,20 @@ class Changelease extends Validate
         'id.require' => '异动单号未知错误！'
     ];
 
-    
+    // 判断当前房屋是否可以申请使用权变更
+    protected function isAllow($value, $rule='', $data)
+    {
+        $msg = '';
+        $houseStatus = HouseModel::where([['house_id','eq',$value]])->value('house_status');
+        if($houseStatus != 1){
+            $msg = '房屋状态异常！';
+        }
+        $row = ChangeLeaseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
+        if($row){
+            $msg = '房屋已在该异动中，请勿重复申请！';
+        }
+        return $msg?$msg:true;
+    }
 
     //添加
     public function sceneForm()

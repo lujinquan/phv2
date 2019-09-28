@@ -24,7 +24,7 @@ class Changelease extends Admin
             $ChangeLeaseModel = new ChangeLeaseModel;
             $where = $ChangeLeaseModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
@@ -88,37 +88,48 @@ class Changelease extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+            // $filData = [
+            //     'save_type' => 'save',
+            //     'house_number' => '10800105671677',
+            //     'change_imgs' => '1',
+            //     'id' => 9250,
+            // ];
+            //halt($filData);
             // 入库使用权变更表
             $row = $ChangeLeaseModel->allowField(true)->update($filData);
+            //$row = $ChangeLeaseModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
-            //halt($useRow);
-            if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $row['id'];
-                if (!$ProcessModel->allowField(true)->create($filData)) {
-                    return $this->error('未知错误');
-                }
-                $msg = '保存并提交成功';
-            }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',3],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
-                if (!$process) {
-                    return $this->error('未知错误');
+
+            if($data['save_type'] == 'submit'){
+                if(count($row['child_json']) == 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $filData['change_id'] = $row['id'];
+                    if (!$ProcessModel->allowField(true)->create($filData)) {
+                        return $this->error('未知错误');
+                    }
+                }elseif(count($row['child_json']) > 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $process = $ProcessModel->where([['change_type','eq',18],['change_id','eq',$row['id']]])->update(['curr_role'=>5,'change_desc'=>'待资料员补充资料']);
+                    if (!$process) {
+                        return $this->error('未知错误');
+                    } 
                 }
                 $msg = '保存并提交成功';
             }else{
                 $msg = '保存成功';
             }
+
             return $this->success($msg,url('index'));
         }
+
         $id = $this->request->param('id');
-        // $ChangeLeaseModel = new ChangeLeaseModel;
-        // $row = $ChangeLeaseModel->detail($id);
-        //halt($row);
+        $ChangeLeaseModel = new ChangeLeaseModel;
+        $row = $ChangeLeaseModel->detail($id);
+        $this->assign('data_info',$row);
         $this->assign('id',$id);
         return $this->fetch();
     }
@@ -134,7 +145,6 @@ class Changelease extends Admin
             $data['code'] = 0;
             return json($data);
         }
-        
         $row = $ChangeLeaseModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
@@ -164,17 +174,16 @@ class Changelease extends Admin
     public function del()
     {
         $id = $this->request->param('id');       
-
         $row = ChangeLeaseModel::get($id);
-        if($row['change_status'] != 3){
-            $this->error('已被审批，无法删除！');
-        }
-        
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
         }else{
-            $this->error('删除失败');
+            $this->error('已被审批，无法删除！');
         }
     }
 
