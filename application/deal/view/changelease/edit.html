@@ -33,13 +33,12 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="house_number" name="house_number" value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
 					<input type="hidden" id="id" name="{$id}">
 					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
 					<input type="hidden" id="tenant_id" name="tenant_id">
 					<input type="hidden" id="tenant_name" name="tenant_name">
-					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>租约申请成功后，原租约自动失效！</div>
 			</div>
@@ -764,293 +763,145 @@
 		var id="{$id}";
 		$.get('{:url("detail")}', {'id':id}, function(res) {
 			console.log(res);
+			$('#house_number').val(res.data.house_info.house_number);
+			/* $('#ban_id').val(res.data.house.ban_id);
+			$('#house_id').val(res.data.house.house_id);
+			$('#tenant_id').val(res.data.house.tenant_id);
+			$('#tenant_name').val(res.data.house.tenant_name); */
+			$('#rent_straight').val(res.data.szno);
+			$('#applyAddress').val(res.data.ban_info.ban_address);
+			$('#applyStruct').val(params.structs[res.data.ban_info.ban_struct_id]);
+			$('#applyHouseFloor').val(res.data.ban_info.ban_floors);
+			$('#applyLiveFloor').val(res.data.house_info.house_floor_id);
+			$('#applyRentName').val(res.data.tenant_info.tenant_name);
+			$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
+			$('#applyRentNumber').val(res.data.tenant_info.tenant_card);
+			// $('#applyRentName1').val('监护人 姓名:张三');
+			// $('#applyRentNumber1').val('监护人身份证号:4203...');
+			$('#applyYear').val(res.data.data_json.applyYear);
+			$('#applyMonth').val(res.data.data_json.applyMonth);
+			$('#applyDay').val(res.data.data_json.applyDay);
+			$('.applyYear').text(res.data.data_json.applyYear);
+			$('.applyMonth').text(res.data.data_json.applyMonth);
+			$('.applyDay').text(res.data.data_json.applyDay);
+			$('#applyRoom1_data1').val(res.data.data_json.applyRoom1_data1);
+			$('#applyRoom1_data2').val(res.data.data_json.applyRoom1_data2);
+			$('#applyRoom1_data3').val(res.data.data_json.applyRoom1_data3);
+			$('#applyRoom1_data4').val(res.data.data_json.applyRoom1_data4);
+			$('#applyRoom1_data5').val(res.data.data_json.applyRoom1_data5);
+			$('#applyRoom1_data6').val(res.data.data_json.applyRoom1_data6);
+			$('#applyRoom2_data1').val(res.data.data_json.applyRoom2_data1);
+			$('#applyRoom2_data2').val(res.data.data_json.applyRoom2_data2);
+			$('#applyRoom2_data3').val(res.data.data_json.applyRoom2_data3);
+			$('#applyRoom2_data4').val(res.data.data_json.applyRoom2_data4);
+			$('#applyRoom2_data5').val(res.data.data_json.applyRoom2_data5);
+			$('#applyRoom2_data6').val(res.data.data_json.applyRoom2_data6);
+			$('#applyRoom3_data1').val(res.data.data_json.applyRoom3_data1);
+			$('#applyRoom3_data2').val(res.data.data_json.applyRoom3_data2);
+			$('#applyRoom3_data3').val(res.data.data_json.applyRoom3_data3);
+			$('#applyRoom3_data4').val(res.data.data_json.applyRoom3_data4);
+			$('#applyRoom3_data5').val(res.data.data_json.applyRoom3_data5);
+			$('#applyRoom3_data6').val(res.data.data_json.applyRoom3_data6);
+			$('#applyRoom4_data1').val(res.data.data_json.applyRoom4_data1);
+			$('#applyRoom4_data2').val(res.data.data_json.applyRoom4_data2);
+			$('#applyRoom4_data3').val(res.data.data_json.applyRoom4_data3);
+			$('#applyRoom4_data4').val(res.data.data_json.applyRoom4_data4);
+			$('#applyRoom4_data5').val(res.data.data_json.applyRoom4_data5);
+			$('#applyRoom4_data6').val(res.data.data_json.applyRoom4_data6);
+			$('#applyRoom5_data2').val(res.data.data_json.applyRoom5_data2);
+			$('#applyRoom5_data3').val(res.data.data_json.applyRoom5_data3);
+			$('#applyRoom5_data4').val(res.data.data_json.applyRoom5_data4);
+			$('#applyRoom5_data5').val(res.data.data_json.applyRoom5_data5);
+			$('#applyRoom6_data6').val(res.data.data_json.applyRoom6_data6);
+			$('#applyRoom7_data7').val(res.data.data_json.applyRoom7_data7);
+			$('#applyRoom6_data2').val(res.data.data_json.applyRoom6_data2);
+			$('#applyRoom6_data3').val(res.data.data_json.applyRoom6_data3);
+			$('#applyRoom6_data4').val(res.data.data_json.applyRoom6_data4);
+			$('#applyRoom6_data5').val(res.data.data_json.applyRoom6_data5);
+			$('#applyRoom7_data2').val(res.data.data_json.applyRoom7_data2);
+			$('#applyRoom7_data3').val(res.data.data_json.applyRoom7_data3);
+			$('#applyRoom7_data4').val(res.data.data_json.applyRoom7_data4);
+			$('#applyRoom7_data5').val(res.data.data_json.applyRoom7_data5);
+			$('#applyRoom8_data2').val(res.data.data_json.applyRoom8_data2);
+			$('#applyRoom8_data3').val(res.data.data_json.applyRoom8_data3);
+			$('#applyRoom8_data4').val(res.data.data_json.applyRoom8_data4);
+			$('#applyRoom8_data5').val(res.data.data_json.applyRoom8_data5);
+			$('#applyRoom9_data2').val(res.data.data_json.applyRoom9_data2);
+			$('#applyRoom9_data3').val(res.data.data_json.applyRoom9_data3);
+			$('#applyRoom9_data4').val(res.data.data_json.applyRoom9_data4);
+			$('#applyRoom9_data5').val(res.data.data_json.applyRoom9_data5);
+			$('#applyRoom10_data2').val(res.data.data_json.applyRoom10_data2);
+			$('#applyRoom10_data3').val(res.data.data_json.applyRoom10_data3);
+			$('#applyRoom10_data4').val(res.data.data_json.applyRoom10_data4);
+			$('#applyRoom10_data5').val(res.data.data_json.applyRoom10_data5);
+			$('#applyRoom11_data2').val(res.data.data_json.applyRoom11_data2);
+			$('#applyRoom11_data3').val(res.data.data_json.applyRoom11_data3);
+			$('#applyRoom11_data4').val(res.data.data_json.applyRoom11_data4);
+			$('#applyRoom11_data5').val(res.data.data_json.applyRoom11_data5);
+			$('#applyRoom12_data2').val(res.data.data_json.applyRoom12_data2);
+			$('#applyRoom12_data3').val(res.data.data_json.applyRoom12_data3);
+			$('#applyRoom12_data4').val(res.data.data_json.applyRoom12_data4);
+			$('#applyRoom12_data5').val(res.data.data_json.applyRoom12_data5);
+			$('#applyRoom12_data6').val(res.data.data_json.applyRoom12_data6);
+			$('#applyRoom12_data7').val(res.data.data_json.applyRoom12_data7);
+			$('#applyRoom12_data8').val(res.data.data_json.applyRoom12_data8);
+			$('#applyRoom12_data9').val(res.data.data_json.applyRoom12_data9);
+			$('#applyRoom13_data1').val(res.data.data_json.applyRoom13_data1);
+			$('#applyRoom13_data2').val(res.data.data_json.applyRoom13_data2);
+			$('#applyRoom13_data3').val(res.data.data_json.applyRoom13_data3);
+			$('#applyRoom13_data4').val(res.data.data_json.applyRoom13_data4);
+			$('#applyRoom13_data5').val(res.data.data_json.applyRoom13_data5);
+			$('#applyRoom13_data6').val(res.data.data_json.applyRoom13_data6);
+			$('#applyRoom13_data7').val(res.data.data_json.applyRoom13_data7);
+			$('#applyRoom13_data8').val(res.data.data_json.applyRoom13_data8);
+			$('#applyRoom14_data1').val(res.data.data_json.applyRoom14_data1);
+			$('#applyRoom14_data2').val(res.data.data_json.applyRoom14_data2);
+			$('#applyRoom14_data3').val(res.data.data_json.applyRoom14_data3);
+			$('#applyRoom14_data4').val(res.data.data_json.applyRoom14_data4);
+			$('#applyRoom14_data5').val(res.data.data_json.applyRoom14_data5);
+			$('#applyRoom14_data6').val(res.data.data_json.applyRoom14_data6);
+			$('#applyRoom14_data7').val(res.data.data_json.applyRoom14_data7);
+			$('#applyRoom14_data8').val(res.data.data_json.applyRoom14_data8);
+			$('#applyRoom15_data1').val(res.data.data_json.applyRoom15_data1);
+			$('#applyRoom15_data2').val(res.data.data_json.applyRoom15_data2);
+			$('#applyRoom15_data3').val(res.data.data_json.applyRoom15_data3);
+			$('#applyRoom15_data4').val(res.data.data_json.applyRoom15_data4);
+			$('#applyRoom15_data5').val(res.data.data_json.applyRoom15_data5);
+			$('#applyRoom15_data6').val(res.data.data_json.applyRoom15_data6);
+			$('#applyRoom15_data7').val(res.data.data_json.applyRoom15_data7);
+			$('#applyRoom15_data8').val(res.data.data_json.applyRoom15_data8);
+			$('#applyRoom16_data1').val(res.data.data_json.applyRoom16_data1);
+			$('#applyRoom16_data2').val(res.data.data_json.applyRoom16_data2);
+			$('#applyRoom16_data3').val(res.data.data_json.applyRoom16_data3);
+			$('#applyRoom16_data4').val(res.data.data_json.applyRoom16_data4);
+			$('#applyRoom16_data5').val(res.data.data_json.applyRoom16_data5);
+			$('#applyRoom16_data6').val(res.data.data_json.applyRoom16_data6);
+			$('#applyRoom16_data7').val(res.data.data_json.applyRoom16_data7);
+			$('#applyRoom16_data8').val(res.data.data_json.applyRoom16_data8);
+			$('#applyRoom17_data1').val(res.data.data_json.applyRoom17_data1);
+			$('#applyRoom17_data2').val(res.data.data_json.applyRoom17_data2);
+			$('#applyRoom17_data3').val(res.data.data_json.applyRoom17_data3);
+			$('#applyRoom17_data4').val(res.data.data_json.applyRoom17_data4);
+			$('#applyRoom17_data5').val(res.data.data_json.applyRoom17_data5);
+			$('#applyRoom18_data1').val(res.data.data_json.applyRoom18_data1);
+			$('#applyRoom18_data2').val(res.data.data_json.applyRoom18_data2);
+			$('#applyRoom18_data3').val(res.data.data_json.applyRoom18_data3);
+			$('#applyRoom18_data4').val(res.data.data_json.applyRoom18_data4);
+			$('#applyRoom18_data5').val(res.data.data_json.applyRoom18_data5);
+			$('#applyRoom19_data1').val(res.data.data_json.applyRoom19_data1);
+			$('#applyRoom19_data2').val(res.data.data_json.applyRoom19_data2);
+			$('#applyRoom19_data3').val(res.data.data_json.applyRoom19_data3);
+			$('#applyRoom19_data4').val(res.data.data_json.applyRoom19_data4);
+			$('#applyRoom19_data5').val(res.data.data_json.applyRoom19_data5);
+			$('#applyRoom20_data1').val(res.data.data_json.applyRoom20_data1);
+			$('#applyRoom20_data2').val(res.data.data_json.applyRoom20_data2);
+			$('#applyRoom20_data3').val(res.data.data_json.applyRoom20_data3);
+			$('#applyRoom20_data4').val(res.data.data_json.applyRoom20_data4);
+			$('#applyRoom20_data5').val(res.data.data_json.applyRoom20_data5);
+			$('#applyRoom21_data1').val(res.data.data_json.applyRoom21_data1);
+			$('#applyRoom21_data2').val(res.data.data_json.applyRoom21_data2);
+			$('#applyRoom21_data3').val(res.data.data_json.applyRoom21_data3);
 		})
-		//获取房屋查询器
-		 $(".layui-form").on('click','.j-house_number',function(){
-			layer.open({
-						title: '房屋查询器'
-						,type: 2
-						,offset: 'auto'
-						,area: ['70%', '60%']
-						, btn:false
-						,pageTabs: false
-						,content: '{:url('system/index/house')}'
-						,btn: ['确定','关闭']
-						,yes: function(index, layero){
-							var row = window["layui-layer-iframe" + index].hoesedata();
-							var mydate = new Date(),
-							    myyear = mydate.getFullYear(),
-							    mymonth = mydate.getMonth()+1,
-								myday = mydate.getDate();
-							//console.log(row);
-							layer.close(index);
-							//$("#house_number").val(row.house_number);//获取房屋编号
-                            $.get('/admin.php/system/api/lease_house_info', {'id':row.house_id}, function(res) {
-								//console.log('租约表详情数据：',res);//return false;
-                                // res = JSON.parse(res);
-                            	//console.log(res);
-								$('#house_number').val(res.data.house.house_number);
-								$('#ban_id').val(res.data.house.ban_id);
-								$('#house_id').val(res.data.house.house_id);
-								$('#tenant_id').val(res.data.house.tenant_id);
-								$('#tenant_name').val(res.data.house.tenant_name);
-                            	$('#rent_straight').val(res.data.house.house_szno);
-                            	$('#applyAddress').val(res.data.house.ban_address);
-                            	$('#applyStruct').val(params.structs[res.data.house.ban_struct_id]);
-                            	$('#applyHouseFloor').val(res.data.house.ban_floors);
-								$('#applyLiveFloor').val(res.data.house.house_floor_id);
-								$('#applyRentName').val(res.data.house.tenant_name);
-								$('#applyRentTel').val(res.data.house.tenant_tel);
-								$('#applyRentNumber').val(res.data.house.tenant_card);
-								// $('#applyRentName1').val('监护人 姓名:张三');
-								// $('#applyRentNumber1').val('监护人身份证号:4203...');
-								$('#applyYear').val(myyear);
-								$('#applyMonth').val(mymonth);
-								$('#applyDay').val(myday);
-								$('.applyYear').text(myyear);
-								$('.applyMonth').text(mymonth);
-								$('.applyDay').text(myday);
-                            	$('#applyRoom1_data5').val(res.data.house.hall);
-                            	$('#applyRoom1_data6').val(res.data.house.hall_rent);
-                            	$('#applyRoom2_data5').val(res.data.house.kitchen);
-                            	$('#applyRoom2_data6').val(res.data.house.kitchen_rent);
-                            	$('#applyRoom3_data5').val(res.data.house.toilet);
-                            	$('#applyRoom3_data6').val(res.data.house.toilet_rent);
-                            	$('#applyRoom4_data5').val(res.data.house.inner_aisle);
-                            	$('#applyRoom4_data6').val(res.data.house.inner_aisle_rent);
-                            	$('#applyRoom5_data6').val(res.data.house.house_below_five_num);//没有参数
-                            	$('#applyRoom5_data7').val(res.data.house.below_five_num_rent);
-                            	$('#applyRoom6_data6').val(res.data.house.house_more_five_num);//没有参数
-                            	$('#applyRoom6_data7').val(res.data.house.more_five_num_rent);
-                            	if(parseInt(res.data.house.pump_cost) != 0){
-                            		$('#applyRoom7_data8').val(res.data.house.total_lease_area);
-                            	}else{
-                            		$('#applyRoom7_data8').val(0);
-                            	}
-                            		
-                            	$('#applyRoom7_data9').val(res.data.house.pump_cost);
-                            	$('#applyRoom20_data2').val(res.data.house.total_use_area);
-                            	$('#applyRoom20_data3').val(res.data.house.total_lease_area);
-                            	$('#applyRoom20_data4').val(res.data.house.total_room_month);
-                            	$('#applyRoom20_data5').val(res.data.house.heding_room_month);
-                            	var ws = 1;
-                            	var fb = 13;
-                            	var wfb = 13;
-                            	var bg = 16,
-                            		flag_12 = 0,//高1.7至2.2米搁楼标识（1个）
-                            		flag_13 = 0;//无封闭阳台标识（3个）
-                            	res.data.room.sort(function(a,b){
-                            		return b.room_type - a.room_type;
-                            	});
-                            	//console.log(res.data.room);
-                            	for(var i = 0;i < res.data.room.length;i++){
-                            		var this_data = res.data.room[i];//$('#applyRoom7_data2').val(this_data.room_number);
-									//console.log(res.data.room[i]);
-                            		switch(this_data.room_type){
-                            			case 1:
-                            				$('#applyRoom'+ws+'_data1').val(this_data.room_door);
-                            				$('#applyRoom'+ws+'_data2').val(this_data.room_use_area);
-                            				$('#applyRoom'+ws+'_data3').val(this_data.room_lease_area);
-                            				$('#applyRoom'+ws+'_data4').val(this_data.room_cou_rent);//没有参数
-                            				if(ws < 4){
-                            					ws++;
-                            				}
-                            				break;
-                            			case 2:
-                            				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom9_data2').val(this_data.room_door);
-                            					$('#applyRoom9_data3').val(this_data.room_use_area);
-                            					$('#applyRoom9_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom9_data5').val(this_data.room_cou_rent);//没有参数
-                            				}else{
-                            					$('#applyRoom10_data2').val(this_data.room_door);
-                            					$('#applyRoom10_data3').val(this_data.room_use_area);
-                            					$('#applyRoom10_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom10_data5').val(this_data.room_cou_rent);//没有参数
-                            				}
-                            				break;
-                            			case 3:
-                            				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom11_data2').val(this_data.room_door);
-                            					$('#applyRoom11_data3').val(this_data.room_use_area);
-                            					$('#applyRoom11_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom11_data5').val(this_data.room_cou_rent);//没有参数
-                            				}else{
-                            					$('#applyRoom12_data2').val(this_data.room_door);
-                            					$('#applyRoom12_data3').val(this_data.room_use_area);
-                            					$('#applyRoom12_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom12_data5').val(this_data.room_cou_rent);//没有参数
-                            				}
-                            				break;
-                            			case 4:
-                            				$('#applyRoom'+fb+'_data1').val(this_data.room_door);
-                            				$('#applyRoom'+fb+'_data2').val(this_data.room_use_area);
-                            				$('#applyRoom'+fb+'_data3').val(this_data.room_lease_area);
-                            				$('#applyRoom'+fb+'_data4').val(this_data.room_cou_rent);//没有参数
-                            				fb++;
-                            				break;
-                            			case 5:
-                            				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom5_data2').val(this_data.room_door);
-                            					$('#applyRoom5_data3').val(this_data.room_use_area);
-                            					$('#applyRoom5_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom5_data5').val(this_data.room_cou_rent);//没有参数
-                            				}else{
-                            					$('#applyRoom6_data2').val(this_data.room_door);
-                            					$('#applyRoom6_data3').val(this_data.room_use_area);
-                            					$('#applyRoom6_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom6_data5').val(this_data.room_cou_rent);//没有参数
-                            				}
-                            				break;
-                            			case 6:
-                            				if(this_data.room_pub_num =="独"){
-                            					$('#applyRoom7_data2').val(this_data.room_door);
-                            					$('#applyRoom7_data3').val(this_data.room_use_area);
-                            					$('#applyRoom7_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom7_data5').val(this_data.room_cou_rent);//没有参数
-                            				}else{
-                            					$('#applyRoom8_data2').val(this_data.room_door);
-                            					$('#applyRoom8_data3').val(this_data.room_use_area);
-                            					$('#applyRoom8_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom8_data5').val(this_data.room_cou_rent);//没有参数
-                            				}
-                            				break;
-                            			case 7:
-                            				if(bg < 20){
-                            					$('#applyRoom'+bg+'_data1').val('');
-                            					$('#applyRoom'+bg+'_data2').val(this_data.room_door);
-                            					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
-                            					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
-                            					bg++;
-                            				}
-                            				break;
-                            			case 8:
-                            					if(flag_13 < 3){
-                            						$('#applyRoom'+wfb+'_data5').val(this_data.room_door);
-                            						$('#applyRoom'+wfb+'_data6').val(this_data.room_use_area);
-                            						$('#applyRoom'+wfb+'_data7').val(this_data.room_lease_area);
-                            						$('#applyRoom'+wfb+'_data8').val(this_data.room_cou_rent);
-                            						wfb++;
-                            						flag_13++;
-                            					}else{
-                            						$('#applyRoom'+bg+'_data1').val('无封闭阳台');
-                            						$('#applyRoom'+bg+'_data2').val(this_data.room_door);
-                            						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
-                            						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            						$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
-                            						if(bg < 19){
-                            							bg++;
-                            						}
-                            					}
-                            				break;
-                            			case 9:
-                            					$('#applyRoom'+bg+'_data1').val('高2.20米以上搁楼');
-                            					$('#applyRoom'+bg+'_data2').val(this_data.room_door);
-                            					$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
-                            					$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            					$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
-                            					if(bg < 19){
-                            						bg++;
-                            					}
-                            				break;
-                            			case 10:
-                            					if(flag_12 < 1){
-                            						$('#applyRoom12_data6').val(this_data.room_door);
-                            						$('#applyRoom12_data7').val(this_data.room_use_area);
-                            						$('#applyRoom12_data8').val(this_data.room_lease_area);
-                            						$('#applyRoom12_data9').val(this_data.room_cou_rent);
-                            						flag_12++;
-                            					}else{
-                            						$('#applyRoom'+bg+'_data1').val('高1.7至2.2米搁楼');
-                            						$('#applyRoom'+bg+'_data2').val(this_data.room_door);
-                            						$('#applyRoom'+bg+'_data3').val(this_data.room_use_area);
-                            						$('#applyRoom'+bg+'_data4').val(this_data.room_lease_area);
-                            						$('#applyRoom'+bg+'_data5').val(this_data.room_cou_rent);
-                            						if(bg < 19){
-                            							bg++;
-                            						}
-                            					}
-                            				break;
-                            		}
-                            	}
-                            	
-                            	/* $('.input_remark').off('blur');
-                                $('.input_remark').blur(function(){
-                                	var str_new = $('.remark label').text() + '&nbsp&nbsp'
-                                	 + $('.remark select option:selected').text() + '&nbsp&nbsp'
-                                	 + $('.input_remark').val();
-                                	
-                                	if(res.data.house.Recorde != ''){
-                                		str_new = str_new + ';' + res.data.house.Recorde;
-                                	}
-                                	$('.applyText_other').val(str_new);
-                                	console.log(str_new);
-                                });
-                            		
-                            	$('.remark p').remove();
-                                var recorde_array = res.data.house.Recorde.split(';');
-                            	for(var i = 0,length = recorde_array.length;i < length; i++){
-                            		$('.remark').append($('<p>'+recorde_array[i]+'</p>'));
-                            	}
-                                $('.remark select').off('change');
-                                $('.remark select').change(function(){
-                                	if($(this).val() == "3" || $(this).val() == "4"){
-                                		$.get('/ph/Api/lease_use?HouseID'+$('#leaseHouseInput').val(),function(res){
-                                			res = JSON.parse(res);
-                                			$('.input_remark').val(res.data.recorde).show();
-                                		})
-                                	}else if($(this).val() == "6"){
-                                		$('.input_remark').show();
-                                	}else{
-                                		$('.input_remark').hide();
-                                	}
-                            		
-                            		
-                                	var str_new = $('.remark label').text() + '&nbsp&nbsp' 
-                                	+ $('.remark select option:selected').text() + '&nbsp&nbsp' 
-                                	+ $('.input_remark').val();
-                                	
-                                	if(res.data.house.Recorde != ''){
-                                		str_new = str_new + ';' + res.data.house.Recorde;
-                                	}
-                                	$('.applyText_other').val(str_new);
-                                	//console.log(str_new);
-                                }) */
-                            })
-                            
-                            
-                            /* var data = $('#MyForm').serializeArray();;
-                            var formData = fileTotall.getArrayFormdata();
-                            if(!formData){
-                            	formData = new FormData();
-                            }
-                            for(var i = 0;i < data.length;i++){
-                            	formData.append(data[i].name,data[i].value);
-                            }
-                            		
-                            formData.append('houseID',$('#leaseHouseInput').val());
-                            formData.append('applyReason',$('.applyReason').val()); 
-                            $.ajax({
-                                type: "post",
-                                url: "/ph/LeaseApply/add",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(res) {
-                                    res = JSON.parse(res);
-                                    layer.msg(res.msg,{time:4000});
-                                    if(res.retcode == '2000'){
-                                        location.reload();
-                                    }
-                                }
-                            }); */
-                            
-						},btn2: function(index, layero){
-							layer.close(index);
-						}
-			 });
-		})	
 		//身份证
 		upload.render({
 			elem: '#upload_img3',
