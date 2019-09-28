@@ -21,11 +21,9 @@ class Changename extends Admin
             $getData = $this->request->get();
             $ChangeNameModel = new ChangeNameModel;
             $where = $ChangeNameModel->checkWhere($getData,'apply');
-            //halt($where);
-            $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_number,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -91,21 +89,21 @@ class Changename extends Admin
             if (!$useRow) {
                 return $this->error('申请失败');
             }
-            //halt($useRow);
-            if($data['save_type'] == 'submit' && count($useRow['child_json']) == 1){ //如果是保存并提交，则入库审批表
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $useRow['id'];
-                if (!$ProcessModel->allowField(true)->create($filData)) {
-                    return $this->error('未知错误');
-                }
-                $msg = '保存并提交成功';
-            }elseif($data['save_type'] == 'submit' && count($useRow['child_json']) > 1){ 
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',17],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
-                if (!$process) {
-                    return $this->error('未知错误');
+            if($data['save_type'] == 'submit'){
+                if(count($useRow['child_json']) == 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $filData['change_id'] = $useRow['id'];
+                    if (!$ProcessModel->allowField(true)->create($filData)) {
+                        return $this->error('未知错误');
+                    }
+                }elseif(count($useRow['child_json']) > 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $process = $ProcessModel->where([['change_type','eq',17],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    if (!$process) {
+                        return $this->error('未知错误');
+                    }
                 }
                 $msg = '保存并提交成功';
             }else{
@@ -138,10 +136,9 @@ class Changename extends Admin
             $ChangeNameModel = new ChangeNameModel;
             $where = $ChangeNameModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_number,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -153,18 +150,18 @@ class Changename extends Admin
     public function del()
     {
         $id = $this->request->param('id');       
-
         $row = ChangeNameModel::get($id);
-        if($row['change_status'] != 3){
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
+        }else{
             $this->error('已被审批，无法删除！');
         }
-        
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
-        }else{
-            $this->error('删除失败');
-        }
+
     }
 
 }

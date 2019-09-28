@@ -21,11 +21,9 @@ class Changeuse extends Admin
             $getData = $this->request->get();
             $ChangeUseModel = new ChangeUseModel;
             $where = $ChangeUseModel->checkWhere($getData,'apply');
-            //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_use_type,a.old_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.transfer_rent,a.change_use_type,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -91,26 +89,28 @@ class Changeuse extends Admin
             if (!$useRow) {
                 return $this->error('申请失败');
             }
-            //halt($useRow);
-            if($data['save_type'] == 'submit' && count($useRow['child_json']) == 1){ //如果是保存并提交，则入库审批表
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $useRow['id'];
-                if (!$ProcessModel->allowField(true)->create($filData)) {
-                    return $this->error('未知错误');
-                }
-                $msg = '保存并提交成功';
-            }elseif($data['save_type'] == 'submit' && count($useRow['child_json']) > 1){ 
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
-                if (!$process) {
-                    return $this->error('未知错误');
+            
+            if($data['save_type'] == 'submit'){
+                if(count($useRow['child_json']) == 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $filData['change_id'] = $useRow['id'];
+                    if (!$ProcessModel->allowField(true)->create($filData)) {
+                        return $this->error('未知错误');
+                    } 
+                }elseif(count($useRow['child_json']) > 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    if (!$process) {
+                        return $this->error('未知错误');
+                    } 
                 }
                 $msg = '保存并提交成功';
             }else{
                 $msg = '保存成功';
             }
+            
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
@@ -137,11 +137,9 @@ class Changeuse extends Admin
             $getData = $this->request->get();
             $ChangeUseModel = new ChangeUseModel;
             $where = $ChangeUseModel->checkWhere($getData,'record');
-            //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_use_type,a.old_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.change_use_type,a.transfer_rent,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';

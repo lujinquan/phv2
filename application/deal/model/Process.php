@@ -56,6 +56,10 @@ class Process extends SystemBase
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
         }
+        // 检索审核当前的状态
+        if(isset($data['change_desc']) && $data['change_desc']){
+            $where[] = ['a.change_desc','like','%'.$data['change_desc'].'%'];
+        }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){
             $startTime = strtotime($data['ctime']);
@@ -158,6 +162,10 @@ class Process extends SystemBase
                 case '17': // 别字更正
                     $ChangeNameModel = new ChangeNameModel;
                     $result = $ChangeNameModel->process($data);
+                    break;
+                case '18': // 租约管理
+                    $ChangeLeaseModel = new ChangeLeaseModel;
+                    $result = $ChangeLeaseModel->process($data);
                     break;
                     default:
                     # code...

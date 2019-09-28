@@ -9,6 +9,7 @@
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
 					<input type="hidden" id="tenant_id" name="tenant_id">
 					<b class="j-explain-search j-house_number">查询</b>
@@ -43,7 +44,7 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 身份证号</label>
 								<div class="j-input-inline">
-									<input type="text" id="old_tenant_card" readonly value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
+									<input type="text" id="old_tenant_card" name="old_tenant_card" readonly value="" lay-verify="require|verifyidnumber"  placeholder="" autocomplete="off" class="layui-input">
 								</div>
 							</div>
 						</div>
@@ -104,9 +105,9 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
-				<label class="j-form-label">备注</label>
+				<label class="j-form-label">异动原由</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_reason" name="change_remark" value="" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_reason" name="change_remark" value="" placeholder="请输入异动原由" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -221,9 +222,9 @@
 			,btn: ['确定','关闭']
 			,yes: function(index, layero){
 				var row = window["layui-layer-iframe" + index].hoesedata();
-				//console.log(row);
 				layer.close(index);
-				$("#house_id").val(row.house_id);//获取楼栋id
+				$("#ban_id").val(row.ban_id);//获取楼栋id
+				$("#house_id").val(row.house_id);//获取房屋id
 				$("#house_number").val(row.house_number);//获取楼栋编号
 				$("#tenant_id").val(row.tenant_id);//获取租户id
 				$("#old_tenant_number,#new_tenant_number").val(row.tenant_number);//当前租户编号

@@ -9,6 +9,7 @@
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
@@ -119,7 +120,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">转让金额</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_money" name="transfer_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+					<input type="number" id="tenant_money" name="transfer_rent" value="" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			
@@ -228,6 +229,7 @@
 				console.log(row);
 				layer.close(index);
 				$("#house_id").val(row.house_id);//获取楼栋id
+				$("#ban_id").val(row.ban_id);//获取楼栋id
 				$("#house_number").val(row.house_number);//获取楼栋编号
 				$("#old_tenant_id").val(row.tenant_id);//获取租户id
 				$("#old_tenant_number").val(row.tenant_number);//当前租户编号

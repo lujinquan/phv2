@@ -12,7 +12,6 @@
 					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
 					<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
 					<input type="hidden" name="id" value="{$data_info['id']}">
-					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>别字更正后，原租约自动失效！</div>
 			</div>
@@ -256,32 +255,6 @@
 				,upload = layui.upload
 				,layer = layui.layer;
       
-	      //获取楼栋查询器
-		  $(".layui-form").on('click','.j-house_number',function(){
-		 layer.open({
-			title: '房屋查询器'
-			,type: 2
-			,offset: 'auto'
-			,area: ['70%', '60%']
-			, btn:false
-			,pageTabs: false
-			,content: '{:url('system/index/house')}'
-			,btn: ['确定','关闭']
-			,yes: function(index, layero){
-				var row = window["layui-layer-iframe" + index].hoesedata();
-				//console.log(row);
-				layer.close(index);
-				$("#house_id").val(row.house_id);//获取楼栋id
-				$("#house_number").val(row.house_number);//获取楼栋编号
-				$("#tenant_id").val(row.tenant_id);//获取租户id
-				$("#old_tenant_number,#new_tenant_number").val(row.tenant_number);//当前租户编号
-				$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
-				$("#old_tenant_card,#new_tenant_card").val(row.tenant_card);//当前租户身份证号
-			},btn2: function(index, layero){
-				layer.close(index);
-			}
-		  });
-		 })	
 		  //身份证信息
 		  upload.render({
 		  	elem: '#upload_img3',

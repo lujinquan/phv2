@@ -27,7 +27,8 @@ class Changename extends Validate
         'house_id|房屋编号' => 'require|isAllow',
         'tenant_id|租户编号' => 'require',
         'old_tenant_name|原租户姓名' => 'require',
-        'new_tenant_name|新租户姓名' => 'require|different:old_tenant_name',      
+        'new_tenant_name|新租户姓名' => 'require|different:old_tenant_name',  
+        'old_tenant_card|身份证号' => 'require',    
     ];
 
     //定义验证提示

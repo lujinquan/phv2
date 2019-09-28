@@ -214,9 +214,9 @@
 	    		btn: ["确定","取消"],
 	    		title: ['审批不通过原因'],
 	    		scrollbar: false,
-	    		area: ['400px','400px'],
+	    		area: ['400px','200px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='不通过原因'></div>",
+	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
@@ -241,9 +241,9 @@
 	    		btn: ["确定","取消"],
 	    		title: ['打回原因'],
 	    		scrollbar: false,
-	    		area: ['400px','400px'],
+	    		area: ['400px','200px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();

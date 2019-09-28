@@ -1,10 +1,7 @@
-<div class="j-table-content j-no-tab">
+<div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
-				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
 				</div>
@@ -27,13 +24,23 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="original_name"   placeholder="原姓名" autocomplete="off" class="layui-input">
+					<input type="text" name="old_tenant_name"   placeholder="原姓名" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="new_name"   placeholder="新姓名" autocomplete="off" class="layui-input">
+					<input type="text" name="new_tenant_name"   placeholder="新姓名" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
+					<input type="text" name="ctime" id="date1"  placeholder="申请时间" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="ftime" id="date2"  placeholder="完成时间" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:155px;">
+					<select name="change_status">
+						<option value="">审核状态</option>
+						<option value="1">成功</option>
+						<option value="0">失败</option>
+					</select>
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -68,7 +75,10 @@
 		
 		//日期
 		  laydate.render({
-		    elem: '#date'
+		    elem: '#date1'
+		  });
+		  laydate.render({
+		    elem: '#date2'
 		  });
 		table.render({
 			elem: '#dataTable',
@@ -85,7 +95,7 @@
 			  }
 			  ,cols: [
 				[  
-					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号'}, 
+					{field: 'change_order_number',hide: true,minWidth: 180,align:'center',title: '异动编号'}, 
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
@@ -97,15 +107,21 @@
 		                    return params.owners[d.ban_owner_id];
 		                }
 					}, 
+					{field: 'house_use_id',hide: true, minWidth: 120,align:'center',title: '使用性质', 
+						templet: function(d) {
+		                    return params.uses[d.house_use_id];
+		                }
+					},
 					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '原姓名'}, 
 					{field: 'new_tenant_name',minWidth: 120,align:'center',title: '新姓名'}, 
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',width: 120,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
 

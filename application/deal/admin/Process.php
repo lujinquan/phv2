@@ -32,11 +32,10 @@ class Process extends Admin
             $getData = $this->request->get();
             $ProcessModel = new ProcessModel;
             $where = $ProcessModel->checkWhere($getData);
-            //halt($where);
-            $fields = "a.id,a.change_id,a.change_type,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_desc,a.curr_role,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_id,a.change_type,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = [];
-            $temps = Db::name('change_process')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.ctime asc')->select();
+            $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.ctime asc')->select();
             foreach($temps as $k => $v){
                 if($v['curr_role'] == ADMIN_ROLE){
                     $v['is_process'] = 1;
@@ -46,9 +45,7 @@ class Process extends Admin
                     array_push($data['data'],$v);
                 }
             }
-           
-            //dump($where);halt($data['data']);
-            $data['count'] = Db::name('change_process')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.id');
+            $data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -176,6 +173,12 @@ class Process extends Admin
                 $this->assign('data_info',$row);
                 return $this->fetch('change_name_process');
                 break;
+            case '18': // 租约管理
+                $ChangeLeaseModel = new ChangeLeaseModel;
+                $row = $ChangeLeaseModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('change_lease_process');
+                break;
             default:
                 # code...
                 break;
@@ -280,6 +283,12 @@ class Process extends Admin
                 $row = $ChangeNameModel->detail($id);
                 $this->assign('data_info',$row);
                 return $this->fetch('Changename/detail');
+                break;
+            case '18': // 租约管理
+                $ChangeLeaseModel = new ChangeLeaseModel;
+                $row = $ChangeLeaseModel->detail($id);
+                $this->assign('data_info',$row);
+                return $this->fetch('Changelease/detail');
                 break;
             default:
                 # code...
