@@ -18,6 +18,8 @@ use app\deal\model\ChangeInst as ChangeInstModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
+
+
 /**
  * 审核
  */
@@ -183,6 +185,32 @@ class Process extends Admin
                 # code...
                 break;
         }
+    }
+
+    /**
+     * 租约打印
+     * @return [type] [description]
+     */
+    public function printout()
+    {
+
+        if ($this->request->isAjax()) {
+            
+        }
+
+        $id = $this->request->param('id');
+        $ChangeLeaseModel = new ChangeLeaseModel;
+        $findRow = $ChangeLeaseModel->get($id);
+        if($findRow['qrcode']){   
+            @unlink($_SERVER['DOCUMENT_ROOT'].$findRow['qrcode']); //删除过期的二维码
+        }
+        $qrcodeUrl = $ChangeLeaseModel->makeQrcode(); //生成新的二维码
+        Db::name('system_config')->where('name','szno')->setInc('value',1); //更新计数器
+        $findRow->update(['id'=>$id,'last_print_time'=>time(),'print_times'=>Db::raw('print_times+1'),'qrcode'=>$qrcodeUrl]);
+  
+        $row = $ChangeLeaseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch('changelease/printout');
     }
 
     public function detail()

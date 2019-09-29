@@ -9,6 +9,7 @@ use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+include EXTEND_PATH.'phpqrcode/phpqrcode.php';
 
 class ChangeLease extends SystemBase
 {
@@ -88,6 +89,26 @@ class ChangeLease extends SystemBase
         }
         
         return $where;
+    }
+
+    //不需要调试模式，ob_end_clean() 不能去掉否则乱码
+    public function makeQrcode()
+    {
+        ob_end_clean();
+
+        $code = substr(md5(substr(uniqid(),-6)),6).substr(uniqid(),-6);
+
+        $value = 'https://www.mylucas.com.cn';          //二维码内容
+        $errorCorrectionLevel = 'L';    //容错级别 
+        $matrixPointSize = 6;           //生成图片大小
+        $url = '/upload/qrcode/'.$code.'.png';
+        $filename = $_SERVER['DOCUMENT_ROOT'].$url;
+
+        $qrcode = new \QRcode;
+
+        $qrcodeUrl = $qrcode::png($value,$filename,$errorCorrectionLevel, $matrixPointSize, 2);
+
+        return $url;
     }
 
     /**

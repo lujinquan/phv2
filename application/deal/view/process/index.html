@@ -57,6 +57,9 @@
 	<script type="text/html" id="toolbar">
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	  {{# if(d.change_type == 18 && d.curr_role == 6 && d.is_process){ }}
+	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
+	  {{# } }}
 	  {{# if(d.is_process){ }}
 	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-primary">审批</a>
 	  {{#  } else { }}
@@ -146,7 +149,7 @@
 						title: '审核状态'
 					}, {
 						title: '操作',
-						width: 180,
+						width: 200,
 						//minWidth: 260,
 						align:'center',
 						templet: '#buttonTpl',

@@ -1,0 +1,768 @@
+{include file="system@block/layui" /}
+<style type="text/css">
+    #leaseprint_1_{font-family:"SimSun"}
+  .print_1_ table{border-spacing:0;border-top: 1px solid #000;border-right: 1px solid #000;}
+  .print_1_ td,.print_1_ th{height:24px;border-left: 1px solid #000;border-bottom: 1px solid #000;font-size:13px;font-weight:400;padding:2px 1px;}
+  #jbydtable td{padding:3px 2px;}
+  .page-tab-content{padding: 20px;}
+  #leaseprint_1_{margin: 0 auto;}
+</style>
+<div  class="clearfix">
+	<button type="button" class="layui-btn layui-btn-warm on fr" onclick="click_print()" id="button_print">
+		<i class="layui-icon layui-icon-print"></i>
+		打印
+	</button>
+</div>
+<div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1080px;">
+        <form id="Myprint_1_" width="1091px">
+            <!--startprint2-->
+            
+            <!-- 基本信息 -->
+            <div style="">
+                <div style="margin-top:44px;margin-left:2%;float: left; width: 46%;height:611px;">
+                    <!-- 约定事项 -->
+                    <div class="textContent">
+                        <table id="jbydtable" border=1 style="height:611px;box-sizing:border-box;border:1px solid #000;padding: 5px; display: inline-block;">
+                            <tbody>
+                            <tr>
+                                <td style="border:0px;"><p style="margin: 10px 0 10px 0; text-align: center;"><span style="font-size: 24px; width: 100px; border-bottom: 3px double #333333;">约定事项</span></p></td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">1、承租人代表履行直管公房的看管义务、负责缴纳租金等事项。</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;" rowspan="3">2、监护人代未成年人、无民事行为能力或限制民事行为能力人的承租人履行直管公房的看管义务、负责缴纳租金等事项，待被监护人成年或具备完全民事行为能力时，办理承租人过户手续。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;" rowspan="2">3、出租人（下称甲方）和承租人（下称乙方）应遵守《武汉市房产管理条例》和租约约定的相关规定。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;letter-spacing:2px;" rowspan="2">4、对房屋的自然损坏或合同约定由甲方修缮的，甲方负责修复。不及时修复，致使房屋发生破坏性事故，造成乙方财产损失或者人身伤害的，甲方应当承担赔偿责任。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;" rowspan="2">5、乙方应当合理使用房屋及附属设施，不得擅自拆改，扩建或增添。确需变动的，必须征得甲方同意并签订书面合同。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;letter-spacing:2px;" rowspan="2">6、乙方不得在室内堆放易燃易爆物品，家庭用电负荷必须与房屋配备电表容量相匹配，如乙方使用不当造成房屋损坏或人身财产损失的，由乙方负责修复或赔偿。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;letter-spacing:2px;" rowspan="2">7、乙方应于本月底前交付当月租金，不得拖欠；逾期未交，房管所下达催缴通知单仍未缴纳的，乙方除应支付拖欠租金外，还应按月支付欠租总额3%的违约金。</td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;">8、乙方有下列行为之一的，甲方有权终止合同，收回房屋：</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">（1）将承租的房屋擅自转租的；</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">（2）将承租的房屋转让、转借他人或擅自调换使用的；</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">（3）将承租的房屋擅自拆改结构或改变用途的；</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">（4）拖欠租金累计六个月以上的；</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;">（5）利用承租房屋进行违法活动。</td>
+                            </tr>
+                            <tr>
+                                <td style="border:0px;" rowspan="2"></td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+                                <td style="border:0px;text-align:right;">武汉市住房保障和房屋管理局印制</td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </div>
+
+                <div style="float: left; width: 44%; margin-left: 4%;height:611px;">
+                    <p class="topHeader" style="text-align: right;font-size:14px;margin:10px 0;">
+                        租直NO:&nbsp;&nbsp;&nbsp;<span id="print_1_NO"></span>
+                    </p>
+                    <table id="table1" border=1  style="height:611px;box-sizing:border-box">
+                        <tbody><tr>
+                            <td rowspan="2" style="width: 80px;">房屋坐落</td>
+                            <td id="print_1_Address" rowspan="2" colspan="2" style="width: 130px;"></td>
+                            <td rowspan="2" style="width: 50px;">结构</td>
+                            <td id="print_1_Struct" rowspan="2" style="width: 80px;">
+                                
+                            </td>
+                            <td style="width: 50px;">房屋层</td>
+                            <td id="print_1_HouseFloor" style="width: 20px;">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>居住层</td>
+                            <td id="print_1_LiveFloor"></td>
+                        </tr>
+                        <tr>
+                            <td style="height:24px;" rowspan="2">承租人姓名</td>
+                            <td id="print_1_RentName" style="width: 150px;height:24px;" rowspan="2">
+
+                            </td>
+                            <td style="width: 80px;height:24px;">身份证号</td>
+                            <td id="print_1_RentNumber" colspan="4" style="height:24px;">
+                                </td>
+                        </tr>
+						<tr>                          
+							<td style="width: 30px;height:24px;">承租人电话</td>
+							<td id="detailRentTel" colspan="4" style="height:24px;">18971219008</td>
+						</tr>
+                        <tr>
+                            <td rowspan="2">承租人代表/监护人 姓名</td>
+                            <td id="print_1_RentName1" rowspan="2"></td>
+                            <td>身份证号</td>
+                            <td id="print_1_RentNumber1" colspan="4"></td>
+                        </tr>
+                        <tr><td colspan="5">注：承租人代表/监护人无处置、转让、房改、征收等权利</td></tr>
+                        <tr>
+                            <td id="zztdheight" colspan="7" style="height: 440px; font-size: 18px;">
+                                <div style="float: left; margin-left: 20px; margin-top: 0px;">
+                                    <span>出租人：（甲方）</span><br>
+
+                                </div>
+                                <div style="float: left; margin-left: 40px; margin-top: 0px;">
+                                    <span>承租人：（乙方）</span><br>
+                                    
+                                    <input type="hidden" id="czr1" value="" truetype="hidden">
+                                    <div id="signature" style="clear: both; margin-top: 10px;">
+                                        <!-- divstart -->
+                                                <div style="width:160px;height:60px;border:0px;"></div>
+
+                                        <!-- divend -->
+                                    </div>
+                                </div>
+                                <!-- divstart2 -->
+                                <div id="div1" style="clear: both; float: left; margin: -30px 130px 30px 75px; width: 150px; height: 150px;">
+                                        <img id="print_1_imghid" src="__ADMIN_IMG__/zhang08.png" style="width: 130px; height: 130px; margin-top: -20px; margin-left: -50px; float: left;">
+                                </div>
+                                 
+                                <img id="print_1_picCode" src="/" style="margin-left:25px;width:130px;height:130px;clear:both;float:left;">
+                                <!-- divend2 -->
+                                <div style="float: right; margin: 0px 35px 50px 50px;width:220px;">
+                                    <span>承租人代表/监护人签章：</span>
+                                    <div id="jhrdiv">
+                                        <!-- divstart3 -->
+                                            <div style="width:160px;height:60px;border:0px;" id="print_1_Represent"></div>
+                                        <!-- divend3 -->
+                                    </div>
+                                </div>
+                                <div style="clear: both;"></div>
+                                <div style="float: right; margin: -50px 40px 10px 50px;">
+                                    租约签订日期&nbsp;<span id="print_1_Year"></span> 年 <span id="print_1_Month"></span> 月 <span id="print_1_Day"></span> 日
+									<input type="hidden" id="j-time" value="">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+
+            </div>
+            
+            <!--startprint1-->
+            <div style="clear: both; padding-top: 45px;">
+                <div style="float: left; width: 46%;margin-top:10px;margin-left:2%;">
+                    <!-- 评 租 情 况 记 载 -->
+                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px; padding-bottom: 20px;">评 租 情 况 记 载</p>
+                    <table class="pzqk" border=1  style="margin-top: 5px;height:538px;">
+                        <tbody><tr>
+                            <th colspan="2" width="85">部位</th>
+                            <th width="40">间号</th>
+                            <th width="55">
+								实有面
+								积(m²)
+							</th>
+                            <th width="55">
+								计租面
+								积(m²)
+							</th>
+                            <th width="40">
+								租金
+								(元)
+							</th>
+                            <th colspan="2">项目</th>
+                            <th width="60">单价(元)</th>
+                            <th width="70">
+								数量
+								（m²）
+								（件、
+								个）
+							</th>
+                            <th width="40">
+								租金
+								(元)
+							</th>
+                        </tr>
+                        <tr>
+                            <td rowspan="4" colspan="2">卧室</td>
+                            <td id="print_1_Room1_data1">
+                                
+                            </td>
+                            <td id="print_1_Room1_data2">
+                                
+                            </td>
+                            <td id="print_1_Room1_data3">
+                                
+                            </td>
+                            <td id="print_1_Room1_data4">
+                                
+                            </td>
+                            <td rowspan="4" width="75">
+								三户以
+							   上共用
+							 </td>
+                            <td width="78">厅(堂)</td>
+                            <td>0.50/个</td>
+                            <td id="print_1_Room1_data5"></td>
+                            <td id="print_1_Room1_data6"></td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Room2_data1">
+                                
+                            </td>
+                            <td id="print_1_Room2_data2">
+                                
+                            </td>
+                            <td id="print_1_Room2_data3">
+                                
+                            </td>
+                            <td id="print_1_Room2_data4">
+                                
+                            </td>
+                            <td>厨房</td>
+                            <td>0.50/个</td>
+                            <td id="print_1_Room2_data5"></td>
+                            <td id="print_1_Room2_data6"></td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Room3_data1"></td>
+                            <td id="print_1_Room3_data2"></td>
+                            <td id="print_1_Room3_data3"></td>
+                            <td id="print_1_Room3_data4"></td>
+                            <td>卫生间</td>
+                            <td>0.50/个</td>
+                            <td id="print_1_Room3_data5">
+                        
+                            <td id="print_1_Room3_data6">
+      
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Room4_data1"></td>
+                            <td id="print_1_Room4_data2"></td>
+                            <td id="print_1_Room4_data3"></td>
+                            <td id="print_1_Room4_data4"></td>
+                            <td>
+								室内走
+							    道
+							</td>
+                            <td>0.50/个</td>
+                            <td id="print_1_Room4_data5">
+               
+                            <td id="print_1_Room4_data6">
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" width="75">厅堂</td>
+                            <td>独</td>
+                            <td id="print_1_Room5_data2">
+                                
+                            </td>
+                            <td id="print_1_Room5_data3">
+                                </td>
+                            <td id="print_1_Room5_data4">
+                                </td>
+                            <td id="print_1_Room5_data5">
+                                </td>
+                            <td rowspan="2">
+								高1至
+							    1.7米
+							    搁楼
+							</td>
+                            <td>5m²以下</td>
+                            <td>0.50/个</td>
+                            <td id="print_1_Room5_data6">
+                                </td>
+                            <td id="print_1_Room5_data7">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td>共</td>
+                            <td id="print_1_Room6_data2">
+                                </td>
+                            <td id="print_1_Room6_data3">
+                                </td>
+                            <td id="print_1_Room6_data4">
+                                </td>
+                            <td id="print_1_Room6_data5">
+                                </td>
+                            <td>5m²以上</td>
+                            <td>1.00/个</td>
+                            <td id="print_1_Room6_data6">
+                               </td>
+                            <td id="print_1_Room6_data7">
+                              </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">厨房</td>
+                            <td>独</td>
+                            <td id="print_1_Room7_data2">
+                                </td>
+                            <td id="print_1_Room7_data3">
+                                </td>
+                            <td id="print_1_Room7_data4">
+                                </td>
+                            <td id="print_1_Room7_data5">
+                                </td>
+                            <td colspan="2">二次供水<input type="hidden" name="ECGS_NAME" id="ECGS_NAME" value="二次供水" truetype="hidden"></td>
+                            <td>0.08/m2<input type="hidden" name="ECGS_DW" id="ECGS_DW" value="0.08/m2" truetype="hidden"></td>
+                            <td id="print_1_Room7_data8">
+                                </td>
+                            <td id="print_1_Room7_data9">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td>共</td>
+                            <td id="print_1_Room8_data2">
+                                </td>
+                            <td id="print_1_Room8_data3">
+                                </td>
+                            <td id="print_1_Room8_data4">
+                                </td>
+                            <td id="print_1_Room8_data5">
+                                </td>
+                            <td id="print_1_Room8_data6" colspan="2"><input type="hidden" name="MP_NAME" id="MP_NAME" value="" truetype="hidden"></td>
+                            <td id="print_1_Room8_data7"></td>
+                            <td id="print_1_Room8_data8">
+                                </td>
+                            <td id="print_1_Room8_data9">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">卫生间</td>
+                            <td>独</td>
+                            <td id="print_1_Room9_data2">
+                                </td>
+                            <td id="print_1_Room9_data3">
+                                </td>
+                            <td id="print_1_Room9_data4">
+                                </td>
+                            <td id="print_1_Room9_data5">
+                                </td>
+                            <td colspan="2"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>共</td>
+                            <td id="print_1_Room10_data2">
+                                </td>
+                            <td id="print_1_Room10_data3">
+                                </td>
+                            <td id="print_1_Room10_data4">
+                                </td>
+                            <td id="print_1_Room10_data5">
+                                </td>
+                            <td></td>
+                            <td>间号</td>
+                            <td>
+							  实有面积
+							  (m²)
+							</td>
+                            <td>
+								计租面积
+								(m²)
+							</td>
+                            <td>
+								租金
+								(元)
+							</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">
+								室内走
+							    道
+							</td>
+                            <td>独</td>
+                            <td id="print_1_Room11_data2">
+                                </td>
+                            <td id="print_1_Room11_data3">
+                                </td>
+                            <td id="print_1_Room11_data4">
+                                </td>
+                            <td id="print_1_Room11_data5">
+                                </td>
+                            <td rowspan="3">
+								无封闭
+								阳台
+							</td>
+                           <td id="print_1_Room13_data5">
+                            </td>
+                            <td id="print_1_Room13_data6">
+                                </td>
+                            <td id="print_1_Room13_data7">
+                                </td>
+                            <td id="print_1_Room13_data8">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td>共</td>
+                            <td id="print_1_Room12_data2">
+                               </td>
+                            <td id="print_1_Room12_data3">
+                                </td>
+                            <td id="print_1_Room12_data4">
+                                </td>
+                            <td id="print_1_Room12_data5">
+                                <input type="hidden" name="DOW_YZJ2" id="DOW_YZJ2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="55"></td>
+                            <td id="print_1_Room14_data5">
+                        <input class="jianhao" type="hidden" name="WFBYT_JHO2" id="WFBYT_JHO2" value="" truetype="hidden"></td>
+                    <td id="print_1_Room14_data6">
+                        <input type="hidden" name="WFBYT_SM2" id="WFBYT_SM2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="56"></td>
+                    <td id="print_1_Room14_data7">
+                        <input type="hidden" name="WFBYT_JM2" id="WFBYT_JM2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="57"></td>
+                    <td id="print_1_Room14_data8">
+                        <input type="hidden" name="WFBYT_YZJ2" id="WFBYT_YZJ2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="58"></td>
+                            
+                        </tr>
+                        
+                       <tr>
+                    <td colspan="2" rowspan="3">封闭阳台</td>
+                    <td id="print_1_Room13_data1">
+                        <input class="jianhao" type="hidden" name="FBYT_JHO1" id="FBYT_JHO1" value="" truetype="hidden"></td>
+                    <td id="print_1_Room13_data2">
+                        <input type="hidden" name="FBYT_SM1" id="FBYT_SM1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="59"></td>
+                    <td id="print_1_Room13_data3">
+                        <input type="hidden" name="FBYT_JM1" id="FBYT_JM1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="60"></td>
+                    <td id="print_1_Room13_data4">
+                        <input type="hidden" name="FBYT_YZJ1" id="FBYT_YZJ1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="61"></td>
+                    <td id="print_1_Room15_data5">
+                        <input class="jianhao" type="hidden" name="WFBYT_JHO3" id="WFBYT_JHO3" value="" truetype="hidden"></td>
+                    <td id="print_1_Room15_data6">
+                        <input type="hidden" name="WFBYT_SM3" id="WFBYT_SM3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="62"></td>
+                    <td id="print_1_Room15_data7">
+                        <input type="hidden" name="WFBYT_JM3" id="WFBYT_JM3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="63"></td>
+                    <td id="print_1_Room15_data8">
+                        <input type="hidden" name="WFBYT_YZJ3" id="WFBYT_YZJ3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="64"></td>
+                </tr>
+
+               <tr>
+                     <td id="print_1_Room14_data1">
+                        <input class="jianhao" type="hidden" name="FBYT_JHO2" id="FBYT_JHO2" value="" truetype="hidden"></td>
+                    <td id="print_1_Room14_data2">
+                        <input type="hidden" name="FBYT_SM2" id="FBYT_SM2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="65"></td>
+                    <td id="print_1_Room14_data3">
+                        <input type="hidden" name="FBYT_JM2" id="FBYT_JM2" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="66"></td>
+                    <td id="print_1_Room14_data4"></td>
+
+                    <td id="print_1_Room16_data1"></td>
+                    <td id="print_1_Room16_data2"></td>
+                    <td id="print_1_Room16_data3"></td>
+                    <td id="print_1_Room16_data4"></td>
+                    <td id="print_1_Room16_data5"></td>
+                </tr>
+                <tr>
+                     <td id="print_1_Room15_data1">
+                        <input class="jianhao" type="hidden" name="FBYT_JHO3" id="FBYT_JHO3" value="" truetype="hidden"></td>
+                    <td id="print_1_Room15_data2">
+                        <input type="hidden" name="FBYT_SM3" id="FBYT_SM3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="68"></td>
+                    <td id="print_1_Room15_data3">
+                        <input type="hidden" name="FBYT_JM3" id="FBYT_JM3" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="69"></td>
+                    <td id="print_1_Room15_data4"></td>
+
+                    <td id="print_1_Room17_data1"></td>
+                    <td id="print_1_Room17_data2"></td>
+                    <td id="print_1_Room17_data3"></td>
+                    <td id="print_1_Room17_data4"></td>
+                    <td id="print_1_Room17_data5"></td>
+                </tr>
+                        <tr>
+                            <td colspan="2">
+								高1.7至
+								2.2米搁
+								楼
+							</td>
+                            <td id="print_1_Room12_data6">
+                        <input class="jianhao" type="hidden" name="GL_JHO1" id="GL_JHO1" value="" truetype="hidden"></td>
+                            <td id="print_1_Room12_data7">
+                                <input type="hidden" name="GL_SM1" id="GL_SM1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="71"></td>
+                            <td id="print_1_Room12_data8">
+                                <input type="hidden" name="GL_JM1" id="GL_JM1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="72"></td>
+                            <td id="print_1_Room12_data9">
+                                <input type="hidden" name="GL_YZJ1" id="GL_YZJ1" value="" class="validate[custom[onlyNumberWide]]" inputmode="positiveDecimal" onblur="gethj1()" truetype="hidden" yzid="73"></td>
+
+                            <td id="print_1_Room18_data1"></td>
+                            <td id="print_1_Room18_data2"></td>
+                            <td id="print_1_Room18_data3"></td>
+                            <td id="print_1_Room18_data4"></td>
+                            <td id="print_1_Room18_data5"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" id="print_1_Room19_data1"></td>
+                            <td id="print_1_Room19_data2"></td>
+                            <td id="print_1_Room19_data3"></td>
+                            <td id="print_1_Room19_data4"></td>
+                            <td id="print_1_Room19_data5"></td>
+                            <td colspan="2">合计</td>
+                            <td id="print_1_Room16_data6">
+                                <input type="hidden" name="" value="" truetype="hidden"></td>
+                            <td id="print_1_Room16_data7">
+                                
+                            </td>
+                            <td id="print_1_Room16_data8"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">合计</td>
+                            <td id="print_1_Room20_data1">
+                                <input class="jianhao" type="hidden" name="" value="" truetype="hidden"></td>
+                            <td id="print_1_Room20_data2"></td>
+                            <td id="print_1_Room20_data3"></td>
+                            <td id="print_1_Room20_data4"></td>
+                            <td colspan="2">核定月租金</td>
+                            <td id="print_1_Room20_data5" colspan="3">
+                                </td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" style="text-align: center">资料员：<span id="print_1_Room21_data1"></span>
+                                &nbsp;  &nbsp;  &nbsp;
+                        经管所长：<span id="print_1_Room21_data2"></span>
+                                &nbsp;  &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3"></span>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+
+                <div style="float: left; width: 44%; margin-left: 4%;margin-top:10px;">
+                    <!-- 房屋构件设备点交记载 -->
+                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px;padding-bottom: 20px;">房屋构件设备点交记载</p>
+                    <table class="fwClass" border=1  style="width:100%;height: 538px;box-sizing:border-box;">
+                        <tbody><tr>
+                            <td>名称</td>
+                            <td>数量</td>
+                            <td>附注</td>
+                            <td></td>
+                            <td>名称</td>
+                            <td>数量</td>
+                            <td>附注</td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Dev1_data1"> </td>
+                            <td id="print_1_Dev1_data2"> </td>
+                            <td id="print_1_Dev1_data3"> </td>
+                            <td></td>
+                            <td id="print_1_Dev1_data4"> </td>
+                            <td id="print_1_Dev1_data5"> </td>
+                            <td id="print_1_Dev1_data6"> </td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Dev2_data1"> </td>
+                            <td id="print_1_Dev2_data2"> </td>
+                            <td id="print_1_Dev2_data3"> </td>
+                            <td></td>
+                            <td id="print_1_Dev2_data4"> </td>
+                            <td id="print_1_Dev2_data5"> </td>
+                            <td id="print_1_Dev2_data6"></td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Dev3_data1"> </td>
+                            <td id="print_1_Dev3_data2"> </td>
+                            <td id="print_1_Dev3_data3"> </td>
+                            <td></td>
+                            <td id="print_1_Dev3_data4"> </td>
+                            <td id="print_1_Dev3_data5"> </td>
+                            <td id="print_1_Dev3_data6"> </td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Dev4_data1"> </td>
+                            <td id="print_1_Dev4_data2"> </td>
+                            <td id="print_1_Dev4_data3"> </td>
+                            <td></td>
+                            <td id="print_1_Dev4_data4"> </td>
+                            <td id="print_1_Dev4_data5"> </td>
+                            <td id="print_1_Dev4_data6"> </td>
+                        </tr>
+                        <tr>
+                            <td id="print_1_Dev5_data1"> </td>
+                            <td id="print_1_Dev5_data2"> </td>
+                            <td id="print_1_Dev5_data3"> </td>
+                            <td></td>
+                            <td id="print_1_Dev5_data4"> </td>
+                            <td id="print_1_Dev5_data5"> </td>
+                            <td id="print_1_Dev5_data6"> </td>
+                        </tr>
+                        <tr>
+                            <td id="fjtdheight" colspan="7" style="vertical-align: top; box-sizing: border-box;">
+                                <p style="margin: 60px 0 30px 0; text-align: center;"><span style="font-size: 20px; width: 50px; border-bottom: 3px double #333333;">附记</span></p>
+                                <div id="print_1_Text_other" style="height:338px;width:100%;border: none;" readonly="readonly"></div>
+                                
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+                <!--endprint1-->
+            </div>
+            <!--endprint2-->
+        </form>
+</div>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 E -->
+<script type="text/javascript">
+	layui.use(['table','jquery'], function() {
+        var table = layui.table
+		   ,$ = layui.$;
+		var id = {$data_info['id']};
+		$.get('/admin.php/house/lease/detail', {'id':id}, function(res) {
+			var table = JSON.parse(res.data.change_data_line);
+			$('#print_1_picCode').show().prop('src',res.data.qrcode);
+			$('#print_1_NO').text(res.data.szno);
+			$('#print_1_Address').text('房屋坐落：武昌区');
+			$('#print_1_Struct').text('钢混');
+			$('#print_1_HouseFloor').text('5');
+			$('#print_1_LiveFloor').text('2');
+			$('#print_1_RentName').text(res.data.tenant_name);
+			$('#print_1_RentNumber').text(res.data.tenant_card);
+			$('#print_1_RentName1').text('监护人 姓名:张三');
+			$('#print_1_RentNumber1').text('监护人身份证号:4203...');
+			$('#print_1_Year').text(res.data.ctime.substring(0,4));
+			$('#print_1_Month').text(res.data.ctime.substring(5,7));
+			$('#print_1_Day').text(res.data.ctime.substring(8,10));
+			$('#print_1_Text_other').html(res.data.change_remark);
+			$('#print_1_Room1_data1').text(table.applyRoom1_data1);
+			$('#print_1_Room1_data2').text(table.applyRoom1_data2);
+			$('#print_1_Room1_data3').text(table.applyRoom1_data3);
+			$('#print_1_Room1_data4').text(table.applyRoom1_data4);
+			$('#print_1_Room1_data5').text(table.applyRoom1_data5);
+			$('#print_1_Room1_data6').text(table.applyRoom1_data6);
+			$('#print_1_Room2_data1').text(table.applyRoom2_data1);
+			$('#print_1_Room2_data2').text(table.applyRoom2_data2);
+			$('#print_1_Room2_data3').text(table.applyRoom2_data3);
+			$('#print_1_Room2_data4').text(table.applyRoom2_data4);
+			$('#print_1_Room2_data5').text(table.applyRoom2_data5);
+			$('#print_1_Room2_data6').text(table.applyRoom2_data6);
+			$('#print_1_Room3_data1').text(table.applyRoom3_data1);
+			$('#print_1_Room3_data2').text(table.applyRoom3_data2);
+			$('#print_1_Room3_data3').text(table.applyRoom3_data3);
+			$('#print_1_Room3_data4').text(table.applyRoom3_data4);
+			$('#print_1_Room3_data5').text(table.applyRoom3_data5);
+			$('#print_1_Room3_data6').text(table.applyRoom3_data6);
+			$('#print_1_Room4_data1').text(table.applyRoom4_data1);
+			$('#print_1_Room4_data2').text(table.applyRoom4_data2);
+			$('#print_1_Room4_data3').text(table.applyRoom4_data3);
+			$('#print_1_Room4_data4').text(table.applyRoom4_data4);
+			$('#print_1_Room4_data5').text(table.applyRoom4_data5);
+			$('#print_1_Room4_data6').text(table.applyRoom4_data6);
+			$('#print_1_Room5_data2').text(table.applyRoom5_data2);
+			$('#print_1_Room5_data3').text(table.applyRoom5_data3);
+			$('#print_1_Room5_data4').text(table.applyRoom5_data4);
+			$('#print_1_Room5_data5').text(table.applyRoom5_data5);
+			$('#print_1_Room6_data6').text(table.applyRoom6_data6);
+			$('#print_1_Room7_data7').text(table.applyRoom7_data7);
+			$('#print_1_Room6_data2').text(table.applyRoom6_data2);
+			$('#print_1_Room6_data3').text(table.applyRoom6_data3);
+			$('#print_1_Room6_data4').text(table.applyRoom6_data4);
+			$('#print_1_Room6_data5').text(table.applyRoom6_data5);
+			$('#print_1_Room7_data2').text(table.applyRoom7_data2);
+			$('#print_1_Room7_data3').text(table.applyRoom7_data3);
+			$('#print_1_Room7_data4').text(table.applyRoom7_data4);
+			$('#print_1_Room7_data5').text(table.applyRoom7_data5);
+			$('#print_1_Room8_data2').text(table.applyRoom8_data2);
+			$('#print_1_Room8_data3').text(table.applyRoom8_data3);
+			$('#print_1_Room8_data4').text(table.applyRoom8_data4);
+			$('#print_1_Room8_data5').text(table.applyRoom8_data5);
+			$('#print_1_Room9_data2').text(table.applyRoom9_data2);
+			$('#print_1_Room9_data3').text(table.applyRoom9_data3);
+			$('#print_1_Room9_data4').text(table.applyRoom9_data4);
+			$('#print_1_Room9_data5').text(table.applyRoom9_data5);
+			$('#print_1_Room10_data2').text(table.applyRoom10_data2);
+			$('#print_1_Room10_data3').text(table.applyRoom10_data3);
+			$('#print_1_Room10_data4').text(table.applyRoom10_data4);
+			$('#print_1_Room10_data5').text(table.applyRoom10_data5);
+			$('#print_1_Room11_data2').text(table.applyRoom11_data2);
+			$('#print_1_Room11_data3').text(table.applyRoom11_data3);
+			$('#print_1_Room11_data4').text(table.applyRoom11_data4);
+			$('#print_1_Room11_data5').text(table.applyRoom11_data5);
+			$('#print_1_Room12_data2').text(table.applyRoom12_data2);
+			$('#print_1_Room12_data3').text(table.applyRoom12_data3);
+			$('#print_1_Room12_data4').text(table.applyRoom12_data4);
+			$('#print_1_Room12_data5').text(table.applyRoom12_data5);
+			$('#print_1_Room12_data6').text(table.applyRoom12_data6);
+			$('#print_1_Room12_data7').text(table.applyRoom12_data7);
+			$('#print_1_Room12_data8').text(table.applyRoom12_data8);
+			$('#print_1_Room12_data9').text(table.applyRoom12_data9);
+			$('#print_1_Room13_data1').text(table.applyRoom13_data1);
+			$('#print_1_Room13_data2').text(table.applyRoom13_data2);
+			$('#print_1_Room13_data3').text(table.applyRoom13_data3);
+			$('#print_1_Room13_data4').text(table.applyRoom13_data4);
+			$('#print_1_Room13_data5').text(table.applyRoom13_data5);
+			$('#print_1_Room13_data6').text(table.applyRoom13_data6);
+			$('#print_1_Room13_data7').text(table.applyRoom13_data7);
+			$('#print_1_Room13_data8').text(table.applyRoom13_data8);
+			$('#print_1_Room14_data1').text(table.applyRoom14_data1);
+			$('#print_1_Room14_data2').text(table.applyRoom14_data2);
+			$('#print_1_Room14_data3').text(table.applyRoom14_data3);
+			$('#print_1_Room14_data4').text(table.applyRoom14_data4);
+			$('#print_1_Room14_data5').text(table.applyRoom14_data5);
+			$('#print_1_Room14_data6').text(table.applyRoom14_data6);
+			$('#print_1_Room14_data7').text(table.applyRoom14_data7);
+			$('#print_1_Room14_data8').text(table.applyRoom14_data8);
+			$('#print_1_Room15_data1').text(table.applyRoom15_data1);
+			$('#print_1_Room15_data2').text(table.applyRoom15_data2);
+			$('#print_1_Room15_data3').text(table.applyRoom15_data3);
+			$('#print_1_Room15_data4').text(table.applyRoom15_data4);
+			$('#print_1_Room15_data5').text(table.applyRoom15_data5);
+			$('#print_1_Room15_data6').text(table.applyRoom15_data6);
+			$('#print_1_Room15_data7').text(table.applyRoom15_data7);
+			$('#print_1_Room15_data8').text(table.applyRoom15_data8);
+			$('#print_1_Room16_data1').text(table.applyRoom16_data1);
+			$('#print_1_Room16_data2').text(table.applyRoom16_data2);
+			$('#print_1_Room16_data3').text(table.applyRoom16_data3);
+			$('#print_1_Room16_data4').text(table.applyRoom16_data4);
+			$('#print_1_Room16_data5').text(table.applyRoom16_data5);
+			$('#print_1_Room16_data6').text(table.applyRoom16_data6);
+			$('#print_1_Room16_data7').text(table.applyRoom16_data7);
+			$('#print_1_Room16_data8').text(table.applyRoom16_data8);
+			$('#print_1_Room17_data1').text(table.applyRoom17_data1);
+			$('#print_1_Room17_data2').text(table.applyRoom17_data2);
+			$('#print_1_Room17_data3').text(table.applyRoom17_data3);
+			$('#print_1_Room17_data4').text(table.applyRoom17_data4);
+			$('#print_1_Room17_data5').text(table.applyRoom17_data5);
+			$('#print_1_Room18_data1').text(table.applyRoom18_data1);
+			$('#print_1_Room18_data2').text(table.applyRoom18_data2);
+			$('#print_1_Room18_data3').text(table.applyRoom18_data3);
+			$('#print_1_Room18_data4').text(table.applyRoom18_data4);
+			$('#print_1_Room18_data5').text(table.applyRoom18_data5);
+			$('#print_1_Room19_data1').text(table.applyRoom19_data1);
+			$('#print_1_Room19_data2').text(table.applyRoom19_data2);
+			$('#print_1_Room19_data3').text(table.applyRoom19_data3);
+			$('#print_1_Room19_data4').text(table.applyRoom19_data4);
+			$('#print_1_Room19_data5').text(table.applyRoom19_data5);
+			$('#print_1_Room20_data1').text(table.applyRoom20_data1);
+			$('#print_1_Room20_data2').text(table.applyRoom20_data2);
+			$('#print_1_Room20_data3').text(table.applyRoom20_data3);
+			$('#print_1_Room20_data4').text(table.applyRoom20_data4);
+			$('#print_1_Room20_data5').text(table.applyRoom20_data5);
+			$('#print_1_Room21_data1').text(table.applyRoom21_data1);
+			$('#print_1_Room21_data2').text(table.applyRoom21_data2);
+			$('#print_1_Room21_data3').text(table.applyRoom21_data3);
+            //console.log(res);
+        });
+	});
+	//打印
+	function  click_print(){
+	 $(".j-report-con").jqprint();
+	}
+</script>

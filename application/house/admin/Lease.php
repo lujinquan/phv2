@@ -26,7 +26,7 @@ class Lease extends Admin
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
             $ChangeLeaseModel = new ChangeLeaseModel;
-            $where = $ChangeLeaseModel->checkWhere($getData);
+            $where = $ChangeLeaseModel->checkWhere($getData,'record');
             //halt($where);
             $fields = 'a.id,a.change_order_number,a.szno,b.house_use_id,c.tenant_name,c.tenant_tel,c.tenant_card,d.ban_address,d.ban_owner_id,d.ban_inst_id';
             $data = [];
@@ -52,8 +52,9 @@ class Lease extends Admin
             return json($data);
     	}
         $id = input('param.id/d');
-        $row = ChangeLeaseModel::with(['house','tenant'])->get($id);
-        $this->assign('id',$id);
+        $ChangeLeaseModel = new ChangeLeaseModel;
+        $row = $ChangeLeaseModel->detail($id);
+        //$this->assign('id',$id);
         $this->assign('data_info',$row);
     	return $this->fetch();
     }

@@ -71,6 +71,9 @@
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{# } }}
+		{{#  } else if(d.change_status == 7){ }}
+		<a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a>
+		<a href="{:url('unpass')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger">不通过</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
@@ -141,7 +144,7 @@
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',width: 180,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',width: 240,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
 

@@ -134,6 +134,63 @@ class Changelease extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 租约打印
+     * @return [type] [description]
+     */
+    public function printout()
+    {
+        
+        $id = $this->request->param('id');
+        $ChangeLeaseModel = new ChangeLeaseModel;
+
+
+
+        if ($this->request->isAjax()) {
+            
+        }
+        $row = $ChangeLeaseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+    /**
+     * 上传签字图片
+     * @return [type] [description]
+     */
+    public function uploadsign()
+    {
+        $id = $this->request->param('id');
+        $ChangeLeaseModel = new ChangeLeaseModel;
+        if ($this->request->isAjax()) {
+            
+        }
+        $row = $ChangeLeaseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+    /**
+     * 不通过
+     * @return [type] [description]
+     */
+    public function unpass()
+    {
+        $id = $this->request->param('id');
+        $ChangeLeaseModel = new ChangeLeaseModel;
+        if ($this->request->isAjax()) {
+            
+        }
+        $row = $ChangeLeaseModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+
+    /**
+     * 租约详情
+     * @return [type] [description]
+     */
     public function detail()
     {
         $id = $this->request->param('id');
