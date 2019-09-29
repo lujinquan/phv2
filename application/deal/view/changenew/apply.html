@@ -124,7 +124,8 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
-				<input type="text" id="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+				<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
 			</div>
 		</div>
 	</div>
@@ -168,8 +169,10 @@
 							var row = window["layui-layer-iframe" + index].hoesedata();
 							console.log(row);
 							layer.close(index);
-							//楼栋信息
+								//楼栋信息
 								$("#reduction_seach").val(row.house_number);//获取房屋编号
+								$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
+								$("#check").removeClass('hide');
 								$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
 								$("input[name='house_id']").val(row.house_id);//获取房屋id
 								$("input[name='tenant_id']").val(row.tenant_id);//获取租户id
@@ -195,24 +198,6 @@
 						}
 			 });
 		})
-		//双击查询记租表
-		 $(".layui-form").on('click','.j-rent-list',function(){
-			 layer.open({
-			 			title: '记租表'
-			 			,type: 2
-			 			,offset: 'auto'
-			 			,area: ['70%', '60%']
-			 			, btn:false
-			 			,pageTabs: false
-			 			,content: '{:url('system/index/house')}'
-			 			,btn: ['确定','关闭']
-			 			,yes: function(index, layero){
-			 				layer.close(index);
-			 			},btn2: function(index, layero){
-			 				layer.close(index);
-			 			}
-			  });
-		 })
         
 	});
 </script>
