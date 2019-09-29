@@ -21,8 +21,8 @@ class Changepause extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangePauseModel = new ChangePauseModel;
-            $where = $ChangePauseModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangePauseModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
@@ -45,15 +45,15 @@ class Changepause extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangePauseModel = new ChangePauseModel;
+            $ChangeModel = new ChangePauseModel;
             // 数据过滤
-            $filData = $ChangePauseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-//halt($filData);
             // 入库
-            $pauseRow = $ChangePauseModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $pauseRow = $ChangeModel->allowField(true)->create($filData);
             if (!$pauseRow) {
                 return $this->error('申请失败');
             }
@@ -82,14 +82,14 @@ class Changepause extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangePauseModel = new ChangePauseModel;
+            $ChangeModel = new ChangePauseModel;
             // 数据过滤
-            $filData = $ChangePauseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-            // 入库使用权变更表
-            $row = $ChangePauseModel->allowField(true)->update($filData);
+            // 入库使用权变更表    
+            $row = $ChangeModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
@@ -98,6 +98,7 @@ class Changepause extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                unset($filData['id']);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -116,8 +117,8 @@ class Changepause extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangePauseModel = new ChangePauseModel;
-        $row = $ChangePauseModel->detail($id);
+        $ChangeModel = new ChangePauseModel;
+        $row = $ChangeModel->detail($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch();
@@ -126,8 +127,8 @@ class Changepause extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangePauseModel = new ChangePauseModel;
-        $row = $ChangePauseModel->detail($id);
+        $ChangeModel = new ChangePauseModel;
+        $row = $ChangeModel->detail($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch();
@@ -139,8 +140,8 @@ class Changepause extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangePauseModel = new ChangePauseModel;
-            $where = $ChangePauseModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangePauseModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
@@ -156,20 +157,6 @@ class Changepause extends Admin
 
     public function del()
     {
-        // $id = $this->request->param('id');       
-
-        // $row = ChangePauseModel::get($id);
-        // if($row['change_status'] != 3){
-        //     $this->error('已被审批，无法删除！');
-        // }
-        
-        // if($row->delete()){
-        //     ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-        //     $this->success('删除成功');
-        // }else{
-        //     $this->error('删除失败');
-        // }
-
         $id = $this->request->param('id');       
         $row = ChangePauseModel::get($id);
         if($row['change_status'] == 2 && $row['is_back'] == 0){

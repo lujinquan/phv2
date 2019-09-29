@@ -77,7 +77,6 @@ class Process extends Admin
         if($this->request->isPost()) {
             $data = $this->request->post();
             $PorcessModel = new ProcessModel;
-            //halt($data);
             $res = $PorcessModel->process($change_type,$data);
             if (!$res) {
                 return $this->error('审批失败');
@@ -85,106 +84,79 @@ class Process extends Admin
             return $this->success('审批成功',url('index'));
         }
 
-
         switch ($change_type) {
             case '1': // 租金减免
-                $ChangeCutModel = new ChangeCutModel;
-                $row = $ChangeCutModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_cut_process');
+                $ChangeModel = new ChangeCutModel;
+                $template = 'change_cut_process';
                 break;
             case '2': // 空租
                 # code...
                 break;
             case '3': //暂停计租
-                $ChangePauseModel = new ChangePauseModel;
-                $row = $ChangePauseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_pause_process');
+                $ChangeModel = new ChangePauseModel;
+                $template = 'change_pause_process';
                 break;
             case '4': // 陈欠核销
-                $ChangeOffsetModel = new ChangeOffsetModel;
-                $row = $ChangeOffsetModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_offset_process');
+                $ChangeModel = new ChangeOffsetModel;
+                $template = 'change_offset_process';
                 break;
             case '5': // 房改
                 # code...
                 break;
-
             case '6': // 维修
                 # code...
                 break;
             case '7': // 新发租
-                $ChangeNewModel = new ChangeNewModel;
-                $row = $ChangeNewModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_new_process');
+                $ChangeModel = new ChangeNewModel;
+                $template = 'change_new_process';
                 break;
-
             case '8': //注销
-                $ChangeCancelModel = new ChangeCancelModel;
-                $row = $ChangeCancelModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_cancel_process');
+                $ChangeModel = new ChangeCancelModel;
+                $template = 'change_cancel_process';
                 break;
             case '9': // 房屋调整
-                $ChangeHouseModel = new ChangeHouseModel;
-                $row = $ChangeHouseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_house_process');
+                $ChangeModel = new ChangeHouseModel;
+                $template = 'change_house_process';
                 break;
             case '10': // 管段调整
-                $ChangeInstModel = new ChangeInstModel;
-                $row = $ChangeInstModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_inst_process');
+                $ChangeModel = new ChangeInstModel;
+                $template = 'change_inst_process';
                 break;
-
             case '11': // 租金追加调整
-                $ChangeRentAddModel = new ChangeRentAddModel;
-                $row = $ChangeRentAddModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_rentadd_process');
+                $ChangeModel = new ChangeRentAddModel;
+                $template = 'change_rentadd_process';
                 break;
             case '12': //租金调整
                 # code...
                 break;
-
             case '13': //使用权变更
-                $ChangeUseModel = new ChangeUseModel;
-                $row = $ChangeUseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_use_process');
+                $ChangeModel = new ChangeUseModel;
+                $template = 'change_use_process';
                 break;
             case '14': // 楼栋调整
-                $ChangeBanModel = new ChangeBanModel;
-                $row = $ChangeBanModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_ban_process');
+                $ChangeModel = new ChangeBanModel;
+                $template = 'change_ban_process';
                 break;
             case '16': // 租金减免年审
-                $ChangeCutYearModel = new ChangeCutYearModel;
-                $row = $ChangeCutYearModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_cut_year_process');
+                $ChangeModel = new ChangeCutYearModel;
+                $template = 'change_cut_year_process';
                 break;
             case '17': // 别字更正
-                $ChangeNameModel = new ChangeNameModel;
-                $row = $ChangeNameModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_name_process');
+                $ChangeModel = new ChangeNameModel;
+                $template = 'change_name_process';
                 break;
             case '18': // 租约管理
-                $ChangeLeaseModel = new ChangeLeaseModel;
-                $row = $ChangeLeaseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('change_lease_process');
+                $ChangeModel = new ChangeLeaseModel;
+                $template = 'change_lease_process';
                 break;
             default:
                 # code...
                 break;
         }
+        $row = $ChangeModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch($template);
+
     }
 
     /**
@@ -218,110 +190,81 @@ class Process extends Admin
         // 显示对应的审批页面
         $id = input('param.id/d');
         $change_type = input('param.change_type/d');
-        
         if(!$change_type || !$id){
             return $this->error('参数错误！');
         }
-
         switch ($change_type) {
             case '1': // 租金减免
-                $ChangeCutModel = new ChangeCutModel;
-                $row = $ChangeCutModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changecut/detail_x');
+                $ChangeModel = new ChangeCutModel;
+                $template = 'Changecut/detail_x';              
                 break;
             case '2': // 空租
                 # code...
                 break;
             case '3': //暂停计租
-                $ChangePauseModel = new ChangePauseModel;
-                $row = $ChangePauseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changepause/detail');
+                $ChangeModel = new ChangePauseModel;
+                $template = 'Changepause/detail'; 
                 break;
             case '4': // 陈欠核销
-                $ChangeOffsetModel = new ChangeOffsetModel;
-                $row = $ChangeOffsetModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changeoffset/detail');
+                $ChangeModel = new ChangeOffsetModel;
+                $template = 'Changeoffset/detail';
                 break;
             case '5': // 房改
                 # code...
                 break;
-
             case '6': // 维修
                 # code...
                 break;
             case '7': // 新发租
-                $ChangeNewModel = new ChangeNewModel;
-                $row = $ChangeNewModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changenew/detail');
+                $ChangeModel = new ChangeNewModel;
+                $template = 'Changenew/detail';
                 break;
-
             case '8': //注销
-                $ChangeCancelModel = new ChangeCancelModel;
-                $row = $ChangeCancelModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changecancel/detail');
+                $ChangeModel = new ChangeCancelModel;
+                $template = 'Changecancel/detail';
                 break;
             case '9': // 房屋调整
-                $ChangeHouseModel = new ChangeHouseModel;
-                $row = $ChangeHouseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changehouse/detail');
+                $ChangeModel = new ChangeHouseModel;
+                $template = 'Changehouse/detail';
                 break;
             case '10': // 管段调整
-                $ChangeInstModel = new ChangeInstModel;
-                $row = $ChangeInstModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changeinst/detail');
+                $ChangeModel = new ChangeInstModel;
+                $template = 'Changeinst/detail';
                 break;
-
             case '11': // 租金追加调整
-                $ChangeRentAddModel = new ChangeRentAddModel;
-                $row = $ChangeRentAddModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changerentadd/detail');
+                $ChangeModel = new ChangeRentAddModel;
+                $template = 'Changerentadd/detail';
                 break;
             case '12': //租金调整
                 # code...
                 break;
-
             case '13': //使用权变更
-                $ChangeUseModel = new ChangeUseModel;
-                $row = $ChangeUseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changeuse/detail');
+                $ChangeModel = new ChangeUseModel;
+                $template = 'Changeuse/detail';
                 break;
             case '14': //楼栋调整
-                $ChangeBanModel = new ChangeBanModel;
-                $row = $ChangeBanModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changeuse/detail');
+                $ChangeModel = new ChangeBanModel;
+                $template = 'Changeban/detail';
                 break;
             case '16': // 租金减免年审
-                $ChangeCutYearModel = new ChangeCutYearModel;
-                $row = $ChangeNameModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changecutyear/detail');
+                $ChangeModel = new ChangeCutYearModel;
+                $template = 'Changecutyear/detail';
                 break;
             case '17': // 别字更正
-                $ChangeNameModel = new ChangeNameModel;
-                $row = $ChangeNameModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changename/detail');
+                $ChangeModel = new ChangeNameModel;
+                $template = 'Changename/detail';
                 break;
             case '18': // 租约管理
-                $ChangeLeaseModel = new ChangeLeaseModel;
-                $row = $ChangeLeaseModel->detail($id);
-                $this->assign('data_info',$row);
-                return $this->fetch('Changelease/detail');
+                $ChangeModel = new ChangeLeaseModel;
+                $template = 'Changelease/detail';
                 break;
             default:
                 # code...
                 break;
         }
+        $row = $ChangeModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch($template);
     }
 
 }

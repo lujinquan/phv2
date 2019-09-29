@@ -21,8 +21,8 @@ class Changeoffset extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeOffsetModel = new ChangeOffsetModel;
-            $where = $ChangeOffsetModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeOffsetModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,a.this_month_Rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
@@ -45,22 +45,23 @@ class Changeoffset extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeOffsetModel = new ChangeOffsetModel;
+            $ChangeModel = new ChangeOffsetModel;
             // 数据过滤
-            $filData = $ChangeOffsetModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-//halt($filData);
+
             // 入库
-            $offsetRow = $ChangeOffsetModel->allowField(true)->create($filData);
-            if (!$offsetRow) {
+            unset($filData['id']);
+            $row = $ChangeModel->allowField(true)->create($filData);
+            if (!$row) {
                 return $this->error('申请失败');
             }
             if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $offsetRow['id'];
+                $filData['change_id'] = $row['id'];
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -82,14 +83,14 @@ class Changeoffset extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeOffsetModel = new ChangeOffsetModel;
+            $ChangeModel = new ChangeOffsetModel;
             // 数据过滤
-            $filData = $ChangeOffsetModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $row = $ChangeOffsetModel->allowField(true)->update($filData);
+            $row = $ChangeModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
@@ -98,6 +99,7 @@ class Changeoffset extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                unset($filData['id']);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -116,8 +118,8 @@ class Changeoffset extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeOffsetModel = new ChangeOffsetModel;
-        $row = $ChangeOffsetModel->detail($id);
+        $ChangeModel = new ChangeOffsetModel;
+        $row = $ChangeModel->detail($id);
         //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
@@ -126,8 +128,8 @@ class Changeoffset extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeOffsetModel = new ChangeOffsetModel;
-        $row = $ChangeOffsetModel->detail($id);
+        $ChangeModel = new ChangeOffsetModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -138,8 +140,8 @@ class Changeoffset extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeOffsetModel = new ChangeOffsetModel;
-            $where = $ChangeOffsetModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeOffsetModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];

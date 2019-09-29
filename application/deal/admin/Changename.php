@@ -19,8 +19,8 @@ class Changename extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeNameModel = new ChangeNameModel;
-            $where = $ChangeNameModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeNameModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
@@ -41,15 +41,16 @@ class Changename extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeNameModel = new ChangeNameModel;
+            $ChangeModel = new ChangeNameModel;
             // 数据过滤
-            $filData = $ChangeNameModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
         
             // 入库使用权变更表
-            $useRow = $ChangeNameModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $useRow = $ChangeModel->allowField(true)->create($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -78,14 +79,14 @@ class Changename extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeNameModel = new ChangeNameModel;
+            $ChangeModel = new ChangeNameModel;
             // 数据过滤
-            $filData = $ChangeNameModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $useRow = $ChangeNameModel->allowField(true)->update($filData);
+            $useRow = $ChangeModel->allowField(true)->update($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -94,6 +95,7 @@ class Changename extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $useRow['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -112,8 +114,8 @@ class Changename extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeNameModel = new ChangeNameModel;
-        $row = $ChangeNameModel->detail($id);
+        $ChangeModel = new ChangeNameModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -121,8 +123,8 @@ class Changename extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeNameModel = new ChangeNameModel;
-        $row = $ChangeNameModel->detail($id);
+        $ChangeModel = new ChangeNameModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -133,8 +135,8 @@ class Changename extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeNameModel = new ChangeNameModel;
-            $where = $ChangeNameModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeNameModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];

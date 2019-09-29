@@ -13,13 +13,13 @@ namespace app\deal\validate;
 
 use think\Validate;
 use app\house\model\House as HouseModel;
-use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
 /**
- *减免异动验证器
+ *减免年审异动验证器
  * @package app\system\validate
  */
-class Changecut extends Validate
+class Changecutyear extends Validate
 {
     //定义验证规则
     protected $rule = [	
@@ -40,13 +40,12 @@ class Changecut extends Validate
     // 判断当前房屋是否可以申请使用权变更
     protected function isAllow($value, $rule='', $data)
   	{
-        //halt($data);
         $msg = '';
         $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,(house_pre_rent+house_diff_rent+house_pump_rent) as house_yue_rent')->find();
         if($find['house_status'] != 1){
             $msg = '房屋状态异常！';
         }
-  		$row = ChangeUseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
+  		$row = ChangeCutYearModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }

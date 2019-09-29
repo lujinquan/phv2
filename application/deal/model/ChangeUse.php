@@ -33,11 +33,6 @@ class ChangeUse extends SystemBase
 
     protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
 
-    public function tenant()
-    {
-        return $this->hasOne('app\house\model\Tenant', 'tenant_id', 'tenant_id')->bind('tenant_number,tenant_tel,tenant_card');
-    }
-
     public function house()
     {
         return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent');
@@ -140,7 +135,6 @@ class ChangeUse extends SystemBase
                 'img' => '',
             ]; 
         }
-
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 13; //使用权变更
         $data['change_order_number'] = date('Ym').'13'.random(14);
@@ -199,13 +193,13 @@ class ChangeUse extends SystemBase
                 'img' => '',
             ];
 
-            // 更新使用权变更表
+            // 更新子表
             $changeRow->allowField(['child_json','is_back','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
             // 更新审批表
             $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
             $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
         }else{
-            /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
+            /* 如果审批通过，且非终审：更新子表的child_json、change_status，更新审批表change_desc、curr_role */
             if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
                 $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
                 $changeUpdateData['child_json'] = $changeRow['child_json'];

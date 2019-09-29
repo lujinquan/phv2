@@ -150,7 +150,7 @@ class ChangeOffset extends SystemBase
     public function process($data)
     {
         // 判断是否通过
-        $changeoffsetRow = self::get($data['id']);
+        $changeRow = self::get($data['id']);
 
         // 获取最后一步的step
         $processRoles = $this->processRole;
@@ -161,14 +161,14 @@ class ChangeOffset extends SystemBase
         // 获取审批描述
         $processDescs = $this->processDesc;
 
-        $changeOffsetUpdateData = $processUpdateData = [];
+        $changeUpdateData = $processUpdateData = [];
 
         /*  如果是打回  */
         if(isset($data['back_reason'])){
-            $changeOffsetUpdateData['change_status'] = 2;
-            $changeOffsetUpdateData['is_back'] = 1;
-            $changeOffsetUpdateData['child_json'] = $changeoffsetRow['child_json'];
-            $changeOffsetUpdateData['child_json'][] = [
+            $changeUpdateData['change_status'] = 2;
+            $changeUpdateData['is_back'] = 1;
+            $changeUpdateData['child_json'] = $changeRow['child_json'];
+            $changeUpdateData['child_json'][] = [
                 'success' => 1,
                 'action' => $processActions[2].'，原因：'.$data['back_reason'],
                 'time' => date('Y-m-d H:i:s'),
@@ -177,70 +177,70 @@ class ChangeOffset extends SystemBase
             ];
 
             // 更新使用权变更表
-            $changeoffsetRow->allowField(['child_json','is_back','change_status'])->save($changeOffsetUpdateData, ['id' => $data['id']]);;
+            $changeRow->allowField(['child_json','is_back','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
             // 更新审批表
-            $processUpdateData['change_desc'] = $processDescs[$changeOffsetUpdateData['change_status']];
-            $processUpdateData['curr_role'] = $processRoles[$changeOffsetUpdateData['change_status']];
+            $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+            $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
         }else{
             /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
-            if(!isset($data['change_reason']) && ($changeoffsetRow['change_status'] < $finalStep)){
-                $changeOffsetUpdateData['change_status'] = $changeoffsetRow['change_status'] + 1;
-                $changeOffsetUpdateData['child_json'] = $changeoffsetRow['child_json'];
-                $changeOffsetUpdateData['child_json'][] = [
+            if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+                $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeOffsetUpdateData['change_status']],
+                    'action' => $processActions[$changeUpdateData['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 if(isset($data['file']) && $data['file']){
-                    $changeOffsetUpdateData['change_imgs'] = implode(',',$data['file']);
+                    $changeUpdateData['change_imgs'] = implode(',',$data['file']);
                 }
                 // 更新使用权变更表
-                $changeoffsetRow->allowField(['child_json','change_imgs','change_status'])->save($changeOffsetUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeOffsetUpdateData['change_status']];
-                $processUpdateData['curr_role'] = $processRoles[$changeOffsetUpdateData['change_status']];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
 
             /* 如果审批通过，且为终审：更新暂停计租表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
-            }else if(!isset($data['change_reason']) && ($changeoffsetRow['change_status'] == $finalStep)){
+            }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
-                $changeOffsetUpdateData['change_status'] = 1;
-                $changeOffsetUpdateData['ftime'] = time();
-                $changeOffsetUpdateData['child_json'] = $changeoffsetRow['child_json'];
-                $changeOffsetUpdateData['child_json'][] = [
+                $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeOffsetUpdateData['change_status']],
+                    'action' => $processActions[$changeUpdateData['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeoffsetRow);}catch(\Exception $e){return false;}
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新暂停计租表
-                $changeoffsetRow->allowField(['child_json','change_status','ftime'])->save($changeOffsetUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeOffsetUpdateData['change_status']];
-                $processUpdateData['ftime'] = $changeOffsetUpdateData['ftime'];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
                 $processUpdateData['status'] = 0;
 
             /* 如果审批不通过：更新暂停计租的child_json、change_status，更新审批表change_desc、curr_role */
             }else if (isset($data['change_reason'])){
-                $changeOffsetUpdateData['change_status'] = 0;
-                $changeOffsetUpdateData['ftime'] = time();
-                $changeOffsetUpdateData['child_json'] = $changeoffsetRow['child_json'];
-                $changeOffsetUpdateData['child_json'][] = [
+                $changeUpdateData['change_status'] = 0;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 0,
-                    'action' => $processActions[$changeOffsetUpdateData['change_status']].'，原因：'.$data['change_reason'],
+                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$data['change_reason'],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 // 更新暂停计租表
-                $changeoffsetRow->allowField(['child_json','change_status','ftime'])->save($changeOffsetUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeOffsetUpdateData['change_status']];
-                $processUpdateData['ftime'] = $changeOffsetUpdateData['ftime'];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
                 $processUpdateData['status'] = 0;                
             }
 

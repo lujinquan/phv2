@@ -40,8 +40,13 @@ class ChangeCut extends SystemBase
 
     public function house()
     {
-        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent,ban_id,house_use_id');
+        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent,house_use_id');
     }
+
+    // public function ban()
+    // {
+    //     return $this->hasOne('app\house\model\Ban', 'house_id', 'house_id')->bind('ban_number,house_pre_rent,house_cou_rent,house_use_id');
+    // }
 
     public function checkWhere($data,$type)
     {
@@ -101,24 +106,21 @@ class ChangeCut extends SystemBase
      */
     public function dataFilter($data)
     {
-        if($data['group'] == 'x'){
-
-            if(isset($data['file']) && $data['file']){
-                $data['change_imgs'] = implode(',',$data['file']);
-            }
-            if(isset($data['id'])){
-                $row = $this->get($data['id']); 
-                if($row['is_back']){ //如果打回过
-                    $data['child_json'] = $row['child_json'];
-                }
-                
-            }
-            if($data['save_type'] == 'save'){ //保存
-                $data['change_status'] = 2;
-            }else{ //保存并提交
-                $data['change_status'] = 3;
+        
+        if(isset($data['file']) && $data['file']){
+            $data['change_imgs'] = implode(',',$data['file']);
+        }
+        if(isset($data['id'])){
+            $row = $this->get($data['id']); 
+            if($row['is_back']){ //如果打回过
+                $data['child_json'] = $row['child_json'];
             }
             
+        }
+        if($data['save_type'] == 'save'){ //保存
+            $data['change_status'] = 2;
+        }else{ //保存并提交
+            $data['change_status'] = 3;
             $data['child_json'][] = [
                 'success' => 1, 
                 'action' => '提交申请',
@@ -126,22 +128,18 @@ class ChangeCut extends SystemBase
                 'uid' => ADMIN_ID,
                 'img' => '',
             ]; 
-
-            $data['cuid'] = ADMIN_ID;
-            $data['change_type'] = 1; //减免
-            $data['change_order_number'] = date('Ym').'01'.random(14);
-
-            // 审批表数据
-            $data['ban_id'] = HouseModel::where([['house_id','eq',$data['house_id']]])->value('ban_id');
-            $processRoles = $this->processRole;
-            $processDescs = $this->processDesc;
-            $data['change_desc'] = $processDescs[3];
-            $data['curr_role'] = $processRoles[3];
-
-        }else{
-
         }
         
+        $data['cuid'] = ADMIN_ID;
+        $data['change_type'] = 1; //减免
+        $data['change_order_number'] = date('Ym').'01'.random(14);
+
+        // 审批表数据
+        $processRoles = $this->processRole;
+        $processDescs = $this->processDesc;
+        $data['change_desc'] = $processDescs[3];
+        $data['curr_role'] = $processRoles[3];
+
         return $data; 
     }
 
@@ -149,7 +147,7 @@ class ChangeCut extends SystemBase
     {
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['ban_info'] = BanModel::get($row['ban_id']);//halt($row);
+        $row['ban_info'] = BanModel::get($row['ban_id']);
         return $row;
     }
 
@@ -198,7 +196,6 @@ class ChangeCut extends SystemBase
                         $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
                     }
                 }
-
 
                 $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
                 $changeUpdateData['child_json'] = $changeRow['child_json'];

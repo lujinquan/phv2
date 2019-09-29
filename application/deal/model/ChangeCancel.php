@@ -110,35 +110,22 @@ class ChangeCancel extends SystemBase
             $data['change_status'] = 2;
         }else{ //保存并提交
             $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'success' => 1, 
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
         }
         
-        $data['child_json'][] = [
-            'success' => 1, 
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ]; 
+         
 
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 8; //使用权变更
         $data['change_order_number'] = date('Ym').'08'.random(14);
         
         $banRow = BanModel::get($data['ban_id']);
-        // $data['change_json'] = [
-        //     'before' => [
-        //         'ban_total_rent' => bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]),
-        //         'ban_total_use_area' => $banRow['ban_use_area'],
-        //         'ban_total_area' => bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]),
-        //         'ban_total_oprice' => bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]),
-        //     ],
-        //     'change' => [
-        //         'ban_total_rent' => $data['cancel_rent'],
-        //         'ban_total_use_area' => $data['cancel_use_area'],
-        //         'ban_total_area' => $data['cancel_area'],
-        //         'ban_total_oprice' => $data['cancel_oprice'],
-        //     ]
-        // ];
 
         $data['change_json']['before']['ban_total_rent'] = bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]);
         $data['change_json']['before']['ban_total_use_area'] = $banRow['ban_use_area'];
@@ -149,7 +136,6 @@ class ChangeCancel extends SystemBase
         $data['change_json']['after']['ban_total_use_area'] = bcsub($data['change_json']['before']['ban_total_use_area'],$data['cancel_use_area'],2);
         $data['change_json']['after']['ban_total_area'] = bcsub($data['change_json']['before']['ban_total_area'],$data['cancel_area'],2);
         $data['change_json']['after']['ban_total_oprice'] = bcsub($data['change_json']['before']['ban_total_oprice'],$data['cancel_oprice'],2);
-
 
         if($data['house_id']){
             $houseids = explode(',',$data['house_id']);
@@ -176,7 +162,7 @@ class ChangeCancel extends SystemBase
     public function process($data)
     {
         // 判断是否通过
-        $changecancelRow = self::get($data['id']);
+        $changeRow = self::get($data['id']);
 
         // 获取最后一步的step
         $processRoles = $this->processRole;
@@ -187,14 +173,14 @@ class ChangeCancel extends SystemBase
         // 获取审批描述
         $processDescs = $this->processDesc;
 
-        $changeCancelUpdateData = $processUpdateData = [];
+        $changeUpdateData = $processUpdateData = [];
 
         /*  如果是打回  */
         if(isset($data['back_reason'])){
-            $changeCancelUpdateData['change_status'] = 2;
-            $changeCancelUpdateData['is_back'] = 1;
-            $changeCancelUpdateData['child_json'] = $changecancelRow['child_json'];
-            $changeCancelUpdateData['child_json'][] = [
+            $changeUpdateData['change_status'] = 2;
+            $changeUpdateData['is_back'] = 1;
+            $changeUpdateData['child_json'] = $changeRow['child_json'];
+            $changeUpdateData['child_json'][] = [
                 'success' => 1,
                 'action' => $processActions[2].'，原因：'.$data['back_reason'],
                 'time' => date('Y-m-d H:i:s'),
@@ -203,70 +189,70 @@ class ChangeCancel extends SystemBase
             ];
 
             // 更新使用权变更表
-            $changecancelRow->allowField(['child_json','is_back','change_status'])->save($changeCancelUpdateData, ['id' => $data['id']]);;
+            $changeRow->allowField(['child_json','is_back','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
             // 更新审批表
-            $processUpdateData['change_desc'] = $processDescs[$changeCancelUpdateData['change_status']];
-            $processUpdateData['curr_role'] = $processRoles[$changeCancelUpdateData['change_status']];
+            $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+            $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
         }else{
             /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
-            if(!isset($data['change_reason']) && ($changecancelRow['change_status'] < $finalStep)){
-                $changeCancelUpdateData['change_status'] = $changecancelRow['change_status'] + 1;
-                $changeCancelUpdateData['child_json'] = $changecancelRow['child_json'];
-                $changeCancelUpdateData['child_json'][] = [
+            if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+                $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeCancelUpdateData['change_status']],
+                    'action' => $processActions[$changeUpdateData['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 if(isset($data['file']) && $data['file']){
-                    $changeCancelUpdateData['change_imgs'] = implode(',',$data['file']);
+                    $changeUpdateData['change_imgs'] = implode(',',$data['file']);
                 }
                 // 更新使用权变更表
-                $changecancelRow->allowField(['child_json','change_imgs','change_status'])->save($changeCancelUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeCancelUpdateData['change_status']];
-                $processUpdateData['curr_role'] = $processRoles[$changeCancelUpdateData['change_status']];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
 
             /* 如果审批通过，且为终审：更新暂停计租表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
-            }else if(!isset($data['change_reason']) && ($changecancelRow['change_status'] == $finalStep)){
+            }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
-                $changeCancelUpdateData['change_status'] = 1;
-                $changeCancelUpdateData['ftime'] = time();
-                $changeCancelUpdateData['child_json'] = $changecancelRow['child_json'];
-                $changeCancelUpdateData['child_json'][] = [
+                $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeCancelUpdateData['change_status']],
+                    'action' => $processActions[$changeUpdateData['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 // 更新暂停计租表
-                $changecancelRow->allowField(['child_json','change_status','ftime'])->save($changeCancelUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changecancelRow);
+                $this->finalDeal($changeRow);
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeCancelUpdateData['change_status']];
-                $processUpdateData['ftime'] = $changeCancelUpdateData['ftime'];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
                 $processUpdateData['status'] = 0;
 
             /* 如果审批不通过：更新暂停计租的child_json、change_status，更新审批表change_desc、curr_role */
             }else if (isset($data['change_reason'])){
-                $changeCancelUpdateData['change_status'] = 0;
-                $changeCancelUpdateData['ftime'] = time();
-                $changeCancelUpdateData['child_json'] = $changecancelRow['child_json'];
-                $changeCancelUpdateData['child_json'][] = [
+                $changeUpdateData['change_status'] = 0;
+                $changeUpdateData['ftime'] = time();
+                $changeUpdateData['child_json'] = $changeRow['child_json'];
+                $changeUpdateData['child_json'][] = [
                     'success' => 0,
-                    'action' => $processActions[$changeCancelUpdateData['change_status']].'，原因：'.$data['change_reason'],
+                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$data['change_reason'],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
                 // 更新暂停计租表
-                $changecancelRow->allowField(['child_json','change_status','ftime'])->save($changeCancelUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
-                $processUpdateData['change_desc'] = $processDescs[$changeCancelUpdateData['change_status']];
-                $processUpdateData['ftime'] = $changeCancelUpdateData['ftime'];
+                $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
+                $processUpdateData['ftime'] = $changeUpdateData['ftime'];
                 $processUpdateData['status'] = 0;                
             }
 

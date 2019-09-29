@@ -21,8 +21,8 @@ class Changelease extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeLeaseModel = new ChangeLeaseModel;
-            $where = $ChangeLeaseModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeLeaseModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
             $data = [];
@@ -45,15 +45,16 @@ class Changelease extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeLeaseModel = new ChangeLeaseModel;
+            $ChangeModel = new ChangeLeaseModel;
             // 数据过滤
-            $filData = $ChangeLeaseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
 //halt($filData);
             // 入库
-            $offsetRow = $ChangeLeaseModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $offsetRow = $ChangeModel->allowField(true)->create($filData);
             if (!$offsetRow) {
                 return $this->error('申请失败');
             }
@@ -82,9 +83,9 @@ class Changelease extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeLeaseModel = new ChangeLeaseModel;
+            $ChangeModel = new ChangeLeaseModel;
             // 数据过滤
-            $filData = $ChangeLeaseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
@@ -96,8 +97,8 @@ class Changelease extends Admin
             // ];
             //halt($filData);
             // 入库使用权变更表
-            $row = $ChangeLeaseModel->allowField(true)->update($filData);
-            //$row = $ChangeLeaseModel->allowField(true)->update($filData);
+            $row = $ChangeModel->allowField(true)->update($filData);
+            //$row = $ChangeModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
@@ -107,6 +108,7 @@ class Changelease extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $row['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -127,8 +129,8 @@ class Changelease extends Admin
         }
 
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
-        $row = $ChangeLeaseModel->detail($id);
+        $ChangeModel = new ChangeLeaseModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         $this->assign('id',$id);
         return $this->fetch();
@@ -142,14 +144,14 @@ class Changelease extends Admin
     {
         
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
+        $ChangeModel = new ChangeLeaseModel;
 
 
 
         if ($this->request->isAjax()) {
             
         }
-        $row = $ChangeLeaseModel->detail($id);
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -161,11 +163,11 @@ class Changelease extends Admin
     public function uploadsign()
     {
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
+        $ChangeModel = new ChangeLeaseModel;
         if ($this->request->isAjax()) {
             
         }
-        $row = $ChangeLeaseModel->detail($id);
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -177,11 +179,11 @@ class Changelease extends Admin
     public function unpass()
     {
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
+        $ChangeModel = new ChangeLeaseModel;
         if ($this->request->isAjax()) {
             
         }
-        $row = $ChangeLeaseModel->detail($id);
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -194,15 +196,15 @@ class Changelease extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeLeaseModel = new ChangeLeaseModel;
+        $ChangeModel = new ChangeLeaseModel;
         if ($this->request->isAjax()) {
             $data = [];
-            $data['data'] = $ChangeLeaseModel->detail($id);
+            $data['data'] = $ChangeModel->detail($id);
             $data['msg'] = '获取成功！';
             $data['code'] = 0;
             return json($data);
         }
-        $row = $ChangeLeaseModel->detail($id);
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -213,8 +215,8 @@ class Changelease extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeLeaseModel = new ChangeLeaseModel;
-            $where = $ChangeLeaseModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeLeaseModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];

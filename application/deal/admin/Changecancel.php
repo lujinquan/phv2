@@ -15,19 +15,15 @@ class Changecancel extends Admin
 
     public function index()
     {
-        // $arr = [1.88,3.02,4.98,6.01,1.77];
-        // halt(bcaddMerge($arr,2));
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeCancelModel = new ChangeCancelModel;
-            $where = $ChangeCancelModel->checkWhere($getData,'apply');
-            //halt($where);
-            $fields = "a.id,a.is_back,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $ChangeModel = new ChangeCancelModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
+            $fields = "a.id,a.is_back,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_cancel')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -45,15 +41,16 @@ class Changecancel extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeCancelModel = new ChangeCancelModel;
+            $ChangeModel = new ChangeCancelModel;
             // 数据过滤
-            $filData = $ChangeCancelModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
         
             // 入库使用权变更表
-            $useRow = $ChangeCancelModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $useRow = $ChangeModel->allowField(true)->create($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -82,14 +79,14 @@ class Changecancel extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeCancelModel = new ChangeCancelModel;
+            $ChangeModel = new ChangeCancelModel;
             // 数据过滤
-            $filData = $ChangeCancelModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $useRow = $ChangeCancelModel->allowField(true)->update($filData);
+            $useRow = $ChangeModel->allowField(true)->update($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -98,6 +95,7 @@ class Changecancel extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $useRow['id'];
+                unset($filData['id']);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -116,18 +114,17 @@ class Changecancel extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeCancelModel = new ChangeCancelModel;
-        $row = $ChangeCancelModel->detail($id);
+        $ChangeModel = new ChangeCancelModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
-        //halt($row);
         return $this->fetch();
     }
 
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeCancelModel = new ChangeCancelModel;
-        $row = $ChangeCancelModel->detail($id);
+        $ChangeModel = new ChangeCancelModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -138,13 +135,11 @@ class Changecancel extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeCancelModel = new ChangeCancelModel;
-            $where = $ChangeCancelModel->checkWhere($getData,'record');
-            //halt($where);
-            $fields = "a.id,a.is_back,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $ChangeModel = new ChangeCancelModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
+            $fields = "a.id,a.is_back,a.change_order_number,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_cancel')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';

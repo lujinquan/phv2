@@ -21,13 +21,11 @@ class Changerentadd extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeRentAddModel = new ChangeRentAddModel;
-            $where = $ChangeRentAddModel->checkWhere($getData,'apply');
-            //halt($where);
+            $ChangeModel = new ChangeRentAddModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
             $data['count'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -39,28 +37,29 @@ class Changerentadd extends Admin
     public function apply()
     {
         if ($this->request->isAjax()) {
-            $data = $this->request->post();//halt($data);
+            $data = $this->request->post();
             // 数据验证
             $result = $this->validate($data, 'Changerentadd.form');
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeRentAddModel = new ChangeRentAddModel;
+            $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
-            $filData = $ChangeRentAddModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-//halt($filData);
+
             // 入库
-            $offsetRow = $ChangeRentAddModel->allowField(true)->create($filData);
-            if (!$offsetRow) {
+            unset($filData['id']);
+            $row = $ChangeModel->allowField(true)->create($filData);
+            if (!$row) {
                 return $this->error('申请失败');
             }
             if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $offsetRow['id'];
+                $filData['change_id'] = $row['id'];
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -82,14 +81,14 @@ class Changerentadd extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeRentAddModel = new ChangeRentAddModel;
+            $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
-            $filData = $ChangeRentAddModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $row = $ChangeRentAddModel->allowField(true)->update($filData);
+            $row = $ChangeModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
@@ -116,8 +115,8 @@ class Changerentadd extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeRentAddModel = new ChangeRentAddModel;
-        $row = $ChangeRentAddModel->detail($id);
+        $ChangeModel = new ChangeRentAddModel;
+        $row = $ChangeModel->detail($id);
         //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
@@ -126,8 +125,8 @@ class Changerentadd extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeRentAddModel = new ChangeRentAddModel;
-        $row = $ChangeRentAddModel->detail($id);
+        $ChangeModel = new ChangeRentAddModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -138,8 +137,8 @@ class Changerentadd extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeRentAddModel = new ChangeRentAddModel;
-            $where = $ChangeRentAddModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeRentAddModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();

@@ -14,6 +14,7 @@
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
 				<input type="text" name="house_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" id="ban_id" name="ban_id">
 				<input type="hidden" id="house_id" name="house_id">
 				<input type="hidden" id="tenant_id" name="tenant_id">
 				<input type="hidden" name="group" value="x">
@@ -240,6 +241,7 @@
 								$("input[name='house_number']").val(row.house_number);//获取房屋编号
 								$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
 								$("#check").removeClass('hide');
+								$("#ban_id").val(row.ban_id);
 								$("#house_id").val(row.house_id);
 								$("#tenant_id").val(row.tenant_id);
 								$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别

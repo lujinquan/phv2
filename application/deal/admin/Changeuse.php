@@ -19,8 +19,8 @@ class Changeuse extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeUseModel = new ChangeUseModel;
-            $where = $ChangeUseModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeUseModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.change_order_number,a.transfer_rent,a.change_use_type,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
@@ -41,22 +41,22 @@ class Changeuse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeUseModel = new ChangeUseModel;
+            $ChangeModel = new ChangeUseModel;
             // 数据过滤
-            $filData = $ChangeUseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-        
-            // 入库使用权变更表
-            $useRow = $ChangeUseModel->allowField(true)->create($filData);
-            if (!$useRow) {
+            // 入库子表
+            unset($filData['id']);
+            $row = $ChangeModel->allowField(true)->create($filData);
+            if (!$row) {
                 return $this->error('申请失败');
             }
             if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $useRow['id'];
+                $filData['change_id'] = $row['id'];
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -78,30 +78,31 @@ class Changeuse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeUseModel = new ChangeUseModel;
+            $ChangeModel = new ChangeUseModel;
             // 数据过滤
-            $filData = $ChangeUseModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $useRow = $ChangeUseModel->allowField(true)->update($filData);
-            if (!$useRow) {
+            $row = $ChangeModel->allowField(true)->update($filData);
+            if (!$row) {
                 return $this->error('申请失败');
             }
             
             if($data['save_type'] == 'submit'){
-                if(count($useRow['child_json']) == 1){
+                if(count($row['child_json']) == 1){
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $useRow['id'];
+                    $filData['change_id'] = $row['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     } 
-                }elseif(count($useRow['child_json']) > 1){
+                }elseif(count($row['child_json']) > 1){
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
                     if (!$process) {
                         return $this->error('未知错误');
                     } 
@@ -114,8 +115,8 @@ class Changeuse extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeUseModel = new ChangeUseModel;
-        $row = $ChangeUseModel->detail($id);
+        $ChangeModel = new ChangeUseModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -123,8 +124,8 @@ class Changeuse extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeUseModel = new ChangeUseModel;
-        $row = $ChangeUseModel->detail($id);
+        $ChangeModel = new ChangeUseModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -135,8 +136,8 @@ class Changeuse extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeUseModel = new ChangeUseModel;
-            $where = $ChangeUseModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeUseModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             $fields = "a.id,a.change_order_number,a.change_use_type,a.transfer_rent,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();

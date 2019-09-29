@@ -19,8 +19,8 @@ class Changenew extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeNewModel = new ChangeNewModel;
-            $where = $ChangeNewModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeNewModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.new_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,d.ban_address,b.house_number,b.house_pre_rent,b.house_oprice,b.house_area,b.house_use_area,b.house_use_id,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_struct_id,d.ban_damage_id";
             $data = [];
@@ -43,15 +43,16 @@ class Changenew extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeNewModel = new ChangeNewModel;
+            $ChangeModel = new ChangeNewModel;
             // 数据过滤
-            $filData = $ChangeNewModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
 //halt($filData);
             // 入库使用权变更表
-            $useRow = $ChangeNewModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $useRow = $ChangeModel->allowField(true)->create($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -80,14 +81,14 @@ class Changenew extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeNewModel = new ChangeNewModel;
+            $ChangeModel = new ChangeNewModel;
             // 数据过滤
-            $filData = $ChangeNewModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $useRow = $ChangeNewModel->allowField(true)->update($filData);
+            $useRow = $ChangeModel->allowField(true)->update($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -96,6 +97,7 @@ class Changenew extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $useRow['id'];
+                unset($filData['id']);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -114,8 +116,8 @@ class Changenew extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeNewModel = new ChangeNewModel;
-        $row = $ChangeNewModel->detail($id);
+        $ChangeModel = new ChangeNewModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -123,8 +125,8 @@ class Changenew extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeNewModel = new ChangeNewModel;
-        $row = $ChangeNewModel->detail($id);
+        $ChangeModel = new ChangeNewModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -135,8 +137,8 @@ class Changenew extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeNewModel = new ChangeNewModel;
-            $where = $ChangeNewModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeNewModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.new_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,a.is_back,d.ban_address,b.house_number,b.house_pre_rent,b.house_oprice,b.house_area,b.house_use_area,b.house_use_id,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_struct_id,d.ban_damage_id";
             $data = [];

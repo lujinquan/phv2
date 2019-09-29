@@ -14,11 +14,11 @@
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
 				<input type="text" name="house_number" value="{$data_info['house_number']}" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
 				<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
 				<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
 				<input type="hidden" name="group" value="x">
 				<input type="hidden" name="id" value="{$data_info['id']}">
-				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
 		</div>
 		<div class="layui-col-md4">

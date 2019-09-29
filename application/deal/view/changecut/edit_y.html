@@ -1,1 +1,610 @@
+<!-- 租金减免申请 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-tips-red"><i class="layui-icon layui-icon-tips"></i>申请租金减免时，请确认租户信息完整且房屋无欠租。</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_number" value="{$data_info['house_number']}" lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
+				<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
+				<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
+				<input type="hidden" name="group" value="y">
+				<input type="hidden" name="id" value="{$data_info['id']}">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_class" value="{$params['owners'][$old_data_info['ban_info']['ban_owner_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_id" value="{$data_info['ban_info']['ban_number']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_address" value="{$data_info['ban_info']['ban_address']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_nature" value="{$params['uses'][$data_info['house_use_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">月租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_monthly_rent" value="{$data_info['house_pre_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tenant" value="{$data_info['tenant_name']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_idnumber" value="{$data_info['tenant_card']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">电话</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tel" value="{$data_info['tenant_tel']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免类型</label>
+  		<div class="j-input-inline">
+  			<input type="text" id="reduction_cut" value="{$params.cuttypes[$old_data_info['cut_type']]}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" id="reduction_waiver_amount" value="{$old_data_info['cut_rent']}" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" id="reduction_card_number" value="{$old_data_info['cut_rent_number']}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>原资料</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">身份证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="TenantReIDCard">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'TenantReIDCard'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">户口本</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Residence">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Residence'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租约</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="HouseForm">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'HouseForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">低保证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Lowassurance">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Lowassurance'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}	
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租房保障申请表</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Housingsecurity">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCutForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}			
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">会审单</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="ChangeCutForm">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCutForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label"><i class="red">*</i>减免类型</label>
+  		<div class="j-input-inline">
+  			<select name="cut_type" class="field-cid">
+  				<option value="">请选择</option>
+  				{volist name="params['cuttypes']" id="v"}
+				<option value="{$key}" {if condition="$data_info['cut_type'] == $key"}selected{/if}>{$v}</option>
+				{/volist}
+  			</select>
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label"><i class="red">*</i>减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" name="cut_rent" value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" name="cut_rent_number" value="{$data_info['cut_rent_number']}" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>资料上传</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">身份证</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list1" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'TenantReIDCard'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+  		
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">户口本</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list2" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'Residence'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">租约</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list3" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'HouseForm'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">低保证</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img4">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list4" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'Lowassurance'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-upload clearfix">
+  			<div class="j-enclosure-label">租房保障申请表</div>
+  			<div class="j-enclosure-label j-uplode-icon">
+  				<i><img src="/static/system/image/Group8.png"></i>点击上传
+  				<button type="button" class="layui-btn layui-btn-primary" id="upload_img5">上传图片</button>
+  			</div>
+  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list5" class="upload_img_list j-viewer-img">
+			{volist name="$data_info['change_imgs']" id="v"}
+			{if condition="$v['file_type'] == 'Housingsecurity'"}
+			<dd class="item_img" id="">
+				<div class="operate">
+					<i  class="layui-icon-close-fill layui-icon"></i>
+				</div>
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+			</dd>
+			{/if}
+			{/volist}
+			</div>
+		</div>
+  	</div>
+  	<div class="layui-upload">
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="j-margin-btn">
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
+		</div>
+	</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	/*上传参数设定*/
+	var upurl = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证
+	var upurl1 = "{:url('system/Api/upload')}?input=Residence&group=change&water=no"; //户口本
+	var upurl2 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //租约
+	var upurl3 = "{:url('system/Api/upload')}?input=Lowassurance&group=change&water=no"; //低保证
+	var upurl4 = "{:url('system/Api/upload')}?input=Housingsecurity&group=change&water=no"; //租房保障申请表
+	var duotu = true; //是否为多图上传true false
+	console.log(params);
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		//获取楼栋查询器
+		 $(".layui-form").on('click','.j-ban_number',function(){
+			layer.open({
+						title: '房屋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '60%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/house')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							var row = window["layui-layer-iframe" + index].hoesedata();
+							console.log(row);
+							layer.close(index);
+							//楼栋信息
+								$("input[name='house_number']").val(row.house_number);//获取房屋编号
+								$("#house_id").val(row.house_id);
+								$("#tenant_id").val(row.tenant_id);
+								$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别
+								$("#reduction_id").val(row.ban_number);//获取楼栋编号
+								$("#reduction_address").val(row.ban_address);//获取楼栋地址
+								$("#reduction_nature").val(params.uses[row.house_use_id]);//获取楼栋使用性质
+								$("#reduction_monthly_rent").val(row.house_pre_rent);//获取月租金
+								$("#reduction_tenant").val(row.tenant_name);//获取租户
+								$("#reduction_idnumber").val(row.tenant_card);//获取身份证号
+								$("#reduction_tel").val(row.tenant_tel);//获取电话
+
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})
+		//双击查询记租表
+		 $(".layui-form").on('click','.j-rent-list',function(){
+			 layer.open({
+			 			title: '记租表'
+			 			,type: 2
+			 			,offset: 'auto'
+			 			,area: ['70%', '60%']
+			 			, btn:false
+			 			,pageTabs: false
+			 			,content: '{:url('system/index/house')}'
+			 			,btn: ['确定','关闭']
+			 			,yes: function(index, layero){
+			 				layer.close(index);
+			 			},btn2: function(index, layero){
+			 				layer.close(index);
+			 			}
+			  });
+		 })
+        //身份证
+        upload.render({
+        	elem: '#upload_img1',
+        	url: upurl,
+        	size: 1024,
+        	multiple: duotu,
+        	field: 'TenantReIDCard',
+        	before: function(obj) {
+        		layer.msg('图片上传中...', {
+        			icon: 16,
+        			shade: 0.01,
+        			time: 0
+        		})
+        	},
+        	done: function(res) {
+        		layer.close(layer.msg()); //关闭上传提示窗口
+        		if (duotu == true) {
+        			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+        			$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
+        				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        		} else {
+        			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+        			$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
+        				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        		}
+        	}
+        })
+		//户口本
+		upload.render({
+			elem: '#upload_img2',
+			url: upurl1,
+			size: 1024,
+			multiple: duotu,
+			field: 'Residence',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		//租约
+		upload.render({
+			elem: '#upload_img3',
+			url: upurl2,
+			size: 1024,
+			multiple: duotu,
+			field: 'HouseForm',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		//低保证
+		upload.render({
+			elem: '#upload_img4',
+			url: upurl3,
+			size: 1024,
+			multiple: duotu,
+			field: 'Lowassurance',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list4').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list4').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		//租房保障申请表
+		upload.render({
+			elem: '#upload_img5',
+			url: upurl4,
+			size: 1024,
+			multiple: duotu,
+			field: 'Housingsecurity',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list5').append('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list5').html('<dd class="item_img" id="' + res.data.name +
+						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		/*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+	});
+</script>

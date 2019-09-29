@@ -109,19 +109,18 @@ class ChangeRentAdd extends SystemBase
             $data['change_status'] = 2;
         }else{ //保存并提交
             $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'step' => 1,
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
         }
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 11; //暂停计租
         $data['change_order_number'] = date('Ym').'11'.random(14);
-        $data['child_json'][] = [
-            'step' => 1,
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
         
-
         // 审批表数据
         $processRoles = $this->processRole;
         $processDescs = $this->processDesc;

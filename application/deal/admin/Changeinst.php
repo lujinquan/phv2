@@ -19,13 +19,12 @@ class Changeinst extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeInstModel = new ChangeInstModel;
-            $where = $ChangeInstModel->checkWhere($getData,'apply');
+            $ChangeModel = new ChangeInstModel;
+            $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.chang_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,c.nick";
             $data = [];
             $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -43,15 +42,16 @@ class Changeinst extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeInstModel = new ChangeInstModel;
+            $ChangeModel = new ChangeInstModel;
             // 数据过滤
-            $filData = $ChangeInstModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
         //halt($filData);
             // 入库
-            $useRow = $ChangeInstModel->allowField(true)->create($filData);
+            unset($filData['id']);
+            $useRow = $ChangeModel->allowField(true)->create($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -80,14 +80,14 @@ class Changeinst extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            $ChangeInstModel = new ChangeInstModel;
+            $ChangeModel = new ChangeInstModel;
             // 数据过滤
-            $filData = $ChangeInstModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
             }
             // 入库使用权变更表
-            $useRow = $ChangeInstModel->allowField(true)->update($filData);
+            $useRow = $ChangeModel->allowField(true)->update($filData);
             if (!$useRow) {
                 return $this->error('申请失败');
             }
@@ -96,6 +96,7 @@ class Changeinst extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $useRow['id'];
+                unset($filData['id']);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -114,8 +115,8 @@ class Changeinst extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
-        $ChangeInstModel = new ChangeInstModel;
-        $row = $ChangeInstModel->detail($id);//halt($row);
+        $ChangeModel = new ChangeInstModel;
+        $row = $ChangeModel->detail($id);//halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -123,8 +124,8 @@ class Changeinst extends Admin
     public function detail()
     {
         $id = $this->request->param('id');
-        $ChangeInstModel = new ChangeInstModel;
-        $row = $ChangeInstModel->detail($id);
+        $ChangeModel = new ChangeInstModel;
+        $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -135,8 +136,8 @@ class Changeinst extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $ChangeInstModel = new ChangeInstModel;
-            $where = $ChangeInstModel->checkWhere($getData,'record');
+            $ChangeModel = new ChangeInstModel;
+            $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
             $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_number,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];

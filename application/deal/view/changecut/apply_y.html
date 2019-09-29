@@ -9,6 +9,7 @@
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_seach" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+        <input type="hidden" id="ban_id" name="ban_id">
 				<input type="hidden" id="house_id" name="house_id">
 				<input type="hidden" id="tenant_id" name="tenant_id">
 				<input type="hidden" name="group" value="y">
@@ -334,6 +335,7 @@
                 }
                 //console.log(imgs.length);
 								$("#reduction_seach").val(res.data.house_number); //房屋编号
+                $("#ban_id").val(res.data.ban_id); //楼栋id
 								$("#house_id").val(res.data.house_id); //房屋id
 								$("#tenant_id").val(res.data.tenant_id); //租户id
 								$("#reduction_class").val(params.owners[res.data.ban_info.ban_owner_id]); //产别

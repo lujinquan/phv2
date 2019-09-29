@@ -1,5 +1,5 @@
 <!-- 租金减免 取消减免 -->
-<div class="j-table-content j-no-title">
+<div class="j-table-content j-no-tab">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
 	    {if condition="in_array(278,$auths)"}      
@@ -128,6 +128,7 @@ var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'�
 					// 	width: 160,
 					// 	title: '减免到期'
 					// }
+					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', templet: function(d) {
 		                    return process_config[d.change_status];
 		                }}, 

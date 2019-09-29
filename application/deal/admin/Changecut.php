@@ -21,17 +21,23 @@ class Changecut extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            if($group = 'x'){
+            if($group == 'x'){
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'apply');
                 //halt($where);
-                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-                //halt($data['data']);
                 $data['count'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             }else{
-
+                $ChangeCutYearModel = new ChangeCutYearModel;
+                $where = $ChangeCutYearModel->checkWhere($getData,'apply');
+                //halt($where);
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                $data = [];
+                $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+                $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+                //halt($data['data']);
             }
             
             $data['code'] = 0;
@@ -63,7 +69,7 @@ class Changecut extends Admin
         $group = input('group','x');
     	if ($this->request->isAjax()) {
             $data = $this->request->post();
-            if($data['group'] = 'x'){
+            if($data['group'] == 'x'){
                 // 数据验证
                 $result = $this->validate($data, 'Changecut.form');
                 if($result !== true) {
@@ -77,6 +83,7 @@ class Changecut extends Admin
                 }
             
                 // 入库使用权变更表
+                unset($filData['id']);
                 $useRow = $ChangeCutModel->allowField(true)->create($filData);
                 if (!$useRow) {
                     return $this->error('申请失败');
@@ -85,6 +92,7 @@ class Changecut extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $useRow['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -106,8 +114,8 @@ class Changecut extends Admin
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
-            
                 // 入库使用权变更表
+                unset($filData['id']);
                 $useRow = $ChangeCutYearModel->allowField(true)->create($filData);
                 if (!$useRow) {
                     return $this->error('申请失败');
@@ -116,6 +124,7 @@ class Changecut extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $useRow['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -126,7 +135,7 @@ class Changecut extends Admin
 
             }
             
-            return $this->success($msg,url('index')); 
+            return $this->success($msg,'index?group='.$data['group']); 
         }       
         return $this->fetch('apply_'.$group);
     }
@@ -136,7 +145,7 @@ class Changecut extends Admin
         $group = input('group','x');
         if ($this->request->isAjax()) {
             $data = $this->request->post();
-            if($data['group'] = 'x'){
+            if($data['group'] == 'x'){
                 // 数据验证
                 $result = $this->validate($data, 'Changecut.edit');
                 if($result !== true) {
@@ -158,6 +167,7 @@ class Changecut extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $useRow['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -185,6 +195,7 @@ class Changecut extends Admin
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
+                //halt($filData);
                 // 入库使用权变更表
                 $useRow = $ChangeCutYearModel->allowField(true)->update($filData);
                 if (!$useRow) {
@@ -195,6 +206,7 @@ class Changecut extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $useRow['id'];
+                    unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
@@ -212,12 +224,26 @@ class Changecut extends Admin
                 }
             }
             
-            return $this->success($msg,url('index'));
+            return $this->success($msg,'index?group='.$data['group']);
         }
         $id = $this->request->param('id');
-        $ChangeCutModel = new ChangeCutModel;
-        $row = $ChangeCutModel->detail($id);
-        $this->assign('data_info',$row);
+        if($group == 'x'){
+            $ChangeCutModel = new ChangeCutModel;
+            $row = $ChangeCutModel->detail($id);
+            $this->assign('data_info',$row);
+        }else{
+            $ChangeCutYearModel = new ChangeCutYearModel;
+            $row = $ChangeCutYearModel->detail($id);
+            $this->assign('data_info',$row);
+
+            $ChangeCutModel = new ChangeCutModel;
+            $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
+            $oldRow = $ChangeCutModel->detail($cutRow['id']);
+
+            $this->assign('old_data_info',$oldRow);
+
+        }
+        //halt($row);
         return $this->fetch('edit_'.$group);
     }
 
@@ -225,7 +251,7 @@ class Changecut extends Admin
     {
         $group = input('group','x');
         $id = $this->request->param('id');
-        if($group = 'x'){
+        if($group == 'x'){
             $ChangeCutModel = new ChangeCutModel;           
             $row = $ChangeCutModel->detail($id);
         }else{

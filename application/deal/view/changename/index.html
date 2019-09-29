@@ -57,9 +57,9 @@
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 		{{#  if (d.change_status == 2) { }}
-		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+		<a href="{:url('edit')}?group=x&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
 		{{# if (d.is_back == 0){ }}
-		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+		<a href="{:url('del')}?group=x&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{# } }}
@@ -67,7 +67,7 @@
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{#  } }}
-		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+		<a href="{:url('detail')}?group=x&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
 <script type="text/javascript">
