@@ -18,7 +18,8 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
-				<input type="text" id="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+        <a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
 			</div>
 		</div>
 		<div class="layui-col-md4">
@@ -100,13 +101,13 @@
   	</div>
   </div>
   <fieldset class="layui-elem-field layui-field-title j-field-box">
-  	<legend>当年资料</legend>
+  	<legend>原资料</legend>
   </fieldset>
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">身份证</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="TenantReIDCard">
   				
   				
   			</ul>
@@ -117,7 +118,7 @@
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">户口本</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="Residence">
   				
   			</ul>
   	    </div>
@@ -127,7 +128,7 @@
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">租约</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="HouseForm">
   				
   			</ul>
   	    </div>
@@ -137,7 +138,7 @@
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">低保证</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="Lowassurance">
   				
   			</ul>
   	    </div>
@@ -147,7 +148,7 @@
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">租房保障申请表</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="Housingsecurity">
   				
   			</ul>
   	    </div>
@@ -157,7 +158,7 @@
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">会审单</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
+  			<ul id="ChangeCutForm">
   				
   			</ul>
   	    </div>
@@ -321,11 +322,17 @@
 							var row = window["layui-layer-iframe" + index].hoesedata();
 							console.log(row);
 							layer.close(index);
-
+              $("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
+              $("#check").removeClass('hide');
 
 							$.get('{:url("api/getChangeCutRow")}', {'house_id':row.house_id}, function(res) {
 								console.log(res);
-								var row = res.data
+								var imgs = res.data.change_imgs;
+                for (var i = imgs.length - 1; i >= 0; i--) {
+                  $('#'+imgs[i].file_type).append('<li><img src="'+imgs[i].file+'" class="img"></li>');
+                  //console.log(imgs[i].data_id);
+                }
+                //console.log(imgs.length);
 								$("#reduction_seach").val(res.data.house_number); //房屋编号
 								$("#house_id").val(res.data.house_id); //房屋id
 								$("#tenant_id").val(res.data.tenant_id); //租户id
