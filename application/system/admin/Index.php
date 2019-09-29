@@ -55,6 +55,11 @@ class Index extends Admin
 	{
 		return $this->fetch('block/queriers/building');
 	}
+	//楼栋调整——楼栋选择器
+	public function queriers()
+	{
+		return $this->fetch('block/queriers/buildings');
+	}
 	 //租户选择器
 	public function tenant()
 	{

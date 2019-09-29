@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // Eros Fratini - eros@recoding.it
 // jqprint 0.3
 //
@@ -63,9 +63,9 @@
     
     $.fn.jqprint.defaults = {
 		debug: false,
-		importCSS: true, 
-		printContainer: true,
-		operaSupport: true
+		importCSS: false, 
+		printContainer: false,
+		operaSupport: false
 	};
 
     // Thanks to 9__, found at http://users.livejournal.com/9__/380664.html

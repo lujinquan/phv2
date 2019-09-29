@@ -772,7 +772,25 @@ function formSubmit(type,url,data,index){
             });
             return false;
         }
-
+//点击tr选中对应的checkbox
+		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
+		      var index = $(this).attr('data-index');
+		      var tableBox = $(this).parents('.layui-table-box');
+		      //存在固定列
+		      if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
+		          tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
+		      } else {
+		          tableDiv = tableBox.find(".layui-table-body.layui-table-main");
+		      }
+		      var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+		      if (checkCell.length>0) {
+		          checkCell.click();
+		      }
+		  });
+		  
+		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
+		      e.stopPropagation();
+		  });
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
      		url: 'data-original',
