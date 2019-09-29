@@ -1,8 +1,8 @@
 {include file="system@block/layui" /}
 <style type="text/css">
-    #leaseprint_1_{font-family:"SimSun"}
+    #leaseprint_1_{font-family:"SimSun";font-size: 12px!important;}
   .print_1_ table{border-spacing:0;border-top: 1px solid #000;border-right: 1px solid #000;}
-  .print_1_ td,.print_1_ th{height:24px;border-left: 1px solid #000;border-bottom: 1px solid #000;font-size:13px;font-weight:400;padding:2px 1px;}
+  .print_1_ td,.print_1_ th{height:24px;border-left: 1px solid #000;border-bottom: 1px solid #000;font-size:13px;padding:2px 1px;}
   #jbydtable td{padding:3px 2px;}
   .page-tab-content{padding: 20px;}
   #leaseprint_1_{margin: 0 auto;}
@@ -13,16 +13,16 @@
 		打印
 	</button>
 </div>
-<div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1080px;">
-        <form id="Myprint_1_" width="1091px">
+<div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1180px;">
+        <form id="Myprint_1_" width="1191px">
             <!--startprint2-->
             
             <!-- 基本信息 -->
             <div style="">
-                <div style="margin-top:44px;margin-left:2%;float: left; width: 46%;height:611px;">
+                <div style="margin-top:38px;margin-left:2%;float: left; width: 46%;height:681px;">
                     <!-- 约定事项 -->
                     <div class="textContent">
-                        <table id="jbydtable" border=1 style="height:611px;box-sizing:border-box;border:1px solid #000;padding: 5px; display: inline-block;">
+                        <table id="jbydtable" border=1 style="height:681px;box-sizing:border-box;border:1px solid #000; padding: 5px; display: inline-block;">
                             <tbody>
                             <tr>
                                 <td style="border:0px;"><p style="margin: 10px 0 10px 0; text-align: center;"><span style="font-size: 24px; width: 100px; border-bottom: 3px double #333333;">约定事项</span></p></td>
@@ -73,10 +73,9 @@
                             <tr>
                                 <td style="border:0px;">（5）利用承租房屋进行违法活动。</td>
                             </tr>
-                            <tr>
-                                <td style="border:0px;" rowspan="2"></td>
-                            </tr>
-                            <tr></tr>
+                            <tr><td style="border:0px;"></td></tr>
+							<tr><td style="border:0px;"></td></tr>
+							<tr><td style="border:0px;"></td></tr>
                             <tr>
                                 <td style="border:0px;text-align:right;">武汉市住房保障和房屋管理局印制</td>
                             </tr>
@@ -84,9 +83,9 @@
                     </div>
                 </div>
 
-                <div style="float: left; width: 44%; margin-left: 4%;height:611px;">
+                <div style="float: left; width: 44%; margin-left: 4%;height:681px;">
                     <p class="topHeader" style="text-align: right;font-size:14px;margin:10px 0;">
-                        租直NO:&nbsp;&nbsp;&nbsp;<span id="print_1_NO"></span>
+                        租直NO:&nbsp;&nbsp;<span id="print_1_NO"></span>
                     </p>
                     <table id="table1" border=1  style="height:611px;box-sizing:border-box">
                         <tbody><tr>
@@ -178,29 +177,17 @@
                         <tbody><tr>
                             <th colspan="2" width="85">部位</th>
                             <th width="40">间号</th>
-                            <th width="55">
-								实有面
-								积(m²)
+                            <th width="55">实有面积(m²)
 							</th>
-                            <th width="55">
-								计租面
-								积(m²)
+                            <th width="55">计租面积(m²)
 							</th>
-                            <th width="40">
-								租金
-								(元)
+                            <th width="40">租金(元)
 							</th>
                             <th colspan="2">项目</th>
                             <th width="60">单价(元)</th>
-                            <th width="70">
-								数量
-								（m²）
-								（件、
-								个）
+                            <th width="70">数量(m²)(件、个)
 							</th>
-                            <th width="40">
-								租金
-								(元)
+                            <th width="40">租金(元)
 							</th>
                         </tr>
                         <tr>
@@ -217,10 +204,7 @@
                             <td id="print_1_Room1_data4">
                                 
                             </td>
-                            <td rowspan="4" width="75">
-								三户以
-							   上共用
-							 </td>
+                            <td rowspan="4" width="75">三户以上共用</td>
                             <td width="78">厅(堂)</td>
                             <td>0.50/个</td>
                             <td id="print_1_Room1_data5"></td>
@@ -251,7 +235,7 @@
                             <td id="print_1_Room3_data4"></td>
                             <td>卫生间</td>
                             <td>0.50/个</td>
-                            <td id="print_1_Room3_data5">
+                            <td id="print_1_Room3_data5"></td>
                         
                             <td id="print_1_Room3_data6">
       
@@ -262,12 +246,9 @@
                             <td id="print_1_Room4_data2"></td>
                             <td id="print_1_Room4_data3"></td>
                             <td id="print_1_Room4_data4"></td>
-                            <td>
-								室内走
-							    道
-							</td>
+                            <td>室内走道</td>
                             <td>0.50/个</td>
-                            <td id="print_1_Room4_data5">
+                            <td id="print_1_Room4_data5"></td>
                
                             <td id="print_1_Room4_data6">
                                 
@@ -285,10 +266,7 @@
                                 </td>
                             <td id="print_1_Room5_data5">
                                 </td>
-                            <td rowspan="2">
-								高1至
-							    1.7米
-							    搁楼
+                            <td rowspan="2">高1至1.7米搁楼
 							</td>
                             <td>5m²以下</td>
                             <td>0.50/个</td>
@@ -377,24 +355,12 @@
                                 </td>
                             <td></td>
                             <td>间号</td>
-                            <td>
-							  实有面积
-							  (m²)
-							</td>
-                            <td>
-								计租面积
-								(m²)
-							</td>
-                            <td>
-								租金
-								(元)
-							</td>
+                            <td>实有面积(m²)</td>
+                            <td>计租面积(m²)</td>
+                            <td>租金(元)</td>
                         </tr>
                         <tr>
-                            <td rowspan="2">
-								室内走
-							    道
-							</td>
+                            <td rowspan="2">室内走道</td>
                             <td>独</td>
                             <td id="print_1_Room11_data2">
                                 </td>
@@ -404,10 +370,7 @@
                                 </td>
                             <td id="print_1_Room11_data5">
                                 </td>
-                            <td rowspan="3">
-								无封闭
-								阳台
-							</td>
+                            <td rowspan="3">无封闭阳台</td>
                            <td id="print_1_Room13_data5">
                             </td>
                             <td id="print_1_Room13_data6">
@@ -489,11 +452,7 @@
                     <td id="print_1_Room17_data5"></td>
                 </tr>
                         <tr>
-                            <td colspan="2">
-								高1.7至
-								2.2米搁
-								楼
-							</td>
+                            <td colspan="2">高1.7至2.2米搁楼</td>
                             <td id="print_1_Room12_data6">
                         <input class="jianhao" type="hidden" name="GL_JHO1" id="GL_JHO1" value="" truetype="hidden"></td>
                             <td id="print_1_Room12_data7">
@@ -621,143 +580,145 @@
 <script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <!-- 打印 E -->
 <script type="text/javascript">
+	console.log(params)
 	layui.use(['table','jquery'], function() {
         var table = layui.table
 		   ,$ = layui.$;
-		var id = {$data_info['id']};
-		$.get('/admin.php/house/lease/detail', {'id':id}, function(res) {
-			var table = JSON.parse(res.data.change_data_line);
+		var id="{$data_info['id']}";
+		/* console.log({:json_encode($systemusers)}); */
+		$.get('{:url("changelease/detail")}', {'id':id}, function(res) {
+			console.log(res);
 			$('#print_1_picCode').show().prop('src',res.data.qrcode);
 			$('#print_1_NO').text(res.data.szno);
-			$('#print_1_Address').text('房屋坐落：武昌区');
-			$('#print_1_Struct').text('钢混');
-			$('#print_1_HouseFloor').text('5');
-			$('#print_1_LiveFloor').text('2');
-			$('#print_1_RentName').text(res.data.tenant_name);
-			$('#print_1_RentNumber').text(res.data.tenant_card);
-			$('#print_1_RentName1').text('监护人 姓名:张三');
-			$('#print_1_RentNumber1').text('监护人身份证号:4203...');
-			$('#print_1_Year').text(res.data.ctime.substring(0,4));
-			$('#print_1_Month').text(res.data.ctime.substring(5,7));
-			$('#print_1_Day').text(res.data.ctime.substring(8,10));
-			$('#print_1_Text_other').html(res.data.change_remark);
-			$('#print_1_Room1_data1').text(table.applyRoom1_data1);
-			$('#print_1_Room1_data2').text(table.applyRoom1_data2);
-			$('#print_1_Room1_data3').text(table.applyRoom1_data3);
-			$('#print_1_Room1_data4').text(table.applyRoom1_data4);
-			$('#print_1_Room1_data5').text(table.applyRoom1_data5);
-			$('#print_1_Room1_data6').text(table.applyRoom1_data6);
-			$('#print_1_Room2_data1').text(table.applyRoom2_data1);
-			$('#print_1_Room2_data2').text(table.applyRoom2_data2);
-			$('#print_1_Room2_data3').text(table.applyRoom2_data3);
-			$('#print_1_Room2_data4').text(table.applyRoom2_data4);
-			$('#print_1_Room2_data5').text(table.applyRoom2_data5);
-			$('#print_1_Room2_data6').text(table.applyRoom2_data6);
-			$('#print_1_Room3_data1').text(table.applyRoom3_data1);
-			$('#print_1_Room3_data2').text(table.applyRoom3_data2);
-			$('#print_1_Room3_data3').text(table.applyRoom3_data3);
-			$('#print_1_Room3_data4').text(table.applyRoom3_data4);
-			$('#print_1_Room3_data5').text(table.applyRoom3_data5);
-			$('#print_1_Room3_data6').text(table.applyRoom3_data6);
-			$('#print_1_Room4_data1').text(table.applyRoom4_data1);
-			$('#print_1_Room4_data2').text(table.applyRoom4_data2);
-			$('#print_1_Room4_data3').text(table.applyRoom4_data3);
-			$('#print_1_Room4_data4').text(table.applyRoom4_data4);
-			$('#print_1_Room4_data5').text(table.applyRoom4_data5);
-			$('#print_1_Room4_data6').text(table.applyRoom4_data6);
-			$('#print_1_Room5_data2').text(table.applyRoom5_data2);
-			$('#print_1_Room5_data3').text(table.applyRoom5_data3);
-			$('#print_1_Room5_data4').text(table.applyRoom5_data4);
-			$('#print_1_Room5_data5').text(table.applyRoom5_data5);
-			$('#print_1_Room6_data6').text(table.applyRoom6_data6);
-			$('#print_1_Room7_data7').text(table.applyRoom7_data7);
-			$('#print_1_Room6_data2').text(table.applyRoom6_data2);
-			$('#print_1_Room6_data3').text(table.applyRoom6_data3);
-			$('#print_1_Room6_data4').text(table.applyRoom6_data4);
-			$('#print_1_Room6_data5').text(table.applyRoom6_data5);
-			$('#print_1_Room7_data2').text(table.applyRoom7_data2);
-			$('#print_1_Room7_data3').text(table.applyRoom7_data3);
-			$('#print_1_Room7_data4').text(table.applyRoom7_data4);
-			$('#print_1_Room7_data5').text(table.applyRoom7_data5);
-			$('#print_1_Room8_data2').text(table.applyRoom8_data2);
-			$('#print_1_Room8_data3').text(table.applyRoom8_data3);
-			$('#print_1_Room8_data4').text(table.applyRoom8_data4);
-			$('#print_1_Room8_data5').text(table.applyRoom8_data5);
-			$('#print_1_Room9_data2').text(table.applyRoom9_data2);
-			$('#print_1_Room9_data3').text(table.applyRoom9_data3);
-			$('#print_1_Room9_data4').text(table.applyRoom9_data4);
-			$('#print_1_Room9_data5').text(table.applyRoom9_data5);
-			$('#print_1_Room10_data2').text(table.applyRoom10_data2);
-			$('#print_1_Room10_data3').text(table.applyRoom10_data3);
-			$('#print_1_Room10_data4').text(table.applyRoom10_data4);
-			$('#print_1_Room10_data5').text(table.applyRoom10_data5);
-			$('#print_1_Room11_data2').text(table.applyRoom11_data2);
-			$('#print_1_Room11_data3').text(table.applyRoom11_data3);
-			$('#print_1_Room11_data4').text(table.applyRoom11_data4);
-			$('#print_1_Room11_data5').text(table.applyRoom11_data5);
-			$('#print_1_Room12_data2').text(table.applyRoom12_data2);
-			$('#print_1_Room12_data3').text(table.applyRoom12_data3);
-			$('#print_1_Room12_data4').text(table.applyRoom12_data4);
-			$('#print_1_Room12_data5').text(table.applyRoom12_data5);
-			$('#print_1_Room12_data6').text(table.applyRoom12_data6);
-			$('#print_1_Room12_data7').text(table.applyRoom12_data7);
-			$('#print_1_Room12_data8').text(table.applyRoom12_data8);
-			$('#print_1_Room12_data9').text(table.applyRoom12_data9);
-			$('#print_1_Room13_data1').text(table.applyRoom13_data1);
-			$('#print_1_Room13_data2').text(table.applyRoom13_data2);
-			$('#print_1_Room13_data3').text(table.applyRoom13_data3);
-			$('#print_1_Room13_data4').text(table.applyRoom13_data4);
-			$('#print_1_Room13_data5').text(table.applyRoom13_data5);
-			$('#print_1_Room13_data6').text(table.applyRoom13_data6);
-			$('#print_1_Room13_data7').text(table.applyRoom13_data7);
-			$('#print_1_Room13_data8').text(table.applyRoom13_data8);
-			$('#print_1_Room14_data1').text(table.applyRoom14_data1);
-			$('#print_1_Room14_data2').text(table.applyRoom14_data2);
-			$('#print_1_Room14_data3').text(table.applyRoom14_data3);
-			$('#print_1_Room14_data4').text(table.applyRoom14_data4);
-			$('#print_1_Room14_data5').text(table.applyRoom14_data5);
-			$('#print_1_Room14_data6').text(table.applyRoom14_data6);
-			$('#print_1_Room14_data7').text(table.applyRoom14_data7);
-			$('#print_1_Room14_data8').text(table.applyRoom14_data8);
-			$('#print_1_Room15_data1').text(table.applyRoom15_data1);
-			$('#print_1_Room15_data2').text(table.applyRoom15_data2);
-			$('#print_1_Room15_data3').text(table.applyRoom15_data3);
-			$('#print_1_Room15_data4').text(table.applyRoom15_data4);
-			$('#print_1_Room15_data5').text(table.applyRoom15_data5);
-			$('#print_1_Room15_data6').text(table.applyRoom15_data6);
-			$('#print_1_Room15_data7').text(table.applyRoom15_data7);
-			$('#print_1_Room15_data8').text(table.applyRoom15_data8);
-			$('#print_1_Room16_data1').text(table.applyRoom16_data1);
-			$('#print_1_Room16_data2').text(table.applyRoom16_data2);
-			$('#print_1_Room16_data3').text(table.applyRoom16_data3);
-			$('#print_1_Room16_data4').text(table.applyRoom16_data4);
-			$('#print_1_Room16_data5').text(table.applyRoom16_data5);
-			$('#print_1_Room16_data6').text(table.applyRoom16_data6);
-			$('#print_1_Room16_data7').text(table.applyRoom16_data7);
-			$('#print_1_Room16_data8').text(table.applyRoom16_data8);
-			$('#print_1_Room17_data1').text(table.applyRoom17_data1);
-			$('#print_1_Room17_data2').text(table.applyRoom17_data2);
-			$('#print_1_Room17_data3').text(table.applyRoom17_data3);
-			$('#print_1_Room17_data4').text(table.applyRoom17_data4);
-			$('#print_1_Room17_data5').text(table.applyRoom17_data5);
-			$('#print_1_Room18_data1').text(table.applyRoom18_data1);
-			$('#print_1_Room18_data2').text(table.applyRoom18_data2);
-			$('#print_1_Room18_data3').text(table.applyRoom18_data3);
-			$('#print_1_Room18_data4').text(table.applyRoom18_data4);
-			$('#print_1_Room18_data5').text(table.applyRoom18_data5);
-			$('#print_1_Room19_data1').text(table.applyRoom19_data1);
-			$('#print_1_Room19_data2').text(table.applyRoom19_data2);
-			$('#print_1_Room19_data3').text(table.applyRoom19_data3);
-			$('#print_1_Room19_data4').text(table.applyRoom19_data4);
-			$('#print_1_Room19_data5').text(table.applyRoom19_data5);
-			$('#print_1_Room20_data1').text(table.applyRoom20_data1);
-			$('#print_1_Room20_data2').text(table.applyRoom20_data2);
-			$('#print_1_Room20_data3').text(table.applyRoom20_data3);
-			$('#print_1_Room20_data4').text(table.applyRoom20_data4);
-			$('#print_1_Room20_data5').text(table.applyRoom20_data5);
-			$('#print_1_Room21_data1').text(table.applyRoom21_data1);
-			$('#print_1_Room21_data2').text(table.applyRoom21_data2);
-			$('#print_1_Room21_data3').text(table.applyRoom21_data3);
+			$('#print_1_Address').text(res.data.ban_info.ban_address);
+			$('#print_1_Struct').text(params.structs[res.data.ban_info.ban_struct_id]);
+			$('#print_1_HouseFloor').text(res.data.ban_info.ban_floors);
+			$('#print_1_LiveFloor').text(res.data.house_info.house_floor_id);
+			$('#print_1_RentName').text(res.data.tenant_info.tenant_name);
+			$('#print_1_RentNumber').text(res.data.tenant_info.tenant_tel);
+			/* $('#print_1_RentName1').text('监护人 姓名:张三');
+			$('#print_1_RentNumber1').text('监护人身份证号:4203...'); */
+			$('#print_1_Year').text(res.data.data_json.applyYear);
+			$('#print_1_Month').text(res.data.data_json.applyMonth);
+			$('#print_1_Day').text(res.data.data_json.applyDay);
+			$('#print_1_Text_other').html(res.data.data_json.applyYear+'-'+res.data.data_json.applyMonth+'-'+res.data.data_json.applyDay+params.leasetypes[res.data.data_json.applyType]);
+			$('#print_1_Room1_data1').text(res.data.data_json.applyRoom1_data1);
+			$('#print_1_Room1_data2').text(res.data.data_json.applyRoom1_data2);
+			$('#print_1_Room1_data3').text(res.data.data_json.applyRoom1_data3);
+			$('#print_1_Room1_data4').text(res.data.data_json.applyRoom1_data4);
+			$('#print_1_Room1_data5').text(res.data.data_json.applyRoom1_data5);
+			$('#print_1_Room1_data6').text(res.data.data_json.applyRoom1_data6);
+			$('#print_1_Room2_data1').text(res.data.data_json.applyRoom2_data1);
+			$('#print_1_Room2_data2').text(res.data.data_json.applyRoom2_data2);
+			$('#print_1_Room2_data3').text(res.data.data_json.applyRoom2_data3);
+			$('#print_1_Room2_data4').text(res.data.data_json.applyRoom2_data4);
+			$('#print_1_Room2_data5').text(res.data.data_json.applyRoom2_data5);
+			$('#print_1_Room2_data6').text(res.data.data_json.applyRoom2_data6);
+			$('#print_1_Room3_data1').text(res.data.data_json.applyRoom3_data1);
+			$('#print_1_Room3_data2').text(res.data.data_json.applyRoom3_data2);
+			$('#print_1_Room3_data3').text(res.data.data_json.applyRoom3_data3);
+			$('#print_1_Room3_data4').text(res.data.data_json.applyRoom3_data4);
+			$('#print_1_Room3_data5').text(res.data.data_json.applyRoom3_data5);
+			$('#print_1_Room3_data6').text(res.data.data_json.applyRoom3_data6);
+			$('#print_1_Room4_data1').text(res.data.data_json.applyRoom4_data1);
+			$('#print_1_Room4_data2').text(res.data.data_json.applyRoom4_data2);
+			$('#print_1_Room4_data3').text(res.data.data_json.applyRoom4_data3);
+			$('#print_1_Room4_data4').text(res.data.data_json.applyRoom4_data4);
+			$('#print_1_Room4_data5').text(res.data.data_json.applyRoom4_data5);
+			$('#print_1_Room4_data6').text(res.data.data_json.applyRoom4_data6);
+			$('#print_1_Room5_data2').text(res.data.data_json.applyRoom5_data2);
+			$('#print_1_Room5_data3').text(res.data.data_json.applyRoom5_data3);
+			$('#print_1_Room5_data4').text(res.data.data_json.applyRoom5_data4);
+			$('#print_1_Room5_data5').text(res.data.data_json.applyRoom5_data5);
+			$('#print_1_Room6_data6').text(res.data.data_json.applyRoom6_data6);
+			$('#print_1_Room7_data7').text(res.data.data_json.applyRoom7_data7);
+			$('#print_1_Room6_data2').text(res.data.data_json.applyRoom6_data2);
+			$('#print_1_Room6_data3').text(res.data.data_json.applyRoom6_data3);
+			$('#print_1_Room6_data4').text(res.data.data_json.applyRoom6_data4);
+			$('#print_1_Room6_data5').text(res.data.data_json.applyRoom6_data5);
+			$('#print_1_Room7_data2').text(res.data.data_json.applyRoom7_data2);
+			$('#print_1_Room7_data3').text(res.data.data_json.applyRoom7_data3);
+			$('#print_1_Room7_data4').text(res.data.data_json.applyRoom7_data4);
+			$('#print_1_Room7_data5').text(res.data.data_json.applyRoom7_data5);
+			$('#print_1_Room8_data2').text(res.data.data_json.applyRoom8_data2);
+			$('#print_1_Room8_data3').text(res.data.data_json.applyRoom8_data3);
+			$('#print_1_Room8_data4').text(res.data.data_json.applyRoom8_data4);
+			$('#print_1_Room8_data5').text(res.data.data_json.applyRoom8_data5);
+			$('#print_1_Room9_data2').text(res.data.data_json.applyRoom9_data2);
+			$('#print_1_Room9_data3').text(res.data.data_json.applyRoom9_data3);
+			$('#print_1_Room9_data4').text(res.data.data_json.applyRoom9_data4);
+			$('#print_1_Room9_data5').text(res.data.data_json.applyRoom9_data5);
+			$('#print_1_Room10_data2').text(res.data.data_json.applyRoom10_data2);
+			$('#print_1_Room10_data3').text(res.data.data_json.applyRoom10_data3);
+			$('#print_1_Room10_data4').text(res.data.data_json.applyRoom10_data4);
+			$('#print_1_Room10_data5').text(res.data.data_json.applyRoom10_data5);
+			$('#print_1_Room11_data2').text(res.data.data_json.applyRoom11_data2);
+			$('#print_1_Room11_data3').text(res.data.data_json.applyRoom11_data3);
+			$('#print_1_Room11_data4').text(res.data.data_json.applyRoom11_data4);
+			$('#print_1_Room11_data5').text(res.data.data_json.applyRoom11_data5);
+			$('#print_1_Room12_data2').text(res.data.data_json.applyRoom12_data2);
+			$('#print_1_Room12_data3').text(res.data.data_json.applyRoom12_data3);
+			$('#print_1_Room12_data4').text(res.data.data_json.applyRoom12_data4);
+			$('#print_1_Room12_data5').text(res.data.data_json.applyRoom12_data5);
+			$('#print_1_Room12_data6').text(res.data.data_json.applyRoom12_data6);
+			$('#print_1_Room12_data7').text(res.data.data_json.applyRoom12_data7);
+			$('#print_1_Room12_data8').text(res.data.data_json.applyRoom12_data8);
+			$('#print_1_Room12_data9').text(res.data.data_json.applyRoom12_data9);
+			$('#print_1_Room13_data1').text(res.data.data_json.applyRoom13_data1);
+			$('#print_1_Room13_data2').text(res.data.data_json.applyRoom13_data2);
+			$('#print_1_Room13_data3').text(res.data.data_json.applyRoom13_data3);
+			$('#print_1_Room13_data4').text(res.data.data_json.applyRoom13_data4);
+			$('#print_1_Room13_data5').text(res.data.data_json.applyRoom13_data5);
+			$('#print_1_Room13_data6').text(res.data.data_json.applyRoom13_data6);
+			$('#print_1_Room13_data7').text(res.data.data_json.applyRoom13_data7);
+			$('#print_1_Room13_data8').text(res.data.data_json.applyRoom13_data8);
+			$('#print_1_Room14_data1').text(res.data.data_json.applyRoom14_data1);
+			$('#print_1_Room14_data2').text(res.data.data_json.applyRoom14_data2);
+			$('#print_1_Room14_data3').text(res.data.data_json.applyRoom14_data3);
+			$('#print_1_Room14_data4').text(res.data.data_json.applyRoom14_data4);
+			$('#print_1_Room14_data5').text(res.data.data_json.applyRoom14_data5);
+			$('#print_1_Room14_data6').text(res.data.data_json.applyRoom14_data6);
+			$('#print_1_Room14_data7').text(res.data.data_json.applyRoom14_data7);
+			$('#print_1_Room14_data8').text(res.data.data_json.applyRoom14_data8);
+			$('#print_1_Room15_data1').text(res.data.data_json.applyRoom15_data1);
+			$('#print_1_Room15_data2').text(res.data.data_json.applyRoom15_data2);
+			$('#print_1_Room15_data3').text(res.data.data_json.applyRoom15_data3);
+			$('#print_1_Room15_data4').text(res.data.data_json.applyRoom15_data4);
+			$('#print_1_Room15_data5').text(res.data.data_json.applyRoom15_data5);
+			$('#print_1_Room15_data6').text(res.data.data_json.applyRoom15_data6);
+			$('#print_1_Room15_data7').text(res.data.data_json.applyRoom15_data7);
+			$('#print_1_Room15_data8').text(res.data.data_json.applyRoom15_data8);
+			$('#print_1_Room16_data1').text(res.data.data_json.applyRoom16_data1);
+			$('#print_1_Room16_data2').text(res.data.data_json.applyRoom16_data2);
+			$('#print_1_Room16_data3').text(res.data.data_json.applyRoom16_data3);
+			$('#print_1_Room16_data4').text(res.data.data_json.applyRoom16_data4);
+			$('#print_1_Room16_data5').text(res.data.data_json.applyRoom16_data5);
+			$('#print_1_Room16_data6').text(res.data.data_json.applyRoom16_data6);
+			$('#print_1_Room16_data7').text(res.data.data_json.applyRoom16_data7);
+			$('#print_1_Room16_data8').text(res.data.data_json.applyRoom16_data8);
+			$('#print_1_Room17_data1').text(res.data.data_json.applyRoom17_data1);
+			$('#print_1_Room17_data2').text(res.data.data_json.applyRoom17_data2);
+			$('#print_1_Room17_data3').text(res.data.data_json.applyRoom17_data3);
+			$('#print_1_Room17_data4').text(res.data.data_json.applyRoom17_data4);
+			$('#print_1_Room17_data5').text(res.data.data_json.applyRoom17_data5);
+			$('#print_1_Room18_data1').text(res.data.data_json.applyRoom18_data1);
+			$('#print_1_Room18_data2').text(res.data.data_json.applyRoom18_data2);
+			$('#print_1_Room18_data3').text(res.data.data_json.applyRoom18_data3);
+			$('#print_1_Room18_data4').text(res.data.data_json.applyRoom18_data4);
+			$('#print_1_Room18_data5').text(res.data.data_json.applyRoom18_data5);
+			$('#print_1_Room19_data1').text(res.data.data_json.applyRoom19_data1);
+			$('#print_1_Room19_data2').text(res.data.data_json.applyRoom19_data2);
+			$('#print_1_Room19_data3').text(res.data.data_json.applyRoom19_data3);
+			$('#print_1_Room19_data4').text(res.data.data_json.applyRoom19_data4);
+			$('#print_1_Room19_data5').text(res.data.data_json.applyRoom19_data5);
+			$('#print_1_Room20_data1').text(res.data.data_json.applyRoom20_data1);
+			$('#print_1_Room20_data2').text(res.data.data_json.applyRoom20_data2);
+			$('#print_1_Room20_data3').text(res.data.data_json.applyRoom20_data3);
+			$('#print_1_Room20_data4').text(res.data.data_json.applyRoom20_data4);
+			$('#print_1_Room20_data5').text(res.data.data_json.applyRoom20_data5);
+			$('#print_1_Room21_data1').text(res.data.data_json.applyRoom21_data1);
+			$('#print_1_Room21_data2').text(res.data.data_json.applyRoom21_data2);
+			$('#print_1_Room21_data3').text(res.data.data_json.applyRoom21_data3);
             //console.log(res);
         });
 	});

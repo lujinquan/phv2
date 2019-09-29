@@ -1,2 +1,209 @@
-<!-- 楼栋调整 -->
+<!-- 楼栋调整审核 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text"  value="1002005001" placeholder=""  lay-verify="required" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text"  readonly value="1002005001" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" readonly value="解放路486" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">机构</label>
+			<div class="j-input-inline">
+				<input type="text" readonly value="粮道14管段" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动信息</legend>
+	</fieldset>
+	<table  class="layui-table j-house-boxs">
+	  <thead>
+		  <tr>
+		    <th width="33.3%">异动类别</th>
+		    <th width="33.3%">原信息</th>
+		    <th width="33.3%">异动后信息</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+		  <tr>
+			  <td>
+				楼层调整  
+			  </td>
+			  <td>7</td>
+			  <td>6</td>
+		  </tr>
+	  </tbody>
+	</table>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>异动明细</legend>
+	</fieldset>
+	<table  class="layui-table j-house-box">
+	  <thead>
+		  <tr>
+		    <th>房屋编号</th>
+		    <th>承租人</th>
+		    <th>使用性质</th>
+		    <th>规定租金</th>
+		    <th>租差</th>
+		    <th>泵费</th>
+		  </tr>
+	  </thead>
+	  <tbody>
+		<tr>													
+		  <td class="house_number">10020050010003</td>												
+		  <td class="house_lessee">王为樑</td>													
+		  <td class="house_nature">住宅</td>													
+		  <td class="house_pre_rent">74.50</td>													
+		  <td class="house_diff_rent">0.00</td>													
+		  <td class="house_pump_rent">0.00</td>												
+		</tr> 
+		<tr>													
+		   <td class="house_number">10020050010004</td>													
+		   <td class="house_lessee">罗志望</td>													
+		   <td class="house_nature">住宅</td>													
+		   <td class="house_pre_rent">82.00</td>													
+		   <td class="house_diff_rent">0.00</td>													
+		   <td class="house_pump_rent">0.00</td>												
+		</tr>
+	  </tbody>
+	</table>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  	<legend>租赁异动</legend>
+  </fieldset>
+  <div class="j-table_selected">
+	  <!-- 楼层调整 -->
+	  <table class="layui-table j-hides j-floor-box">
+		  <thead>
+			  <tr>
+				<th>基本情况</th>
+				<th>户数</th>
+				<th>建设面积</th>
+				<th>规定租金</th>
+				<th>使用面积</th>
+				<th>原价</th>
+				<th>栋数</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td>异动前</td>
+			  <td>5</td>
+			  <td>100.00</td>
+			  <td>100.00</td>
+			  <td>100.00</td>
+			  <td>110.00</td>
+			  <td>7</td>
+			</tr>
+			<tr>
+			  <td>异动</td>
+			  <td>0</td>
+			  <td>0</td>
+			  <td>0</td>
+			  <td>0</td>
+			  <td>0</td>
+			  <td>0</td>
+			</tr>
+			<tr>
+			  <td>异动后</td>
+			  <td>5</td>
+			  <td>100.00></td>
+			  <td>100.00</td>
+			  <td>100.00</td>
+			  <td>110.00</td>
+			  <td>7</td>
+			</tr>
+		  </tbody>
+		</table>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="j-margin-btn">
+  		<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+  		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+  		<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+  	</div>
+  </div>
+  </div>
+</form>
 {include file="system@block/layui" /}
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+        //审批不通过
+        $("#handover").on("click",function(){
+        	layer.open({
+        		type: 1,
+        		btn: ["确定","取消"],
+        		title: ['审批不通过原因'],
+        		scrollbar: false,
+        		area: ['400px','200px'],
+        		offset: 'auto',
+        		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+        		yes: function(index, layero){
+        			
+        			var formData = $('.layui-form').serialize();
+        			var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=10';
+        			if($('#change_reason').val()==''){
+        				layer.tips('原因不能为空！', '#change_reason', {
+        				  tips: 1
+        				});
+        			}
+        			else if(!$('.layui-layer-btn0').hasClass('disabled')){
+        				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+        				formSubmit('post',"{:url()}",data,index);
+        			}
+        
+        		}
+        	});
+        })
+        
+        //打回
+        $("#backover").on("click",function(){
+        	layer.open({
+        		type: 1,
+        		btn: ["确定","取消"],
+        		title: ['打回原因'],
+        		scrollbar: false,
+        		area: ['400px','200px'],
+        		offset: 'auto',
+        		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+        		yes: function(index, layero){
+        			
+        			var formData = $('.layui-form').serialize();
+        			var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=10';
+        			if($('#back_reason').val()==''){
+        				layer.tips('原因不能为空！', '#back_reason', {
+        				  tips: 1
+        				});
+        			}
+        			else if(!$('.layui-layer-btn0').hasClass('disabled')){
+        				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+        				formSubmit('post',"{:url()}",data,index);
+        			}
+        
+        		}
+        	});
+        })
+	});
+</script>
