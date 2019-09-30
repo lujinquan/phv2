@@ -16,8 +16,8 @@
 	 	  <td id="write_type">管段调整</td>
 		  <td id="raw_pipesection">{$params.insts[$Think.INST]}</td>
 		  <td id="new_pipesection">
-			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" required>
-				<option value="">请选择</option>
+			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" lay-filter="required" lay-verify="required">
+				<option value="0">请选择</option>
 				{volist name=":config('inst_data_names')[1]" id="v"}
 				<option value="{$key}">{$v}</option>
 				{/volist}
@@ -50,17 +50,17 @@
   <fieldset class="layui-elem-field layui-field-title j-field-box">
   	<legend>异动信息</legend>
   </fieldset>
-  <table  class="layui-table j-house-boxs">
+  <table  class="layui-table j-info-boxs">
     <tbody>
       <tr>
-		  <td>管段</td>
-		  <td><input type="text" name="pipe_segment_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
-		  <td><input type="text" name="pipe_segment_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td width="20%">管段</td>
+		  <td width="40%"><input type="text" name="pipe_segment_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td width="40%"><input type="text" name="pipe_segment_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
 	  <tr>
 		  <td>栋数</td>
 		  <td><input type="text" name="number_buildings_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
-		  <td><input type="text" name="number_buildings_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td><input type="text" name="number_buildings_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
 <!-- 	  <tr>
 		  <td>户数</td>
@@ -70,22 +70,22 @@
 	  <tr>
 		  <td>建筑面积</td>
 		  <td><input type="text" name="builtup_area_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
-		  <td><input type="text" name="builtup_area_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td><input type="text" name="builtup_area_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
 	  <tr>
 		  <td>规定租金</td>
 		  <td><input type="text" name="prescribed_rent_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
-		  <td><input type="text" name="prescribed_rent_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td><input type="text" name="prescribed_rent_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
 	  <tr>
 		  <td>原价</td>
 		  <td><input type="text" name="original_price_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
-		  <td><input type="text" name="original_price_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td><input type="text" name="original_price_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
 	  <tr>
 		  <td>使用面积</td>
-		  <td id="area_use_old">&nbsp;</td>
-		  <td id="area_use_new">&nbsp;</td>
+		  <td><input type="text" name="area_use_old" readonly="" value="" placeholder="" autocomplete="off" class="layui-input"></td>
+		  <td><input type="text" name="area_use_new" readonly="" value="" placeholder="" autocomplete="off" class="layui-input hide"></td>
 	  </tr>
    </tbody>
  </table>
@@ -107,6 +107,25 @@
 			,$ = layui.jquery
 			,upload = layui.upload
 			,layer = layui.layer;
+			//异动信息
+			 $("input[name='pipe_segment_old']").val($("#raw_pipesection").text());//原管段
+			form.on('select(required)', function(data){
+				selectedName = data.elem[data.elem.selectedIndex].text;
+				if(data.value==0)
+				{
+					$(".j-info-boxs tr:eq(0) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(1) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(2) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(3) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(4) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(5) td:eq(2)").find(".layui-input").hide();
+				}
+				else{
+					$("input[name='pipe_segment_new']").val(selectedName);
+					$(".j-info-boxs tr td").find(".layui-input").show();
+				}
+				form.render('select');
+			}); 
 		//获取房屋查询器
 		 $(".layui-form").on('click','.j-house_number',function(){
 			layer.open({
@@ -123,6 +142,7 @@
 							var row = window["layui-layer-iframe" + index].callbackdatas();
 							console.log(row);
 							layer.close(index);
+							//添加楼栋单选
 							/* var trData ='<tr>\
 												<td class="building_number">'+row.ban_number+'</td>\
 												<td class="building_address">'+row.ban_address+'</td>\
@@ -144,7 +164,7 @@
 							var tdsumrent =0;//异动信息规定租金
 							var tdsumoprice =0;//异动信息原价
 							var tdsumuse =0;//异动使用面积
-							console.log(row);
+							//console.log(row);
 							//console.log(rows);
 							//layer.close(index);
 							//$('.j-house-box tbody').html("");
@@ -153,54 +173,26 @@
 								var houseidData = '';
 								for(var i=0;i<row.length;i++) {
 									houseidData += ','+row[i].ban_number;
-									var sumnum = parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;//栋数
+									/* var sumnum = parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;//栋数
 									var sumarea = parseFloat(row[i].ban_civil_area).toFixed(2)*100+parseFloat(row[i].ban_party_area).toFixed(2)*100+parseFloat(row[i].ban_career_area).toFixed(2)*100;//建筑面积
 									var sumrent = parseFloat(row[i].ban_civil_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100;//规定租金
-									var sumoprice = parseFloat(row[i].ban_civil_oprice).toFixed(2)*100+parseFloat(row[i].ban_party_oprice).toFixed(2)*100+parseFloat(row[i].ban_career_oprice).toFixed(2)*100;//原价
+									var sumoprice = parseFloat(row[i].ban_civil_oprice).toFixed(2)*100+parseFloat(row[i].ban_party_oprice).toFixed(2)*100+parseFloat(row[i].ban_career_oprice).toFixed(2)*100;//原价 */
 									var trData ='<tr>\
 												<td class="building_number">'+row[i].ban_number+'</td>\
 												<td class="building_address">'+row[i].ban_address+'</td>\
 												<td class="building_buildings">'+row[i].ban_num+'</td>\
-												<td class="building_households">'+row[i].ban_area+'</td>\
-												<td class="builtup_area">'+sumarea.toFixed(2)/100+'</td>\
-												<td class="prescribed_rent">'+sumrent.toFixed(2)/100+'</td>\
-												<td class="original_price">'+sumoprice.toFixed(2)/100+'</td>\
+												<td class="builtup_area">'+row[i].ban_area+'</td>\
+												<td class="prescribed_rent">'+row[i].ban_rent+'</td>\
+												<td class="original_price">'+row[i].ban_oprice+'</td>\
 												<td class="areaof_use">'+row[i].ban_use_area+'</td>\
 											</tr>';
 								//$('.j-house-box tbody').append(trData);
 								if($('#defaultTr').html()){
 									$('.j-house-box tbody').html(trData);
 								}else{
-									$('.j-house-box tbody').append(trData);
+									$('.j-house-box tbody').append(trData);	
 								}
 								$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" value="'+row.ban_id +'">');
-								//栋数
-								tdsumnum += parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;
-								$("#number_buildings_old").text('-'+tdsumnum.toFixed(2)/100);
-								$("#number_buildings_new").text(tdsumnum.toFixed(2)/100);
-								//户数
-								tdsumhouse += parseFloat(row[i].ban_damage_id).toFixed(2)*100//户数(字段里没户数，前端随便找的一个参数，需要后台添加户数字段)
-								$("#households_old").text('-'+tdsumhouse.toFixed(2)/100);
-								$("#households_new").text(tdsumhouse.toFixed(2)/100);
-								//建筑面积
-								tdsumarea += parseFloat(row[i].ban_civil_area).toFixed(2)*100+parseFloat(row[i].ban_party_area).toFixed(2)*100+parseFloat(row[i].ban_career_area).toFixed(2)*100;
-								$("#builtup_area_old").text('-'+tdsumarea.toFixed(2)/100);
-								$("#builtup_area_new").text(tdsumarea.toFixed(2)/100);
-								//规定租金
-								tdsumrent += parseFloat(row[i].ban_civil_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100;
-								$("#prescribed_rent_old").text('-'+tdsumrent.toFixed(2)/100);
-								$("#prescribed_rent_new").text(tdsumrent.toFixed(2)/100);
-								//原价
-								tdsumoprice += parseFloat(row[i].ban_civil_oprice).toFixed(2)*100+parseFloat(row[i].ban_party_oprice).toFixed(2)*100+parseFloat(row[i].ban_career_oprice).toFixed(2)*100;
-								$("#original_price_old").text('-'+tdsumoprice.toFixed(2)/100);
-								$("#original_price_new").text(tdsumoprice.toFixed(2)/100);
-								//使用面积
-								tdsumuse += parseFloat(row[i].ban_use_area).toFixed(2)*100;
-								$("#area_use_old").text('-'+tdsumuse.toFixed(2)/100);
-								$("#area_use_new").text(tdsumuse.toFixed(2)/100);
-							  }
-							  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
-								$("input[name='house_id']").val(houseidData);//获取房屋编号
 							}
 							if(	$('.j-house-box tbody').html()==''){
 								$(".j-house-box,.j-house-title").hide();
@@ -208,6 +200,34 @@
 							else{
 								$(".j-house-box,.j-house-title").show();
 							}
+							
+						}
+						//遍历table求和
+						var trList = $(".j-house-box tbody").children("tr");
+						for (var j=0;j<trList.length;j++) {
+						        var tdArr = trList.eq(j).find("td"); //遍历td  
+								//栋数
+						        tdsumnum += parseFloat(tdArr.eq(2).text()).toFixed(2)*100;//栋数
+						        $("input[name='number_buildings_old']").val('-'+tdsumnum.toFixed(2)/100);
+						        $("input[name='number_buildings_new']").val(tdsumnum.toFixed(2)/100);
+								//建筑面积
+								tdsumarea += parseFloat(tdArr.eq(3).text()).toFixed(2)*100;//建筑面积
+								$("input[name='builtup_area_old']").val('-'+tdsumarea.toFixed(2)/100);
+								$("input[name='builtup_area_new']").val(tdsumarea.toFixed(2)/100);
+								//规定租金
+								tdsumrent += parseFloat(tdArr.eq(4).text()).toFixed(2)*100;//规定租金
+								$("input[name='prescribed_rent_old']").val('-'+tdsumrent.toFixed(2)/100);
+								$("input[name='prescribed_rent_new']").val(tdsumrent.toFixed(2)/100);
+								//原价
+								tdsumoprice += parseFloat(tdArr.eq(5).text()).toFixed(2)*100;//原价
+								$("input[name='original_price_old']").val('-'+tdsumoprice.toFixed(2)/100);
+								$("input[name='original_price_new']").val(tdsumoprice.toFixed(2)/100);
+								//使用面积
+								tdsumuse += parseFloat(tdArr.eq(6).text()).toFixed(2)*100;//使用面积
+								$("input[name='area_use_old']").val('-'+tdsumuse.toFixed(2)/100);
+								$("input[name='area_use_new']").val(tdsumuse.toFixed(2)/100);
+						      
+						}	
 						},btn2: function(index, layero){
 							layer.close(index);
 						}
