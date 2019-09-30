@@ -27,9 +27,9 @@ class ChangePause extends SystemBase
         'data_json' => 'json',
     ];
 
-    protected $processAction = ['审批不通过','审批成功','打回','初审通过','审批通过','终审通过'];
+    protected $processAction = ['审批不通过','审批成功','打回给房管员','初审通过','审批通过','终审通过'];
 
-    protected $processDesc = ['失败','成功','打回','待经租会计初审','待经管所长审批','待经管科长终审'];
+    protected $processDesc = ['失败','成功','打回给房管员','待经租会计初审','待经管所长审批','待经管科长终审'];
 
     protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
 
@@ -109,17 +109,18 @@ class ChangePause extends SystemBase
             $data['change_status'] = 2;
         }else{ //保存并提交
             $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'step' => 1,
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
         }
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 03; //暂停计租
         $data['change_order_number'] = date('Ym').'03'.random(14);
-        $data['child_json'][] = [
-            'step' => 1,
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
+        
         if($data['house_id']){
             $houseids = explode(',',$data['house_id']);
             $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();

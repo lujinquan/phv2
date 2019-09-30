@@ -72,7 +72,8 @@
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{# } }}
 		{{#  } else if(d.change_status == 7){ }}
-		<a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a>
+		<!-- <a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a> -->
+		<a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '1000px', height: '500px',refresh: 2}" title="上传签字图片">上传签字图片</a>
 		<a href="{:url('unpass')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger">不通过</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
@@ -82,7 +83,7 @@
     </script>
 </div>
 <script type="text/javascript">
-	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待资料员补充资料','4':'待经管所长审批','5':'待经管科审批','6':'待经租会计发证','7':'待房管员提交签字'};
+	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待资料员初审','4':'待经管所长审批','5':'待经管科审批','6':'待经租会计发证','7':'待房管员提交签字'};
 	console.log(params);
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;

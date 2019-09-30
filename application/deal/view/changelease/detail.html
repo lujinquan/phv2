@@ -618,12 +618,7 @@
 						<div class="layui-col-md4">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
-								<select name="applyType" lay-filter="reason">
-									<option>请选择</option>
-									{volist name="params['leasetypes']" id="v"}
-									<option value="{$key}" {if condition="$data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
-									{/volist}
-								</select>
+								<input type="text" id="editing_reason" readonly value="{$params.leasetypes[$data_info['data_json']['applyType']]}"  placeholder="" autocosmplete="off" class="layui-input">
 							</div>
 						</div>
 						<div class="layui-col-md6 hide">
@@ -731,7 +726,7 @@
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-						<p>经租会计</p>
+						<p>资料员</p>
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
@@ -740,6 +735,14 @@
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
 						<p>经管科</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 6) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 7) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
 					</li>
 				</ul>
 			</div>
