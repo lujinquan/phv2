@@ -1,3 +1,5 @@
+<!-- 楼栋查询器，只能单选楼栋 -->
+
 <style>
 	/*------------------ iframe页面去共用部分样式 S ----------------*/
 	.layui-header,.layui-side,.layui-footer,.bread-crumbs{ display: none; color: #f60;}
@@ -44,14 +46,9 @@
 		    ,$ = layui.$;
         table.render({
 			elem: '#dataTable'
-            //,skin: 'line' //行边框风格
-            //,even: true //开启隔行背景
-            //,size: 'sm' //小尺寸的表格
-            //,height: 550
-            //,height: 'full-20' //浏览器最大高度
             ,toolbar: true
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
-            ,url: '{:url("system/Admin/queryData")}' //数据接口
+            ,url: '{:url("system/Admin/queryData")}?type=ban' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
