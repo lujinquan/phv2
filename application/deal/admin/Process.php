@@ -77,7 +77,7 @@ class Process extends Admin
         if($this->request->isPost()) {
             $data = $this->request->post();
             $PorcessModel = new ProcessModel;
-            $res = $PorcessModel->process($change_type,$data);
+            $res = $PorcessModel->process($change_type,$data); //$data必须包含子表的id
             if (!$res) {
                 return $this->error('审批失败');
             }

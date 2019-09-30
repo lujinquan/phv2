@@ -23,8 +23,9 @@ class Changelease extends Validate
 {
     //定义验证规则
     protected $rule = [	
-        'id|异动单号' => 'require',     
-        'house_id|房屋编号' => 'require|isAllow',      
+        'id|异动单号' => 'require', 
+        'house_id|房屋编号' => 'require|isAllow',
+        'applyType|附记' => 'require',      
     ];
 
     //定义验证提示
@@ -50,13 +51,13 @@ class Changelease extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['house_id']);
+        return $this->only(['house_id','applyType']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['id']);
+        return $this->only(['id','applyType']);
     }
 
     

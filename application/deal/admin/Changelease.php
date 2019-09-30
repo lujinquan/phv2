@@ -89,13 +89,6 @@ class Changelease extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-            // $filData = [
-            //     'save_type' => 'save',
-            //     'house_number' => '10800105671677',
-            //     'change_imgs' => '1',
-            //     'id' => 9250,
-            // ];
-            //halt($filData);
             // 入库使用权变更表
             $row = $ChangeModel->allowField(true)->update($filData);
             //$row = $ChangeModel->allowField(true)->update($filData);
@@ -137,26 +130,6 @@ class Changelease extends Admin
     }
 
     /**
-     * 租约打印
-     * @return [type] [description]
-     */
-    public function printout()
-    {
-        
-        $id = $this->request->param('id');
-        $ChangeModel = new ChangeLeaseModel;
-
-
-
-        if ($this->request->isAjax()) {
-            
-        }
-        $row = $ChangeModel->detail($id);
-        $this->assign('data_info',$row);
-        return $this->fetch();
-    }
-
-    /**
      * 上传签字图片
      * @return [type] [description]
      */
@@ -165,7 +138,17 @@ class Changelease extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangeLeaseModel;
         if ($this->request->isAjax()) {
-            
+            $data = $this->request->post();
+            if(isset($data['file']) && $data['file']){
+                $ProcessModel = new ProcessModel;
+                $res = $ProcessModel->process(18,$data);
+                if (!$res) {
+                    return $this->error('上传失败');
+                }
+                return $this->success('上传成功','index');
+            }else{
+                return $this->error('请上传签字图片');
+            }
         }
         $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);
@@ -217,12 +200,11 @@ class Changelease extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeLeaseModel;
             $where = $ChangeModel->checkWhere($getData,'record');
-            //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
-            $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['count'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

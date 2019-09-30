@@ -764,6 +764,9 @@ class Admin extends Common
                     if(isset($queryWhere['ban_address']) && $queryWhere['ban_address']){ //查询楼栋地址
                         $where['ban'][] = ['ban_address','like','%'.$queryWhere['ban_address'].'%'];
                     }
+                    if(isset($queryWhere['ban_number']) && $queryWhere['ban_number']){ //查询楼栋编号
+                        $where['ban'][] = ['ban_number','like','%'.$queryWhere['ban_number'].'%'];
+                    }
                     if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
                         $where['ban'][] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
                     }

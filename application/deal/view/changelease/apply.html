@@ -619,13 +619,10 @@
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
 								<select name="applyType" lay-filter="reason">
-									<option>请选择</option>
-									<option value="1">老证换新证</option>
-									<option value="2">遗失补发</option>
-									<option value="3">亲属转让</option>
-									<option value="4">正常过户</option>
-									<option value="5">新发租</option>
-									<option value="6">其他</option>
+									<option value="">请选择</option>
+									{volist name="params['leasetypes']" id="v"}
+									<option value="{$key}">{$v}</option>
+									{/volist}
 								</select>
 							</div>
 						</div>

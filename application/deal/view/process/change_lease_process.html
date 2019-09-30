@@ -618,12 +618,8 @@
 						<div class="layui-col-md4">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
-								<select name="applyType" lay-filter="reason">
-									<option>请选择</option>
-									{volist name="params['leasetypes']" id="v"}
-									<option value="{$key}" {if condition="$data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
-									{/volist}
-								</select>
+								<input type="text" id="editing_reason" readonly value="{$params.leasetypes[$data_info['data_json']['applyType']]}"  placeholder="" autocomplete="off" class="layui-input">
+								
 							</div>
 						</div>
 						<div class="layui-col-md6 hide">
@@ -715,7 +711,7 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i>换租原因</label>
 				<div class="j-input-inline">
-					<input readonly type="text" id="applyReason" name="applyReason"  lay-verify="required" value=""  placeholder="请输入原因" autocomplete="off" class="layui-input">
+					<input readonly type="text" id="applyReason" value=""  placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -731,7 +727,7 @@
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-						<p>经租会计</p>
+						<p>资料员</p>
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
@@ -740,6 +736,14 @@
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
 						<p>经管科</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 6) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 7) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
 					</li>
 				</ul>
 			</div>
@@ -930,6 +934,61 @@
 			$('#applyRoom21_data3').val(res.data.data_json.applyRoom21_data3);
 			$('#applyReason').val(res.data.data_json.applyReason);
 		})
+
+		//审批不通过
+	    $("#handover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['审批不通过原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=18';
+					if($('#change_reason').val()==''){
+						layer.tips('原因不能为空！', '#change_reason', {
+						  tips: 1
+						});
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=18';
+					if($('#back_reason').val()==''){
+						layer.tips('原因不能为空！', '#back_reason', {
+						  tips: 1
+						});
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
 		/*
 		删除上传图片
 		*/

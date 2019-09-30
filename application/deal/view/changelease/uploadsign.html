@@ -1,2 +1,86 @@
+
+<form class="layui-form" action="" method="post">
+	<div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>填报信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">签字图片</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制1M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<input type="hidden" name="id" value="{$data_info['process_info']['id']}">
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确认</button>
+			</div>
+		</div>
+  </div>
+</form>
 {include file="system@block/layui" /}
-上传签字图片页面
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	/*上传参数设定*/
+	var file1 = 'ChangeLeaseSign'; //上传签字图片
+	var upurl1 = "{:url('system/Api/upload')}?input="+ file1 +"&group=change&water=no";
+	var duotu = true; //是否为多图上传true false
+	
+	layui.use(['jquery','table','layer', 'upload','form'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer;
+
+			  //审批表
+			  upload.render({
+			  	elem: '#upload_img1',
+			  	url: upurl1,
+			  	size: 1024,
+			  	multiple: duotu,
+			  	field: file1,
+			  	before: function(obj) {
+			  		layer.msg('图片上传中...', {
+			  			icon: 16,
+			  			shade: 0.01,
+			  			time: 0
+			  		})
+			  	},
+			  	done: function(res) {
+			  		layer.close(layer.msg()); //关闭上传提示窗口
+			  		if (duotu == true) {
+			  			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+			  			$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
+			  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+			  				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+			  		} else {
+			  			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+			  			$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
+			  				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+			  				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+			  		}
+			  	}
+			  })
+
+			  /*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+		  	});
+</script>
