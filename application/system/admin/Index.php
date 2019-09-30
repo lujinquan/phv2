@@ -53,12 +53,12 @@ class Index extends Admin
     //楼栋选择器
 	public function querier()
 	{
-		return $this->fetch('block/queriers/building');
+		return $this->fetch('block/queriers/ban');
 	}
 	//楼栋调整——楼栋选择器
 	public function queriers()
 	{
-		return $this->fetch('block/queriers/buildings');
+		return $this->fetch('block/queriers/ban_houses');
 	}
 	 //租户选择器
 	public function tenant()
@@ -75,12 +75,12 @@ class Index extends Admin
 	//异动注销查询器
 	public function cancellation()
 	{
-		return $this->fetch('block/queriers/cancellation');
+		return $this->fetch('block/queriers/ban_select_houses');
 	}
 	//楼栋选择器多选
 	public function cancellations()
 	{
-		return $this->fetch('block/queriers/cancellations');
+		return $this->fetch('block/queriers/bans');
 	}
     /**
      * 欢迎首页
