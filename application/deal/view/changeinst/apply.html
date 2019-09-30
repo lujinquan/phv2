@@ -16,7 +16,7 @@
 	 	  <td id="write_type">管段调整</td>
 		  <td id="raw_pipesection">{$params.insts[$Think.INST]}</td>
 		  <td id="new_pipesection">
-			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" lay-filter="required" lay-verify="required">
+			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" lay-filter="requireds" lay-verify="required">
 				<option value="0">请选择</option>
 				{volist name=":config('inst_data_names')[1]" id="v"}
 				<option value="{$key}">{$v}</option>
@@ -109,7 +109,7 @@
 			,layer = layui.layer;
 			//异动信息
 			 $("input[name='pipe_segment_old']").val($("#raw_pipesection").text());//原管段
-			form.on('select(required)', function(data){
+			form.on('select(requireds)', function(data){
 				selectedName = data.elem[data.elem.selectedIndex].text;
 				if(data.value==0)
 				{
@@ -156,8 +156,8 @@
 							
 							//基本信息
 						   
-							$('#ban_ids').val($('.ba'));
-							var trData = '';
+							//$('#ban_ids').val($('.ba'));
+							//var trData = '';
 							var tdsumnum =0;//异动信息栋数
 							var tdsumhouse =0;//异动信息户数
 							var tdsumarea =0;//异动信息建筑面积
@@ -170,10 +170,10 @@
 							//$('.j-house-box tbody').html("");
 							//房屋信息
 							if(row){
-								var houseidData = '';
+								//var houseidData = '';
 								for(var i=0;i<row.length;i++) {
-									houseidData += ','+row[i].ban_number;
-									/* var sumnum = parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;//栋数
+									/*houseidData += ','+row[i].ban_number;
+									 var sumnum = parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;//栋数
 									var sumarea = parseFloat(row[i].ban_civil_area).toFixed(2)*100+parseFloat(row[i].ban_party_area).toFixed(2)*100+parseFloat(row[i].ban_career_area).toFixed(2)*100;//建筑面积
 									var sumrent = parseFloat(row[i].ban_civil_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100;//规定租金
 									var sumoprice = parseFloat(row[i].ban_civil_oprice).toFixed(2)*100+parseFloat(row[i].ban_party_oprice).toFixed(2)*100+parseFloat(row[i].ban_career_oprice).toFixed(2)*100;//原价 */
@@ -192,14 +192,14 @@
 								}else{
 									$('.j-house-box tbody').append(trData);	
 								}
-								$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" value="'+row.ban_id +'">');
+								$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" value="'+row[i].ban_id +'">');
 							}
-							if(	$('.j-house-box tbody').html()==''){
+							/* if(	$('.j-house-box tbody').html()==''){
 								$(".j-house-box,.j-house-title").hide();
 							}
 							else{
 								$(".j-house-box,.j-house-title").show();
-							}
+							} */
 							
 						}
 						//遍历table求和
