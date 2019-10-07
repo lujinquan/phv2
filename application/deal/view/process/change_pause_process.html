@@ -6,9 +6,15 @@
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">楼栋查询</label>
+			<label class="j-form-label">楼栋编号</label>
 			<div class="j-input-inline">
 				<input type="text" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>暂停月租金</label>
+			<div class="j-input-inline">
+				<input type="number" value="{$data_info['change_pause_rent']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -40,12 +46,7 @@
 				<input type="text" value="{$params.damages[$data_info['ban_info']['ban_damage_id']]}" readonly  autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>暂停月租金</label>
-			<div class="j-input-inline">
-				<input type="number" value="{$data_info['change_pause_rent']}" autocomplete="off" class="layui-input">
-			</div>
-		</div>
+		
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
@@ -164,6 +165,7 @@
    	<input type="hidden" name="id" value="{$data_info['id']}">
   	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 			<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
 			<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>

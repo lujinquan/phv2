@@ -4,9 +4,10 @@
 	    {if condition="in_array(278,$auths)"}      
 	        <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>注销申请</button></a>
 	    </div>
+	    {/if}
 	</div>
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:155px;">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
@@ -21,6 +22,14 @@
 					</select>
 				</div>
 				{/if}
+				<div class="layui-input-inline" style="width:155px;">
+					<select name="cancel_type" class="field-cid">
+						<option value="">注销类别</option>
+						{volist name="params['cancels']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
 				<div class="layui-input-inline" style="width:155px;">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
@@ -102,6 +111,11 @@
 					{field: 'ban_owner_id',minWidth: 100,align:'center',title: '产别', 
 						templet: function(d) {
 		                    return params.owners[d.ban_owner_id];
+		                }
+					}, 
+					{field: 'cancel_type',minWidth: 100,align:'center',title: '注销类型', 
+						templet: function(d) {
+		                    return params.cancels[d.cancel_type];
 		                }
 					}, 
 					{field: 'cancel_rent',minWidth: 120,align:'center',title: '注销规租'},

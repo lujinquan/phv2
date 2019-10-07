@@ -69,8 +69,8 @@ class ChangeCut extends SystemBase
                 break;
         }
         // 检索原租户
-        if(isset($data['tenant_name']) && $data['enant_name']){
-            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+        if(isset($data['tenant_name']) && $data['tenant_name']){
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
@@ -79,6 +79,14 @@ class ChangeCut extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索使用性质
+        if(isset($data['house_use_id']) && $data['house_use_id']){
+            $where[] = ['b.house_use_id','eq',$data['house_use_id']];
+        }
+        // 检索减免类型
+        if(isset($data['cut_type']) && $data['cut_type']){
+            $where[] = ['a.cut_type','eq',$data['cut_type']];
         }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){

@@ -8,7 +8,8 @@
 			<div class="layui-col-md12">
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" name="house_number" value="{$data_info['house_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="house_number" name="house_number" value="{$data_info['house_number']}" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
 					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
 					<input type="hidden" name="id" value="{$data_info['id']}">
 				</div>
@@ -243,33 +244,6 @@
 				,$ = layui.jquery
 				,upload = layui.upload
 				,layer = layui.layer;
-      
-/*	      //获取楼栋查询器
-		  $(".layui-form").on('click','.j-house_number',function(){
-		 layer.open({
-			title: '房屋查询器'
-			,type: 2
-			,offset: 'auto'
-			,area: ['70%', '60%']
-			, btn:false
-			,pageTabs: false
-			,content: '{:url('system/index/house')}'
-			,btn: ['确定','关闭']
-			,yes: function(index, layero){
-				var row = window["layui-layer-iframe" + index].hoesedata();
-				console.log(row);
-				layer.close(index);
-				$("#house_id").val(row.house_id);//获取楼栋id
-				$("#house_number").val(row.house_number);//获取楼栋编号
-				$("#old_tenant_id").val(row.tenant_id);//获取租户id
-				$("#old_tenant_number").val(row.tenant_number);//当前租户编号
-				$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
-				$("#old_tenant_card").val(row.tenant_card);//当前租户身份证号
-			},btn2: function(index, layero){
-				layer.close(index);
-			}
-		  });
-		 })	*/
 		  //获取租户查询器
 		   $(".layui-form").on('click','.j-tenant_number',function(){
 		  layer.open({

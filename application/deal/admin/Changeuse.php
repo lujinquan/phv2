@@ -57,6 +57,7 @@ class Changeuse extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                //halt($filData);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }

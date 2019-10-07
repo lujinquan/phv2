@@ -184,14 +184,17 @@ class ChangePause extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
-                if(isset($data['file']) && $data['file']){
-                    $changeUpdateData['change_imgs'] = implode(',',$data['file']);
+                if($changeRow['change_status'] == 3){ 
+                    if(isset($data['file']) && $data['file']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']),',');
+                    }
                 }
+                //dump($changeUpdateData);halt($data);
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
@@ -206,7 +209,7 @@ class ChangePause extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[1],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
@@ -214,7 +217,7 @@ class ChangePause extends SystemBase
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -227,7 +230,7 @@ class ChangePause extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 0,
-                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$data['change_reason'],
+                    'action' => $processActions[0].'，原因：'.$data['change_reason'],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',

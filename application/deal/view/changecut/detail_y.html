@@ -1,1 +1,392 @@
-detail_y.html
+<!-- 租金减免年审 -->
+<form class="layui-form" action="" method="post" >
+  <div class="j-details-box floorWrap">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-tips-red"><i class="layui-icon layui-icon-tips"></i>申请租金减免时，请确认租户信息完整且房屋无欠租。</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_number" value="{$data_info['house_number']}" lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
+				<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
+				<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
+				<input type="hidden" name="group" value="y">
+				<input type="hidden" name="id" value="{$data_info['id']}">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+        		<a href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_class" value="{$params['owners'][$old_data_info['ban_info']['ban_owner_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_id" value="{$data_info['ban_info']['ban_number']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_address" value="{$data_info['ban_info']['ban_address']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_nature" value="{$params['uses'][$data_info['house_use_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">月租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_monthly_rent" value="{$data_info['house_pre_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tenant" value="{$data_info['tenant_name']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_idnumber" value="{$data_info['tenant_card']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">电话</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tel" value="{$data_info['tenant_tel']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免类型</label>
+  		<div class="j-input-inline">
+  			<input type="text" id="reduction_cut" value="{$params.cuttypes[$old_data_info['cut_type']]}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" id="reduction_waiver_amount" value="{$old_data_info['cut_rent']}" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" id="reduction_card_number" value="{$old_data_info['cut_rent_number']}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>原资料</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">身份证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="TenantReIDCard">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'TenantReIDCard'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">户口本</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Residence">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Residence'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租约</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="HouseForm">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'HouseForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">低保证</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Lowassurance">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Lowassurance'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}	
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">租房保障申请表</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="Housingsecurity">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCutForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}			
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">会审单</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul id="ChangeCutForm">
+  				{volist name="$old_data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCutForm'"}
+  				<li>
+  					<img src="{$v['file']}">
+  				</li>
+  				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label"><i class="red">*</i>减免类型</label>
+  		<div class="j-input-inline">
+  			<select name="cut_type" class="field-cid">
+  				<option value="">请选择</option>
+  				{volist name="params['cuttypes']" id="v"}
+				<option value="{$key}" {if condition="$data_info['cut_type'] == $key"}selected{/if}>{$v}</option>
+				{/volist}
+  			</select>
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label"><i class="red">*</i>减免金额</label>
+  		<div class="j-input-inline">
+  			<input type="number" name="cut_rent" value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免证号</label>
+  		<div class="j-input-inline">
+  			<input type="text" name="cut_rent_number" value="{$data_info['cut_rent_number']}" placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>资料上传</legend>
+  </fieldset>
+ <div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-label clearfix">身份证</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'TenantReIDCard'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
+			</ul>
+	    </div>
+	</div>
+</div>
+ <div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-label clearfix">户口本</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Residence'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
+			</ul>
+	    </div>
+	</div>
+</div> 
+
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-label clearfix">租约</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'HouseForm'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
+			</ul>
+	    </div>
+	</div>
+</div>
+
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-label clearfix">低保证</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Lowassurance'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
+			</ul>
+	    </div>
+	</div>
+</div>
+
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-label clearfix">租房保障申请表</div>
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'Housingsecurity'"}
+				<li>
+					<img src="{$v['file']}">
+				</li>
+				{/if}
+				{/volist}
+			</ul>
+	    </div>
+	</div>
+</div>
+<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>审批状态</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
+					<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+				</ul>
+			</div>
+		</div>	
+  </div>
+</form>
+{include file="system@block/layui" /}
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+		
+		//双击查询计租表
+		 $(".layui-form").on('click','.j-rent-list',function(){
+			 layer.open({
+			 			title: '计租表'
+			 			,type: 2
+			 			,offset: 'auto'
+			 			,area: ['70%', '60%']
+			 			, btn:false
+			 			,pageTabs: false
+			 			,content: '{:url('system/index/house')}'
+			 			,btn: ['确定','关闭']
+			 			,yes: function(index, layero){
+			 				layer.close(index);
+			 			},btn2: function(index, layero){
+			 				layer.close(index);
+			 			}
+			  });
+		 })
+
+		 $('.j-viewer-img').viewer({
+		   	url: 'data-original',
+		 });
+        
+	});
+</script>

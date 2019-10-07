@@ -8,6 +8,7 @@ use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
+use app\house\model\HouseTai as HouseTaiModel;
 
 class ChangeUse extends SystemBase
 {
@@ -233,7 +234,7 @@ class ChangeUse extends SystemBase
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -274,6 +275,24 @@ class ChangeUse extends SystemBase
         //halt($finalRow);
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         // 添加台账记录
+        $taiData = [];
+        $taiData['house_id'] = $finalRow['house_id'];
+        $taiData['tenant_id'] = $finalRow['old_tenant_id'];
+        $taiData['cuid'] = $finalRow['cuid'];
+        $taiData['house_tai_type'] = 6;
+        $taiData['data_json'] = [
+            'tenant_id' => [
+                'old' => $finalRow['old_tenant_id'],
+                'new' => $finalRow['new_tenant_id'],
+            ],
+            'tenant_name' => [
+                'old' => $finalRow['old_tenant_name'],
+                'new' => $finalRow['new_tenant_name'],
+            ],
+        ];
+
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiData);
     }
 
 }

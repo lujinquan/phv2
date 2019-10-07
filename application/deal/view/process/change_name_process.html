@@ -162,36 +162,40 @@
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			 <legend>审批状态</legend>
 		  </fieldset>
-		  <div class="layui-row layui-form-item layui-col-space90">
-		  		   <div class="j-status-bar">
-		  				<ul>
-		  					<li class="layui-col-xs2 on">
-		  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-		  						<p>房管员</p>
-		  					</li>
-		  					<li class="layui-col-xs2 ">
-		  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-		  						<p>经租会计</p>
-		  					</li>
-		  					<li class="layui-col-xs2 ">
-		  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-		  						<p>经租所长</p>
-		  					</li>
-		  					<li class="layui-col-xs2 ">
-		  						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-		  						<p>经管科</p>
-		  					</li>
-		  				</ul>
-		  			</div>
-		  			<div class="j-status-result">
-		  				<ul>
-		  					<li>房管员［孙莲］于2019-09-19 10:03:19 房管员提交申请；</li>
-		  				</ul>
-		  			</div>
-		  	</div>	
+		<div class="layui-row layui-form-item layui-col-space90">
+		   <div class="j-status-bar">
+				<ul>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>房管员</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租会计</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经租所长</p>
+					</li>
+					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+						<p>经管科</p>
+					</li>
+				</ul>
+			</div>
+			<div class="j-status-result">
+				<ul>
+					{volist name="$data_info['child_json']" id="v"}
+					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+					{/volist}
+					<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+				</ul>
+			</div>
+		</div>	
 		  	<input type="hidden" name="id" value="{$data_info['id']}">
 		  <div class="layui-row layui-form-item layui-col-space90">
 				<div class="j-margin-btn">
+					<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 					<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
 					<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
 					<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>

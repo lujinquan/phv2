@@ -11,8 +11,13 @@ class HouseTai extends SystemBase
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
+    // 定义时间戳字段名
+    protected $createTime = 'ctime';
+    protected $updateTime = false;
+
     protected $type = [
-        //'tenant_ctime' => 'timestamp:Y-m-d H:i:s',
+        'ctime' => 'timestamp:Y-m-d H:i:s',
+        'data_json' => 'json',
     ];
 
     public function tenant()
@@ -22,7 +27,7 @@ class HouseTai extends SystemBase
 
     public function SystemUser()
     {
-        return $this->hasOne('app\system\model\SystemUser', 'id', 'house_tai_cuid')->bind('nick');
+        return $this->hasOne('app\system\model\SystemUser', 'id', 'cuid')->bind('nick');
     }
 
     public function checkWhere($data)
@@ -32,9 +37,9 @@ class HouseTai extends SystemBase
         }
         $where = [];
      	// 检索房屋编号
-        if(isset($data['house_id']) && $data['house_id']){
-            $where[] = ['house_id','eq',$data['house_id']];
-        }
+        
+        $where[] = ['house_id','eq',$data['id']];
+        
         // 检索业务类型
         if(isset($data['house_tai_type']) && $data['house_tai_type']){
             $where[] = ['house_tai_type','eq',$data['house_tai_type']];

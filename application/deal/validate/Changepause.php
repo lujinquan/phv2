@@ -29,7 +29,7 @@ class Changepause extends Validate
 
     //定义验证提示
     protected $message = [
-        'house_id.require' => '房屋信息不能为空！',
+        'house_id.require' => '房屋明细不能为空！',
         // 'role_id.require'  => '请选择角色分组',
     ];
 

@@ -71,12 +71,17 @@ class Process extends Admin
         }
 
         //检查当前页面或当前表单，是否允许被请求？
+        $PorcessModel = new ProcessModel;
+        $row = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
+        //dump($row['curr_role']);halt(ADMIN_ROLE);
+        if($row['curr_role'] != ADMIN_ROLE){
+            return $this->error('审批状态错误');
+        }
         
-
         // 提交审批表单
         if($this->request->isPost()) {
             $data = $this->request->post();
-            $PorcessModel = new ProcessModel;
+            
             $res = $PorcessModel->process($change_type,$data); //$data必须包含子表的id
             if (!$res) {
                 return $this->error('审批失败');
@@ -153,7 +158,15 @@ class Process extends Admin
                 # code...
                 break;
         }
+
         $row = $ChangeModel->detail($id);
+        if($change_type == 16){
+            $ChangeCutModel = new ChangeCutModel;
+            $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
+            $oldRow = $ChangeCutModel->detail($cutRow['id']);
+            $this->assign('old_data_info',$oldRow);
+        }
+        
         $this->assign('data_info',$row);
         return $this->fetch($template);
 
@@ -248,7 +261,7 @@ class Process extends Admin
                 break;
             case '16': // 租金减免年审
                 $ChangeModel = new ChangeCutYearModel;
-                $template = 'Changecutyear/detail';
+                $template = 'Changecut/detail_y';
                 break;
             case '17': // 别字更正
                 $ChangeModel = new ChangeNameModel;
@@ -263,6 +276,12 @@ class Process extends Admin
                 break;
         }
         $row = $ChangeModel->detail($id);
+        if($change_type == 16){
+            $ChangeCutModel = new ChangeCutModel;
+            $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
+            $oldRow = $ChangeCutModel->detail($cutRow['id']);
+            $this->assign('old_data_info',$oldRow);
+        }
         $this->assign('data_info',$row);
         return $this->fetch($template);
     }

@@ -23,8 +23,7 @@ class Changepause extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangePauseModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
-            //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.is_back,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
@@ -129,7 +128,6 @@ class Changepause extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangePauseModel;
         $row = $ChangeModel->detail($id);
-        $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -143,10 +141,9 @@ class Changepause extends Admin
             $ChangeModel = new ChangePauseModel;
             $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
+            $data['data'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';

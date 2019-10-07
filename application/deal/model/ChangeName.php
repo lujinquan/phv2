@@ -226,10 +226,10 @@ class ChangeName extends SystemBase
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
-                // 更新使用权变更表
+                
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -267,8 +267,8 @@ class ChangeName extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
-        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        // 别字更正
+        TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
         // 添加台账记录
     }
 

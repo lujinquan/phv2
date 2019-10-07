@@ -6,7 +6,7 @@
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>楼栋查询</label>
+			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
 				<input type="text" name="ban_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="">
@@ -49,9 +49,9 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
-			<label class="j-form-label">异动事由</label>
+			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
-				<input type="text" name="change_remark" value="" placeholder="请填写异动备注" autocomplete="off" class="layui-input">
+				<input type="text" name="change_remark" value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -87,7 +87,6 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
-			//console.log(params);
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
 		layer.open({
@@ -102,9 +101,7 @@
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].callbackdata();
 						var rows = window["layui-layer-iframe" + index].callbackdatas();
-						var HousePrerent = 0;
-						// console.log(row);
-						// console.log(rows);
+						var HouseYuerent = 0;
 						layer.close(index);
 						$('.j-house-box tbody').html("");
 							//房屋信息
@@ -123,7 +120,7 @@
 
 								$('.j-house-box tbody').append(trData);
 
-								HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
+								HouseYuerent += parseFloat(rows[i].house_yue_rent) * 100;
 							}
 							houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							$("input[name='house_id']").val(houseidData);//获取房屋编号
@@ -136,7 +133,7 @@
 							$("input[name='ban_owner_id']").val(params.owners[row.ban_owner_id]);//获取楼栋产别
 							$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取楼栋结构类别
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
-							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
+							$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);//获取楼栋暂停月租金
 							if(	$('.j-house-box tbody').html()==''){
 								$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}

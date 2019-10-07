@@ -14,6 +14,7 @@ namespace app\system\admin;
 use Env;
 use hisi\Dir;
 use app\system\model\SystemNotice;
+use app\system\model\SystemData as DataModel;
 
 /**
  * 后台默认首页控制器
@@ -53,6 +54,12 @@ class Index extends Admin
     //楼栋选择器
 	public function querier()
 	{
+        if ($this->request->isAjax()) {
+            $queryWhere = $this->request->param();
+            $DataModel = new DataModel;
+            $data = $DataModel->queryBan($queryWhere);
+            return json($data);
+        }
 		return $this->fetch('block/queriers/ban');
 	}
 	//楼栋调整——楼栋选择器
@@ -65,16 +72,30 @@ class Index extends Admin
 	{
 		return $this->fetch('block/queriers/tenant');
 	}
-	 //房屋选择器
+
+	//房屋选择器
 	public function house()
 	{
-        $change_type = input('param.change_type'); // 
-        $this->assign('change_type',$change_type);
+        if ($this->request->isAjax()) {
+            $queryWhere = $this->request->param();
+            $DataModel = new DataModel;
+            $data = $DataModel->queryHouse($queryWhere);
+            return json($data);
+        }
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/house');
 	}
+
 	//异动注销查询器
 	public function cancellation()
 	{
+        if ($this->request->isAjax()) {
+            $queryWhere = $this->request->param();
+            $DataModel = new DataModel;
+            $data = $DataModel->queryBan($queryWhere);
+            return json($data);
+        }
 		return $this->fetch('block/queriers/ban_select_houses');
 	}
 	//楼栋选择器多选

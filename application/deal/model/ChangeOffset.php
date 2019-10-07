@@ -110,17 +110,18 @@ class ChangeOffset extends SystemBase
             $data['change_status'] = 2;
         }else{ //保存并提交
             $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'step' => 1,
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
         }
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 4; //暂停计租
         $data['change_order_number'] = date('Ym').'04'.random(14);
-        $data['child_json'][] = [
-            'step' => 1,
-            'action' => '提交申请',
-            'time' => date('Y-m-d H:i:s'),
-            'uid' => ADMIN_ID,
-            'img' => '',
-        ];
+
         
             //$rentorderdates = explode(',',$data['rent_order_date']);
             $fields = 'a.rent_order_number,d.ban_owner_id,b.house_use_id,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.rent_order_date,d.ban_address,c.tenant_name';
@@ -188,7 +189,7 @@ class ChangeOffset extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',

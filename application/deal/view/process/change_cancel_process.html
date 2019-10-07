@@ -12,9 +12,9 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>楼栋查询</label>
+			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
-				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" readonly placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="">
 				<input type="hidden" name="house_id" value="">
 			</div>
@@ -28,7 +28,7 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
-			<label class="j-form-label">异动事由</label>
+			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
 				<input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input" readonly>
 			</div>
@@ -210,7 +210,7 @@
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-						<p>经租所长</p>
+						<p>经管所长</p>
 					</li>
 					<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
 						<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
@@ -229,6 +229,7 @@
   	<input type="hidden" name="id" value="{$data_info['id']}">	
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 			<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
 			<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>

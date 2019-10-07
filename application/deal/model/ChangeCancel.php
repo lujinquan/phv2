@@ -54,10 +54,6 @@ class ChangeCancel extends SystemBase
                 # code...
                 break;
         }
-        // 检索原租户
-        if(isset($data['old_tenant_name']) && $data['old_tenant_name']){
-            $where[] = ['a.old_tenant_name','like','%'.$data['old_tenant_name'].'%'];
-        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
@@ -65,6 +61,10 @@ class ChangeCancel extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索注销类别
+        if(isset($data['cancel_type']) && $data['cancel_type']){
+            $where[] = ['a.cancel_type','eq',$data['cancel_type']];
         }
         // 检索申请时间(按天搜索)
         if(isset($data['ctime']) && $data['ctime']){
@@ -200,7 +200,7 @@ class ChangeCancel extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
@@ -230,7 +230,7 @@ class ChangeCancel extends SystemBase
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];

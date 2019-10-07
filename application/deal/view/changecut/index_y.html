@@ -1,15 +1,17 @@
 <!-- 租金减免年审/申请列表 -->
 <div class="j-table-content j-no-tab">
 	 <div class="layui-btn-container j-container-margin">
-	     <div class="layui-btn-container">       
+	     <div class="layui-btn-container"> 
+	     	{if condition="in_array(282,$auths)"}      
 	         <a href="{:url('apply')}?group={$group}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>租金减免年审申请</button></a>
+	         {/if}
 	     </div>
 	 </div>
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}?group=x" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url('index')}?group={$group}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_address" placeholder="楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
 					<select name="house_use_id">
@@ -33,15 +35,13 @@
 				<div class="layui-input-inline" style="width:120px;">
 					<select name="reduction_class">
 						<option value="">减免类型</option>
-						<option value="">减免类型1</option>
-						<option value="">减免类型2</option>
+						{volist name="params['cuttypes']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_money" placeholder="减免金额" class="layui-input">
-				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_time" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
+					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -77,7 +77,7 @@
     </script>
 </div>
 <script type="text/javascript">
-	var process_config = {'2':'待房管员处理','3':'待经租会计处理','4':'待经管所长处理','5':'待经管科处理'};
+	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待经租会计初审','4':'待经管所长审批','5':'待经管科终审'};
 	//console.log(params);
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;

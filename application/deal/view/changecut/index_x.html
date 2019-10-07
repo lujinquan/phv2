@@ -1,16 +1,17 @@
 <!-- 租金减免 取消减免 -->
-<div class="j-table-content j-no-tab">
+<div class="j-table-content j-no-title">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
-	    {if condition="in_array(278,$auths)"}      
+	    	{if condition="in_array(282,$auths)"}      
 	        <a href="{:url('apply')}?group={$group}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>租金减免申请</button></a>
+	        {/if}
 	    </div>
 	</div>
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}?group=x" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url('index')}?group={$group}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_address" placeholder="填写楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="填写楼栋地址" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
 					<select name="house_use_id">
@@ -29,10 +30,10 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_name" placeholder="租户名称" class="layui-input">
+					<input type="text" name="tenant_name" placeholder="租户名称" class="layui-input">
 				</div>
 				<div class="layui-input-inline" style="width:120px;">
-					<select name="reduction_class">
+					<select name="cut_type">
 						<option value="">减免类型</option>
 						{volist name="params['cuttypes']" id="v"}
 						<option value="{$key}">{$v}</option>
@@ -40,14 +41,7 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_complete_time" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="reduction_class">
-						<option value="">状态</option>
-						<option value="">正常</option>
-						<option value="">过期</option>
-					</select>
+					<input type="text" name="ctime" id="date" placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">

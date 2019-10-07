@@ -33,7 +33,7 @@ class House extends Admin
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
-            $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area';
+            $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area,house_diff_rent,house_pump_rent,(house_pre_rent + house_diff_rent + house_pump_rent) as house_yue_rent';
             $data = [];
             //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
             $data['data'] = $HouseModel->withJoin([
@@ -215,7 +215,7 @@ class House extends Admin
             $HouseTaiModel = new HouseTaiModel;
             $where = $HouseTaiModel->checkWhere($getData);
             $data = [];
-            $data['data'] = $HouseTaiModel->with(['tenant','SystemUser'])->where($where)->page($page)->order('house_tai_ctime desc')->limit($limit)->select();
+            $data['data'] = $HouseTaiModel->with(['tenant','SystemUser'])->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
             $data['count'] = $HouseTaiModel->where($where)->count('house_tai_id');
             $data['code'] = 0;
             $data['msg'] = '';

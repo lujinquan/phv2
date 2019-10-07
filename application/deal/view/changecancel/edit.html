@@ -17,10 +17,10 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>楼栋查询</label>
+			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
-				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" readonly placeholder="点击查询" autocomplete="off" class="layui-input">
-				<input type="hidden" name="ban_id" value="">
+				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
 				<input type="hidden" name="house_id" value="">
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
@@ -34,7 +34,7 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
-			<label class="j-form-label">异动事由</label>
+			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
 				<input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
 			</div>
@@ -122,10 +122,10 @@
 	  	<tr>
 	  		<td>{$v['house_number']}</td>
 	  		<td>{$v['tenant_name']}</td>
-	  		<td>{$v['tenant_name']}</td>
-	  		<td>{$v['tenant_name']}</td>
-	  		<td>{$v['tenant_name']}</td>
-	  		<td>{$v['tenant_name']}</td>
+	  		<td>{$v['house_oprice']}</td>
+	  		<td>{$v['house_area']}</td>
+	  		<td>{$v['house_pre_rent']}</td>
+	  		<td>{$v['house_lease_area']}</td>
 	  	</tr>
 	  	{/volist}
 	    <!-- <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr> -->
@@ -179,8 +179,19 @@
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
 			<div class="j-enclosure-imgs clearfix">
-				<div id="upload_img_list2" class="upload_img_list j-viewer-img"> </div>
-			</div>
+   				<div id="upload_img_list2" class="upload_img_list j-viewer-img">
+   					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelOne'"}
+					<dd class="item_img" id="">
+						<div class="operate">
+							<i  class="layui-icon-close-fill layui-icon"></i>
+						</div>
+						<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+					</dd>
+					{/if}
+					{/volist}
+   				</div>
+   			</div>
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
@@ -194,8 +205,19 @@
 				<div class="layui-form-mid layui-word-aux">限制1M</div>
 			</div>
 			<div class="j-enclosure-imgs clearfix">
-				<div id="upload_img_list3" class="upload_img_list j-viewer-img"> </div>
-			</div>
+   				<div id="upload_img_list3" class="upload_img_list j-viewer-img">
+   					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelTwo'"}
+					<dd class="item_img" id="">
+						<div class="operate">
+							<i  class="layui-icon-close-fill layui-icon"></i>
+						</div>
+						<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+					</dd>
+					{/if}
+					{/volist}
+   				</div>
+   			</div>
 		</div>
 	</div>
 <input type="hidden" name="id" value="{$data_info['id']}">

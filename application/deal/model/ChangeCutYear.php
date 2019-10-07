@@ -65,7 +65,7 @@ class ChangeCutYear extends SystemBase
         }
         // 检索原租户
         if(isset($data['tenant_name']) && $data['enant_name']){
-            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
@@ -74,6 +74,14 @@ class ChangeCutYear extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索使用性质
+        if(isset($data['house_use_id']) && $data['house_use_id']){
+            $where[] = ['b.house_use_id','eq',$data['house_use_id']];
+        }
+        // 检索减免类型
+        if(isset($data['cut_type']) && $data['cut_type']){
+            $where[] = ['a.cut_type','eq',$data['cut_type']];
         }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){
@@ -90,7 +98,7 @@ class ChangeCutYear extends SystemBase
             $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
             $where[] = ['d.ban_inst_id','in',$insts[$instid]];
         }
-        
+        //halt($where);
         return $where;
     }
 
@@ -216,7 +224,7 @@ class ChangeCutYear extends SystemBase
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -254,7 +262,7 @@ class ChangeCutYear extends SystemBase
     private function finalDeal($finalRow)
     {
         //halt($finalRow);
-        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         
     }
 

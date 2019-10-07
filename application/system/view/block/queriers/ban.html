@@ -10,7 +10,7 @@
 </style>
 <div class="j-table-content j-no-title">
 <div class="page-toolbar j-page-toolbar clearfix">
-      <form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=ban"  method="post" id="hisi-table-search">
+      <form class="layui-form layui-form-pane" action="{:url('system/Index/querier')}"  method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline" style="width:150px;">
 				  <select name="ban_inst_id">
@@ -48,7 +48,7 @@
 			elem: '#dataTable'
             ,toolbar: true
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
-            ,url: '{:url("system/Admin/queryData")}?type=ban' //数据接口
+            ,url: "{:url('system/Index/querier')}" //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {

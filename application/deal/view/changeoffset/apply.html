@@ -270,9 +270,9 @@
 				     before_month = parseFloat($("#before_month").text()).toFixed(2)*100,
 					 this_month = parseFloat($("#this_month").text()).toFixed(2)*100;
 
-					 $("#before_year_copy").val(before_year);
-				     $("#before_month_copy").val(before_month);
-					 $("#this_month_copy").val(this_month);
+					 $("#before_year_copy").val(before_year.toFixed(2) / 100);
+				     $("#before_month_copy").val(before_month.toFixed(2) / 100);
+					 $("#this_month_copy").val(this_month.toFixed(2) / 100);
 
 				previousmonths3 = before_year+before_month+this_month;
 				$("#total_sum").text(previousmonths3.toFixed(2) / 100);

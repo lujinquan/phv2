@@ -34,7 +34,7 @@
   </div>
 {include file="system@block/layui" /}
 <!-- 楼栋查询 -->
-<table id="dataTable" lay-filter='dataTable'></table>
+<table id="dataTable1" lay-filter='dataTable1'></table>
 
 </div>
 <!-- 房屋查询 -->
@@ -51,7 +51,7 @@
 		    ,$ = layui.$;
 		//楼栋查询
         table.render({
-			elem: '#dataTable'
+			elem: '#dataTable1'
             ,url: '{:url("system/Index/cancellation")}' //数据接口
             ,page: true //开启分页
             ,limit: 5
@@ -76,7 +76,7 @@
             }
         },isShowInst);
 		  //监听行单击事件（单击事件为：rowDouble）
-			table.on('row(dataTable)',function(obj){
+			table.on('row(dataTable1)',function(obj){
 				data = obj.data;
 				conId = data.id;
 				//console.log(data);
