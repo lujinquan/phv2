@@ -8,6 +8,9 @@ use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\BanTai as BanTaiModel;
+use app\house\model\HouseTai as HouseTaiModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeCancel extends SystemBase
 {
@@ -154,6 +157,7 @@ class ChangeCancel extends SystemBase
     public function detail($id)
     {
         $row = self::get($id);
+        $this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         return $row;
@@ -267,8 +271,72 @@ class ChangeCancel extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
+        // 将涉及的所有房屋，设置成注销状态
         HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>3]);
+
+        $banData = [];
+        if($finalRow['is_ban']){ //如果整栋注销
+
+        }else{
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>3]);
+        }
+        
+        $banInfo = BanModel::get($finalRow['ban_id']);
+        $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,(house_pre_rent + house_pump_rent + house_diff_rent) as house_yue_rent,ban_id')->select()->toArray();
+
+        $houseArr = [];
+        foreach($houseTemps as $s){
+            $houseArr[$s['house_id']] = $s;
+        }
+
+        // 变更楼栋数据
+
+        // 添加房屋台账记录
+        $taiHouseData = $taiBanData = $tableData = [];
+        $houses = explode(',', $finalRow['house_id']);
+        foreach($houses as $key => $h){
+            $taiHouseData[$key]['house_id'] = $h;
+            $taiHouseData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
+            $taiHouseData[$key]['cuid'] = $finalRow['cuid'];
+            $taiHouseData[$key]['house_tai_type'] = 4;
+            $taiHouseData[$key]['data_json'] = [
+                'house_status' => [
+                    'old' => 1,
+                    'new' => 3,
+                ],
+                
+            ];
+
+            // 添加产权统计记录
+            $tableData[$key]['change_type'] = 8;
+            $tableData[$key]['change_order_number'] = $finalRow['change_order_number'];
+            $tableData[$key]['house_id'] = $h;
+            $tableData[$key]['ban_id'] = $houseArr[$h]['ban_id'];
+            $tableData[$key]['inst_id'] = $houseArr[$h]['ban_inst_id'];
+            $tableData[$key]['inst_pid'] = $houseArr[$h]['ban_inst_pid'];
+            $tableData[$key]['owner_id'] = $houseArr[$h]['ban_owner_id'];
+            $tableData[$key]['use_id'] = $houseArr[$h]['house_use_id'];
+            $tableData[$key]['change_rent'] = $houseArr[$h]['house_yue_rent'];
+            $tableData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
+            $tableData[$key]['cuid'] = $finalRow['cuid']; 
+            $tableData[$key]['order_date'] = date('Ym',$finalRow['ftime']);  
+        }
+
+        $taiBanData['ban_id'] = $finalRow['ban_id'];
+        $taiBanData['cuid'] = $finalRow['cuid'];
+        $taiBanData['ban_tai_type'] = 4;
+        $taiBanData['data_json'] = [
+
+        ];
+
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->saveAll($taiHouseData);
+
+        $BanTaiModel = new BanTaiModel;
+        $BanTaiModel->allowField(true)->create($taiBanData);
+
+        $ChangeTableModel = new ChangeTableModel;
+        $ChangeTableModel->saveAll($tableData);
         
     }
 }
