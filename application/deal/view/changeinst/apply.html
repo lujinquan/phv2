@@ -132,7 +132,7 @@
 						title: '楼栋查询器'
 						,type: 2
 						,offset: 'auto'
-						,area: ['70%', '90%']
+						,area: ['70%', '69%']
 						, btn:false
 						,pageTabs: false
 						,content: '{:url('system/index/cancellations')}'
@@ -167,7 +167,7 @@
 							//console.log(row);
 							//console.log(rows);
 							//layer.close(index);
-							//$('.j-house-box tbody').html("");
+							$('.j-house-box tbody').html("");
 							//房屋信息
 							if(row){
 								//var houseidData = '';
@@ -186,19 +186,12 @@
 												<td class="original_price">'+row[i].ban_oprice+'</td>\
 												<td class="areaof_use">'+row[i].ban_use_area+'</td>\
 											</tr>';
-									if($('#defaultTr').html()){
+									$('.j-house-box tbody').append(trData);
+									/* if($('#defaultTr').html()){
 										$('.j-house-box tbody').html(trData);
 									}else{
-										$('.j-house-box tbody').append(trData);	
-										/* // if(row[i].ban_number==tdArrs.eq(0).text()){
-										if(row[i].ban_number==1030012113){
-											alert("不能添加！");
-										}
-										else{
-											$('.j-house-box tbody').append(trData);	
-										} */
-										
-									}
+										  $('.j-house-box tbody').append(trData);	
+									} */
 								 
 									$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" value="'+row[i].ban_id +'">');
 									//console.log(row[i].ban_number);

@@ -375,6 +375,12 @@
 									$('.j-house-box tbody').append(trData);
 
 									HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
+									//隐藏域信息
+									$("#j_floor_hidden").val(rows[0].ban.ban_floors);//楼层原信息
+									$("#j_endloss_hidden").val(params.damages[rows[0].ban.ban_damage_id]);//完损等级原信息
+									$("#j_structure_hidden").val(params.structs[rows[0].ban.ban_struct_id]);//结构类别原信息
+									$("#j_nature_hidden").val(params.uses[rows[0].house_use_id]);//使用性质原信息
+									$("#j_yield_hidden").val(params.owners[rows[0].ban.ban_owner_id]);//产别原信息
 								}
 								houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 								$("input[name='house_id']").val(houseidData);//获取房屋编号
@@ -385,14 +391,7 @@
 								$("input[name='building_number']").val(row.ban_number);//获取楼栋编号
 								$("input[name='building_address']").val(row.ban_address);//获取楼栋地址
 								$("input[name='mechanism']").val(params.insts[row.ban_inst_id]);//获取机构
-								
-								$("#j_floor_hidden").val(row.ban_floors);//楼层原信息
-								$("#j_endloss_hidden").val(params.damages[row.ban.ban_damage_id]);//完损等级原信息
-								$("#j_structure_hidden").val(params.structs[row.ban_struct_id]);//结构类别原信息
-								$("#j_nature_hidden").val(params.uses[row.house_use_id]);//使用性质原信息
-								$("#j_yield_hidden").val(params.owners[row.ban_owner_id]);//产别原信息
-								/* 楼层调整 */
-								
+								/* 无数据 */
 								if(	$('.j-house-box tbody').html()==''){
 									$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 								}
