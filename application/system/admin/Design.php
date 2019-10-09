@@ -27,16 +27,26 @@ class Design extends Admin
 	public function index()
 	{
 		if ($this->request->isAjax()) {
+			$page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $where = 1;
+            if(isset($getData['table_name']) && $getData['table_name']){
+            	$where .= " AND NAME LIKE '%".$getData['table_name']."%'";
+            }
+            if(isset($getData['table_remark']) && $getData['table_remark']){
+            	$where .= " AND Comment LIKE '%".$getData['table_remark']."%'";
+            }
             $data = [];
-            if (true) {
-                $tables = Db::query("SHOW TABLE STATUS");
-                foreach ($tables as $k => &$v) {
-                    $v['id'] = $v['Name'];
-                }
-                //halt($tables);
-                $data['data'] = $tables;
-                $data['code'] = 0;
-            } 
+            $sql = "SHOW TABLE STATUS WHERE ".$where;
+            $tables = Db::query($sql);
+            foreach ($tables as $k => &$v) {
+                $v['id'] = $v['Name'];
+            }
+            $data['data'] = array_slice($tables, ($page- 1) * $limit, $limit);
+            $data['count'] = count($tables);
+            $data['code'] = 0;
+
             return json($data);
         }
 		return $this->fetch();

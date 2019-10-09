@@ -707,6 +707,22 @@
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">签字图片</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'ChangeLeaseSign'"}
+						<li>
+							<img src="{$v['file']}">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+			    </div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i>换租原因</label>
 				<div class="j-input-inline">

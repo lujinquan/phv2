@@ -64,9 +64,13 @@ class ChangeNew extends SystemBase
                 # code...
                 break;
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
         // 检索租户
         if(isset($data['tenant_name']) && $data['tenant_name']){
-            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
@@ -75,6 +79,14 @@ class ChangeNew extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索房屋规定租金
+        if(isset($data['house_pre_rent']) && $data['house_pre_rent']){
+            $where[] = ['b.house_pre_rent','eq',$data['house_pre_rent']];
+        }
+        // 检索房屋计租面积
+        if(isset($data['house_lease_area']) && $data['house_lease_area']){
+            $where[] = ['b.house_lease_area','eq',$data['house_lease_area']];
         }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){

@@ -82,6 +82,14 @@ class Process extends Admin
         if($this->request->isPost()) {
             $data = $this->request->post();
             
+            if($change_type == 18 && ADMIN_ROLE == 6){
+                $ChangeModel = new ChangeLeaseModel;
+                $changeRow = $ChangeModel->where([['change_id','eq',$id]])->find();
+                if(!$changeRow['print_times']){
+                    return $this->error('请先打印租约后再审批！');
+                }
+            }
+
             $res = $PorcessModel->process($change_type,$data); //$data必须包含子表的id
             if (!$res) {
                 return $this->error('审批失败');

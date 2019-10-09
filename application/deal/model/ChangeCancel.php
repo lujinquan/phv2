@@ -275,7 +275,7 @@ class ChangeCancel extends SystemBase
         HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>3]);
 
         $banData = [];
-        if($finalRow['is_ban']){ //如果整栋注销
+        if($finalRow['cancel_ban']){ //如果整栋注销
 
         }else{
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>3]);

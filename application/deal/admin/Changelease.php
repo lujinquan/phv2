@@ -24,7 +24,7 @@ class Changelease extends Admin
             $ChangeModel = new ChangeLeaseModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
@@ -145,7 +145,7 @@ class Changelease extends Admin
                 if (!$res) {
                     return $this->error('上传失败');
                 }
-                return $this->success('上传成功','index');
+                return $this->success('上传成功');
             }else{
                 return $this->error('请上传签字图片');
             }

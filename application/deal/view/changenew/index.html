@@ -1,4 +1,4 @@
-<div class="j-table-content j-no-tab">
+<div class="j-table-content j-no-{if condition='in_array(299,$auths)'}tab{else /}title{/if}">
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container">    
 	     	 {if condition="in_array(299,$auths)"}   
@@ -9,11 +9,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:150px;">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_owner_id">
@@ -24,7 +24,7 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="original_name"   placeholder="租户" autocomplete="off" class="layui-input">
+					<input type="text" name="tenant_name"   placeholder="租户" autocomplete="off" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:120px;">
@@ -37,17 +37,10 @@
 				</div>
 				{/if}
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="prescribed_rent"   placeholder="规定租金" autocomplete="off" class="layui-input">
+					<input type="text" name="house_pre_rent" placeholder="规定租金" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="rental_area"   placeholder="计租面积" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="approval_status">
-						<option value="">状态</option>
-						<option value="1">审批状态1</option>
-						<option value="2">审批状态2</option>
-					</select>
+					<input type="text" name="house_lease_area" placeholder="计租面积" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
