@@ -16,12 +16,6 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">楼栋编号</label>
-			<div class="j-input-inline">
-				<input type="text" name="building_number" readonly value="" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
 				<input type="text" name="building_address" readonly value="" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
@@ -53,8 +47,8 @@
 					  <option value="1">楼层调整</option>
 					  <option value="2">完损等级</option>
 					  <option value="3">结构类别</option>
-					  <option value="4">使用性质</option>
-					  <option value="5">产别</option>
+					  <!-- <option value="4">使用性质</option>
+					  <option value="5">产别</option> -->
 				</select>
 			  </td>
 			  <td><input type="text"  readonly value="" placeholder=""  autocomplete="off" class="layui-input"></td>
@@ -86,26 +80,26 @@
 	  <table class="layui-table j-hides j-floor-box hide">
 		  <thead>
 			  <tr>
-				<th>基本情况</th>
-				<th>户数</th>
-				<th>建设面积</th>
+				<!-- <th>基本情况</th> -->
+				<!-- <th>户数</th> -->
+				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<th>栋数</th>
+				<!-- <th>栋数</th> -->
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
-			  <td>异动前</td>
+			  <!-- <td>异动前</td> -->
 			  <td><input type="text"  id="floor_household" name="floor_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			  <td><input type="text"  id="floor_areaofuse" name="floor_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_builtuparea" name="floor_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_original" name="floor_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			</tr>
-			<tr>
+			<!-- <tr>
 			  <td>异动</td>
 			  <td><input type="text" id="cancel_before_0edit" name="floor_before_0edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_1edit" name="floor_before_1edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -122,7 +116,7 @@
 			  <td><input type="text" id="changes_floor_builtuparea" name="floor_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_original" name="floor_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_tung" name="floor_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr>
+			</tr> -->
 		  </tbody>
 		</table>
       <!-- 完损等级 -->
@@ -130,25 +124,25 @@
 		  <thead>
 			  <tr>
 				<th>完损等级</th>
-				<th>户数</th>
-				<th>建设面积</th>
+				<!-- <th>户数</th> -->
+				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<th>栋数</th>
+				<!-- <th>栋数</th> -->
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
 			  <td><input type="text"  id="endloss_class" name="endloss_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="endloss_household" name="endloss_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="endloss_household" name="endloss_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			  <td><input type="text"  id="endloss_prescribed" name="endloss_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_areaofuse" name="endloss_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_builtuparea" name="endloss_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_original" name="endloss_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="endloss_tung" name="endloss_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="endloss_tung" name="endloss_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			</tr>
-			<tr>
+			<!-- <tr>
 			  <td><input type="text" id="endloss_changes_class" name="endloss_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_household" name="endloss_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_prescribed" name="endloss_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -156,7 +150,7 @@
 			  <td><input type="text" id="endloss_changes_builtuparea" name="endloss_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_original" name="endloss_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_tung" name="endloss_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr>
+			</tr> -->
 		  </tbody>
 	  </table>
 	  <!-- 结构类别 -->
@@ -164,25 +158,25 @@
 		  <thead>
 			  <tr>
 				<th>结构类别</th>
-				<th>户数</th>
-				<th>建设面积</th>
+				<!-- <th>户数</th> -->
+				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<th>栋数</th>
+				<!-- <th>栋数</th> -->
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
 			  <td><input type="text"  id="structure_class" name="structure_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			  <td><input type="text"  id="structure_prescribed" name="structure_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_areaofuse" name="structure_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_builtuparea" name="structure_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_original" name="structure_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			</tr>
-			<tr>
+			<!-- <tr>
 			  <td><input type="text" id="structure_changes_class" name="structure_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_household" name="structure_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_prescribed" name="structure_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -190,7 +184,7 @@
 			  <td><input type="text" id="structure_changes_builtuparea" name="structure_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_original" name="structure_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_tung" name="structure_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr>
+			</tr> -->
 		  </tbody>
 		  
 	  </table>
@@ -233,32 +227,32 @@
 		  <thead>
 			  <tr>
 				<th>产别</th>
-				<th>户数</th>
-				<th>建设面积</th>
+				<!-- <th>户数</th> -->
+				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<th>栋数</th>
+				<!-- <th>栋数</th> -->
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
 			  <td><input type="text"  id="yield_class" name="yield_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="yield_household" name="yield_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="yield_household" name="yield_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			  <td><input type="text"  id="yield_prescribed" name="yield_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="yield_areaofuse" name="yield_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="yield_builtuparea" name="yield_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="yield_original" name="yield_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="yield_tung" name="yield_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text"  id="yield_tung" name="yield_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			</tr>
 			<tr>
 			  <td><input type="text" id="yield_changes_class" name="yield_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="yield_changes_household" name="yield_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text" id="yield_changes_household" name="yield_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			  <td><input type="text" id="yield_changes_prescribed" name="yield_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="yield_changes_areaofuse" name="yield_changes_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="yield_changes_builtuparea" name="yield_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="yield_changes_original" name="yield_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="yield_changes_tung" name="yield_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <!-- <td><input type="text" id="yield_changes_tung" name="yield_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
 			</tr>
 		  </tbody>
 	  </table>
