@@ -13,8 +13,6 @@
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
 		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
@@ -46,7 +44,7 @@
 					  <option value="">调整类型</option>
 					  <option value="1">楼层调整</option>
 					  <option value="2">完损等级</option>
-					  <option value="3">结构类别</option>
+					  <!-- <option value="3">结构类别</option> -->
 					  <!-- <option value="4">使用性质</option>
 					  <option value="5">产别</option> -->
 				</select>
@@ -56,7 +54,7 @@
 		  </tr>
 	  </tbody>
 	</table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-details">
 		<legend>异动明细</legend>
 	</fieldset>
 	<table  class="layui-table j-house-box">
@@ -64,15 +62,16 @@
 		  <tr>
 		    <th>房屋编号</th>
 		    <th>承租人</th>
-		    <th>使用性质</th>
-		    <th>规定租金</th>
-		    <th>租差</th>
-		    <th>泵费</th>
+		    <th>原楼层</th>
+		    <th>现楼层</th>
+		    <th>原规租</th>
+			<th> 租金变化</th>
+		    <th>计算租金（异动后）</th>
 		  </tr>
 	  </thead>
-	  <tbody><tr><td colspan="6"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
+	  <tbody><tr><td colspan="7"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
-  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-lease-box hide">
   	<legend>租赁异动</legend>
   </fieldset>
   <div class="j-table_selected">
@@ -80,26 +79,26 @@
 	  <table class="layui-table j-hides j-floor-box hide">
 		  <thead>
 			  <tr>
-				<!-- <th>基本情况</th> -->
-				<!-- <th>户数</th> -->
+				<th>基本情况</th>
+				<th>户数</th>
 				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<!-- <th>栋数</th> -->
+				<th>栋数</th>
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
-			  <!-- <td>异动前</td> -->
+			  <td>异动前</td>
 			  <td><input type="text"  id="floor_household" name="floor_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_areaofuse" name="floor_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_builtuparea" name="floor_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_original" name="floor_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
-			<!-- <tr>
+			<tr>
 			  <td>异动</td>
 			  <td><input type="text" id="cancel_before_0edit" name="floor_before_0edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_1edit" name="floor_before_1edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -116,7 +115,7 @@
 			  <td><input type="text" id="changes_floor_builtuparea" name="floor_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_original" name="floor_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_tung" name="floor_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr> -->
+			</tr>
 		  </tbody>
 		</table>
       <!-- 完损等级 -->
@@ -124,25 +123,25 @@
 		  <thead>
 			  <tr>
 				<th>完损等级</th>
-				<!-- <th>户数</th> -->
+				<th>户数</th>
 				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<!-- <th>栋数</th> -->
+				<th>栋数</th>
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
 			  <td><input type="text"  id="endloss_class" name="endloss_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="endloss_household" name="endloss_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="endloss_household" name="endloss_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_prescribed" name="endloss_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_areaofuse" name="endloss_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_builtuparea" name="endloss_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="endloss_original" name="endloss_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="endloss_tung" name="endloss_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="endloss_tung" name="endloss_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
-			<!-- <tr>
+			<tr>
 			  <td><input type="text" id="endloss_changes_class" name="endloss_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_household" name="endloss_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_prescribed" name="endloss_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -150,33 +149,33 @@
 			  <td><input type="text" id="endloss_changes_builtuparea" name="endloss_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_original" name="endloss_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="endloss_changes_tung" name="endloss_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr> -->
+			</tr>
 		  </tbody>
 	  </table>
 	  <!-- 结构类别 -->
-	  <table class="layui-table j-hides j-structure-boxs hide">
+<!-- 	  <table class="layui-table j-hides j-structure-boxs hide">
 		  <thead>
 			  <tr>
 				<th>结构类别</th>
-				<!-- <th>户数</th> -->
+				<th>户数</th>
 				<th>建筑面积</th>
 				<th>规定租金</th>
 				<th>使用面积</th>
 				<th>原价</th>
-				<!-- <th>栋数</th> -->
+				<th>栋数</th>
 			  </tr>
 		  </thead>
 		  <tbody>
 			<tr>
 			  <td><input type="text"  id="structure_class" name="structure_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_prescribed" name="structure_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_areaofuse" name="structure_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_builtuparea" name="structure_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="structure_original" name="structure_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <!-- <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td> -->
+			  <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
-			<!-- <tr>
+			<tr>
 			  <td><input type="text" id="structure_changes_class" name="structure_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_household" name="structure_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_prescribed" name="structure_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -184,10 +183,10 @@
 			  <td><input type="text" id="structure_changes_builtuparea" name="structure_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_original" name="structure_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="structure_changes_tung" name="structure_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			</tr> -->
+			</tr>
 		  </tbody>
 		  
-	  </table>
+	  </table> -->
       <!-- 使用性质 -->
 	  <table class="layui-table j-hides j-nature-box hide">
 		  <thead>
@@ -286,21 +285,27 @@
 				   switch(message){
 				   	case '1':
 				   		$(".j-house-boxs td:eq(1) input").attr("name","floor_number_old");
-				   		$(".j-house-boxs td:eq(2)").html('<input type="text" value="" placeholder="" autocomplete="off" class="layui-input" name="floor_number_edit">');
+				   		$(".j-house-boxs td:eq(2)").html('<input type="number" value="" placeholder="" autocomplete="off" class="layui-input" name="floor_number_edit">');
 						$(".j-hides").hide();
+						$(".j-lease-box").show();//租赁异动导航显示
 				   		$(".j-floor-box").show();
+						$(".j-details").show();//异动明细导航显示
+						$(".j-house-box").show();//异动明细显示
 						$("input[name='floor_number_old']").val($("#j_floor_hidden").val())
 				   		form.render('select');
 				   		break;
 					case '2':
 						$(".j-house-boxs td:eq(1) input").attr("name","endloss_grade_old");
-						$(".j-house-boxs td:eq(2)").html('<select name="ban_damage_id"><option value="">完损等级</option>{volist name="params['damages']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-house-boxs td:eq(2)").html('<select name="ban_damage_id" lay-filter="lossgrade"><option value="">完损等级</option>{volist name="params['damages']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
 						$(".j-hides").hide();
+						$(".j-lease-box").show();//租赁异动导航显示
+						$(".j-details").hide();//异动明细导航隐藏
+						$(".j-house-box").hide();//异动明细隐藏
 						$(".j-endloss-box").show();
-						$("input[name='endloss_grade_old']").val($("#j_endloss_hidden").val());
+						$("input[name='endloss_grade_old']").val($("#j_endloss_hidden").val()); 
 						form.render('select');
 						break;
-					case '3':
+					/* case '3':
 						$(".j-house-boxs td:eq(1) input").attr("name","structure_category_old");
 						$(".j-house-boxs td:eq(2)").html('<select name="ban_struct_id"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
 						$(".j-hides").hide();
@@ -323,11 +328,12 @@
                     	$(".j-yield-box").show();
 						$("input[name='yield_class_old']").val($("#j_yield_hidden").val());
                     	form.render('select');
-                    	break;
+                    	break; */
 					default:
 					    $(".j-house-boxs td:eq(1) input").attr("name","none_class_old");
 					    $(".j-house-boxs td:eq(2)").html('');
 					    $(".j-hides").hide();
+						$(".j-lease-box").hide();
 						$("input[name='none_class_old']").val('');
 						$("input[name='none_class_edit']").html('');
 					}
@@ -349,33 +355,109 @@
 							var rows = window["layui-layer-iframe" + index].callbackdatas();
 							var HousePrerent = 0;
 							 console.log(row);
-							 console.log(rows);
+							 //console.log(rows);
 							layer.close(index);
 							$('.j-house-box tbody').html("");
-								//房屋信息
+								//房屋信息	
 								if(rows){
 									var houseidData = '';
 									for(var i=0;i<rows.length;i++) {
-									houseidData += ','+rows[i].house_id;
-									var trData ='<tr>\
-													<td class="house_number">'+rows[i].house_number+'</td>\
-													<td class="house_lessee">'+rows[i].tenant_name+'</td>\
-													<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
-													<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
-													<td class="house_diff_rent">'+rows[i].house_diff_rent+'</td>\
-													<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
-												</tr>';
+										houseidData += ','+rows[i].house_id;
+										/* var trData ='<tr>\
+														<td class="house_number">'+rows[i].house_number+'</td>\
+														<td class="house_lessee">'+rows[i].tenant_name+'</td>\
+														<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
+														<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
+														<td class="house_diff_rent">'+rows[i].house_cou_rent+'</td>\
+														<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
+													</tr>';
+										$('.j-house-box tbody').append(trData); */
 
-									$('.j-house-box tbody').append(trData);
-
-									HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
-									//隐藏域信息
-									$("#j_floor_hidden").val(rows[0].ban.ban_floors);//楼层原信息
-									$("#j_endloss_hidden").val(params.damages[rows[0].ban.ban_damage_id]);//完损等级原信息
-									$("#j_structure_hidden").val(params.structs[rows[0].ban.ban_struct_id]);//结构类别原信息
-									$("#j_nature_hidden").val(params.uses[rows[0].house_use_id]);//使用性质原信息
-									$("#j_yield_hidden").val(params.owners[rows[0].ban.ban_owner_id]);//产别原信息
-								}
+										HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
+										//隐藏域信息
+										$("#j_floor_hidden").val(rows[0].ban.ban_floors);//楼层原信息
+										$("#j_endloss_hidden").val(params.damages[rows[0].ban.ban_damage_id]);//完损等级原信息
+										$("#j_structure_hidden").val(params.structs[rows[0].ban.ban_struct_id]);//结构类别原信息
+										$("#j_nature_hidden").val(params.uses[rows[0].house_use_id]);//使用性质原信息
+										$("#j_yield_hidden").val(params.owners[rows[0].ban.ban_owner_id]);//产别原信息
+								   }
+									//计算建筑面积
+									var rents_old = 0//规定租金异动前金额
+									var rents = 0;//规定租金异动金额
+									var rents_sum = 0;//规定租金异动后金额
+									//楼层调整异动监听input改变
+									$(".j-house-boxs").bind("input propertychange",function(j_ban_number,j_floor_number){
+										var insts = $("input[name='ban_number']").val();//获取楼栋编号
+										var owners = $("input[name='floor_number_edit']").val();//获取异动后楼层
+									  /* $.ajax({
+										  type: "post",
+										  url: "",
+										  data: { 'j_ban_number': insts,'j_floor_number': owners}, 
+										  dataType: "json", 
+										  success: function(data) {
+											   for(var k=0;k<rows.length;k++) {
+												 var trData ='<tr>\
+																<td class="house_number">'+rows[k].house_number+'</td>\
+																<td class="house_lessee">'+rows[k].tenant_name+'</td>\
+																<td class="old_floor">'+params.uses[rows[k].house_use_id]+'</td>\
+																<td class="new_floor">'+rows[k].house_pre_rent+'</td>\
+																<td class="house_regulation_rent">'+rows[k].house_cou_rent+'</td>\
+																<td class="house_change_rent">'+rows[k].house_pump_rent+'</td>\
+																<td class="house_calculation_rent">'+rows[k].house_pump_rent+'</td>\
+															</tr>';
+												 $('.j-house-box tbody').append(trData);
+											  }
+										  },
+										  error: function(msg) {
+											  layer.msg(msg);
+										  }
+									  }); */
+									  //租赁异动楼层调整异动前数据
+									  $("input[name='floor_household']").val();//获取异动前户数
+									  $("input[name='floor_prescribed']").val(row.ban_area);//获取异动前建筑面积
+									  $("input[name='floor_areaofuse']").val(row.ban_rent);//获取异动前规定租金
+									  $("input[name='floor_builtuparea']").val(row.ban_use_area);//获取异动前使用面积
+									  $("input[name='floor_original']").val(row.ban_oprice);//获取异动前原价
+									  $("input[name='floor_tung']").val(row.ban_num);//获取异动前栋数
+									  //租赁异动楼层调整异动数据
+									  $("input[name='floor_before_0edit']").val(0);//获取异动户数
+									  $("input[name='floor_before_1edit']").val(0);//获取异动建筑面积
+									  $("input[name='floor_before_2edit']").val(-10);//获取异动规定租金
+									  $("input[name='floor_before_3edit']").val(0);//获取异动使用面积
+									  $("input[name='floor_before_4edit']").val(0);//获取异动原价
+									  $("input[name='floor_before_5edit']").val(0);//获取异动栋数
+									  //租赁异动楼层调整异动后数据
+									  rents_old =parseFloat(row.ban_rent) * 100;
+									  rents = parseFloat($("#cancel_before_2edit").val()) * 100;
+									  rents_sum = rents + rents_old
+									  $("input[name='floor_changes_household']").val();//获取异动后户数
+									  $("input[name='floor_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
+									  $("input[name='floor_changes_areaofuse']").val(rents_sum.toFixed(2) / 100);//获取异动后规定租金
+									  $("input[name='floor_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
+									  $("input[name='floor_changes_original']").val(row.ban_oprice);//获取异动后原价
+									  $("input[name='floor_changes_tung']").val(row.ban_num);//获取异动后栋数
+									})
+									//完损等级异动监听delected改变
+									form.on('select(lossgrade)', function (data) {
+										 var message=params.damages[data.value];
+										 $("input[name='endloss_class']").val($("input[name='endloss_grade_old']").val());//获取完损等级前
+										 $("input[name='endloss_changes_class']").val(message);//获取完损等级后
+										 //完损等级异动前
+										 $("input[name='endloss_household']").val();//获取异动前户数
+										 $("input[name='endloss_prescribed']").val('-'+row.ban_area);//获取异动前建筑面积
+										 $("input[name='endloss_areaofuse']").val('-'+row.ban_rent);//获取异动前规定租金
+										 $("input[name='endloss_builtuparea']").val('-'+row.ban_use_area);//获取异动前使用面积
+										 $("input[name='endloss_original']").val('-'+row.ban_oprice);//获取异动前原价
+										 $("input[name='endloss_tung']").val('-'+row.ban_num);//获取异动前栋数
+										 //完损等级异动后
+										 $("input[name='endloss_changes_household']").val();//获取异动前户数
+										 $("input[name='endloss_changes_prescribed']").val(row.ban_area);//获取异动前建筑面积
+										 $("input[name='endloss_changes_areaofuse']").val(row.ban_rent);//获取异动前规定租金
+										 $("input[name='endloss_changes_builtuparea']").val(row.ban_use_area);//获取异动前使用面积
+										 $("input[name='endloss_changes_original']").val(row.ban_oprice);//获取异动前原价
+										 $("input[name='endloss_changes_tung']").val(row.ban_num);//获取异动前栋数
+									});
+								
 								houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 								$("input[name='house_id']").val(houseidData);//获取房屋编号
 								
@@ -387,14 +469,13 @@
 								$("input[name='mechanism']").val(params.insts[row.ban_inst_id]);//获取机构
 								/* 无数据 */
 								if(	$('.j-house-box tbody').html()==''){
-									$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+									$('.j-house-box tbody').html("<tr><td colspan='7'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 								}
-
 						},btn2: function(index, layero){
 							layer.close(index);
 						}
 			 });
 		})
-        
+       
 	});
 </script>
