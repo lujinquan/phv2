@@ -1,4 +1,3 @@
-<!-- 楼栋调整审核 -->
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -8,52 +7,52 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
-				<input type="text"  value="1002005001" placeholder=""  lay-verify="required" readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">楼栋编号</label>
-			<div class="j-input-inline">
-				<input type="text"  readonly value="1002005001" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
+				<input type="hidden" name="id" value="{$data_info['id']}">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
-				<input type="text" readonly value="解放路486" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+				<input type="text" id="building_address" readonly value="{$data_info['ban_info']['ban_address']}" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">机构</label>
 			<div class="j-input-inline">
-				<input type="text" readonly value="粮道14管段" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
+				<input type="text" id="mechanism" readonly value="{$params.insts[$data_info['ban_info']['ban_inst_id']]}" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
+	
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>异动信息</legend>
 	</fieldset>
 	<table  class="layui-table j-house-boxs">
 	  <thead>
 		  <tr>
-		    <th width="33.3%">异动类别</th>
+		    <th width="33.3%"><i class="red">*</i> 异动类别</th>
 		    <th width="33.3%">原信息</th>
-		    <th width="33.3%">异动后信息</th>
+		    <th width="33.3%"><i class="red">*</i> 异动后信息</th>
 		  </tr>
 	  </thead>
 	  <tbody>
 		  <tr>
-			  <td>
-				楼层调整  
+		  	<td><input type="text"  readonly value="{$params.ban_change_ids[$data_info['ban_change_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+				  
 			  </td>
-			  <td>7</td>
-			  <td>6</td>
+		  	  {if condition="$data_info['ban_change_id'] == 1"}
+			  <td><input type="text"  readonly value="{$data_info['old_floors']}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$data_info['new_floors']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  {else /}
+			   <td><input type="text"  readonly value="{$data_info['old_damage']}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$data_info['new_damage']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  {/if}
 		  </tr>
 	  </tbody>
 	</table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-details">
 		<legend>异动明细</legend>
 	</fieldset>
 	<table  class="layui-table j-house-box">
@@ -61,40 +60,154 @@
 		  <tr>
 		    <th>房屋编号</th>
 		    <th>承租人</th>
-		    <th>使用性质</th>
-		    <th>规定租金</th>
-		    <th>租差</th>
-		    <th>泵费</th>
+		    <th>原楼层</th>
+		    <th>现楼层</th>
+		    <th>原规定租金</th>
+		    <th>计算租金（异动前）</th>
+			<th> 租金变化</th>
+		    <th>计算租金（异动后）</th>
 		  </tr>
 	  </thead>
 	  <tbody>
-		<tr>													
-		  <td class="house_number">10020050010003</td>												
-		  <td class="house_lessee">王为樑</td>													
-		  <td class="house_nature">住宅</td>													
-		  <td class="house_pre_rent">74.50</td>													
-		  <td class="house_diff_rent">0.00</td>													
-		  <td class="house_pump_rent">0.00</td>												
-		</tr> 
-		<tr>													
-		   <td class="house_number">10020050010004</td>													
-		   <td class="house_lessee">罗志望</td>													
-		   <td class="house_nature">住宅</td>													
-		   <td class="house_pre_rent">82.00</td>													
-		   <td class="house_diff_rent">0.00</td>													
-		   <td class="house_pump_rent">0.00</td>												
-		</tr>
+	  	{volist name="$data_info['data_json']['houseDetail']" id="v"}
+	  	<tr>
+	  		<td>{$v['detail_house_number']}</td>
+	  		<td>{$v['detail_tenant_name']}</td>
+	  		<td>{$v['detail_old_floor']}</td>
+	  		<td>{$v['detail_new_floor']}</td>
+	  		<td>{$v['detail_house_rent']}</td>
+	  		<td>{$v['detail_house_old_cou_rent']}</td>
+	  		<td>{$v['detail_diff_cou_rent']}</td>
+	  		<td>{$v['detail_house_new_cou_rent']}</td>
+	  	</tr>
+	  	{/volist}
 	  </tbody>
 	</table>
-  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-lease-box">
   	<legend>租赁异动</legend>
   </fieldset>
   <div class="j-table_selected">
 	  <!-- 楼层调整 -->
+	  {if condition="$data_info['ban_change_id'] == 1"}
 	  <table class="layui-table j-hides j-floor-box">
 		  <thead>
 			  <tr>
 				<th>基本情况</th>
+				<th>户数</th>
+				<th>建筑面积</th>
+				<th>规定租金</th>
+				<th>使用面积</th>
+				<th>原价</th>
+				<th>栋数</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td>异动前</td>
+			  <td><input type="text"  id="floor_household" name="floor_household" readonly  value="{$data_info['data_json']['changeDetail']['floor_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['floor_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="floor_areaofuse" name="floor_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['floor_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="floor_builtuparea" name="floor_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['floor_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="floor_original" name="floor_original" readonly  value="{$data_info['data_json']['changeDetail']['floor_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="{$data_info['data_json']['changeDetail']['floor_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+			<tr>
+			  <td>异动</td>
+			  <td><input type="text" id="cancel_before_0edit" name="floor_before_0edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_0edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_1edit" name="floor_before_1edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_1edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_2edit" name="floor_before_2edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_2edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_3edit" name="floor_before_3edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_3edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_4edit" name="floor_before_4edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_4edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_5edit" name="floor_before_5edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_5edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+			<tr>
+			  <td>异动后</td>
+			  <td><input type="text" id="changes_floor_household" name="floor_changes_household" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="changes_floor_prescribed" name="floor_changes_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="changes_floor_areaofuse" name="floor_changes_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="changes_floor_builtuparea" name="floor_changes_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="changes_floor_original" name="floor_changes_original" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="changes_floor_tung" name="floor_changes_tung" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+		  </tbody>
+		</table>
+		{/if}
+      <!-- 完损等级 -->
+      {if condition="$data_info['ban_change_id'] == 2"}
+	  <table class="layui-table j-hides j-endloss-box hide">
+		  <thead>
+			  <tr>
+				<th>完损等级</th>
+				<th>户数</th>
+				<th>建筑面积</th>
+				<th>规定租金</th>
+				<th>使用面积</th>
+				<th>原价</th>
+				<th>栋数</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td><input type="text"  id="endloss_class" name="endloss_class" readonly  value="{$data_info['data_json']['changeDetail']['endloss_class']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_household" name="endloss_household" readonly  value="{$data_info['data_json']['changeDetail']['endloss_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_prescribed" name="endloss_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['endloss_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_areaofuse" name="endloss_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['endloss_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_builtuparea" name="endloss_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['endloss_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_original" name="endloss_original" readonly  value="{$data_info['data_json']['changeDetail']['endloss_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="endloss_tung" name="endloss_tung" readonly  value="{$data_info['data_json']['changeDetail']['endloss_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+			<tr>
+			  <td><input type="text" id="endloss_changes_class" name="endloss_changes_class" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_class']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_household" name="endloss_changes_household" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_prescribed" name="endloss_changes_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_areaofuse" name="endloss_changes_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_builtuparea" name="endloss_changes_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_original" name="endloss_changes_original" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="endloss_changes_tung" name="endloss_changes_tung" readonly  value="{$data_info['data_json']['changeDetail']['endloss_changes_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+		  </tbody>
+	  </table>
+	  {/if}
+	  <!-- 结构类别 -->
+<!-- 	  <table class="layui-table j-hides j-structure-boxs hide">
+		  <thead>
+			  <tr>
+				<th>结构类别</th>
+				<th>户数</th>
+				<th>建筑面积</th>
+				<th>规定租金</th>
+				<th>使用面积</th>
+				<th>原价</th>
+				<th>栋数</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td><input type="text"  id="structure_class" name="structure_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_prescribed" name="structure_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_areaofuse" name="structure_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_builtuparea" name="structure_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_original" name="structure_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+			<tr>
+			  <td><input type="text" id="structure_changes_class" name="structure_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_household" name="structure_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_prescribed" name="structure_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_areaofuse" name="structure_changes_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_builtuparea" name="structure_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_original" name="structure_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_tung" name="structure_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+		  </tbody>
+		  
+	  </table> -->
+      <!-- 使用性质 -->
+<!-- 	  <table class="layui-table j-hides j-nature-box hide">
+		  <thead>
+			  <tr>
+				<th>使用性质</th>
 				<th>户数</th>
 				<th>建设面积</th>
 				<th>规定租金</th>
@@ -105,106 +218,186 @@
 		  </thead>
 		  <tbody>
 			<tr>
-			  <td>异动前</td>
-			  <td>5</td>
-			  <td>100.00</td>
-			  <td>100.00</td>
-			  <td>100.00</td>
-			  <td>110.00</td>
-			  <td>7</td>
+			  <td><input type="text"  id="nature_class" name="nature_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_household" name="nature_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_prescribed" name="nature_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_areaofuse" name="nature_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_builtuparea" name="nature_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_original" name="nature_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="nature_tung" name="nature_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 			<tr>
-			  <td>异动</td>
-			  <td>0</td>
-			  <td>0</td>
-			  <td>0</td>
-			  <td>0</td>
-			  <td>0</td>
-			  <td>0</td>
-			</tr>
-			<tr>
-			  <td>异动后</td>
-			  <td>5</td>
-			  <td>100.00></td>
-			  <td>100.00</td>
-			  <td>100.00</td>
-			  <td>110.00</td>
-			  <td>7</td>
+			  <td><input type="text" id="nature_changes_class" name="nature_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_household" name="nature_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_prescribed" name="nature_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_areaofuse" name="nature_changes_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_builtuparea" name="nature_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_original" name="nature_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="nature_changes_tung" name="nature_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 		  </tbody>
-		</table>
+	  </table> -->
+	  <!-- 产别 -->
+<!-- 	  <table class="layui-table j-hides j-yield-box hide">
+		  <thead>
+			  <tr>
+				<th>产别</th>
+				<th>户数</th>
+				<th>建筑面积</th>
+				<th>规定租金</th>
+				<th>使用面积</th>
+				<th>原价</th>
+				<th>栋数</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td><input type="text"  id="yield_class" name="yield_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_household" name="yield_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_prescribed" name="yield_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_areaofuse" name="yield_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_builtuparea" name="yield_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_original" name="yield_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="yield_tung" name="yield_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+			<tr>
+			  <td><input type="text" id="yield_changes_class" name="yield_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_household" name="yield_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_prescribed" name="yield_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_areaofuse" name="yield_changes_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_builtuparea" name="yield_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_original" name="yield_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="yield_changes_tung" name="yield_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			</tr>
+		  </tbody>
+	  </table> -->
   </div>
   <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="j-margin-btn">
-  		<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
-  		<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
-  		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
-  		<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
-  	</div>
-  </div>
+		<div class="layui-col-md8">
+			<label class="j-form-label">异动原因</label>
+			<div class="j-input-inline">
+				<input type="text" name="change_remark" readonly value="{$data_info['change_remark']}" placeholder="请输入异动备注信息" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>审批状态</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+	   <div class="j-status-bar">
+			<ul>
+				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
+					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+					<p>房管员</p>
+				</li>
+				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
+					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+					<p>经租会计</p>
+				</li>
+				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
+					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+					<p>经租所长</p>
+				</li>
+				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
+					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
+					<p>经管科</p>
+				</li>
+			</ul>
+		</div>
+		<div class="j-status-result">
+			<ul>
+				{volist name="$data_info['child_json']" id="v"}
+				<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
+				{/volist}
+				<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
+			</ul>
+		</div>
+  <!-- 隐藏域赋默认值不作数据提交依据 -->
+  <input type="hidden" id="j_floor_hidden" value="" />
+  <input type="hidden" id="j_endloss_hidden" value="" />
+  <input type="hidden" id="j_endloss_hidden_id" name="old_damage" value="" />
+  <input type="hidden" id="j_structure_hidden" value="" />
+  <input type="hidden" id="j_nature_hidden" value="" />
+  <input type="hidden" id="j_yield_hidden" value="" />
+  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
+				<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">通过</button>
+				<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+			</div>
+		</div>
   </div>
 </form>
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
-		var laydate = layui.laydate,
-			$ = layui.$,
-			upload = layui.upload,
-			form = layui.form;
-        //审批不通过
-        $("#handover").on("click",function(){
-        	layer.open({
-        		type: 1,
-        		btn: ["确定","取消"],
-        		title: ['审批不通过原因'],
-        		scrollbar: false,
-        		area: ['400px','200px'],
-        		offset: 'auto',
-        		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
-        		yes: function(index, layero){
-        			
-        			var formData = $('.layui-form').serialize();
-        			var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=10';
-        			if($('#change_reason').val()==''){
-        				layer.tips('原因不能为空！', '#change_reason', {
-        				  tips: 1
-        				});
-        			}
-        			else if(!$('.layui-layer-btn0').hasClass('disabled')){
-        				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
-        				formSubmit('post',"{:url()}",data,index);
-        			}
-        
-        		}
-        	});
-        })
-        
-        //打回
-        $("#backover").on("click",function(){
-        	layer.open({
-        		type: 1,
-        		btn: ["确定","取消"],
-        		title: ['打回原因'],
-        		scrollbar: false,
-        		area: ['400px','200px'],
-        		offset: 'auto',
-        		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
-        		yes: function(index, layero){
-        			
-        			var formData = $('.layui-form').serialize();
-        			var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=10';
-        			if($('#back_reason').val()==''){
-        				layer.tips('原因不能为空！', '#back_reason', {
-        				  tips: 1
-        				});
-        			}
-        			else if(!$('.layui-layer-btn0').hasClass('disabled')){
-        				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
-        				formSubmit('post',"{:url()}",data,index);
-        			}
-        
-        		}
-        	});
-        })
+	/*上传参数设定*/
+	layui.use(['jquery','table','layer', 'upload','form'], function() {
+		var table = layui.table
+		    ,form = layui.form
+			,$ = layui.jquery
+			,upload = layui.upload
+			,layer = layui.layer; 
+
+		//审批不通过
+	    $("#handover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['审批不通过原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=13';
+					if($('#change_reason').val()==''){
+						layer.tips('原因不能为空！', '#change_reason', {
+						  tips: 1
+						});
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
+	    //打回
+	    $("#backover").on("click",function(){
+	    	layer.open({
+	    		type: 1,
+	    		btn: ["确定","取消"],
+	    		title: ['打回原因'],
+	    		scrollbar: false,
+	    		area: ['400px','200px'],
+	    		offset: 'auto',
+	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+	    		yes: function(index, layero){
+					
+					var formData = $('.layui-form').serialize();
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=13';
+					if($('#back_reason').val()==''){
+						layer.tips('原因不能为空！', '#back_reason', {
+						  tips: 1
+						});
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
+						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+						formSubmit('post',"{:url()}",data,index);
+					}
+
+				}
+			});
+	    })
+
 	});
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
 </script>

@@ -147,7 +147,7 @@ class Room extends SystemBase
             $structureTypePoint = BanStructTypeModel::where([['id','eq',$roomRow['ban_struct_id']]])->value('new_point');
             // 房间的架空率，与楼栋是否一层为架空层有关
             $emptyPoint = $roomRow['ban_is_first']?0.98:1;
-            // 计算租金= 计租面积（使用面积，房间类型，是否共用） * 基价折减率（有无上下水这种折减） * 结构基价  *  架空率 * 层次调解率
+            // 计算租金= 计租面积（使用面积，房间类型，是否共用） * 基价折减率（类似有无上下水这种折减） * 结构基价  *  架空率 * 层次调解率 + 租差 + 泵费
             return round($roomRow['room_lease_area'] * round($roomRow['room_rent_point'] * $structureTypePoint,2) * $emptyPoint * $floorPoint,2); 
         }
         

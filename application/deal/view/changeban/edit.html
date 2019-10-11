@@ -276,42 +276,10 @@
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
-				<input type="text" name="change_remark" readonly value="{$data_info['change_remark']}" placeholder="请输入异动备注信息" autocomplete="off" class="layui-input">
+				<input type="text" name="change_remark" value="{$data_info['change_remark']}" placeholder="请输入异动备注信息" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>审批状态</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-	   <div class="j-status-bar">
-			<ul>
-				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 2) || ($data_info['change_status'] == 1)"}on{/if}">
-					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-					<p>房管员</p>
-				</li>
-				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 3) || ($data_info['change_status'] == 1)"}on{/if}">
-					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-					<p>经租会计</p>
-				</li>
-				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 4) || ($data_info['change_status'] == 1)"}on{/if}">
-					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-					<p>经租所长</p>
-				</li>
-				<li class="layui-col-xs2 {if condition="($data_info['change_status'] > 5) || ($data_info['change_status'] == 1)"}on{/if}">
-					<i class="layui-icon iconfont j-icon-guifanjieguoyeduigou"></i>
-					<p>经管科</p>
-				</li>
-			</ul>
-		</div>
-		<div class="j-status-result">
-			<ul>
-				{volist name="$data_info['child_json']" id="v"}
-				<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
-				{/volist}
-				<!-- <li>经租会计［冯超］于2019-08-30 09:35:01 初审；</li> -->
-			</ul>
-		</div>
   <!-- 隐藏域赋默认值不作数据提交依据 -->
   <input type="hidden" id="j_floor_hidden" value="" />
   <input type="hidden" id="j_endloss_hidden" value="" />
@@ -320,27 +288,250 @@
   <input type="hidden" id="j_nature_hidden" value="" />
   <input type="hidden" id="j_yield_hidden" value="" />
   <div class="layui-row layui-form-item layui-col-space90">
-			<div class="j-margin-btn">
-				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
-			</div>
+		<div class="j-margin-btn">
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
+			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
+	</div>
   </div>
 </form>
 {include file="system@block/layui" /}
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
-<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	/*上传参数设定*/
-	layui.use(['jquery','table','layer', 'upload','form'], function() {
-		var table = layui.table
-		    ,form = layui.form
-			,$ = layui.jquery
-			,upload = layui.upload
-			,layer = layui.layer; 
+	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+		var laydate = layui.laydate,
+			$ = layui.$,
+			upload = layui.upload,
+			form = layui.form;
+			console.log(params);
+		//监听selected下拉框事件
+		form.on('select(adjustment)', function (data) {
+		    	   var message=data.value;
+				   switch(message){
+				   	case '1':
+				   		$(".j-house-boxs td:eq(1) input").attr("name","old_floors");
+				   		$(".j-house-boxs td:eq(2)").html('<input type="number" value="" placeholder="" autocomplete="off" class="layui-input" name="new_floors">');
+						$(".j-hides").hide();
+						$(".j-lease-box").show();//租赁异动导航显示
+				   		$(".j-floor-box").show();
+						$(".j-details").show();//异动明细导航显示
+						$(".j-house-box").show();//异动明细显示
+						$("input[name='old_floors']").val($("#j_floor_hidden").val())
+				   		form.render('select');
+				   		break;
+					case '2':
+						$(".j-house-boxs td:eq(1) input").attr("name","endloss_grade_old");
+						$(".j-house-boxs td:eq(2)").html('<select name="new_damage" lay-filter="lossgrade"><option value="">完损等级</option>{volist name="params['damages']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-hides").hide();
+						$(".j-lease-box").show();//租赁异动导航显示
+						$(".j-details").hide();//异动明细导航隐藏
+						$(".j-house-box").hide();//异动明细隐藏
+						$(".j-endloss-box").show();
+						$("input[name='endloss_grade_old']").val($("#j_endloss_hidden").val()); 
+						$("input[name='endloss_grade_old_id']").val($("#j_endloss_hidden_id").val()); 
+						form.render('select');
+						break;
+					/* case '3':
+						$(".j-house-boxs td:eq(1) input").attr("name","structure_category_old");
+						$(".j-house-boxs td:eq(2)").html('<select name="ban_struct_id"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-hides").hide();
+						$(".j-structure-boxs").show();
+						$("input[name='structure_category_old']").val($("#j_structure_hidden").val());
+						form.render('select');
+						break;	
+					case '4':
+						$(".j-house-boxs td:eq(1) input").attr("name","nature_use_old");
+						$(".j-house-boxs td:eq(2)").html('<select name="house_use_id"><option value="">使用性质</option>{volist name="params['uses']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-hides").hide();
+						$(".j-nature-box").show();
+						$("input[name='nature_use_old']").val($("#j_nature_hidden").val());
+						form.render('select');
+						break;	
+                    case '5':
+                    	$(".j-house-boxs td:eq(1) input").attr("name","yield_class_old");
+                    	$(".j-house-boxs td:eq(2)").html('<select name="ban_owner_id"><option value="">产别</option>{volist name="params['owners']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+                    	$(".j-hides").hide();
+                    	$(".j-yield-box").show();
+						$("input[name='yield_class_old']").val($("#j_yield_hidden").val());
+                    	form.render('select');
+                    	break; */
+					default:
+					    $(".j-house-boxs td:eq(1) input").attr("name","none_class_old");
+					    $(".j-house-boxs td:eq(2)").html('');
+					    $(".j-hides").hide();
+						$(".j-lease-box").hide();
+						$("input[name='none_class_old']").val('');
+						$("input[name='none_class_edit']").html('');
+					}
+					
+		    	});
+		//获取楼栋查询器
+		 $(".layui-form").on('click','.j-ban_number',function(){
+			layer.open({
+						title: '楼栋查询器'
+						,type: 2
+						,offset: 'auto'
+						,area: ['70%', '90%']
+						, btn:false
+						,pageTabs: false
+						,content: '{:url('system/index/querier')}'
+						,btn: ['确定','关闭']
+						,yes: function(index, layero){
+							var row = window["layui-layer-iframe" + index].callbackdata();
+							//var rows = window["layui-layer-iframe" + index].callbackdatas();
+							var HousePrerent = 0;
+							 //console.log(row);
+							 //console.log(rows);
+							layer.close(index);
+							$("input[name='new_floors']").val();
+							$('.j-house-box tbody').html("");
 
+							    //楼栋信息
+								$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
+								$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+								$("#building_address").val(row.ban_address);//获取楼栋地址
+								$("#mechanism").val(params.insts[row.ban_inst_id]);//获取机构
+								$("#j_floor_hidden").val(row.ban_floors);//楼层原信息
+								$("#j_endloss_hidden").val(params.damages[row.ban_damage_id]);//完损等级原信息
+								$("#j_endloss_hidden_id").val(row.ban_damage_id);//完损等级原信息
+
+								/* 无数据 */
+								if(	$('.j-house-box tbody').html()==''){
+									$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+								}
+								$("input[name='floor_before_2edit']").val(0);//获取异动规定租金 
+								$("input[name='floor_household']").val(0);//获取异动前户数
+								$("input[name='floor_changes_household']").val(0);//获取异动后户数
+
+								//楼层调整异动监听input改变
+								$(".j-house-boxs").bind("input propertychange",function(){
+									var ban_id = $("input[name='ban_id']").val();//获取楼栋编号
+									var new_floors = $("input[name='new_floors']").val();//获取异动后楼层
+								   $.ajax({
+									  type: "post",
+									  url: "{:url('deal/Api/getChangeBan')}",
+									  data: { 'ban_id': ban_id,'ban_floors': new_floors}, 
+									  dataType: "json", 
+									  success: function(res) {
+
+									  	if(res.code == 0){
+									  		layer.msg(res.msg);
+									  		$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+									  		$(".j-floor-box input").val();
+									  	}else{
+									  		$('.j-house-box tbody').html("");
+									  		var resData = res.data;
+									  		$diffRent = 0;
+									  		for(var k=0;k<resData.length;k++) {
+											$diffRent += parseFloat(resData[k].diff_cou_rent)*100;
+											 var trData ='<tr>\
+															<td class="house_number"><input type="hidden" name="detail_house_number['+k+']" value="'+resData[k].house_number +'">'+resData[k].house_number+'</td>\
+															<td class="house_lessee"><input type="hidden" name="detail_tenant_name['+k+']" value="'+resData[k].tenant_name +'">'+resData[k].tenant_name+'</td>\
+															<td class="old_floor"><input type="hidden" name="detail_old_floor['+k+']" value="'+resData[k].old_floor +'">'+resData[k].old_floor+'</td>\
+															<td class="new_floor"><input type="hidden" name="detail_new_floor['+k+']" value="'+resData[k].new_floor +'">'+resData[k].new_floor+'</td>\
+															<td class="house_regulation_old_rent"><input type="hidden" name="detail_house_rent['+k+']" value="'+resData[k].house_rent +'">'+resData[k].house_rent+'</td>\
+															<td class="house_regulation_rent"><input type="hidden" name="detail_house_old_cou_rent['+k+']" value="'+resData[k].house_old_cou_rent +'">'+resData[k].house_old_cou_rent+'</td>\
+															<td class="house_change_rent"><input type="hidden" name="detail_diff_cou_rent['+k+']" value="'+resData[k].diff_cou_rent +'">'+resData[k].diff_cou_rent+'</td>\
+															<td class="house_calculation_rent"><input type="hidden" name="detail_house_new_cou_rent['+k+']" value="'+resData[k].house_new_cou_rent +'">'+resData[k].house_new_cou_rent+'</td>\
+														</tr>';
+											 $('.j-house-box tbody').append(trData);
+										  }
+
+										  $("input[name='floor_before_2edit']").val($diffRent.toFixed(2)/100);
+										  $("input[name='floor_household']").val(resData.length);//获取异动前户数
+										  $("input[name='floor_changes_household']").val(resData.length);//获取异动后户数
+									  	}
+										   
+									  },
+									  error: function(msg) {
+										  layer.msg(msg);
+									  }
+								  }); 
+								  //租赁异动楼层调整异动前数据
+								  
+								  $("input[name='floor_prescribed']").val(row.ban_area);//获取异动前建筑面积
+								  $("input[name='floor_areaofuse']").val(row.ban_rent);//获取异动前规定租金
+								  $("input[name='floor_builtuparea']").val(row.ban_use_area);//获取异动前使用面积
+								  $("input[name='floor_original']").val(row.ban_oprice);//获取异动前原价
+								  $("input[name='floor_tung']").val(row.ban_num);//获取异动前栋数
+								  //租赁异动楼层调整异动数据
+								  $("input[name='floor_before_0edit']").val(0);//获取异动户数
+								  $("input[name='floor_before_1edit']").val(0);//获取异动建筑面积
+								  
+								  $("input[name='floor_before_3edit']").val(0);//获取异动使用面积
+								  $("input[name='floor_before_4edit']").val(0);//获取异动原价
+								  $("input[name='floor_before_5edit']").val(0);//获取异动栋数
+								  //租赁异动楼层调整异动后数据
+								  rents_old =parseFloat(row.ban_rent) * 100;
+								  rents = parseFloat($("#cancel_before_2edit").val()) * 100;
+								  rents_sum = rents + rents_old;
+								  
+								  $("input[name='floor_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
+								  $("input[name='floor_changes_areaofuse']").val(rents_sum.toFixed(2) / 100);//获取异动后规定租金
+								  $("input[name='floor_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
+								  $("input[name='floor_changes_original']").val(row.ban_oprice);//获取异动后原价
+								  $("input[name='floor_changes_tung']").val(row.ban_num);//获取异动后栋数
+								})
+
+								//房屋信息	
+								
+								// 	var houseidData = '';
+								// 	for(var i=0;i<rows.length;i++) {
+								// 		houseidData += ','+rows[i].house_id;
+										/* var trData ='<tr>\
+														<td class="house_number">'+rows[i].house_number+'</td>\
+														<td class="house_lessee">'+rows[i].tenant_name+'</td>\
+														<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
+														<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
+														<td class="house_diff_rent">'+rows[i].house_cou_rent+'</td>\
+														<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
+													</tr>';
+										$('.j-house-box tbody').append(trData); */
+
+										//HousePrerent += parseFloat(rows[i].house_pre_rent) * 100;
+										//隐藏域信息
+										
+										
+										// $("#j_structure_hidden").val(params.structs[rows[0].ban.ban_struct_id]);//结构类别原信息
+										// $("#j_nature_hidden").val(params.uses[rows[0].house_use_id]);//使用性质原信息
+										// $("#j_yield_hidden").val(params.owners[rows[0].ban.ban_owner_id]);//产别原信息
+								   //}
+									//计算建筑面积
+									var rents_old = 0//规定租金异动前金额
+									var rents = 0;//规定租金异动金额
+									var rents_sum = 0;//规定租金异动后金额
+
+									//完损等级异动监听delected改变
+									form.on('select(lossgrade)', function (data) {
+										 var message=params.damages[data.value];
+										 $("input[name='endloss_class']").val($("input[name='endloss_grade_old']").val());//获取完损等级前
+										 $("input[name='endloss_changes_class']").val(message);//获取完损等级后
+										 //完损等级异动前
+										 $("input[name='endloss_household']").val('-'+row.ban_holds);//获取异动前户数
+										 $("input[name='endloss_prescribed']").val('-'+row.ban_area);//获取异动前建筑面积
+										 $("input[name='endloss_areaofuse']").val('-'+row.ban_rent);//获取异动前规定租金
+										 $("input[name='endloss_builtuparea']").val('-'+row.ban_use_area);//获取异动前使用面积
+										 $("input[name='endloss_original']").val('-'+row.ban_oprice);//获取异动前原价
+										 $("input[name='endloss_tung']").val('-'+row.ban_num);//获取异动前栋数
+										 //完损等级异动后
+										 $("input[name='endloss_changes_household']").val(row.ban_holds);//获取异动后户数
+										 $("input[name='endloss_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
+										 $("input[name='endloss_changes_areaofuse']").val(row.ban_rent);//获取异动后规定租金
+										 $("input[name='endloss_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
+										 $("input[name='endloss_changes_original']").val(row.ban_oprice);//获取异动后原价
+										 $("input[name='endloss_changes_tung']").val(row.ban_num);//获取异动后栋数
+									});
+								
+								//houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
+								//$("input[name='house_id']").val(houseidData);//获取房屋编号
+								
+							
+							
+						},btn2: function(index, layero){
+							layer.close(index);
+						}
+			 });
+		})
+       
 	});
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
 </script>

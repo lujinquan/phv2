@@ -137,12 +137,15 @@ class House extends SystemBase
         }
 
         if($row['ban_number'] == '1050053295'){
-            return $row['house_pre_rent'];
+            return bcaddMerge([$row['house_pre_rent'],$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']]);
         }else{
+
             //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
-            $houseRent = $sumrent  + $row['house_diff_rent'] + $row['house_protocol_rent'];
-            // 民用的四舍五入保留一位，机关企业的四舍五入保留两位 
-            return ($row['house_use_id'] == 1)?round($houseRent,1):round($houseRent,2); 
+            
+            // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
+            $p = ($row['house_use_id'] == 1)?1:2; //保留1位数
+
+            return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']],$p); 
         }
 
     }

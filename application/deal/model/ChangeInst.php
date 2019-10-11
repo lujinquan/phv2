@@ -68,14 +68,14 @@ class ChangeInst extends SystemBase
             $startTime = strtotime($data['ctime']);
             $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
         }
+
         // 检索楼栋机构
+        $insts = config('inst_ids');
         if(isset($data['old_inst_id']) && $data['old_inst_id']){
-            $where[] = ['a.old_inst_id','eq',$data['old_inst_id']];
+            $where[] = ['d.old_inst_id','in',$insts[$data['old_inst_id']]];
         }else{
-            //检索管段
-            $insts = config('inst_ids');
             $instid = (isset($data['old_inst_id']) && $data['old_inst_id'])?$data['old_inst_id']:INST;
-            $where[] = ['a.old_inst_id','in',$insts[$instid]];
+            $where[] = ['d.old_inst_id','in',$insts[$instid]];
         }
         
         return $where;
