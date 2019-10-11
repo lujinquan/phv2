@@ -6,21 +6,23 @@
 	</div>
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
-			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_number" placeholder="楼栋编号" class="layui-input">
+			<div class="j-search-fl layui-col-md8 fl">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:120px;">
-					  <select name="ban_inst_id">
-						  <option value="">机构</option>
-						  {volist name=":config('inst_check_names')[INST]" id="v"}
-						  <option value="{$key}">{$v}</option>
-						  {/volist}
-						</select>
+					<select name="ban_inst_id">
+						<option value="">申请机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
 				</div>
+				{/if}
 				<div class="layui-input-inline" style="width:120px;">
 					  <select name="ban_owner_id">
 						  <option value="">产别</option>
@@ -29,25 +31,17 @@
 						  {/volist}
 						</select>
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<!-- <div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="title_Certificate" placeholder="产权证号" class="layui-input">
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					  <select name="ban_damage_id">
+				</div> -->
+				<div class="layui-input-inline" style="width:140px;">
+					  <select name="ban_change_id">
 						  <option value="">调整类型</option>
-						  <option value="1">楼层调整</option>
-						  <option value="2">完损等级</option>
-						  <option value="3">结果类别</option>
-						  <option value="4">使用性质</option>
-						  <option value="5">产别</option>
+						  {volist name="params['ban_change_ids']" id="v"}
+						  <option value="{$key}">{$v}</option>
+						  {/volist}
 						</select>
 				</div>
-                <div class="layui-input-inline layui-col-md2" style="width:120px;">
-                	<select name="house_use_id">
-                		<option value="">审批状态</option>
-                		<option value="1">审批状态1</option>
-                	</select>
-                </div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -99,9 +93,7 @@
 		  });
 		table.render({
 			elem: '#dataTable',
-			/* height: 550, */
 			toolbar: '#toolbar'
-				// ,defaultToolbar: ['print']
 				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 			    ,url: '{:url()}' //数据接口
 				,page: true //开启分页
@@ -111,14 +103,8 @@
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [[ 
-				  //表头
-					/* {
-						field: '', align:'center',width:60, title: '#', templet:function(d){
-						     return d.LAY_INDEX ;
-						}
-					}, */
-					{field: 'building_number',minWidth: 180,align:'center',title: '楼栋编号'}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'},
+					{field: 'ban_number',minWidth: 180,align:'center',title: '楼栋编号'}, 
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
@@ -129,10 +115,10 @@
 					        return params.owners[d.ban_owner_id];
 					    }
 					}, 
-					{field: 'title_Certificate',minWidth: 180,align:'center',title: '产权证号'},
-                    {field: 'adjustment_type',align:'center',minWidth: 180,title: '调整类型',
+					// {field: 'title_Certificate',minWidth: 180,align:'center',title: '产权证号'},
+                    {field: 'ban_change_id',align:'center',minWidth: 180,title: '调整类型',
                     	templet: function(d) {
-                            return readjust_config[d.adjustment_type];
+                            return params.ban_change_ids[d.ban_change_id];
                         }
                     }, 
 					{field: 'ctime',minWidth: 100,align:'center',title: '申请时间'},

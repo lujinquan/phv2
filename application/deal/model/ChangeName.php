@@ -93,11 +93,10 @@ class ChangeName extends SystemBase
             $where[] = ['a.ftime','between time',[$flishTime,$flishTime+3600*24]];
         }
         // 检索楼栋机构
+        $insts = config('inst_ids');
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
-            $where[] = ['d.ban_inst_id','eq',$data['ban_inst_id']];
+            $where[] = ['d.ban_inst_id','in',$insts[$data['ban_inst_id']]];
         }else{
-            //检索管段
-            $insts = config('inst_ids');
             $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
             $where[] = ['d.ban_inst_id','in',$insts[$instid]];
         }

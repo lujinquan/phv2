@@ -48,7 +48,7 @@ class Room extends Admin
     public function add()
     {   
         $id = input('param.id/d');
-        $row = HouseModel::with('ban')->get($id);
+        $row = HouseModel::with(['ban','tenant'])->get($id);
     	if ($this->request->isPost()) {
             $data = $this->request->post();
 
@@ -133,9 +133,21 @@ class Room extends Admin
             return $this->success('修改成功');
         }
         $id = input('param.id/d');
-        $row = RoomModel::get($id);
+        $house_number = input('param.house_number/s');
+        $row = RoomModel::with('ban')->find($id);
         $row['room_rent_point'] = 100 - $row['room_rent_point']*100;
-        $houseArrs = HouseRoomModel::where([['room_id','eq',$id]])->column('house_number');
+        $houseidArrs = HouseRoomModel::where([['room_id','eq',$id]])->column('house_id');
+        //dump($row);halt($houseidArrs);
+        $houseArrsTemp = HouseModel::with('tenant')->where([['house_id','in',$houseidArrs]])->field('house_number,tenant_id')->select();
+        $houseArrs = [];
+        foreach($houseArrsTemp as $h){
+            if($h['house_number'] == $house_number){
+                array_unshift($houseArrs, $h);
+            }else{
+                array_push($houseArrs, $h);
+            }
+        }
+        //dump($house_number);halt($houseArrs);
         $this->assign('data_info',$row);
         $this->assign('houseArrs',$houseArrs);
         return $this->fetch('form');

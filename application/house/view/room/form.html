@@ -53,17 +53,22 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 				<div class="j-input-inline">
-					 <input type="text" name="house_number[]" value="{$houseArrs[0]}"  autocomplete="off" readonly placeholder="点击查询" class="layui-input j-explain-input">
-						 <b class="j-explain-search j-house_number">查询</b>
-				</div>
-				 {volist name="houseArrs" id="vo" offset="1"}
-				     <div class="j-input-inline">
-				         <input type="text" name="house_number[]" value="{$vo}" autocomplete="off" readonly placeholder="点击查询" class="layui-input">
-						 <b class="j-explain-search j-house_number">查询</b>
-						 <i class="icon-cancel lu-del"></i>
-				     </div>
-				 {/volist}
+					 <input type="text" value="{$houseArrs[0]['tenant_name']}"  autocomplete="off" readonly placeholder="" class="layui-input j-explain-input">
+					 <input type="hidden" name="house_number[]" value="{$houseArrs[0]['house_number']}">
+					 
+				</div> 
 			</div>
+			{volist name="houseArrs" id="vo" offset="1"}
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
+			     <div class="j-input-inline">
+			         <input type="text" value="{$vo['tenant_name']}" autocomplete="off" readonly placeholder="点击查询" class="layui-input">
+			         <input type="hidden" name="house_number[]" value="{$vo['house_number']}">
+					 <b class="j-explain-search j-house_number">查询</b>
+					 <i class="icon-cancel lu-del"></i>
+			     </div> 
+			</div>
+			{/volist}
 			<div class="layui-col-md4">
 				<label class="j-form-label lu-add"><i class="layui-icon layui-icon-add-1 " style="color:#1E9FFF;"></i>添加房屋</label>
 			</div>
@@ -76,10 +81,16 @@
 					 <input type="text" name="room_rent_point" value="{$data_info['room_rent_point']}" id="room_rent_point" readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+		  		<label class="j-form-label"><i class="red">*</i>规定租金</label>
+		  		<div class="j-input-inline">
+		  			<input type="text" name="room_pre_rent" value="{$data_info['room_pre_rent']}" autocomplete="off" class="layui-input">
+		  		</div>
+		  	</div>
 		</div>
 		<input type="hidden" name="room_id" value="{$data_info['room_id']}">
 		<div class="layui-row layui-form-item layui-col-space90">
-				   <div class="layui-inline j-inline-margin e-inline room_rent_pointids_form"">
+				   <div class="layui-inline j-inline-margin e-inline room_rent_pointids_form">
 		            <input type="checkbox" name="room_rent_pointids[]" class="renttable" lay-filter="filter" value="1" v="5" lay-skin="primary" title="1、土地面房屋 5%">
 		            <input type="checkbox" name="room_rent_pointids[]" class="renttable" lay-filter="filter" value="2" v="5" lay-skin="primary" title="2、无平顶瓦屋面、石棉瓦屋面房屋 5%">
 		            <input type="checkbox" name="room_rent_pointids[]" class="renttable" lay-filter="filter" value="3" v="10" lay-skin="primary" title="3、油毡屋面房屋 10%">
@@ -94,7 +105,7 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+				<button type="submit" class="layui-btn" j-data="{'refresh':'false'}" lay-submit lay-filter="formSubmit">提交</button>
 			</div>
 		</div>
 
@@ -106,7 +117,7 @@ layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
     
     $('.lu-add').click(function(){
-        var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" name="house_number[]" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
+        var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><input type="hidden" name="house_number[]" value=""><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
         $('.lu-add').parent().before(html);
     });
     $('.e-house').on('click','.lu-del',function(){
@@ -181,7 +192,8 @@ layui.use(['form', 'func'], function() {
 						var row = window["layui-layer-iframe" + index].hoesedata();
 						/* console.log(row); */
 						layer.close(index);
-						that.prev("input").val(row.house_number);//获取房屋编号
+						that.prev().prev("input[type='text']").val(row.tenant_name);//获取租户名
+						that.prev("input[type='hidden']").val(row.house_number);//获取房屋编号
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

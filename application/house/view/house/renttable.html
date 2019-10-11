@@ -140,7 +140,8 @@
 				<th>房间编号</th>
 				<th>间号</th>
 				<th>绑定楼栋</th>
-				<th>绑定房屋</th>
+				<th>绑定房屋编号</th>
+				<th>绑定租户</th>
 				<th>产别</th>
 				<th>单元号</th>
 				<th>层次</th>
@@ -148,6 +149,7 @@
 				<th>基价折减</th>
 				<th>计租面积</th>
 				<th>层次调解率</th>
+				<th>规定租金</th>
 				<th>计算租金</th>
 				<th>状态</th>
 				{if condition="$group == 'x'"}
@@ -179,7 +181,8 @@
 				<td>{$vo['baseinfo']['room_number']}</td>
 				<td>{$vo['baseinfo']['room_door']}</td>
 				<td>{$vo['baseinfo']['ban_number']}</td>
-				<td>{$vo['houseinfo'][0]}</td>
+				<td>{$vo['houseinfo'][0]['house_number']}</td>
+				<td>{$vo['houseinfo'][0]['tenant_name']}</td>
 				<td>{$params['owners'][$vo['baseinfo']['ban_owner_id']]}</td>
 				<td>{$vo['baseinfo']['room_unit_id']}</td>
 				<td>{$vo['baseinfo']['room_floor_id']}</td>
@@ -187,12 +190,13 @@
 				<td>{$vo['baseinfo']['room_rent_point']}</td>
 				<td>{$vo['baseinfo']['room_lease_area']}</td>
 				<td>{$vo['baseinfo']['floor_point']}</td>
+				<td>{$vo['baseinfo']['room_pre_rent']}</td>
 				<td>{$vo['baseinfo']['room_cou_rent']}</td>
 				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
 				{if condition="$group == 'x'"}
 				<td>	
 				
-					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
+					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}&house_number={$data_info['house_number']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
 					
 					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
 					
@@ -208,7 +212,9 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td>{$vv}</td>
+				<td>{$vv['house_number']}</td>
+				<td>{$vv['tenant_name']}</td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>

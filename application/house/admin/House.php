@@ -154,7 +154,7 @@ class House extends Admin
         $group = input('param.group');
         $row = HouseModel::with(['ban','tenant'])->find($id);
         //获取当前房屋的房间
-        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_number'); 
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_number'); 
         //定义计租表房间数组
         $roomTables = [];
         if($rooms){
@@ -175,9 +175,12 @@ class House extends Admin
                     $roomRow['floor_point'] = ($flor_point * 100).'%';
                     $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
                     $room_houses = $roomRow->house_room()->column('house_number');
+                    //dump($row);halt($room_houses);
+                    $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
+                    //halt($houses);
                     $roomTables[] = [
                         'baseinfo' => $roomRow,
-                        'houseinfo' => $room_houses
+                        'houseinfo' => $houses,
                     ];
                 }
                 
