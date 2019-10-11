@@ -22,7 +22,7 @@
 // 百度地图API功能
 window.onload = function(){
 	var map = new BMap.Map("allmap");    // 创建Map实例
-	map.centerAndZoom(new BMap.Point(114.212946,30.601163), 13);  // 初始化地图,设置中心点坐标和地图级别
+	map.centerAndZoom(new BMap.Point(114.45326,30.526532), 13);  // 初始化地图,设置中心点坐标和地图级别
 	//map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
 	map.addControl(new BMap.NavigationControl({enableGeolocation:true}));
 	map.addControl(new BMap.OverviewMapControl());
@@ -70,11 +70,11 @@ function initMapMarkers(map){
   function bindEvents(map) {
     //开始画圈绑定事件
     drawBtn.addEventListener('click', function (e) {
-			if(map.getZoom()<= 13)
+			/* if(map.getZoom()<= 13)
 			{
 				 layer.msg("请放大地图后使用画图找房！");
 			}
-			else{
+			else{ */
 				  //$(".BMapLabel").hide();
 					$("#draw").hide();
 					$("#exit").show();
@@ -86,7 +86,7 @@ function initMapMarkers(map){
 					map.setDefaultCursor('crosshair'); // 设置地图默认的鼠标指针样式。参数cursor应符合CSS的cursor属性规范
 					//设置标志位进入画圈状态
 					isInDrawing = true;    
-			}
+			/* } */
     });
     //退出画圈按钮绑定事件
     exitBtn.addEventListener('click', function (e) {
@@ -166,6 +166,7 @@ function initMapMarkers(map){
 		      //console.log(li.innerText);   //打印所选内容
         }
         oUl.appendChild(fragment);
+		map.setZoom(14);//画圈完成后改变地图缩放比例找到圈内数据
       }
     });
   }

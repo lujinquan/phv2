@@ -68,10 +68,10 @@
 			<tr>
 			  <td></td>
 			  <td>异动</td>
-			  <td><input type="number" class="layui-input cancel_change cancel_change_1" id="cancel_rent" name="cancel_rent" value="" autocomplete="off" class="layui-input" required></td>
-			  <td><input type="number" class="layui-input cancel_change cancel_change_2" id="cancel_use_area" name="cancel_use_area" value="" autocomplete="off" class="layui-input" required></td>
-			  <td><input type="number" class="layui-input cancel_change cancel_change_3" id="cancel_area" name="cancel_area" value="" autocomplete="off" class="layui-input" required></td>
-			  <td><input type="number" class="layui-input ancel_change cancel_change_4" id="cancel_oprice" name="cancel_oprice" value="" autocomplete="off" class="layui-input" required></td>
+			  <td class="cancel_change_1"></td>
+			  <td class="cancel_change_2"></td>
+			  <td class="cancel_change_3"></td>
+			  <td class="cancel_change_4"></td>
 			</tr>
 			<tr>
 			  <td></td>
@@ -240,24 +240,59 @@
 						$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
 						$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
 						$('.j-house-box tbody').html('');
-						$('#changes_floor_prescribed').text($('#floor_prescribed').text());//规定租金
-						$('#changes_floor_areaofuse').text($('#floor_areaofuse').text());//使用面积
-						$('#changes_floor_builtuparea').text($('#floor_builtuparea').text()); //建筑面积
-						$('#changes_floor_original').text($('#floor_original').text());//房屋原价
+						$('.cancel_change_1').text($('#floor_prescribed').text());//异动规定租金
+						/* $('#changes_floor_prescribed').text($('#floor_prescribed').text());//异动后规定租金初始值
+						$('#changes_floor_areaofuse').text($('#floor_areaofuse').text());//异动后使用面积初始值
+						$('#changes_floor_builtuparea').text($('#floor_builtuparea').text()); //异动后建筑面积初始值
+						$('#changes_floor_original').text($('#floor_original').text());//异动后房屋原价初始值 */
+						
+						var sumrule =0,//规定租金异动初始金额
+						    sumruleold =0;//规定租金异动后金额
+						var sumuse =0,//使用面积异动初始面积
+						    sumuseold =0;//使用面积异动后面积
+						var sumbuildings =0,//建筑面积异动初始面积
+						    sumbuildingsold =0;//建筑面积异动后面积
+						var sumoriginal =0,//房屋原价异动初始面积
+						    sumoriginalold =0;//房屋原价异动后面积
 						//房屋信息
 						if(rows){
 							var houseidData = '';
 							for(var i=0;i<rows.length;i++) {
 								houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
-											<td class="house_number">'+rows[i].house_number+'</td>\
-											<td class="house_lessee">'+rows[i].tenant_name+'</td>\
-											<td class="house_original">'+rows[i].house_oprice+'</td>\
-											<td class="house_builtuparea">'+rows[i].house_area+'</td>\
-											<td class="house_prescribed">'+rows[i].house_pre_rent+'</td>\
-											<td class="house_rentalarea">'+rows[i].house_lease_area+'</td>\
+											<td class="house_number"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
+											<td class="house_lessee"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
+											<td class="house_original"><input type="number" class="layui-input" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
+											<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
+											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
+											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
 										</tr>';
 							$('.j-house-box tbody').append(trData);
+							//规定租金计算
+							sumrule += parseFloat(rows[i].house_pre_rent).toFixed(2)*100;
+							$(".cancel_change_1").text(sumrule.toFixed(2) / 100);
+						    sumruleold = parseFloat($('.cancel_before_1').text()).toFixed(2)*100 -sumrule ;
+							$('.cancel_after_1').text(sumruleold.toFixed(2) / 100);
+						    //使用面积计算
+							sumuse += parseFloat(rows[i].house_lease_area).toFixed(2)*100;
+							$(".cancel_change_2").text(sumuse.toFixed(2) / 100);
+							sumuseold = parseFloat($('.cancel_before_2').text()).toFixed(2)*100 -sumuse ;
+							$('.cancel_after_2').text(sumuseold.toFixed(2) / 100);
+							//建筑面积
+
+								sumbuildings += parseFloat(rows[i].house_area).toFixed(2)*100;
+								$(".cancel_change_3").text(sumbuildings.toFixed(2) / 100);
+								sumbuildingsold = parseFloat($('.cancel_before_3').text()).toFixed(2)*100 -sumbuildings ;
+								$('.cancel_after_3').text(sumbuildingsold.toFixed(2) / 100);
+						
+							
+							//房屋原价
+							/* $(".house_original").bind("input propertychange",function(){ */
+								sumoriginal += parseFloat(rows[i].house_oprice).toFixed(2)*100;
+								$(".cancel_change_4").text(sumoriginal.toFixed(2) / 100);
+								sumoriginalold = parseFloat($('.cancel_before_4').text()).toFixed(2)*100 -sumoriginal ;
+								$('.cancel_after_4').text(sumoriginalold.toFixed(2) / 100);
+							/* }); */
 						  }
 						  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							$("input[name='house_id']").val(houseidData);//获取房屋编号
@@ -268,11 +303,38 @@
 						else{
 							$(".j-house-box,.j-house-title").show();
 						}
+						
+						//输入框建筑面积改变重新计算
+						$(".house_builtuparea").bind("input propertychange",function(){
+							sumbuildings = 0;
+							var trList = $(".j-house-box tbody").children("tr");
+							for (var j=0;j<trList.length;j++) {
+								var tdArr = trList.eq(j).find("td"); //遍历td  
+									sumbuildings += parseFloat(tdArr.eq(3).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
+									$(".cancel_change_3").text(sumbuildings.toFixed(2) / 100);
+									sumbuildingsold = parseFloat($('.cancel_before_3').text()).toFixed(2)*100 -sumbuildings ;
+									$('.cancel_after_3').text(sumbuildingsold.toFixed(2) / 100);
+								
+							}
+						});
+						//输入框房屋原价改变重新计算
+						$(".house_original").bind("input propertychange",function(){
+							sumoriginal = 0;
+							var trList = $(".j-house-box tbody").children("tr");
+							for (var j=0;j<trList.length;j++) {
+								var tdArr = trList.eq(j).find("td"); //遍历td  
+									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
+									$(".cancel_change_4").text(sumoriginal.toFixed(2) / 100);
+									sumoriginalold = parseFloat($('.cancel_before_4').text()).toFixed(2)*100 -sumoriginal ;
+									$('.cancel_after_4').text(sumoriginalold.toFixed(2) / 100);
+							}
+						});
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
 		 });
 		})
+		
 		//待优化
 		/* var lengths = $(".cancel").length;
 		 for(var i=1;i<=4;i++){
@@ -294,11 +356,12 @@
 			 }); 
 		 } */
 		 
-		     var i=1;
+		     /* var i=1;
+			 var sums =0;
 		 	 //console.log(i);
-		 	 $(".cancel_change_"+i).bind("input propertychange",function(){console.log(i);
-		 	 	var sum = parseFloat($('.cancel_before_'+i).text()).toFixed(2)*100 - parseFloat($('.cancel_change_'+i).val()).toFixed(2)*100;
-		 	 	var sum1 = parseFloat($('.cancel_before_'+i).text()).toFixed(2)*100;
+		 	 $(".cancel_change_"+i).bind("input propertychange",function(){ 
+		 	 	sums = parseFloat($('.cancel_before_'+i).text()).toFixed(2)*100 - parseFloat($('.cancel_change_'+i).text($('#floor_prescribed').text())).toFixed(2)*100;
+				$('.cancel_after_'+i).text(sums.toFixed(2) / 100);
 		 	 	if($('.cancel_change_'+i).val()=='')
 		 	 	{
 		 	 		$('.cancel_after_'+i).text(sum1.toFixed(2) / 100);
@@ -310,8 +373,8 @@
 		 	 		$('.cancel_change_'+i).val($('.cancel_before_'+i).text());
 		 	 		$('.cancel_after_'+i).text(0);
 		 	 	}
-		 	 }); 
-			 var j=2;
+		 	/* }); */
+			 /* var j=2;
 			 //console.log(i);
 			 $(".cancel_change_"+j).bind("input propertychange",function(){console.log(j);
 			 	var sum = parseFloat($('.cancel_before_'+j).text()).toFixed(2)*100 - parseFloat($('.cancel_change_'+j).val()).toFixed(2)*100;
@@ -327,8 +390,8 @@
 			 		$('.cancel_change_'+j).val($('.cancel_before_'+j).text());
 			 		$('.cancel_after_'+j).text(0);
 			 	}
-			 }); 
-			 var k=3;
+			 }); */
+			 /* var k=3;
 			 //console.log(i);
 			 $(".cancel_change_"+k).bind("input propertychange",function(){console.log(k);
 			 	var sum = parseFloat($('.cancel_before_'+k).text()).toFixed(2)*100 - parseFloat($('.cancel_change_'+k).val()).toFixed(2)*100;
@@ -344,7 +407,7 @@
 			 		$('.cancel_change_'+k).val($('.cancel_before_'+k).text());
 			 		$('.cancel_after_'+k).text(0);
 			 	}
-			 }); 
+			 }); */
 			 var h=4;
 			 //console.log(i);
 			 $(".cancel_change_"+h).bind("input propertychange",function(){console.log(h);
