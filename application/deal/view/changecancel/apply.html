@@ -8,7 +8,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>注销类别</label>
 			<div class="j-input-inline">
-				<select name="cancel_type" class="field-cid">
+				<select name="cancel_type" class="field-cid" lay-verify="required">
 					<option value="">请选择</option>
 					{volist name="params['cancels']" id="v" key="k"}
 					<option value="{$k}">{$v}</option>
@@ -228,7 +228,6 @@
 						var trData = '';
 						//console.log(row);
 						//console.log(rows);
-						layer.close(index);
 						$('.j-house-box tbody').html("");
 						$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 						$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
@@ -296,6 +295,10 @@
 						  }
 						  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							$("input[name='house_id']").val(houseidData);//获取房屋编号
+							layer.close(index);
+						}
+						else{
+							layer.msg("房屋没选择!");
 						}
 						if(	$('.j-house-box tbody').html()==''){
 							$(".j-house-box,.j-house-title").hide();
@@ -408,7 +411,7 @@
 			 		$('.cancel_after_'+k).text(0);
 			 	}
 			 }); */
-			 var h=4;
+/* 			 var h=4;
 			 //console.log(i);
 			 $(".cancel_change_"+h).bind("input propertychange",function(){console.log(h);
 			 	var sum = parseFloat($('.cancel_before_'+h).text()).toFixed(2)*100 - parseFloat($('.cancel_change_'+h).val()).toFixed(2)*100;
@@ -424,7 +427,7 @@
 			 		$('.cancel_change_'+h).val($('.cancel_before_'+h).text());
 			 		$('.cancel_after_'+h).text(0);
 			 	}
-			 });
+			 }); */
 /* 		//规定租金
 		$("#cancel_rent").bind("input propertychange",function(){
 			var sum = parseFloat($('#floor_prescribed').text()).toFixed(2)*100 - parseFloat($('#cancel_rent').val()).toFixed(2)*100;
