@@ -8,7 +8,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>注销类别</label>
 			<div class="j-input-inline">
-				<select name="cancel_type" class="field-cid">
+				<select name="cancel_type" class="field-cid" lay-verify="required">
 					<option value="">请选择</option>
 					{volist name="params['cancels']" id="v" key="k"}
 					<option value="{$k}">{$v}</option>
