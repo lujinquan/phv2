@@ -122,12 +122,41 @@
 			</div>
 		</div>
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-			<legend>房间信息</legend>
+			<legend>异动明细</legend>
+		</fieldset>
+		<table  class="layui-table">
+		  <thead>
+			  <tr>
+			    <th width="20%">异动类型</th>
+			    <th class="cancel" width="30%">异动前</th>
+			    <th class="cancel" width="50%">异动后</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+			  <td>租差</td>
+			  <td id="changes_difference_old"></td>
+			  <td><input type="number" class="layui-input cancel_change cancel_change_1" id="changes_difference_news" name="changes_difference_news" value="" autocomplete="off"></td>
+		    </tr>
+			<tr>
+			  <td>泵费</td>
+			  <td id="changes_pumpfee_old"></td>
+			  <td><input type="number" class="layui-input ancel_change cancel_change_4" id="changes_pumpfee_news" name="changes_pumpfee_news" value="" autocomplete="off"></td>
+			</tr>
+			<tr>
+			  <td>协议租金</td>
+			  <td id="changes_agreement_old"></td>
+			  <td><input type="number" class="layui-input ancel_change cancel_change_4" id="changes_agreement_news" name="changes_agreement_news" value="" autocomplete="off"></td>
+			</tr>
+		  </tbody>
+		</table>
+		<fieldset class="layui-elem-field layui-field-title j-field-box">
+			<legend>异动后房间信息</legend>
 		</fieldset>
 		<div class="layui-row">
 			  <a href="{:url('house/room/add')}?id=14542" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 		</div>
-		<!-- 房间信息 -->
+		<!-- 异动后房间信息 -->
 		<table class="layui-table ">
 		<thead class="j-table-center">
 			<tr>
