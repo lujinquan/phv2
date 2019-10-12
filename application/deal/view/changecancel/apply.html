@@ -228,7 +228,6 @@
 						var trData = '';
 						//console.log(row);
 						//console.log(rows);
-						layer.close(index);
 						$('.j-house-box tbody').html("");
 						$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 						$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
@@ -296,6 +295,10 @@
 						  }
 						  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							$("input[name='house_id']").val(houseidData);//获取房屋编号
+							layer.close(index);
+						}
+						else{
+							layer.msg("房屋没选择!");
 						}
 						if(	$('.j-house-box tbody').html()==''){
 							$(".j-house-box,.j-house-title").hide();

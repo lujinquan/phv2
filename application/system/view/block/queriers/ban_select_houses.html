@@ -90,10 +90,10 @@
 						//,height: 550
 						//,height: 'full-20' //浏览器最大高度
 					,toolbar: true
-					,defaultToolbar: false //设置右边筛选，导出，打印显示
+					//,defaultToolbar: false //设置右边筛选，导出，打印显示
 					,url: '{:url("house/House/index")}?ban_number='+data.ban_number //数据接口
-					,page: true //开启分页
-					,limit: 10
+					,page: false //开启分页
+					,limit: 1000000000
 					,text: {
 						none: '暂无相关数据'
 					},
@@ -185,33 +185,19 @@
 			table.on('checkbox(dataTable2)', function(obj){
               var checkStatus = table.checkStatus('dataTable2');
               datas = checkStatus.data;
-              //console.log(datas);
+			  //console.log(datas.length);
+			 /* if(datas.length==0)
+			   {
+			  	alert("房屋必须选择！");
+			   } */
+			 
           });
-		  //点击tr选中对应的checkbox
-		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
-		      var index = $(this).attr('data-index');
-		      var tableBox = $(this).parents('.layui-table-box');
-		      //存在固定列
-		      if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
-		          tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
-		      } else {
-		          tableDiv = tableBox.find(".layui-table-body.layui-table-main");
-		      }
-		      var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
-		      if (checkCell.length>0) {
-		          checkCell.click();
-		      }
-		  });
-		  
-		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
-		      e.stopPropagation();
-		  });
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
     });
 	var callbackdata = function () {
          return data;
     }
 	var callbackdatas = function () {
-	     return datas;
+	     return datas; 
 	}
 </script>
