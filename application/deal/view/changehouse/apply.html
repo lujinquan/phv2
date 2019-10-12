@@ -244,6 +244,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 				,btn: ['确定','关闭']
 				,yes: function(index, layero){
 					var row = window["layui-layer-iframe" + index].hoesedata();
+					
 					console.log(row);
 					layer.close(index);
 					var hosue_number = row.house_number;

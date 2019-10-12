@@ -389,6 +389,10 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 layer.msg('请设置data-href参数');
                 return false;
             }
+            var data_index = that.parents('tr').attr('data-index');
+            console.log(that.parents('tr').attr('data-index'));
+            $("tr[data-index='"+data_index + "']").remove();
+
             $.get(href, function(res) {
                 console.log(res);
                 if (res.code == 0) {
@@ -407,7 +411,8 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         return false;
     });
 
-      // table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+      // table.on('tool(dataTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+      //   console.log(1);
       //   var data = obj.data //获得当前行数据
       //   ,layEvent = obj.event; //获得 lay-event 对应的值
       //   if(layEvent === 'detail'){
