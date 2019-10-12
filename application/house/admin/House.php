@@ -183,10 +183,17 @@ class House extends Admin
                         'houseinfo' => $houses,
                     ];
                 }
-                
             }
         }
-        //halt($roomTables);
+        if ($this->request->isAjax()) {
+            $data = [];
+            $data['data'] = $roomTables;
+            $data['msg'] = '获取计租表数据成功！';
+            $data['code'] = 1;
+            return json($data);
+        }
+
+        //halt(json($roomTables));
         $this->assign('room_tables',$roomTables);
         $this->assign('group',$group);
         $this->assign('data_info',$row);
