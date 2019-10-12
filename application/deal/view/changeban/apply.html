@@ -491,7 +491,7 @@
 									form.on('select(lossgrade)', function (data) {
 										 var message=params.damages[data.value];
 										 $("input[name='endloss_class']").val($("input[name='endloss_grade_old']").val());//获取完损等级前
-										 $("input[name='endloss_changes_class']").val(message);//获取完损等级后
+										 $("input[name='endloss_changes_class']").val(message);//获取完损等级后 
 										 //完损等级异动前
 										 $("input[name='endloss_household']").val('-'+row.ban_holds);//获取异动前户数
 										 $("input[name='endloss_prescribed']").val('-'+row.ban_area);//获取异动前建筑面积
@@ -518,6 +518,5 @@
 						}
 			 });
 		})
-       
 	});
 </script>
