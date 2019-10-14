@@ -37,7 +37,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">租户</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_unit_id" readonly value="" autocomplete="off" class="layui-input">
+					<input type="text" id="house_tenant" readonly value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -317,7 +317,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#ban_number").val(row.ban_number);//获取楼栋编号
 					$("#tenant_number").val(params.structs[row.ban_struct_id]);//获取房屋结构
 					$("#house_door").val(row.ban_floors);//获取楼层数量
-					$("#house_unit_id").val(row.tenant_name);//获取租户
+					$("#house_tenant").val(row.tenant_name);//获取租户
 					$("#house_floor_layer").val(row.house_floor_id);//获取居住层
 					$("#ban_owner_id").val(params.owners[row.ban_owner_id]);//获取产别
 					$("#ban_address").val(row.ban_address);//获取房屋地址
