@@ -17,7 +17,7 @@
 		  <td id="raw_pipesection">{$params.insts[$Think.INST]}</td>
 		  <td id="new_pipesection">
 			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" lay-filter="requireds" lay-verify="required">
-				<option value="0">请选择</option>
+				<option value="">请选择</option>
 				{volist name=":config('inst_data_names')[1]" id="v"}
 				<option value="{$key}">{$v}</option>
 				{/volist}
