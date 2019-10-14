@@ -286,7 +286,15 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
   	,upload = layui.upload
   	,layer = layui.layer;
 	
-	
+	//计算函数
+	var sumhouseholds =0, //租赁异动户数初始值
+	    sumconstruction=0,//租赁异动建筑面积初始值
+		sumrule=0,//租赁异动规定租金初始值
+		sumuse=0,//租赁异动使用面积初始值
+		sumoriginalprice=0,//租赁异动原价初始值
+		sumbuildings=0,//租赁异动栋数初始值
+		sumcalculated=0,//table计算租金之和初始值
+		sumcalculation=0;//table计算计租面积初始值
 	console.log(params);
 	//获取房屋查询器
 	 $(".layui-form").on('click','.j-house_number',function(){
@@ -347,17 +355,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#changes_floor_prescribed").text($("#floor_prescribed").text());//异动后建筑面积
 					$("#changes_floor_original").text($("#floor_original").text());//异动后原价
 					$("#changes_floor_buildings").text(1);//异动后栋数
-					
-					//计算函数
-					var sumhouseholds =0, //租赁异动户数初始值
-					    sumconstruction=0,//租赁异动建筑面积初始值
-						sumrule=0,//租赁异动规定租金初始值
-						sumuse=0,//租赁异动使用面积初始值
-						sumoriginalprice=0,//租赁异动原价初始值
-						sumbuildings=0,//租赁异动栋数初始值
-						sumcalculated=0,//table计算租金之和初始值
-						sumcalculation=0;//table计算计租面积初始值
-					
 					//获取原房间信息
 					var house_id = row.house_id;//获取房屋ID
 					$.ajax({
@@ -523,18 +520,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					,pageTabs: false
 					,content: urls+'&&hisi_iframe=yes'
 					//,btn: ['确定','关闭']
-					,cancel: function(index, layero){
-						//计算函数
-						var sumhouseholds =0, //租赁异动户数初始值
-						    sumconstruction=0,//租赁异动建筑面积初始值
-							sumrule=0,//租赁异动规定租金初始值
-							sumuse=0,//租赁异动使用面积初始值
-							sumoriginalprice=0,//租赁异动原价初始值
-							sumbuildings=0,//租赁异动栋数初始值
-							sumcalculated=0,//table计算租金之和初始值
-							sumcalculation=0;//table计算计租面积初始值
-							
-							
+					,cancel: function(index, layero){	
 						//获取原房间信息
 						var house_id = $("#j_house_id").val();//获取房屋ID
 						$.ajax({
@@ -642,17 +628,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	$(".layui-form").on('click','.j-tr-del-change',function(){
 		var  urls=$(".j-tr-del-change").attr('data-href');
 		layer.confirm('删除之后无法恢复，您确定要删除吗？', {icon: 3, title:'提示'}, function(index){
-		  //计算函数
-		  var sumhouseholds =0, //租赁异动户数初始值
-		      sumconstruction=0,//租赁异动建筑面积初始值
-		  	sumrule=0,//租赁异动规定租金初始值
-		  	sumuse=0,//租赁异动使用面积初始值
-		  	sumoriginalprice=0,//租赁异动原价初始值
-		  	sumbuildings=0,//租赁异动栋数初始值
-		  	sumcalculated=0,//table计算租金之和初始值
-		  	sumcalculation=0;//table计算计租面积初始值
-		  	
-		  	
 		  //获取原房间信息
 		  var house_id = $("#j_house_id").val();//获取房屋ID
 		  $.ajax({
