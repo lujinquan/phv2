@@ -59,27 +59,27 @@
 		    <tr>
 		  	  <td id="floor_number"></td>
 			  <td>异动前</td>
-			  <td class="cancel_before_1" id="floor_prescribed"></td>
-	    	  <td class="cancel_before_2" id="floor_areaofuse"></td>
-	    	  <td class="cancel_before_3" id="floor_builtuparea"></td>
-	    	  <td class="cancel_before_4" id="floor_original"></td>
+			  <td class="cancel_before_1" id="floor_prescribed"><input type="hidden" name="floor_prescribed" value=""><label></label></td>
+	    	  <td class="cancel_before_2" id="floor_areaofuse"><input type="hidden" name="floor_areaofuse" value=""><label></label></td>
+	    	  <td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value=""><label></label></td>
+	    	  <td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value=""><label></label></td>
 			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
 		    </tr>
 			<tr>
 			  <td></td>
 			  <td>异动</td>
-			  <td class="cancel_change_1"></td>
-			  <td class="cancel_change_2"></td>
-			  <td class="cancel_change_3"></td>
-			  <td class="cancel_change_4"></td>
+			  <td class="cancel_change_1"><input type="hidden" name="cancel_change_1" value=""><label></label></td>
+			  <td class="cancel_change_2"><input type="hidden" name="cancel_change_2" value=""><label></label></td>
+			  <td class="cancel_change_3"><input type="hidden" name="cancel_change_3" value=""><label></label></td>
+			  <td class="cancel_change_4"><input type="hidden" name="cancel_change_4" value=""><label></label></td>
 			</tr>
 			<tr>
 			  <td></td>
 			  <td>异动后</td>
-			  <td class="cancel_after_1" id="changes_floor_prescribed"></td>
-			  <td class="cancel_after_2" id="changes_floor_areaofuse"></td>
-			  <td class="cancel_after_3" id="changes_floor_builtuparea"></td>
-			  <td class="cancel_after_4" id="changes_floor_original"></td>
+			  <td class="cancel_after_1" id="changes_floor_prescribed"><input type="hidden" name="changes_floor_prescribed" value=""><label></label></td>
+			  <td class="cancel_after_2" id="changes_floor_areaofuse"><input type="hidden" name="changes_floor_areaofuse" value=""><label></label></td>
+			  <td class="cancel_after_3" id="changes_floor_builtuparea"><input type="hidden" name="changes_floor_builtuparea" value=""><label></label></td>
+			  <td class="cancel_after_4" id="changes_floor_original"><input type="hidden" name="changes_floor_original" value=""><label></label></td>
 			</tr>
 		  </tbody>
 		</table>
@@ -234,16 +234,20 @@
 						$("#ban_address").val(row.ban_address);//获取地址
 						//楼栋信息
 						$("#floor_number").text(row.ban_number);//获取表格楼栋编号
-						$("#floor_prescribed").text(row.ban_civil_rent);//获取表格规定租金
-						$("#floor_areaofuse").text(row.ban_use_area);//获取表格使用面积
-						$("#floor_builtuparea").text(row.ban_civil_area);//获取表格建筑面积
-						$("#floor_original").text(row.ban_civil_oprice);//获取表格房屋原价
+						$("#floor_prescribed label").text(row.ban_civil_rent);//获取表格规定租金
+						$("#floor_prescribed input").val(row.ban_civil_rent);//获取隐藏域的值
+						$("#floor_areaofuse label").text(row.ban_use_area);//获取表格使用面积
+						$("#floor_areaofuse input").val(row.ban_use_area);//获取隐藏域的值
+						$("#floor_builtuparea label").text(row.ban_civil_area);//获取表格建筑面积
+						$("#floor_builtuparea input").val(row.ban_civil_area);//获取隐藏域的值
+						$("#floor_original label").text(row.ban_civil_oprice);//获取表格房屋原价
+						$("#floor_original input").val(row.ban_civil_oprice);//获取隐藏域的值
 						$('.j-house-box tbody').html('');
-						$('.cancel_change_1').text($('#floor_prescribed').text());//异动规定租金
-						/* $('#changes_floor_prescribed').text($('#floor_prescribed').text());//异动后规定租金初始值
-						$('#changes_floor_areaofuse').text($('#floor_areaofuse').text());//异动后使用面积初始值
-						$('#changes_floor_builtuparea').text($('#floor_builtuparea').text()); //异动后建筑面积初始值
-						$('#changes_floor_original').text($('#floor_original').text());//异动后房屋原价初始值 */
+						$('.cancel_change_1 label').text($('#floor_prescribed label').text());//异动规定租金
+						/* $('#changes_floor_prescribed label').text($('#floor_prescribed').text());//异动后规定租金初始值
+						$('#changes_floor_areaofuse label').text($('#floor_areaofuse').text());//异动后使用面积初始值
+						$('#changes_floor_builtuparea label').text($('#floor_builtuparea').text()); //异动后建筑面积初始值
+						$('#changes_floor_original label').text($('#floor_original').text());//异动后房屋原价初始值 */
 						
 						var sumrule =0,//规定租金异动初始金额
 						    sumruleold =0;//规定租金异动后金额
@@ -269,28 +273,36 @@
 							$('.j-house-box tbody').append(trData);
 							//规定租金计算
 							sumrule += parseFloat(rows[i].house_pre_rent).toFixed(2)*100;
-							$(".cancel_change_1").text(sumrule.toFixed(2) / 100);
-						    sumruleold = parseFloat($('.cancel_before_1').text()).toFixed(2)*100 -sumrule ;
-							$('.cancel_after_1').text(sumruleold.toFixed(2) / 100);
+							$(".cancel_change_1 label").text(sumrule.toFixed(2) / 100);
+							$(".cancel_change_1 input").val(sumrule.toFixed(2) / 100)//获取隐藏域的值
+						    sumruleold = parseFloat($('.cancel_before_1 label').text()).toFixed(2)*100 -sumrule ;
+							$('.cancel_after_1 label').text(sumruleold.toFixed(2) / 100);
+							$('.cancel_after_1 input').val(sumruleold.toFixed(2) / 100);//获取隐藏域的值
 						    //使用面积计算
 							sumuse += parseFloat(rows[i].house_lease_area).toFixed(2)*100;
-							$(".cancel_change_2").text(sumuse.toFixed(2) / 100);
-							sumuseold = parseFloat($('.cancel_before_2').text()).toFixed(2)*100 -sumuse ;
-							$('.cancel_after_2').text(sumuseold.toFixed(2) / 100);
+							$(".cancel_change_2 label").text(sumuse.toFixed(2) / 100);
+							$(".cancel_change_2 input").val(sumuse.toFixed(2) / 100);//获取隐藏域的值
+							sumuseold = parseFloat($('.cancel_before_2 label').text()).toFixed(2)*100 -sumuse ;
+							$('.cancel_after_2 label').text(sumuseold.toFixed(2) / 100);
+							$('.cancel_after_2 input').val(sumuseold.toFixed(2) / 100);//获取隐藏域的值
 							//建筑面积
 
 								sumbuildings += parseFloat(rows[i].house_area).toFixed(2)*100;
-								$(".cancel_change_3").text(sumbuildings.toFixed(2) / 100);
-								sumbuildingsold = parseFloat($('.cancel_before_3').text()).toFixed(2)*100 -sumbuildings ;
-								$('.cancel_after_3').text(sumbuildingsold.toFixed(2) / 100);
+								$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
+								$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
+								sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
+								$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
+								$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
 						
 							
 							//房屋原价
 							/* $(".house_original").bind("input propertychange",function(){ */
 								sumoriginal += parseFloat(rows[i].house_oprice).toFixed(2)*100;
-								$(".cancel_change_4").text(sumoriginal.toFixed(2) / 100);
-								sumoriginalold = parseFloat($('.cancel_before_4').text()).toFixed(2)*100 -sumoriginal ;
-								$('.cancel_after_4').text(sumoriginalold.toFixed(2) / 100);
+								$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
+								$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
+								sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
+								$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
+								$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
 							/* }); */
 						  }
 						  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
@@ -314,9 +326,11 @@
 							for (var j=0;j<trList.length;j++) {
 								var tdArr = trList.eq(j).find("td"); //遍历td  
 									sumbuildings += parseFloat(tdArr.eq(3).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
-									$(".cancel_change_3").text(sumbuildings.toFixed(2) / 100);
-									sumbuildingsold = parseFloat($('.cancel_before_3').text()).toFixed(2)*100 -sumbuildings ;
-									$('.cancel_after_3').text(sumbuildingsold.toFixed(2) / 100);
+									$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
+									$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
+									sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
+									$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
+									$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
 								
 							}
 						});
@@ -327,9 +341,11 @@
 							for (var j=0;j<trList.length;j++) {
 								var tdArr = trList.eq(j).find("td"); //遍历td  
 									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
-									$(".cancel_change_4").text(sumoriginal.toFixed(2) / 100);
-									sumoriginalold = parseFloat($('.cancel_before_4').text()).toFixed(2)*100 -sumoriginal ;
-									$('.cancel_after_4').text(sumoriginalold.toFixed(2) / 100);
+									$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
+									$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
+									sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
+									$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
+									$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
 							}
 						});
 					},btn2: function(index, layero){

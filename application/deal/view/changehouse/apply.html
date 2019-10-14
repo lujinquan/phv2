@@ -311,7 +311,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 				,btn: ['确定','关闭']
 				,yes: function(index, layero){
 					var row = window["layui-layer-iframe" + index].hoesedata();
-					console.log(row);
+					//console.log(row);
 					layer.close(index);
 					var hosue_number = row.house_number;
 					$("#j_house_id").val(row.house_id);//获取房屋id
@@ -388,7 +388,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						  $('.j-table-tbodynew').html("");
 						  //原房屋信息
 						  var resData = res.data;
-						  console.log(resData);
+						  //console.log(resData);
 						  for(var k=0;k<resData.length;k++) {
 							//房间明细
 							var trDataold ='<tr>\
@@ -661,14 +661,14 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		    data: {'house_id': house_id}, 
 		    dataType: "json", 
 		    success: function(res) {
-				console.log(res);
+				//console.log(res);
 		  	if(res.code == 0){
 		  		layer.msg(res.msg);
 		  	}else{
 		  	  $('.j-table-tbodynew').html("");
 		  	  //原房屋信息
 		  	  var resData = res.data;
-		  	  console.log('删除一个房间后：'+resData);
+		  	  //console.log('删除一个房间后：'+resData);
 		  	  for(var k=0;k<resData.length;k++) {
 		  		//异动后房间信息
 		  		var trDatanew ='<tr>\
