@@ -6,6 +6,8 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\house\model\House as HouseModel;
+use app\house\model\HouseTemp as HouseTempModel;
 use app\deal\model\Process as ProcessModel;
 
 class ChangeHouse extends SystemBase
@@ -66,6 +68,14 @@ class ChangeHouse extends SystemBase
         if(isset($data['ban_number']) && $data['ban_number']){
             $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
+        // 检索租户姓名
+        if(isset($data['tenant_name']) && $data['tenant_name']){
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
@@ -73,6 +83,10 @@ class ChangeHouse extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索房屋使用性质
+        if(isset($data['house_use_id']) && $data['house_use_id']){
+            $where[] = ['b.house_use_id','eq',$data['house_use_id']];
         }
         // 检索楼栋调整类型
         if(isset($data['ban_change_id']) && $data['ban_change_id']){
@@ -134,7 +148,7 @@ class ChangeHouse extends SystemBase
                 'img' => '',
             ];
         }
-        $data['change_json'] = [
+        $data['data_json'] = [
             'before' => [
                 'floor_households' => $data['floor_households'],
                 'floor_prescribed' => $data['floor_prescribed'],
@@ -159,12 +173,12 @@ class ChangeHouse extends SystemBase
                 'changes_floor_original' => $data['changes_floor_original'],
                 'changes_floor_buildings' => $data['changes_floor_buildings'],
             ],
-        ]
+        ];
 
         
         $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 14; //楼栋调整
-        $data['change_order_number'] = date('Ym').'14'.random(14);
+        $data['change_type'] = 9; //楼栋调整
+        $data['change_order_number'] = date('Ym').'09'.random(14);
 
         // 审批表数据
         $processRoles = $this->processRole;
@@ -180,6 +194,10 @@ class ChangeHouse extends SystemBase
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
+        $HouseModel = new HouseModel;
+        $row['house_info'] = HouseModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
+        $row['house_table'] = $HouseModel->get_house_renttable($row['house_id']);
+        $row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         //$oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         //$row['old_tenant_info'] = $oldTenantRow;
         return $row;

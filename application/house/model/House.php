@@ -2,8 +2,11 @@
 namespace app\house\model;
 
 use app\system\model\SystemBase;
+use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
+use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\FloorPoint as FloorPointModel;
 
 class House extends SystemBase
 {
@@ -110,6 +113,49 @@ class House extends SystemBase
             $data['house_number'] = $maxHouseNumber + 1;
         }
         return $data; 
+    }
+
+    /**
+     * [计算房屋计算租金]
+     * @param  [type] $houseid [房屋编号]
+     * @return [type]        
+     */
+    public function get_house_renttable($houseid){
+        $row = HouseModel::with(['ban','tenant'])->find($houseid);
+        //halt($row);
+        //获取当前房屋的房间
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_number'); 
+        //定义计租表房间数组
+        $roomTables = [];
+        if($rooms){
+            $FloorPointModel =new FloorPointModel;
+            foreach($rooms as $roo){
+                 $roomtype = RoomModel::where([['room_number','eq',$roo]])->find();
+                 $sort = $roomtype->room_type_point()->value('sort');
+                 $roomsSort[$sort][] = $roo;
+            }
+            //halt($roomsSort);
+            ksort($roomsSort);
+            //halt($roomsSort);
+            foreach($roomsSort as $ro){
+                foreach($ro as $r){
+                    $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
+                    //动态获取层次调解率
+                    $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
+                    $roomRow['floor_point'] = ($flor_point * 100).'%';
+                    $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
+                    $room_houses = $roomRow->house_room()->column('house_number');
+                    //dump($row);halt($room_houses);
+                    $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
+                    //halt($houses);
+                    $roomTables[] = [
+                        'baseinfo' => $roomRow,
+                        'houseinfo' => $houses,
+                    ];
+                }
+            }
+        }
+        return $roomTables;
     }
 
     /**

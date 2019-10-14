@@ -10,10 +10,13 @@
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_number" placeholder="楼栋编号" class="layui-input">
+					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
+				</div>
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
 				<div class="layui-input-inline" style="width:120px;">
 					  <select name="ban_inst_id">
@@ -31,22 +34,7 @@
 						  {/volist}
 						</select>
 				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					  <select name="ban_damage_id">
-						  <option value="">完损等级</option>
-						  {volist name="params['damages']" id="v"}
-						  <option value="{$key}">{$v}</option>
-						  {/volist}
-						</select>
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-				  <select name="ban_struct_id">
-					  <option value="">结构类别</option>
-					  {volist name="params['structs']" id="v"}
-					  <option value="{$key}">{$v}</option>
-					  {/volist}
-					</select>
-				</div>
+				
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
 					<select name="house_use_id">
 						<option value="">使用性质</option>
@@ -55,12 +43,7 @@
 						{/volist}
 					</select>
 				</div>
-                <div class="layui-input-inline layui-col-md2" style="width:120px;">
-                	<select name="house_use_id">
-                		<option value="">审批状态</option>
-                		<option value="1">审批状态1</option>
-                	</select>
-                </div>
+                
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -129,28 +112,29 @@
 						     return d.LAY_INDEX ;
 						}
 					}, */
-					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号'}, 
-					{field: 'building_number',minWidth: 180,align:'center',title: '楼栋编号'},
+					{field: 'house_number',hide:true,minWidth: 180,align:'center',title: '房屋编号'}, 
+					{field: 'ban_number',hide:true,minWidth: 180,align:'center',title: '楼栋编号'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
 					    }
 					}, 
-					{field: 'building_address',minWidth: 180,align:'center',title: '楼栋地址'},
-					{field: 'nature_usage',minWidth: 100,align:'center',title: '使用性质',
+					{field: 'ban_address',width: 220,align:'center',title: '楼栋地址'},
+					{field: 'house_use_id',width: 100,align:'center',title: '使用性质',
 						templet: function(d) {
 					        return params.uses[d.house_use_id];
 					    }
 					}, 
-					{field: 'ban_owner_id',minWidth: 100,align:'center',title: '产别',
+					{field: 'ban_owner_id',width: 100,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
 					    }
 					}, 
 					{field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'},
-                    {field: 'unit_number',minWidth: 100,align:'center',title: '单元号'},
-					{field: 'floor_number',minWidth: 100,align:'center',title: '楼层号'},
-					{field: 'brand_number',minWidth: 100,align:'center',title: '门牌号'},
+                    {field: 'house_unit_id',width: 80,align:'center',title: '单元号'},
+					{field: 'house_floor_id',width: 80,align:'center',title: '楼层号'},
+					{field: 'house_door',width: 80,align:'center',title: '门牌号'},
+					{field: 'ctime',width: 140,align:'center',title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];

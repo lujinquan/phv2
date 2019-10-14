@@ -22,10 +22,10 @@ class Changehouse extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeHouseModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
-            $fields = "a.id,a.change_order_number,a.ban_change_id,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,b.house_number,b.house_floor_id,b.house_unit_id,b.house_door,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            $data['count'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['data'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['count'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -36,7 +36,7 @@ class Changehouse extends Admin
     public function apply()
     {
         if ($this->request->isAjax()) {
-            $data = $this->request->post();//halt($data);
+            $data = $this->request->post();
             // 数据验证
             $result = $this->validate($data, 'Changehouse.form');
             if($result !== true) {
@@ -55,14 +55,14 @@ class Changehouse extends Admin
             $row = $ChangeModel->allowField(true)->create($filData);
 
             //更新档案临时表
-            HouseTempModel::where([['house_id','eq',$data['house_id']]])->update([
-                'house_diff_rent' => $data['changes_difference_news'],
-                'house_pump_rent' => $data['changes_pumpfee_news'],
-                'house_protocol_rent' => $data['changes_agreement_news'],
-                'house_area' => $data['changes_architecture_news'],
-                'house_oprice' => $data['changes_originalprice_news'],
-            ]);
-            
+            // HouseTempModel::where([['house_id','eq',$data['house_id']]])->update([
+            //     'house_diff_rent' => $data['changes_difference_news'],
+            //     'house_pump_rent' => $data['changes_pumpfee_news'],
+            //     'house_protocol_rent' => $data['changes_agreement_news'],
+            //     'house_area' => $data['changes_architecture_news'],
+            //     'house_oprice' => $data['changes_originalprice_news'],
+            // ]);
+
             if (!$row) {
                 return $this->error('申请失败');
             }
@@ -150,10 +150,10 @@ class Changehouse extends Admin
             $ChangeModel = new ChangeHouseModel;
             $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.ban_change_id,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,b.house_use_id,b.house_number,b.house_floor_id,b.house_unit_id,b.house_door,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_ban')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            $data['count'] = Db::name('change_ban')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['data'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['count'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

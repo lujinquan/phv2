@@ -6,6 +6,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeBan as ChangeBanModel;
+use app\deal\model\ChangeHouse as ChangeHouseModel;
 use app\deal\model\ChangeCancel as ChangeCancelModel;
 use app\deal\model\ChangeLease as ChangeLeaseModel;
 use app\deal\model\ChangeName as ChangeNameModel;
