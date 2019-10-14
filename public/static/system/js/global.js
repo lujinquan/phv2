@@ -391,53 +391,69 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
     //     return false;
     // });
 
-    $(document).on('click', '.j-tr-del,.hisi-tr-del', function() {
+    // $(document).on('click', '.j-tr-del,.hisi-tr-del', function() {
+    //     var that = $(this),
+    //         href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
+    //         isReload = that.attr('isreload');
+    //     layer.confirm('删除之后无法恢复，您确定要删除吗？', {title:false, closeBtn:0}, function(index){
+    //         if (!href) {
+    //             layer.msg('请设置data-href参数');
+    //             return false;
+    //         }
+    //         var data_index = that.parents('tr').attr('data-index');
+    //         console.log(that.parents('tr').attr('data-index'));
+    //         $("tr[data-index='"+data_index + "']").remove();
+
+    //         $.get(href, function(res) {
+    //             console.log(res);
+    //             if (res.code == 0) {
+    //                 layer.msg(res.msg);
+    //             } else {
+    //                 if(isReload){
+    //                     location.reload();
+    //                 }else{
+    //                     that.parents('tr').remove();
+    //                 }
+                    
+    //             }
+    //         });
+    //         layer.close(index);
+    //     });
+    //     return false;
+    // });
+
+    table.on('tool(dataTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        
+        var data = obj.data //获得当前行数据
+        ,layEvent = obj.event; //获得 lay-event 对应的值
+
         var that = $(this),
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
             isReload = that.attr('isreload');
-        layer.confirm('删除之后无法恢复，您确定要删除吗？', {title:false, closeBtn:0}, function(index){
-            if (!href) {
-                layer.msg('请设置data-href参数');
-                return false;
-            }
-            var data_index = that.parents('tr').attr('data-index');
-            console.log(that.parents('tr').attr('data-index'));
-            $("tr[data-index='"+data_index + "']").remove();
 
+        if (!href) {
+            layer.msg('请设置data-href参数');
+            return false;
+        }
+        if(layEvent === 'del'){
+            layer.confirm('删除之后无法恢复，您确定要删除吗？', function(index){
             $.get(href, function(res) {
-                console.log(res);
+                //console.log(res);
                 if (res.code == 0) {
                     layer.msg(res.msg);
                 } else {
                     if(isReload){
                         location.reload();
                     }else{
-                        that.parents('tr').remove();
+                        obj.del(); //删除对应行（tr）的DOM结构
                     }
                     
                 }
             });
             layer.close(index);
-        });
-        return false;
-    });
-
-      // table.on('tool(dataTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-      //   console.log(1);
-      //   var data = obj.data //获得当前行数据
-      //   ,layEvent = obj.event; //获得 lay-event 对应的值
-      //   if(layEvent === 'detail'){
-      //     layer.msg('查看操作');
-      //   } else if(layEvent === 'del'){
-      //     layer.confirm('真的删除行么', function(index){
-      //       obj.del(); //删除对应行（tr）的DOM结构
-      //       layer.close(index);
-      //       //向服务端发送删除指令
-      //     });
-      //   } else if(layEvent === 'edit'){
-      //     layer.msg('编辑操作');
-      //   }
-      // });
+          });
+        }
+      });
 
     /**
      * ajax请求操作
