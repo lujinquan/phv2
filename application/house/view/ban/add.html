@@ -20,7 +20,7 @@
 				<div class="layui-col-md12">
 					<div class="j-form-label"><i class="red">*</i>楼栋地址</div>
 					<div class="j-input-inline">
-						<input type="text" id="ban_address" name="ban_address" autocomplete="off" class="layui-input">
+						<input type="text" id="ban_address" name="ban_address" lay-verify="required" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>管段</label>
 					<div class="j-input-inline">
-						<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
+						<select id="ban_inst_id" name="ban_inst_id" lay-verify="required" class="field-cid" type="select" required>
 							<option value="">请选择</option>
 							{volist name=":config('inst_data_names')[INST]" id="v"}
 							<option value="{$key}">{$v}</option>
@@ -41,7 +41,7 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>楼栋产别</label>
 					<div class="j-input-inline">
-						<select id="ban_owner_id" name="ban_owner_id" class="field-cid" type="select">
+						<select id="ban_owner_id" name="ban_owner_id" lay-verify="required" class="field-cid" type="select">
 							<option value="">请选择</option>
 							{volist name="params['owners']" id="v"}
 							<option value="{$key}">{$v}</option>
@@ -52,7 +52,7 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>结构类别</label>
 					<div class="j-input-inline">
-						<select id="ban_struct_id" name="ban_struct_id" class="field-cid" type="select">
+						<select id="ban_struct_id" name="ban_struct_id" lay-verify="required" class="field-cid" type="select">
 							<option value="">请选择</option>
 							{volist name="params['structs']" id="v"}
 							<option value="{$key}">{$v}</option>
@@ -65,7 +65,7 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>完损等级</label>
 					<div class="j-input-inline">
-						<select id="ban_damage_id" name="ban_damage_id" class="field-cid" type="select">
+						<select id="ban_damage_id" name="ban_damage_id" lay-verify="required" class="field-cid" type="select">
 							<option value="">请选择</option>
 							{volist name="params['damages']" id="v"}
 							<option value="{$key}">{$v}</option>
@@ -76,13 +76,13 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label">栋系数</label>
 					<div class="j-input-inline">
-						<input type="text" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
+						<input type="number" id="ban_ratio" name="ban_ratio" value="" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>建成年份</label>
 					<div class="j-input-inline">
-						<input type="text" id="ban_build_year" name="ban_build_year" value="" id="ban_build_year" autocomplete="off"
+						<input type="text" id="ban_build_year"  readonly name="ban_build_year" lay-verify="required" value="" id="ban_build_year" autocomplete="off"
 						 class="layui-input">
 					</div>
 				</div>
@@ -91,19 +91,19 @@
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>栋号</label>
 					<div class="j-input-inline">
-						<input type="text" id="ban_door" name="ban_door" placeholder="" autocomplete="off" class="layui-input">
+						<input type="number" id="ban_door" name="ban_door" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>单元数量</label>
 					<div class="j-input-inline">
-						<input type="text" id="ban_units" name="ban_units" value="" autocomplete="off" class="layui-input">
+						<input type="number" id="ban_units" name="ban_units" lay-verify="required" value="" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-md4">
 					<label class="j-form-label"><i class="red">*</i>楼层数量</label>
 					<div class="j-input-inline">
-						<input type="text" id="ban_floors" name="ban_floors" value="" autocomplete="off" class="layui-input">
+						<input type="number" id="ban_floors" name="ban_floors" lay-verify="required" value="" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -144,19 +144,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="area_use" name="ban_use_area" autocomplete="off" class="layui-input">
+					<input type="number" id="area_use" name="ban_use_area" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>占地面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="area_covered" name="ban_cover_area" autocomplete="off" class="layui-input">
+					<input type="number" id="area_covered" name="ban_cover_area" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>证载面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="proof_area" name="ban_actual_area" autocomplete="off" class="layui-input">
+					<input type="number" id="proof_area" name="ban_actual_area" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -224,19 +224,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>企业栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="enterprise_number" name="ban_career_num" autocomplete="off" class="layui-input">
+					<input type="number" id="enterprise_number" name="ban_career_num" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>机关栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="office_number" name="ban_party_num" autocomplete="off" class="layui-input">
+					<input type="number" id="office_number" name="ban_party_num" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>民用栋数</label>
 				<div class="j-input-inline">
-					<input type="text" id="civil_number" name="ban_civil_num" autocomplete="off" class="layui-input">
+					<input type="number" id="civil_number" name="ban_civil_num" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -295,13 +295,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>经度</label>
 				<div class="j-input-inline">
-					<input type="text" id="jingdu" name="ban_gpsx" autocomplete="off" id="jingdu" class="layui-input">
+					<input type="number" id="jingdu" name="ban_gpsx" readonly lay-verify="required" autocomplete="off"  id="jingdu" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>纬度</label>
 				<div class="j-input-inline">
-					<input type="text" id="weidu" name="ban_gpsy" autocomplete="off" id="weidu" class="layui-input">
+					<input type="number" id="weidu" name="ban_gpsy" readonly lay-verify="required" autocomplete="off" id="weidu" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -329,13 +329,13 @@
 			<div class="layui-col-md6">
 				<label class="j-form-label"><i class="red">*</i>产权证号</label>
 				<div class="j-input-inline">
-					<input type="text" name="ban_property_id" value="" autocomplete="off" class="layui-input">
+					<input type="number" name="ban_property_id" lay-verify="required" value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md6">
 				<label class="j-form-label">土地证号</label>
 				<div class="j-input-inline">
-					<input type="text" name="ban_land_id" autocomplete="off" class="layui-input">
+					<input type="number" name="ban_land_id" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>

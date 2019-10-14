@@ -1,3 +1,24 @@
+<!-- 处理楼栋调整房屋跳转后左边栏目高亮显示问题	 -->
+<style>
+	.layui-nav-tree .layui-nav-child dd.layui-this,.layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover{
+		background-color:#e5e9f2!important;
+		color:#48576a!important;
+	}
+	.layui-nav-tree .layui-nav-child dd.layui-this.j-layui-this,
+	.layui-nav-tree .layui-nav-child dd.j-layui-this,
+	.layui-nav-tree .layui-nav-child dd.layui-this.j-layui-this a,
+	.layui-nav-tree .layui-nav-child dd.j-layui-this a,
+	.layui-nav-tree .layui-this.j-layui-this,
+	.layui-nav-tree .layui-this.j-layui-this>a,
+	.layui-nav-tree .j-layui-this,
+	.layui-nav-tree .j-layui-this>a,
+	.layui-nav-tree .layui-this.j-layui-this>a:hover,
+	.layui-nav-tree .j-layui-this>a:hover
+	{
+		background-color:#d1dbe5!important;
+		color:#20a0ff!important;
+	}
+</style>
 <div class="j-table-content">
 	<div class="layui-btn-container j-container-margin">
 		<div class="layui-btn-container">
@@ -182,5 +203,7 @@
 			}
 		}, isShowInst,isHide);
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		//处理楼栋调整房屋跳转后左边栏目高亮显示问题		
+		$(".layui-nav-tree .layui-nav-child dd:eq(2)").addClass("j-layui-this").siblings().removeClass("layui-this");
 	});
 </script>

@@ -7,7 +7,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="ban_number" name="ban_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="ban_number" name="ban_number" lay-verify="required" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<b class="j-explain-search j-ban_number">查询</b>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>租户编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_number" name="tenant_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="tenant_number" name="tenant_number" lay-verify="required" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<b class="j-explain-search j-tenant_number">查询</b>
 				</div>
 			</div>
@@ -45,19 +45,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_unit_id" name="house_unit_id" value=""  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value=""  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_floor_id" name="house_floor_id" value="" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id" name="house_floor_id" lay-verify="required" value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用性质</label>
 				<div class="j-input-inline">
-					<select name="house_use_id" class="field-cid" type="select">
+					<select name="house_use_id" lay-verify="required" class="field-cid" type="select">
 					    <option value="">请选择</option>
 					    {volist name="params['uses']" id="v"}
 					    <option value="{$key}">{$v}</option>

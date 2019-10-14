@@ -197,7 +197,7 @@
 			<legend>异动后房间信息</legend>
 		</fieldset>
 		<div class="layui-row">
-			  <a href="{:url('house/room/add')}?id=14542" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
+			  <a data-href="javascript:;" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-add-change" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 		</div>
 		<!-- 异动后房间信息 -->
 		<table class="layui-table ">
@@ -334,6 +334,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#rent_relief").val(row.house_pump_rent);//获取租金减免(没字段随便取得值)
 					$("#agreement_rent").val(row.house_protocol_rent);//获取协议租金
 					$("#elevator").val(row.ban_is_levator);//获取电梯
+					$(".j-iframe-add-change").attr('data-href','{:url('house/room/add')}?id='+row.house_id); //新增
 					//异动前异动明细
 					$("#changes_difference_old").text(row.house_diff_rent);//获取租差
 					$("#changes_pumpfee_old").text(row.house_pump_rent);//获取泵费
@@ -529,6 +530,129 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 				}
 		 });
 	});	
+
+	//异动后房间信息新增
+	$(".layui-form").on('click','.j-iframe-add-change',function(){
+		var  urls=$(".j-iframe-add-change").attr('data-href');
+			layer.open({
+					title: '计租表异动'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					, btn:false
+					,pageTabs: false
+					,content: urls+'&&hisi_iframe=yes'
+					//,btn: ['确定','关闭']
+					,cancel: function(index, layero){
+						//获取原房间信息
+						var house_id = $("#j_house_id").val();//获取房屋ID
+						$.ajax({
+						  type: "post",
+						  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
+						  data: { 'house_id': house_id}, 
+						  dataType: "json", 
+						  success: function(res) {
+							  console.log(res);
+							if(res.code == 0){
+								layer.msg(res.msg);
+							}else{
+							  $('.j-table-tbodynew').html("");
+							  //原房屋信息
+							  var resData = res.data;
+							  //console.log(resData);
+							  for(var k=0;k<resData.length;k++) {
+								//异动后房间信息
+								var trDatanew ='<tr>\
+									<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
+									<td>'+resData[k].baseinfo.room_number+'</td>\
+									<td>'+resData[k].baseinfo.room_door+'</td>\
+									<td>'+resData[k].baseinfo.ban_number+'</td>\
+									<td>'+resData[k].houseinfo[0].house_number+'</td>\
+									<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
+									<td>'+resData[k].baseinfo.room_unit_id+'</td>\
+									<td>'+resData[k].baseinfo.room_floor_id+'</td>\
+									<td>'+resData[k].baseinfo.room_use_area+'</td>\
+									<td>'+resData[k].baseinfo.room_rent_point+'</td>\
+									<td>'+resData[k].baseinfo.room_lease_area+'</td>\
+									<td>'+resData[k].baseinfo.floor_point+'</td>\
+									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
+									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
+									<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
+								</tr>';
+								$('.j-table-tbodynew').append(trDatanew);
+								//房屋明细
+								for(var j=1;j<resData[k].houseinfo.length;j++) {
+									//异动后房屋信息
+									var trDatahousenew='<tr>\
+										<td></td>\
+										<td></td>\
+										<td></td>\
+										<td></td>\
+										<td>'+resData[k].houseinfo[j].house_number+'</td>\
+										<td></td>\
+										<td></td>\
+										<td></td>\
+										<td></td>\
+										<td></td>\
+										<td>0</td>\
+										<td></td>\
+										<td>0</td>\
+										<td></td>\
+										<td></td>\
+									</tr>';
+									$('.j-table-tbodynew').append(trDatahousenew);
+								}
+							  } 
+							  
+							  
+								  function statistics(){
+								    //异动后房间信息table计算租金之和
+								    	var trList = $(".j-table-tbodynew").children("tr");
+										sumcalculated = 0;
+										sumcalculation=0;
+								    	for (var j=0;j<trList.length;j++) {
+								  		
+								  		$("#changes_rule_news").text();
+								    		var tdArr = trList.eq(j).find("td"); //遍历td  
+								    			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
+								  			$("#changes_rule_news").text(
+								  			  (                  
+								  				sumcalculated
+								  				+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
+								  				+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
+								  				+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
+								  				).toFixed(2) / 100
+								  			);	//异动明细异动后规定租金
+											$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
+											$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
+											$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
+											$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
+								  			sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
+								  			$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
+											$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
+											$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
+											$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
+								    	}
+								  }
+								 statistics(); 
+							}
+							   
+						  },
+						  error: function(msg) {
+							  layer.msg(msg);
+						  }
+						}); 
+						layer.close(index)
+					},
+					btn2: function(index, layero){
+						layer.close(index);
+					}
+	
+	  })
+	})
+	
+
+
 	
 	//异动后房间信息编辑
 	$(".layui-form").on('click','.j-iframe-pop-change',function(){
