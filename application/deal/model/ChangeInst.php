@@ -72,10 +72,10 @@ class ChangeInst extends SystemBase
         // 检索楼栋机构
         $insts = config('inst_ids');
         if(isset($data['old_inst_id']) && $data['old_inst_id']){
-            $where[] = ['d.old_inst_id','in',$insts[$data['old_inst_id']]];
+            $where[] = ['a.old_inst_id','in',$insts[$data['old_inst_id']]];
         }else{
             $instid = (isset($data['old_inst_id']) && $data['old_inst_id'])?$data['old_inst_id']:INST;
-            $where[] = ['d.old_inst_id','in',$insts[$instid]];
+            $where[] = ['a.old_inst_id','in',$insts[$instid]];
         }
         
         return $where;

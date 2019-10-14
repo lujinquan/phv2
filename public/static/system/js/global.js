@@ -360,6 +360,37 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
      * @attr href或data-href 请求地址
      * @attr refresh 操作完成后是否自动刷新
      */
+    // $(document).on('click', '.j-tr-del,.hisi-tr-del', function() {
+    //     var that = $(this),
+    //         href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
+    //         isReload = that.attr('isreload');
+    //     layer.confirm('删除之后无法恢复，您确定要删除吗？', {title:false, closeBtn:0}, function(index){
+    //         if (!href) {
+    //             layer.msg('请设置data-href参数');
+    //             return false;
+    //         }
+    //         var data_index = that.parents('tr').attr('data-index');
+    //         console.log(that.parents('tr').attr('data-index'));
+    //         $("tr[data-index='"+data_index + "']").remove();
+
+    //         $.get(href, function(res) {
+    //             console.log(res);
+    //             if (res.code == 0) {
+    //                 layer.msg(res.msg);
+    //             } else {
+    //                 if(isReload){
+    //                     location.reload();
+    //                 }else{
+    //                     that.parents('tr').remove();
+    //                 }
+                    
+    //             }
+    //         });
+    //         layer.close(index);
+    //     });
+    //     return false;
+    // });
+
     $(document).on('click', '.j-tr-del,.hisi-tr-del', function() {
         var that = $(this),
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
