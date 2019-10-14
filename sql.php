@@ -250,6 +250,29 @@ update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house
 update ph_v2.ph_change_use_back a,ph_v2.ph_system_user b set a.cuid = b.id where a.cuid = b.number;
 
 
+/**
+ * 21、增加档案临时表 
+ */
+drop table if exists ph_v2.ph_ban_temp;
+create table ph_v2.ph_ban_temp like ph_v2.ph_ban;
+insert into ph_v2.ph_ban_temp select * from ph_ban;
+
+drop table if exists ph_v2.ph_house_temp;
+create table ph_v2.ph_house_temp like ph_v2.ph_house;
+insert into ph_v2.ph_house_temp select * from ph_house;
+
+drop table if exists ph_v2.ph_room_temp;
+create table ph_v2.ph_room_temp like ph_v2.ph_room;
+insert into ph_v2.ph_room_temp select * from ph_room;
+
+drop table if exists ph_v2.ph_house_room_temp;
+create table ph_v2.ph_house_room_temp like ph_v2.ph_house_room;
+insert into ph_v2.ph_house_room_temp select * from ph_house_room;
+
+
+
+
+
 /*CREATE FUNCTION str_for_substr (num int, str varchar(50000)) RETURNS VARCHAR (100)
 BEGIN
 	RETURN (

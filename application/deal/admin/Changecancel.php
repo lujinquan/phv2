@@ -35,7 +35,7 @@ class Changecancel extends Admin
     public function apply()
     {
         if ($this->request->isAjax()) {
-            $data = $this->request->post();
+            $data = $this->request->post();//halt($data);
             // 数据验证
             $result = $this->validate($data, 'Changecancel.form');
             if($result !== true) {

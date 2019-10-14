@@ -139,7 +139,8 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
                 layer.msg(res.msg, {}, function() {
                     if (res.code == 1) {
                         location.href = res.url;
-                    } else {
+                    } else { 	
+                    	$('#LAY-user-get-vercode').attr('src','/captcha.html'); //更新二维码
                         that.prop('disabled', false);
                     }
                 });

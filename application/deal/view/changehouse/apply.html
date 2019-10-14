@@ -8,6 +8,8 @@
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+					<input type="hidden" id="ban_id" name="ban_id">
+					<input type="hidden" id="house_id" name="house_id">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
@@ -314,6 +316,8 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					var hosue_number = row.house_number;
 					$("#j_house_id").val(row.house_id);//获取房屋id
 					$("#house_number").val(row.house_number);//获取房屋编号
+					$("#house_id").val(row.house_id);//获取房屋编号
+					$("#ban_id").val(row.ban_id);//获取房屋编号
 					$("#ban_number").val(row.ban_number);//获取楼栋编号
 					$("#tenant_number").val(params.structs[row.ban_struct_id]);//获取房屋结构
 					$("#house_door").val(row.ban_floors);//获取楼层数量
@@ -373,7 +377,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					var house_id = row.house_id;//获取房屋ID
 					$.ajax({
 					  type: "post",
-					  url: "{:url('house/house/renttable')}?id="+house_id,
+					  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
 					  data: { 'house_id': house_id}, 
 					  dataType: "json", 
 					  success: function(res) {
@@ -384,7 +388,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						  $('.j-table-tbodynew').html("");
 						  //原房屋信息
 						  var resData = res.data;
-						  //console.log(resData);
+						  console.log(resData);
 						  for(var k=0;k<resData.length;k++) {
 							//房间明细
 							var trDataold ='<tr>\
@@ -420,7 +424,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 								<td>'+resData[k].baseinfo.floor_point+'</td>\
 								<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 								<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-								<td><a data-href="{:url('house/room/edit')}?id='+ resData[0].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/room/del')}?id='+ resData[0].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
+								<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 							</tr>';
 							$('.j-table-tbodynew').append(trDatanew);
 							//房屋明细
@@ -543,7 +547,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						var house_id = $("#j_house_id").val();//获取房屋ID
 						$.ajax({
 						  type: "post",
-						  url: "{:url('house/house/renttable')}?id="+house_id,
+						  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
 						  data: { 'house_id': house_id}, 
 						  dataType: "json", 
 						  success: function(res) {
@@ -571,7 +575,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 									<td>'+resData[k].baseinfo.floor_point+'</td>\
 									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-									<td><a data-href="{:url('house/room/edit')}?id='+ resData[0].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/room/del')}?id='+ resData[0].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
+									<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 								</tr>';
 								$('.j-table-tbodynew').append(trDatanew);
 								//房屋明细
@@ -647,14 +651,14 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	
 	//异动后房间信息删除
 	$(".layui-form").on('click','.j-tr-del-change',function(){
-		var  urls=$(".j-tr-del-change").attr('data-href');
+		var  urls=$(this).attr('data-href');
 		layer.confirm('删除之后无法恢复，您确定要删除吗？', {icon: 3, title:'提示'}, function(index){
 		  //获取原房间信息
 		  var house_id = $("#j_house_id").val();//获取房屋ID
 		  $.ajax({
 		    type: "post",
-		    url: "{:url('house/house/renttable')}?id="+house_id,
-		    data: { 'house_id': house_id}, 
+		    url: urls,
+		    data: {'house_id': house_id}, 
 		    dataType: "json", 
 		    success: function(res) {
 				console.log(res);
@@ -664,7 +668,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		  	  $('.j-table-tbodynew').html("");
 		  	  //原房屋信息
 		  	  var resData = res.data;
-		  	  //console.log(resData);
+		  	  console.log('删除一个房间后：'+resData);
 		  	  for(var k=0;k<resData.length;k++) {
 		  		//异动后房间信息
 		  		var trDatanew ='<tr>\
@@ -682,7 +686,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		  			<td>'+resData[k].baseinfo.floor_point+'</td>\
 		  			<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 		  			<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-		  			<td><a data-href="{:url('house/room/edit')}?id='+ resData[0].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a href="" data-href="{:url('house/room/del')}?id='+ resData[0].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
+		  			<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 		  		</tr>';
 		  		$('.j-table-tbodynew').append(trDatanew);
 		  		//房屋明细

@@ -126,6 +126,9 @@ class User extends Admin
                     $data['inst_ids'] = implode(',',$data['inst_ids']);
                 }
             }
+            if(!$data['password']){
+                return $this->error('密码不能为空');
+            }
             $data['password'] = md5($data['password']);
             $data['password_confirm'] = md5($data['password_confirm']);
             // 验证
@@ -133,8 +136,15 @@ class User extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-
-            
+            if($data['inst_id'] == 1){
+                $data['inst_level'] = 1;
+            }else if($data['inst_id']<4){
+                $data['inst_level'] = 2;
+            }else{
+                $data['inst_level'] = 3;
+            }
+            $number = UserModel::max('number');
+            $data['number'] = $number + 1;
             unset($data['id'], $data['password_confirm']);
             $data['last_login_ip'] = '';
             $data['auth'] = '';
