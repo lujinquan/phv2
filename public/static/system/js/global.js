@@ -844,7 +844,7 @@ function formSubmit(type,url,data,index){
 		      } else {
 		          tableDiv = tableBox.find(".layui-table-body.layui-table-main");
 		      }
-		      var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox I");
+		      var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
 		      if (checkCell.length>0) {
 		          checkCell.click();
 		      }
