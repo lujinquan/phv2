@@ -7,7 +7,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="ban_number" name="ban_number" value="{$data_info['ban_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="ban_number" name="ban_number" lay-verify="required" value="{$data_info['ban_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<b class="j-explain-search j-ban_number">查询</b>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>租户编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_number" name="tenant_number" value="{$data_info['tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="tenant_number" name="tenant_number" lay-verify="required" value="{$data_info['tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<b class="j-explain-search j-tenant_number">查询</b>
 				</div>
 			</div>
@@ -45,19 +45,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_unit_id" name="house_unit_id" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_floor_id" name="house_floor_id" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id" name="house_floor_id" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用性质</label>
 				<div class="j-input-inline">
-					<select name="house_use_id" class="field-cid" type="select">
+					<select name="house_use_id" lay-verify="required" class="field-cid" type="select">
 					    <option value="">请选择</option>
 					    {volist name="params['uses']" id="v"}
 					    <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
@@ -70,14 +70,14 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">房屋原价</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
+					<input type="number" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
 					<b class="j-explain-name">元</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label">建筑面积</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_area" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input j-explain-input">
+					<input type="number" id="house_area" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input j-explain-input">
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>

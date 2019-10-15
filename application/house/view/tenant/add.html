@@ -8,19 +8,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>租户姓名</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_name" value="" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_name" lay-verify="required" value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>联系电话</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_tel" value="" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_tel" lay-verify="required|tellphone"  value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>身份证号</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_card" value="" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_card" lay-verify="required|identity"  value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 	 <div class="layui-col-md4">
 		<label class="j-form-label"><i class="red">*</i>管段</label>
 		<div class="j-input-inline">
-			<select id="ban_inst_id" name="tenant_inst_id" class="field-cid" type="select" required>
+			<select id="ban_inst_id" name="tenant_inst_id" lay-verify="required"  class="field-cid" type="select" required>
 				<option value="">请选择</option>
 				{volist name=":config('inst_data_names')[INST]" id="v"}
 				<option value="{$key}">{$v}</option>

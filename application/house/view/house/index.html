@@ -18,6 +18,7 @@
 		background-color:#d1dbe5!important;
 		color:#20a0ff!important;
 	}
+	
 </style>
 <div class="j-table-content">
 	<div class="layui-btn-container j-container-margin">
@@ -204,6 +205,11 @@
 		}, isShowInst,isHide);
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		//处理楼栋调整房屋跳转后左边栏目高亮显示问题		
-		$(".layui-nav-tree .layui-nav-child dd:eq(2)").addClass("j-layui-this").siblings().removeClass("layui-this");
+		$(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(1)").addClass("j-layui-this");
+		/* if($(".layui-nav-tree .layui-nav-child dd a").text()=='   房屋信息   ')
+		{
+			console.log(1);
+			$(this).parent().addClass("j-layui-this");
+		} */
 	});
 </script>
