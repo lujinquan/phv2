@@ -763,6 +763,20 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 img.attr("src", "/static/system/image/add_img.png");
             });
         });
+		
+		
+    //自定义验证规则
+	//验证手机和座机
+	var mobile = /^1[3|4|5|6|7|8]\d{9}$/,
+	phone = /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/;
+	form.verify({
+		tellphone: function(value){
+			var flag = mobile.test(value) || phone.test(value);
+			if(!flag){
+				return '请输入正确座机号码或手机号';
+			}
+		}
+	});
   })
 
 function bytesToSize(bytes) {  

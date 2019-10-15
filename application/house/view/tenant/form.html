@@ -8,19 +8,19 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>租户姓名</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_name" lay-verify="required" value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>联系电话</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_tel" lay-verify="required|tellphone" value="{$data_info['tenant_tel']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>身份证号</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" autocomplete="off" class="layui-input">
+				<input type="number" name="tenant_card" lay-verify="required" value="{$data_info['tenant_card']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -30,7 +30,7 @@
 		<label class="j-form-label"><i class="red">*</i>管段</label>
 		<div class="j-input-inline">
 			{if condition="INST_LEVEL < 3"}
-			<select id="ban_inst_id" name="tenant_inst_id" class="field-cid" type="select" required>
+			<select id="ban_inst_id" name="tenant_inst_id" lay-verify="required" class="field-cid" type="select" required>
 				<option value="">请选择</option>
 				{volist name=":config('inst_data_names')[INST]" id="v"}
 				<option value="{$key}" {if condition="$key == $data_info['tenant_inst_id']"}selected{/if}>{$v}</option>

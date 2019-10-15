@@ -6,19 +6,19 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">房间间号</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="room_door" value="{$data_info['room_door']}" readonly autocomplete="off" class="layui-input">
+  			<input type="text" name="room_door" value="{$data_info['room_door']}" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">房间编号</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="room_number" value="{$data_info['room_number']}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="room_number" value="{$data_info['room_number']}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">绑定楼栋</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="ban_number" value="{$data_info['ban_number']}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="ban_number" value="{$data_info['ban_number']}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   </div>
@@ -26,19 +26,19 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">楼栋地址</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="ban_address" value="{$data_info['ban_address']}" readonly autocomplete="off" class="layui-input">
+  			<input type="text" name="ban_address" value="{$data_info['ban_address']}" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">房间类别</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="room_type" value="{$params['roomtypes'][$data_info['room_type']]}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="room_type" value="{$params['roomtypes'][$data_info['room_type']]}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">单元号</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="room_unit_id" value="{$data_info['room_unit_id']}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="room_unit_id" value="{$data_info['room_unit_id']}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   </div>
@@ -46,19 +46,19 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">层次</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="room_floor_id" value="{$data_info['room_floor_id']}" readonly autocomplete="off" class="layui-input">
+  			<input type="text" name="room_floor_id" value="{$data_info['room_floor_id']}" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">基价折减率</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="room_rent_point" value="{$data_info['room_rent_point']}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="room_rent_point" value="{$data_info['room_rent_point']}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   	<div class="layui-col-md4">
   	  <label class="j-form-label">使用面积</label> 
   	  <div class="j-input-inline">
-  		<input type="text" name="room_use_room" value="{$data_info['room_use_area']}" readonly autocomplete="off" class="layui-input">
+  		<input type="text" name="room_use_room" value="{$data_info['room_use_area']}" disabled autocomplete="off" class="layui-input">
   	  </div>
   	</div>
   </div>
@@ -66,7 +66,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">计租面积</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="room_lease_room" value="{$data_info['room_lease_area']}" readonly autocomplete="off" class="layui-input">
+  			<input type="text" name="room_lease_room" value="{$data_info['room_lease_area']}" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
   </div>
@@ -78,7 +78,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">房屋{$k}</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="house_number" value="{$vo}" readonly autocomplete="off" class="layui-input">
+  			<input type="text" name="house_number" value="{$vo}" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
    {/volist}
