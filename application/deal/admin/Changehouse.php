@@ -162,7 +162,7 @@ class Changehouse extends Admin
     }
 
     public function del()
-    {die();
+    {
         $id = $this->request->param('id');       
         $row = ChangeHouseModel::get($id);
         if($row['change_status'] == 2 && $row['is_back'] == 0){

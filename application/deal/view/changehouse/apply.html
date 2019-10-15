@@ -334,7 +334,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#rent_relief").val(row.house_pump_rent);//获取租金减免(没字段随便取得值)
 					$("#agreement_rent").val(row.house_protocol_rent);//获取协议租金
 					$("#elevator").val(row.ban_is_levator);//获取电梯
-					$(".j-iframe-add-change").attr('data-href','{:url('house/room/add')}?id='+row.house_id); //新增
+					$(".j-iframe-add-change").attr('data-href','{:url('house/RoomTemp/add')}?id='+row.house_id); //新增
 					//异动前异动明细
 					$("#changes_difference_old").text(row.house_diff_rent);//获取租差
 					$("#changes_pumpfee_old").text(row.house_pump_rent);//获取泵费
