@@ -129,20 +129,59 @@ class ChangeCancel extends SystemBase
         
         $banRow = BanModel::get($data['ban_id']);
 
-        $data['change_json']['before']['ban_total_rent'] = bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]);
-        $data['change_json']['before']['ban_total_use_area'] = $banRow['ban_use_area'];
-        $data['change_json']['before']['ban_total_area'] = bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]);
-        $data['change_json']['before']['ban_total_oprice'] = bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]);
+        // $data['change_json']['before']['ban_total_rent'] = bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]);
+        // $data['change_json']['before']['ban_total_use_area'] = $banRow['ban_use_area'];
+        // $data['change_json']['before']['ban_total_area'] = bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]);
+        // $data['change_json']['before']['ban_total_oprice'] = bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]);
 
-        $data['change_json']['after']['ban_total_rent'] = bcsub($data['change_json']['before']['ban_total_rent'],$data['cancel_rent'],2);
-        $data['change_json']['after']['ban_total_use_area'] = bcsub($data['change_json']['before']['ban_total_use_area'],$data['cancel_use_area'],2);
-        $data['change_json']['after']['ban_total_area'] = bcsub($data['change_json']['before']['ban_total_area'],$data['cancel_area'],2);
-        $data['change_json']['after']['ban_total_oprice'] = bcsub($data['change_json']['before']['ban_total_oprice'],$data['cancel_oprice'],2);
+        // $data['change_json']['after']['ban_total_rent'] = bcsub($data['change_json']['before']['ban_total_rent'],$data['cancel_rent'],2);
+        // $data['change_json']['after']['ban_total_use_area'] = bcsub($data['change_json']['before']['ban_total_use_area'],$data['cancel_use_area'],2);
+        // $data['change_json']['after']['ban_total_area'] = bcsub($data['change_json']['before']['ban_total_area'],$data['cancel_area'],2);
+        // $data['change_json']['after']['ban_total_oprice'] = bcsub($data['change_json']['before']['ban_total_oprice'],$data['cancel_oprice'],2);
+        
+        $data['cancel_ban'] = $data['changes_floor_original'];
+        $data['cancel_rent'] = $data['cancel_change_1'];
+        $data['cancel_use_area'] = $data['cancel_change_2'];
+        $data['cancel_area'] = $data['cancel_change_3'];
+        $data['cancel_oprice'] = $data['cancel_change_4'];
 
-        if($data['house_id']){
-            $houseids = explode(',',$data['house_id']);
-            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_area,house_use_area,house_oprice,house_lease_area')->select()->toArray();
+        $data['change_json'] = [
+            'before' => [
+                'ban_total_rent' => $data['floor_prescribed'],
+                'ban_total_use_area' => $data['floor_areaofuse'],
+                'ban_total_area' => $data['floor_builtuparea'],
+                'ban_total_oprice' => $data['floor_original'],
+            ],
+            'change' => [
+                'ban_total_rent' => $data['cancel_change_1'],
+                'ban_total_use_area' => $data['cancel_change_2'],
+                'ban_total_area' => $data['cancel_change_3'],
+                'ban_total_oprice' => $data['cancel_change_4'],
+            ],
+            'after' => [
+                'ban_total_rent' => $data['changes_floor_prescribed'],
+                'ban_total_use_area' => $data['changes_floor_areaofuse'],
+                'ban_total_area' => $data['changes_floor_builtuparea'],
+                'ban_total_oprice' => $data['changes_floor_original'],
+            ],
+        ];
+        
+        $count = count($data['house_number']);
+        $houseDetail = [];
+        for ($i=0; $i < $count; $i++) { 
+            $houseDetail[$i]['house_number'] = $data['house_number'][$i];  //房屋编号
+            $houseDetail[$i]['tenant_name'] = $data['house_lessee'][$i]; // 承租人
+            $houseDetail[$i]['house_oprice'] = $data['house_original'][$i]; // 原价
+            $houseDetail[$i]['house_area'] = $data['house_builtuparea'][$i]; // 建筑面积
+            $houseDetail[$i]['house_pre_rent'] = $data['house_prescribed'][$i]; // 规租
+            $houseDetail[$i]['house_lease_area'] = $data['house_rentalarea'][$i]; // 计租面积
         }
+        $data['data_json'] = $houseDetail;
+
+        // if($data['house_id']){
+        //     $houseids = explode(',',$data['house_id']);
+        //     $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_area,house_use_area,house_oprice,house_lease_area')->select()->toArray();
+        // }
 
         // 审批表数据
         $processRoles = $this->processRole;
@@ -156,7 +195,7 @@ class ChangeCancel extends SystemBase
     public function detail($id)
     {
         $row = self::get($id);
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         return $row;
@@ -233,7 +272,7 @@ class ChangeCancel extends SystemBase
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
