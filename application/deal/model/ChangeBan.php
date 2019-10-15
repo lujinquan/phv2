@@ -28,9 +28,9 @@ class ChangeBan extends SystemBase
 
     protected $processAction = ['审批不通过','审批成功','打回给房管员','初审通过','审批通过','终审通过'];
 
-    protected $processDesc = ['失败','成功','打回给房管员','待经租会计初审','待经管所长审批','待经管科长终审'];
+    protected $processDesc = ['失败','成功','打回给房管员','待资料员初审','待经管所长审批','待经管科长终审'];
 
-    protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
+    protected $processRole = ['2'=>4,'3'=>5,'4'=>8,'5'=>9];
 
     public function tenant()
     {
