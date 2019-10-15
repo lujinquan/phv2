@@ -56,14 +56,22 @@ class Changeban extends Validate
     {
         $msg = '';
         if($data['ban_change_id'] == 1){
-            $floors = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_floors');
-            if($floors == $data['new_floors']){
-                $msg = '异动前后楼层不能相同！';
+            if(!$data['new_floors']){
+                $msg = '异动后的楼层不能为空！';
+            }else{
+                $floors = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_floors');
+                if($floors == $data['new_floors']){
+                    $msg = '异动前后楼层不能相同！';
+                } 
             }
         }else{
-            $damage = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_damage_id');
-            if($damage == $data['new_damage']){
-                $msg = '异动前后完损等级不能相同！';
+            if(!$data['new_damage']){
+                $msg = '异动后的完损等级不能为空！';
+            }else{
+                $damage = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_damage_id');
+                if($damage == $data['new_damage']){
+                    $msg = '异动前后完损等级不能相同！';
+                }
             }
         }
         

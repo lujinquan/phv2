@@ -54,14 +54,14 @@ class Changehouse extends Admin
             unset($filData['id']);
             $row = $ChangeModel->allowField(true)->create($filData);
 
-            //更新档案临时表
-            // HouseTempModel::where([['house_id','eq',$data['house_id']]])->update([
-            //     'house_diff_rent' => $data['changes_difference_news'],
-            //     'house_pump_rent' => $data['changes_pumpfee_news'],
-            //     'house_protocol_rent' => $data['changes_agreement_news'],
-            //     'house_area' => $data['changes_architecture_news'],
-            //     'house_oprice' => $data['changes_originalprice_news'],
-            // ]);
+            // 更新档案临时表
+            HouseTempModel::where([['house_id','eq',$data['house_id']]])->update([
+                'house_diff_rent' => $data['changes_difference_news'],
+                'house_pump_rent' => $data['changes_pumpfee_news'],
+                'house_protocol_rent' => $data['changes_agreement_news'],
+                'house_area' => $data['changes_architecture_news'],
+                'house_oprice' => $data['changes_originalprice_news'],
+            ]);
 
             if (!$row) {
                 return $this->error('申请失败');

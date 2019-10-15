@@ -11,9 +11,11 @@
 
 namespace app\deal\validate;
 
+use think\Db;
 use think\Validate;
 use app\house\model\House as HouseModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
+use app\rent\model\Rent as RentModel;
 
 /**
  *减免异动验证器
@@ -40,18 +42,25 @@ class Changecut extends Validate
     // 判断当前房屋是否可以申请使用权变更
     protected function isAllow($value, $rule='', $data)
   	{
-        //halt($data);
+        // 房屋必须是正常状态的
         $msg = '';
         $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,(house_pre_rent+house_diff_rent+house_pump_rent) as house_yue_rent')->find();
         if($find['house_status'] != 1){
             $msg = '房屋状态异常！';
         }
+        // 房屋必须未在减免异动中
   		$row = ChangeUseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
+        // 房屋必须没有欠租 
+        $rentOrderNumber = RentModel::where([['house_id','eq',$value],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->value('rent_order_number');
+        if($rentOrderNumber){
+            $msg = '房屋有欠缴订单未处理！';
+        }
+        // 减免金额必须小于规租
         if($find['house_yue_rent'] < $data['cut_rent']){
-            $msg = '减免金额不能大于月租金！';
+            $msg = '减免金额不能大于规租！';
         }
       	return $msg?$msg:true;
   	}

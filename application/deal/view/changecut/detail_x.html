@@ -92,6 +92,14 @@
   		</div>
   	</div>
   </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md8">
+			<label class="j-form-label">异动原因</label>
+			<div class="j-input-inline">
+				<input type="text" name="change_remark" value="{$data_info['change_remark']}" placeholder="" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
   <fieldset class="layui-elem-field layui-field-title j-field-box">
   	<legend>资料上传</legend>
   </fieldset>
@@ -165,7 +173,7 @@
   		<div class="j-enclosure-img j-viewer-img clearfix">
   			<ul>
   				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'Lowassurance'"}
+				{if condition="$v['file_type'] == 'Housingsecurity'"}
 				<li>
   					<img src="{$v['file']}" class="img">
   				</li>

@@ -1,5 +1,5 @@
 <!-- 租金减免 取消减免 -->
-<div class="j-table-content">
+<div class="j-table-content {if condition='in_array(282,$auths)'}on{/if}">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
 	    	{if condition="in_array(282,$auths)"}      
@@ -65,7 +65,7 @@
 		{{#  if (d.change_status == 2) { }}
 		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
 		{{# if (d.is_back == 0){ }}
-		<a href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+		<a data-href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{# } }}
