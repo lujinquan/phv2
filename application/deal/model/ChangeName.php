@@ -8,6 +8,7 @@ use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
+use app\house\model\TenantTai as TenantTaiModel;
 
 class ChangeName extends SystemBase
 {
@@ -268,7 +269,21 @@ class ChangeName extends SystemBase
     {
         // 别字更正
         TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
+
         // 添加台账记录
+        $taiData = [];
+        $taiData['tenant_id'] = $finalRow['tenant_id'];
+        $taiData['cuid'] = $finalRow['cuid'];
+        $taiData['tenant_tai_type'] = 1;
+        $taiData['data_json'] = [
+            'tenant_name' => [
+                'old' => $finalRow['old_tenant_name'],
+                'new' => $finalRow['new_tenant_name'],
+            ],
+        ];
+
+        $TenantTaiModel = new TenantTaiModel;
+        $TenantTaiModel->allowField(true)->create($taiData);
     }
 
 }

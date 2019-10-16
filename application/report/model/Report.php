@@ -80,4 +80,6 @@ class Report extends Model
         return $result;
     }
 
+    
+
 }

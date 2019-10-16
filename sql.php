@@ -188,7 +188,7 @@ drop table if exists ph_v2.ph_change_lease_back;
 create table ph_v2.ph_change_lease_back like ph_v2.ph_change_lease;
 # 同步数据
 insert into ph_v2.ph_change_lease_back 
-(change_order_number,process_id,house_id,change_remark,tenant_id,tenant_name,change_child_line,change_data_line,last_print_time,print_times,qrcode,szno,reason,change_imgs,change_status,ctime) 
+(change_order_number,process_id,house_id,change_remark,tenant_id,tenant_name,child_json,data_json,last_print_time,print_times,qrcode,szno,reason,change_imgs,change_status,ctime) 
 select 
 ChangeOrderID,ProcessConfigType,HouseID,Recorde,TenantID,TenantName,Child,Deadline,PrintTime,PrintTimes,QrcodeUrl,Szno,Reason,ChangeImageIDS,Status,CreateTime
 from ph_v1.ph_lease_change_order;
@@ -205,15 +205,15 @@ update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.hou
 
 /**
  * 18、同步异动统计表[ph_rent_table => ph_change_table]
- * 字段：异动编号、异动类型、新发类型、注销类型、所id、管段、产别、使用性质、影响租金、影响建面、影响使面、影响原价、影响栋数、以前月租金、以前年租金、租户编号、房屋编号、楼栋编号、异动日期、状态
+ * 字段：异动编号、异动类型、新发类型、注销类型、减免类型、所id、管段、产别、使用性质、影响租金、影响建面、影响使面、影响原价、影响栋数、以前月租金、以前年租金、租户编号、房屋编号、楼栋编号、异动日期、状态
  */
 drop table if exists ph_v2.ph_change_table_back;
 create table ph_v2.ph_change_table_back like ph_v2.ph_change_table;
 # 同步数据
 insert into ph_v2.ph_change_table_back 
-(change_order_number,change_type,change_send_type,change_cancel_type,inst_pid,inst_id,new_inst_id,owner_id,use_id,change_rent,change_area,change_use_area,change_oprice,change_ban_num,change_month_rent,change_year_rent,tenant_id,house_id,ban_id,order_date,change_status) 
+(change_order_number,change_type,change_send_type,change_cancel_type,cut_type,inst_pid,inst_id,new_inst_id,owner_id,use_id,change_rent,change_area,change_use_area,change_oprice,change_ban_num,change_month_rent,change_year_rent,tenant_id,house_id,ban_id,end_date,order_date,change_status) 
 select 
-ChangeOrderID,ChangeType,NewSendRentType,CancelType,InstitutionPID,InstitutionID,NewInstitutionID,OwnerType,UseNature,InflRent,Area,UseArea,Oprice,ChangeNum,OldMonthRent,OldYearRent,TenantID,HouseID,BanID,OrderDate,Status
+ChangeOrderID,ChangeType,NewSendRentType,CancelType,CutType,InstitutionPID,InstitutionID,NewInstitutionID,OwnerType,UseNature,InflRent,Area,UseArea,Oprice,ChangeNum,OldMonthRent,OldYearRent,TenantID,HouseID,BanID,DateEnd,OrderDate,Status
 from ph_v1.ph_rent_table;
 
 
@@ -272,118 +272,38 @@ insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 
 
 
+/*
 
-/*CREATE FUNCTION str_for_substr (num int, str varchar(50000)) RETURNS VARCHAR (100)
-BEGIN
-	RETURN (
-		SUBSTRING(
-			SUBSTRING_INDEX(str, ',', num + 1),
-			CASE num
-		WHEN 0 THEN
-			CHAR_LENGTH(
-				SUBSTRING_INDEX(str, ',', num)
-			) + 1
-		ELSE
-			CHAR_LENGTH(
-				SUBSTRING_INDEX(str, ',', num)
-			) + 2
-		END,
-		CASE num
-	WHEN 0 THEN
-		CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num + 1)
-		) - CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num)
-		)
-	ELSE
-		CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num + 1)
-		) - CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num)
-		) - 1
-	END
-		)
-	)
-END
-
+# 创建字符串分隔存储过程函数
 delimiter $$
-CREATE FUNCTION str_for_substr (num int, str varchar(50000)) RETURNS VARCHAR (100)
+CREATE DEFINER = `root`@`%` PROCEDURE `split_str`()
+    SQL SECURITY INVOKER
 BEGIN
-	RETURN (
-		SUBSTRING(
-			SUBSTRING_INDEX(str, ',', num + 1),
-			CASE num
-		WHEN 0 THEN
-			CHAR_LENGTH(
-				SUBSTRING_INDEX(str, ',', num)
-			) + 1
-		ELSE
-			CHAR_LENGTH(
-				SUBSTRING_INDEX(str, ',', num)
-			) + 2
-		END,
-		CASE num
-	WHEN 0 THEN
-		CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num + 1)
-		) - CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num)
-		)
-	ELSE
-		CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num + 1)
-		) - CHAR_LENGTH(
-			SUBSTRING_INDEX(str, ',', num)
-		) - 1
-	END
-		)
-	);
-END$$
-delimiter ;*/
-
-/*BEGIN
-	DECLARE a1 varCHAR(20);
-  DECLARE b1 varchar(10000);
-  
+  DECLARE a varchar(20);
+  DECLARE b varchar(10000);
   DECLARE done INT DEFAULT FALSE;
-
-  
   DECLARE cur CURSOR FOR SELECT a,b from test ;
-  
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-  
-  OPEN cur;
-  
-  
+  OPEN cur; 
   read_loop: LOOP
-    
-    FETCH cur INTO a1,b1;
-
-    
+    FETCH cur INTO a,b;
     IF done THEN
       LEAVE read_loop;
     END IF;
-
-   SET @num = LENGTH(b1) - LENGTH(REPLACE(b1, ',', ''));
-
-
+    SET @num = LENGTH(b) - LENGTH(REPLACE(b, ',', ''));
 SET @i = 0;
-
-
 WHILE (@i <=@num ) DO
     INSERT INTO test1
 VALUES
     (
-        a1,
-      str_for_substr(@i,b1)
+        a,
+      str_for_substr(@i,b)
 );
-
 set @i = @i+1;
-
 END WHILE;
-
-  END LOOP;
-  
+  END LOOP;  
   CLOSE cur;
+END$$
 
-END*/
+
+*/

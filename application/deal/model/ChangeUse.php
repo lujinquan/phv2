@@ -271,8 +271,9 @@ class ChangeUse extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
+        // 改变房屋绑定的租户;
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        
         // 添加台账记录
         $taiData = [];
         $taiData['house_id'] = $finalRow['house_id'];
