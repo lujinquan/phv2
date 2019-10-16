@@ -8,7 +8,7 @@
 		<div class="layui-col-md12">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline j-tips">
-				<input type="text" id="house_number" name="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
 				<input type="hidden" id="ban_id" name="ban_id" value="">
 				<input type="hidden" id="house_id" name="house_id" value="">
 				<input type="hidden" id="tenant_id" name="tenant_id" value="">
@@ -204,6 +204,7 @@
 						        }}
 						        ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '账单金额'}
 						        ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已支付金额'}
+								,{field: 'rent_order_unpaid', minWidth: 140, align:'center', title: '欠缴金额'}
 						        ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
 						        ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
 						        ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
@@ -213,6 +214,10 @@
 						       
 						    }
 						},isShowInst,house_number)
+						$("#before_year").text(0);
+						$("#before_month").text(0);
+						$("#this_month").text(0);
+						$("#total_sum").text(0);
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
@@ -246,17 +251,17 @@
 				for(var i=0;i<data.length;i++) {
 					//判断本月
 					if(data[i].rent_order_date==jdates){
-						previousmonths2 += parseFloat(data[i].rent_order_receive) * 100;
+						previousmonths2 += parseFloat(data[i].rent_order_unpaid) * 100;
 						$("#this_month").text(previousmonths2.toFixed(2) / 100);
 					}
 					//判断以前月
 					else if(data[i].rent_order_date<jdates && data[i].rent_order_date.substr(0,data[i].rent_order_date.length-2)==years){
-						previousmonths1 += parseFloat(data[i].rent_order_receive) * 100;
+						previousmonths1 += parseFloat(data[i].rent_order_unpaid) * 100;
 						$("#before_month").text(previousmonths1.toFixed(2) / 100);
 					}
 					//判断以前年
 					else if(data[i].rent_order_date.substr(0,data[i].rent_order_date.length-2)<years){
-						previousmonths += parseFloat(data[i].rent_order_receive) * 100;
+						previousmonths += parseFloat(data[i].rent_order_unpaid) * 100;
 						$("#before_year").text(previousmonths.toFixed(2) / 100);
 					}
 

@@ -33,7 +33,7 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i> 房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" name="house_number" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="house_number" name="house_number" lay-verify="required" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
 					<input type="hidden" id="tenant_id" name="tenant_id">
@@ -618,7 +618,7 @@
 						<div class="layui-col-md4">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
-								<select name="applyType" lay-filter="reason">
+								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
 									{volist name="params['leasetypes']" id="v"}
 									<option value="{$key}">{$v}</option>

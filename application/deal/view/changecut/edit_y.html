@@ -24,7 +24,8 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
-				<input type="text" id="reduction_rentlist" value="" placeholder="双击查看"   readonly autocomplete="off" class="layui-input j-rent-list">
+				<input type="text" id="reduction_rentlist" value="" placeholder=""   readonly autocomplete="off" class="layui-input j-rent-list">
+				<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
 			</div>
 		</div>
 		<div class="layui-col-md4">
@@ -215,7 +216,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
-  			<select name="cut_type" class="field-cid">
+  			<select name="cut_type" lay-verify="required" class="field-cid">
   				<option value="">请选择</option>
   				{volist name="params['cuttypes']" id="v"}
 				<option value="{$key}" {if condition="$data_info['cut_type'] == $key"}selected{/if}>{$v}</option>
@@ -226,7 +227,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" name="cut_rent" value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" lay-verify="required" name="cut_rent" value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
@@ -404,6 +405,7 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
+		$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+{$data_info['house_id']});//获取房屋编号
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
 			layer.open({
@@ -437,7 +439,7 @@
 						}
 			 });
 		})
-		//双击查询记租表
+		/* //双击查询记租表
 		 $(".layui-form").on('click','.j-rent-list',function(){
 			 layer.open({
 			 			title: '记租表'
@@ -454,7 +456,7 @@
 			 				layer.close(index);
 			 			}
 			  });
-		 })
+		 }) */
         //身份证
         upload.render({
         	elem: '#upload_img1',

@@ -25,7 +25,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>发租类型</label>
 			<div class="j-input-inline">
-				<select name="new_type" class="field-cid">
+				<select name="new_type" lay-verify="required" class="field-cid">
 					<option value="">请选择</option>
 					{volist name="params['news']" id="v" key="k"}
 					<option value="{$k}">{$v}</option>

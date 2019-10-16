@@ -16,7 +16,7 @@
 	 	  <td id="write_type">管段调整</td>
 		  <td id="raw_pipesection">{$params.insts[$Think.INST]}</td>
 		  <td id="new_pipesection">
-			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" required>
+			  <select id="ban_inst_id" name="new_inst_id" lay-verify="required" class="field-cid" type="select" required>
 				<option value="">请选择</option>
 				{volist name=":config('inst_data_names')[1]" id="v"}
 				<option value="{$key}" {if condition="$data_info['new_inst_id'] == $key"}selected{/if}>{$v}</option>
