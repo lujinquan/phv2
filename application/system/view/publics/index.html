@@ -35,6 +35,7 @@
 		<div class="layadmin-user-login-main">
 		  <div class="layadmin-user-login-box layadmin-user-login-header clearfix">
 		    <h2>武房公房管理系统</h2>
+			<span class="j-errors">&nbsp;</span>
 		  </div>
 		  <div class="j-title">
 			  <ul>
@@ -52,17 +53,17 @@
 				  <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 					<div class="layui-form-item">
 					  <label class="layadmin-user-login-icon layui-icon layui-icon-username" ></label>
-					  <input type="text" name="username"  lay-verify="required" placeholder="账户" class="layui-input">
+					  <input type="text" name="username"  lay-verify="required" lay-vertype="tips" placeholder="账户" class="layui-input">
 					</div>
 					<div class="layui-form-item">
 					  <label class="layadmin-user-login-icon layui-icon layui-icon-password" ></label>
-					  <input type="password" name="password" value="ctnmit" lay-verify="required" placeholder="密码" class="layui-input">
+					  <input type="password" name="password" value="ctnmit" lay-verify="required" lay-vertype="tips" placeholder="密码" class="layui-input">
 					</div>
 					<div class="layui-form-item">
 					  <div class="layui-row">
 						<div class="layui-col-xs7">
 						  <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" ></label>
-						  <input type="text" name="captcha" lay-verify="required" placeholder="验证码" class="layui-input">
+						  <input type="text" name="captcha" lay-verify="required" lay-vertype="tips" placeholder="验证码" class="layui-input">
 						</div>
 						<div class="layui-col-xs5">
 						  <div style="margin-left: 10px;">
@@ -125,9 +126,8 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
             token = $('input[name="__token__"]').val(),
             captcha = $('input[name="captcha"]').val();
 
-        layer.msg('数据提交中...',{time:500000});
+        //layer.msg('数据提交中...',{time:500000});
         that.prop('disabled', true);
-        
         $.ajax({
             type: "POST",
             url: _form.attr('action'),
@@ -136,14 +136,22 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
                 if (typeof(res.data.token) != 'undefined') {
                     $('input[name="__token__"]').val(res.data.token);
                 }
-                layer.msg(res.msg, {}, function() {
+				if (res.code == 1) {
+				    location.href = res.url;
+					$(".j-errors").text("数据提交中...");
+				} else { 	
+					$(".j-errors").text(res.msg)
+					$('#LAY-user-get-vercode').attr('src','/captcha.html'); //更新二维码
+				    that.prop('disabled', false);
+				}
+                /* layer.msg(res.msg, {}, function() {
                     if (res.code == 1) {
                         location.href = res.url;
                     } else { 	
                     	$('#LAY-user-get-vercode').attr('src','/captcha.html'); //更新二维码
                         that.prop('disabled', false);
                     }
-                });
+                }); */
 
             }
         });
