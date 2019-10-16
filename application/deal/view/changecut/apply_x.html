@@ -91,7 +91,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
-  			<select name="cut_type" class="field-cid">
+  			<select name="cut_type" lay-verify="required" class="field-cid">
   				{volist name="params['cuttypes']" id="v"}
 				<option value="{$key}">{$v}</option>
 				{/volist}
@@ -101,13 +101,13 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" name="cut_rent" lay-verify="required" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   		<label class="j-form-label">减免证号</label>
   		<div class="j-input-inline">
-  			<input type="text" name="cut_rent_number" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" name="cut_rent_number" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   </div>

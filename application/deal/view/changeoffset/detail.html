@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box floorWrap">
+  <div class="j-details-box j-no-border floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -16,9 +16,7 @@
 				<input type="hidden" id="before_year_copy" name="before_year_rent" value="{$data_info['before_year_rent']}">
 				<input type="hidden" id="before_month_copy" name="before_month_rent" value="{$data_info['before_month_rent']}">
 				<input type="hidden" id="this_month_copy" name="this_month_rent" value="{$data_info['this_month_rent']}">
-				<b class="j-explain-search j-house_number">查询</b>
 			</div>
-			<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>可以核销当月订单</div>
 		</div>
 
 	</div>

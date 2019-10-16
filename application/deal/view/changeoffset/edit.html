@@ -8,7 +8,7 @@
 		<div class="layui-col-md12">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline j-tips">
-				<input type="text" id="house_number" name="house_number" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
+				<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
 				<input type="hidden" name="id" value="{$data_info['id']}">
 				<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_info']['ban_id']}">
 				<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
@@ -266,9 +266,7 @@
 						        }}
 						        ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '账单金额'}
 						        ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已支付金额'}
-						        ,{field: 'rent_order_unpaid', minWidth: 140, align:'center', title: '欠缴金额', templet: function(d) {
-						            return d.rent_order_receive-d.rent_order_paid;
-						        }}
+						        ,{field: 'rent_order_unpaid', minWidth: 140, align:'center', title: '欠缴金额'}
 						        ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
 						        ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
 						        ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
@@ -278,6 +276,10 @@
 						       
 						    }
 						},isShowInst,house_number)
+						$("#before_year").text(0);
+						$("#before_month").text(0);
+						$("#this_month").text(0);
+						$("#total_sum").text(0);
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
@@ -292,6 +294,7 @@
 				var previousmonths2 = 0;//本月
 				var previousmonths3 = 0;//总金额
 				var myDate = new Date;
+				console.log(data);
 				var years = myDate.getFullYear(),//获取当前年
 				    months = ("0" + (myDate.getMonth() + 1)).slice(-2),//获取当前月
 					jdates = years+''+months;

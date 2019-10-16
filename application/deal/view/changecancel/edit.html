@@ -8,7 +8,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>注销类别</label>
 			<div class="j-input-inline">
-				<select name="cancel_type" class="field-cid">
+				<select name="cancel_type" lay-verify="required" class="field-cid">
 					<option value="">请选择</option>
 					{volist name="params['cancels']" id="v"}
 					<option value="{$key}" {if condition="$data_info['cancel_type'] == $key"}selected{/if}>{$v}</option>
@@ -19,7 +19,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
-				<input type="text" name="ban_number" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
+				<input type="text" name="ban_number" lay-verify="required" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
 				<input type="hidden" name="house_id" value="">
 				<b class="j-explain-search j-ban_number">查询</b>
