@@ -33,6 +33,10 @@
 			    <i class="layui-icon layui-icon-print"></i>
 			    打印
 			</button>
+			<button type="button" class="layui-btn layui-bg-green on" id="button_create">
+			    <i class="layui-icon layui-icon-chart"></i>
+			    生成报表
+			</button>
         </div>
 	   </div>
     </form>
@@ -55,10 +59,18 @@
 <script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <!-- 打印 E -->
 <script>
-    layui.use(['jquery', 'laydate', 'element'], function(){
-        var laydate = layui.laydate,
-		    $ = layui.$
-			,element = layui.element;
+layui.use(['jquery', 'laydate', 'element'], function(){
+    var laydate = layui.laydate,
+	    $ = layui.$
+		,element = layui.element;
+		
+		$('#button_create').click(function(){
+			$.post('{:url('rent/makeMonthReport')}', function(res) {
+                layer.msg(res.msg);
+                location.reload();
+            });
+		})
+
 			
         //年选择器
         laydate.render({

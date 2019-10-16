@@ -3,7 +3,7 @@ namespace app\report\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\report\model\Report as ReportModel;
-use app\rent\model\Rent as RentModel;
+use app\report\model\MonthReport as MonthReportModel;
 include EXTEND_PATH.'phpexcel/PHPExcel.php';
 
 class Rent extends Admin
@@ -46,6 +46,42 @@ class Rent extends Admin
             return json_encode($data);
         }
         return $this->fetch();
+    }
+
+    /**
+     * [months 生成月租金报表]
+     * @return [type] [description]
+     */
+    public function makeMonthReport()
+    {
+        if ($this->request->isAjax()) {
+            //set_time_limit(0);
+            $date = date('Ym');
+            //$date = 201909;
+            //Debug::remark('begin');
+            $MonthReportModel = new MonthReportModel;
+            $HouseReportdata = $MonthReportModel->makeMonthReport($date);
+            //Debug::remark('end');
+            $where = [['type','eq','RentReport'],['date','eq',$date]];
+
+            $ReportModel = new ReportModel;
+            $res = $ReportModel->where($where)->find();
+
+            if($res){
+                $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
+            }else{
+                $re = $ReportModel->create([
+                    'data'=>json_encode($HouseReportdata),
+                    'type'=>'RentReport',
+                    'date'=>$date,
+                ]);
+            }
+            
+            $data = [];
+            $data['msg'] = $date.'月报，保存成功！';
+            $data['code'] = 1;
+            return json($data);
+        }
     }
 
     /**
