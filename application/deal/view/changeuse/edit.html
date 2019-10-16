@@ -70,7 +70,7 @@
 							<div class="layui-col-md12">
 								<label class="j-form-label"><i class="red">*</i> 租户ID</label>
 								<div class="j-input-inline">
-									<input type="text" id="new_tenant_number" name="new_tenant_number" value="{$data_info['new_tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
+									<input type="text" id="new_tenant_number" name="new_tenant_number" lay-verify="required" value="{$data_info['new_tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
 									<input type="hidden" id="new_tenant_id" name="new_tenant_id" value="{$data_info['new_tenant_id']}">
 									<b class="j-explain-search j-tenant_number">查询</b>
 								</div>
@@ -109,7 +109,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i> 变更类型</label>
 				<div class="j-input-inline">
-					<select name="change_use_type" class="field-cid" type="select">
+					<select name="change_use_type" lay-verify="required" class="field-cid" type="select">
 					    {volist name="params['usetypes']" id="v"}
 					    <option value="{$key}" {if condition="$data_info['change_use_type'] == $key"}selected{/if}>{$v}</option>
 					    {/volist}

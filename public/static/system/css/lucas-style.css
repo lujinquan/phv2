@@ -203,6 +203,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .layui-input,.j-details-box .layui-select,.j-details-box .layui-textarea{border:1px solid rgba(198,210,223,1);}
 .j-details-box.j-no-border .layui-input,.j-details-box .layui-select,.j-details-box.j-no-border .layui-textarea{border:none;}/*详情页面去除边框  */
 .j-details-box.j-no-border .j-form-label, .j-details-box.j-no-border .j-enclosure-label{border: 0; background: none;}/*详情页面去除边框  */
+.j-details-box.j-no-border input{background: none!important;}/* 去除详情页背景 */
+.j-details-box.j-no-border .j-enclosure-label{float: left;padding: 0;width: 120px;text-align: center;line-height: 36px;background: rgba(240,241,245,1);
+    border: 1px solid rgba(198,210,223,1);color: #8592A3;font-weight: bold;border-radius: 2px 0 0 2px;}
 .j-map-height{ width: 100%; height: 224px;}
 .j-enclosure-img li{ margin:20px 10px 0 0;width: 120px; height: 112px; float: left; border-radius: 4px;}
 .j-enclosure-img li img{width: 120px; height: 112px;}

@@ -7,7 +7,7 @@
 			<div class="layui-col-md12">
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+					<input type="text" id="house_number" lay-verify="required" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
 					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
 					<b class="j-explain-search j-house_number">查询</b>
@@ -298,6 +298,34 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		sumcalculated=0,//table计算租金之和初始值
 		sumcalculation=0;//table计算计租面积初始值
 	console.log(params);
+	function statistics(){
+	  //异动后房间信息table计算租金之和
+	  	var trList = $(".j-table-tbodynew").children("tr");
+		sumcalculated = 0;
+		sumcalculation=0;
+	  	for (var j=0;j<trList.length;j++) {
+			$("#changes_rule_news").text();
+	  		var tdArr = trList.eq(j).find("td"); //遍历td  
+	  			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
+					$("#changes_rule_news").text(
+					  (                  
+						sumcalculated
+						+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
+						+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
+						+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
+						).toFixed(2) / 100
+					);	//异动明细异动后规定租金
+				$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
+				$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
+				$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
+				$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
+				sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
+				$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
+				$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
+				$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
+				$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
+	  	}
+	}
 	//获取房屋查询器
 	 $(".layui-form").on('click','.j-house_number',function(){
 		layer.open({
@@ -468,50 +496,17 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 								$('.j-table-tbodynew').append(trDatahousenew);
 							}
 						  }
-						  
-						  function statistics(){
-						    //异动后房间信息table计算租金之和
-						    	var trList = $(".j-table-tbodynew").children("tr");
-								sumcalculated = 0;
-								sumcalculation=0;
-						    	for (var j=0;j<trList.length;j++) {
-						  		
-						  		$("#changes_rule_news").text();
-						    		var tdArr = trList.eq(j).find("td"); //遍历td  
-						    			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
-						  			$("#changes_rule_news").text(
-						  			  (                  
-						  				sumcalculated
-						  				+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
-						  				+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
-						  				+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
-						  				).toFixed(2) / 100
-						  			);	//异动明细异动后规定租金
-									$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
-									$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
-									$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
-									$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
-						  			sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
-						  			$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
-									$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
-									$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
-									$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
-						    	}
-						  }
 						  statistics();
 						  //监听异动明细异动后租差input
 						  $(".changes_difference_news").bind("input propertychange",function(){
-							  
-							  statistics();
+								statistics();
 						  });
 						  //监听异动明细异动后泵费input
 						  $(".changes_pumpfee_news").bind("input propertychange",function(){
-							 
-							  statistics();
+								statistics();
 						  });
 						  //监听异动明细异动后泵费input
 						  $(".changes_agreement_news").bind("input propertychange",function(){
-							  
 							  statistics();
 						  });
 						  
@@ -603,37 +598,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 									$('.j-table-tbodynew').append(trDatahousenew);
 								}
 							  } 
-							  
-							  
-								  function statistics(){
-								    //异动后房间信息table计算租金之和
-								    	var trList = $(".j-table-tbodynew").children("tr");
-										sumcalculated = 0;
-										sumcalculation=0;
-								    	for (var j=0;j<trList.length;j++) {
-								  		
-								  		$("#changes_rule_news").text();
-								    		var tdArr = trList.eq(j).find("td"); //遍历td  
-								    			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
-								  			$("#changes_rule_news").text(
-								  			  (                  
-								  				sumcalculated
-								  				+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
-								  				+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
-								  				+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
-								  				).toFixed(2) / 100
-								  			);	//异动明细异动后规定租金
-											$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
-											$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
-											$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
-											$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
-								  			sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
-								  			$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
-											$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
-											$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
-											$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
-								    	}
-								  }
 								 statistics(); 
 							}
 							   
@@ -722,37 +686,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 									$('.j-table-tbodynew').append(trDatahousenew);
 								}
 							  } 
-							  
-							  
-								  function statistics(){
-								    //异动后房间信息table计算租金之和
-								    	var trList = $(".j-table-tbodynew").children("tr");
-								  								sumcalculated = 0;
-								  								sumcalculation=0;
-								    	for (var j=0;j<trList.length;j++) {
-								  		
-								  		$("#changes_rule_news").text();
-								    		var tdArr = trList.eq(j).find("td"); //遍历td  
-								    			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
-								  			$("#changes_rule_news").text(
-								  			  (                  
-								  				sumcalculated
-								  				+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
-								  				+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
-								  				+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
-								  				).toFixed(2) / 100
-								  			);	//异动明细异动后规定租金
-											$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
-											$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
-											$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
-											$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
-								  			sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
-								  			$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
-											$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
-											$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
-											$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
-								    	}
-								  }
 								 statistics(); 
 							}
 							   
@@ -833,37 +766,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		  			$('.j-table-tbodynew').append(trDatahousenew);
 		  		}
 		  	  } 
-		  	  
-		  	  
-		  		  function statistics(){
-		  		    //异动后房间信息table计算租金之和
-		  		    	var trList = $(".j-table-tbodynew").children("tr");
-		  		  								sumcalculated = 0;
-		  		  								sumcalculation=0;
-		  		    	for (var j=0;j<trList.length;j++) {
-		  		  		
-		  		  		$("#changes_rule_news").text();
-		  		    		var tdArr = trList.eq(j).find("td"); //遍历td  
-		  		    			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(2)*100;//计算租金之和
-		  		  			$("#changes_rule_news").text(
-		  		  			  (                  
-		  		  				sumcalculated
-		  		  				+parseFloat($('#changes_difference_news').val()).toFixed(2)*100
-		  		  				+parseFloat($('#changes_pumpfee_news').val()).toFixed(2)*100
-		  		  				+parseFloat($('#changes_agreement_news').val()).toFixed(2)*100
-		  		  				).toFixed(2) / 100
-		  		  			);	//异动明细异动后规定租金
-							$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
-							$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
-							$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
-							$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
-		  		  			sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
-		  		  			$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
-							$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
-							$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
-							$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
-		  		    	}
-		  		  }
 		  		 statistics(); 
 		  	}
 		  	   
