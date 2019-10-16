@@ -7,7 +7,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 			<div class="j-input-inline">
-				<input type="text" name="ban_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+				<input type="text" name="ban_number" lay-verify="required" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="">
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
@@ -40,7 +40,7 @@
 	  <tbody>
 		  <tr>
 			  <td>
-				  <select name="ban_change_id" lay-filter="adjustment">
+				  <select name="ban_change_id" lay-verify="required" lay-filter="adjustment">
 					  <option value="">调整类型</option>
 					  {volist name="params['ban_change_ids']" id="v"}
 					  <option value="{$key}">{$v}</option>
@@ -296,7 +296,7 @@
 				   switch(message){
 				   	case '1':
 				   		$(".j-house-boxs td:eq(1) input").attr("name","old_floors");
-				   		$(".j-house-boxs td:eq(2)").html('<input type="number" value="" placeholder="" autocomplete="off" class="layui-input" name="new_floors">');
+				   		$(".j-house-boxs td:eq(2)").html('<input type="number" value="" lay-verify="required"  placeholder="" autocomplete="off" class="layui-input" name="new_floors">');
 						$(".j-hides").hide();
 						$(".j-lease-box").show();//租赁异动导航显示
 				   		$(".j-floor-box").show();
