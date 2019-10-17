@@ -40,6 +40,7 @@ class Room extends Admin
                  },])->where($where['room'])->count('room_id');
             $data['code'] = 0;
             $data['msg'] = '';
+            //halt($data);
             return json($data);
         }
         return $this->fetch();
@@ -171,8 +172,9 @@ class Room extends Admin
         $id = input('param.id/d');
         $row = RoomModel::with(['ban'])->find($id);
         $row['room_rent_point'] = (100 - $row['room_rent_point']*100).'%';
-        $houses = $row->house_room()->where([['house_room_status','<=',1]])->column('house_number');
-        //halt($houses);
+        $room_ids = $row->house_room()->where([['house_room_status','<=',1]])->column('house_id');
+        $houses = HouseModel::with('tenant')->where([['house_id','in',$room_ids]])->field('house_number,tenant_id')->select();
+        //dump($row);halt($houses);
         $this->assign('houses',$houses);
         $this->assign('data_info',$row);
         return $this->fetch();

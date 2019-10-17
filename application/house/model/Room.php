@@ -60,6 +60,15 @@ class Room extends SystemBase
         if(isset($data['room_type']) && $data['room_type']){
             $where['room'][] = ['room_type','eq',$data['room_type']];
         }
+        
+        // 检索房间共用状态
+        if(isset($data['room_pub_num']) && $data['room_pub_num']){
+            if($data['room_pub_num'] < 3){
+                $where['room'][] = ['room_pub_num','eq',$data['room_pub_num']];
+            }else{
+                $where['room'][] = ['room_pub_num','>=',$data['room_pub_num']];      
+            }
+        }
         //检索管段
         $insts = config('inst_ids');
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;

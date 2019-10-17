@@ -238,6 +238,32 @@ class House extends Admin
         return $this->fetch();
     }
 
+    public function taiDetail()
+    {
+        $HouseTaiModel = new HouseTaiModel;
+        $id = input('param.id/d');
+        $row = $HouseTaiModel->get($id);
+        $temps = $row['data_json'];
+        
+        if($temps){
+            $tableData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."house");
+            $colNameArr = [];
+            foreach ($tableData as $v) {
+                $colNameArr[$v['Field']] = $v['Comment'];
+            }
+            foreach ($temps as $key => $value) {
+                $datas[] = [
+                    $colNameArr[$key] , $value['old'],$value['new']
+                ];
+            }
+            $this->assign('datas',$datas);
+            return $this->fetch();
+        }else{
+            return $this->error('数据为空！');
+        }
+               
+    }
+
     public function del()
     {
         $ids = $this->request->param('id/a');        

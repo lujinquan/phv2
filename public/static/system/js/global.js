@@ -793,6 +793,27 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
 			}
 		}
 	});
+
+      //点击tr选中对应的checkbox
+      $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
+          var index = $(this).attr('data-index');
+          var tableBox = $(this).parents('.layui-table-box');
+          //存在固定列
+          if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
+              tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
+          } else {
+              tableDiv = tableBox.find(".layui-table-body.layui-table-main");
+          }
+          var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
+          if (checkCell.length>0) {
+              checkCell.click();
+          }
+      });
+      
+      $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
+          e.stopPropagation();
+      });
+
   })
 
 function bytesToSize(bytes) {  
@@ -813,46 +834,28 @@ function toFixed(num, s) {
 }
 
 function formSubmit(type,url,data,index){
-            $.ajax({
-                type: type,
-                url: url,
-                data: data,
-                success: function(res) {
-                    console.log(res);
-                    var that = $('.layui-layer-btn0');
-                    that.text(res.msg);
-                    if (res.code == 0) { 
-                        setTimeout(function(){
-                            that.removeClass('disabled').text('确认');
-                        }, 2000);
-                    } else {
-                        setTimeout(function(){
-                            parent.location.href = res.url;
-                        }, 2000);
-                    }
-                }
-            });
-            return false;
+    $.ajax({
+        type: type,
+        url: url,
+        data: data,
+        success: function(res) {
+            console.log(res);
+            var that = $('.layui-layer-btn0');
+            that.text(res.msg);
+            if (res.code == 0) { 
+                setTimeout(function(){
+                    that.removeClass('disabled').text('确认');
+                }, 2000);
+            } else {
+                setTimeout(function(){
+                    parent.location.href = res.url;
+                }, 2000);
+            }
         }
-//点击tr选中对应的checkbox
-		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
-		      var index = $(this).attr('data-index');
-		      var tableBox = $(this).parents('.layui-table-box');
-		      //存在固定列
-		      if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
-		          tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
-		      } else {
-		          tableDiv = tableBox.find(".layui-table-body.layui-table-main");
-		      }
-		      var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
-		      if (checkCell.length>0) {
-		          checkCell.click();
-		      }
-		  });
-		  
-		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
-		      e.stopPropagation();
-		  });
+    });
+    return false;
+}
+
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
      		url: 'data-original',

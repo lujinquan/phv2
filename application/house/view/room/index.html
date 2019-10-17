@@ -29,6 +29,15 @@
 						{/volist}
 					</select>
 				</div>
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="room_pub_num">
+						<option value="">租用状态</option>
+						<option value="1">独用</option>
+						<option value="2">公摊</option>
+						<option value="3">共用</option>
+						{/volist}
+					</select>
+				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -82,6 +91,20 @@
 						align:'center',
 						title: '楼栋编号'
 					}, {
+						field: 'room_type',
+						width: 110,
+						title: '租用状态',
+						templet: function(d) {
+							if(parseInt(d.room_pub_num) == 1){
+								return '独用';
+							}else if(parseInt(d.room_pub_num) == 2){
+								return '公摊';
+							}else{
+								return '共用';
+							}
+							//return params.roomtypes[d.room_type];
+						}
+					}, {
 						field: 'ban_inst_id',
 						minWidth: 120,
 						align:'center',
@@ -124,8 +147,7 @@
 						title: '使用面积'
 					}, {
 						title: '操作',
-						Width: 260,
-						minWidth: 260,
+						width: 100,
 						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'
@@ -133,7 +155,15 @@
 				]
 			],
 			done: function(res, curr, count) {
-
+				var	result = res.data;
+				for (var i = 0; i < result.length; i++) {
+					if(parseInt(result[i].room_pub_num) == 2){
+						$("tr[data-index="+i+"]").css('color','blue');
+					}else if(parseInt(result[i].room_pub_num) > 2){
+						$("tr[data-index="+i+"]").css('color','red');
+					}
+				}
+				
 			}
 		}, isShowInst)
 	});

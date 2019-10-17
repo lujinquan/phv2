@@ -54,7 +54,7 @@ class Lease extends Admin
         $id = input('param.id/d');
         $ChangeLeaseModel = new ChangeLeaseModel;
         $row = $ChangeLeaseModel->detail($id);
-        //$this->assign('id',$id);
+        $this->assign('id',$id);
         $this->assign('data_info',$row);
     	return $this->fetch();
     }

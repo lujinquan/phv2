@@ -71,15 +71,15 @@ update ph_v1.ph_room a,ph_v2.ph_ban_back b set a.BanID = b.ban_id where a.BanID 
 
 /**
  * 7、同步房间表[ph_room => ph_room_back]
- * 字段：房间编号、房间类型、规租、计算租金、间号、单元号、楼层号、使用面积、建面、计租面积、状态
+ * 字段：房间编号、房间类型、规租、计算租金、间号、单元号、楼层号、使用面积、建面、计租面积、共用状态、状态
  */
 drop table if exists ph_v2.ph_room_back;
 create table ph_v2.ph_room_back like ph_v2.ph_room;
 # 同步数据
 insert into ph_v2.ph_room_back 
-(room_number,ban_id,room_type,room_pre_rent,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area,room_status) 
+(room_number,ban_id,room_type,room_pre_rent,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area,room_pub_num,room_status) 
 select 
-RoomID,BanID,RoomType,RoomPrerent,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea,Status
+RoomID,BanID,RoomType,RoomPrerent,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea,RoomPublicStatus,Status
 from ph_v1.ph_room;
 
 
@@ -272,7 +272,6 @@ insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 
 
 
-/*
 
 # 创建字符串分隔存储过程函数
 delimiter $$
@@ -306,4 +305,3 @@ END WHILE;
 END$$
 
 
-*/

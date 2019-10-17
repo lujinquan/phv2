@@ -335,11 +335,14 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 				,area: ['70%', '60%']
 				, btn:false
 				,pageTabs: false
-				,content: '{:url('system/index/house')}?hisi_iframe=yes'
+				,content: '{:url('system/index/house')}?hisi_iframe=yes&change_type=9'
 				,btn: ['确定','关闭']
 				,yes: function(index, layero){
 					var row = window["layui-layer-iframe" + index].hoesedata();
 					//console.log(row);
+					if(row.color_status != 1){ //正常状态下的才可以执行
+						return false;
+					}
 					layer.close(index);
 					var hosue_number = row.house_number;
 					$("#j_house_id").val(row.house_id);//获取房屋id

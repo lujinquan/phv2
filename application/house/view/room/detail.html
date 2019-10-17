@@ -74,11 +74,11 @@
     <legend>绑定房屋</legend>
   </fieldset>
   <div class="layui-row layui-form-item layui-col-space90">
-   {volist name="houses" id="vo" key="k"}
+   {volist name="houses" id="v" key="k"}
   	<div class="layui-col-md4">
   		<label class="j-form-label">房屋{$k}</label> 
   		<div class="j-input-inline">
-  			<input type="text" name="house_number" value="{$vo}" disabled autocomplete="off" class="layui-input">
+  			<input type="text" name="house_number" value="{$v['house_number']}（{$v['tenant_name']}）" disabled autocomplete="off" class="layui-input">
   		</div>
   	</div>
    {/volist}

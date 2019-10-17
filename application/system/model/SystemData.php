@@ -96,31 +96,26 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 10);
-        $where['house'] = [
-            ['house_status','eq',1], // 默认查询正常状态下的房屋
-        ];
-        $where['ban'] = [
-            ['ban_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的房屋
-        ];
-        $where['tenant'] = [
-        ];
+        $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
+        $where[] = ['c.ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
+        
         if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
-            $where['house'][] = ['house_number','like','%'.$queryWhere['house_number'].'%'];
+            $where[] = ['a.house_number','like','%'.$queryWhere['house_number'].'%'];
         }
         if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
-            $where['tenant'][] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
+            $where[] = ['b.tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
         }
         if(isset($queryWhere['ban_address']) && $queryWhere['ban_address']){ //查询楼栋地址
-            $where['ban'][] = ['ban_address','like','%'.$queryWhere['ban_address'].'%'];
+            $where[] = ['c.ban_address','like','%'.$queryWhere['ban_address'].'%'];
         }
         if(isset($queryWhere['ban_number']) && $queryWhere['ban_number']){ //查询楼栋编号
-            $where['ban'][] = ['ban_number','like','%'.$queryWhere['ban_number'].'%'];
+            $where[] = ['c.ban_number','like','%'.$queryWhere['ban_number'].'%'];
         }
         if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
-            $where['ban'][] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
+            $where[] = ['c.ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
         }
         if(isset($queryWhere['house_status'])){ //查询房屋状态
-            $where['house'][] = ['house_status','eq',$queryWhere['house_status']];
+            $where[] = ['a.house_status','eq',$queryWhere['house_status']];
         }
         
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
@@ -128,26 +123,34 @@ class SystemData extends Model
                 case 4: //陈欠核销 【待优化】
                     $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
                     //halt($houseids);
-                    $where['house'][] = ['house_id','in',$houseids];
-                    $where['house'][] = ['house_status','eq',1];
+                    $where[] = ['house_id','in',$houseids];
+                    $where[] = ['house_status','eq',1];
+                    break;
+                case 9: //房屋调整
+                    $where[] = ['a.house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_house')->where([['change_status','>',1]])->column('house_id');
                     break;
 
                 case 13: //使用权变更
-                    $where['house'][] = ['house_status','eq',1];
+                    $where[] = ['a.house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
                     break;
 
                 case 16: //减免年审
                     $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
-                    $where['house'][] = ['house_id','in',$houseids];
-                    $where['house'][] = ['house_status','eq',1];
+                    $where[] = ['house_id','in',$houseids];
+                    $where[] = ['house_status','eq',1];
                     //halt($where);
                     break;
-
+                case 17: //别字更正
+                    $where[] = ['a.house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_name')->where([['change_status','>',1]])->column('house_id');
+                    break;
                 case 18: //发租约
                     // $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
                     // $where['house'][] = ['house_id','in',$houseids];
-                    $where['house'][] = ['house_use_id','eq',1];
-                    $where['house'][] = ['house_status','eq',1];
+                    $where[] = ['house_use_id','eq',1];
+                    $where[] = ['house_status','eq',1];
                     //halt($where);
                     break;
                 
@@ -160,23 +163,35 @@ class SystemData extends Model
 
         $HouseModel = new HouseModel;
 
-        $fields = 'house_id,house_balance,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area,(house_pre_rent + house_diff_rent + house_pump_rent) as house_yue_rent';
+        $fields = 'a.house_id,a.house_number,a.house_balance,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,(a.house_pre_rent + a.house_diff_rent + a.house_pump_rent) as house_yue_rent,b.*,c.*';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
-        $data['data'] = $HouseModel->withJoin([
-             'ban'=> function($query)use($where){ //注意闭包传参的方式
-                 $query->where($where['ban']);
-             },
-             'tenant'=> function($query)use($where){
-                 $query->where($where['tenant']);
-             },
-             ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc,house_id desc')->limit($limit)->select();
-        $data['count'] = $HouseModel->withJoin([
-             'ban'=> function($query)use($where){ //注意闭包传参的方式
-                 $query->where($where['ban']);
-             },
-             ],'left')->where($where['house'])->count();
+        // $temps = $HouseModel->withJoin([
+        //      'ban'=> function($query)use($where){ //注意闭包传参的方式
+        //          $query->where($where['ban']);
+        //      },
+        //      'tenant'=> function($query)use($where){
+        //          $query->where($where['tenant']);
+        //      },
+        //      ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc,house_id desc')->limit($limit)->select();
+        
+        $temps = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+        
+        foreach ($temps as $k => &$v) {
+            $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
+            $v['color_status'] = 1; //正常的
+            if($unpaids){
+                $v['color_status'] = 3; // 有欠租的
+            }
+            if(isset($applyHouseidArr) && $applyHouseidArr){
+                if(in_array($v['house_id'], $applyHouseidArr)){
+                    $v['color_status'] = 2; // 已在异动中
+                }
+            }
+        }
+        $data['data'] = $temps;
+        $data['count'] = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->count();
         $data['code'] = 0;
         $data['msg'] = '';
 

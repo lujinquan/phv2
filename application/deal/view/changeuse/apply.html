@@ -230,7 +230,9 @@
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].hoesedata();
-						console.log(row);
+						if(row.color_status != 1){ //正常状态下的才可以执行
+							return false;
+						}
 						layer.close(index);
 						$("#house_id").val(row.house_id);//获取楼栋id
 						$("#ban_id").val(row.ban_id);//获取楼栋id

@@ -112,27 +112,36 @@
 						}
 					}, {
 						field: 'ban_address',
-						minWidth: 200,
+						minWidth: 160,
 						align:'center',
 						title: '地址'
 					}, {
-						field: 'house_area',
-						minWidth: 80,
+						field: 'tenant_card',
+						minWidth: 200,
 						align:'center',
-						title: '建面'
+						title: '身份证号'
 					}
 
 				]
 			],
 			done: function(res, curr, count) {
-
+				var	result = res.data;
+				console.log(result);
+				for (var i = 0; i < result.length; i++) {
+					$("tr[data-index="+i+"]").attr('color-status',1);
+					if(parseInt(result[i].color_status) == 2){
+						$("tr[data-index="+i+"]").css('color','#E6E6E6').attr('color-status',2);
+					}else if(parseInt(result[i].color_status) == 3){
+						$("tr[data-index="+i+"]").css('color','red').attr('color-status',3);
+					}
+				}
 			}
 		}, isShowInst);
 		//监听行单击事件（单击事件为：rowDouble）
 		table.on('row(dataTable)',function(obj){
 			data = obj.data;
 			conId = data.id;
-			/* console.log(data); */
+			 console.log(obj); 
 			//标注选中样式
 			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 		});
@@ -140,17 +149,21 @@
 		//点击tr选中对应的checkbox
 		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
 			  var index = $(this).attr('data-index');
-			  var tableBox = $(this).parents('.layui-table-box');
-			  //存在固定列
-			  if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
-				  tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
-			  } else {
-				  tableDiv = tableBox.find(".layui-table-body.layui-table-main");
-			  }
-			  var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
-			  if (checkCell.length>0) {
-				  checkCell.click();
-			  }
+			  // var color_status = $(this).attr('color-status');
+			  // if(color_status == 1){
+			  	  var tableBox = $(this).parents('.layui-table-box');
+				  //存在固定列
+				  if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
+					  tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
+				  } else {
+					  tableDiv = tableBox.find(".layui-table-body.layui-table-main");
+				  }
+				  var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
+				  if (checkCell.length>0) {
+					  checkCell.click();
+				  }
+			  // }
+			  
 		  });
 		  
 		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
