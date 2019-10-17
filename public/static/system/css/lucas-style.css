@@ -218,7 +218,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .layui-input.j-explain-input{ padding-right: 30px;}
 .j-details-box .layui-input.j-search-input{padding-right: 40px;}
 b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px;cursor: pointer;}
-b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF; text-decoration: underline;cursor: pointer;}
+b.j-explain-search{position: absolute; right: 8px;top:10px; color: #0084FF;cursor: pointer;}
 /*楼层导航 S*/
 .j-floor-nav .navWrap{position: fixed;top:150px; right: 20px;z-index: 999;background:rgba(255,255,255,0.5);}
 /* .j-floor-nav .navWrap li{width: 212px; height: 28px; background:url(../image/Rectangle17.png) no-repeat; margin-bottom: 15px;}
@@ -408,3 +408,9 @@ opacity: .8color: #333;}
  #leaseprint_1_{font-size: 12px!important; color: #666; font-weight:100;font-family:'宋体'!important;}
  .print_1_ td,.print_1_ th{}
 /* 打印样式 E */
+
+
+/* 首页样式 S */
+.j-download-color{ color: #2E77EF;}
+.j-download-color:hover{ color: #2E77EF;text-decoration:underline;}
+/* 首页样式 E */
