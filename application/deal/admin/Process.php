@@ -218,18 +218,18 @@ class Process extends Admin
         switch ($change_type) {
             case '1': // 租金减免
                 $ChangeModel = new ChangeCutModel;
-                $template = 'Changecut/detail_x';              
+                $template = 'changecut/detail_x';              
                 break;
             case '2': // 空租
                 # code...
                 break;
             case '3': //暂停计租
                 $ChangeModel = new ChangePauseModel;
-                $template = 'Changepause/detail'; 
+                $template = 'changepause/detail'; 
                 break;
             case '4': // 陈欠核销
                 $ChangeModel = new ChangeOffsetModel;
-                $template = 'Changeoffset/detail';
+                $template = 'changeoffset/detail';
                 break;
             case '5': // 房改
                 # code...
@@ -239,46 +239,46 @@ class Process extends Admin
                 break;
             case '7': // 新发租
                 $ChangeModel = new ChangeNewModel;
-                $template = 'Changenew/detail';
+                $template = 'changenew/detail';
                 break;
             case '8': //注销
                 $ChangeModel = new ChangeCancelModel;
-                $template = 'Changecancel/detail';
+                $template = 'changecancel/detail';
                 break;
             case '9': // 房屋调整
                 $ChangeModel = new ChangeHouseModel;
-                $template = 'Changehouse/detail';
+                $template = 'changehouse/detail';
                 break;
             case '10': // 管段调整
                 $ChangeModel = new ChangeInstModel;
-                $template = 'Changeinst/detail';
+                $template = 'changeinst/detail';
                 break;
             case '11': // 租金追加调整
                 $ChangeModel = new ChangeRentAddModel;
-                $template = 'Changerentadd/detail';
+                $template = 'changerentadd/detail';
                 break;
             case '12': //租金调整
                 # code...
                 break;
             case '13': //使用权变更
                 $ChangeModel = new ChangeUseModel;
-                $template = 'Changeuse/detail';
+                $template = 'changeuse/detail';
                 break;
             case '14': //楼栋调整
                 $ChangeModel = new ChangeBanModel;
-                $template = 'Changeban/detail';
+                $template = 'changeban/detail';
                 break;
             case '16': // 租金减免年审
                 $ChangeModel = new ChangeCutYearModel;
-                $template = 'Changecut/detail_y';
+                $template = 'changecut/detail_y';
                 break;
             case '17': // 别字更正
                 $ChangeModel = new ChangeNameModel;
-                $template = 'Changename/detail';
+                $template = 'changename/detail';
                 break;
             case '18': // 租约管理
                 $ChangeModel = new ChangeLeaseModel;
-                $template = 'Changelease/detail';
+                $template = 'changelease/detail';
                 break;
             default:
                 # code...
