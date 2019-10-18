@@ -1,21 +1,291 @@
 	<style>
 		.page-tab-content{ background: none;}
 	</style>
+	<script type="text/javascript" src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
+	<script type="text/javascript" src="__PUBLIC_JS__/echarts.min.js?v={:config('hisiphp.version')}"></script>
 	<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+	<!-- 累计租金收租情况 待办事项 -->
 	<div class="layui-row layui-col-space15">
-		<div class="layui-col-md6">
+	  <div class="layui-col-md6 j-title-size">
+		<div class="j-product-title clearfix">
+		  <div class="j-title layui-col-md4 fl">累计租金收租情况</div>
+		  <div class="j-table-content layui-col-md8 fr">
+			  <div class="page-toolbar j-page-toolbar clearfix">
+				<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
+					<div class="j-search-fl fr">
+						  <div class="layui-input-inline" style="width:140px;">
+							  <select name="inst_id" lay-filter="inst_id">
+								  <option value="">机构</option>
+								  {volist name="params['insts']" id="v" key="k"}
+								  <option value="{$k}"{if condition="$key == INST"}selected{/if}>{$v}</option>
+								  {/volist}
+							  </select>
+						  </div>
+						  <div class="layui-input-inline fr" style="width:140px;padding-left:5px">
+							  <input type="text" name="query_month" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+						  </div>
+					</div>
+				</form>
+			</div>
+		  </div>		  
+		</div>
+	    <div class="j-index-notice j-chart-box j-no-padding">
+		  <div class="product-title">
+			<ul class="product-ul">
+			  <li class="cur">所有</li>
+			  <li class="">市属</li>
+			  <li class="">区属</li>
+			  <li class="">自管</li>
+			</ul>
+		  </div>
+		  <div class="layui-row layui-col-space15">
+			  <div class="layui-col-md4">
+				<div class="product-con">
+				  <div class="product-box clearfix">
+				    <div id="chart-panel" style="width:100%;min-height:220px;"></div>
+				  </div>
+				  <div class="product-box clearfix hide">
+					2  
+				  </div>
+				  <div class="product-box clearfix hide">
+				  	3
+				  </div>
+				  <div class="product-box clearfix hide">
+				  	4
+				  </div>
+				</div>
+			  </div>
+			  <div class="layui-col-md8">
+				<div class="layui-form">
+				  <table class="layui-table j-no-borde">
+				    <thead>
+				      <tr>
+				        <th>使用性质</th>
+				        <th>目标金额</th>
+				        <th>累计金额</th>
+				        <th>完成率</th>
+				      </tr> 
+				    </thead>
+				    <tbody>
+				      <tr>
+				        <td>企业</td>
+				        <td>50,000,000.00</td>
+				        <td>25,000,000.00</td>
+				        <td>50%</td>
+				      </tr>
+				      <tr>
+				        <td>机关</td>
+				        <td>60,000,000.00</td>
+				        <td>30,000,000.00</td>
+				        <td>50%</td>
+				      </tr>
+				      <tr>
+				        <td>民用</td>
+				        <td>80,000,000.00</td>
+				        <td>20,000,000.00</td>
+				        <td>25%</td>
+				      </tr>
+				    </tbody>
+				  </table>
+				</div>			  
+			  </div>
+		  </div>
+	    </div>
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+			  <div class="j-col-box">
+				<div class="j-title-color clearfix">租金年计划</div>
+				<div class="j-money-max clearfix">
+					<span class="j-line-bottom clearfix">20,000,000<label>元</label></span>
+					<p class="j-complete clearfix">已完成金额</p>
+					<span class="j-bottom-size clearfix">1,000,000<label>元</label></span>
+				</div>
+			  </div>
+			</div>
+		</div>
+	  </div>	
+	  <!-- 待办事项 -->
+	  <div class="layui-col-md6 j-title-size">
+		<div class="j-product-title clearfix">
+		  <div class="j-title layui-col-md4 fl">待办事项</div>		  
+		</div>
+	    <div class="j-index-notice">
+	  	  <div class="j-table-content clearfix">
+	  		  <div class="page-toolbar j-page-toolbar clearfix">
+	  			<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
+	  				<div class="j-search-fl layui-col-md8  fl">
+	  					  <div class="layui-input-inline j-input-margin" style="width:150px;">
+	  						  <input type="text" name="title" placeholder="变更类型查询" class="layui-input">
+	  					  </div>
+	  				</div>
+	  				<div class="j-search-fr layui-col-md4 fr">
+	  					<div class="layui-input-inline fr">
+	  					  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+	  						<button class="layui-btn" lay-submit lay-filter="formDemo">
+	  							<i class="layui-icon">&#xe615;</i>
+	  							搜索
+	  						</button>
+	  					</div>
+	  				</div>
+	  			</form>
+	  		</div>
+	  	  </div>
+	  	  <table id="dataTable3" class="layui-table" lay-filter='dataTable3'></table>   
+	    </div>
+	  </div>
+	</div>
+	<hr />
+	<!-- 每月缴费情况分析 -->
+	<div class="layui-row layui-col-space15">
+	    <div class="j-title-size">
+		  <div class="j-product-title clearfix">
+			<div class="j-title layui-col-md4 fl">每月缴费情况分析</div>
+			<div class="j-table-content layui-col-md8 fr">
+			  <div class="page-toolbar j-page-toolbar clearfix">
+				<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
+					<div class="j-search-fl fr">
+						  <div class="layui-input-inline" style="width:140px;">
+							  <select name="inst_id" lay-filter="inst_id">
+								  <option value="">机构</option>
+								  {volist name="params['insts']" id="v" key="k"}
+								  <option value="{$k}"{if condition="$key == INST"}selected{/if}>{$v}</option>
+								  {/volist}
+							  </select>
+						  </div>
+						  <div class="layui-input-inline fr" style="width:140px;padding-left:5px">
+							  <input type="text" name="query_month" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+						  </div>
+					</div>
+				</form>
+			</div>
+			</div>		  
+		  </div>
+		  <div class="layui-row layui-col-space15">
+		    <div class="layui-col-md4">
+			<div class="j-index-notice j-chart-box j-no-padding">
+			  <div class="product-title clearfix">
+				<ul class="product-ul">
+				  <li class="cur">市属</li>
+				  <li class="">区属</li>
+				  <li class="">自管</li>
+				</ul>
+			  </div>
+			  <div class="product-con clearfix">
+			    <div class="product-box clearfix">
+			      <div id="chart-panel1" style="width:100%;min-height:220px;"></div>
+			    </div>
+			    <div class="product-box clearfix hide">
+			  	 <div>2</div>  
+			    </div>
+				<div class="product-box clearfix hide">
+				 <div>3</div>  
+				</div>
+			  </div>
+			</div>
+		  </div>  
+		    <div class="layui-col-md4">
+			<div class="j-index-notice j-chart-box j-no-padding">
+			  <div class="product-title clearfix">
+				<div class="j-size-title fl">房屋变动情况</div>
+				<ul class="product-ul">
+				  <li class="cur">所有</li>
+				  <li class="">市属</li>
+				  <li class="">区属</li>
+				  <li class="">自管</li>
+				</ul>
+			  </div>
+			  <div class="product-con clearfix">
+			    <div class="product-box clearfix">
+			      <div id="chart-panel2" style="width:100%;min-height:220px;"></div>
+			    </div>
+			    <div class="product-box clearfix hide">
+			  	 <div>2</div>  
+			    </div>
+				<div class="product-box clearfix hide">
+				 <div>3</div>  
+				</div>
+				<div class="product-box clearfix hide">
+				 <div>4</div>  
+				</div>
+			  </div>
+			</div>
+		  </div>
+		    <div class="layui-col-md4">
+			<div class="j-index-notice j-chart-box j-no-padding">
+			  <div class="product-title clearfix">
+				<div class="j-size-title fl">租金收缴情况</div>
+				<ul class="product-ul">
+				  <li class="cur">所有</li>
+				  <li class="">市属</li>
+				  <li class="">区属</li>
+				  <li class="">自管</li>
+				</ul>
+			  </div>
+			  <div class="product-con clearfix">
+			    <div class="product-box clearfix">
+			      <div id="chart-panel3" style="width:100%;min-height:220px;"></div>
+			    </div>
+			    <div class="product-box clearfix hide">
+			  	 <div>2</div>  
+			    </div>
+				<div class="product-box clearfix hide">
+				 <div>3</div>  
+				</div>
+				<div class="product-box clearfix hide">
+				 <div>4</div>  
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  </div>
+		</div>
+	</div>
+	<div class="j-hr-button"></div>
+	<hr />
+	<!-- 文件下载 公告 -->
+	<div class="layui-row layui-col-space15">
+		<!-- 文件下载 -->
+		<div class="layui-col-md6 j-title-size hide">
+		  <div class="j-product-title clearfix">
+		    <div class="j-title layui-col-md4 fl">文件下载</div>		  
+		  </div>
 		  <div class="j-index-notice">
 			  <div class="j-table-content clearfix">
-				  <fieldset class="layui-elem-field layui-field-title">
-					<legend>公告</legend>
-				  </fieldset>
+				  <div class="page-toolbar j-page-toolbar clearfix">
+					<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
+						<div class="j-search-fl layui-col-md8  fl">
+							  <div class="layui-input-inline j-input-margin" style="width:150px;">
+								  <input type="text" name="title" placeholder="文件名查询" class="layui-input">
+							  </div>
+						</div>
+						<div class="j-search-fr layui-col-md4 fr">
+							<div class="layui-input-inline fr">
+							  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+								<button class="layui-btn" lay-submit lay-filter="formDemo1">
+									<i class="layui-icon">&#xe615;</i>
+									搜索
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			  </div>
+			  <table id="dataTable2" class="layui-table" lay-filter='dataTable2'></table>
+		  </div>
+		</div>
+		<!-- 公告 -->
+		<div class="layui-col-md6 j-title-size">
+		  <div class="j-product-title clearfix">
+		    <div class="j-title layui-col-md4 fl">公告</div>		  
+		  </div>
+		  <div class="j-index-notice">
+			  <div class="j-table-content clearfix">
 				  <div class="page-toolbar j-page-toolbar clearfix">
 					<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
 						<div class="j-search-fl layui-col-md8  fl">
 							  <div class="layui-input-inline j-input-margin" style="width:150px;">
 								  <input type="text" name="title" placeholder="标题查询" class="layui-input">
 							  </div>
-
 						</div>
 						<div class="j-search-fr layui-col-md4 fr">
 							<div class="layui-input-inline fr">
@@ -33,13 +303,106 @@
 		  </div>
 		</div>
 	</div>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	    <a href="" class="j-download-color">下载</a>
+	</script>
+	<script type="text/html" title="操作按钮模板" id="buttonTp2">
+	    <a href="" class="j-download-color">审批</a>
+	</script>
 	{include file="block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 	<script type="text/javascript">
-	layui.use(['table','layer'], function() {
+	layui.use(['table','layer','laydate'], function() {
         var table = layui.table
 		    ,$ = layui.jquery
+			,laydate = layui.laydate
 			,layer = layui.layer;
+		//获取原房间信息
+/* 		$.ajax({
+		  type: "post",
+		  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id,
+		  data: { 'house_id': house_id}, 
+		  dataType: "json", 
+		  success: function(res) {
+			if(res.code == 0){
+				layer.msg(res.msg);
+			}else{
+			  var resData = res.data;
+			}
+			   
+		  },
+		  error: function(msg) {
+			  layer.msg(msg);
+		  }
+		}); */
+		//年选择器
+		laydate.render({
+		    elem: '#query_month'
+		    ,type: 'month'
+			,value: new Date() 
+			,isInitValue: true,
+			ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+		});
+		//tab切换
+		$(function(){
+			var $div_li =$(".product-title li");
+			$div_li.click(function(){
+				$(this).addClass("cur").siblings().removeClass("cur");
+				var index =  $div_li.index(this);
+				$(".product-con > div").eq(index).show().siblings().hide(); 
+			})
+		})
+		/* 待办事项 */
+		table.render({
+		    elem: '#dataTable3'
+		    ,height: 462
+		    //,toolbar: '#toolbar'
+		    // ,defaultToolbar: ['print']
+		    ,url: '{:url("rent/api/indexPartTwo")}' //数据接口
+		    ,page: true //开启分页
+		    ,limit: 10
+		    ,text: {
+		        none : '暂无相关数据'
+		    }
+		    ,cols: [[ //表头
+			    { type: 'numbers', title: '序号',align:'center'}
+				,{field: 'change_type', maxwidth:200, title: '变更类型',
+						templet: function(d) {
+		                    return params.changes[d.change_type];
+		                }}
+		        ,{field: 'ctime', maxwidthwidth: 180, title: '创建时间'}
+				,{field: 'reads', maxwidthwidth: 80,title: '操作',templet: '#buttonTp2',align:'center'}
+		    ]]
+		    ,done:function(res,curr,count){
+		       
+		    }
+		})
+		/* 文件下载 */
+		table.render({
+		    elem: '#dataTable2'
+		    ,height: 300
+		    //,toolbar: '#toolbar'
+		    // ,defaultToolbar: ['print']
+		    ,url: '{:url("system/Index/index")}' //数据接口
+		    ,page: true //开启分页
+		    ,limit: 5
+		    ,text: {
+		        none : '暂无相关数据'
+		    }
+		    ,cols: [[ //表头
+				{field: 'title', maxwidth:200, title: '文件名'}
+		        ,{field: 'reads', maxwidth: 80,title: '操作',templet: '#buttonTpl',align:'center'}
+		        ,{field: 'create_time', maxwidth: 180, title: '创建时间'}
+		    ]]
+		    ,done:function(res,curr,count){
+		       
+		    }
+		})
+		/* 公告 */
         table.render({
             elem: '#dataTable'
             ,height: 300
@@ -52,19 +415,17 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-				{field: 'title', width:200, title: '标题'}
-                ,{field: 'content', width: 240, hide: true ,title: '内容'}
+				{field: 'title', maxwidth:200, title: '标题'}
+                ,{field: 'content',maxwidth: 240, hide: true ,title: '内容'}
                 ,{field: 'reads', width: 240, hide: true ,title: '阅读记录'}
                 ,{field: 'cuid', width: 240, hide: true ,title: '创建人'}
-                ,{field: 'create_time', width: 180, title: '创建时间'}
+                ,{field: 'create_time', maxwidth: 180, title: '创建时间'}
             ]]
             ,done:function(res,curr,count){
                
             }
         })
         table.on('row(dataTable)', function(obj){
-		  //console.log(obj.tr) //得到当前行元素对象
-		  //console.log(obj.data) //得到当前行数据
 		  $.get("/admin.php/system/api/update_notice_reads/id/"+obj.data.id, function(msg){console.log(msg);});
 		  	layer.open({
 			  title: '公告'
@@ -73,19 +434,461 @@
 			  , btn:false
 			  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>'+ obj.data.title +'</h1><h2>'+ obj.data.create_time +'</h2><div class="j-content-size">'+ htmlRestore(obj.data.content) +'</div></div>'
 			});
-		  //obj.del(); //删除当前行
-		  //obj.update(fields) //修改当前行数据
 		});
-		//点击查看详情
-		// $(".layui-table").on('click','.layui-table-hover td:eq(0)', function(){
-		// 	layer.open({
-		// 	  title: '公告'
-		// 	  ,offset: 'auto'
-		// 	  ,area: ['60%', '40%']
-		// 	  , btn:false
-		// 	  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>公房数据培训</h1><h2>2019-05-17 14:48:42</h2><div class="j-content-size">您有一条【房屋基础数据】工单已处理，单号12548574515<img  data-original="__ADMIN_IMG__/add_img.png" src="__ADMIN_IMG__/add_img.png" alt="图片1" /></div></div>'
-		// 	});
-		// })
+		
+	    /* 累计租金收租情况 */
+		var myChart = echarts.init(document.getElementById('chart-panel'));
+		 // 指定图表的配置项和数据
+		var dataStyle = {
+		    normal: {
+		        label: {show:false},
+		        labelLine: {show:false}
+		    }
+		};
+		var placeHolderStyle = {
+		    normal : {
+		        color: 'rgba(0,0,0,0)',
+		        label: {show:false},
+		        labelLine: {show:false}
+		    },
+		    emphasis : {
+		        color: 'rgba(0,0,0,0)'
+		    }
+		};
+		option = {
+		    backgroundColor:'#fff',
+			color: ['#7B62E9','#11A0F8','#7ACE4C'],
+		    title: {
+		        x: 'center',
+		        y: '19%',
+		        itemGap: 20,
+		        textStyle : {
+		            color : '#8ce6ff',
+		            fontFamily : '微软雅黑',
+		            fontSize : 32,
+		            fontWeight : 'bolder'
+		        }
+		    },
+		     tooltip : {
+		        show: true,
+		        backgroundColor:'rgba(0,0,0,0.5)',
+		         textStyle:{
+		            fontSize:14,
+		            color:'#fff'
+		        },
+		        formatter: "累计租金收租情况 <br/>{b} : {c} {d} %"
+		    },
+		    legend: {
+		        orient : 'horizontal',
+		        left: '10%',
+		        bottom : '20',
+		        icon:'pin',
+		        itemGap:12,
+		        textStyle : {
+		            color : '#666',
+		        },
+		        data:['企业','机关','民用']
+		    },
+		    series : [
+		        {
+		            name:'0',
+		            type:'pie',
+		            clockWise:false,
+		            radius : ['60%', '70%'],
+		            center: ['45%', '40%'],
+		            itemStyle : dataStyle,
+		            data:[
+		                {
+		                    value:200, 
+		                    name:'企业'
+		                },
+		                {
+		                    value:200,
+		                    name:'invisible',
+		                    tooltip: {
+								show: false
+							},
+							itemStyle: {
+								normal: {
+									color: '#E7E7E7'
+								},
+								emphasis: {
+									color: '#E7E7E7'
+								}
+							}
+		                }
+		            ]
+		        },
+		        {
+		            name:'1',
+		            type:'pie',
+		            clockWise:false,
+		            radius : ['40%', '50%'],
+		            center: ['45%', '40%'],
+		            itemStyle : dataStyle,
+		            data:[
+		                {
+		                    value:220,
+		                    name:'机关'
+		                },
+		                {
+		                    value:200,
+		                    name:'invisible',
+		                    itemStyle : placeHolderStyle,
+		                    tooltip: {
+								show: false
+							},
+							itemStyle: {
+								normal: {
+									color: '#E7E7E7'
+								},
+								emphasis: {
+									color: '#E7E7E7'
+								}
+							}
+		                }
+		            ]
+		        },
+		        {
+		            name:'2',
+		            type:'pie',
+		            clockWise:false,
+		            radius : ['20%', '30%'],
+		            center: ['45%', '40%'],
+		            itemStyle : dataStyle,
+		            data:[
+		                {
+		                    value:860, 
+		                    name:'民用'
+		                },
+		                {
+		                    value:200,
+		                    name:'invisible',
+		                    itemStyle : placeHolderStyle,
+		                    tooltip: {
+								show: false
+							},
+							itemStyle: {
+								normal: {
+									color: '#E7E7E7'
+								},
+								emphasis: {
+									color: '#E7E7E7'
+								}
+							}
+		                }
+		            ]
+		        }
+		    ]
+		};
+		myChart.setOption(option);
+		//每月缴费情况分析统计
+		var myChart1 = echarts.init(document.getElementById('chart-panel1'));
+		option1 = {
+		    backgroundColor: '#fff',
+		    tooltip: {
+		        trigger: 'item',
+		        formatter: "{b}: {c} 元",
+		        padding: 10,
+		    },
+		    color:['#7460EE','#11A0F8','#7ACE4C'],
+		    grid:{
+		      left:20, 
+			  bottom: '0', 
+			  top:20,
+			  containLabel: true  
+		    },
+		    yAxis : [
+		        {
+		            type : 'category',
+		            data : [ '企业','机关', '民用'],
+		            boundaryGap:true,
+		            axisLine: {
+						lineStyle: {
+							color: '#eee'
+						}
+					},
+		            axisLabel: {
+		                textStyle: {
+		                    fontSize: 12,
+		                    color: "#999",
+		                    fontFamily: "微软雅黑"
+		                },
+		                margin:5
+		            },
+		            axisTick: {
+		               show:true
+		            },
+		            splitLine: {
+		                show:true,
+		                lineStyle: {
+		                    color: '#fff', //分割线颜色
+		                    type: "solid",
+		                    opacity:1
+		                }
+		            }
+		        }
+		    ],
+		    xAxis : [
+		        {
+		            type : 'value', 
+		            min:0,
+		            max:75000,
+		            interval:25000,
+		            axisLine: {
+						lineStyle: {
+							color: '#eee'
+						}
+					},
+		            axisLabel: {
+		                textStyle: {
+		                    fontSize: 12,
+		                    color: "#999",
+		                    fontFamily: "微软雅黑"
+		                },
+		                margin: 10
+		            },
+		            splitLine: {
+		                lineStyle: {
+		                    color: '#fff', //分割线颜色
+		                    type: "solid",
+		                    opacity:1
+		                }
+		            },
+		            axisTick: {
+		               show:false
+		            }
+		        }
+		    ],
+		    series : [
+		        {
+		            name:'直接访问',
+		            type:'bar',
+		            barWidth: '44%',
+		            data:[
+		                {
+		                    value:'45927',
+		                    itemStyle:{
+		                        normal:{
+		                            color:['#7ACE4C']
+		                        }
+		                    },
+		                    
+		                },
+		                {
+		                    value:'72991',
+		                    itemStyle:{
+		                        normal:{
+		                            color:['#11A0F8']
+		                        }
+		                    },
+		                    
+		                },
+		                {
+		                    value:'27283',
+		                    label:{
+		                        normal:{
+		                            //show:true,
+		                            position:'right',
+		                            //formatter:'25%',
+		                            textStyle:{
+		                                color:"#ff5a00",
+		                                fontSize:12
+		                            }
+		                        }
+		                    },
+		                    itemStyle:{
+		                        normal:{
+		                            color:['#7460EE']
+		                        }
+		                    },
+		                    
+		                }]
+		        }
+		    ]
+		};
+		myChart1.setOption(option1);
+		//房屋变动情况
+		var myChart2 = echarts.init(document.getElementById('chart-panel2'));
+		option2 = {
+		    backgroundColor:'#fff',
+		        //color: ['#3398DB'],
+		        tooltip : {
+		            trigger: 'axis',
+					//formatter: "{b}: {c} 元",
+					padding: 10,
+		            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		            },
+		            textStyle:{
+		                color:'#fff',
+		            },
+		            backgroundColor:'rgba(0,0,0,0.5)',
+		        },
+		        grid: {
+		            left:50,
+		            bottom: 20, 
+		            top:40,
+		        },
+		        xAxis : [
+		            {
+		                nameTextStyle:{
+		                    color:'#999'
+		                },
+		                type : 'category',
+		                data: ['暂停租金','租金减免','公房出售','注销'],
+		                axisTick:{show:false},
+		                axisLabel:{
+		                    textStyle:{
+		                        color:'#999'
+		                    },
+		                    interval:0,
+		                    rotate:''
+		                },
+		                axisLine:{
+		                     show:false,
+		                    lineStyle:{
+		                        color:'#fff'
+		                    }
+		                },
+		            }
+		        ],
+		        yAxis : [
+		            {
+		                name:'金额/元',
+		                nameTextStyle:{
+		                    color:'#999'
+		                },
+		                type : 'value',
+		                axisTick:{show:false},
+		                axisLabel:{
+		                    textStyle:{
+		                        color:'#999'
+		                    },
+		                    
+		                },
+		                axisLine:{
+		                    show:false,
+		                    lineStyle:{
+		                        color:'#6986c9'
+		                    }
+		                },
+		                splitLine: {
+		                lineStyle: {
+		                    color: '#35518f', //分割线颜色
+		                    type: "solid",
+		                    opacity:0.1
+		                }
+		            },
+		            }
+		        ],
+		        series : [
+		            {
+		                name:'金额',
+		                type:'bar',
+		                barWidth: '25%',
+		                data:[
+		                    {
+		                        name:'暂停租金',
+		                        value:805.00,
+		                        itemStyle:{
+		                            normal:{
+		                                color:'#7460EE',
+		                            }
+		                        }
+		                    },
+		                    {
+		                        name:'租金减免',
+		                        value:206.00,
+		                        itemStyle:{
+		                            normal:{
+		                                color:'#11A0F8',
+		                            }
+		                        }
+		                    },
+		                    {
+		                        name:'公房出售',
+		                        value:332.00,
+		                        itemStyle:{
+		                            normal:{
+		                                color:'#7ACE4C',
+		                            }
+		                        }
+		                    },
+		                     {
+		                        name:'注销',
+		                        value:92,
+		                        itemStyle:{
+		                            normal:{
+		                                color:'#FFC740',
+		                            }
+		                        }
+		                    }
+		                ],
+		                label:{
+		                    normal:{
+		                        show:true,
+		                        position:'top',
+		                        textStyle:{
+		                            color:'#333',
+		                            fontSize:14,
+		                        }
+		                    }
+		                }
+		            }
+		        ]
+		    
+		};
+		myChart2.setOption(option2);
+		//租金收缴情况
+		var myChart3 = echarts.init(document.getElementById('chart-panel3'));
+		option3 = {
+		    tooltip: {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		    },
+		    backgroundColor:'#fff',
+		    legend: {
+		        orient: 'vertical',
+				right: 'right',
+				bottom:'30%',
+		        data:['已缴租金','未缴租金','欠缴租金','陈欠租金']
+		    },
+			color:['#7B62E9','#11A0F8','#7ACE4C','#F9B048'],
+		    series: [
+		       
+		        {
+		            name:'租金收缴情况',
+		            type:'pie',
+		            radius: ['40%', '80%'],
+		            center: ['25%', '50%'],
+		            label: {
+		                normal: {
+		                    position: 'outside',
+		                    show: false,
+		                    formatter: "{b}\n\n{d}%",
+		                }
+		            },
+		
+		            data:[
+		                {value:500000.16, name:'已缴租金'},
+		                {value:300000.00, name:'未缴租金'},
+		                {value:200000.00, name:'欠缴租金'},
+		                {value:100000.00, name:'陈欠租金'},
+		               
+		            ]
+		        }
+		    ]
+		};
+		myChart3.setOption(option3);
+		setTimeout(function (){
+		    window.onresize = function () {
+		     myChart.resize();
+		     myChart1.resize();
+			 myChart2.resize();
+			 myChart3.resize();
+		   };
+		 }, 200);
     });
 	// $(document).on('click', '.layui-table-hover', function() {
 	//   //点击图片全屏展示
