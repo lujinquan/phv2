@@ -104,7 +104,7 @@ class Changeinst extends Admin
             }elseif($data['save_type'] == 'submit' && count($useRow['child_json']) > 1){ 
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',10],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                $process = $ProcessModel->where([['change_type','eq',10],['change_id','eq',$useRow['id']]])->update(['curr_role'=>5,'change_desc'=>'待资料员初审']);
                 if (!$process) {
                     return $this->error('未知错误');
                 }

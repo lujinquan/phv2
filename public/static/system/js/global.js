@@ -590,9 +590,9 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                     }
                 }
 
-                layer.msg('数据提交中...',{time:500000});
+                layer.msg('数据提交中...');
                 $.post(href, query, function(res) {
-                    layer.msg(res.msg, {}, function(){
+                    layer.msg(res.msg, {time:5000}, function(){
                         if (res.code != 0) {
                             location.reload();
                         } 

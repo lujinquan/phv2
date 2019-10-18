@@ -75,6 +75,8 @@ class Rent extends Model
 
             //租金欠缴的查询
             case 'unpaid': 
+                $where[] = ['rent_order_date','<',date('Ym')];
+                $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
                 // 检索月【租金】订单编号
                 if(isset($data['rent_order_number']) && $data['rent_order_number']){
                     $where[] = ['rent_order_number','like','%'.$data['rent_order_number'].'%'];
@@ -99,12 +101,20 @@ class Rent extends Model
                 if(isset($data['house_use_id']) && $data['house_use_id']){
                     $where[] = ['house_use_id','eq',$data['house_use_id']];
                 }
-                
+                // 检索以前年或以前月
+                if(isset($data['unpaid_date_type']) && $data['unpaid_date_type']){
+                    $start = date('Y').'00';
+                    if($data['unpaid_date_type'] == 1){
+                        $end = date('Ym',strtotime('- 1 month'));
+                        $where[] = ['rent_order_date','between',[$start,$end]];
+                    }else if($data['unpaid_date_type'] == 2){
+                        $where[] = ['rent_order_date','<',$start];
+                    }
+                    
+                }
                 // 检索【楼栋】机构
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
                 $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
-                $where[] = ['rent_order_date','<',date('Ym')];
-                $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
                 break;
 
             //租金欠缴的查询

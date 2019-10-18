@@ -154,27 +154,27 @@
 		  });
 		 })
 		 //双击获取租户查询器
-		  $(".layui-form").on('click','.j-tenant_number',function(){
+		 $(".layui-form").on('click','.j-tenant_number',function(){
 		 layer.open({
-		 			title: '租户查询器'
-		 			,type: 2
-		 			,offset: 'auto'
-		 			,area: ['70%', '60%']
-		 			, btn:false
-		 			,pageTabs: false
-		 			,content: '{:url('system/index/tenant')}'
-		 			,btn: ['确定','关闭']
-		 			,yes: function(index, layero){
-		 				var row = window["layui-layer-iframe" + index].tenantdata();
-		 				console.log(row);
-		 				layer.close(index);
-		 				$("#tenant_number").val(row.tenant_number);//获取租户编号
-		 				$("#tenant_name").val(row.tenant_name);
-		 				$("#tenant_card").val(row.tenant_card);
-		 				$("#tenant_id").val(row.tenant_id);
-		 			},btn2: function(index, layero){
-		 				layer.close(index);
-		 			}
+	 			title: '租户查询器'
+	 			,type: 2
+	 			,offset: 'auto'
+	 			,area: ['70%', '60%']
+	 			, btn:false
+	 			,pageTabs: false
+	 			,content: '{:url('system/index/tenant')}?hisi_iframe=yes'
+	 			,btn: ['确定','关闭']
+	 			,yes: function(index, layero){
+	 				var row = window["layui-layer-iframe" + index].tenantdata();
+	 				console.log(row);
+	 				layer.close(index);
+	 				$("#tenant_number").val(row.tenant_number);//获取租户编号
+	 				$("#tenant_name").val(row.tenant_name);
+	 				$("#tenant_card").val(row.tenant_card);
+	 				$("#tenant_id").val(row.tenant_id);
+	 			},btn2: function(index, layero){
+	 				layer.close(index);
+	 			}
 		  });
 		 })
 		 

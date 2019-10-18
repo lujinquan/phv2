@@ -82,11 +82,12 @@
             ,url: '{:url("rent/Rent/index")}'
             ,page: true 
             ,limit: 10
+            ,limits: [10,20,30,40,50,100,500,1000,5000]
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
+                {type: 'checkbox'}
                 ,{field: 'rent_order_number',minWidth: 200, align:'center', title: '订单编号'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];

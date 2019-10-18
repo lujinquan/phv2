@@ -17,9 +17,9 @@
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
         </div>
-        <div class="layui-input-inline j-input-margin" style="width:120px;">
+        <!-- <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="rent_order_number" placeholder="订单编号" class="layui-input">
-        </div>
+        </div> -->
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="ban_address" placeholder="地址" class="layui-input">
         </div>
@@ -48,6 +48,13 @@
                 <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;">
+            <select name="unpaid_date_type">
+                <option value="">以前月/年</option>
+                <option value="1">以前月</option>
+                <option value="2">以前年</option>
+            </select>
         </div>
 	   </div>
        <div class="j-search-fr layui-col-md4 fr">
@@ -80,15 +87,16 @@
             elem: '#dataTable'
             //,height: 550
             ,url: '{:url("index")}'
-			,toolbar: '#toolbar'
-			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+      			,toolbar: '#toolbar'
+      			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+            ,totalRow: true
             ,page: true 
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
+                {type: 'checkbox', totalRowText: '合计：'}
                 ,{field: 'rent_order_number', minWidth: 240, align:'center', title: '订单编号'}
                 ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
@@ -103,6 +111,8 @@
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '应收租金'}
+                ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已缴租金'}
+                ,{field: 'rent_order_unpaid', minWidth: 140, align:'center', title: '欠缴租金', totalRow: true}
                 //,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){

@@ -385,7 +385,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			</tr>\
 			<tr>\
 				<td rowspan="1" colspan="2">暂停计租</td>\
-				<td rowspan="1" colspan="1" class="some_hide_13" style="color:red">'+ data[12][0] + '</td>\
+				<td rowspan="1" colspan="1" class="some_hide_13">'+ data[12][0] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[12][1] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[12][2] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[12][3] + '</td>\
@@ -404,7 +404,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			</tr>\
 			<tr>\
 				<td rowspan="1" colspan="2">文化室</td>\
-				<td rowspan="1" colspan="1" class="some_hide_14"  style="color:red"></td>\
+				<td rowspan="1" colspan="1" class="some_hide_14"></td>\
 				<td rowspan="1" colspan="1"></td>\
 				<td rowspan="1" colspan="1"></td>\
 				<td rowspan="1" colspan="1"></td>\
@@ -459,9 +459,9 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				<td rowspan="1" colspan="1">'+ data[15][14] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[15][15] + '</td>\
 			</tr>\
-			<tr>\
+			<tr style="color:red">>\
 				<td rowspan="1" colspan="2">累计补差</td>\
-				<td rowspan="1" colspan="1" class="some_hide_17" style="color:red">'+ data[16][0] + '</td>\
+				<td rowspan="1" colspan="1" class="some_hide_17" '+ data[16][0] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[16][1] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[16][2] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[16][3] + '</td>\
@@ -582,7 +582,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 					$(".report tr").each(function(){
 					        var td=$(this).find("td");
 					        td.each(function(){
-					            if($(this).text()=="0.00"){
+					            if($(this).text()=="0.00" || $(this).text()==0){
 					                $(this).text("");
 					            }
 					        });
@@ -611,7 +611,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				$(".report tr").each(function(){
 				        var td=$(this).find("td");
 				        td.each(function(){
-				            if($(this).text()=="0.00"){
+				            if($(this).text()=="0.00" || $(this).text()==0){
 				                $(this).text("");
 				            }
 				        });

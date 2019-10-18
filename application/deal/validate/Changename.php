@@ -55,7 +55,7 @@ class Changename extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['house_id','tenant_id','old_tenant_name','new_tenant_name']);
+        return $this->only(['house_id','tenant_id','old_tenant_name','new_tenant_name','old_tenant_card']);
     }
 
     // 编辑

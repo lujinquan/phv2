@@ -138,9 +138,9 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
                 }
 				if (res.code == 1) {
 				    location.href = res.url;
-					$(".j-errors").text("数据提交中...");
+					$(".j-errors").html('<font color="green">数据提交中...</font>');
 				} else { 	
-					$(".j-errors").text(res.msg)
+					$(".j-errors").html('<font color="red">'+res.msg+'</font>')
 					$('#LAY-user-get-vercode').attr('src','/captcha.html'); //更新二维码
 				    that.prop('disabled', false);
 				}
