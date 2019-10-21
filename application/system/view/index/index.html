@@ -31,11 +31,11 @@
 		</div>
 	    <div class="j-index-notice j-chart-box j-no-padding">
 		  <div class="product-title">
-			<ul class="product-ul">
-			  <li class="cur">所有</li>
-			  <li class="">市属</li>
-			  <li class="">区属</li>
-			  <li class="">自管</li>
+			<ul class="product-ul click-rent">
+			  <li class="cur" data-id="11">所有</li>
+			  <li class="" data-id="10">市属</li>
+			  <li class="" data-id="2">区属</li>
+			  <li class="" data-id="5">自管</li>
 			</ul>
 		  </div>
 		  <div class="layui-row layui-col-space15">
@@ -44,7 +44,7 @@
 				  <div class="product-box clearfix">
 				    <div id="chart-panel" style="width:100%;min-height:220px;"></div>
 				  </div>
-				  <div class="product-box clearfix hide">
+				  <!-- <div class="product-box clearfix hide">
 					2  
 				  </div>
 				  <div class="product-box clearfix hide">
@@ -52,12 +52,12 @@
 				  </div>
 				  <div class="product-box clearfix hide">
 				  	4
-				  </div>
+				  </div> -->
 				</div>
 			  </div>
 			  <div class="layui-col-md8">
 				<div class="layui-form">
-				  <table class="layui-table j-no-borde">
+				  <table class="layui-table j-no-borde j-rent-box">
 				    <thead>
 				      <tr>
 				        <th>使用性质</th>
@@ -67,24 +67,7 @@
 				      </tr> 
 				    </thead>
 				    <tbody>
-				      <tr>
-				        <td>企业</td>
-				        <td>50,000,000.00</td>
-				        <td>25,000,000.00</td>
-				        <td>50%</td>
-				      </tr>
-				      <tr>
-				        <td>机关</td>
-				        <td>60,000,000.00</td>
-				        <td>30,000,000.00</td>
-				        <td>50%</td>
-				      </tr>
-				      <tr>
-				        <td>民用</td>
-				        <td>80,000,000.00</td>
-				        <td>20,000,000.00</td>
-				        <td>25%</td>
-				      </tr>
+				      
 				    </tbody>
 				  </table>
 				</div>			  
@@ -145,7 +128,7 @@
 				<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisi-table-search">
 					<div class="j-search-fl fr">
 						  <div class="layui-input-inline" style="width:140px;">
-							  <select name="inst_id" lay-filter="inst_id">
+							  <select name="inst_id1" lay-filter="inst_id1">
 								  <option value="">机构</option>
 								  {volist name="params['insts']" id="v" key="k"}
 								  <option value="{$k}"{if condition="$key == INST"}selected{/if}>{$v}</option>
@@ -153,7 +136,7 @@
 							  </select>
 						  </div>
 						  <div class="layui-input-inline fr" style="width:140px;padding-left:5px">
-							  <input type="text" name="query_month" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+							  <input type="text" name="query_month" value="" placeholder="月份" id="query_month1" autocomplete="off" class="layui-input">
 						  </div>
 					</div>
 				</form>
@@ -164,22 +147,23 @@
 		    <div class="layui-col-md4">
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
-				<ul class="product-ul">
-				  <li class="cur">市属</li>
-				  <li class="">区属</li>
-				  <li class="">自管</li>
+				<ul class="product-ul click-rent-list1">
+				  <li class="cur" data-id1="11">所有</li>
+				  <li class="" data-id1="10">市属</li>
+				  <li class="" data-id1="2">区属</li>
+				  <li class="" data-id1="5">自管</li>
 				</ul>
 			  </div>
 			  <div class="product-con clearfix">
 			    <div class="product-box clearfix">
 			      <div id="chart-panel1" style="width:100%;min-height:220px;"></div>
 			    </div>
-			    <div class="product-box clearfix hide">
+			   <!-- <div class="product-box clearfix hide">
 			  	 <div>2</div>  
 			    </div>
 				<div class="product-box clearfix hide">
 				 <div>3</div>  
-				</div>
+				</div> -->
 			  </div>
 			</div>
 		  </div>  
@@ -187,7 +171,7 @@
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">房屋变动情况</div>
-				<ul class="product-ul">
+				<ul class="product-ul click-rent-list2">
 				  <li class="cur">所有</li>
 				  <li class="">市属</li>
 				  <li class="">区属</li>
@@ -214,7 +198,7 @@
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">租金收缴情况</div>
-				<ul class="product-ul">
+				<ul class="product-ul click-rent-list3">
 				  <li class="cur">所有</li>
 				  <li class="">市属</li>
 				  <li class="">区属</li>
@@ -312,50 +296,13 @@
 	{include file="block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 	<script type="text/javascript">
-	layui.use(['table','layer','laydate'], function() {
+	layui.use(['table','layer','laydate','form'], function() {
         var table = layui.table
+		    ,form = layui.form
 		    ,$ = layui.jquery
 			,laydate = layui.laydate
 			,layer = layui.layer;
-		//获取原房间信息
-/* 		$.ajax({
-		  type: "post",
-		  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id,
-		  data: { 'house_id': house_id}, 
-		  dataType: "json", 
-		  success: function(res) {
-			if(res.code == 0){
-				layer.msg(res.msg);
-			}else{
-			  var resData = res.data;
-			}
-			   
-		  },
-		  error: function(msg) {
-			  layer.msg(msg);
-		  }
-		}); */
-		//年选择器
-		laydate.render({
-		    elem: '#query_month'
-		    ,type: 'month'
-			,value: new Date() 
-			,isInitValue: true,
-			ready: function(date){
-			    $('.layui-laydate li').click(function () {
-			       $('.laydate-btns-confirm').trigger('click');
-			    });
-			}
-		});
-		//tab切换
-		$(function(){
-			var $div_li =$(".product-title li");
-			$div_li.click(function(){
-				$(this).addClass("cur").siblings().removeClass("cur");
-				var index =  $div_li.index(this);
-				$(".product-con > div").eq(index).show().siblings().hide(); 
-			})
-		})
+			console.log($("#query_month").val());
 		/* 待办事项 */
 		table.render({
 		    elem: '#dataTable3'
@@ -487,101 +434,213 @@
 		        textStyle : {
 		            color : '#666',
 		        },
-		        data:['企业','机关','民用']
+		        data:['企事','机关','住宅']
 		    },
-		    series : [
-		        {
-		            name:'0',
-		            type:'pie',
-		            clockWise:false,
-		            radius : ['60%', '70%'],
-		            center: ['45%', '40%'],
-		            itemStyle : dataStyle,
-		            data:[
-		                {
-		                    value:200, 
-		                    name:'企业'
-		                },
-		                {
-		                    value:200,
-		                    name:'invisible',
-		                    tooltip: {
-								show: false
-							},
-							itemStyle: {
-								normal: {
-									color: '#E7E7E7'
-								},
-								emphasis: {
-									color: '#E7E7E7'
-								}
-							}
-		                }
-		            ]
-		        },
-		        {
-		            name:'1',
-		            type:'pie',
-		            clockWise:false,
-		            radius : ['40%', '50%'],
-		            center: ['45%', '40%'],
-		            itemStyle : dataStyle,
-		            data:[
-		                {
-		                    value:220,
-		                    name:'机关'
-		                },
-		                {
-		                    value:200,
-		                    name:'invisible',
-		                    itemStyle : placeHolderStyle,
-		                    tooltip: {
-								show: false
-							},
-							itemStyle: {
-								normal: {
-									color: '#E7E7E7'
-								},
-								emphasis: {
-									color: '#E7E7E7'
-								}
-							}
-		                }
-		            ]
-		        },
-		        {
-		            name:'2',
-		            type:'pie',
-		            clockWise:false,
-		            radius : ['20%', '30%'],
-		            center: ['45%', '40%'],
-		            itemStyle : dataStyle,
-		            data:[
-		                {
-		                    value:860, 
-		                    name:'民用'
-		                },
-		                {
-		                    value:200,
-		                    name:'invisible',
-		                    itemStyle : placeHolderStyle,
-		                    tooltip: {
-								show: false
-							},
-							itemStyle: {
-								normal: {
-									color: '#E7E7E7'
-								},
-								emphasis: {
-									color: '#E7E7E7'
-								}
-							}
-		                }
-		            ]
-		        }
-		    ]
 		};
 		myChart.setOption(option);
+		//json数据初始化
+		var now = new Date();
+		var time = now.getFullYear() + "/" +((now.getMonth()+1)<10?"0":"")+(now.getMonth()+1);
+		var ban_inst_id = {$Think.INST},//获取机构
+		    ctime = time;//获取日期改变
+		function ajaxdata(){
+		  $.ajax({
+		  type: "post",
+		  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id+'&ctime='+ctime,
+		  data: {'ban_inst_id':ban_inst_id,'ctime':ctime}, 
+		  dataType: "json", 
+		  success: function(res) {
+			  var resData = res.data;
+			  var data_id = $('.click-rent li.cur').attr('data-id');
+			  var data_id1 = $('.click-rent-list1 li.cur').attr('data-id1');
+			  
+			   if (res) {
+				function statistics(){
+					$('.j-rent-box tbody').html("");
+					//生成table表格
+					if(resData[data_id][1].rent_order_receives==0||resData[data_id][1].rent_order_paids==0||resData[data_id][2].rent_order_receives==0||resData[data_id][2].rent_order_paids==0||resData[data_id][3].rent_order_receives==0||resData[data_id][3].rent_order_paids==0){
+					  
+					  var trData='<tr>\
+							<td>企事</td>\
+							<td>'+resData[data_id][2].rent_order_receives+'</td>\
+							<td>'+resData[data_id][2].rent_order_paids+'</td>\
+							<td>0%</td>\
+						  </tr>\
+						<tr>\
+							<td>机关</td>\
+							<td>'+resData[data_id][3].rent_order_receives+'</td>\
+							<td>'+resData[data_id][3].rent_order_paids+'</td>\
+							<td>0%</td>\
+						</tr>\
+						<tr>\
+							<td>住宅</td>\
+							<td>'+resData[data_id][1].rent_order_receives+'</td>\
+							<td>'+resData[data_id][1].rent_order_paids+'</td>\
+							<td>0%</td>\
+						</tr>';
+					}
+					else{
+					var trData='<tr>\
+						  <td>企事</td>\
+						  <td>'+resData[data_id][2].rent_order_receives+'</td>\
+						  <td>'+resData[data_id][2].rent_order_paids+'</td>\
+						  <td>'+(resData[data_id][2].rent_order_paids/resData[data_id][2].rent_order_receives*100).toFixed(2)+'%'+'</td>\
+						</tr>\
+						<tr>\
+							<td>机关</td>\
+							<td>'+resData[data_id][3].rent_order_receives+'</td>\
+							<td>'+resData[data_id][3].rent_order_paids+'</td>\
+							<td>'+(resData[data_id][3].rent_order_paids/resData[data_id][3].rent_order_receives*100).toFixed(2)+'%'+'</td>\
+						</tr>\
+						<tr>\
+							<td>住宅</td>\
+							<td>'+resData[data_id][1].rent_order_receives+'</td>\
+							<td>'+resData[data_id][1].rent_order_paids+'</td>\
+							<td>'+(resData[data_id][1].rent_order_paids/resData[data_id][1].rent_order_receives*100).toFixed(2)+'%'+'</td>\
+						</tr>';
+					}
+					console.log(trData);
+					  $('.j-rent-box tbody').append(trData);
+					 //生成可视化数据
+					 //myChart.hideLoading();
+					//累计租金收租情况
+					 myChart.setOption({
+					     series : [
+					         {
+					             name:'0',
+					             type:'pie',
+					             clockWise:false,
+					             radius : ['60%', '70%'],
+					             center: ['45%', '40%'],
+					             itemStyle : dataStyle,
+					             data:[
+					                 {
+					                     value:resData[data_id][2].rent_order_paids, 
+					                     name:'企事'
+					                 },
+					                 {
+					                     value:resData[data_id][2].rent_order_receives-resData[data_id][2].rent_order_paids,
+					                     name:'invisible',
+					                     tooltip: {
+					     					show: false
+					     				},
+					     				itemStyle: {
+					     					normal: {
+					     						color: '#E7E7E7'
+					     					},
+					     					emphasis: {
+					     						color: '#E7E7E7'
+					     					}
+					     				}
+					                 }
+					             ]
+					         },
+					         {
+					             name:'1',
+					             type:'pie',
+					             clockWise:false,
+					             radius : ['40%', '50%'],
+					             center: ['45%', '40%'],
+					             itemStyle : dataStyle,
+					             data:[
+					                 {
+					                     value:resData[data_id][3].rent_order_paids,
+					                     name:'机关'
+					                 },
+					                 {
+					                     value:resData[data_id][3].rent_order_receives-resData[data_id][3].rent_order_paids,
+					                     name:'invisible',
+					                     itemStyle : placeHolderStyle,
+					                     tooltip: {
+					     					show: false
+					     				},
+					     				itemStyle: {
+					     					normal: {
+					     						color: '#E7E7E7'
+					     					},
+					     					emphasis: {
+					     						color: '#E7E7E7'
+					     					}
+					     				}
+					                 }
+					             ]
+					         },
+					         {
+					             name:'2',
+					             type:'pie',
+					             clockWise:false,
+					             radius : ['20%', '30%'],
+					             center: ['45%', '40%'],
+					             itemStyle : dataStyle,
+					             data:[
+					                 {
+					                     value:resData[data_id][1].rent_order_paids, 
+					                     name:'住宅'
+					                 },
+					                 {
+					                     value:resData[data_id][1].rent_order_receives-resData[data_id][1].rent_order_paids,
+					                     name:'invisible',
+					                     itemStyle : placeHolderStyle,
+					                     tooltip: {
+					     					show: false
+					     				},
+					     				itemStyle: {
+					     					normal: {
+					     						color: '#E7E7E7'
+					     					},
+					     					emphasis: {
+					     						color: '#E7E7E7'
+					     					}
+					     				}
+					                 }
+					             ]
+					         }
+					     ]
+					   });
+				} 
+					statistics();
+					$(".click-rent li").click(function(){
+						$(this).addClass("cur").siblings().removeClass("cur");
+						data_id =$(this).attr('data-id');
+						console.log(resData[data_id][1].rent_order_paids);
+						statistics();
+						
+					})
+			}
+		  },
+		  error: function(msg) {
+			  layer.msg(msg);
+			  myChart.hideLoading();
+		  }
+		});
+	   }
+	ajaxdata();
+	//监听机构变化
+	form.on('select(inst_id)', function(data){
+		//console.log(data.value); //得到被选中的值
+		ban_inst_id = data.value;//获取机构
+		ajaxdata();
+	});
+	
+	//年选择器
+	laydate.render({
+	    elem: '#query_month'
+	    ,type: 'month'
+		,value: new Date() 
+		,isInitValue: true,
+		format: 'yyyy/MM',
+		ready: function(date){
+		    $('.layui-laydate li').click(function () {
+		       $('.laydate-btns-confirm').trigger('click');
+		    });
+		},
+		done: function(value, date){ //监听日期被切换
+		  console.log(value)
+		  ctime=value;
+		 //执行函数
+		  ajaxdata();
+		}
+	});
 		//每月缴费情况分析统计
 		var myChart1 = echarts.init(document.getElementById('chart-panel1'));
 		option1 = {
@@ -633,8 +692,8 @@
 		        {
 		            type : 'value', 
 		            min:0,
-		            max:75000,
-		            interval:25000,
+		            max:1000000,
+		            interval:200000,
 		            axisLine: {
 						lineStyle: {
 							color: '#eee'
@@ -660,54 +719,115 @@
 		            }
 		        }
 		    ],
-		    series : [
-		        {
-		            name:'直接访问',
-		            type:'bar',
-		            barWidth: '44%',
-		            data:[
-		                {
-		                    value:'45927',
-		                    itemStyle:{
-		                        normal:{
-		                            color:['#7ACE4C']
-		                        }
-		                    },
-		                    
-		                },
-		                {
-		                    value:'72991',
-		                    itemStyle:{
-		                        normal:{
-		                            color:['#11A0F8']
-		                        }
-		                    },
-		                    
-		                },
-		                {
-		                    value:'27283',
-		                    label:{
-		                        normal:{
-		                            //show:true,
-		                            position:'right',
-		                            //formatter:'25%',
-		                            textStyle:{
-		                                color:"#ff5a00",
-		                                fontSize:12
-		                            }
-		                        }
-		                    },
-		                    itemStyle:{
-		                        normal:{
-		                            color:['#7460EE']
-		                        }
-		                    },
-		                    
-		                }]
-		        }
-		    ]
+
 		};
 		myChart1.setOption(option1);
+		//json数据初始化
+			var ban_inst_id1 = {$Think.INST},//获取机构
+			    ctime1 = time;//获取日期改变
+			function ajaxdata1(){
+			  $.ajax({
+			  type: "post",
+			  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id1+'&ctime='+ctime1,
+			  data: {'ban_inst_id':ban_inst_id1,'ctime':ctime1}, 
+			  dataType: "json", 
+			  success: function(res) {
+				  var resData = res.data;
+				  var data_id1 = $('.click-rent-list1 li.cur').attr('data-id1');
+				   if (res) {
+					 //生成可视化数据
+					 myChart.hideLoading();
+					function statistics1(){
+						//每月缴费情况分析
+						myChart1.setOption({
+						  series : [
+						      {
+						          name:'直接访问',
+						          type:'bar',
+						          barWidth: '44%',
+						          data:[
+						              {
+						                  value:resData[data_id1][2].rent_order_paids,
+						                  itemStyle:{
+						                      normal:{
+						                          color:['#7ACE4C']
+						                      }
+						                  },
+						                  
+						              },
+						              {
+						                  value:resData[data_id1][3].rent_order_paids,
+						                  itemStyle:{
+						                      normal:{
+						                          color:['#11A0F8']
+						                      }
+						                  },
+						                  
+						              },
+						              {
+						                  value:resData[data_id1][1].rent_order_paids,
+						                  label:{
+						                      normal:{
+						                          //show:true,
+						                          position:'right',
+						                          //formatter:'25%',
+						                          textStyle:{
+						                              color:"#ff5a00",
+						                              fontSize:12
+						                          }
+						                      }
+						                  },
+						                  itemStyle:{
+						                      normal:{
+						                          color:['#7460EE']
+						                      }
+						                  },
+						                  
+						              }]
+						      }
+						  ] 
+						});	
+					} 
+						statistics1();
+						//每月缴费情况分析第一个栏目tab切换
+						$(".click-rent-list1 li").click(function(){
+							$(this).addClass("cur").siblings().removeClass("cur");
+							data_id1 =$(this).attr('data-id1');
+							statistics1();
+						})
+					  }
+			  },
+			  error: function(msg) {
+				  layer.msg(msg);
+				  myChart.hideLoading();
+			  }
+			});
+		   }
+		ajaxdata1();
+		//监听机构变化
+		form.on('select(inst_id1)', function(data){
+			//console.log(data.value); //得到被选中的值
+			ban_inst_id1 = data.value;//获取机构
+			ajaxdata1();
+		});
+		//年选择器
+		laydate.render({
+		    elem: '#query_month1'
+		    ,type: 'month'
+			,value: new Date() 
+			,isInitValue: true,
+			format: 'yyyy/MM',
+			ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			},
+			done: function(value, date){ //监听日期被切换
+			  ctime1=value;
+			 //执行函数
+			  ajaxdata1();
+			}
+		});
 		//房屋变动情况
 		var myChart2 = echarts.init(document.getElementById('chart-panel2'));
 		option2 = {
