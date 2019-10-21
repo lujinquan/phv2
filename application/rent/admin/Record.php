@@ -40,4 +40,20 @@ class Record extends Admin
         }
         return $this->fetch();
     }
+
+    /**
+     *  批量撤回
+     */
+    public function payBackList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $nowDate = date('Ym');
+        $RentModel = new RentModel;
+        $res = $RentModel->payBackList($ids,date('Ym'));
+        if($res){
+            $this->success('撤回成功，本次撤回'.$res.'条账单！');
+        }else{
+            $this->error('撤回失败，请检查订单期是否为 '.$nowDate.'!');
+        }
+    }
 }

@@ -50,8 +50,8 @@ class Api extends Common
         $result = [];
         foreach($temp as $t){
         	$result[$t['ban_owner_id']][$t['house_use_id']] = [
-        		'rent_order_receives' => $t['rent_order_receives'],
-        		'rent_order_paids' => $t['rent_order_paids'],
+        		'rent_order_receives' => (float)$t['rent_order_receives'],
+        		'rent_order_paids' => (float)$t['rent_order_paids'],
         	];
         }
         $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
@@ -80,7 +80,7 @@ class Api extends Common
         $result[11][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[2][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[5][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
         $data['data'] = $result;
         $data['code'] = 0;
-        $data['msg'] = '获取成功';
+        $data['msg'] = '获取成功';halt($data);
         return json($data);
     }
 

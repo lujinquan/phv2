@@ -41,5 +41,36 @@ class Unpaid extends Admin
         return $this->fetch();
     }
 
+    /**
+     *  批量缴费
+     */
+    public function payList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $RentModel = new RentModel;      
+        $res = $RentModel->payList($ids);
+        if($res){
+            $this->success('缴费成功，本次缴费'.$res.'条账单！');
+        }else{
+            $this->error('缴费失败');
+        }
+    }
+
+    /**
+     *  批量撤回
+     */
+    public function payBackList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $nowDate = date('Ym');
+        $RentModel = new RentModel;
+        $res = $RentModel->payBackList($ids,date('Ym'));
+        if($res){
+            $this->success('撤回成功，本次撤回'.$res.'条账单！');
+        }else{
+            $this->error('撤回失败，请检查订单期是否为 '.$nowDate.'!');
+        }
+    }
+
     
 }

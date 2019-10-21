@@ -1,7 +1,7 @@
 <div class="j-table-content j-no-tab">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
-	    	{if condition="in_array(275,$auths)"}       
+	    	{if condition="in_array(275,$auths) || $Think.ADMIN_ROLE == 1"}       
 	        <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>暂停计租申请</button></a>
 	        {/if}
 	    </div>

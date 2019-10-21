@@ -94,8 +94,8 @@ class Rent extends Admin
     public function payList()
     {
         $ids = $this->request->param('id/a'); 
-        $ptime = time();       
-        $res = RentModel::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        $RentModel = new RentModel;      
+        $res = $RentModel->payList($ids);
         if($res){
             $this->success('缴费成功，本次缴费'.$res.'条账单！');
         }else{

@@ -139,6 +139,11 @@ class Rent extends Model
                 if(isset($data['house_use_id']) && $data['house_use_id']){
                     $where[] = ['house_use_id','eq',$data['house_use_id']];
                 }
+                // 检索订单月份
+                if(isset($data['rent_order_date']) && $data['rent_order_date']){
+                    $queryMonth = substr($data['rent_order_date'],0,4).substr($data['rent_order_date'],-2);
+                    $where[] = ['rent_order_date','eq',$queryMonth];
+                }
                 
                 // 检索【楼栋】机构
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
@@ -166,16 +171,20 @@ class Rent extends Model
     public function configRentOrder()
     {
         $currMonth = date('Ym');
+
+        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        //$where[] = ;
         //获取当月的租金订单，如果没有则自动生成，有则跳过
-        $currMonthOrder = self::where([['rent_order_date','eq',$currMonth]])->value('rent_order_id'); 
+        $currMonthOrder = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','eq',$currMonth],['ban_inst_id','in',config('inst_ids')[$instid]]])->value('a.rent_order_id'); 
         //halt($currMonthOrder);
         
         if(!$currMonthOrder){
             $houseModel = new House;
             $where = [];
-            $where[] = ['house_status','eq',1];
+            $where[] = ['a.house_status','eq',1];
+            $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'house_id,house_number,tenant_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent';
-            $houseArr = $houseModel->where($where)->field($fields)->select();
+            $houseArr = $houseModel::alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
             //halt($houseArr);
             $str = '';
             foreach ($houseArr as $k => $v) {
@@ -200,5 +209,26 @@ class Rent extends Model
             return true;
         }
         
+    }
+
+    /**
+     *  批量缴费
+     */
+    public function payList($ids)
+    {     
+        $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        return $res;
+    }
+
+    /**
+     * [payBackList 批量撤回订单]
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function payBackList($ids,$nowDate)
+    {
+        //撤回后，是否处理:0,支付时间:0,支付金额:0,支付方式:0    
+        $res = self::where([['rent_order_id','in',$ids],['rent_order_date','eq',$nowDate]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+        return $res;
     }
 }

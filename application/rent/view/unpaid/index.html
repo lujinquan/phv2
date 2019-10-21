@@ -4,8 +4,12 @@
  <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">   
-         <a data-href="{:url('rent/payList')}" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a>    
-             <!-- <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a> -->
+         {if condition="in_array(343,$auths) || $Think.ADMIN_ROLE == 1"}
+         <a data-href="{:url('payList')}" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a>  
+         {/if}
+         {if condition="in_array(341,$auths) || $Think.ADMIN_ROLE == 1"}
+         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回</button></a> 
+         {/if} 
          </div>
      </div>
   <div class="page-toolbar j-page-toolbar clearfix">

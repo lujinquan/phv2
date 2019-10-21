@@ -1,4 +1,11 @@
-<div class="j-table-content j-no-title">
+<div class="j-table-content j-no-tab">
+    <div class="layui-btn-container j-container-margin">
+         <div class="layui-btn-container">
+         {if condition="in_array(342,$auths) || $Think.ADMIN_ROLE == 1"}
+         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回</button></a>
+         {/if}
+         </div>
+     </div>
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
@@ -37,6 +44,9 @@
                 {/volist}
               </select>
         </div>
+        <div class="layui-input-inline" style="width:120px;">
+            <input type="text" name="rent_order_date" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+        </div>
 	    </div>
         <div class="j-search-fr layui-col-md4 fr">
         	<div class="layui-input-inline fr">
@@ -62,7 +72,23 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery'], function() {
+    layui.use(['jquery', 'laydate', 'element','table','jquery'], function() {
+        var laydate = layui.laydate,
+        $ = layui.$
+        ,element = layui.element;
+
+        //年选择器
+        laydate.render({
+            elem: '#query_month'
+            ,type: 'month'
+            ,value: new Date() 
+            ,isInitValue: true,
+            ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
+        });
         var table = layui.table;
         table.render({
             elem: '#dataTable'

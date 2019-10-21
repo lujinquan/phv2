@@ -269,6 +269,46 @@ drop table if exists ph_v2.ph_house_room_temp;
 create table ph_v2.ph_house_room_temp like ph_v2.ph_house_room;
 insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 
+/**
+ * 22、同步异动表[ph_change_order => ph_change_order]
+ * 
+ */
+
+//同步暂停计租
+drop table if exists ph_v2.ph_old_change_pause_back;
+create table ph_v2.ph_old_change_pause_back like ph_v2.ph_change_pause;
+# 同步数据
+insert into ph_v2.ph_old_change_use_back 
+(change_order_number,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,InstitutionID,InstitutionPID,Status
+from ph_v1.ph_change_order where ChangeType = 3 and Status < 2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
