@@ -80,7 +80,7 @@ class Api extends Common
         $result[11][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[2][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[5][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
         $data['data'] = $result;
         $data['code'] = 0;
-        $data['msg'] = '获取成功';halt($data);
+        $data['msg'] = '获取成功';
         return json($data);
     }
 
