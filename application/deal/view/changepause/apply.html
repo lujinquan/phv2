@@ -5,15 +5,18 @@
 		<legend>基本信息</legend>
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
-			<div class="j-input-inline">
-				<input type="text" name="ban_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
-				<input type="hidden" name="ban_id" value="">
-				<input type="hidden" name="house_id" value="">
-				<b class="j-explain-search j-ban_number">查询</b>
-			</div>
-		</div>
+	  <div class="layui-col-md12">
+	  	<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
+	  	<div class="j-input-inline j-tips">
+	  		<input type="text" name="ban_number" value="" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">
+	  		<input type="hidden" name="ban_id" value="">
+	  		<input type="hidden" name="house_id" value="">
+	  		<b class="j-explain-search j-ban_number">查询</b>
+	  	</div>
+		<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>申请异动中的不允许重复办理！</div>
+	  </div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
@@ -26,14 +29,14 @@
 				<input type="text" name="ban_owner_id" readonly value="" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
 			</div>
 		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">结构类别</label>
 			<div class="j-input-inline">
 				<input type="text" name="ban_struct_id" readonly value="" placeholder="" lay-verify="required" autocomplete="off" class="layui-input">
 			</div>
 		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
 			<label class="j-form-label">完损等级</label>
 			<div class="j-input-inline">
@@ -67,9 +70,10 @@
 		    <th>规定租金</th>
 		    <th>租差</th>
 		    <th>泵费</th>
+			<th>操作</th>
 		  </tr>
 	  </thead>
-	  <tbody><tr><td colspan="6"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
+	  <tbody><tr><td colspan="7"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
@@ -78,6 +82,7 @@
 			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div>
+	<input type="hidden" id="j_house_id" value="">
   </div>
 </form>
 {include file="system@block/layui" /}
@@ -87,6 +92,17 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
+		function houserent(){
+			var HouseYuerent = 0; //暂停月租金之和初始值
+			//计算暂停月租金
+			var trList = $(".j-house-box tbody").children("tr");
+				for (var j=0;j<trList.length;j++) {
+					var tdArr = trList.eq(j).find("td"); //遍历td  
+						HouseYuerent += parseFloat(tdArr.eq(3).text()).toFixed(2)*100;//规定租金之和
+						$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);
+					
+				}
+		}
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
 		layer.open({
@@ -101,7 +117,7 @@
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].callbackdata();
 						var rows = window["layui-layer-iframe" + index].callbackdatas();
-						var HouseYuerent = 0;
+						console.log(rows);
 						$('.j-house-box tbody').html("");
 							//房屋信息
 							if(rows){
@@ -115,15 +131,14 @@
 												<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
 												<td class="house_diff_rent">'+rows[i].house_diff_rent+'</td>\
 												<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
+												<td><a href="javascript:;" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 											</tr>';
 
 								$('.j-house-box tbody').append(trData);
-
-								HouseYuerent += parseFloat(rows[i].house_yue_rent) * 100;
 							}
 							houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							$("input[name='house_id']").val(houseidData);//获取房屋编号
-							
+							houserent();
 						}
 						else{
 							layer.msg("房屋没选择!");
@@ -131,15 +146,16 @@
 						}
 						
 						//楼栋信息
+						    $("#j_house_id").val(row.house_id);//获取房屋id
 							$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 							$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
 							$("input[name='ban_address']").val(row.ban_address);//获取楼栋地址
 							$("input[name='ban_owner_id']").val(params.owners[row.ban_owner_id]);//获取楼栋产别
 							$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取楼栋结构类别
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
-							$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);//获取楼栋暂停月租金
+							//$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);//获取楼栋暂停月租金
 							if(	$('.j-house-box tbody').html()==''){
-								$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+								$('.j-house-box tbody').html("<tr><td colspan='7'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}
                       layer.close(index);
 					},btn2: function(index, layero){
@@ -147,6 +163,14 @@
 					}
 		 });
 		})
-
+		//删除房屋信息
+		$(".layui-form").on('click','.j-tr-del-change',function(){
+			var that = $(this);
+			layer.confirm('删除之后无法恢复，您确定要删除吗？', {icon: 3, title:'提示'}, function(index){
+			   that.parents("tr").remove();
+			   houserent();
+			  layer.close(index);
+			});
+		})
 	});
 </script>

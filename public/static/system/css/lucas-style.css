@@ -189,7 +189,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}
 /* .j-enclosure-img{ padding: 20px 0 0;} */
 .j-details-box .j-enclosure-label.j-uplode-icon{background:#fff; color:#0084FF;position: relative;left: -1px; margin-right: 5px;}
-.j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 13px; height: 13px;position: relative;top:-3px; margin-right: 5px;}
+.j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 16px; height: 17px;position: relative;top:-3px; margin-right: 5px;}
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
 .j-details-box .layui-form-item .j-input-inline{padding-left: 122px; position: relative;left: -2px;/* font-weight: bold; */color: #666;}
@@ -198,7 +198,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show a{color: #FF8700; font-size: 12px; font-weight: bold;}
 .j-tips-red{color: #f00;}
 .j-tips-red i{color: #f00;margin: 0 5px 0 10px;}
-.layui-form-mid.j-size-class{  font-weight: bold; color: #FF8700!important;}
+.layui-form-mid.j-size-class{  font-weight: bold; color: #FF8700!important;font-size: 13px!important;}
 .layui-form-mid.j-size-class i{ color: #FF8700;  margin:0 5px 0 10px;}
 .j-details-box .layui-form-item .j-input-inline.j-input-radio{padding-left: 142px; font-weight: inherit;}
 .j-details-box .layui-form-item .j-lengthen .j-input-inline.j-input-radio{padding-left: 212px; font-weight: inherit;}
