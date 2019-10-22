@@ -29,6 +29,44 @@ use think\Db;
 class Api extends Common 
 {
     /**
+     * 数据处理
+     * @param id 消息id
+     * @return json
+     */
+    public function dataDeal()
+    {
+        //将字表中的数据json化，写入到对应的异动表中
+        $allChildData = Db::name('change_child_back')->column('change_order_number,child_step,child_status,is_valid,child_cuid,child_ctime');
+
+        $result = [];
+        foreach($allChildData as $k => &$v){
+            unset($v['change_order_number']);
+            $result[$k] = json_encode($v);
+        }
+
+        /* // 处理原暂停计租异动
+        $allPauseData = Db::name('change_pause_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allPauseData as $a){
+            if(isset($result[$a])){
+                Db::name('change_pause_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }*/
+
+        // 处理新发租异动
+        $allNewData = Db::name('change_new_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allNewData as $a){
+            if(isset($result[$a])){
+                Db::name('change_new_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }
+
+
+
+
+        halt('ok');
+    }
+
+    /**
      * 获取 一条消息提醒数据
      * @param id 消息id
      * @return json

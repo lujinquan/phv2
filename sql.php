@@ -274,17 +274,44 @@ insert into ph_v2.ph_house_room_temp select * from ph_house_room;
  * 
  */
 
-//同步暂停计租
-drop table if exists ph_v2.ph_old_change_pause_back;
-create table ph_v2.ph_old_change_pause_back like ph_v2.ph_change_pause;
+# 同步子异动表
+drop table if exists ph_v2.ph_change_child_back;
+create table ph_v2.ph_change_child_back like ph_v2.ph_change_child;
 # 同步数据
-insert into ph_v2.ph_old_change_use_back 
-(change_order_number,change_status) 
+insert into ph_v2.ph_change_child_back 
+(change_order_number,inst_id,child_step,child_remark,child_status,is_valid,child_cuid,child_ctime) 
 select 
-ChangeOrderID,HouseID,BanID,InstitutionID,InstitutionPID,Status
+FatherOrderID,InstitutionID,Step,Reson,Status,IfValid,UserNumber,CreateTime
+from ph_v1.ph_use_child_order;
+
+
+# 同步暂停计租
+drop table if exists ph_v2.ph_change_pause_back;
+create table ph_v2.ph_change_pause_back like ph_v2.ph_change_pause;
+# 同步数据
+insert into ph_v2.ph_change_pause_back 
+(change_order_number,house_id,ban_id,change_pause_rent,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,InflRent,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 3 and Status < 2;
 
+update ph_v2.ph_change_pause_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_pause_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
 
+
+# 同步新发租
+drop table if exists ph_v2.ph_change_new_back;
+create table ph_v2.ph_change_new_back like ph_v2.ph_change_new;
+# 同步数据
+insert into ph_v2.ph_change_new_back 
+(change_order_number,house_id,ban_id,tenant_id,new_type,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,TenantID,NewLeaseType,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 7 and Status < 2;
+
+update ph_v2.ph_change_new_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_new_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_new_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
 
