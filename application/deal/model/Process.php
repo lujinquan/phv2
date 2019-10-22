@@ -57,6 +57,9 @@ class Process extends SystemBase
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
         }
+        if(isset($data['change_type']) && $data['change_type']){
+            $where[] = ['change_type','eq',$data['change_type']];
+        }
         // 检索审核当前的状态
         if(isset($data['change_desc']) && $data['change_desc']){
             $where[] = ['a.change_desc','like','%'.$data['change_desc'].'%'];

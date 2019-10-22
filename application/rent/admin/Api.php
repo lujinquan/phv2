@@ -96,13 +96,14 @@ class Api extends Common
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
             $where[] = ['a.status','eq',1];
-            // $ProcessModel = new ProcessModel;
-            // $where = $ProcessModel->checkWhere($getData);
             // 检索申请时间
 	        if(isset($getData['ctime']) && $getData['ctime']){
 	            $startTime = strtotime($getData['ctime']);
 	            $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
 	        }
+            if(isset($getData['change_type']) && $getData['change_type']){
+                $where[] = ['change_type','eq',$getData['change_type']];
+            }
             $fields = "a.id,a.change_id,a.change_type,a.curr_role,from_unixtime(a.ctime, '%Y-%m-%d') as ctime";
             $data = $result = [];
             

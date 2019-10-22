@@ -678,7 +678,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
      * @attr data-table table容器ID
      * @attr action 搜索请求地址
      */
-    $('#hisiSearch,#hisi-table-search').submit(function() {
+    $('#hisiSearch,#hisi-table-search,#hisi-table-search-one,#hisi-table-search-two').submit(function() {
         var that = $(this), 
             arr = that.serializeArray(), 
             where = new Array(),
@@ -687,7 +687,8 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         for(var i in arr) {
             where[arr[i].name] = arr[i].value;
         }
-//console.log(dataTable);console.log(where);
+        // console.log(that.attr('data-table'));
+        // console.log(that.attr('action'));
         table.reload(dataTable, {
             page: true,
             url: that.attr('action'),

@@ -1,3 +1,5 @@
+{include file="system@block/layui" /}
+{if condition="$group == 'y'"}
 <style>
 	.layui-nav-tree .layui-nav-child dd.layui-this,.layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover{
 		background-color:#e5e9f2!important;
@@ -140,7 +142,6 @@
 	</div>
    </div>
 </div>
-{include file="system@block/layui" /}
 <!-- 图片查看 -->
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
@@ -151,3 +152,76 @@
 	 //处理租户左边栏目高亮显示问题
 	 $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
 </script>
+{else /}
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
+    <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['tenant_id']}&group={$group}"  method="get" id="hisi-table-search">
+    <div class="j-search-fl layui-col-md8  fl">
+        <div class="layui-input-inline" style="width:160px;">
+            <select name="house_tai_type">
+                <option value="">业务类型</option>
+                {volist name="params['tenant_tai_type']" id="v" key="k"}
+                <option value="{$k}">{$v}</option>
+                {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:160px;">
+            <input type="text" name="tenant_tai_remark" placeholder="描述内容" class="layui-input">
+        </div>
+        <input type="hidden" name="group" value="{$group}" class="layui-input">
+        <input type="hidden" name="tenant_id" value="{$data_info['tenant_id']}" class="layui-input">
+    </div>
+    <div class="j-search-fr layui-col-md4 fr">
+     <div class="layui-input-inline fr">
+        <div class="layui-input-inline" style="margin-left:10px;">
+      <button type="reset" class="layui-btn j-btn-reset">重置</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                <i class="layui-icon">&#xe615;</i>
+                搜索
+            </button>
+        </div>
+    </div>
+  </div>
+    </form>
+</div>
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <!-- <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-normal">详情</a> -->
+    <a href="{:url('tenant/taiDetail')}?id={{ d.tenant_tai_id }}" id="checktable" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '700px', height: '500px',refresh: 2}" title="台账明细">详情</a>
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery'], function() {
+        var table = layui.table
+       ,$ = layui.$;
+        table.render({
+            elem: '#dataTable'
+            //,skin: 'line' //行边框风格
+            //,even: true //开启隔行背景
+            ,height: 500
+            ,url: '{:url("house/Tenant/detail")}?id={$data_info["tenant_id"]}&group={$group}' //数据接口
+            ,page: true //开启分页
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {field: 'tenant_tai_id', width: 80,align:'center',title: '<span class="e-title">序号</span>',templet: function(d) {
+                    return d.LAY_TABLE_INDEX+1;
+                }}
+                ,{field: 'tenant_tai_type', width: 110,align:'center', title: '<span class="e-title">业务类型</span>', templet: function(d) {
+                    return params.tenant_tai_type[d.tenant_tai_type];
+                }}
+                ,{field: 'tenant_name', width: 120,align:'center', title: '<span class="e-title">租户姓名</span>'}
+                ,{field: 'ctime', width: 180,align:'center', title: '<span class="e-title">操作时间</span>'}
+                ,{field: 'nick', width: 120,align:'center', title: '<span class="e-title">操作人</span>'}
+                ,{field: 'tenant_tai_remark', minWidth: 140,align:'center', title: '<span class="e-title">备注</span>'}
+                ,{title: '操作',width: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        },isShowInst);
+    });
+</script>
+{/if}

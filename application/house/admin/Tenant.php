@@ -18,6 +18,7 @@ use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\TenantTai as TenantTaiModel;
 
 class Tenant extends Admin
 {
@@ -114,6 +115,34 @@ class Tenant extends Admin
         if(!$row){
             return $this->error('当前租户不存在！');
         }
+        $group = input('group','y');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '详情',
+                'url' => '?id='.$id.'&group=y',
+            ],
+            [
+                'title' => '台账',
+                'url' => '?id='.$id.'&group=t',
+            ]
+        ];
+        $tabData['current'] = url("detail?id=$id&group=$group");
+
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->param();
+            $TenantTaiModel = new TenantTaiModel;
+            $where = $TenantTaiModel->checkWhere($getData);
+            $data = [];
+            $data['data'] = $TenantTaiModel->with(['SystemUser'])->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $data['count'] = $TenantTaiModel->where($where)->count('tenant_tai_id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+
         $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
         // 获取租户的余额
         $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
@@ -122,11 +151,37 @@ class Tenant extends Admin
         $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
         $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
         
-        $group = input('param.group');
         $this->assign('group',$group);
-
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
         $this->assign('data_info',$row);
         return $this->fetch();
+    }
+
+    public function taiDetail()
+    {
+        $TaiModel = new TenantTaiModel;
+        $id = input('param.id/d');
+        $row = $TaiModel->get($id);
+        $temps = $row['data_json'];
+        
+        if($temps){
+            $tableData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."tenant");
+            $colNameArr = [];
+            foreach ($tableData as $v) {
+                $colNameArr[$v['Field']] = $v['Comment'];
+            }
+            foreach ($temps as $key => $value) {
+                $datas[] = [
+                    $colNameArr[$key] , $value['old'],$value['new']
+                ];
+            }
+            $this->assign('datas',$datas);
+            return $this->fetch();
+        }else{
+            return $this->error('数据为空！');
+        }
+               
     }
 
     public function del()
