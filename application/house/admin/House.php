@@ -246,7 +246,10 @@ class House extends Admin
         $temps = $row['data_json'];
         
         if($temps){
-            $tableData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."house");
+            $tableBanData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."ban");
+            $tableHouseData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."house");
+            $tableTenantData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."tenant");
+            $tableData = array_merge($tableBanData,$tableHouseData,$tableTenantData);
             $colNameArr = [];
             foreach ($tableData as $v) {
                 $colNameArr[$v['Field']] = $v['Comment'];

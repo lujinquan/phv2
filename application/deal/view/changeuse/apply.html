@@ -118,18 +118,30 @@
 				</div>
 			</div>
 			<div class="layui-col-md4">
+				<label class="j-form-label">手续费</label>
+				<div class="j-input-inline">
+					<input type="number" name="service_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
 				<label class="j-form-label">转让金额</label>
 				<div class="j-input-inline">
 					<input type="number" id="tenant_money" name="transfer_rent" value="" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label">转让原因</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_reason" name="change_remark" value="" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">是否生成租约</label>
+				<div class="j-input-inline j-input-radio">
+					<input type="radio" name="is_create_lease" value="1" title="是">
+					<input type="radio" name="is_create_lease" value="0" title="否" checked="">
 				</div>
 			</div>
 		</div>

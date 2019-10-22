@@ -98,6 +98,12 @@
 				</div>
 			</div>
 			<div class="layui-col-md4">
+				<label class="j-form-label">手续费</label>
+				<div class="j-input-inline">
+					<input type="number" name="service_rent" value="{$data_info['service_rent']}" readonly placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
 				<label class="j-form-label">转让金额</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_money" value="{$data_info['transfer_rent']}" readonly placeholder="" autocomplete="off" class="layui-input">
@@ -109,6 +115,13 @@
 				<label class="j-form-label">转让原因</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_reason" value="{$data_info['change_remark']}" readonly placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">是否生成租约</label>
+				<div class="j-input-inline j-input-radio">
+					<input type="radio" name="is_create_lease" value="1" disabled="disabled" {if condition="$data_info['is_create_lease']"}checked{/if} title="是">
+					<input type="radio" name="is_create_lease" value="0" title="否" disabled="disabled" {if condition="!$data_info['is_create_lease']"}checked{/if}>
 				</div>
 			</div>
 		</div>

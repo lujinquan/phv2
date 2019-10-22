@@ -274,16 +274,19 @@ class ChangeUse extends SystemBase
         // 改变房屋绑定的租户;
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         
-        // 添加台账记录
+        // 添加房屋台账记录
         $taiData = [];
         $taiData['house_id'] = $finalRow['house_id'];
         $taiData['tenant_id'] = $finalRow['old_tenant_id'];
+        $TenantModel = new TenantModel;
+        $oldTenantRow = $TenantModel->where([['tenant_id','eq',$finalRow['old_tenant_id']]])->field('tenant_number')->find();
+        $newTenantRow = $TenantModel->where([['tenant_id','eq',$finalRow['new_tenant_id']]])->field('tenant_number')->find();
         $taiData['cuid'] = $finalRow['cuid'];
         $taiData['house_tai_type'] = 6;
         $taiData['data_json'] = [
-            'tenant_id' => [
-                'old' => $finalRow['old_tenant_id'],
-                'new' => $finalRow['new_tenant_id'],
+            'tenant_number' => [
+                'old' => $oldTenantRow['tenant_number'],
+                'new' => $newTenantRow['tenant_number'],
             ],
             'tenant_name' => [
                 'old' => $finalRow['old_tenant_name'],
