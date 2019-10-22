@@ -242,7 +242,9 @@
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].hoesedata();
+					if(row){
 						if(row.color_status != 1){ //正常状态下的才可以执行
+						    layer.msg("当前不可选!");
 							return false;
 						}
 						layer.close(index);
@@ -253,6 +255,11 @@
 						$("#old_tenant_number").val(row.tenant_number);//当前租户编号
 						$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
 						$("#old_tenant_card").val(row.tenant_card);//当前租户身份证号
+					}
+					else{
+						layer.msg("房屋没选择!");
+						return false;
+					}
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
