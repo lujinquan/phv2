@@ -748,6 +748,19 @@
 						          data:[
 						              {
 						                  value:resData[data_id1][2].rent_order_paids,
+										  label:{
+										      normal:{
+										          show:false,
+												  position: 'Right',
+												  formatter(params){
+													return params.value
+												  },
+										          textStyle:{
+										              color:"#fff",
+										              fontSize:12
+										          },
+										      }
+										  },
 						                  itemStyle:{
 						                      normal:{
 						                          color:['#7ACE4C']
@@ -757,6 +770,19 @@
 						              },
 						              {
 						                  value:resData[data_id1][3].rent_order_paids,
+										  label:{
+										      normal:{
+										          show:false,
+												  position: 'Right',
+												  formatter(params){
+													return params.value
+												  },
+										          textStyle:{
+										              color:"#fff",
+										              fontSize:12
+										          },
+										      }
+										  },
 						                  itemStyle:{
 						                      normal:{
 						                          color:['#11A0F8']
@@ -768,13 +794,15 @@
 						                  value:resData[data_id1][1].rent_order_paids,
 						                  label:{
 						                      normal:{
-						                          //show:true,
-						                          position:'right',
-						                          //formatter:'25%',
+						                          show:false,
+												  position: 'Right',
+												  formatter(params){
+													return params.value
+												  },
 						                          textStyle:{
-						                              color:"#ff5a00",
+						                              color:"#fff",
 						                              fontSize:12
-						                          }
+						                          },
 						                      }
 						                  },
 						                  itemStyle:{

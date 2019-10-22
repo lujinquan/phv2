@@ -323,7 +323,7 @@ opacity: .8color: #333;}
 .j-echarts-box .j-Statistics{ line-height: 110px; float: right; width: 60%; text-align: center; font-size: 70px; color: #fff; font-family: '微软雅黑';}
 .j-echarts-box .j-Statistics i{ font-size: 24px; font-style:normal; padding-left: 10px;}
 .j-echarts-box .j-chart-box .j-title{ font:bold 24px/31px '微软雅黑'; color: #999;}
-.j-chart-box .product-ul li{float: left; margin-left: 20px; border-bottom: #fff 3px solid; color: #9B9B9B; font-size: 16px; font-family: '微软雅黑';padding-bottom: 5px;}
+.j-chart-box .product-ul li{float: left; margin-left: 20px; border-bottom: #fff 3px solid; color: #9B9B9B; font-size: 16px; font-family: '微软雅黑';padding-bottom: 5px;cursor: pointer;}
 .j-chart-box .product-ul li.cur{border-bottom: #4786DA 3px solid; color:#4786DA;}
 .j-chart-right {padding-right: 100px;}
 .j-seized-list .j-seized-box{ background: url(../image/j-seized-line.jpg) repeat-x;border-radius: 4px;height: 90px; text-align: center; color: #fff;}
