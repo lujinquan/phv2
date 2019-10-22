@@ -423,7 +423,11 @@
 		            fontSize:14,
 		            color:'#fff'
 		        },
-		        formatter: "累计租金收租情况 <br/>{b} : {c} {d} %"
+		        formatter: "累计租金收租情况 <br/>{b} : {c} {d} %",
+				 position: function (p) {
+					   // 位置回调
+					   return [p[0] + 10, p[1] - 10];
+				   },
 		    },
 		    legend: {
 		        orient : 'horizontal',
