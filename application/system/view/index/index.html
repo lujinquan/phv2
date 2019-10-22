@@ -476,28 +476,6 @@
 				function statistics(){
 					$('.j-rent-box tbody').html("");
 					//生成table表格
-					if(resData[data_id][1].rent_order_receives==0||resData[data_id][1].rent_order_paids==0||resData[data_id][2].rent_order_receives==0||resData[data_id][2].rent_order_paids==0||resData[data_id][3].rent_order_receives==0||resData[data_id][3].rent_order_paids==0){
-					  
-					  var trData='<tr>\
-							<td>企事</td>\
-							<td>'+resData[data_id][2].rent_order_receives+'</td>\
-							<td>'+resData[data_id][2].rent_order_paids+'</td>\
-							<td>0%</td>\
-						  </tr>\
-						<tr>\
-							<td>机关</td>\
-							<td>'+resData[data_id][3].rent_order_receives+'</td>\
-							<td>'+resData[data_id][3].rent_order_paids+'</td>\
-							<td>0%</td>\
-						</tr>\
-						<tr>\
-							<td>住宅</td>\
-							<td>'+resData[data_id][1].rent_order_receives+'</td>\
-							<td>'+resData[data_id][1].rent_order_paids+'</td>\
-							<td>0%</td>\
-						</tr>';
-					}
-					else{
 					var trData='<tr>\
 						  <td>企事</td>\
 						  <td>'+resData[data_id][2].rent_order_receives+'</td>\
@@ -516,9 +494,16 @@
 							<td>'+resData[data_id][1].rent_order_paids+'</td>\
 							<td>'+(resData[data_id][1].rent_order_paids/resData[data_id][1].rent_order_receives*100).toFixed(2)+'%'+'</td>\
 						</tr>';
-					}
-					// console.log(trData);
 					  $('.j-rent-box tbody').append(trData);
+					  //处理0%的问题
+					  var trList = $(".j-rent-box tbody").children("tr");
+						for (var j=0;j<trList.length;j++) {
+							var tdArr = trList.eq(j).find("td"); //遍历td  
+								if(tdArr.eq(1).text()==0||tdArr.eq(2).text()==0){
+									tdArr.eq(3).text("0%");
+								}
+							
+						}
 					 //生成可视化数据
 					 //myChart.hideLoading();
 					//累计租金收租情况
