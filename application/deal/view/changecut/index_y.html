@@ -105,7 +105,7 @@
 			  }
 			  ,cols: [
 				[ //表头 
-				 {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',}, 
+				 {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
 				   {field: 'house_use_id',width: 120,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 
@@ -116,7 +116,7 @@
 					{field: 'cut_type',align:'center',minWidth: 100,title: '减免类型',templet:function(d) {
 		                    return params.cuttypes[d.cut_type];
 		            }},
-					{field: 'cut_rent',align:'center',minWidth: 100,title: '减免金额'},
+					{field: 'cut_rent',align:'center',minWidth: 100,title: '减免金额', totalRow: true},
 					// ,{
 					// 	field: 'expire_time',
 					// 	align:'center',

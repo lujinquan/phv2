@@ -35,13 +35,12 @@
 {include file="system@block/layui" /}
 <!-- 楼栋查询 -->
 <table id="dataTable" lay-filter='dataTable'></table>
-
-</div>
 <!-- 房屋查询 -->
 <fieldset class="layui-elem-field layui-field-title j-field-box">
 	<legend>选择房屋</legend>
 </fieldset>
 <table id="dataTable2" lay-filter='dataTable2'></table>
+</div>
 <script type="text/javascript">
 	var conId;
 	var data;
@@ -54,7 +53,7 @@
 			elem: '#dataTable'
             ,url: '{:url("system/Index/cancellation")}' //数据接口
             ,page: true //开启分页
-            ,limit: 5
+            ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
@@ -193,25 +192,7 @@
 			 
           });
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
-		//点击tr选中对应的checkbox
-		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
-			  var index = $(this).attr('data-index');
-			  var tableBox = $(this).parents('.layui-table-box');
-			  //存在固定列
-			  if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
-				  tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
-			  } else {
-				  tableDiv = tableBox.find(".layui-table-body.layui-table-main");
-			  }
-			  var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
-			  if (checkCell.length>0) {
-				  checkCell.click();
-			  }
-		  });
-		  
-		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
-			  e.stopPropagation();
-		  });
+		
     });
 	var callbackdata = function () {
          return data;
