@@ -22,7 +22,7 @@ class Changeinst extends Admin
             $ChangeModel = new ChangeInstModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.chang_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,c.nick";
+            $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.chang_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,c.nick";
             $data = [];
             $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
@@ -139,11 +139,10 @@ class Changeinst extends Admin
             $ChangeModel = new ChangeInstModel;
             $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_number,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.chang_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,c.nick";
             $data = [];
-            $data['data'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('system_user c','a.cuid = c.id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-            //halt($data['data']);
-            $data['count'] = Db::name('change_name')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

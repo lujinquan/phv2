@@ -219,7 +219,7 @@ from ph_v1.ph_rent_table;
 
 
 /**
- * 17、补充ph_change_table表 
+ * 19、补充ph_change_table表 
  */
 update ph_v2.ph_change_table_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update ph_v2.ph_change_table_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -228,30 +228,7 @@ update ph_v2.ph_change_table_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id 
 
 
 /**
- * 19、同步使用权变更表[ph_use_change_order => ph_change_use]
- * 字段：异动编号、变更类型、转让金额、房屋编号、原租户编号、原租户姓名、新租户编号、新租户姓名、备注、失败原因、附件、创建时间、状态
- */
-drop table if exists ph_v2.ph_change_use_back;
-create table ph_v2.ph_change_use_back like ph_v2.ph_change_use;
-# 同步数据
-insert into ph_v2.ph_change_use_back 
-(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
-select 
-ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,UserNumber,Status
-from ph_v1.ph_use_change_order;
-
-
-/**
- * 20、补充ph_change_use表 
- */
-update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.old_tenant_id = b.tenant_id where a.old_tenant_id = b.tenant_number;
-update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.new_tenant_id = b.tenant_id where a.new_tenant_id = b.tenant_number;
-update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_use_back a,ph_v2.ph_system_user b set a.cuid = b.id where a.cuid = b.number;
-
-
-/**
- * 21、增加档案临时表 
+ * 20、增加档案临时表 
  */
 drop table if exists ph_v2.ph_ban_temp;
 create table ph_v2.ph_ban_temp like ph_v2.ph_ban;
@@ -269,8 +246,32 @@ drop table if exists ph_v2.ph_house_room_temp;
 create table ph_v2.ph_house_room_temp like ph_v2.ph_house_room;
 insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 
+
+
 /**
- * 22、同步异动表[ph_change_order => ph_change_order]
+ * 21、同步使用权变更表[ph_use_change_order => ph_change_use]
+ * 字段：异动编号、变更类型、转让金额、房屋编号、原租户编号、原租户姓名、新租户编号、新租户姓名、备注、失败原因、附件、创建时间、状态
+ */
+drop table if exists ph_v2.ph_change_use_back;
+create table ph_v2.ph_change_use_back like ph_v2.ph_change_use;
+# 同步数据
+insert into ph_v2.ph_change_use_back 
+(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
+select 
+ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,UserNumber,Status
+from ph_v1.ph_use_change_order;
+
+/**
+ * 22、补充ph_change_use表 
+ */
+update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.old_tenant_id = b.tenant_id where a.old_tenant_id = b.tenant_number;
+update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.new_tenant_id = b.tenant_id where a.new_tenant_id = b.tenant_number;
+update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+
+
+
+/**
+ * 23、同步异动表[ph_change_order => ph_change_order]
  * 
  */
 
@@ -314,7 +315,105 @@ update ph_v2.ph_change_new_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id wh
 update ph_v2.ph_change_new_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
+# 同步租金减免
+drop table if exists ph_v2.ph_change_cut_back;
+create table ph_v2.ph_change_cut_back like ph_v2.ph_change_cut;
+# 同步数据
+insert into ph_v2.ph_change_cut_back 
+(change_order_number,house_id,ban_id,tenant_id,cut_type,cut_rent,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 1 and Status < 2;
 
+update ph_v2.ph_change_cut_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_cut_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_cut_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+
+
+# 同步注销+房改异动
+drop table if exists ph_v2.ph_change_cancel_back;
+create table ph_v2.ph_change_cancel_back like ph_v2.ph_change_cancel;
+# 同步数据
+insert into ph_v2.ph_change_cancel_back 
+(change_order_number,house_id,ban_id,cancel_type,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType in (5,8) and Status < 2;
+
+update ph_v2.ph_change_cancel_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_cancel_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+
+
+# 同步房屋调整
+drop table if exists ph_v2.ph_change_house_back;
+create table ph_v2.ph_change_house_back like ph_v2.ph_change_house;
+# 同步数据
+insert into ph_v2.ph_change_house_back 
+(change_order_number,house_id,ban_id,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 9 and Status < 2;
+
+update ph_v2.ph_change_house_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_house_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+
+
+# 同步管段调整
+drop table if exists ph_v2.ph_change_inst_back;
+create table ph_v2.ph_change_inst_back like ph_v2.ph_change_inst;
+# 同步数据
+insert into ph_v2.ph_change_inst_back 
+(change_order_number,ban_ids,old_inst_id,new_inst_id,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 10 and Status < 2;
+
+update ph_v2.ph_change_inst_back a,ph_v2.ph_ban_back b set a.ban_ids = b.ban_id where a.ban_ids = b.ban_number;
+
+
+# 同步陈欠核销
+drop table if exists ph_v2.ph_change_offset_back;
+create table ph_v2.ph_change_offset_back like ph_v2.ph_change_offset;
+# 同步数据
+insert into ph_v2.ph_change_offset_back 
+(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 4 and Status < 2;
+
+update ph_v2.ph_change_offset_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_offset_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_offset_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+
+
+# 同步别字更正
+drop table if exists ph_v2.ph_change_name_back;
+create table ph_v2.ph_change_name_back like ph_v2.ph_change_name;
+# 同步数据
+insert into ph_v2.ph_change_name_back 
+(change_order_number,house_id,tenant_id,old_tenant_name,new_tenant_name,change_remark,change_reason,change_imgs,ctime,change_status) 
+select 
+ChangeOrderID,HouseID,OldTenantID,OldTenantName,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,Status
+from ph_v1.ph_cor_change_order;
+
+
+update ph_v2.ph_change_name_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+update ph_v2.ph_change_name_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+
+
+# 同步租金追加调整
+drop table if exists ph_v2.ph_change_rentadd_back;
+create table ph_v2.ph_change_rentadd_back like ph_v2.ph_change_rentadd;
+# 同步数据
+insert into ph_v2.ph_change_rentadd_back 
+(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status) 
+select 
+ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status
+from ph_v1.ph_change_order where ChangeType = 11 and Status < 2;
+
+update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
 

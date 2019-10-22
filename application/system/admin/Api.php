@@ -44,13 +44,13 @@ class Api extends Common
             $result[$k] = json_encode($v);
         }
 
-        /* // 处理原暂停计租异动
+/*        // 处理原暂停计租异动
         $allPauseData = Db::name('change_pause_back')->where([['child_json','eq','']])->column('change_order_number');
         foreach($allPauseData as $a){
             if(isset($result[$a])){
                 Db::name('change_pause_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
             }
-        }*/
+        }
 
         // 处理新发租异动
         $allNewData = Db::name('change_new_back')->where([['child_json','eq','']])->column('change_order_number');
@@ -60,6 +60,45 @@ class Api extends Common
             }
         }
 
+        // 处理租金减免异动
+        $allCutData = Db::name('change_cut_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_cut_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }
+
+        // 处理注销+房改异动
+        $allCancelData = Db::name('change_cancel_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allCancelData as $a){
+            if(isset($result[$a])){
+                Db::name('change_cancel_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }
+
+        // 处理房屋调整异动
+        $allHouseData = Db::name('change_house_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allHouseData as $a){
+            if(isset($result[$a])){
+                Db::name('change_house_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }*/
+
+        /*// 处理陈欠核销异动
+        $allOffsetData = Db::name('change_offset_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allOffsetData as $a){
+            if(isset($result[$a])){
+                Db::name('change_offset_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }*/
+
+        // 处理租金追加调整异动
+        $allRentaddData = Db::name('change_rentadd_back')->where([['child_json','eq','']])->column('change_order_number');
+        foreach($allRentaddData as $a){
+            if(isset($result[$a])){
+                Db::name('change_rentadd_back')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+            }
+        }
 
 
 
