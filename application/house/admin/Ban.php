@@ -14,6 +14,7 @@ namespace app\house\admin;
 
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
+use app\house\model\BanTai as BanTaiModel;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
@@ -66,7 +67,7 @@ class Ban extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Ban.sceneForm');
+            $result = $this->validate($data, 'Ban.form');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -90,7 +91,7 @@ class Ban extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Ban.sceneForm');
+            $result = $this->validate($data, 'Ban.edit');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -116,18 +117,55 @@ class Ban extends Admin
     public function detail()
     {
         $id = input('param.id/d');
+        $group = input('group','y');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '详情',
+                'url' => '?id='.$id.'&group=y',
+            ],
+            [
+                'title' => '台账',
+                'url' => '?id='.$id.'&group=t',
+            ]
+        ];
+        $tabData['current'] = url("detail?id=$id&group=$group");
+
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->param();
+            $TaiModel = new BanTaiModel;
+            $where = $TaiModel->checkWhere($getData);
+            $data = [];
+            $data['data'] = $TaiModel->with(['SystemUser'])->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $data['count'] = $TaiModel->where($where)->count('ban_tai_id');
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
         $row = BanModel::get($id);
         $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
-        //halt($row);
-        $group = input('param.group');
         $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
+        //halt($row);
+        // $group = input('param.group');
+        // $this->assign('group',$group);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
 
     public function del()
     {
-        $ids = $this->request->param('id/a');        
+        $ids = $this->request->param('id/a'); 
+        $data = [];   
+        $data['ban_id'] = $ids;
+        // 数据验证
+        $result = $this->validate($data, 'Ban.del');
+        if($result !== true) {
+            return $this->error($result);
+        }    
         $res = BanModel::where([['ban_id','in',$ids]])->delete();
         if($res){
             $this->success('删除成功');
@@ -184,4 +222,28 @@ class Ban extends Admin
         return $this->fetch();
     }
 
+    public function taiDetail()
+    {
+        $TaiModelModel = new BanTaiModel;
+        $id = input('param.id/d');
+        $row = $TaiModelModel->get($id);
+        $temps = $row['data_json'];
+       
+        if($temps){
+            $tableData = Db::query("SHOW FULL FIELDS FROM ".config('database.prefix')."ban");
+            $colNameArr = [];
+            foreach ($tableData as $v) {
+                $colNameArr[$v['Field']] = $v['Comment'];
+            }
+            foreach ($temps as $key => $value) {
+                $datas[] = [
+                    $colNameArr[$key] , $value['old'],$value['new']
+                ];
+            }
+            $this->assign('datas',$datas);
+            return $this->fetch();
+        }else{
+            return $this->error('数据为空！');
+        }         
+    }
 }

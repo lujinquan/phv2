@@ -55,7 +55,7 @@ class Admin extends Common
         // 判断登陆
         $login = $model->isLogin();
         if (!$login['uid']) {
-            return $this->error('请登陆之后在操作', ROOT_DIR.config('sys.admin_path'));
+            return $this->error('请登录之后在操作', ROOT_DIR.config('sys.admin_path'));
         }
 
         define('INST',session('admin_user.inst_id'));

@@ -25,7 +25,7 @@
 		<div class="layui-btn-container">
 			{if condition="$group == 'x'"}
 			<a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增房屋</button></a>
-			<button data-href="{:url('del')}" data-id="house_id" class="layui-btn layui-btn-gray j-page-btns"><i class="layui-icon layui-icon-close"></i>批量删除</button>
+			<button data-href="{:url('del')}" data-id="house_id" class="layui-btn layui-btn-danger j-page-btns"><i class="layui-icon layui-icon-close"></i>批量删除</button>
 			{/if}
 		</div>
 	</div>
@@ -133,7 +133,7 @@
 						title: '租户姓名'
 					}, {
 						field: 'ban_inst_id',
-						minWidth: 120,
+						width: 110,
 						align:'center',
 						title: '管段',
 						hide: isShowInst,
@@ -150,7 +150,7 @@
 						}
 					}, {
 						field: 'house_use_id',
-						minWidth: 100,
+						width: 100,
 						align:'center',
 						title: '使用性质',
 						templet: function(d) {
@@ -163,17 +163,17 @@
 						title: '地址'
 					}, {
 						field: 'house_area',
-						minWidth: 80,
+						width: 80,
 						align:'center',
 						title: '建面'
 					}, {
 						field: 'house_lease_area',
-						minWidth: 100,
+						width: 100,
 						align:'center',
 						title: '计租面积'
 					}, {
 						field: '',
-						minWidth: 80,
+						width: 80,
 						align:'center',
 						title: '单元',
 						templet: function(d) {
@@ -182,7 +182,7 @@
 					}, {
 						field: '',
 						align:'center',
-						minWidth: 80,
+						width: 80,
 						title: '楼层',
 						templet: function(d) {
 							return d.house_floor_id + '/' + d.ban_floors;

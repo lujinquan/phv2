@@ -21,13 +21,7 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 10);
-        $where[] = [
-            ['ban_status','eq',1], // 默认查询正常状态下的房屋
-        ];
-        $where[] = [
-            ['ban_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的房屋
-        ];
-        
+        $where[] = ['ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         if(isset($queryWhere['ban_number']) && $queryWhere['ban_number']){ //查询楼栋编号
             $where[] = ['ban_number','like','%'.$queryWhere['ban_number'].'%'];
         }
@@ -37,9 +31,25 @@ class SystemData extends Model
         if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
             $where[] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
         }
-        if(isset($queryWhere['ban_status'])){ //查询房屋状态
-            $where[] = ['ban_status','eq',$queryWhere['ban_status']];
+
+        if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
+            switch ($queryWhere['change_type']) {
+                case 7: //新发
+                    $where[] = ['ban_status','<',2];
+                    break;
+                case 17: //别字更正
+                    break;
+                case 18: //发租约
+                    break;
+                
+                default:
+                    $where[] = ['ban_status','eq',1]; // 默认查询正常状态下的房屋
+                    break;
+            }  
+        }else{
+            $where[] = ['ban_status','eq',1]; // 默认查询正常状态下的房屋
         }
+        
 
         $BanModel = new BanModel;
         $fields = 'ban_id,ban_holds,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,ban_civil_num,ban_party_num,ban_career_num,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent + ban_party_rent + ban_career_rent) as ban_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_use_area,ban_floors';
@@ -58,18 +68,12 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 10);
-        $where[] = [
-            ['tenant_status','eq',1], // 默认查询正常状态下的租户
-        ];
-        $where[] = [
-            ['tenant_inst_id','in',config('inst_ids')[INST]], // 默认查询当前机构下的租户
-        ];
-        
+        $where[] = ['tenant_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的租户
         if(isset($queryWhere['tenant_number']) && $queryWhere['tenant_number']){ //查询租户编号
             $where[] = ['tenant_number','like','%'.$queryWhere['tenant_number'].'%'];
         }
         if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
-            $where['ban'][] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
+            $where[] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
         }
         if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
             $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
@@ -77,7 +81,24 @@ class SystemData extends Model
         if(isset($queryWhere['tenant_status'])){ //查询租户状态
             $where[] = ['tenant_status','eq',$queryWhere['tenant_status']];
         }
-        
+        if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
+            switch ($queryWhere['change_type']) {
+                case 7: //新发
+                    $where[] = ['tenant_status','<',2];
+                    break;
+                case 17: //别字更正
+                    break;
+                case 18: //发租约
+                    break;
+                
+                default:
+                    $where[] = ['tenant_status','eq',1]; // 默认查询正常状态下的租户 
+                    break;
+            }  
+        }else{
+            $where[] = ['tenant_status','eq',1]; // 默认查询正常状态下的租户 
+        }
+//halt($where);    
         $TenantModel = new TenantModel;
 
         $fields = 'tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card';
@@ -96,9 +117,8 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 10);
-        $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
-        $where[] = ['c.ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         
+        $where[] = ['c.ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
             $where[] = ['a.house_number','like','%'.$queryWhere['house_number'].'%'];
         }
@@ -114,9 +134,6 @@ class SystemData extends Model
         if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
             $where[] = ['c.ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
         }
-        if(isset($queryWhere['house_status'])){ //查询房屋状态
-            $where[] = ['a.house_status','eq',$queryWhere['house_status']];
-        }
         
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
@@ -125,6 +142,9 @@ class SystemData extends Model
                     //halt($houseids);
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
+                    break;
+                case 7: //新发租
+                    $where[] = ['house_status','eq',0];
                     break;
                 case 9: //房屋调整
                     $where[] = ['a.house_status','eq',1];
@@ -155,12 +175,15 @@ class SystemData extends Model
                     break;
                 
                 default:
-                    # code...
+                    $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
+                    
                     break;
             }
             
+        }else{
+            $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
         }
-
+//halt($where);
         $HouseModel = new HouseModel;
 
         $fields = 'a.house_id,a.house_number,a.house_balance,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,(a.house_pre_rent + a.house_diff_rent + a.house_pump_rent) as house_yue_rent,b.*,c.*';

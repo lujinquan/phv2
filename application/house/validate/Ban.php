@@ -11,6 +11,7 @@
 namespace app\house\validate;
 
 use think\Validate;
+use app\deal\model\ChangeNew as ChangeNewModel;
 
 /**
  * 楼栋验证器
@@ -20,6 +21,7 @@ class Ban extends Validate
 {
     //定义验证规则
     protected $rule = [
+        'ban_id' => 'isAllowChange',
         'ban_address|楼栋地址' => 'require', 
         'ban_inst_id|管段' => 'require',
         'ban_owner_id|产别' => 'require|number',
@@ -43,10 +45,29 @@ class Ban extends Validate
         
     ];
 
-    //定义验证场景
-    protected $scene = [
-        //新增
-        'sceneForm'  =>  ['ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id'],
-          
-    ];
+    protected function isAllowChange($value, $rule='', $data)
+    { 
+        $row = ChangeNewModel::where([['ban_id','in',$value],['change_status','>',2]])->value('id');
+        return $row?'该楼栋已经在新发租异动中':true;  
+    }
+
+    // 添加
+    public function sceneForm()
+    {
+        return $this->only(['ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
+    }
+
+    // 编辑
+    public function sceneEdit()
+    {
+        return $this->only(['ban_id','ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
+    }
+
+    // 编辑
+    public function sceneDel()
+    {
+        return $this->only(['ban_id']);
+    }
+
+
 }

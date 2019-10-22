@@ -60,16 +60,22 @@ class Index extends Admin
             $data = $DataModel->queryBan($queryWhere);
             return json($data);
         }
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/ban');
 	}
 	//楼栋调整——楼栋选择器
 	public function queriers()
 	{
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/ban_houses');
 	}
 	 //租户选择器
 	public function tenant()
 	{
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/tenant');
 	}
 
@@ -96,11 +102,15 @@ class Index extends Admin
             $data = $DataModel->queryBan($queryWhere);
             return json($data);
         }
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/ban_select_houses');
 	}
 	//楼栋选择器多选
 	public function cancellations()
 	{
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/bans');
 	}
     /**

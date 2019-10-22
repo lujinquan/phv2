@@ -10,8 +10,11 @@
 </style> -->
 <div class="j-table-content j-no-title">
 <div class="page-toolbar j-page-toolbar clearfix">
-    <form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=tenant"  method="get" id="hisi-table-search">
+    <form class="layui-form layui-form-pane" action="{:url('system/Admin/queryData')}?type=tenant&change_type={$changeType}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
+	  	<div class="layui-input-inline layui-col-md2"  style="width:150px;padding-left:5px">
+            <input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
+        </div>
         <div class="layui-input-inline layui-col-md2" style="width:150px;padding-left:5px">
             <select name="tenant_inst_id">
                 <option value="">所属机构</option>
@@ -43,8 +46,6 @@
 	var data;
     layui.use(['table','jquery'], function() {
         var $ = layui.$;
-        var s = $('#dataTable').attr('params');
-        var params = JSON.parse(s);
         var table = layui.table;
         table.render({
             elem: '#dataTable'
@@ -52,18 +53,18 @@
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
             ,toolbar: 'true'
             // ,defaultToolbar: ['print']
-            ,url: '{:url("system/Admin/queryData")}?type=tenant' //数据接口
+            ,url: '{:url("system/Admin/queryData")}?type=tenant&change_type={$changeType}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
-                none : '暂无相关数据'
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'tenant_number', minWidth:100,align:'center', title: '租户ID'}
+                {field: 'tenant_number', width:120,align:'center', title: '租户编号'}
                 ,{field: 'tenant_name', minWidth: 240,align:'center', title: '租户姓名'}
-				,{field: 'tenant_tel', minWidth: 140,align:'center', title: '联系方式'}
+				,{field: 'tenant_tel', width: 140,align:'center', title: '联系方式'}
 				,{field: 'tenant_card', minWidth: 180,align:'center', title: '身份证号'}
-                ,{field: 'tenant_inst_id', minWidth: 140,align:'center', title: '管段', hide: isShowInst, templet: function(d) {
+                ,{field: 'tenant_inst_id', width: 140,align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.tenant_inst_id];
                 }}
                 

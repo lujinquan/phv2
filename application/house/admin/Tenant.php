@@ -62,7 +62,7 @@ class Tenant extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Tenant.sceneForm');
+            $result = $this->validate($data, 'Tenant.form');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -86,7 +86,7 @@ class Tenant extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'Tenant.sceneForm');
+            $result = $this->validate($data, 'Tenant.edit');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -131,7 +131,14 @@ class Tenant extends Admin
 
     public function del()
     {
-        $ids = $this->request->param('id/a');        
+        $ids = $this->request->param('id/a');
+        $data = [];   
+        $data['tenant_id'] = $ids;
+        // 数据验证
+        $result = $this->validate($data, 'Tenant.del');
+        if($result !== true) {
+            return $this->error($result);
+        }        
         $res = TenantModel::where([['tenant_id','in',$ids]])->delete();
         if($res){
             $this->success('删除成功');

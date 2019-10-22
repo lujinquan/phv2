@@ -11,6 +11,7 @@
 namespace app\house\validate;
 
 use think\Validate;
+use app\deal\model\ChangeNew as ChangeNewModel;
 
 /**
  * 租户验证器
@@ -20,6 +21,7 @@ class Tenant extends Validate
 {
     //定义验证规则
     protected $rule = [
+        'tenant_id' => 'isAllowChange',
         'tenant_name|租户姓名' => 'require',
         'tenant_tel|联系电话' => 'require|number',
         'tenant_card|身份证号' => 'require|idCard',
@@ -30,11 +32,28 @@ class Tenant extends Validate
         'tenant_card.length' => '身份证格式不正确',
     ];
 
-    //定义验证场景
-    protected $scene = [
-        //新增
-        'sceneForm'  =>  ['tenant_name','tenant_tel','tenant_card'],
-        // //修改
-        // 'edit'  =>  ['ban_struct_id'],    
-    ];
+    protected function isAllowChange($value, $rule='', $data)
+    { 
+        $row = ChangeNewModel::where([['tenant_id','in',$value],['change_status','>',2]])->value('id');
+        return $row?'该楼栋已经在新发租异动中':true;  
+    }
+
+    //添加
+    public function sceneForm()
+    {
+        return $this->only(['tenant_name','tenant_tel','tenant_card']);
+    }
+
+    // 编辑
+    public function sceneEdit()
+    {
+        return $this->only(['tenant_id','tenant_name','tenant_tel','tenant_card']);
+    }
+
+    // 删除
+    public function sceneDel()
+    {
+        return $this->only(['tenant_id']);
+    }
+
 }

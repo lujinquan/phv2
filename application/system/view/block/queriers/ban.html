@@ -10,8 +10,11 @@
 </style> -->
 <div class="j-table-content j-no-title">
 <div class="page-toolbar j-page-toolbar clearfix">
-      <form class="layui-form layui-form-pane" action="{:url('system/Index/querier')}"  method="post" id="hisi-table-search">
+      <form class="layui-form layui-form-pane" action="{:url('system/Index/querier')}?change_type={$changeType}"  method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
+			  <div class="layui-input-inline j-input-margin" style="width:150px;">
+				  <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+			  </div>
 			  <div class="layui-input-inline" style="width:150px;">
 				  <select name="ban_inst_id">
 					  <option value="">机构</option>
@@ -48,11 +51,11 @@
 			elem: '#dataTable'
             ,toolbar: true
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
-            ,url: "{:url('system/Index/querier')}" //数据接口
+            ,url: "{:url('system/Index/querier')}?change_type={$changeType}" //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
-                none : '暂无相关数据'
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
                 {field: 'ban_number', minWidth: 110,align:'center', title: '楼栋编号'}

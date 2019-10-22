@@ -1,0 +1,24 @@
+{include file="system@block/layui" /}
+<table class="layui-table">
+  <colgroup>
+    <col width="60%">
+    <col width="20%">
+    <col width="20%">
+  </colgroup>
+  <thead>
+    <tr>
+      <th>字段</th>
+      <th>原值</th>
+      <th>改变后的值</th>
+    </tr> 
+  </thead>
+  <tbody>
+  	{volist name="datas" id="v"}
+    <tr>
+      <td>{$v[0]}</td>
+      <td>{$v[1]}</td>
+      <td>{$v[2]}</td>
+    </tr>
+    {/volist}
+  </tbody>
+</table>

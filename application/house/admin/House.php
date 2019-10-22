@@ -105,7 +105,7 @@ class House extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'House.sceneForm');
+            $result = $this->validate($data, 'House.form');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -129,7 +129,7 @@ class House extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            $result = $this->validate($data, 'House.sceneForm');
+            $result = $this->validate($data, 'House.edit');
             if($result !== true) {
                 return $this->error($result);
             }
@@ -266,7 +266,14 @@ class House extends Admin
 
     public function del()
     {
-        $ids = $this->request->param('id/a');        
+        $ids = $this->request->param('id/a');
+        $data = [];   
+        $data['house_id'] = $ids;
+        // 数据验证
+        $result = $this->validate($data, 'House.del');
+        if($result !== true) {
+            return $this->error($result);
+        }     
         $res = HouseModel::where([['house_id','in',$ids]])->delete();
         if($res){
             $this->success('删除成功');

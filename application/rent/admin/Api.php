@@ -95,7 +95,7 @@ class Api extends Common
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $where[] = ['a.status','>',1];
+            $where[] = ['a.status','eq',1];
             // $ProcessModel = new ProcessModel;
             // $where = $ProcessModel->checkWhere($getData);
             // 检索申请时间
@@ -103,9 +103,11 @@ class Api extends Common
 	            $startTime = strtotime($getData['ctime']);
 	            $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
 	        }
-            $fields = "a.id,a.change_id,a.change_type,from_unixtime(a.ctime, '%Y-%m-%d') as ctime";
+            $fields = "a.id,a.change_id,a.change_type,a.curr_role,from_unixtime(a.ctime, '%Y-%m-%d') as ctime";
             $data = $result = [];
+            
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
+//halt($where);
             foreach($temps as $k => $v){
                 if($v['curr_role'] == session('admin_user.role_id')){
                 	$result[] = $v;

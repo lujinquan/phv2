@@ -13,6 +13,7 @@ namespace app\house\validate;
 use think\Validate;
 use app\house\model\Ban as BanModel;
 use app\house\model\Tenant as TenantModel;
+use app\deal\model\ChangeNew as ChangeNewModel;
 
 /**
  * 房屋验证器
@@ -22,6 +23,7 @@ class House extends Validate
 {
     //定义验证规则
     protected $rule = [
+        'house_id' => 'isAllowChange',
         'ban_id|楼栋编号' => 'require|existInBan',
         'tenant_id|租户编号' => 'require|existInTenant',
         'house_unit_id|单元号' => 'require|number',
@@ -34,22 +36,39 @@ class House extends Validate
         
     ];
 
+    protected function isAllowChange($value, $rule='', $data)
+    { 
+        $row = ChangeNewModel::where([['house_id','in',$value],['change_status','>',2]])->value('id');
+        return $row?'该房屋已经在新发租异动中':true;  
+    }
+
     protected function existInBan($value, $rule='', $data)
   	{
-  		$row = BanModel::where([['ban_id','eq',$value]])->value('ban_id');
+  		  $row = BanModel::where([['ban_id','eq',$value]])->value('ban_id');
       	return $row?true:'楼栋编号格式错误';	
   	}
 
   	protected function existInTenant($value, $rule='', $data)
   	{
-  		$row = TenantModel::where([['tenant_id','eq',$value]])->value('tenant_id');
+  		  $row = TenantModel::where([['tenant_id','eq',$value]])->value('tenant_id');
       	return $row?true:'租户编号格式错误';	
   	}
 
-    //定义验证场景
-    protected $scene = [
-        //新增
-        'sceneForm'  =>  ['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id'],
-         
-    ];
+    //添加
+    public function sceneForm()
+    {
+        return $this->only(['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id']);
+    }
+
+    // 编辑
+    public function sceneEdit()
+    {
+        return $this->only(['house_id','ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id']);
+    }
+
+    // 编辑
+    public function sceneDel()
+    {
+        return $this->only(['house_id']);
+    }
 }

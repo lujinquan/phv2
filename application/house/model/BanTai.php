@@ -10,7 +10,8 @@ class BanTai extends SystemBase
 
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
-
+    // 设置主键
+    protected $pk = 'ban_tai_id';
     // 定义时间戳字段名
     protected $createTime = 'ctime';
     protected $updateTime = false;
