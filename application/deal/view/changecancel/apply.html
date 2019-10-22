@@ -265,8 +265,8 @@
 								var trData ='<tr>\
 											<td class="house_number"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
 											<td class="house_lessee"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
-											<td class="house_original"><input type="number" class="layui-input" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
-											<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
+											<td class="house_original"><input type="number" class="layui-input" lay-verify="required" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
+											<td class="house_builtuparea"><input type="number" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
 										</tr>';
