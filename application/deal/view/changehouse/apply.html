@@ -138,27 +138,27 @@
 		    <tr>
 			  <td>租差</td>
 			  <td id="changes_difference_old"></td>
-			  <td class="changes_difference_news"><input type="number" class="layui-input cancel_change" id="changes_difference_news" name="changes_difference_news" value="0" autocomplete="off"></td>
+			  <td class="changes_difference_news"><input min="0" type="number" class="layui-input cancel_change" id="changes_difference_news" name="changes_difference_news" value="0" autocomplete="off"></td>
 		    </tr>
 			<tr>
 			  <td>泵费</td>
 			  <td id="changes_pumpfee_old"></td>
-			  <td class="changes_pumpfee_news"><input type="number" class="layui-input ancel_change" id="changes_pumpfee_news" name="changes_pumpfee_news" value="0" autocomplete="off"></td>
+			  <td class="changes_pumpfee_news"><input min="0" type="number" class="layui-input ancel_change" id="changes_pumpfee_news" name="changes_pumpfee_news" value="0" autocomplete="off"></td>
 			</tr>
 			<tr>
 			  <td>协议租金</td>
 			  <td id="changes_agreement_old"></td>
-			  <td class="changes_agreement_news"><input type="number" class="layui-input ancel_change" id="changes_agreement_news" name="changes_agreement_news" value="0" autocomplete="off"></td>
+			  <td class="changes_agreement_news"><input min="0" type="number" class="layui-input ancel_change" id="changes_agreement_news" name="changes_agreement_news" value="0" autocomplete="off"></td>
 			</tr>
 			<tr>
 			  <td>建筑面积</td>
 			  <td id="changes_architecture_old"></td>
-			  <td><input type="number" class="layui-input ancel_change" id="changes_architecture_news" name="changes_architecture_news" value="0" autocomplete="off"></td>
+			  <td><input min="0" type="number" class="layui-input ancel_change" id="changes_architecture_news" name="changes_architecture_news" value="0" autocomplete="off"></td>
 			</tr>
 			<tr>
 			  <td>原价</td>
 			  <td id="changes_originalprice_old"></td>
-			  <td><input type="number" class="layui-input ancel_change" id="changes_originalprice_news" name="changes_originalprice_news" value="0" autocomplete="off"></td>
+			  <td><input min="0" type="number" class="layui-input ancel_change" id="changes_originalprice_news" name="changes_originalprice_news" value="0" autocomplete="off"></td>
 			</tr>
 			<tr>
 			  <td>规定租金</td>
@@ -502,7 +502,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						  statistics();
 						  //监听异动明细异动后租差input
 						  $(".changes_difference_news").bind("input propertychange",function(){
-								statistics();
+								  statistics();
 						  });
 						  //监听异动明细异动后泵费input
 						  $(".changes_pumpfee_news").bind("input propertychange",function(){

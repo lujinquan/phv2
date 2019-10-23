@@ -78,6 +78,7 @@
 				,page: true //开启分页
 				,limit: 10
 			   ,limits: [10,20,30,40,50,100,300,500,1000]
+			   ,totalRow: true
 			  ,text: {
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
@@ -96,10 +97,10 @@
 	                }}, 
 					{field: 'chang_ban_num',minWidth: 100,align:'center',title: '栋数'}, 
 					{field: 'households',minWidth: 100,align:'center',title: '户数'},
-					{field: 'change_ban_area',minWidth: 120,align:'center',title: '建筑面积'},  
-					{field: 'change_ban_rent',minWidth: 120,align:'center',title: '规定租金'},
-					{field: 'change_ban_oprice',minWidth: 120,align:'center',title: '原价'},
-					{field: 'change_ban_use_area',minWidth: 120,align:'center',title: '使用面积'},
+					{field: 'change_ban_area',minWidth: 120,align:'center',title: '建筑面积',totalRow: true},  
+					{field: 'change_ban_rent',minWidth: 120,align:'center',title: '规定租金',totalRow: true},
+					{field: 'change_ban_oprice',minWidth: 120,align:'center',title: '原价',totalRow: true},
+					{field: 'change_ban_use_area',minWidth: 120,align:'center',title: '使用面积',totalRow: true},
 					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {

@@ -80,11 +80,12 @@
 				,page: true //开启分页
 				,limit: 10
 			   ,limits: [10,20,30,40,50,100,300,500,1000]
+			   ,totalRow: true
 			  ,text: {
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [[ 
-					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];
@@ -100,10 +101,10 @@
 		                    return params.cancels[d.cancel_type];
 		                }
 					}, 
-					{field: 'cancel_rent',minWidth: 120,align:'center',title: '注销规租'},
-					{field: 'cancel_area',minWidth: 120,align:'center',title: '注销建面'},
-					{field: 'cancel_use_area',minWidth: 120,align:'center',title: '注销使面'},
-					{field: 'cancel_oprice',minWidth: 120,align:'center',title: '注销原价'},
+					{field: 'cancel_rent',minWidth: 120,align:'center',title: '注销规租',totalRow: true},
+					{field: 'cancel_area',minWidth: 120,align:'center',title: '注销建面',totalRow: true},
+					{field: 'cancel_use_area',minWidth: 120,align:'center',title: '注销使面',totalRow: true},
+					{field: 'cancel_oprice',minWidth: 120,align:'center',title: '注销原价',totalRow: true},
 					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'}, 
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
 						templet: function(d) {
