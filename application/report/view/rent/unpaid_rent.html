@@ -60,6 +60,19 @@
 			          <tbody id="Tbody">
 			              
 			          </tbody>
+					  <tfoot id="Statistics">
+						<tr>
+							<td>统计</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td id="j-month">0</td>
+							<td id="j-previous-months"></td>
+							<td id="j-previous-year"></td>
+							<td id="j-sum"></td>
+							<td>&nbsp;</td>
+						</tr>   
+					  </tfoot>
 			  </table>
 		  </div>
 	  </div>
@@ -74,9 +87,28 @@
 		    $ = layui.$
 			,element = layui.element
 			,table = layui.table;
-
+		function statistics(){
+		    var trList = $("#Tbody").children("tr");
+			var j_month =0,
+			    j_previous_months=0,
+				j_previous_year=0,
+				j_sum =0;
+			$("#j-month").text();
+			$("#j-previous-months").text();	
+			$("#j-previous-year").text();
+			for (var j=2;j<trList.length;j++) {
+				var tdArr = trList.eq(j).find("td"); //遍历td  
+					j_month += parseFloat(tdArr.eq(4).text()).toFixed(2)*100;//房屋欠租情况本月份
+					$("#j-month").text(j_month.toFixed(2) / 100);
+				    j_previous_months += parseFloat(tdArr.eq(5).text()).toFixed(2)*100;//房屋欠租情况以前月份
+					$("#j-previous-months").text(j_previous_months.toFixed(2)/100);
+					j_previous_year += parseFloat(tdArr.eq(6).text()).toFixed(2)*100;//房屋欠租情况以前年
+					$("#j-previous-year").text(j_previous_year.toFixed(2)/100);
+					j_sum += parseFloat(tdArr.eq(7).text()).toFixed(2)*100;//房屋欠租情况总和
+					$("#j-sum").text(j_sum.toFixed(2)/100);
+			}
+		}
 		
-
 		$("#button_search").click(function(){
 			var inst = $("select[name='inst_id']").val();
 			var owner = $("select[name='owner_id']").val();
@@ -115,6 +147,7 @@
 					}
 					//console.log(tableStr);
 					$('#Tbody').html(tableStr);
+					statistics();
 				}
 			})
 		});
@@ -161,9 +194,10 @@
 				}
 				//console.log(tableStr);
 				$('#Tbody').html(str);
+				statistics();
 			}
 		})
-
+        
 
         //年选择器
         laydate.render({

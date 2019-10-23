@@ -424,3 +424,7 @@ opacity: .8color: #333;}
 .j-chart-box.j-no-padding .j-size-title{font-size: 16px;color:#4786DA;font-family: '微软雅黑'; border-right: #E7E7E7 1px solid; padding-right: 20px;}
 .j-hr-button{padding-bottom: 24px;}
 /* 首页样式 E */
+/* 报表管理 S */
+/* #Statistics{position:absolute; bottom:0px;left:0; width: 100%;} */
+#Statistics{background-color: #f2f2f2;}
+/* 报表管理 E */
