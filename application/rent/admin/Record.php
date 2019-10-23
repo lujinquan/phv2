@@ -56,4 +56,14 @@ class Record extends Admin
             $this->error('撤回失败，请检查订单期是否为 '.$nowDate.'!');
         }
     }
+
+    public function detail()
+    {
+        $id = input('param.id/d');
+        $RentModel = new RentModel;      
+        $row = $RentModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch('Rent/detail');
+    }
+    
 }

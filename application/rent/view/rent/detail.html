@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<div class="j-details-box j-no-border floorWrap layui-form">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>基本信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">订单编号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="rent_order_number" value="{$data_info['rent_order_number']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">租户姓名</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">联系电话</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">身份证号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md8">
+  	  <label class="j-form-label">楼栋地址</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="ban_address" value="{$data_info['ban_address']}" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>账单信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">账单金额</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['rent_order_receive']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">账单期</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['rent_order_date']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+
+  </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">历史已缴</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['pay_info']['total_paid_rent']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md8">
+  	  <label class="j-form-label">历史欠缴(含本月)</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['pay_info']['total_unpaid_rent']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>应缴凭据</legend>
+  </fieldset>
+   <div class="layui-row layui-form-item layui-col-space90">
+   	<div class="layui-col-md12">
+		<div class="j-enclosure-img j-viewer-img clearfix">
+			<ul>
+				<li>
+					<img src="__ADMIN_IMG__/add_img.png" />
+				</li>
+			</ul>
+		</div>
+   	</div>
+	<div class="layui-row layui-form-item layui-col-space100">
+		<div class="j-margin-btn">
+			<a href="javascript:history.go(-1)" class="layui-btn">返回</a>
+		</div>
+	</div>
+   </div>
+</div>
+<!-- 图片查看 -->
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	//图片查看
+	$('.j-viewer-img').viewer({
+	   	url: 'data-original',
+	 });
+	 //处理租户左边栏目高亮显示问题
+	 $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
+</script>

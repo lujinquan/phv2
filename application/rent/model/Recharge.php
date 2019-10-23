@@ -87,5 +87,10 @@ class Recharge extends Model
         return $data;
     }
 
+    public function detail($id)
+    {
+
+        return true;
+    }
     
 }
