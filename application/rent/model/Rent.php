@@ -20,7 +20,7 @@ class Rent extends Model
 
     public function house()
     {
-        return $this->belongsTo('app\house\model\House', 'house_id', 'house_id')->bind('ban_number');
+        return $this->belongsTo('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_use_id,ban_id');
     }
 
     public function tenant()

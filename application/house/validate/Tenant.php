@@ -24,12 +24,13 @@ class Tenant extends Validate
         'tenant_id' => 'isAllowChange',
         'tenant_name|租户姓名' => 'require',
         'tenant_tel|联系电话' => 'require|number',
-        'tenant_card|身份证号' => 'require|idCard',
+        'tenant_card|身份证号' => 'require|idCard|unique:tenant',
     ];
 
     //定义验证提示
     protected $message = [
-        'tenant_card.length' => '身份证格式不正确',
+        'tenant_card.idCard' => '身份证格式不正确',
+        'tenant_card.unique' => '身份证号已在系统中存在',
     ];
 
     protected function isAllowChange($value, $rule='', $data)

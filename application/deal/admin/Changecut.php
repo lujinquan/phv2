@@ -77,7 +77,7 @@ class Changecut extends Admin
                 }
                 $ChangeCutModel = new ChangeCutModel;
                 // 数据过滤
-                $filData = $ChangeCutModel->dataFilter($data);
+                $filData = $ChangeCutModel->dataFilter($data,'add');
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
@@ -110,7 +110,7 @@ class Changecut extends Admin
                 }
                 $ChangeCutYearModel = new ChangeCutYearModel;
                 // 数据过滤
-                $filData = $ChangeCutYearModel->dataFilter($data);
+                $filData = $ChangeCutYearModel->dataFilter($data,'add');
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
@@ -153,7 +153,7 @@ class Changecut extends Admin
                 }
                 $ChangeCutModel = new ChangeCutModel;
                 // 数据过滤
-                $filData = $ChangeCutModel->dataFilter($data);
+                $filData = $ChangeCutModel->dataFilter($data,'edit');
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
@@ -191,7 +191,7 @@ class Changecut extends Admin
                 }
                 $ChangeCutYearModel = new ChangeCutYearModel;
                 // 数据过滤
-                $filData = $ChangeCutYearModel->dataFilter($data);
+                $filData = $ChangeCutYearModel->dataFilter($data,'edit');
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }

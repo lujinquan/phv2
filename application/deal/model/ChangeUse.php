@@ -110,11 +110,15 @@ class ChangeUse extends SystemBase
      * @param  [type] $data [传入数据]
      * @return [type]
      */
-    public function dataFilter($data)
+    public function dataFilter($data,$flag = 'add')
     {
-        if(isset($data['file']) && $data['file']){
-            $data['change_imgs'] = implode(',',$data['file']);
+        if(($flag === 'add' && isset($data['file']) && $data['file']) || ($flag === 'edit' && isset($data['file']))){
+            $data['change_imgs'] = trim(implode(',',$data['file']),',');
         }
+        if($flag === 'edit' && !isset($data['file'])){
+            $data['change_imgs'] = '';
+        }
+        // halt($data);
         if(isset($data['id'])){
             $row = $this->get($data['id']); 
             if($row['is_back']){ //如果打回过

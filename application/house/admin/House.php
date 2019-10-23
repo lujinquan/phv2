@@ -190,6 +190,10 @@ class House extends Admin
             $data['data'] = $roomTables;
             $data['msg'] = '获取计租表数据成功！';
             $data['code'] = 1;
+            $flag = input('param.flag');
+            if($flag === 'syn'){ //如果是房屋调整异动中调用，则执行临时表同步更新操作
+                Db::query('call syn_temp_table');
+            }
             return json($data);
         }
 

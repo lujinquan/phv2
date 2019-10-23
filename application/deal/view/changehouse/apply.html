@@ -409,7 +409,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					var house_id = row.house_id;//获取房屋ID
 					$.ajax({
 					  type: "post",
-					  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
+					  url: "{:url('house/House/renttable')}?flag=syn&id="+house_id,
 					  data: { 'house_id': house_id}, 
 					  dataType: "json", 
 					  success: function(res) {

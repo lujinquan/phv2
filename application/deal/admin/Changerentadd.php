@@ -45,7 +45,7 @@ class Changerentadd extends Admin
             }
             $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
-            $filData = $ChangeModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data,'add');
             if(!is_array($filData)){
                 return $this->error($filData);
             }
@@ -83,7 +83,7 @@ class Changerentadd extends Admin
             }
             $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
-            $filData = $ChangeModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data,'edit');
             if(!is_array($filData)){
                 return $this->error($filData);
             }

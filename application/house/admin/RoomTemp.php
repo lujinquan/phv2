@@ -87,6 +87,7 @@ class RoomTemp extends Admin
             return $this->success('新增成功');
         }
         $this->assign('data_info',$row);
+        $this->assign('flag','temp');
     	return $this->fetch('room/add');
     }
 
@@ -148,6 +149,7 @@ class RoomTemp extends Admin
         }
         //dump($house_number);halt($houseArrs);
         $this->assign('data_info',$row);
+        $this->assign('flag','temp');
         $this->assign('houseArrs',$houseArrs);
         return $this->fetch('room/form');
     }

@@ -44,7 +44,7 @@ class Changeban extends Admin
             $ChangeModel = new ChangeBanModel;
             //halt($data);
             // 数据过滤
-            $filData = $ChangeModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data,'add');
             if(!is_array($filData)){
                 return $this->error($filData);
             }
@@ -82,7 +82,7 @@ class Changeban extends Admin
             }
             $ChangeModel = new ChangeBanModel;
             // 数据过滤
-            $filData = $ChangeModel->dataFilter($data);
+            $filData = $ChangeModel->dataFilter($data,'edit');
             if(!is_array($filData)){
                 return $this->error($filData);
             }

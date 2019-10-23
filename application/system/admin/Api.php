@@ -352,4 +352,14 @@ class Api extends Common
         return json($data);
     }
 
+    /**
+     * 同步楼栋临时表，同步房屋临时表，同步房屋房间临时表，同步房间临时表
+     * @param  [type] $queryWhere [description]
+     * @return [type]             [description]
+     */
+    // public function synTempTable()
+    // {
+    //     $res = Db::query('call syn_temp_table');
+    // }
+
 }

@@ -88,6 +88,7 @@ class Room extends Admin
             return $this->success('新增成功');
         }
         $this->assign('data_info',$row);
+        $this->assign('flag','normal');
     	return $this->fetch('add');
     }
 
@@ -151,6 +152,7 @@ class Room extends Admin
         //dump($house_number);halt($houseArrs);
         $this->assign('data_info',$row);
         $this->assign('houseArrs',$houseArrs);
+        $this->assign('flag','normal');
         return $this->fetch('form');
     }
 
@@ -163,7 +165,7 @@ class Room extends Admin
         if($re){
             return $this->success('删除成功');
         }
-            return $this->error('删除失败');
+        return $this->error('删除失败');
 
     }
 
