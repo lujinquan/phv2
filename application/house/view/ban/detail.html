@@ -6,7 +6,8 @@
 	<ul class="navWrap">
 		<li class="current"><a href="#item1"><i>1</i><b>楼栋信息</b></a></li>
 		<li><a href="#item2"><i>2</i><b>房屋信息</b></a></li>
-		<li><a href="#item3"><i>3</i><b>状态选择</b></a></li>
+		<li><a href="#item3"><i>3</i><b>房间信息</b></a></li>
+		<!-- <li><a href="#item4"><i>4</i><b>状态选择</b></a></li> -->
 		<!-- <li><a href="#item4"><i>4</i><b>附件信息</b></a></li> -->
 	</ul>
 </div>
@@ -223,7 +224,93 @@
 		</div>
 	</div>
   </div>
-  <div id="item3" class="item">
+    <div id="item3" class="item">
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+	  <legend>房间信息</legend>
+	</fieldset>
+	{if condition="$room_tables"}
+		{if condition="!isset($room_tables[0]['houseinfo'][0]['house_number'])"}<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>关联数据异常，请联系超级管理员处理！</div>{else /}
+		<table class="layui-table ">
+			<thead class="j-table-center">
+				<tr>
+					<th>房屋类型</th>
+					<th>房间编号</th>
+					<th>间号</th>
+					<th>绑定楼栋</th>
+					<th>绑定房屋编号</th>
+					<th>绑定租户</th>
+					<th>产别</th>
+					<th>单元号</th>
+					<th>层次</th>
+					<th>实有面积</th>
+					<th>基价折减</th>
+					<th>计租面积</th>
+					<th>层次调解率</th>
+					<th>规定租金</th>
+					<th>计算租金</th>
+					<th>状态</th>
+				</tr> 
+			</thead>
+			<tbody  class="j-table-center">
+			{volist name="room_tables" id="vo"}
+			<tr>
+				<td>{$params['roomtypes'][$vo['baseinfo']['room_type']]}</td>
+				<td>{$vo['baseinfo']['room_number']}</td>
+				<td>{$vo['baseinfo']['room_door']}</td>
+				<td>{$vo['baseinfo']['ban_number']}</td>
+				<td>{$vo['houseinfo'][0]['house_number']}</td>
+				<td>{$vo['houseinfo'][0]['tenant_name']}</td>
+				<td>{$params['owners'][$vo['baseinfo']['ban_owner_id']]}</td>
+				<td>{$vo['baseinfo']['room_unit_id']}</td>
+				<td>{$vo['baseinfo']['room_floor_id']}</td>
+				<td>{$vo['baseinfo']['room_use_area']}</td>
+				<td>{$vo['baseinfo']['room_rent_point']}</td>
+				<td>{$vo['baseinfo']['room_lease_area']}</td>
+				<td>{$vo['baseinfo']['floor_point']}</td>
+				<td>{$vo['baseinfo']['room_pre_rent']}</td>
+				<td>{$vo['baseinfo']['room_cou_rent']}</td>
+				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
+				{if condition="$group == 'x'"}
+				<td>	
+					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}&house_number={$data_info['house_number']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>					
+					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
+				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
+			    </td>
+			    {/if}
+			</tr>
+			{if condition="isset($vo['houseinfo'][1])"}
+			{volist name="$vo['houseinfo']" offset="1" id="vv"}
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>{$vv['house_number']}</td>
+				<td>{$vv['tenant_name']}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			{/volist}
+			{/if}
+			{/volist}
+		</tbody>
+		</table>
+		{/if}
+		{else /}
+		<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无3户及3户以上共用房间的数据！</div>
+		{/if}
+  </div>
+  <div id="item4" class="item">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 	  <legend>状态选择</legend>
 	</fieldset>
@@ -279,11 +366,6 @@
 			<div class="j-input-inline">
 				<input type="text" name="enterprise_number" id="coordinate" disabled="disabled" value="{$data_info['ban_gpsx']},{$data_info['ban_gpsy']}" autocomplete="off" class="layui-input">
 			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md8">
-			<div class="j-map-height" id="allmap"></div>
 		</div>
 	</div>
   </div>

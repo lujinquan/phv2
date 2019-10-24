@@ -102,4 +102,14 @@ class Rent extends Admin
             $this->error('缴费失败');
         }
     }
+
+
+    public function detail()
+    {
+        $id = input('param.id/d');
+        $RentModel = new RentModel;      
+        $row = $RentModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
 }

@@ -14,11 +14,13 @@ namespace app\house\admin;
 
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
+use app\house\model\Room as RoomModel;
 use app\house\model\BanTai as BanTaiModel;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
+use app\house\model\FloorPoint as FloorPointModel;
 
 class Ban extends Admin
 {
@@ -146,12 +148,30 @@ class Ban extends Admin
         }
         $row = BanModel::get($id);
         $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
+
+        // 获取该楼栋下共用房间的数据
+        $RoomModel = new RoomModel;
+        $roomArr = $RoomModel->with('ban')->where([['ban_id','eq',$id],['room_pub_num','>',2]])->select();
+        $FloorPointModel = new FloorPointModel;
+        $roomTables = [];
+        foreach ($roomArr as $k => $roomRow) {
+            $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $row['ban_floors']);
+            $roomRow['floor_point'] = ($flor_point * 100).'%';
+            $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
+            $room_houses = $roomRow->house_room()->column('house_number');
+            $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
+            $roomTables[] = [
+                'baseinfo' => $roomRow,
+                'houseinfo' => $houses,
+            ];
+        }
+//halt($roomTables);
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
         //halt($row);
         // $group = input('param.group');
-        // $this->assign('group',$group);
+        $this->assign('room_tables',$roomTables);
         $this->assign('data_info',$row);
         return $this->fetch();
     }

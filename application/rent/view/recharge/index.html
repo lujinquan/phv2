@@ -2,7 +2,7 @@
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container"> 
              {if condition="in_array(269,$auths) || $Think.ADMIN_ROLE == 1"}      
-	         <a href="{:url('add')}" class="j-iframe-pop" hisi-data="{width: '1000px', height: '500px',refresh: 2}" title=""><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
+	         <a href="{:url('add')}" class="j-iframe-pop" hisi-data="{width: '1200px', height: '500px',refresh: 1}" title=""><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
              {/if}
 	     </div>
 	 </div>
@@ -42,7 +42,7 @@
                     </select>
                 </div>
                 <div class="layui-input-inline" style="width:120px;">
-                    <select name="pay_type">
+                    <select name="pay_way">
                         <option value="">支付方式</option>
                         {volist name="params['pay_way']" id="v"}
                         <option value="{$key}">{$v}</option>

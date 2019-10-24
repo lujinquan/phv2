@@ -121,11 +121,11 @@
 						$('.j-house-box tbody').html("");
 							//房屋信息
 							if(rows){
-								var houseidData = '';
+								//var houseidData = '';
 								for(var i=0;i<rows.length;i++) {
-								houseidData += ','+rows[i].house_id;
+								//houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
-												<td class="house_number">'+rows[i].house_number+'</td>\
+												<td class="house_number"><input type="hidden" name="house_id[]" value="'+ rows[i].house_id +'">'+rows[i].house_number+'</td>\
 												<td class="house_lessee">'+rows[i].tenant_name+'</td>\
 												<td class="house_nature">'+params.uses[rows[i].house_use_id]+'</td>\
 												<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
@@ -136,8 +136,8 @@
 
 								$('.j-house-box tbody').append(trData);
 							}
-							houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
-							$("input[name='house_id']").val(houseidData);//获取房屋编号
+							// houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
+							// $("input[name='house_id']").val(houseidData);//获取房屋编号
 							houserent();
 						}
 						else{
