@@ -90,13 +90,11 @@
 	</div>
    </div>
 </div>
+{include file="system@block/layui" /}
 <!-- 图片查看 -->
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
-	 //处理租户左边栏目高亮显示问题
-	 $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
+$('.j-viewer-img').viewer({
+  url: 'data-original',
+});
 </script>
