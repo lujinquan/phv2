@@ -37,6 +37,10 @@ class SystemData extends Model
                 case 7: //新发
                     $where[] = ['ban_status','<',2];
                     break;
+                case 14: //楼栋调整
+                    $where[] = ['ban_status','eq',1];
+                    $applyHouseidArr = Db::name('change_ban')->where([['change_status','>',1]])->column('ban_id');
+                    break;
                 case 17: //别字更正
                     break;
                 case 18: //发租约
