@@ -287,7 +287,12 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
   	,$ = layui.jquery
   	,upload = layui.upload
   	,layer = layui.layer;
-	
+	//限制input输入框字符
+	$("input[type=number]").keypress(function(e) {
+	　　if (!String.fromCharCode(e.keyCode).match(/[-0-9\.]/)) {
+	　　　　return false;
+	　　}
+	});
 	//计算函数
 	var sumhouseholds =0, //租赁异动户数初始值
 	    sumconstruction=0,//租赁异动建筑面积初始值
@@ -502,7 +507,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						  statistics();
 						  //监听异动明细异动后租差input
 						  $(".changes_difference_news").bind("input propertychange",function(){
-								  statistics();
+								statistics();  
 						  });
 						  //监听异动明细异动后泵费input
 						  $(".changes_pumpfee_news").bind("input propertychange",function(){
