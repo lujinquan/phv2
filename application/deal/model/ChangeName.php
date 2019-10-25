@@ -159,6 +159,7 @@ class ChangeName extends SystemBase
         $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
         $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         $row['old_tenant_info'] = $oldTenantRow;
+        //$this->finalDeal($row);exit;
         return $row;
     }
 
