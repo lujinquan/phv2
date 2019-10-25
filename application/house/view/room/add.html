@@ -9,8 +9,8 @@
 	  		<div class="j-input-inline">
 	  			 <select name="room_type" lay-verify="required" class="field-cid" type="select" required>
 	  			    <option value="">请选择</option>
-	  			    {volist name="params['roomtypes']" id="v" key="k"}
-	  			    <option value="{$k}">{$v}</option>
+	  			    {volist name="params['roomtypes']" id="v"}
+	  			    <option value="{$key}">{$v}</option>
 	  			    {/volist}
 	  			</select>
 	  		</div>

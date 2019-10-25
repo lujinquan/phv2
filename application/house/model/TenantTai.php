@@ -22,10 +22,10 @@ class TenantTai extends SystemBase
         'data_json' => 'json',
     ];
 
-    // public function tenant()
-    // {
-    //     return $this->belongsTo('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_number');
-    // }
+    public function tenant()
+    {
+        return $this->belongsTo('tenant', 'tenant_id', 'tenant_id')->bind('tenant_name,tenant_number');
+    }
 
     public function SystemUser()
     {

@@ -136,10 +136,11 @@ class Tenant extends Admin
             $TenantTaiModel = new TenantTaiModel;
             $where = $TenantTaiModel->checkWhere($getData);
             $data = [];
-            $data['data'] = $TenantTaiModel->with(['SystemUser'])->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $data['data'] = $TenantTaiModel->with(['tenant','SystemUser'])->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
             $data['count'] = $TenantTaiModel->where($where)->count('tenant_tai_id');
             $data['code'] = 0;
             $data['msg'] = '';
+            //halt($data);
             return json($data);
         }
 

@@ -158,10 +158,10 @@
     <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['tenant_id']}&group={$group}"  method="get" id="hisi-table-search">
     <div class="j-search-fl layui-col-md8  fl">
         <div class="layui-input-inline" style="width:160px;">
-            <select name="house_tai_type">
+            <select name="tenant_tai_type">
                 <option value="">业务类型</option>
-                {volist name="params['tenant_tai_type']" id="v" key="k"}
-                <option value="{$k}">{$v}</option>
+                {volist name="params['tenant_tai_type']" id="v"}
+                <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>

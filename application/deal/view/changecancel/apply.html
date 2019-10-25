@@ -10,8 +10,8 @@
 			<div class="j-input-inline">
 				<select name="cancel_type" class="field-cid" lay-verify="required">
 					<option value="">请选择</option>
-					{volist name="params['cancels']" id="v" key="k"}
-					<option value="{$k}">{$v}</option>
+					{volist name="params['cancels']" id="v"}
+					<option value="{$key}">{$v}</option>
 					{/volist}
 				</select>
 			</div>

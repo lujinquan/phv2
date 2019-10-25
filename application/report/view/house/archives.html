@@ -4,8 +4,8 @@
 			<div class="j-search-fl layui-col-md8  fl">
 	          <div class="layui-input-inline" style="width:140px;">
 	              <select name="inst_id" id="TubulationI" lay-filter="inst_id">
-	                  {volist name="params['insts']" id="v" key="k"}
-	                  <option value="{$k}" {if condition="INST == $k"}selected{/if}>{$v}</option>
+	                  {volist name="params['insts']" id="v"}
+	                  <option value="{$key}" {if condition="INST == $key"}selected{/if}>{$v}</option>
 	                  {/volist}
 	              </select>
 	          </div>

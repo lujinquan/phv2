@@ -27,8 +27,8 @@
 			<div class="j-input-inline">
 				<select name="new_type" lay-verify="required" class="field-cid">
 					<option value="">请选择</option>
-					{volist name="params['news']" id="v" key="k"}
-					<option value="{$k}">{$v}</option>
+					{volist name="params['news']" id="v"}
+					<option value="{$key}">{$v}</option>
 					{/volist}
 				</select>
 			</div>
