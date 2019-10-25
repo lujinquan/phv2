@@ -89,8 +89,9 @@ class Recharge extends Model
 
     public function detail($id)
     {
-
-        return true;
+        $fields = "a.pay_number,a.pay_rent,a.pay_way,from_unixtime(a.ctime,'%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,c.tenant_id,c.tenant_name,c.tenant_card,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $row = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['id','eq',$id]])->find();
+        return $row;
     }
     
 }

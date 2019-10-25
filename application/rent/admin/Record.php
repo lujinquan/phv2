@@ -63,7 +63,7 @@ class Record extends Admin
         $RentModel = new RentModel;      
         $row = $RentModel->detail($id);
         $this->assign('data_info',$row);
-        return $this->fetch('rent/detail');
+        return $this->fetch();
     }
     
 }

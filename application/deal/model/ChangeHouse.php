@@ -125,6 +125,7 @@ class ChangeHouse extends SystemBase
      */
     public function dataFilter($data,$flag = 'add')
     {
+
         if(($flag === 'add' && isset($data['file']) && $data['file']) || ($flag === 'edit' && isset($data['file']))){
             $data['change_imgs'] = trim(implode(',',$data['file']),',');
         }
@@ -138,6 +139,7 @@ class ChangeHouse extends SystemBase
             }
             
         }
+        $before_base_info = HouseModel::get($data['house_id']);
         if($data['save_type'] == 'save'){ // 保存
             $data['change_status'] = 2;
         // 保存并提交
@@ -176,9 +178,10 @@ class ChangeHouse extends SystemBase
                 'changes_floor_original' => $data['changes_floor_original'],
                 'changes_floor_buildings' => $data['changes_floor_buildings'],
             ],
+            'before_base_info' => $before_base_info,
         ];
 
-        
+
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 9; //楼栋调整
         $data['change_order_number'] = date('Ym').'09'.random(14);
@@ -201,7 +204,8 @@ class ChangeHouse extends SystemBase
         $row['house_info'] = HouseModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         $row['house_table'] = $HouseModel->get_house_renttable($row['house_id']);
         $row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
-        //$this->finalDeal($row);
+        //halt($row);
+        $this->finalDeal($row);
         //$oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         //$row['old_tenant_info'] = $oldTenantRow;
         return $row;
@@ -316,14 +320,18 @@ class ChangeHouse extends SystemBase
     private function finalDeal($finalRow)
     {
         // 更新房屋信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）
-        // halt($finalRow);
         // $rowTemp = HouseTempModel::get($finalRow['house_id']);
         // $houseChangeData = [
-
+        //     'house_diff_rent' => $rowTemp['house_diff_rent'],
+        //     'house_pump_rent' => $rowTemp['house_pump_rent'],
+        //     'house_protocol_rent' => $rowTemp['house_protocol_rent'],
+        //     'house_area' => $rowTemp['house_area'],
+        //     'house_oprice' => $rowTemp['house_oprice'],
         // ];
         // $row = HouseModel::get($finalRow['house_id']);
         // HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update($houseChangeData);
-        // dump($rowTemp);halt($row);
+
+        //dump($rowTemp);halt($row);
         // 添加台账记录
     }
 
