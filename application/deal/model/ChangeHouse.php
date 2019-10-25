@@ -201,6 +201,7 @@ class ChangeHouse extends SystemBase
         $row['house_info'] = HouseModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         $row['house_table'] = $HouseModel->get_house_renttable($row['house_id']);
         $row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
+        //$this->finalDeal($row);
         //$oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         //$row['old_tenant_info'] = $oldTenantRow;
         return $row;
@@ -314,8 +315,15 @@ class ChangeHouse extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        // 别字更正
-        //TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
+        // 更新房屋信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）
+        // halt($finalRow);
+        // $rowTemp = HouseTempModel::get($finalRow['house_id']);
+        // $houseChangeData = [
+
+        // ];
+        // $row = HouseModel::get($finalRow['house_id']);
+        // HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update($houseChangeData);
+        // dump($rowTemp);halt($row);
         // 添加台账记录
     }
 

@@ -35,7 +35,7 @@ class ChangeCancel extends SystemBase
 
     protected $processDesc = ['失败','成功','打回给房管员','待资料员初审','待经管所长审批','待经管科长终审'];
 
-    protected $processRole = ['2'=>4,'3'=>6,'4'=>8,'5'=>9];
+    protected $processRole = ['2'=>4,'3'=>5,'4'=>8,'5'=>9];
 
     public function checkWhere($data,$type)
     {
