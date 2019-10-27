@@ -2,6 +2,7 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
@@ -123,8 +124,6 @@ class ChangeCancel extends SystemBase
                 'img' => '',
             ];
         }
-        
-         
 
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 8; //使用权变更
@@ -132,17 +131,6 @@ class ChangeCancel extends SystemBase
         
         $banRow = BanModel::get($data['ban_id']);
 
-        // $data['change_json']['before']['ban_total_rent'] = bcaddMerge([$banRow['ban_civil_rent'],$banRow['ban_party_rent'],$banRow['ban_career_rent']]);
-        // $data['change_json']['before']['ban_total_use_area'] = $banRow['ban_use_area'];
-        // $data['change_json']['before']['ban_total_area'] = bcaddMerge([$banRow['ban_civil_area'],$banRow['ban_party_area'],$banRow['ban_career_area']]);
-        // $data['change_json']['before']['ban_total_oprice'] = bcaddMerge([$banRow['ban_civil_oprice'],$banRow['ban_party_oprice'],$banRow['ban_career_oprice']]);
-
-        // $data['change_json']['after']['ban_total_rent'] = bcsub($data['change_json']['before']['ban_total_rent'],$data['cancel_rent'],2);
-        // $data['change_json']['after']['ban_total_use_area'] = bcsub($data['change_json']['before']['ban_total_use_area'],$data['cancel_use_area'],2);
-        // $data['change_json']['after']['ban_total_area'] = bcsub($data['change_json']['before']['ban_total_area'],$data['cancel_area'],2);
-        // $data['change_json']['after']['ban_total_oprice'] = bcsub($data['change_json']['before']['ban_total_oprice'],$data['cancel_oprice'],2);
-        
-        $data['cancel_ban'] = $data['changes_floor_original'];
         $data['cancel_rent'] = $data['cancel_change_1'];
         $data['cancel_use_area'] = $data['cancel_change_2'];
         $data['cancel_area'] = $data['cancel_change_3'];
@@ -168,11 +156,14 @@ class ChangeCancel extends SystemBase
                 'ban_total_oprice' => $data['changes_floor_original'],
             ],
         ];
-        
-        $count = count($data['house_number']);
+        //halt($data);
+        $count = count($data['house_id']);
         $houseDetail = [];
         for ($i=0; $i < $count; $i++) { 
+            $houseDetail[$i]['house_id'] = $data['house_id'][$i];  //房屋id
+            $houseDetail[$i]['house_use_id'] = $data['house_use_id'][$i];  //房屋使用性质
             $houseDetail[$i]['house_number'] = $data['house_number'][$i];  //房屋编号
+            $houseDetail[$i]['tenant_id'] = $data['tenant_id'][$i]; // 承租人
             $houseDetail[$i]['tenant_name'] = $data['house_lessee'][$i]; // 承租人
             $houseDetail[$i]['house_oprice'] = $data['house_original'][$i]; // 原价
             $houseDetail[$i]['house_area'] = $data['house_builtuparea'][$i]; // 建筑面积
@@ -180,11 +171,6 @@ class ChangeCancel extends SystemBase
             $houseDetail[$i]['house_lease_area'] = $data['house_rentalarea'][$i]; // 计租面积
         }
         $data['data_json'] = $houseDetail;
-
-        // if($data['house_id']){
-        //     $houseids = explode(',',$data['house_id']);
-        //     $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_area,house_use_area,house_oprice,house_lease_area')->select()->toArray();
-        // }
 
         // 审批表数据
         $processRoles = $this->processRole;
@@ -198,9 +184,9 @@ class ChangeCancel extends SystemBase
     public function detail($id)
     {
         $row = self::get($id);
-        //$this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -311,65 +297,108 @@ class ChangeCancel extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        // 将涉及的所有房屋，设置成注销状态
-        HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>3]);
-
-        $banData = [];
-        if($finalRow['cancel_ban']){ //如果整栋注销
-
-        }else{
+    {//halt($finalRow);
+        $taiBanData = $taiHouseData = $tableData = [];
+        // 按栋注销
+        if($finalRow['cancel_ban']){ 
+            // 将楼栋状态改成注销
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>3]);
-        }
-        
-        $banInfo = BanModel::get($finalRow['ban_id']);
-        $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,(house_pre_rent + house_pump_rent + house_diff_rent) as house_yue_rent,ban_id')->select()->toArray();
+            // 新增楼栋台账
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['ban_tai_type'] = 4;
+            $taiBanData['ban_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [];
 
-        $houseArr = [];
-        foreach($houseTemps as $s){
-            $houseArr[$s['house_id']] = $s;
-        }
+            // 如果选择了房屋
+            if($finalRow['data_json']){
 
-        // 变更楼栋数据
+                // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
+                foreach ($finalRow['data_json'] as $k => $v) {
+                    HouseModel::where([['house_number','eq',$v['house_number']]])->update([
+                        'house_oprice' => $v['house_oprice'],
+                        'house_area' => $v['house_area'],
+                        'house_status' => 3,
+                    ]);
+                    
+                    // 添加房屋台账
+                    $taiHouseData[$k]['house_id'] = $v['house_id'];
+                    $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
+                    $taiHouseData[$k]['cuid'] = $finalRow['cuid'];
+                    $taiHouseData[$k]['house_tai_type'] = 4;
+                    $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
+                    $taiHouseData[$k]['data_json'] = [];
 
-        // 添加房屋台账记录
-        $taiHouseData = $taiBanData = $tableData = [];
-        $houses = explode(',', $finalRow['house_id']);
-        foreach($houses as $key => $h){
-            $taiHouseData[$key]['house_id'] = $h;
-            $taiHouseData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
-            $taiHouseData[$key]['cuid'] = $finalRow['cuid'];
-            $taiHouseData[$key]['house_tai_type'] = 4;
-            $taiHouseData[$key]['data_json'] = [
-                'house_status' => [
-                    'old' => 1,
-                    'new' => 3,
-                ],
+
+                    // 添加统计报表记录
+                    $tableData[$k]['change_type'] = 8;
+                    $tableData[$k]['change_order_number'] = $finalRow['change_order_number'];
+                    $tableData[$k]['house_id'] = $v['house_id'];
+                    $tableData[$k]['ban_id'] = $finalRow['ban_info']['ban_id'];
+                    $tableData[$k]['inst_id'] = $finalRow['ban_info']['ban_inst_id'];
+                    $tableData[$k]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
+                    $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
+                    $tableData[$k]['use_id'] = $v['house_use_id'];
+                    $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                    $tableData[$k]['tenant_id'] = $v['tenant_id'];
+                    $tableData[$k]['cuid'] = $finalRow['cuid']; 
+                    $tableData[$k]['order_date'] = date('Ym',$finalRow['ftime']);  
+                }
+            }
+
+        // 按户注销   
+        }else{
+            $changeBanData = [];
+            // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
+            foreach ($finalRow['data_json'] as $k => $v) {
+                HouseModel::where([['house_number','eq',$v['house_number']]])->update([
+                    'house_oprice' => $v['house_oprice'],
+                    'house_area' => $v['house_area'],
+                    'house_status' => 3,
+                ]);
                 
-            ];
+                $taiHouseData[$k]['house_id'] = $v['house_id'];
+                $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
+                $taiHouseData[$k]['cuid'] = $finalRow['cuid'];
+                $taiHouseData[$k]['house_tai_type'] = 4;
+                $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
+                $taiHouseData[$k]['data_json'] = [];
 
-            // 添加产权统计记录
-            $tableData[$key]['change_type'] = 8;
-            $tableData[$key]['change_order_number'] = $finalRow['change_order_number'];
-            $tableData[$key]['house_id'] = $h;
-            $tableData[$key]['ban_id'] = $houseArr[$h]['ban_id'];
-            $tableData[$key]['inst_id'] = $houseArr[$h]['ban_inst_id'];
-            $tableData[$key]['inst_pid'] = $houseArr[$h]['ban_inst_pid'];
-            $tableData[$key]['owner_id'] = $houseArr[$h]['ban_owner_id'];
-            $tableData[$key]['use_id'] = $houseArr[$h]['house_use_id'];
-            $tableData[$key]['change_rent'] = $houseArr[$h]['house_yue_rent'];
-            $tableData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
-            $tableData[$key]['cuid'] = $finalRow['cuid']; 
-            $tableData[$key]['order_date'] = date('Ym',$finalRow['ftime']);  
+                if($v['house_use_id'] == 1){ // 住宅
+                    $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
+                    $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
+                }else if($v['house_use_id'] == 2){ // 企业
+                    $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
+                }else{ // 机关
+                    $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
+                }
+                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
+                //halt($res);
+                // 添加统计报表记录
+                $tableData[$k]['change_type'] = 8;
+                $tableData[$k]['change_order_number'] = $finalRow['change_order_number'];
+                $tableData[$k]['house_id'] = $v['house_id'];
+                $tableData[$k]['ban_id'] = $finalRow['ban_info']['ban_id'];
+                $tableData[$k]['inst_id'] = $finalRow['ban_info']['ban_inst_id'];
+                $tableData[$k]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
+                $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
+                $tableData[$k]['use_id'] = $v['house_use_id'];
+                $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                $tableData[$k]['tenant_id'] = $v['tenant_id'];
+                $tableData[$k]['cuid'] = $finalRow['cuid']; 
+                $tableData[$k]['order_date'] = date('Ym',$finalRow['ftime']);  
+            }
+
+            // 添加楼栋台账
+
         }
-
-        $taiBanData['ban_id'] = $finalRow['ban_id'];
-        $taiBanData['cuid'] = $finalRow['cuid'];
-        $taiBanData['ban_tai_type'] = 4;
-        $taiBanData['data_json'] = [
-
-        ];
-
+//dump($taiHouseData);dump($taiBanData);halt($tableData);
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->saveAll($taiHouseData);
 

@@ -4,6 +4,9 @@
  <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">  
+             {if condition="in_array(347,$auths) || $Think.ADMIN_ROLE == 1"}
+             <a data-href="{:url('createRentOrders')}" class="j-ajax"><button class="layui-btn layui-bg-green"><i class="layui-icon layui-icon-rmb"></i> 生成本月租金</button></a>
+             {/if}
              {if condition="in_array(316,$auths) || $Think.ADMIN_ROLE == 1"}     
              <a data-href="{:url('payList')}" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a>
              {/if}

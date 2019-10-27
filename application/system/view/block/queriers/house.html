@@ -1,13 +1,4 @@
 <!-- 房屋查询器 -->
-
-<!-- <style>
-	/*------------------ iframe页面去共用部分样式 S ----------------*/
-	.layui-header,.layui-side,.layui-footer,.bread-crumbs{ display: none; color: #f60;}
-	.layui-layout-admin .layui-body{top: 0;bottom: 0;}
-	.layui-body{left: 0;}
-	.page-tab-content{margin: 0;}
-	/*------------------ iframe页面去共用部分样式 E ----------------*/
-</style> -->
 <div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('system/Index/house')}?change_type={$changeType}" method="get" id="hisi-table-search">
@@ -58,22 +49,15 @@
 		    ,$ = layui.$;;
 		table.render({
 			elem: '#dataTable'
-				//,height: 550
-				//,height: 'full-20' //浏览器最大高度
-				,
-			toolbar: true,
-			defaultToolbar: false //设置右边筛选，导出，打印显示
-
-				,
-			url: '{:url("system/Index/house")}?change_type={$changeType}' //数据接口
-				,
-			page: true //开启分页
-				,
-			limit: 10,
-			text: {
+			,toolbar: true
+			,defaultToolbar: false //设置右边筛选，导出，打印显示
+			,url: '{:url("system/Index/house")}?change_type={$changeType}' //数据接口
+			,page: true //开启分页
+			,limit: 10
+			,text: {
 				none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
-			},
-			cols: [
+			}
+			,cols: [
 				[ //表头
 					{
 						field: 'house_number',

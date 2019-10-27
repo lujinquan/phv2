@@ -7,8 +7,11 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeOffset extends SystemBase
 {
@@ -121,13 +124,13 @@ class ChangeOffset extends SystemBase
             ];
         }
         $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 4; //暂停计租
+        $data['change_type'] = 4; //陈欠核销
         $data['change_order_number'] = date('Ym').'04'.random(14);
 
         
             //$rentorderdates = explode(',',$data['rent_order_date']);
-            $fields = 'a.rent_order_number,d.ban_owner_id,b.house_use_id,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.rent_order_date,d.ban_address,c.tenant_name';
-            $data['data_json'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['a.house_id','eq',$data['house_id']],['a.rent_order_date','in',$data['rent_order_date']]])->select();
+        $fields = 'a.rent_order_number,d.ban_owner_id,b.house_use_id,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.rent_order_date,d.ban_address,c.tenant_name';
+        $data['data_json'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['a.house_id','eq',$data['house_id']],['a.rent_order_date','in',$data['rent_order_date']]])->select();
             //$data['data_json'] = RentModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
         
 
@@ -147,6 +150,7 @@ class ChangeOffset extends SystemBase
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -254,12 +258,41 @@ class ChangeOffset extends SystemBase
 
     /**
      * 终审审核成功后的数据处理
-     * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        // 将涉及的所有房屋，设置成暂停计租状态
-        //HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
-        
+    {//halt($finalRow);
+
+        // 1、将核销掉的订单全部删除
+        RentModel::where([['house_id','eq',$finalRow['house_id']],['rent_order_date','in',$finalRow['rent_order_date']]])->delete();
+
+        // 2、将核销对应的，当月租金、以前月租金、以前年租金，入库到数据统计表中
+        $ChangeTableModel = new ChangeTableModel;
+        $tableData = [
+            'change_rent' => $finalRow['this_month_rent'],
+            'change_month_rent' => $finalRow['before_month_rent'],
+            'change_year_rent' => $finalRow['before_year_rent'],
+            'tenant_id' => $finalRow['tenant_id'],
+            'house_id' => $finalRow['house_id'],
+            'ban_id' => $finalRow['ban_id'],
+            'change_order_number' => $finalRow['change_order_number'],
+            'change_type' => 4,
+            'inst_id' => $finalRow['ban_info']['ban_inst_id'],
+            'inst_pid' => $finalRow['ban_info']['ban_inst_pid'],
+            'owner_id' => $finalRow['ban_info']['ban_owner_id'],
+            'use_id' => $finalRow['house_info']['house_use_id'],
+            'order_date' => date('Ym',$finalRow['ftime']),
+        ];
+        $ChangeTableModel->allowField(true)->create($tableData);
+
+        // 3、增加一条房屋台账：记录核销单号
+        $taiData = [];
+        $taiData['house_id'] = $finalRow['house_id'];
+        $taiData['tenant_id'] = $finalRow['tenant_id'];
+        $taiData['cuid'] = $finalRow['cuid'];
+        $taiData['house_tai_type'] = 8;
+        $taiData['house_tai_remark'] = '陈欠核销异动单号：'.$finalRow['change_order_number'];
+        $taiData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiData);
     }
 }

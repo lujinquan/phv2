@@ -7,6 +7,48 @@
 		<button data-href="{:url('delUser')}" class="layui-btn layui-btn-gray hisi-page-btns confirm j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
 		</div>
 	</div>
+        <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+            <div class="j-search-fl layui-col-md8  fl">
+                <div class="layui-input-inline j-input-margin" style="width:140px;">
+                    <input type="text" name="username" placeholder="用户名" class="layui-input">
+                </div>
+                <div class="layui-input-inline" style="width:140px;">
+                    <select name="role_id">
+                        <option value="">角色</option>
+                        {volist name="$roleArr" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="layui-input-inline j-input-margin" style="width:140px;">
+                    <input type="text" name="mobile" placeholder="手机号" class="layui-input">
+                </div>
+                {if condition="INST_LEVEL != 3"}
+                <div class="layui-input-inline" style="width:140px;">
+                    <select name="inst_id">
+                        <option value="">机构</option>
+                        {volist name=":config('inst_check_names')[INST]" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}             
+            </div>
+            <div class="j-search-fr layui-col-md4 fr">
+                <div class="layui-input-inline fr">
+                    <div class="layui-input-inline" style="margin-left:10px;">
+                        <button type="reset" class="layui-btn j-btn-reset">重置</button>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                            <i class="layui-icon">&#xe615;</i>
+                            搜索
+                        </button>
+                        <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 <table id="dataTable"></table>
 
 {include file="block/layui" /}
@@ -30,14 +72,10 @@
             elem: '#dataTable'
             ,url: '{:url()}' //数据接口
             ,page: true //开启分页
-            //,skin: 'row'
-            //,even: true
-            ,limit: 20
+            ,limit: 10
             ,text: {
-                none : '暂无相关数据'
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
-            //,toolbar: '#toolbar'
-            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
                 ,{field: 'username', width: 90, title: '用户名', align:'center'}
@@ -46,13 +84,13 @@
                 }}
                 ,{field: 'nick', width: 90,title: '昵称'}
                 ,{field: 'role_id', width: 120,align:'center',title: '角色', templet:function(d){
-                    return d.role.name;
+                    return d.name;
                 }}
                 ,{field: 'mobile', width: 120,align:'center',title: '手机'}
-                ,{field: 'email', width: 170, align:'center',title: '邮箱'}
+                ,{field: 'email', width: 170, hide: true,align:'center',title: '邮箱'}
                 ,{field: 'last_login_time', width: 160,align:'center', title: '最后登陆时间'}
                 ,{field: 'last_login_ip', width: 120,align:'center',title: '最后登陆IP'}
-                ,{field: 'intro', minWidth: 160,align:'center',title: '简介'}
+                ,{field: 'intro', minWidth: 160, hide:true, align:'center', title: '简介'}
                 ,{field: 'status',width: 100,align:'center', title: '状态', templet: '#statusTpl'}
                 ,{title: '操作', width: 160,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]

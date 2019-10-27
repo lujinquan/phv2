@@ -65,6 +65,7 @@ class Admin extends Common
             define('ADMIN_ROLE', $login['role_id']);
         
             $curMenu = MenuModel::getInfo();
+            //halt($curMenu);
             if ($curMenu) {
 
                 if (!RoleModel::checkAuth($curMenu['id']) && 

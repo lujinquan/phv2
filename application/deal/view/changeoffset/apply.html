@@ -164,6 +164,11 @@
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].hoesedata();
+						
+						if(row.color_status != 1){ //正常状态下的才可以执行
+						    layer.msg("当前数据不可选！");
+							return false;
+						}
 						//console.log(row);
 						layer.close(index);
 						var hosue_number = row.house_number;

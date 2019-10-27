@@ -41,6 +41,11 @@ class Design extends Admin
             $sql = "SHOW TABLE STATUS WHERE ".$where;
             $tables = Db::query($sql);
             foreach ($tables as $k => &$v) {
+                if(strpos($v['Name'], '_back') !== false || strpos($v['Name'], '_copy') !== false){
+                    unset($tables[$k]);
+                }else{
+                    $v['id'] = $v['Name'];
+                }
                 $v['id'] = $v['Name'];
             }
             $data['data'] = array_slice($tables, ($page- 1) * $limit, $limit);

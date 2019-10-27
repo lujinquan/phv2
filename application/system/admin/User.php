@@ -56,22 +56,32 @@ class User extends Admin
         if ($this->request->isAjax()) {
             $where      = $data = [];
             $page       = $this->request->param('page/d', 1);
-            $limit      = $this->request->param('limit/d', 15);
-            $keyword    = $this->request->param('keyword/s');
-            $where[]    = ['id', 'neq', 1];
-            if ($keyword) {
-                $where[] = ['username', 'like', "%{$keyword}%"];
+            $limit      = $this->request->param('limit/d', 10);
+            $queryData    = $this->request->param();
+            $where[]    = ['a.id', 'neq', 1];
+            if (isset($queryData['username']) && $queryData['username']) {
+                $where[] = ['a.username', 'like', "%{$queryData['username']}%"];
             }
-
-            $data['data'] = UserModel::with('role')->where($where)->page($page)->limit($limit)->order('inst_id asc,ctime desc')->select();
+            if (isset($queryData['mobile']) && $queryData['mobile']) {
+                $where[] = ['a.mobile', 'like', "%{$queryData['mobile']}%"];
+            }
+            if (isset($queryData['inst_id']) && $queryData['inst_id']) {
+                $where[] = ['a.inst_id', 'eq', $queryData['inst_id']];
+            }
+            if (isset($queryData['role_id']) && $queryData['role_id']) {
+                $where[] = ['a.role_id', 'eq', $queryData['role_id']];
+            }
+            $fields = "a.username,a.mobile,a.nick,a.last_login_time,a.ctime,a.last_login_ip,a.intro,a.status,b.name";
+            $data['data'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->page($page)->limit($limit)->order('inst_id asc,a.ctime desc')->select();
             //halt($data['data']);
-            $data['count'] = UserModel::where($where)->count('id');
+            $data['count'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
         }
-
+        $roleArr = RoleModel::where([['status','eq',1]])->column('id,name');
         $this->assign('hisiTabData', $this->tabData);
+        $this->assign('roleArr', $roleArr);
         $this->assign('hisiTabType', 3);
         return $this->fetch();
     }

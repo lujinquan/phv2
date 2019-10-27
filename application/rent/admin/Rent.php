@@ -31,11 +31,10 @@ class Rent extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
-            $res = $RentModel->configRentOrder(); //生成本月份订单
-            //halt($res);
-            if(!$res){
-                $this->error('本月份订单生成失败！');
-            }
+            // $res = $RentModel->configRentOrder(); //生成本月份订单
+            // if(!$res){
+            //     $this->error('本月份订单生成失败！');
+            // }
 
             $where = $RentModel->checkWhere($getData,'rent');
             
@@ -48,6 +47,20 @@ class Rent extends Admin
             return json($data);
         }
         return $this->fetch();
+    }
+
+    public function createRentOrders()
+    {
+        if(INST_LEVEL != 3){
+            return $this->error('请联系房管员生成本月份账单！','',['refresh'=>0]);
+        }
+        $RentModel = new RentModel;
+        $res = $RentModel->configRentOrder(); //生成本月份订单
+        if(!$res){
+            return $this->error('生成失败，本月份账单已存在！','',['refresh'=>0]);
+        }else{
+            return $this->success('生成成功！');
+        }
     }
 
     /**

@@ -17,14 +17,14 @@
             ,skin: 'row'
             ,even: true
             ,text: {
-                none : '暂无相关数据'
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
                 {field: 'name', title: '备份名称',minWidth: 200, align:'center'}
                 ,{field: 'part', title: '备份卷数', minWidth: 100, align:'center'}
                 ,{field: 'compress', title: '备份压缩', minWidth: 100, align:'center'}
                 ,{field: 'size', title: '备份大小', minWidth: 100,align:'center', templet: function(d) {
-                    return parseInt(d.size / 1024) + 'KB';
+                    return bytesToSize(d.size);
                 }}
                 ,{field: 'time', title: '备份时间', minWidth: 170, align:'center'}
                 ,{title: '操作', minWidth: 260, Width: 260, align:'center',templet: '#buttonTpl'}

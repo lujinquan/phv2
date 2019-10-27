@@ -494,11 +494,13 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             layer.msg('数据提交中...', {time:500000});
             $.get(href, {}, function(res) {
                 layer.msg(res.msg, {}, function() {
-                    if (refresh == 'yes') {
-                        if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
-                            location.href = res.url;
-                        } else {
-                            location.reload();
+                    if(res.data.refresh === undefined || res.data.refresh){
+                        if (refresh == 'yes') {
+                            if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+                                location.href = res.url;
+                            } else {
+                                location.reload();
+                            }
                         }
                     }
                 });
@@ -509,11 +511,13 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                 layer.msg('数据提交中...', {time:500000});
                 $.get(href, {}, function(res) {
                     layer.msg(res.msg, {}, function() {
-                        if (refresh == 'yes') {
-                            if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
-                                location.href = res.url;
-                            } else {
-                                location.reload();
+                        if(res.data.refresh === undefined || res.data.refresh){
+                            if (refresh == 'yes') {
+                                if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+                                    location.href = res.url;
+                                } else {
+                                    location.reload();
+                                }
                             }
                         }
                     });

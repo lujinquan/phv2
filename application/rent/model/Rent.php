@@ -172,8 +172,9 @@ class Rent extends Model
     {
         $currMonth = date('Ym');
 
-        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        //$where[] = ;
+        //$instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        // 只生成当前机构下的订单
+        $instid = INST;
         //获取当月的租金订单，如果没有则自动生成，有则跳过
         $currMonthOrder = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','eq',$currMonth],['ban_inst_id','in',config('inst_ids')[$instid]]])->value('a.rent_order_id'); 
         //halt($currMonthOrder);
@@ -203,10 +204,10 @@ class Rent extends Model
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id) values " . rtrim($str, ','));
                 return $res;
             }else{
-                return true;
+                return false;
             }
         }else{
-            return true;
+            return false;
         }
         
     }

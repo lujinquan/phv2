@@ -56,13 +56,20 @@ class Database extends Admin
             $data = [];
 
             if ($group == 'export') {
+                $page = input('param.page/d', 1);
+                $limit = input('param.limit/d', 10);
                 $tables = Db::query("SHOW TABLE STATUS");
 
                 foreach ($tables as $k => &$v) {
-                    $v['id'] = $v['Name'];
+                    if(strpos($v['Name'], '_back') !== false || strpos($v['Name'], '_copy') !== false){
+                        unset($tables[$k]);
+                    }else{
+                        $v['id'] = $v['Name'];
+                    }   
                 }
 
-                $data['data'] = $tables;
+                $data['data'] = array_slice($tables, ($page- 1) * $limit, $limit);
+                $data['count'] = count($tables);
                 $data['code'] = 0;
 
             } else {

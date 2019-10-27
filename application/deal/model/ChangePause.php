@@ -259,7 +259,7 @@ class ChangePause extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        // 将涉及的所有房屋，设置成暂停计租状态
+        // 1、将涉及的所有房屋，设置成暂停计租状态
         HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
         $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,(house_pre_rent + house_pump_rent + house_diff_rent) as house_yue_rent,ban_id')->select()->toArray();
         $houseArr = [];
@@ -267,7 +267,7 @@ class ChangePause extends SystemBase
             $houseArr[$s['house_id']] = $s;
         }
 
-        // 添加台账记录
+        // 2、添加台账记录
         $taiData = $tableData = [];
         $houses = explode(',', $finalRow['house_id']);
         foreach($houses as $key => $h){
