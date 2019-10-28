@@ -31,10 +31,10 @@ class Tenant extends Admin
             $getData = $this->request->get();
             $TenantModel = new TenantModel;
             $where = $TenantModel->checkWhere($getData);
-            $fields = 'tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card';
+            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance';
             $data = [];
-            $data['data'] = TenantModel::field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
-            $data['count'] = TenantModel::where($where)->count('tenant_id');
+            $data['data'] = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
+            $data['count'] = TenantModel::where($where)->count('tenant_id');//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

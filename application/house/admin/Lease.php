@@ -28,7 +28,7 @@ class Lease extends Admin
             $ChangeLeaseModel = new ChangeLeaseModel;
             $where = $ChangeLeaseModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = 'a.id,a.change_order_number,a.szno,b.house_use_id,c.tenant_name,c.tenant_tel,c.tenant_card,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $fields = "a.id,a.change_order_number,a.szno,from_unixtime(a.last_print_time, '%Y-%m-%d') as last_print_time,b.house_use_id,b.house_area,b.house_oprice,c.tenant_name,c.tenant_tel,c.tenant_card,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);

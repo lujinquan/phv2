@@ -2,14 +2,14 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline j-input-margin" style="width:150px;">
-					<input type="text" name="room_number" placeholder="房间编号" class="layui-input">
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="room_number" title="房间编号" placeholder="房间编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+					<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
+					<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:120px;">
@@ -72,6 +72,7 @@
 				,toolbar: '#toolbar'
 				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 				,url: '{:url("house/Room/index")}'
+				,totalRow: true
 				,page: true
 				,limit: 10
 				,limits: [10,20,30,40,50,100,300,500,1000]
@@ -84,7 +85,8 @@
 						field: 'room_number',
 						minWidth: 110,
 						align:'center',
-						title: '房间编号'
+						title: '房间编号',
+						totalRowText: '合计：'
 					}, {
 						field: 'ban_number',
 						minWidth: 110,
@@ -144,7 +146,14 @@
 						field: 'room_use_area',
 						minWidth: 100,
 						align:'center',
-						title: '使用面积'
+						title: '使用面积',
+						totalRow: true
+					}, {
+						field: 'room_lease_area',
+						minWidth: 100,
+						align:'center',
+						title: '计租面积',
+						totalRow: true
 					}, {
 						title: '操作',
 						width: 100,

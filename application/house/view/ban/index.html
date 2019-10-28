@@ -11,10 +11,10 @@
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline j-input-margin" style="width:120px;">
-				  <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+				  <input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline j-input-margin" style="width:120px;">
-				  <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+				  <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 			  </div>
 			  {if condition="INST_LEVEL != 3"}
 			  <div class="layui-input-inline" style="width:120px;">
@@ -85,6 +85,7 @@
             ,toolbar: true
 			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
+            ,totalRow: true
             ,page: true //开启分页
             ,limit: 10
             ,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
@@ -93,7 +94,7 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', hide: isHide ,fixed: 'left'}
-                ,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
+                ,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
                 ,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -104,15 +105,15 @@
                 ,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
                     return params.structs[d.ban_struct_id];
                 }}
-                ,{field: 'ban_civil_area', minWidth: 80, align:'center', title: '合建面',templet: function(d) {
+                ,{field: 'ban_civil_area', minWidth: 80, align:'center', title: '合建面',totalRow: true,templet: function(d) {
                     return (parseFloat(d.ban_civil_area) + parseFloat(d.ban_party_area) + parseFloat(d.ban_career_area)).toFixed(2);
                 }}
-                ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积'}
+                ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积',totalRow: true}
                 
-                ,{field: 'ban_civil_rent', minWidth: 80, align:'center', title: '合规租',templet: function(d) {
+                ,{field: 'ban_civil_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true,templet: function(d) {
                     return (parseFloat(d.ban_civil_rent) + parseFloat(d.ban_party_rent) + parseFloat(d.ban_career_rent)).toFixed(2);
                 }}
-                ,{field: 'ban_civil_oprice', minWidth: 100, align:'center', title: '合原价',templet: function(d) {
+                ,{field: 'ban_civil_oprice', minWidth: 100, align:'center', title: '合原价',totalRow: true,templet: function(d) {
                     return (parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice)).toFixed(2);
                 }}
                 ,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
@@ -120,7 +121,7 @@
                 ,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
                     return params.damages[d.ban_damage_id];
                 }}
-                ,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数'}
+                ,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数',totalRow: true}
                 ,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
                 ,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
                 ,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}

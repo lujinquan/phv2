@@ -43,6 +43,9 @@ class House extends Admin
                  'tenant'=> function($query)use($where){
                      $query->where($where['tenant']);
                  },
+                 // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
+                 //     $query->where($where['lease']);
+                 // },
                  ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
             $data['count'] = $HouseModel->withJoin([
                  'ban'=> function($query)use($where){
@@ -51,6 +54,9 @@ class House extends Admin
                  'tenant'=> function($query)use($where){
                      $query->where($where['tenant']);
                  },
+                 // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
+                 //     $query->where($where['lease']);
+                 // },
                  ],'left')->where($where['house'])->count('house_id');
                
             //二、这种可以实现关联模型查询，但是不能将无法关联的数据剔除掉会出现undifined数据）
@@ -71,7 +77,7 @@ class House extends Admin
             //三、无法实现关联查询，速度快   
             // $data['data'] = $HouseModel->with(['ban','tenant'])->field($fields)->where($where)->page($page)->order('house_ctime desc')->limit($limit)->select();
             // $data['count'] = $HouseModel->with(['ban','tenant'])->where($where)->count('house_id');
-
+//halt($data);
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

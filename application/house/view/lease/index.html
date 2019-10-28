@@ -2,8 +2,8 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+					<input type="text" name="szno" placeholder="租约编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
@@ -16,13 +16,13 @@
 				</div>
 				{/if}
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+					<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_card" placeholder="身份证号" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:170px;">
+					<input type="text" name="tenant_card" title="身份证号" placeholder="身份证号" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -77,19 +77,14 @@
 				[ //表头
 					{
 						field: 'change_order_number',
-						width: 240,
+						minWidth: 240,
 						align:'center',
-						title: '租户编号'
+						title: '租约申请单号'
 					}, {
 						field: 'szno',
-						width: 200,
+						minWidth: 200,
 						align:'center',
 						title: '租约编号'
-					}, {
-						field: 'tenant_name',
-						width: 100,
-						align:'center',
-						title: '租户姓名'
 					}, {
 						field: 'ban_inst_id',
 						width: 160,
@@ -99,19 +94,30 @@
 						templet: function(d) {
 							return params.insts[d.ban_inst_id];
 						}
-					}, {
+					}, {field: 'ban_owner_id',width: 80,title: '产别',align:'center',templet: function(d) {
+						return params.owners[d.ban_owner_id];
+					}}, {field: 'house_use_id',width: 100,align:'center',title: '使用性质',templet: function(d) {
+						return params.uses[d.house_use_id];
+					}},  {
+						field: 'tenant_name',
+						width: 100,
+						align:'center',
+						title: '租户姓名'
+					},{
 						field: 'tenant_tel',
 						width: 160,
 						align:'center',
-						title: '联系方式'
+						title: '联系方式',
+						hide: true
 					}, {
 						field: 'tenant_card',
 						width: 200,
-						title: '身份证号'
-					}, {
+						title: '身份证号',
+						hide: true
+					}, {field: 'house_area',hide: true,width: 80,align:'center',title: '房屋建面',totalRow: true}
+					, {field: 'house_oprice',hide: true,width: 80,align:'center',title: '房屋原价',totalRow: true}, {
 						title: '操作',
-						Width: 260,
-						minWidth: 260,
+						width: 100,
 						align:'center',
 						templet: '#buttonTpl',
 						fixed: 'right'

@@ -10,10 +10,10 @@
         <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
             <div class="j-search-fl layui-col-md8  fl">
                 <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+                    <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
                 </div>  
                 <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+                    <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
                 </div>
                 {if condition="INST_LEVEL != 3"}
                 <div class="layui-input-inline" style="width:120px;">
@@ -49,8 +49,8 @@
                         {/volist}
                     </select>
                 </div> 
-                <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="ctime" placeholder="日期范围" id="test6" class="layui-input">
+                <div class="layui-input-inline j-input-margin" style="width:180px;">
+                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
                 </div> 
             </div>
             <div class="j-search-fr layui-col-md4 fr">

@@ -56,13 +56,25 @@ class ChangeLease extends SystemBase
                 # code...
                 break;
         }
+        // 检索租约编号
+        if(isset($data['szno']) && $data['szno']){
+            $where[] = ['a.szno','like','%'.$data['szno'].'%'];
+        }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
         }
-        // 检索租户
+        // 检索租户姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
+        // 检索租户手机号
+        if(isset($data['tenant_tel']) && $data['tenant_tel']){
+            $where[] = ['a.tenant_tel','like','%'.$data['tenant_tel'].'%'];
+        }
+        // 检索租户身份证号
+        if(isset($data['tenant_card']) && $data['tenant_card']){
+            $where[] = ['a.tenant_card','like','%'.$data['tenant_card'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){

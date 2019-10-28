@@ -33,16 +33,16 @@
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+					<input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+					<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
+					<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:120px;">
@@ -106,97 +106,51 @@
 			toolbar: true,
 			defaultToolbar: ['filter','exports','print'], //设置右边筛选，导出，打印显示
 			url: '{:url("house/House/index")}?group={$group}&ban_number={$ban_number}', //数据接口
+			totalRow: true,
 			page: true, //开启分页
 			limit: 10,
 			limits: [10,20,30,40,50,100,300,500,1000],
 			text: {none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"},
 			cols: [
 				[ //表头
-					{
-						type: 'checkbox',
-						hide: isHide,
-						fixed: 'left'
-					}, {
-						field: 'house_number',
-						minWidth: 140,
-						align:'center',
-						title: '房屋编号'
-					}, {
-						field: 'ban_number',
-						minWidth: 110,
-						align:'center',
-						title: '楼栋编号'
-					}, {
-						field: 'tenant_name',
-						minWidth: 100,
-						align:'center',
-						title: '租户姓名'
-					}, {
-						field: 'ban_inst_id',
-						width: 110,
-						align:'center',
-						title: '管段',
-						hide: isShowInst,
-						templet: function(d) {
-							return params.insts[d.ban_inst_id];
-						}
-					}, {
-						field: 'ban_owner_id',
-						minWidth: 60,
-						title: '产别',
-						align:'center',
-						templet: function(d) {
-							return params.owners[d.ban_owner_id];
-						}
-					}, {
-						field: 'house_use_id',
-						width: 100,
-						align:'center',
-						title: '使用性质',
-						templet: function(d) {
-							return params.uses[d.house_use_id];
-						}
-					}, {
-						field: 'ban_address',
-						minWidth: 200,
-						align:'center',
-						title: '地址'
-					}, {
-						field: 'house_area',
-						width: 80,
-						align:'center',
-						title: '建面'
-					}, {
-						field: 'house_lease_area',
-						width: 100,
-						align:'center',
-						title: '计租面积'
-					}, {
-						field: '',
-						width: 80,
-						align:'center',
-						title: '单元',
-						templet: function(d) {
-							return d.house_unit_id + '/' + d.ban_units;
-						}
-					}, {
-						field: '',
-						align:'center',
-						width: 80,
-						title: '楼层',
-						templet: function(d) {
-							return d.house_floor_id + '/' + d.ban_floors;
-						}
-					}
-
-					, {
-						title: '操作',
-						Width: 260,
-						minWidth: 260,
-						align:'center',
-						templet: '#buttonTpl',
-						fixed: 'right'
-					}
+					{type: 'checkbox',hide: isHide,fixed: 'left'}
+					, {field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
+					, {field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}
+					
+					, {field: 'ban_address',minWidth: 160,align:'center',title: '地址'}
+					, {field: 'ban_inst_id',width: 110,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
+						return params.insts[d.ban_inst_id];
+					}}
+					, {field: 'ban_owner_id',minWidth: 60,title: '产别',align:'center',templet: function(d) {
+						return params.owners[d.ban_owner_id];
+					}}
+					, {field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'}
+					
+					, {field: 'house_use_id',width: 100,align:'center',title: '使用性质',templet: function(d) {
+						return params.uses[d.house_use_id];
+					}}
+					, {field: 'house_pre_rent',width: 100,align:'center',title: '规定租金',totalRow: true}
+					, {field: 'house_cou_rent',width: 100,align:'center',title: '计算租金',totalRow: true}
+					, {field: 'house_lease_area',width: 100,align:'center',title: '计租面积',totalRow: true}
+					//, {field: '',width: 100,align:'center',title: '出证时间'}
+					, {field: 'house_area',hide: true,width: 80,align:'center',title: '房屋建面',totalRow: true}
+					, {field: 'house_oprice',hide: true,width: 80,align:'center',title: '房屋原价',totalRow: true}
+					,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
+	                    return params.structs[d.ban_struct_id];
+	                }}
+					, {field: 'ban_damage_id',hide: true,width: 80,align:'center',title: '完损等级', templet: function(d) {
+	                    return params.damages[d.ban_damage_id];
+	                }}
+					, {field: 'house_is_pause',hide: true,width: 100,align:'center',title: '是否暂停计租',templet: function(d) {
+						return parseInt(d.house_is_pause)?'是':'否';
+					}}
+					, {field: '',width: 80,hide: true,align:'center',title: '单元',templet: function(d) {
+						return d.house_unit_id + '/' + d.ban_units;
+					}}
+					, {field: '',align:'center',hide: true,width: 80,title: '楼层',templet: function(d) {
+						return d.house_floor_id + '/' + d.ban_floors;
+					}}
+					, {title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
 			done: function(res, curr, count) {

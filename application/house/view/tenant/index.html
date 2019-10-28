@@ -11,7 +11,7 @@
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_number" placeholder="租户编号" class="layui-input">
+					<input type="text" name="tenant_number" title="租户编号" placeholder="租户编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
@@ -24,13 +24,13 @@
 				</div>
 				{/if}
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_tel" placeholder="手机号" class="layui-input">
+					<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="tenant_card" placeholder="身份证号" class="layui-input">
+					<input type="text" name="tenant_card" title="身份证号" placeholder="身份证号" class="layui-input">
 				</div>
 				<input type="hidden" name="group" value="{$group}" class="layui-input">
 			</div>
@@ -72,10 +72,10 @@
 			toolbar: '#toolbar'
 				// ,defaultToolbar: ['print']
 				,
-				defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 			,url: '{:url("house/Tenant/index")}?group={$group}' //数据接口
 				,
-
+			totalRow: true,
 			page: true //开启分页
 				,
 			limit: 10,
@@ -89,11 +89,13 @@
 						type: 'checkbox',
 						hide: isHide,
 						fixed: 'left'
+						
 					}, {
 						field: 'tenant_number',
 						minWidth: 100,
 						align:'center',
-						title: '租户编号'
+						title: '租户编号',
+						totalRowText: '合计：'
 					}, {
 						field: 'tenant_name',
 						minWidth: 240,
@@ -117,6 +119,11 @@
 						field: 'tenant_card',
 						minWidth: 180,
 						title: '身份证号'
+					}, {
+						field: 'tenant_balance',
+						minWidth: 180,
+						title: '余额',
+						totalRow: true
 					}, {
 						title: '操作',
 						Width: 260,

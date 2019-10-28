@@ -9,11 +9,11 @@
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
       <div class="j-search-fl layui-col-md8  fl">
-    	<div class="layui-input-inline j-input-margin" style="width:120px;">
-    	    <input type="text" name="rent_order_number" placeholder="订单编号" class="layui-input">
+    	<div class="layui-input-inline j-input-margin" style="width:180px;">
+    	    <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
     	</div>
-    	<div class="layui-input-inline" style="width:120px;">
-    	    <input type="text" name="rent_order_date" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+    	<div class="layui-input-inline" style="width:100px;">
+    	    <input type="text" name="rent_order_date" value="" title="月份" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
     	</div>
     	{if condition="INST_LEVEL != 3"}
     	<div class="layui-input-inline" style="width:120px;">
@@ -42,10 +42,10 @@
     	      </select>
     	</div>
         <div class="layui-input-inline j-input-margin" style="width:120px;">
-            <input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+            <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
         </div>
-        <div class="layui-input-inline j-input-margin" style="width:120px;">
-            <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+        <div class="layui-input-inline j-input-margin" style="width:140px;">
+            <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
         </div>
         </div>
         <div class="j-search-fr layui-col-md4 fr">
@@ -96,13 +96,14 @@
             ,url: '{:url("index")}'
 			,toolbar: '#toolbar'
 			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+            ,totalRow: true
             ,page: true 
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
+                {type: 'checkbox', fixed: 'left', totalRowText: '合计：'}
                 ,{field: 'rent_order_number', minWidth: 200, align:'center', title: '订单编号'}
                 ,{field: 'rent_order_date', minWidth: 120, align:'center', title: '账单期'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
@@ -116,8 +117,8 @@
                 }}
                 ,{field: 'tenant_name', minWidth: 100, align:'center', title: '租户姓名'}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
-                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金'}
-                ,{field: 'rent_order_paid', minWidth: 100, align:'center', title: '已缴租金'}
+                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金', totalRow: true}
+                ,{field: 'rent_order_paid', minWidth: 100, align:'center', title: '已缴租金', totalRow: true}
                 ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
                     return params.is_invoice[d.is_invoice];
                 }}
