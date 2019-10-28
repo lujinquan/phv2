@@ -59,8 +59,8 @@ insert into ph_v2.ph_house_back
 select 
 HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,Status
 from ph_v1.ph_house;
-
-
+# 将规租更新成包含租差泵费和协议租金
+update ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
 
 /**
  * 6、将v1的房间表中的ban_number全部替换成v2房间中的ban_id [反向更新v1的房屋表]

@@ -105,6 +105,18 @@ class Api extends Common
         halt('ok');
     }
 
+    public function synAllHouses()
+    {
+        $houseids = Db::name('house')->cloumn('house_id');
+        $HouseModel = new HouseModel;
+        foreach ($houseids as $k => $v) {
+            $houseRent = $HouseModel->count_house_rent($v);
+            Db::name('house')->where([['house_id','eq',$v]])->update(['house_cou_rent'=>$houseRent]);
+        }
+        halt('处理完成！');
+    }
+
+
     /**
      * 获取 一条消息提醒数据
      * @param id 消息id

@@ -97,14 +97,9 @@
                 ,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
+                ,{field: 'ban_address',minWidth:200,align:'center', title: '地址'}
                 ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
-                }}
-                ,{field: 'ban_address',minWidth:200,align:'center', title: '地址'}
-                ,{field: 'ban_property_id', minWidth: 100, align:'center', title: '产权证号'}
-                ,{field: 'ban_build_year', minWidth: 100, align:'center', title: '建成年份'}
-                ,{field: 'ban_damage_id', minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
-                    return params.damages[d.ban_damage_id];
                 }}
                 ,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
                     return params.structs[d.ban_struct_id];
@@ -112,13 +107,23 @@
                 ,{field: 'ban_civil_area', minWidth: 80, align:'center', title: '合建面',templet: function(d) {
                     return (parseFloat(d.ban_civil_area) + parseFloat(d.ban_party_area) + parseFloat(d.ban_career_area)).toFixed(2);
                 }}
+                ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积'}
+                
                 ,{field: 'ban_civil_rent', minWidth: 80, align:'center', title: '合规租',templet: function(d) {
                     return (parseFloat(d.ban_civil_rent) + parseFloat(d.ban_party_rent) + parseFloat(d.ban_career_rent)).toFixed(2);
                 }}
                 ,{field: 'ban_civil_oprice', minWidth: 100, align:'center', title: '合原价',templet: function(d) {
                     return (parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice)).toFixed(2);
                 }}
-                ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积'}
+                ,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
+                ,{field: 'ban_build_year', hide: true, minWidth: 100, align:'center', title: '建成年份'}
+                ,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
+                    return params.damages[d.ban_damage_id];
+                }}
+                ,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数'}
+                ,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
+                ,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
+                ,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
                 ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
