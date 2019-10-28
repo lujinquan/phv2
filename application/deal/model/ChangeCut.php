@@ -157,6 +157,7 @@ class ChangeCut extends SystemBase
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -278,6 +279,12 @@ class ChangeCut extends SystemBase
     private function finalDeal($finalRow)
     {
         //halt($finalRow);
+        // 1、添加房屋台账
+        
+
+        // 2、将数据写入到异动统计表
+        
+
         //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         
     }

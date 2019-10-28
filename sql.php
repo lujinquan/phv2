@@ -57,9 +57,9 @@ select
 HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,Status
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
-update ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
+update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
 # 更新楼栋表的户数
-update ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_house_back group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
+update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
 
 
 /**
@@ -419,55 +419,44 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 创建字符串分隔存储过程函数
-delimiter $$
-CREATE DEFINER = `root`@`%` PROCEDURE `split_str`()
-    SQL SECURITY INVOKER
-BEGIN
-  DECLARE a varchar(20);
-  DECLARE b varchar(10000);
-  DECLARE done INT DEFAULT FALSE;
-  DECLARE cur CURSOR FOR SELECT a,b from test ;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-  OPEN cur; 
-  read_loop: LOOP
-    FETCH cur INTO a,b;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
-    SET @num = LENGTH(b) - LENGTH(REPLACE(b, ',', ''));
-SET @i = 0;
-WHILE (@i <=@num ) DO
-    INSERT INTO test1
-VALUES
-    (
-        a,
-      str_for_substr(@i,b)
-);
-set @i = @i+1;
-END WHILE;
-  END LOOP;  
-  CLOSE cur;
-END$$
-
-
+# 将back表同步到主表
+drop table if exists ph_ban;
+alter table ph_ban_back rename ph_ban;
+drop table if exists ph_change_cancel;
+alter table ph_change_cancel_back rename ph_change_cancel;
+drop table if exists ph_change_child;
+alter table ph_change_child_back rename ph_change_child;
+drop table if exists ph_change_cut;
+alter table ph_change_cut_back rename ph_change_cut;
+drop table if exists ph_change_house;
+alter table ph_change_house_back rename ph_change_house;
+drop table if exists ph_change_inst;
+alter table ph_change_inst_back rename ph_change_inst;
+drop table if exists ph_change_lease;
+alter table ph_change_lease_back rename ph_change_lease;
+drop table if exists ph_change_name;
+alter table ph_change_name_back rename ph_change_name;
+drop table if exists ph_change_new;
+alter table ph_change_new_back rename ph_change_new;
+drop table if exists ph_change_offset;
+alter table ph_change_offset_back rename ph_change_offset;
+drop table if exists ph_change_pause;
+alter table ph_change_pause_back rename ph_change_pause;
+drop table if exists ph_change_rentadd;
+alter table ph_change_rentadd_back rename ph_change_rentadd;
+drop table if exists ph_change_table;
+alter table ph_change_table_back rename ph_change_table;
+drop table if exists ph_change_use;
+alter table ph_change_use_back rename ph_change_use;
+drop table if exists ph_house;
+alter table ph_house_back rename ph_house;
+drop table if exists ph_house_room;
+alter table ph_house_room_back rename ph_house_room;
+drop table if exists ph_rent_order;
+alter table ph_rent_order_back rename ph_rent_order;
+drop table if exists ph_rent_recycle;
+alter table ph_rent_recycle_back rename ph_rent_recycle;
+drop table if exists ph_room;
+alter table ph_room_back rename ph_room;
+drop table if exists ph_tenant;
+alter table ph_tenant_back rename ph_tenant;
