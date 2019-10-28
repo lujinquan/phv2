@@ -15,13 +15,11 @@ BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,Owner
 from ph_v1.ph_ban;
 
 
-
 /**
  * 2、将v1的房屋表中的ban_number全部替换成v2楼栋表中的ban_id [反向更新v1的房屋表]
  */
 # update ph_v1.ph_house as a inner join ph_v2.ph_ban_back as b on a.BanID = b.ban_number set a.BanID = b.ban_id;
 update ph_v1.ph_house a,ph_v2.ph_ban_back b set a.BanID = b.ban_id where a.BanID = b.ban_number;
-
 
 
 /**
@@ -37,13 +35,12 @@ select
 TenantID,TenantName,InstitutionID,InstitutionPID,TenantTel,TenantNumber,Status
 from ph_v1.ph_tenant;
 
-
-
 /**
  * 4、将v1的房屋表中的tenant_number全部替换成v2楼栋表中的tenant_id [反向更新v1的房屋表]
  */
 # update ph_v1.ph_house as a left join ph_v2.ph_tenant_back as b on a.TenantID = b.tenant_number set a.TenantID = b.tenant_id;
 update ph_v1.ph_house a,ph_v2.ph_tenant_back b set a.TenantID = b.tenant_id where a.TenantID = b.tenant_number;
+
 
 
 
@@ -61,6 +58,9 @@ HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
 update ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
+# 更新楼栋表的户数
+update ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_house_back group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
+
 
 /**
  * 6、将v1的房间表中的ban_number全部替换成v2房间中的ban_id [反向更新v1的房屋表]

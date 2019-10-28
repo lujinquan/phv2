@@ -38,23 +38,24 @@ class Process extends Admin
             $where = $ProcessModel->checkWhere($getData);
             $fields = "a.id,a.change_id,a.change_type,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = [];
+            $data['data'] = $dataTemps = [];
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
             foreach($temps as $k => $v){
                 if($v['curr_role'] == ADMIN_ROLE){
                     $v['is_process'] = 1;
-                    array_unshift($data['data'],$v);
+                    array_unshift($dataTemps,$v);
                 }else{
                     $v['is_process'] = 0;
-                    array_push($data['data'],$v);
+                    array_push($dataTemps,$v);
                 }
             }
             //$data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.id');
 
-            $data['data'] = array_slice($temps, ($page - 1) * $limit, $limit);
+            $data['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
             $data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
+            //halt($data['data']);
             return json($data);
         }
         return $this->fetch();
