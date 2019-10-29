@@ -104,11 +104,19 @@ class Api extends Common
             if(isset($getData['change_type']) && $getData['change_type']){
                 $where[] = ['change_type','eq',$getData['change_type']];
             }
+            // 检索楼栋机构
+            $insts = config('inst_ids');
+            if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+                $where[] = ['d.ban_inst_id','in',$insts[$data['ban_inst_id']]];
+            }else{
+                $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:session('admin_user.inst_id');
+                $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+            }
             $fields = "a.id,a.change_id,a.change_type,a.curr_role,from_unixtime(a.ctime, '%Y-%m-%d') as ctime";
             $data = $result = [];
             
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
-//halt($where);
+
             foreach($temps as $k => $v){
                 if($v['curr_role'] == session('admin_user.role_id')){
                 	$result[] = $v;

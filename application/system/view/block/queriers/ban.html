@@ -14,11 +14,21 @@
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline j-input-margin" style="width:150px;">
 				  <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
-			  </div>
+			  </div>\
+			  {if condition="$Think.INST_LEVEL < 3"}
 			  <div class="layui-input-inline" style="width:150px;">
 				  <select name="ban_inst_id">
 					  <option value="">机构</option>
 					  {volist name=":config('inst_check_names')[INST]" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  {/if}
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_owner_id">
+					  <option value="">产别</option>
+					  {volist name="params['owners']" id="v"}
 					  <option value="{$key}">{$v}</option>
 					  {/volist}
 					</select>
@@ -62,6 +72,7 @@
                 ,{field: 'ban_inst_id', minWidth: 120, align:'center',title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
+                ,{field: 'ban_address', minWidth: 140,align:'center', title: '地址'}
 				,{field: 'ban_damage_id', minWidth: 100, align:'center',title: '完损等级', templet: function(d) {
 				    return params.damages[d.ban_damage_id];
 				}}
@@ -71,7 +82,9 @@
                 ,{field: 'ban_owner_id', minWidth: 80,align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'ban_address', minWidth: 140,align:'center', title: '地址'}
+                ,{field: 'ban_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true}
+                ,{field: 'ban_area', minWidth: 80, align:'center', title: '合建面',totalRow: true}
+                
             ]]
             ,done:function(res,curr,count){
                

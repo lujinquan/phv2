@@ -231,11 +231,12 @@ class ChangeLease extends SystemBase
         }else{
             /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
             if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+                //dump($changeRow['change_status']);halt($finalStep);
                 $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeRow['change_status']],
+                    'action' => $processActions[$changeRow['change_status']], //用没递增的状态id来记录
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
@@ -244,7 +245,8 @@ class ChangeLease extends SystemBase
                     $changeUpdateData['change_imgs'] = implode(',',$data['file']);
                 }
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);
+                //halt($data);
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
@@ -257,7 +259,7 @@ class ChangeLease extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',

@@ -101,6 +101,7 @@ class Ban extends Admin
                 $data['ban_imgs'] = implode(',',$data['file']);
             }
             $BanModel = new BanModel();
+            halt($data);
             // 入库
             if (!$BanModel->allowField(true)->update($data)) {
                 return $this->error('修改失败');

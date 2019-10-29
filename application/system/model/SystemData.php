@@ -31,7 +31,9 @@ class SystemData extends Model
         if(isset($queryWhere['ban_inst_id']) && $queryWhere['ban_inst_id']){ //查询机构
             $where[] = ['ban_inst_id','in',config('inst_ids')[$queryWhere['ban_inst_id']]];
         }
-
+        if(isset($queryWhere['ban_owner_id']) && $queryWhere['ban_owner_id']){
+            $where[] = ['ban_owner_id','eq',$queryWhere['ban_owner_id']];
+        }
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
                 case 7: //新发
