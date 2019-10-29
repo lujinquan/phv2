@@ -98,7 +98,7 @@ class Process extends SystemBase
 
     public function process($change_type,$data)
     {
-        $process = self::where([['change_type','eq',$change_type],['change_id','eq',$data['id']]])->find();
+        $process = self::where([['change_type','eq',$change_type],['id','eq',$data['id']]])->find();
         switch ($change_type) {
                 case '1': // 租金减免
                     $ChangeCutModel = new ChangeCutModel;
@@ -186,8 +186,8 @@ class Process extends SystemBase
                 if(isset($result['status'])){
                     $process->status = $result['status'];
                 }
-                
-                $res = $process->save();
+               
+                $res = $process->save(); 
                 return $res;
             }
 
