@@ -228,6 +228,13 @@
 						var trData = '';
 						//console.log(row);
 						//console.log(rows);
+						if(!row){
+							layer.msg("请选择楼栋!");
+						}
+						else if(!rows){
+							layer.msg("请选择房屋!");
+						}
+						else if(!rows.length==0){
 						$('.j-house-box tbody').html("");
 						$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 						$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
@@ -309,6 +316,7 @@
 							// $("input[name='house_id']").val(houseidData);//获取房屋编号
 							layer.close(index);
 						}
+					}
 						else{
 							layer.msg("房屋没选择!");
 							return false;
