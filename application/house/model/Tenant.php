@@ -61,7 +61,9 @@ class Tenant extends SystemBase
 
     public function dataFilter($data)
     {
-        $data['tenant_inst_pid'] = Db::name('base_inst')->where([['inst_id','eq',$data['tenant_inst_id']]])->value('inst_pid');
+        $instid = isset($data['tenant_inst_id'])?$data['tenant_inst_id']:INST;
+        $data['tenant_inst_pid'] = Db::name('base_inst')->where([['inst_id','eq',$instid]])->value('inst_pid');
+        $data['tenant_inst_id'] = $instid;
         if(isset($data['file']) && $data['file']){
             $data['tenant_imgs'] = implode(',',$data['file']);
         }

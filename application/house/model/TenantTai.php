@@ -1,6 +1,7 @@
 <?php
 namespace app\house\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 
 class TenantTai extends SystemBase
@@ -53,8 +54,26 @@ class TenantTai extends SystemBase
         return $where;
     }
 
-    public static function store($data)
+    public static function store($old,$new,$type = 2,$remark = '')
     {
-
+        $data = Db::query("select COLUMN_NAME from INFORMATION_SCHEMA.Columns where table_name = 'ph_tenant'");
+        $taiData = [];
+        foreach($data as $d){
+            if(isset($old[$d['COLUMN_NAME']]) && isset($new[$d['COLUMN_NAME']]) && ($old[$d['COLUMN_NAME']] !== $new[$d['COLUMN_NAME']])){
+                $taiData['data_json'][$d['COLUMN_NAME']] =  [
+                    'old' => $old[$d['COLUMN_NAME']],
+                    'new' => $new[$d['COLUMN_NAME']],
+                ];
+            } 
+        }
+        if($taiData){
+            $taiData['cuid'] = ADMIN_ID;
+            $taiData['tenant_id'] = $old['tenant_id'];
+            $taiData['tenant_tai_type'] = $type;
+            $taiData['remark'] = $remark;
+            $TenantTaiModel = new self;
+            $TenantTaiModel->allowField(true)->create($taiData);
+        }
+        
     }
 }

@@ -297,7 +297,6 @@ class ChangeUse extends SystemBase
                 'new' => $finalRow['new_tenant_name'],
             ],
         ];
-
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
     }

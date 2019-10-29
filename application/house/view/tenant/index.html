@@ -54,9 +54,9 @@
 
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	{if condition="$group == 'x'"}
-	<a href="{:url('edit')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    {/if}
+	
+	<a href="{:url('edit')}?group={$group}&id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    
     <a href="{:url('detail')}?id={{ d.tenant_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 </div>

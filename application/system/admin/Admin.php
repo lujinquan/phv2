@@ -136,7 +136,7 @@ class Admin extends Common
                 // 当前用户的权限
                 $this->assign('auths',$auths);
                 $this->assign('paramsJson',json_encode($params));
-//halt($auths);
+                //halt($auths);
                 //当前用户是否拥有“提交工单”权限
                 //$addOrderAuthBool = RoleModel::checkAuth(218);
                 $this->assign('addOrderAuthBool',in_array(218,$auths));

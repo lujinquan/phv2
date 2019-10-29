@@ -12,6 +12,7 @@
 
 namespace app\house\admin;
 
+use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
@@ -72,7 +73,7 @@ class Tenant extends Admin
             $filData = $TenantModel->dataFilter($data);
             if(!is_array($filData)){
                 return $this->error($filData);
-            }
+            }//halt($filData);
             // 入库
             if (!$TenantModel->allowField(true)->create($filData)) {
                 return $this->error('新增失败');
@@ -96,15 +97,26 @@ class Tenant extends Admin
             }
             $TenantModel = new TenantModel();
             // 入库
+            $oldRow = TenantModel::get($data['tenant_id']);
             if (!$TenantModel->allowField(true)->update($data)) {
                 return $this->error('修改失败');
             }
+            if ($data['group'] == 'y') {
+                // 添加房屋台账记录
+                $newRow = TenantModel::get($data['tenant_id']);
+                $TenantTaiModel = new TenantTaiModel;
+                $TenantTaiModel->store($oldRow,$newRow); 
+            }
+            
+
             return $this->success('修改成功');
         }
         $id = input('param.id/d');
+        $group = input('param.group/s');
         $row = TenantModel::get($id);
         $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
         $this->assign('data_info',$row);
+        $this->assign('group',$group);
         return $this->fetch('form');
     }
 
@@ -147,15 +159,14 @@ class Tenant extends Admin
         $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
         // 获取租户的余额
         $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
-
         //获取租户的合计欠租情况
         $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
         $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
-        
-        $this->assign('group',$group);
+
+        $this->assign('group', $group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
-        $this->assign('data_info',$row);
+        $this->assign('data_info', $row);
         return $this->fetch();
     }
 

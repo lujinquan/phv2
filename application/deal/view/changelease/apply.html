@@ -774,12 +774,15 @@
 							    myyear = mydate.getFullYear(),
 							    mymonth = mydate.getMonth()+1,
 								myday = mydate.getDate();
-							//console.log(row);
+							if(row.color_status != 1){ //正常状态下的才可以执行
+							    layer.msg("当前数据不可选！");
+								return false;
+							}
 							layer.close(index);
 							//$("#house_number").val(row.house_number);//获取房屋编号
                             $.get('/admin.php/system/api/lease_house_info', {'id':row.house_id}, function(res) {
 								//console.log('租约表详情数据：',res);//return false;
-                                // res = JSON.parse(res);
+                                
                             	//console.log(res);
 								$('#house_number').val(res.data.house.house_number);
 								$('#ban_id').val(res.data.house.ban_id);
