@@ -90,7 +90,7 @@ class Process extends Admin
             
             if($change_type == 18 && ADMIN_ROLE == 6){
                 $ChangeModel = new ChangeLeaseModel;
-                $changeRow = $ChangeModel->where([['change_id','eq',$id]])->find();
+                $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
                 if(!$changeRow['print_times']){
                     return $this->error('请先打印租约后再审批！');
                 }
