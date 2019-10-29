@@ -52,6 +52,34 @@ class Rent extends Model
                 if(isset($data['tenant_name']) && $data['tenant_name']){
                     $where[] = ['tenant_name','like','%'.$data['tenant_name'].'%'];
                 }
+                // 检索【房屋】房屋编号
+                if(isset($data['house_number']) && $data['house_number']){
+                    $where[] = ['house_number','like','%'.$data['house_number'].'%'];
+                }
+                // 检索【订单】租差
+                if(isset($data['rent_order_diff']) && $data['rent_order_diff'] != ''){
+                    if($data['rent_order_diff']){
+                        $where[] = ['rent_order_diff','>',0];
+                    }else{
+                        $where[] = ['rent_order_diff','eq',0]; 
+                    }
+                }
+                // 检索【订单】泵费
+                if(isset($data['rent_order_pump']) && $data['rent_order_pump'] != ''){
+                    if($data['rent_order_pump']){
+                        $where[] = ['rent_order_pump','>',0];
+                    }else{
+                        $where[] = ['rent_order_pump','eq',0]; 
+                    }
+                }
+                // 检索【订单】减免
+                if(isset($data['rent_order_cut']) && $data['rent_order_cut'] != ''){
+                    if($data['rent_order_cut']){
+                        $where[] = ['rent_order_cut','>',0];
+                    }else{
+                        $where[] = ['rent_order_cut','eq',0]; 
+                    }
+                }
 
                 // 检索【楼栋】地址
                 if(isset($data['ban_address']) && $data['ban_address']){
@@ -112,6 +140,11 @@ class Rent extends Model
                     }
                     
                 }
+                // 检索【账单期】
+                if(isset($data['rent_order_date']) && $data['rent_order_date']){
+                    $tempDate = str_replace('-', '', $data['rent_order_date']);
+                    $where[] = ['rent_order_date','eq',$tempDate];
+                }
                 // 检索【楼栋】机构
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
                 $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
@@ -122,6 +155,10 @@ class Rent extends Model
                 // 检索月【租金】订单编号
                 if(isset($data['rent_order_number']) && $data['rent_order_number']){
                     $where[] = ['rent_order_number','like','%'.$data['rent_order_number'].'%'];
+                }
+                // 检索【收欠】支付方式
+                if(isset($data['pay_way']) && $data['pay_way']){
+                    $where[] = ['pay_way','eq',$data['pay_way']];
                 }
                 // 检索【租户】姓名
                 if(isset($data['tenant_name']) && $data['tenant_name']){

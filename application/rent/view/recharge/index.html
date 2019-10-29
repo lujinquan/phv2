@@ -9,9 +9,13 @@
  <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
             <div class="j-search-fl layui-col-md8  fl">
+                <div class="layui-input-inline j-input-margin" style="width:160px;">
+                    <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
+                </div>
                 <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
                 </div>  
+
                 <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
                 </div>
@@ -43,7 +47,7 @@
                 </div>
                 <div class="layui-input-inline" style="width:120px;">
                     <select name="pay_way">
-                        <option value="">支付方式</option>
+                        <option value="">充值方式</option>
                         {volist name="params['pay_way']" id="v"}
                         <option value="{$key}">{$v}</option>
                         {/volist}
@@ -95,6 +99,7 @@
             ,cols: [[ //表头
                 {type: 'checkbox',  totalRowText: '合计'}
                 ,{field: 'house_number', width: 140, align:'center', title: '房屋编号'} 
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -105,8 +110,8 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
-                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
-                ,{field: 'pay_way', width: 100, align:'center', title: '缴纳方式', templet: function(d) {
+                
+                ,{field: 'pay_way', width: 100, align:'center', title: '充值方式', templet: function(d) {
                     return params.pay_way[d.pay_way];
                 }}
                 ,{field: 'ctime', width: 160, align:'center', title: '充值时间'}

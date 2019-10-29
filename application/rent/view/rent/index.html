@@ -22,7 +22,7 @@
             <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
         </div>
         <div class="layui-input-inline j-input-margin" style="width:160px;">
-            <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
+            <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
         </div>
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
@@ -51,6 +51,27 @@
                 {volist name="params['uses']" id="v"}
                 <option value="{$key}">{$v}</option>
                 {/volist}
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;">
+            <select name="rent_order_diff">
+                <option value="">租差</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;">
+            <select name="rent_order_pump">
+                <option value="">泵费</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+              </select>
+        </div>
+        <div class="layui-input-inline" style="width:120px;">
+            <select name="rent_order_cut">
+                <option value="">减免</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
               </select>
         </div>
 		</div>
@@ -96,21 +117,26 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox'}
-                ,{field: 'rent_order_number',minWidth: 200, align:'center', title: '订单编号' ,totalRowText: '合计：'}
+                ,{field: 'rent_order_number',hide:true,minWidth: 200, align:'center', title: '订单编号' ,totalRowText: '合计：'}
+                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
+                ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
                 ,{field: 'house_use_id', minWidth: 100, align:'center', title: '使用性质', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '账单金额',totalRow: true}
-                ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已支付金额',totalRow: true}
-                ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
-                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
+                ,{field: 'rent_order_diff', minWidth: 140, align:'center', title: '租差',totalRow: true}
+                ,{field: 'rent_order_pump', minWidth: 140, align:'center', title: '泵费',totalRow: true}
+                ,{field: 'rent_order_cut', minWidth: 140, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 140, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent', minWidth: 140, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '应收租金',totalRow: true}                
                 ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
