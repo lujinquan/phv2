@@ -51,7 +51,7 @@
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-boxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="{:url('house/tenant/index')}" id="old_tenant_info" target="_blank">
+									<a href="javascript:;" id="old_tenant_info" class="j-iframe-pop" hisi-data="{width: '700px', height: '500px',refresh: 2}" title="修改租户信息" target="_blank">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -95,7 +95,7 @@
 						<div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
-									<a href="{:url('house/tenant/index')}" id="new_tenant_info" target="_blank">
+									<a href="javascript:;" id="new_tenant_info" class="j-iframe-pop" hisi-data="{width: '700px', height: '500px',refresh: 2}" title="修改租户信息" target="_blank">
 										<i class="layui-icon layui-icon-tips"></i>去补充完整的身份信息！
 									</a>
 								</div>
@@ -255,6 +255,7 @@
 						$("#old_tenant_number").val(row.tenant_number);//当前租户编号
 						$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
 						$("#old_tenant_card").val(row.tenant_card);//当前租户身份证号
+						$('#old_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&id='+row.tenant_id);
 					}else{
 						layer.msg("房屋没选择!");
 						return false;
@@ -284,7 +285,7 @@
 						$("#new_tenant_number").val(row.tenant_number);//获取租户编号
 						$("#new_tenant_name").val(row.tenant_name);
 						$("#new_tenant_card").val(row.tenant_card);
-						//$("#new_tenant_info").attr('href','/admin.php/house/tenant/index?tenant_number='+row.tenant_number);
+						$('#new_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&id='+row.tenant_id);
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

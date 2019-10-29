@@ -175,6 +175,7 @@ class SystemData extends Model
                     // $where['house'][] = ['house_id','in',$houseids];
                     $where[] = ['house_use_id','eq',1];
                     $where[] = ['house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_lease')->where([['change_status','>',1]])->column('house_id');
                     //halt($where);
                     break;
                 
