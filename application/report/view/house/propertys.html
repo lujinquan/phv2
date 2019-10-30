@@ -1,8 +1,12 @@
+{include file="system@block/layui" /}
+{if condition="INST_LEVEL == 3"}
+<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>改页面只对房管所和区公司管理员开放！</div>
+{else /}
 <div class="j-table-content j-no-title j-reportform">
   <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" >
   		<div class="j-search-fl layui-col-md8  fl">
-  			<div class="layui-input-inline" style="width:160px;">
+  			<div class="layui-input-inline" style="width:140px;">
                 <select name="inst" id="OwnerTyp" lay-filter="owner_id">
                     <option value="">机构</option>
                     <option value="1" {if condition="INST == 1"}selected{/if}>武昌区公司</option>
@@ -138,7 +142,7 @@
 	  </div>
 	</div>
 </div>
-{include file="system@block/layui" /}
+
 <script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_propertys.js?v={:config('hisiphp.version')}"></script>
 <!-- 打印 S -->
 <script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
@@ -247,3 +251,4 @@
 	 $(".j-report-con").jqprint();
 	}
 </script>
+{/if}

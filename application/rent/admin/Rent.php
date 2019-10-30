@@ -56,8 +56,8 @@ class Rent extends Admin
         }
         $RentModel = new RentModel;
         $res = $RentModel->configRentOrder(); //生成本月份订单
-        if(!$res){
-            return $this->error('生成失败，本月份账单已存在！','',['refresh'=>0]);
+        if($res !== true){
+            return $this->error($res,'',['refresh'=>0]);
         }else{
             return $this->success('生成成功！');
         }
@@ -116,6 +116,20 @@ class Rent extends Admin
         }
     }
 
+    /**
+     *  批量欠缴
+     */
+    public function unpayList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $RentModel = new RentModel;      
+        $res = $RentModel->unpayList($ids);
+        if($res){
+            $this->success('缴费成功，本次欠缴'.$res.'条账单！');
+        }else{
+            $this->error('缴费失败');
+        }
+    }
 
     public function detail()
     {

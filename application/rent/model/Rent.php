@@ -103,7 +103,7 @@ class Rent extends Model
 
             //租金欠缴的查询
             case 'unpaid': 
-                $where[] = ['rent_order_date','<',date('Ym')];
+                $where[] = ['is_deal','eq',1];
                 $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
                 // 检索月【租金】订单编号
                 if(isset($data['rent_order_number']) && $data['rent_order_number']){
@@ -208,10 +208,16 @@ class Rent extends Model
     public function configRentOrder()
     {
         $currMonth = date('Ym');
+        $instid = INST;
 
+        $undealOrders = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','<',$currMonth],['is_deal','eq',0],['ban_inst_id','in',config('inst_ids')[$instid]]])->count('rent_order_id');
+        if($undealOrders){
+            return '当前有'.$undealOrders.'条订单未处理，无法生成本月订单！';
+        }
+    
         //$instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // 只生成当前机构下的订单
-        $instid = INST;
+        
         //获取当月的租金订单，如果没有则自动生成，有则跳过
         $currMonthOrder = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','eq',$currMonth],['ban_inst_id','in',config('inst_ids')[$instid]]])->value('a.rent_order_id'); 
         //halt($currMonthOrder);
@@ -232,7 +238,7 @@ class Rent extends Model
                 $rent_order_number = $v['house_number'].$currMonth;
 
                 // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
-                $rent_order_receive = $v['house_pre_rent'] + $v['house_pump_rent'] + $v['house_diff_rent'] + $v['house_protocol_rent'] - $rent_order_cut;
+                $rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
                 // 待入库的数据
                 $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id'] . "),";
             }
@@ -244,7 +250,7 @@ class Rent extends Model
                 return false;
             }
         }else{
-            return false;
+            return '生成失败，本月份账单已存在！';
         }
         
     }
@@ -254,7 +260,16 @@ class Rent extends Model
      */
     public function payList($ids)
     {     
-        $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        return $res;
+    }
+
+    /**
+     *  批量欠缴
+     */
+    public function unpayList($ids)
+    {     
+        $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1]);
         return $res;
     }
 

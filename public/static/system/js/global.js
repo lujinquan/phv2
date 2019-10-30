@@ -491,9 +491,9 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         }
 
         if (!that.attr('confirm')) {
-            layer.msg('数据提交中...', {time:500000});
+            layer.msg('数据提交中...', {time:2000});
             $.get(href, {}, function(res) {
-                layer.msg(res.msg, {}, function() {
+                layer.msg(res.msg, {time:5000}, function() {
                     if(res.data.refresh === undefined || res.data.refresh){
                         if (refresh == 'yes') {
                             if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
@@ -508,9 +508,9 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             layer.close();
         } else {
             layer.confirm(that.attr('confirm'), {title:false, closeBtn:0}, function(index){
-                layer.msg('数据提交中...', {time:500000});
+                layer.msg('数据提交中...', {time:2000});
                 $.get(href, {}, function(res) {
-                    layer.msg(res.msg, {}, function() {
+                    layer.msg(res.msg, {time:5000}, function() {
                         if(res.data.refresh === undefined || res.data.refresh){
                             if (refresh == 'yes') {
                                 if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
