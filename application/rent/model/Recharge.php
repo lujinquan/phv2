@@ -58,6 +58,10 @@ class Recharge extends Model
         if(isset($data['house_use_id']) && $data['house_use_id']){
             $where[] = ['b.house_use_id','eq',$data['house_use_id']];
         }
+        // 检索【房屋】支付金额
+        if(isset($data['pay_rent']) && $data['pay_rent']){
+            $where[] = ['a.pay_rent','eq',$data['pay_rent']];
+        }
         // 检索【收欠】支付方式
         if(isset($data['pay_way']) && $data['pay_way']){
             $where[] = ['a.pay_way','eq',$data['pay_way']];

@@ -209,13 +209,11 @@ class Rent extends Model
     {
         $currMonth = date('Ym');
         $instid = INST;
-
+        $res = [];
         $undealOrders = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','<',$currMonth],['is_deal','eq',0],['ban_inst_id','in',config('inst_ids')[$instid]]])->count('rent_order_id');
         if($undealOrders){
-            return '当前有'.$undealOrders.'条订单未处理，无法生成本月订单！';
+            return ['code'=>0,'msg'=>'当前有'.$undealOrders.'条订单未处理，无法生成本月订单！'];
         }
-    
-        //$instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // 只生成当前机构下的订单
         
         //获取当月的租金订单，如果没有则自动生成，有则跳过
@@ -245,12 +243,12 @@ class Rent extends Model
             if($str){
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id) values " . rtrim($str, ','));
-                return $res;
+                return ['code'=>1,'msg'=>'生成成功！'];
             }else{
-                return false;
+                return ['code'=>0,'msg'=>'未知错误！'];
             }
         }else{
-            return '生成失败，本月份账单已存在！';
+            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！'];
         }
         
     }

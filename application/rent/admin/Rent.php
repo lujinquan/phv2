@@ -55,11 +55,13 @@ class Rent extends Admin
             return $this->error('请联系房管员生成本月份账单！','',['refresh'=>0]);
         }
         $RentModel = new RentModel;
+
         $res = $RentModel->configRentOrder(); //生成本月份订单
-        if($res !== false){
-            return $this->error($res,'',['refresh'=>0]);
+
+        if($res['code'] !== 1){
+            return $this->error($res['msg'],'',['refresh'=>0]);
         }else{
-            return $this->success('生成成功！');
+            return $this->success($res['msg']);
         }
     }
 

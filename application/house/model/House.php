@@ -58,7 +58,7 @@ class House extends SystemBase
 
         switch ($group) {
             case 'y':
-                $wher[] = [['a.house_status','eq',1]];
+                $where[] = [['a.house_status','eq',1]];
                 break;
             case 'x':
                 $where[] = [['a.house_status','eq',0]];
@@ -70,6 +70,7 @@ class House extends SystemBase
                 $where[] = [['a.house_status','eq',1]];
                 break;
         }
+        //dump($group);halt($where);
         // 检索【租户】姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
