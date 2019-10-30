@@ -120,7 +120,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">手续费</label>
 				<div class="j-input-inline">
-					<input type="number" name="service_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+					<input min="0" type="number" name="service_rent" value="" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -228,7 +228,12 @@
 			,$ = layui.jquery
 			,upload = layui.upload
 			,layer = layui.layer;
-      
+              //限制input输入框字符
+              $("input[type=number]").keypress(function(e) {
+              　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+              　　　　return false;
+              　　}
+              });
 		      //获取楼栋查询器
 			  $(".layui-form").on('click','.j-house_number',function(){
 				 layer.open({
