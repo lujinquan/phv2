@@ -229,6 +229,7 @@ class ChangeLease extends SystemBase
             $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
             $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
         }else{
+            // dump($changeRow['change_status']);halt($finalStep);
             /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
             if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
                 //dump($changeRow['change_status']);halt($finalStep);

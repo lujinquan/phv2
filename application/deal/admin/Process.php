@@ -95,7 +95,7 @@ class Process extends Admin
                     return $this->error('请先打印租约后再审批！');
                 }
             }
-
+//exit;
             $res = $PorcessModel->process($change_type,$data); //$data必须包含子表的id
             if (!$res) {
                 return $this->error('审批失败');

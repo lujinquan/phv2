@@ -23,7 +23,7 @@ class Room extends Validate
     //定义验证规则
     protected $rule = [
         'room_type|房间类型' => 'require|number',
-        'room_door|间号' => 'require',
+        'room_door|间号' => 'require|alphaDash',
         'room_unit_id|单元号' => 'require|number',
         'room_floor_id|层次' => 'require|number',
         'room_use_area|实有面积' => 'require',
