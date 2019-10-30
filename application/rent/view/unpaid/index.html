@@ -53,6 +53,9 @@
                 {/volist}
               </select>
         </div>
+        <div class="layui-input-inline" style="width:120px">
+            <input type="text" name="rent_order_date" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+        </div>
         <div class="layui-input-inline" style="width:120px;">
             <select name="unpaid_date_type">
                 <option value="">以前月/年</option>
@@ -85,8 +88,20 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery'], function() {
+    layui.use(['table','laydate','jquery'], function() {
         var table = layui.table;
+        var laydate = layui.laydate;
+        //年选择器
+        laydate.render({
+            elem: '#query_month'
+            ,type: 'month'
+            ,isInitValue: true,
+            ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
+        });
         table.render({
             elem: '#dataTable'
             //,height: 550
@@ -101,11 +116,13 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', totalRowText: '合计：'}
-                ,{field: 'rent_order_number', minWidth: 240, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_number', hide:true,minWidth: 240, align:'center', title: '订单编号'}
+                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
@@ -113,7 +130,11 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
-                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+                ,{field: 'rent_order_diff', minWidth: 140, align:'center', title: '租差',totalRow: true}
+                ,{field: 'rent_order_pump', minWidth: 140, align:'center', title: '泵费',totalRow: true}
+                ,{field: 'rent_order_cut', minWidth: 140, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 140, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent', minWidth: 140, align:'center', title: '计算租金',totalRow: true}
                 ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '应收租金', totalRow: true}
                 ,{field: 'rent_order_paid', minWidth: 140, align:'center', title: '已缴租金', totalRow: true}
                 ,{field: 'rent_order_unpaid', minWidth: 140, align:'center', title: '欠缴租金', totalRow: true}

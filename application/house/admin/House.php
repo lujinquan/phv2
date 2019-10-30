@@ -33,31 +33,39 @@ class House extends Admin
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
-            $fields = 'house_id,house_pre_rent,house_cou_rent,house_use_id,house_unit_id,house_floor_id,house_lease_area,house_area,house_diff_rent,house_pump_rent,(house_pre_rent + house_diff_rent + house_pump_rent) as house_yue_rent';
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,c.tenant_id,c.tenant_name,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            //halt($where);
             $data = [];
-            //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
-            $data['data'] = $HouseModel->withJoin([
-                 'ban'=> function($query)use($where){ //注意闭包传参的方式
-                     $query->where($where['ban']);
-                 },
-                 'tenant'=> function($query)use($where){
-                     $query->where($where['tenant']);
-                 },
-                 // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
-                 //     $query->where($where['lease']);
-                 // },
-                 ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
-            $data['count'] = $HouseModel->withJoin([
-                 'ban'=> function($query)use($where){
-                     $query->where($where['ban']);
-                 },
-                 'tenant'=> function($query)use($where){
-                     $query->where($where['tenant']);
-                 },
-                 // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
-                 //     $query->where($where['lease']);
-                 // },
-                 ],'left')->where($where['house'])->count('house_id');
+            $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            foreach ($data['data'] as $k => &$v) {
+                $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+            }
+
+            $data['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.house_id');
+
+            // //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
+            // $data['data'] = $HouseModel->withJoin([
+            //      'ban'=> function($query)use($where){ //注意闭包传参的方式
+            //          $query->where($where['ban']);
+            //      },
+            //      'tenant'=> function($query)use($where){
+            //          $query->where($where['tenant']);
+            //      },
+            //      // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
+            //      //     $query->where($where['lease']);
+            //      // },
+            //      ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc')->limit($limit)->select();
+            // $data['count'] = $HouseModel->withJoin([
+            //      'ban'=> function($query)use($where){
+            //          $query->where($where['ban']);
+            //      },
+            //      'tenant'=> function($query)use($where){
+            //          $query->where($where['tenant']);
+            //      },
+            //      // 'change_lease'=> function($query)use($where){ //注意闭包传参的方式
+            //      //     $query->where($where['lease']);
+            //      // },
+            //      ],'left')->where($where['house'])->count('house_id');
                
             //二、这种可以实现关联模型查询，但是不能将无法关联的数据剔除掉会出现undifined数据）
             // $data['data'] = $HouseModel->with([

@@ -78,19 +78,19 @@ class Process extends Admin
 
         //检查当前页面或当前表单，是否允许被请求？
         $PorcessModel = new ProcessModel;
-        $row = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
+        $rowProcess = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
         //dump($row['curr_role']);halt(ADMIN_ROLE);
-        if($row['curr_role'] != ADMIN_ROLE){
+        if($rowProcess['curr_role'] != ADMIN_ROLE){
             return $this->error('审批状态错误');
         }
-        
+  //halt($row);      
         // 提交审批表单
         if($this->request->isPost()) {
             $data = $this->request->post();
             
             if($change_type == 18 && ADMIN_ROLE == 6){
                 $ChangeModel = new ChangeLeaseModel;
-                $changeRow = $ChangeModel->where([['change_id','eq',$id]])->find();
+                $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
                 if(!$changeRow['print_times']){
                     return $this->error('请先打印租约后再审批！');
                 }
@@ -174,6 +174,7 @@ class Process extends Admin
         }
 
         $row = $ChangeModel->detail($id);
+
         if($change_type == 16){
             $ChangeCutModel = new ChangeCutModel;
             $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();

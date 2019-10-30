@@ -28,7 +28,7 @@ class Changeoffset extends Admin
             $data = [];
             $data['data'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
-            $data['count'] = Db::name('change_offset')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['count'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

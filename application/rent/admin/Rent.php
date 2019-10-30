@@ -38,7 +38,7 @@ class Rent extends Admin
 
             $where = $RentModel->checkWhere($getData,'rent');
             
-            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
             $data = [];
             $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
@@ -56,8 +56,8 @@ class Rent extends Admin
         }
         $RentModel = new RentModel;
         $res = $RentModel->configRentOrder(); //生成本月份订单
-        if(!$res){
-            return $this->error('生成失败，本月份账单已存在！','',['refresh'=>0]);
+        if($res !== true){
+            return $this->error($res,'',['refresh'=>0]);
         }else{
             return $this->success('生成成功！');
         }
@@ -116,6 +116,20 @@ class Rent extends Admin
         }
     }
 
+    /**
+     *  批量欠缴
+     */
+    public function unpayList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $RentModel = new RentModel;      
+        $res = $RentModel->unpayList($ids);
+        if($res){
+            $this->success('缴费成功，本次欠缴'.$res.'条账单！');
+        }else{
+            $this->error('缴费失败');
+        }
+    }
 
     public function detail()
     {

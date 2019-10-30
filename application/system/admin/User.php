@@ -11,6 +11,7 @@
 
 namespace app\system\admin;
 
+use think\Db;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemMenu as MenuModel;
@@ -71,8 +72,8 @@ class User extends Admin
             if (isset($queryData['role_id']) && $queryData['role_id']) {
                 $where[] = ['a.role_id', 'eq', $queryData['role_id']];
             }
-            $fields = "a.username,a.mobile,a.nick,a.last_login_time,a.ctime,a.last_login_ip,a.intro,a.status,b.name";
-            $data['data'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->page($page)->limit($limit)->order('inst_id asc,a.ctime desc')->select();
+            $fields = "a.id,a.username,a.mobile,a.nick,a.last_login_time,a.ctime,a.inst_id,a.last_login_ip,a.intro,a.status,b.name";
+            $data['data'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('inst_id asc,a.ctime desc')->select();
             //halt($data['data']);
             $data['count'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->count('a.id');
             $data['code'] = 0;

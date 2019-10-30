@@ -105,17 +105,10 @@
                 ,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
                     return params.structs[d.ban_struct_id];
                 }}
-                ,{field: 'ban_civil_area', minWidth: 80, align:'center', title: '合建面',totalRow: true,templet: function(d) {
-                    return (parseFloat(d.ban_civil_area) + parseFloat(d.ban_party_area) + parseFloat(d.ban_career_area)).toFixed(2);
-                }}
+                ,{field: 'ban_area', minWidth: 80, align:'center', title: '合建面',totalRow: true}
                 ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积',totalRow: true}
-                
-                ,{field: 'ban_civil_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true,templet: function(d) {
-                    return (parseFloat(d.ban_civil_rent) + parseFloat(d.ban_party_rent) + parseFloat(d.ban_career_rent)).toFixed(2);
-                }}
-                ,{field: 'ban_civil_oprice', minWidth: 100, align:'center', title: '合原价',totalRow: true,templet: function(d) {
-                    return (parseFloat(d.ban_civil_oprice) + parseFloat(d.ban_party_oprice) + parseFloat(d.ban_career_oprice)).toFixed(2);
-                }}
+                ,{field: 'ban_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true}
+                ,{field: 'ban_oprice', minWidth: 100, align:'center', title: '合原价',totalRow: true}
                 ,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
                 ,{field: 'ban_build_year', hide: true, minWidth: 100, align:'center', title: '建成年份'}
                 ,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
