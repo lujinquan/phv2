@@ -56,7 +56,7 @@ class Rent extends Admin
         }
         $RentModel = new RentModel;
         $res = $RentModel->configRentOrder(); //生成本月份订单
-        if($res !== true){
+        if($res !== false){
             return $this->error($res,'',['refresh'=>0]);
         }else{
             return $this->success('生成成功！');

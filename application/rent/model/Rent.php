@@ -97,7 +97,7 @@ class Rent extends Model
                 // 检索【楼栋】机构
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
                 $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
-                $where[] = ['rent_order_date','eq',date('Ym')];
+                //$where[] = ['rent_order_date','eq',date('Ym')];
                 $where[] = ['is_deal','eq',0];
                 break;
 
