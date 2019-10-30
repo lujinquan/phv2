@@ -36,6 +36,9 @@ class SystemData extends Model
         }
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
+                case 3: //暂停计租
+                    $where[] = ['ban_holds','>',0];
+                    break;
                 case 7: //新发
                     $where[] = ['ban_status','<',2];
                     break;
@@ -143,6 +146,12 @@ class SystemData extends Model
         
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
+                case 3: //暂停计租 【待优化】
+                    // $houseids = Db::name('change_pause')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
+                    // $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');
+                    // $where[] = ['house_id','in',$houseids];
+                    // $where[] = ['house_status','eq',1];
+                    break;
                 case 4: //陈欠核销 【待优化】
                     $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
                     $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');
@@ -193,7 +202,7 @@ class SystemData extends Model
 //halt($where);
         $HouseModel = new HouseModel;
 
-        $fields = 'a.house_id,a.house_number,a.house_balance,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,(a.house_pre_rent + a.house_diff_rent + a.house_pump_rent) as house_yue_rent,b.*,c.*';
+        $fields = 'a.house_id,a.house_number,a.house_balance,a.house_pump_rent,a.house_diff_rent,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,b.*,c.*';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
@@ -212,7 +221,7 @@ class SystemData extends Model
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; //正常的
             if($unpaids){ 
-                if($queryWhere['change_type'] != 4){
+                if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4){
                     $v['color_status'] = 3; // 有欠租的
                 }
             }

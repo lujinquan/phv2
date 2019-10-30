@@ -261,7 +261,7 @@ class ChangePause extends SystemBase
     {
         // 1、将涉及的所有房屋，设置成暂停计租状态
         HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
-        $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,(house_pre_rent + house_pump_rent + house_diff_rent) as house_yue_rent,ban_id')->select()->toArray();
+        $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,house_pre_rent,ban_id')->select()->toArray();
         $houseArr = [];
         foreach($houseTemps as $s){
             $houseArr[$s['house_id']] = $s;
@@ -292,7 +292,7 @@ class ChangePause extends SystemBase
             $tableData[$key]['inst_pid'] = $houseArr[$h]['ban_inst_pid'];
             $tableData[$key]['owner_id'] = $houseArr[$h]['ban_owner_id'];
             $tableData[$key]['use_id'] = $houseArr[$h]['house_use_id'];
-            $tableData[$key]['change_rent'] = $houseArr[$h]['house_yue_rent'];
+            $tableData[$key]['change_rent'] = $houseArr[$h]['house_pre_rent'];
             $tableData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
             $tableData[$key]['cuid'] = $finalRow['cuid'];
             $tableData[$key]['order_date'] = date('Ym',$finalRow['ftime']);  

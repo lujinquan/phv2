@@ -14,7 +14,7 @@
 	<legend>楼栋查询</legend>
 </fieldset>
 <div class="page-toolbar j-page-toolbar clearfix">
-      <form class="layui-form layui-form-pane" action="{:url('system/Index/cancellation')}" method="post" id="hisi-table-search">
+      <form class="layui-form layui-form-pane" action="{:url('system/Index/cancellation')}?change_type={$changeType}" method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline j-input-margin" style="width:150px;">
 				  <input type="text" name="ban_address" placeholder="地址" class="layui-input">
@@ -51,7 +51,7 @@
 		//楼栋查询
         table.render({
 			elem: '#dataTable'
-            ,url: '{:url("system/Index/cancellation")}' //数据接口
+            ,url: '{:url("system/Index/cancellation")}?change_type={$changeType}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
@@ -90,7 +90,7 @@
 						//,height: 'full-20' //浏览器最大高度
 					,toolbar: true
 					//,defaultToolbar: false //设置右边筛选，导出，打印显示
-					,url: '{:url("house/House/index")}?ban_number='+data.ban_number //数据接口
+					,url: '{:url("system/Index/house")}?change_type=3&ban_number='+data.ban_number //数据接口
 					,page: false //开启分页
 					,limit: 1000000000
 					,text: {

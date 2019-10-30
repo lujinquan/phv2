@@ -41,7 +41,7 @@ class Changecutyear extends Validate
     protected function isAllow($value, $rule='', $data)
   	{
         $msg = '';
-        $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,(house_pre_rent+house_diff_rent+house_pump_rent) as house_yue_rent')->find();
+        $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,house_pre_rent')->find();
         if($find['house_status'] != 1){
             $msg = '房屋状态异常！';
         }
@@ -49,7 +49,7 @@ class Changecutyear extends Validate
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
-        if($find['house_yue_rent'] < $data['cut_rent']){
+        if($find['house_pre_rent'] < $data['cut_rent']){
             $msg = '减免金额不能大于月租金！';
         }
       	return $msg?$msg:true;

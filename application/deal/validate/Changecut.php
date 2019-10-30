@@ -14,7 +14,7 @@ namespace app\deal\validate;
 use think\Db;
 use think\Validate;
 use app\house\model\House as HouseModel;
-use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeCut as ChangeCutModel;
 use app\rent\model\Rent as RentModel;
 
 /**
@@ -44,12 +44,12 @@ class Changecut extends Validate
   	{
         // 房屋必须是正常状态的
         $msg = '';
-        $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,(house_pre_rent+house_diff_rent+house_pump_rent) as house_yue_rent')->find();
+        $find = HouseModel::where([['house_id','eq',$value]])->field('house_status,house_pre_rent')->find();
         if($find['house_status'] != 1){
             $msg = '房屋状态异常！';
         }
         // 房屋必须未在减免异动中
-  		$row = ChangeUseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
+  		$row = ChangeCutModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
@@ -59,7 +59,7 @@ class Changecut extends Validate
             $msg = '房屋有欠缴订单未处理！';
         }
         // 减免金额必须小于规租
-        if($find['house_yue_rent'] < $data['cut_rent']){
+        if($find['house_pre_rent'] < $data['cut_rent']){
             $msg = '减免金额不能大于规租！';
         }
       	return $msg?$msg:true;
