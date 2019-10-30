@@ -59,7 +59,7 @@ class ChangeOffset extends SystemBase
         }
         // 检索原租户
         if(isset($data['tenant_name']) && $data['tenant_name']){
-            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
