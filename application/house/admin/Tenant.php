@@ -94,6 +94,8 @@ class Tenant extends Admin
             }
             if(isset($data['file']) && $data['file']){
                 $data['tenant_imgs'] = implode(',',$data['file']);
+            }else{
+                $data['tenant_imgs'] = '';
             }
             $TenantModel = new TenantModel();
             // 入库

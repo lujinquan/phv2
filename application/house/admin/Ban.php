@@ -99,6 +99,8 @@ class Ban extends Admin
             }
             if(isset($data['file']) && $data['file']){
                 $data['ban_imgs'] = implode(',',$data['file']);
+            }else{
+                $data['ban_imgs'] = '';
             }
             $BanModel = new BanModel();
             //halt($data);

@@ -2,7 +2,7 @@
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container"> 
              {if condition="in_array(269,$auths) || $Think.ADMIN_ROLE == 1"}      
-	         <a href="{:url('add')}" class="j-iframe-pop" hisi-data="{width: '1200px', height: '500px',refresh: 1}" title=""><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
+	         <a href="{:url('add')}" class="j-iframe-pop" hisi-data="{width: '1200px', height: '500px',refresh: 1}" title="充值缴费"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>充值缴费</button></a>
              {/if}
 	     </div>
 	 </div>
@@ -97,8 +97,7 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox',  totalRowText: '合计'}
-                ,{field: 'house_number', width: 140, align:'center', title: '房屋编号'} 
+                ,{field: 'house_number', width: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
                     return params.insts[d.ban_inst_id];
