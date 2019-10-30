@@ -116,7 +116,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
-				<input type="text" id="reduction_rentlist" value="" placeholder="双击查看" readonly autocomplete="off" class="layui-input j-rent-list">
+				<a href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
 			</div>
 		</div>
 	</div>

@@ -118,7 +118,8 @@ class Api extends Common
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
 
             foreach($temps as $k => $v){
-                if($v['curr_role'] == session('admin_user.role_id')){
+                // 如果业务审批角色 = 当前登录角色，且当前角色不是房管员
+                if($v['curr_role'] == session('admin_user.role_id') && session('admin_user.role_id') != 4){
                 	$result[] = $v;
                 }
             }

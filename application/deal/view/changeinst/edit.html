@@ -29,7 +29,7 @@
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>异动明细</legend>
 	</fieldset>
-    <a href="javascript:;"  class="layui-btn j-house_number"><i class="layui-icon layui-icon-add-1"></i>添加调整楼栋</a>
+    <!-- <a href="javascript:;"  class="layui-btn j-house_number"><i class="layui-icon layui-icon-add-1"></i>添加调整楼栋</a> -->
 	<table  class="layui-table j-house-box">
 	  <thead>
 		  <tr>
@@ -67,13 +67,13 @@
     <tbody>
       <tr>
 		  <td>管段</td>
-		  <td>紫阳01</td>
-		  <td id="pipe_segment">紫阳02</td>
+		  <td>{$params.insts[$data_info['old_inst_id']]}</td>
+		  <td id="pipe_segment">{$params.insts[$data_info['new_inst_id']]}</td>
 	  </tr>
 	  <tr>
 		  <td>栋数</td>
-		  <td id="number_buildings_old">&nbsp;</td>
-		  <td id="number_buildings_new">&nbsp;</td>
+		  <td id="number_buildings_old">&nbsp;-{$data_info['change_ban_num']}</td>
+		  <td id="number_buildings_new">&nbsp;{$data_info['change_ban_num']}</td>
 	  </tr>
 <!-- 	  <tr>
 		  <td>户数</td>
@@ -82,23 +82,23 @@
 	  </tr> -->
 	  <tr>
 		  <td>建筑面积</td>
-		  <td id="builtup_area_old">&nbsp;</td>
-		  <td id="builtup_area_new">&nbsp;</td>
+		  <td id="builtup_area_old">&nbsp;-{$data_info['change_ban_area']}</td>
+		  <td id="builtup_area_new">&nbsp;{$data_info['change_ban_area']}</td>
 	  </tr>
 	  <tr>
 		  <td>规定租金</td>
-		  <td id="prescribed_rent_old">&nbsp;</td>
-		  <td id="prescribed_rent_new">&nbsp;</td>
+		  <td id="prescribed_rent_old">&nbsp;-{$data_info['change_ban_rent']}</td>
+		  <td id="prescribed_rent_new">&nbsp;{$data_info['change_ban_rent']}</td>
 	  </tr>
 	  <tr>
 		  <td>原价</td>
-		  <td id="original_price_old">&nbsp;</td>
-		  <td id="original_price_new">&nbsp;</td>
+		  <td id="original_price_old">&nbsp;-{$data_info['change_ban_oprice']}</td>
+		  <td id="original_price_new">&nbsp;{$data_info['change_ban_oprice']}</td>
 	  </tr>
 	  <tr>
 		  <td>使用面积</td>
-		  <td id="area_use_old">&nbsp;</td>
-		  <td id="area_use_new">&nbsp;</td>
+		  <td id="area_use_old">&nbsp;-{$data_info['change_ban_use_area']}</td>
+		  <td id="area_use_new">&nbsp;{$data_info['change_ban_use_area']}</td>
 	  </tr>
    </tbody>
  </table>
@@ -129,7 +129,7 @@
 						,area: ['70%', '90%']
 						, btn:false
 						,pageTabs: false
-						,content: '{:url('system/index/querier')}?hisi_iframe=yes'
+						,content: '{:url('system/index/querier')}?change_type=10&hisi_iframe=yes'
 						,btn: ['确定','关闭']
 						,yes: function(index, layero){
 							//var row = window["layui-layer-iframe" + index].callbackdata();

@@ -22,7 +22,7 @@ class Changeinst extends Admin
             $ChangeModel = new ChangeInstModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.chang_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,c.nick";
+            $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.change_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,c.nick";
             $data = [];
             $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
@@ -153,18 +153,18 @@ class Changeinst extends Admin
     public function del()
     {
         $id = $this->request->param('id');       
-
         $row = ChangeInstModel::get($id);
-        if($row['change_status'] != 3){
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
+        }else{
             $this->error('已被审批，无法删除！');
         }
         
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
-        }else{
-            $this->error('删除失败');
-        }
     }
 
 }
