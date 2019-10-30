@@ -87,7 +87,7 @@ class Rent extends Admin
 
         foreach($nowRents as $key => $v){
             if(!in_array($key,$lastRents)){
-                $data[] = ['is_deal'=>1,'rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
+                $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
             }
         }
         //halt($data);

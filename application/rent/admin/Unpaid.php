@@ -68,7 +68,7 @@ class Unpaid extends Admin
         if($res){
             $this->success('撤回成功，本次撤回'.$res.'条账单！');
         }else{
-            $this->error('撤回失败，请检查订单期是否为 '.$nowDate.'!');
+            $this->error('撤回失败，请检查账单期是否为 '.$nowDate.'!');
         }
     }
 
