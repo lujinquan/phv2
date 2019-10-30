@@ -189,7 +189,7 @@ class Rent extends Admin
 
                         $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
                     }else{
-                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), $b);
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), ' ' . $b . ' ');
                     }
      
                 }

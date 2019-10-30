@@ -153,8 +153,8 @@ class Rent extends Model
             //租金欠缴的查询
             case 'record': 
                 // 检索月【租金】订单编号
-                if(isset($data['rent_order_number']) && $data['rent_order_number']){
-                    $where[] = ['rent_order_number','like','%'.$data['rent_order_number'].'%'];
+                if(isset($data['house_number']) && $data['house_number']){
+                    $where[] = ['house_number','like','%'.$data['house_number'].'%'];
                 }
                 // 检索【收欠】支付方式
                 if(isset($data['pay_way']) && $data['pay_way']){
