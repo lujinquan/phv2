@@ -295,7 +295,7 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=1';
 					if($('#change_reason').val()==''){
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
@@ -323,7 +323,7 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=1';
 					if($('#back_reason').val()==''){
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1

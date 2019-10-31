@@ -61,7 +61,7 @@
 	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
 	  {{# } }}
 	  {{# if(d.is_process){ }}
-	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-primary">审批</a>
+	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
 	  {{#  } else { }}
 	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
 	  {{# } }}
