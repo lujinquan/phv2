@@ -125,11 +125,11 @@ class ChangePause extends SystemBase
         $data['change_type'] = 03; //暂停计租
         $data['change_order_number'] = date('Ym').'03'.random(14);
         
-        // if($data['house_id']){
-        //     $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$data['house_id']]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
-        //     $data['house_id'] = implode(',',$data['house_id']);
-        // }
-//halt($data);
+        if($data['house_id']){
+            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$data['house_id']]])->field('house_id,house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
+            $data['house_id'] = implode(',',$data['house_id']);
+        }
+
         // 审批表数据
         $processRoles = $this->processRole;
         $processDescs = $this->processDesc;

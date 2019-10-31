@@ -167,10 +167,12 @@ class SystemData extends Model
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
                 case 3: //暂停计租 【待优化】
-                    // $houseids = Db::name('change_pause')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
-                    // $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');
-                    // $where[] = ['house_id','in',$houseids];
-                    // $where[] = ['house_status','eq',1];
+                    $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1]])->column('house_id');
+                    if($tempApplyHouseidArr){
+                        $applyHouseidArr = explode(',',implode(',',$tempApplyHouseidArr));
+                    }
+                    $where[] = ['house_status','eq',1];
+                    $where[] = ['house_is_pause','eq',0];
                     break;
                 case 4: //陈欠核销 【待优化】
                     $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');

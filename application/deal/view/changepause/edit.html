@@ -72,7 +72,7 @@
 	  <tbody>
 	  	{volist name="$data_info['data_json']" id="v"}
 	    <tr>											
-		  <td class="house_number">{$v['house_number']}</td>
+		  <td class="house_number"><input type="hidden" name="house_id[]" value="{$v['house_id']}"> {$v['house_number']}</td>
 		  <td class="house_lessee">{$v['tenant_name']}</td>
 		  <td class="house_nature">{$params.uses[$v['house_use_id']]}</td>
 		  <td class="house_monthly_rent">{$v['house_pre_rent']}</td>
