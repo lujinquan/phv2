@@ -68,6 +68,9 @@ class Changeinst extends Admin
             }
             return $this->success($msg,url('index'));
         }
+        $pid = Db::name('base_inst')->where([['inst_id','eq',INST]])->value('inst_pid');
+        $insts = Db::name('base_inst')->where([['inst_pid','eq',$pid]])->column('inst_id,inst_name');
+        $this->assign('insts',$insts);
         return $this->fetch();
     }
 
@@ -118,6 +121,9 @@ class Changeinst extends Admin
         $ChangeModel = new ChangeInstModel;
         $row = $ChangeModel->detail($id);//halt($row);
         $this->assign('data_info',$row);
+        $pid = Db::name('base_inst')->where([['inst_id','eq',INST]])->value('inst_pid');
+        $insts = Db::name('base_inst')->where([['inst_pid','eq',$pid]])->column('inst_id,inst_name');
+        $this->assign('insts',$insts);
         return $this->fetch();
     }
 

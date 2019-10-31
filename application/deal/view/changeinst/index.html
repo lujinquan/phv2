@@ -20,7 +20,7 @@
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" required>
 						<option value="">新管段</option>
-						{volist name=":config('inst_data_names')[INST]" id="v"}
+						{volist name=":config('inst_data_names')[$Think.INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>

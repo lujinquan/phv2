@@ -18,7 +18,7 @@
 		  <td id="new_pipesection">
 			  <select id="ban_inst_id" name="new_inst_id" class="field-cid" type="select" lay-filter="requireds" lay-verify="required">
 				<option value="">请选择</option>
-				{volist name=":config('inst_data_names')[1]" id="v"}
+				{volist name="$insts" id="v"}
 				<option value="{$key}">{$v}</option>
 				{/volist}
 			  </select>
@@ -164,10 +164,9 @@
 							var tdsumrent =0;//异动信息规定租金
 							var tdsumoprice =0;//异动信息原价
 							var tdsumuse =0;//异动使用面积
-							//console.log(row);
-							//console.log(rows);
-							//layer.close(index);
+							var trData = '';
 							$('.j-house-box tbody').html("");
+							$('.ban_ids').val("");
 							//房屋信息
 							if(row){
 								//var houseidData = '';
@@ -193,7 +192,7 @@
 										  $('.j-house-box tbody').append(trData);	
 									} */
 								 
-									$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" value="'+row[i].ban_id +'">');
+									$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].ban_id +'">');
 									//console.log(row[i].ban_number);
 							    }
 								//遍历table求和

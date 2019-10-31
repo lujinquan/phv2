@@ -18,7 +18,7 @@
 		  <td id="new_pipesection">
 			  <select id="ban_inst_id" name="new_inst_id" lay-verify="required" class="field-cid" type="select" required>
 				<option value="">请选择</option>
-				{volist name=":config('inst_data_names')[1]" id="v"}
+				{volist name="$insts" id="v"}
 				<option value="{$key}" {if condition="$data_info['new_inst_id'] == $key"}selected{/if}>{$v}</option>
 				{/volist}
 			  </select>
@@ -137,6 +137,8 @@
 							
 							//console.log(row);
 							layer.close(index);
+							var trData = '';
+							$('.j-house-box tbody').html();
 							var trData ='<tr>\
 												<td class="building_number">'+row.ban_number+'</td>\
 												<td class="building_address">'+row.ban_address+'</td>\
