@@ -27,11 +27,11 @@ class ChangeInst extends SystemBase
         'data_json' => 'json',
     ];
 
-    protected $processAction = ['审批不通过','审批成功','打回给房管员','初审通过','审批通过','终审通过'];
+    protected $processAction = ['审批不通过','审批成功','打回给房管员','初审通过','审批通过','审批通过','终审通过'];
 
-    protected $processDesc = ['失败','成功','打回给房管员','待资料员初审','待经管所长审批','待经管科长终审'];
+    protected $processDesc = ['失败','成功','打回给房管员','待资料员初审','待经租会计审批','待经管所长审批','待经管科长终审'];
 
-    protected $processRole = ['2'=>4,'3'=>5,'4'=>8,'5'=>9];
+    protected $processRole = ['2'=>4,'3'=>5,'4'=>6,'5'=>8,'6'=>9];
 
     public function tenant()
     {
@@ -151,6 +151,7 @@ class ChangeInst extends SystemBase
     {
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
+        //halt($row);
         // $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
         // $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         // $row['old_tenant_info'] = $oldTenantRow;

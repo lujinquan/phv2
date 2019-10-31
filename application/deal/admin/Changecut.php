@@ -275,6 +275,8 @@ class Changecut extends Admin
     {
         if ($this->request->isAjax()) {
             $data = $this->request->post();
+
+            exit;
             //halt($data);
         }
         $id = $this->request->param('id');

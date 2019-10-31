@@ -2,8 +2,9 @@
 
 namespace app\system\model;
 
-use think\Model;
+
 use think\Db;
+use think\Model;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\House as HouseModel;
 use app\rent\model\Rent as RentModel;
@@ -42,9 +43,16 @@ class SystemData extends Model
                 case 7: //新发
                     $where[] = ['ban_status','<',2];
                     break;
+                case 10: //管段调整
+                    $where[] = ['ban_status','eq',1];
+                    $tempApplyBanidArr = Db::name('change_inst')->where([['change_status','>',1]])->column('ban_ids');
+                    if($tempApplyBanidArr){
+                        $applyBanidArr = explode(',',implode(',',$tempApplyBanidArr));
+                    }
+                    break;
                 case 14: //楼栋调整
                     $where[] = ['ban_status','eq',1];
-                    $applyHouseidArr = Db::name('change_ban')->where([['change_status','>',1]])->column('ban_id');
+                    $applyBanidArr = Db::name('change_ban')->where([['change_status','>',1]])->column('ban_id');
                     break;
                 case 17: //别字更正
                     break;
@@ -65,7 +73,19 @@ class SystemData extends Model
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
-        $data['data'] = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc,ban_id desc')->limit($limit)->select();
+        $temps = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc,ban_id desc')->limit($limit)->select();
+//halt();
+        foreach ($temps as $k => &$v) {
+            
+            $v['color_status'] = 1; //正常的
+            
+            if(isset($applyBanidArr) && $applyBanidArr){
+                if(in_array($v['ban_id'], $applyBanidArr)){
+                    $v['color_status'] = 2; // 已在异动中
+                }
+            }
+        }
+        $data['data'] = $temps;
         $data['count'] = $BanModel->where($where)->count();
         $data['code'] = 0;
         $data['msg'] = '';
