@@ -120,8 +120,8 @@
 	  <tbody>
 	  	{volist name="$data_info['data_json']" id="v"}
 	  	<tr>
-	  		<td class="house_number"><input type="hidden" name="house_number[{$key}]" value="{$v['house_number']}">{$v['house_number']}</td>
-	  		<td class="house_lessee"><input type="hidden" name="house_lessee[{$key}]" value="{$v['tenant_name']}">{$v['tenant_name']}</td>
+	  		<td class="house_number"><input type="hidden" name="house_id[{$key}]" value="{$v['house_id']}"><input type="hidden" name="house_use_id[{$key}]" value="{$v['house_use_id']}"><input type="hidden" name="house_number[{$key}]" value="{$v['house_number']}">{$v['house_number']}</td>
+	  		<td class="house_lessee"><input type="hidden" name="tenant_id[{$key}]" value="{$v['tenant_id']}"><input type="hidden" name="house_lessee[{$key}]" value="{$v['tenant_name']}">{$v['tenant_name']}</td>
 			<td class="house_original"><input type="number" class="layui-input" name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
 			<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
 			<td class="house_prescribed"><input type="hidden" name="house_prescribed[{$key}]" value="{$v['house_pre_rent']}">{$v['house_pre_rent']}</td>
@@ -393,14 +393,14 @@
 						    sumoriginalold =0;//房屋原价异动后面积
 						//房屋信息
 						if(rows){
-							var houseidData = '';
+							//var houseidData = '';
 							for(var i=0;i<rows.length;i++) {
-								houseidData += ','+rows[i].house_id;
+								//houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
-											<td class="house_number"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
-											<td class="house_lessee"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
-											<td class="house_original"><input type="number" class="layui-input" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
-											<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
+											<td class="house_number"><input type="hidden" name="house_id['+i+']" value="'+rows[i].house_id+'"><input type="hidden" name="house_use_id['+i+']" value="'+rows[i].house_use_id+'"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
+											<td class="house_lessee"><input type="hidden" name="tenant_id['+i+']" value="'+rows[i].tenant_id+'"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
+											<td class="house_original"><input type="number" class="layui-input" lay-verify="required" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
+											<td class="house_builtuparea"><input type="number" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
 										</tr>';
@@ -439,8 +439,8 @@
 								$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
 							/* }); */
 						  }
-						  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
-							$("input[name='house_id']").val(houseidData);//获取房屋编号
+						 //  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
+							// $("input[name='house_id']").val(houseidData);//获取房屋编号
 							layer.close(index);
 						}
 						else{

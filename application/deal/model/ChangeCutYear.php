@@ -29,7 +29,7 @@ class ChangeCutYear extends SystemBase
 
     protected $processAction = ['审批不通过','审批成功','打回给房管员','终审通过'];
 
-    protected $processDesc = ['失败','成功','打回给房管员','待经租会计终审审'];
+    protected $processDesc = ['失败','成功','打回给房管员','待经租会计终审'];
 
     protected $processRole = ['2'=>4,'3'=>6];
 

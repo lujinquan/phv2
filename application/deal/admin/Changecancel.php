@@ -114,6 +114,7 @@ class Changecancel extends Admin
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');
+        //halt($id);
         $ChangeModel = new ChangeCancelModel;
         $row = $ChangeModel->detail($id);
         $this->assign('data_info',$row);

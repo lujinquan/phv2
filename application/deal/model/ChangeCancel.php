@@ -186,7 +186,8 @@ class ChangeCancel extends SystemBase
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        $this->finalDeal($row);
+        //halt($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
