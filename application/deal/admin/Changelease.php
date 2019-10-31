@@ -140,7 +140,12 @@ class Changelease extends Admin
         if ($this->request->isAjax()) {
             $data = $this->request->post();
             if(isset($data['file']) && $data['file']){
+                $status = Db::name('change_lease')->where([['id','eq',$data['id']]])->value('change_status');
+                if($status < 2){
+                    return $this->error('请勿重复提交签字图片！');
+                }
                 $ProcessModel = new ProcessModel;
+
                 $res = $ProcessModel->process(18,$data);
                 if (!$res) {
                     return $this->error('上传失败');

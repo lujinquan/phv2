@@ -6,14 +6,16 @@
   <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" >
   		<div class="j-search-fl layui-col-md8  fl">
+  			{if condition="$Think.INST_LEVEL == 1"}
   			<div class="layui-input-inline" style="width:140px;">
                 <select name="inst" id="OwnerTyp" lay-filter="owner_id">
                     <option value="">机构</option>
-                    <option value="1" {if condition="INST == 1"}selected{/if}>武昌区公司</option>
-                    <option value="2" {if condition="INST == 2"}selected{/if}>紫阳所</option>
-                    <option value="3" {if condition="INST == 3"}selected{/if}>粮道所</option> 
+                    <option value="1" selected>武昌区公司</option>
+                    <option value="2" >紫阳所</option>
+                    <option value="3" >粮道所</option>      
                 </select>
             </div>
+            {/if}
             <div class="layui-input-inline" style="width:120px;">
                 <select name="owner" id="OwnerID" lay-filter="owner_id">
                     <option value="">产别</option>
@@ -201,7 +203,15 @@
 
     	var time_span = $('#timeYear').val().split('-');
 		$('.time').text(' '+time_span[0]+'年'+time_span[1]+'月');
-		$(".DQueryType,.DOwnerTyp").text(' '+$("#OwnerTyp option:selected").text());
+		var inst = $("#OwnerTyp option:selected").text();
+		if(inst){
+			$(".DQueryType,.DOwnerTyp").text(' '+inst);
+		}else{
+			var inst = '{$params.insts[$Think.INST]}';
+			//console.log(inst);
+			$(".DQueryType,.DOwnerTyp").text(' '+inst);
+		}
+		//$(".DQueryType,.DOwnerTyp").text(' '+$("#OwnerTyp option:selected").text());
 		$(".DQueryType,.OwnerID").text(' '+$("#OwnerID option:selected").text());
 
     	$('#zongji_num').text(res.data[0][0]);

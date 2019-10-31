@@ -87,31 +87,55 @@ class Changerentadd extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+            //halt($filData);
             // 入库使用权变更表
             $row = $ChangeModel->allowField(true)->update($filData);
             if (!$row) {
                 return $this->error('申请失败');
             }
             //halt($useRow);
-            if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $row['id'];
-                if (!$ProcessModel->allowField(true)->create($filData)) {
-                    return $this->error('未知错误');
-                }
-                $msg = '保存并提交成功';
-            }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
-                // 入库审批表
-                $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',11],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
-                if (!$process) {
-                    return $this->error('未知错误');
+            // if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
+            //     // 入库审批表
+            //     $ProcessModel = new ProcessModel;
+            //     $filData['change_id'] = $row['id'];
+            //     if (!$ProcessModel->allowField(true)->create($filData)) {
+            //         return $this->error('未知错误');
+            //     }
+            //     $msg = '保存并提交成功';
+            // }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
+            //     // 入库审批表
+            //     $ProcessModel = new ProcessModel;
+            //     $process = $ProcessModel->where([['change_type','eq',11],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+            //     if (!$process) {
+            //         return $this->error('未知错误');
+            //     }
+            //     $msg = '保存并提交成功';
+            // }else{
+            //     $msg = '保存成功';
+            // }
+
+            if($data['save_type'] == 'submit'){
+                if(count($row['child_json']) == 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $filData['change_id'] = $row['id'];
+                    unset($filData['id']);
+                    if (!$ProcessModel->allowField(true)->create($filData)) {
+                        return $this->error('未知错误');
+                    } 
+                }elseif(count($row['child_json']) > 1){
+                    // 入库审批表
+                    $ProcessModel = new ProcessModel;
+                    $process = $ProcessModel->where([['change_type','eq',11],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    if (!$process) {
+                        return $this->error('未知错误');
+                    } 
                 }
                 $msg = '保存并提交成功';
             }else{
                 $msg = '保存成功';
             }
+
             return $this->success($msg,url('index'));
         }
         $id = $this->request->param('id');

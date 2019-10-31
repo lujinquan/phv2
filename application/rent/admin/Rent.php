@@ -127,9 +127,9 @@ class Rent extends Admin
         $RentModel = new RentModel;      
         $res = $RentModel->unpayList($ids);
         if($res){
-            $this->success('缴费成功，本次欠缴'.$res.'条账单！');
+            $this->success('欠缴成功，本次欠缴'.$res.'条账单！');
         }else{
-            $this->error('缴费失败');
+            $this->error('欠缴失败');
         }
     }
 

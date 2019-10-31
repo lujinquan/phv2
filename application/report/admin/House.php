@@ -52,7 +52,7 @@ class House extends Admin
             $options = $this->request->get();
             $owner = $options['owner'];
             $date = $options['month'];
-            $inst = $options['inst'];
+            $inst = isset($options['inst'])?$options['inst']:INST;
 
             $data = [];
             $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
