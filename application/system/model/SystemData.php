@@ -222,7 +222,7 @@ class SystemData extends Model
 //halt($where);
         $HouseModel = new HouseModel;
 
-        $fields = 'a.house_id,a.house_number,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,b.*,c.*';
+        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,b.*,c.*';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）

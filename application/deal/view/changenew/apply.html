@@ -50,7 +50,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">门牌号</label>
 			<div class="j-input-inline">
-				<input type="text" id="house_numbers" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" id="house_door" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -116,12 +116,6 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">月租金</label>
-			<div class="j-input-inline">
-				<input type="text" id="monthly_rent" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
 				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
@@ -185,12 +179,12 @@
 								$("#reduction_idnumber").val(row.tenant_card);//获取身份证号
 								$("#reduction_tel").val(row.tenant_tel);//获取电话
 								$("#builtup_area").val(row.house_area);//获取建筑面积
+								$("#house_door").val(row.house_door);//获取门牌号
 								$("#rental_area").val(row.house_lease_area);//获取计租面积
 								$("#house_originalprice").val(row.house_oprice);//获取房屋原价
 								$("#prescribed_rent").val(row.house_pre_rent);//获取规定租金
 								$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别
 								$("#reduction_nature").val(params.uses[row.house_use_id]);//获取楼栋使用性质
-								$("#monthly_rent").val(row.house_pre_rent);//获取月租金
 								
 
 						},btn2: function(index, layero){
