@@ -289,11 +289,12 @@ class Changecut extends Admin
 
     public function record()
     {
+        $group = input('group','x');
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            if($group = 'x'){
+            if($group == 'x'){
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
@@ -306,18 +307,23 @@ class Changecut extends Admin
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
-                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-                //halt($data['data']);
                 $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+
+                // $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                // $data = [];
+                // $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+                // //halt($data['data']);
+                // $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             }
             
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);        
         }
-        $group = input('group','x');
+        
         $tabData = [];
         $tabData['menu'] = [
             [
@@ -341,7 +347,7 @@ class Changecut extends Admin
     {
         $id = $this->request->param('id');
         $group = input('group','x');
-        if($group = 'x'){
+        if($group == 'x'){
             $row = ChangeCutModel::get($id);
             if($row['change_status'] == 2 && $row['is_back'] == 0){
                if($row->delete()){
