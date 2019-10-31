@@ -227,6 +227,7 @@ class ChangeCut extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['end_date'] = (date('Y')+1).'01';
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
@@ -240,7 +241,7 @@ class ChangeCut extends SystemBase
                 try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
                 
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];

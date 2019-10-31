@@ -6,6 +6,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeCutCancel as ChangeCutCancelModel;
 use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 
 /**
@@ -275,9 +276,38 @@ class Changecut extends Admin
     {
         if ($this->request->isAjax()) {
             $data = $this->request->post();
-
-            exit;
+            if(!$data['change_remark']){
+                return $this->error('请填写取消原因！');
+            }
+            if(isset($data['file']) && $data['file']){
+                $data['change_imgs'] = implode(',',$data['file']);
+            }else{
+               return $this->error('请上传取消报告！'); 
+            }
+            
             //halt($data);
+            $filData = [
+                'change_cut_id' => $data['id'],
+                'change_remark' => $data['change_remark'],
+                'change_imgs' => $data['change_imgs'],
+                'change_status' => 1,
+            ];
+            // 入库减免取消
+            $ChangeCutCancelModel = new ChangeCutCancelModel;
+            if (!$ChangeCutCancelModel->allowField(true)->create($filData)) {
+                return $this->error('未知错误！');
+            }
+
+            // 将减免异动的减免结束时间改成当月
+            $ChangeCutModel = new ChangeCutModel;
+            $row = $ChangeCutModel->get($data['id']);
+            $row->end_date = date('Ym');
+            $row->save();
+            //$ChangeCutModel->where([['id','eq',$data['id']]])->update(['end_date'=>date('Ym')]);
+            // 将异动统计表的该减免结束时间改成当月
+            Db::name('change_table')->where([['change_order_number','eq',$row['change_order_number']]])->update(['end_date'=>date('Ym')]);
+            //halt($data);
+            return $this->success('取消成功！',url('index'));
         }
         $id = $this->request->param('id');
         $ChangeCutModel = new ChangeCutModel;
@@ -298,9 +328,9 @@ class Changecut extends Admin
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
-                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id,e.change_status as change_cut_status";
                 $data = [];
-                $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+                $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('change_cut_cancel e','a.id = e.change_cut_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
                 //halt($data['data']);
                 $data['count'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             }else{

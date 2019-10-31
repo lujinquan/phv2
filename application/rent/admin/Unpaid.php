@@ -62,13 +62,12 @@ class Unpaid extends Admin
     public function payBackList()
     {
         $ids = $this->request->param('id/a'); 
-        $nowDate = date('Ym');
         $RentModel = new RentModel;
-        $res = $RentModel->payBackList($ids,date('Ym'));
+        $res = $RentModel->payBackList($ids,date('Y-m'));
         if($res){
             $this->success('撤回成功，本次撤回'.$res.'条账单！');
         }else{
-            $this->error('撤回失败，请检查账单期是否为 '.$nowDate.'!');
+            $this->error('撤回失败，请检查账单支付日期是否为本月');
         }
     }
 

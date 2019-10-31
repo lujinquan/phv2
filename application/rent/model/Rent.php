@@ -278,8 +278,13 @@ class Rent extends Model
      */
     public function payBackList($ids,$nowDate)
     {
-        //撤回后，是否处理:0,支付时间:0,支付金额:0,支付方式:0    
-        $res = self::where([['rent_order_id','in',$ids],['rent_order_date','eq',$nowDate]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+        //撤回后，是否处理:0,支付时间:0,支付金额:0,支付方式:0   
+         
+        $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
+        //halt($nextDate);
+        //$where[] = ['rent_order_date','between',[$start,$end]];
+        $res = self::where([['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->whereOr([['rent_order_date','eq',str_replace('-', '', $nowDate)]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+        //halt($res);
         return $res;
     }
 

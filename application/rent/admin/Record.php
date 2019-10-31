@@ -30,7 +30,7 @@ class Record extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
             $where = $RentModel->checkWhere($getData,'record');
-            $fields = 'a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $fields = "a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
             $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
@@ -46,14 +46,13 @@ class Record extends Admin
      */
     public function payBackList()
     {
-        $ids = $this->request->param('id/a'); 
-        $nowDate = date('Ym');
+        $ids = $this->request->param('id/a');
         $RentModel = new RentModel;
-        $res = $RentModel->payBackList($ids,date('Ym'));
+        $res = $RentModel->payBackList($ids,date('Y-m'));
         if($res){
             $this->success('撤回成功，本次撤回'.$res.'条账单！');
         }else{
-            $this->error('撤回失败，请检查账单期是否为 '.$nowDate.'!');
+            $this->error('撤回失败，请检查账单支付日期是否为本月!');
         }
     }
 

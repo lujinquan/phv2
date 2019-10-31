@@ -63,8 +63,10 @@
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 		<a href="{:url('detail')}?group=x&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
-		{{#  if (d.change_status == 1) { }}
+		{{#  if (d.change_status == 1 && d.change_cut_status != 1) { }}
 		<a href="{:url('calloff')}?group=x&id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-warm">取消减免</a>
+		{{#  } else { }}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">取消减免</button>
 		{{#  } }}
     </script>
 </div>
