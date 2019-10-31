@@ -188,9 +188,14 @@ class Rent extends Admin
                         $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->getStartColor()->setRGB('E6E6E6'); //设置填充颜色
 
                         $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
-                    }else{
-                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), ' ' . $b . ' ');
                     }
+                    if($bk == 'A'){ //将第一列的格式改成文本，其他列不变
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), ' ' . $b . ' ');
+                    }else{
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), $b);  
+                    }
+                    
+                    
      
                 }
             }
