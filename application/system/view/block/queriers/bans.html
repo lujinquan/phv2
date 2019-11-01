@@ -4,7 +4,47 @@
 <fieldset class="layui-elem-field layui-field-title j-field-box">
 	<legend>楼栋查询</legend>
 </fieldset>
-<table id="dataTable1" lay-filter='dataTable1' lay-filter="dataTable1"></table>
+<div class="j-table-content j-no-title">
+<div class="page-toolbar j-page-toolbar clearfix">
+      <form class="layui-form layui-form-pane" action="{:url('system/Index/querier')}?change_type={$changeType}"  method="post" id="hisi-table-search">
+		<div class="j-search-fl layui-col-md8  fl">
+			  <div class="layui-input-inline j-input-margin" style="width:150px;">
+				  <input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+			  </div>
+			  {if condition="$Think.INST_LEVEL < 3"}
+			  <div class="layui-input-inline" style="width:150px;">
+				  <select name="ban_inst_id">
+					  <option value="">机构</option>
+					  {volist name=":config('inst_check_names')[INST]" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  {/if}
+			  <div class="layui-input-inline" style="width:120px;">
+				  <select name="ban_owner_id">
+					  <option value="">产别</option>
+					  {volist name="params['owners']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  <div class="layui-input-inline j-input-margin" style="width:150px;">
+				  <input type="text" name="ban_address" placeholder="地址" class="layui-input">
+			  </div>
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+          </div>
+		</div>
+      </form>
+  </div>
+<table id="dataTable" lay-filter="dataTable"></table>
 </div>
 <script type="text/javascript">
 	var conId;
@@ -15,7 +55,7 @@
 		    ,$ = layui.$;
 		//楼栋查询
         table.render({
-        	elem: '#dataTable1'
+        	elem: '#dataTable'
         		//,height: 550
         		//,height: 'full-20' //浏览器最大高度
         	,toolbar: true
@@ -56,8 +96,8 @@
 				}
         	}
         }, isShowInst);
-		table.on('checkbox(dataTable1)', function(obj){
-              var checkStatus = table.checkStatus('dataTable1');
+		table.on('checkbox(dataTable)', function(obj){
+              var checkStatus = table.checkStatus('dataTable');
               datas = checkStatus.data;
               //console.log(datas);
           });
