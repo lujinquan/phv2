@@ -245,7 +245,22 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
-
+            //限制input输入框字符
+            $("input[type=number]").keypress(function(e) {
+            　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+            　　　　return false;
+            　　}
+            });
+            function initialvalue(){
+            	$(".j-house-box tbody tr").each( function(){
+            		if($(this).find(".house_original input").val()==""){
+            			$(this).find(".house_original input").val(0);
+            		}
+            		if($(this).find(".house_builtuparea input").val()==""){
+            			$(this).find(".house_builtuparea input").val(0);
+            		}
+            	})	
+            }
 			var i=1;
 		 	 //console.log(i);
 		 	 $(".cancel_change_"+i).bind("input propertychange",function(){console.log(i);
@@ -315,35 +330,37 @@
 			 	}
 			 });
 
-			 						//输入框建筑面积改变重新计算
-						$(".house_builtuparea").bind("input propertychange",function(){
-							sumbuildings = 0;
-							var trList = $(".j-house-box tbody").children("tr");
-							for (var j=0;j<trList.length;j++) {
-								var tdArr = trList.eq(j).find("td"); //遍历td  
-									sumbuildings += parseFloat(tdArr.eq(3).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
-									$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
-									$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
-									sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
-									$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
-									$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
-								
-							}
-						});
-						//输入框房屋原价改变重新计算
-						$(".house_original").bind("input propertychange",function(){
-							sumoriginal = 0;
-							var trList = $(".j-house-box tbody").children("tr");
-							for (var j=0;j<trList.length;j++) {
-								var tdArr = trList.eq(j).find("td"); //遍历td  
-									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
-									$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
-									$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
-									sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
-									$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
-									$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
-							}
-						});
+		//输入框建筑面积改变重新计算
+		$(".house_builtuparea").bind("input propertychange",function(){
+			initialvalue();
+			sumbuildings = 0;
+			var trList = $(".j-house-box tbody").children("tr");
+			for (var j=0;j<trList.length;j++) {
+				var tdArr = trList.eq(j).find("td"); //遍历td  
+					sumbuildings += parseFloat(tdArr.eq(3).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
+					$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
+					$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
+					sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
+					$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
+					$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
+				
+			}
+		});
+		//输入框房屋原价改变重新计算
+		$(".house_original").bind("input propertychange",function(){
+			initialvalue();
+			sumoriginal = 0;
+			var trList = $(".j-house-box tbody").children("tr");
+			for (var j=0;j<trList.length;j++) {
+				var tdArr = trList.eq(j).find("td"); //遍历td  
+					sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
+					$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
+					$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
+					sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
+					$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
+					$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
+			}
+		});
 
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
