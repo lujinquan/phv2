@@ -6,6 +6,7 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\house\model\BanTai as BanTaiModel;
 use app\deal\model\Process as ProcessModel;
 
 class ChangeBan extends SystemBase
@@ -223,8 +224,7 @@ class ChangeBan extends SystemBase
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
-        //$oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
-        //$row['old_tenant_info'] = $oldTenantRow;
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -331,14 +331,59 @@ class ChangeBan extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理 【完成，可优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
     {
-        // 别字更正
-        //TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
-        // 添加台账记录
+        // 判断改变的类型
+        if($finalRow['ban_change_id'] == 1){ // 如果是调整层高
+
+            // 1、修改楼栋层高
+            $BanModel = new BanModel;
+            $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_floors'=>$finalRow['new_floors']]);
+
+            // 2、添加楼栋台账
+            $taiBanData = [];
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_tai_type'] = 5;
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['ban_tai_remark'] = '楼栋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [
+                'ban_floors' => [
+                    'old' => $finalRow['old_floors'],
+                    'new' => $finalRow['new_floors'],
+                ],
+            ];
+            $BanTaiModel = new BanTaiModel;
+            $BanTaiModel->allowField(true)->create($taiBanData);
+
+            // 3、批量处理房屋计算租金变化
+
+
+        }else{ // 如果是调整完损等级
+
+            // 1、修改楼栋完损等级
+            $BanModel = new BanModel;
+            $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_damage_id'=>$finalRow['new_damage']]);
+
+            // 2、添加楼栋台账
+            $taiBanData = [];
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_tai_type'] = 5;
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['ban_tai_remark'] = '楼栋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [
+                'ban_damage_id' => [
+                    'old' => $finalRow['old_damage'],
+                    'new' => $finalRow['new_damage'],
+                ],
+            ];
+            $BanTaiModel = new BanTaiModel;
+            $BanTaiModel->allowField(true)->create($taiBanData);
+
+        }
+
     }
 
 }

@@ -12,6 +12,7 @@
 
 namespace app\house\admin;
 
+use think\Db;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;

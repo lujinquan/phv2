@@ -7,8 +7,12 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\HouseTai as HouseTaiModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
+
 
 class ChangeRentAdd extends SystemBase
 {
@@ -139,6 +143,8 @@ class ChangeRentAdd extends SystemBase
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
+        //halt($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -245,13 +251,95 @@ class ChangeRentAdd extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理 【完成】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
     {
-        // 将涉及的所有房屋，设置成暂停计租状态
-        //HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
-        
+        // 1、如果有追加以前年，则增加一条以前年回收的订单
+        $RentModel = new RentModel;
+        $rentData = [];
+        $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
+       
+        if($finalRow['before_year_rent']){ //rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id
+            $rent_order_date = date('Y'.'12',strtotime('-1 year')); 
+            $rentData[] = [         
+                'house_id' => $finalRow['house_id'],
+                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                'tenant_id' => $finalRow['tenant_id'],
+                'rent_order_date' => $rent_order_date,
+                'rent_order_receive' => $finalRow['before_year_rent'],
+                'rent_order_paid' => $finalRow['before_year_rent'],
+                'rent_order_remark' => '租金追加调整创建的以前年回收订单，异动单号：'.$finalRow['change_order_number'],
+                'pay_way' => time(),
+                'ptime' => 1,
+                'is_deal' => 1,
+            ];  
+        }
+        // 2、如果有追加以前月，则增加一条以前月回收的订单
+        if($finalRow['before_month_rent']){
+            $rent_order_date = date('Ym',strtotime('-1 month')); 
+            $rentData[] = [         
+                'house_id' => $finalRow['house_id'],
+                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                'tenant_id' => $finalRow['tenant_id'],
+                'rent_order_date' => $rent_order_date,
+                'rent_order_receive' => $finalRow['before_month_rent'],
+                'rent_order_paid' => $finalRow['before_month_rent'],
+                'rent_order_remark' => '租金追加调整创建的以前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                'pay_way' => 1,
+                'ptime' => time(),
+                'is_deal' => 1,
+            ];
+        }
+        // 3、如果有追加当月，则增加一条当月回收的订单
+        if($finalRow['this_month_rent']){
+            $rent_order_date = date('Ym'); 
+            $rentData[] = [         
+                'house_id' => $finalRow['house_id'],
+                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                'tenant_id' => $finalRow['tenant_id'],
+                'rent_order_date' => $rent_order_date,
+                'rent_order_receive' => $finalRow['this_month_rent'],
+                'rent_order_paid' => $finalRow['this_month_rent'],
+                'rent_order_remark' => '租金追加调整创建的当前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                'pay_way' => 1,
+                'ptime' => time(),
+                'is_deal' => 1,
+            ];
+        }
+        $RentModel->insertAll($rentData);
+
+        // 4、异动统计表中添加一条记录
+        $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+        $tableData = [];       
+        $tableData['change_type'] = 12;
+        $tableData['change_order_number'] = $finalRow['change_order_number'];
+        $tableData['house_id'] = $finalRow['house_id'];;
+        $tableData['ban_id'] = $finalRow['ban_id'];
+        $tableData['inst_id'] = $banInfo['ban_inst_id'];
+        $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
+        $tableData['owner_id'] = $banInfo['ban_owner_id'];
+        $tableData['use_id'] = $houseInfo['house_use_id'];
+        $tableData['change_month_rent'] = $finalRow['before_month_rent'];
+        $tableData['change_year_rent'] = $finalRow['before_year_rent'];
+        $tableData['change_rent'] = $finalRow['this_month_rent'];
+        $tableData['tenant_id'] = $finalRow['tenant_id'];
+        $tableData['cuid'] = $finalRow['cuid'];
+        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $ChangeTableModel = new ChangeTableModel;
+        $ChangeTableModel->save($tableData);
+
+        // 5、添加一条房屋台账记录
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 9;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '租金追加调整异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
+
     }
 }

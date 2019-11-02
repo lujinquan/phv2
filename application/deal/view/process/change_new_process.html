@@ -108,12 +108,6 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">月租金</label>
-			<div class="j-input-inline">
-				<input type="text" id="monthly_rent" value="{$data_info['house_info']['house_pre_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
 				<a href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>

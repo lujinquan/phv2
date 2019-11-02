@@ -7,6 +7,7 @@ use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 
@@ -157,7 +158,7 @@ class ChangeCut extends SystemBase
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -279,9 +280,17 @@ class ChangeCut extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
+        halt($finalRow);
         // 1、添加房屋台账
-        
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 10;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '租金减免异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
 
         // 2、将数据写入到异动统计表
         

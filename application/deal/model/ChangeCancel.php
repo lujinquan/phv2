@@ -294,11 +294,12 @@ class ChangeCancel extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理 【完成】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
     {//halt($finalRow);
+        
         $taiBanData = $taiHouseData = $tableData = [];
         // 按栋注销
         if($finalRow['cancel_ban']){ 
