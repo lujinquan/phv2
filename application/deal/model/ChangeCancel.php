@@ -262,7 +262,7 @@ class ChangeCancel extends SystemBase
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -294,7 +294,7 @@ class ChangeCancel extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理 【完成】
+     * 终审审核成功后的数据处理 【完成，可优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
@@ -314,7 +314,7 @@ class ChangeCancel extends SystemBase
 
             // 如果选择了房屋
             if($finalRow['data_json']){
-
+                $finalRow['ban_info'] = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
                 // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
                 foreach ($finalRow['data_json'] as $k => $v) {
                     HouseModel::where([['house_number','eq',$v['house_number']]])->update([
@@ -381,7 +381,7 @@ class ChangeCancel extends SystemBase
                     $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
                 }
                 BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
-                //halt($res);
+         
                 // 添加统计报表记录
                 $tableData[$k]['change_type'] = 8;
                 $tableData[$k]['change_order_number'] = $finalRow['change_order_number'];

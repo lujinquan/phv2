@@ -119,7 +119,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">电梯</label>
 				<div class="j-input-inline">
-					<input type="text" id="elevator" readonly value="无" autocomplete="off" class="layui-input">
+					<input type="text" id="elevator" readonly value="{if condition="$data_info['ban_info']['ban_is_levator']"}有{else /}无{/if}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>

@@ -31,20 +31,22 @@ class Api extends Common
      */
     public function getChangeCutRow() 
     {
-    	$house_id = $this->request->param('house_id');
-    	$data = [];
-        $ChangeCutModel = new ChangeCutModel;
-        if($house_id){
-        	$changecutid = ChangeCutModel::where([['house_id','eq',$house_id]])->order('ctime desc')->value('id');
-            $row = $ChangeCutModel->detail($changecutid);
-            $data['data'] = $row;
-	        $data['msg'] = '获取成功';
-	        $data['code'] = 0;
-        }else{
-        	$data['msg'] = '参数错误';
-	        $data['code'] = -1;
+        if ($this->request->isAjax()) {
+        	$house_id = $this->request->param('house_id');
+        	$data = [];
+            $ChangeCutModel = new ChangeCutModel;
+            if($house_id){
+            	$changecutid = ChangeCutModel::where([['house_id','eq',$house_id]])->order('ctime desc')->value('id');
+                $row = $ChangeCutModel->detail($changecutid);
+                $data['data'] = $row->toArray();
+    	        $data['msg'] = '获取成功';
+    	        $data['code'] = 1;
+            }else{
+            	$data['msg'] = '参数错误';
+    	        $data['code'] = 0;
+            }
+            return json($data);
         }
-        return json($data);
     }
 
     /**
@@ -68,7 +70,7 @@ class Api extends Common
                 RoomModel::where([['room_id','eq',$roomid]])->update(['room_cou_rent'=>$room_rent]);
             }
             // 获取该楼栋下所有房屋
-            $houseOldArr = HouseModel::with('tenant')->where([['ban_id','eq',$ban_id]])->field('house_id,house_number,tenant_id,(house_pre_rent + house_diff_rent + house_diff_rent + house_pump_rent) as house_rent,house_floor_id,house_cou_rent')->select()->toArray();
+            $houseOldArr = HouseModel::with('tenant')->where([['ban_id','eq',$ban_id]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
             $HouseModel = new HouseModel;
             // 更新所有房屋的计算租金
             foreach($houseOldArr as $h){

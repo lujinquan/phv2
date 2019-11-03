@@ -254,7 +254,7 @@ class ChangePause extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成，待优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)

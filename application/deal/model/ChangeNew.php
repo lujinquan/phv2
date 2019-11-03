@@ -2,13 +2,16 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeNew extends SystemBase
 {
@@ -164,7 +167,7 @@ class ChangeNew extends SystemBase
                 $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -275,14 +278,49 @@ class ChangeNew extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        //halt($finalRow);
-        //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
-        // 添加台账记录
+    {//halt($finalRow);
+        // 1、将新发的房屋变成正常状态
+        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
+        // 2、添加台账记录
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 1;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '新发租异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
+        // 3、修改涉及到的房间的状态
+        $roomids = Db::name('house_room')->where([['house_id','eq',$finalRow['house_id']]])->column('room_id');
+        if($roomids){
+            Db::name('room')->where([['room_id','in',$roomids]])->update(['room_status'=>1]);
+        }
+
+        // 2、将数据写入到异动统计表
+        $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
+        $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+        $tableData = [];       
+        $tableData['change_type'] = 7;
+        $tableData['change_order_number'] = $finalRow['change_order_number'];
+        $tableData['house_id'] = $finalRow['house_id'];;
+        $tableData['ban_id'] = $finalRow['ban_id'];
+        $tableData['inst_id'] = $banInfo['ban_inst_id'];
+        $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
+        $tableData['owner_id'] = $banInfo['ban_owner_id'];
+        $tableData['use_id'] = $houseInfo['house_use_id'];
+        $tableData['change_rent'] = $houseInfo['house_pre_rent']; 
+        $tableData['change_send_type'] = $finalRow['new_type'];
+        $tableData['tenant_id'] = $finalRow['tenant_id']; 
+        $tableData['cuid'] = $finalRow['cuid'];
+        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $ChangeTableModel = new ChangeTableModel;
+        $ChangeTableModel->save($tableData);
+        
     }
 
 }

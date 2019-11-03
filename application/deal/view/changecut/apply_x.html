@@ -245,6 +245,10 @@
 						,yes: function(index, layero){
 							var row = window["layui-layer-iframe" + index].hoesedata();
 							console.log(row);
+							if(row.color_status != 1){ //正常状态下的才可以执行
+							    layer.msg("当前数据不可选！");
+								return false;
+							}
 							layer.close(index);
 							//楼栋信息
 								$("input[name='house_number']").val(row.house_number);//获取房屋编号

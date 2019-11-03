@@ -10,6 +10,7 @@
 					<input type="text" id="house_number" lay-verify="required" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
 					<input type="hidden" id="ban_id" name="ban_id">
 					<input type="hidden" id="house_id" name="house_id">
+					<input type="hidden" id="tenant_id" name="tenant_id">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
@@ -363,6 +364,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#house_number").val(row.house_number);//获取房屋编号
 					$("#house_id").val(row.house_id);//获取房屋编号
 					$("#ban_id").val(row.ban_id);//获取房屋编号
+					$("#tenant_id").val(row.tenant_id);//获取租户id
 					$("#ban_number").val(row.ban_number);//获取楼栋编号
 					$("#tenant_number").val(params.structs[row.ban_struct_id]);//获取房屋结构
 					$("#house_door").val(row.ban_floors);//获取楼层数量
@@ -378,7 +380,11 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#pump_fee").val(row.house_pump_rent);//获取泵费
 					$("#rent_relief").val(row.house_pump_rent);//获取租金减免(没字段随便取得值)
 					$("#agreement_rent").val(row.house_protocol_rent);//获取协议租金
-					$("#elevator").val(row.ban_is_levator);//获取电梯
+					if(row.ban_is_levator){ //获取电梯
+						$("#elevator").val('有');
+					}else{
+						$("#elevator").val('无');
+					}
 					$(".j-iframe-add-change").attr('data-href','{:url('house/RoomTemp/add')}?id='+row.house_id); //新增
 					//异动前异动明细
 					$("#changes_difference_old").text(row.house_diff_rent);//获取租差

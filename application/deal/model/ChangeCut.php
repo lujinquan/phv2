@@ -2,6 +2,7 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
@@ -10,6 +11,7 @@ use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeCut extends SystemBase
 {
@@ -158,7 +160,7 @@ class ChangeCut extends SystemBase
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -275,12 +277,12 @@ class ChangeCut extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        halt($finalRow);
+    {//halt($finalRow);
+        
         // 1、添加房屋台账
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];
@@ -293,7 +295,25 @@ class ChangeCut extends SystemBase
         $HouseTaiModel->allowField(true)->create($taiHouseData);
 
         // 2、将数据写入到异动统计表
-        
+        $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
+        $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+        $tableData = [];       
+        $tableData['change_type'] = 1;
+        $tableData['change_order_number'] = $finalRow['change_order_number'];
+        $tableData['house_id'] = $finalRow['house_id'];;
+        $tableData['ban_id'] = $finalRow['ban_id'];
+        $tableData['inst_id'] = $banInfo['ban_inst_id'];
+        $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
+        $tableData['owner_id'] = $banInfo['ban_owner_id'];
+        $tableData['use_id'] = $houseInfo['house_use_id'];
+        $tableData['change_rent'] = $finalRow['cut_rent']; //减免金额
+        $tableData['end_date'] = $finalRow['end_date']; //减免失效时间
+        $tableData['cut_type'] = $finalRow['cut_type']; //减免类型
+        $tableData['tenant_id'] = $finalRow['tenant_id']; 
+        $tableData['cuid'] = $finalRow['cuid'];
+        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $ChangeTableModel = new ChangeTableModel;
+        $ChangeTableModel->save($tableData);
 
         //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         

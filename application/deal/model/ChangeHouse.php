@@ -2,11 +2,13 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\HouseTemp as HouseTempModel;
 use app\deal\model\Process as ProcessModel;
 
@@ -204,10 +206,7 @@ class ChangeHouse extends SystemBase
         $row['house_info'] = HouseModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         $row['house_table'] = $HouseModel->get_house_renttable($row['house_id']);
         $row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
-        //halt($row);
         //$this->finalDeal($row);
-        //$oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
-        //$row['old_tenant_info'] = $oldTenantRow;
         return $row;
     }
 
@@ -314,12 +313,35 @@ class ChangeHouse extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成，待优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        // 更新房屋信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）
+    {//halt($finalRow);
+
+        // 1、更新房屋信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）
+        $houseChangeSql = "replace into ".config('database.prefix')."house select * from ".config('database.prefix')."house_temp where house_id = ".$finalRow['house_id'];
+        Db::execute($houseChangeSql);
+        // 2、更新房间信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）【待优化】
+        $roomids = Db::name('house_room')->where([['house_id','eq',$finalRow['house_id']]])->column('room_id');
+        $roomChangeSql = "replace into ".config('database.prefix')."room select * from ".config('database.prefix')."room_temp where room_id in (".implode(',',$roomids).")";
+        Db::execute($roomChangeSql);
+        // 3、更新房屋房间中间表【待优化】
+        
+        // 4、添加房屋台账
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 12;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+        // 5、更新房屋临时表
+        Db::query('call syn_temp_table');
+
         // $rowTemp = HouseTempModel::get($finalRow['house_id']);
         // $houseChangeData = [
         //     'house_diff_rent' => $rowTemp['house_diff_rent'],

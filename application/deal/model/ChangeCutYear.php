@@ -2,13 +2,17 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeCutYear extends SystemBase
 {
@@ -152,6 +156,7 @@ class ChangeCutYear extends SystemBase
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -257,14 +262,26 @@ class ChangeCutYear extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        //halt($finalRow);
-        //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+    {//halt($finalRow);
         
+        // 1、增加台账记录
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 11;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '租金减免年审异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+        // 2、修改租金异动表和异动统计表中的end_date时间
+        ChangeCutModel::where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['tenant_id']]])->setInc('end_date',100);
+        ChangeTableModel::where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['tenant_id']],['change_type','eq',1]])->setInc('end_date',100);
     }
 
 }

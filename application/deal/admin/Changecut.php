@@ -263,7 +263,7 @@ class Changecut extends Admin
             $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
             $oldRow = $ChangeCutModel->detail($cutRow['id']);
             $this->assign('old_data_info',$oldRow);
-        }        
+        }     
         $this->assign('data_info',$row);
         return $this->fetch('detail_'.$group);
     }

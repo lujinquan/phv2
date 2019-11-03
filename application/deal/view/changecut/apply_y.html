@@ -329,10 +329,13 @@
 							$.get('{:url("api/getChangeCutRow")}', {'house_id':row.house_id}, function(res) {
 								console.log(res);
 								var imgs = res.data.change_imgs;
-                for (var i = imgs.length - 1; i >= 0; i--) {
-                  $('#'+imgs[i].file_type).append('<li><img src="'+imgs[i].file+'" class="img"></li>');
-                  //console.log(imgs[i].data_id);
+                if(imgs){
+                  for (var i = imgs.length - 1; i >= 0; i--) {
+                    $('#'+imgs[i].file_type).append('<li><img src="'+imgs[i].file+'" class="img"></li>');
+                    //console.log(imgs[i].data_id);
+                  }
                 }
+                
                 //console.log(imgs.length);
 								$("#reduction_seach").val(res.data.house_number); //房屋编号
                 $("#ban_id").val(res.data.ban_id); //楼栋id

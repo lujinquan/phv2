@@ -2,12 +2,15 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
 use app\house\model\Ban as BanModel;
+use app\house\model\BanTai as BanTaiModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeInst extends SystemBase
 {
@@ -151,10 +154,7 @@ class ChangeInst extends SystemBase
     {
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        //halt($row);
-        // $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
-        // $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
-        // $row['old_tenant_info'] = $oldTenantRow;
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -228,7 +228,7 @@ class ChangeInst extends SystemBase
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                $this->finalDeal($changeRow);
+                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -261,14 +261,67 @@ class ChangeInst extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成，待优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {
-        //halt($finalRow);
-        HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
-        // 添加台账记录
+    {//halt($finalRow);
+        
+        // 1、将楼栋机构改成变更后的机构
+        BanModel::where([['ban_id','in',$finalRow['ban_ids']]])->update(['ban_inst_id'=>$finalRow['new_inst_id']]);
+        // 2、添加楼栋台账记录
+        $taiBanData = [];
+        $bans = explode(',', $finalRow['ban_ids']);
+
+        $ChangeTableModel = new ChangeTableModel;
+
+        foreach ($bans as $k => $v) {
+            $finalRow['ban_info'] = Db::name('ban')->where([['ban_id','eq',$v]])->field('ban_inst_pid,ban_owner_id,ban_civil_rent,ban_party_rent,ban_career_rent')->find();
+
+            $taiBanData[$k]['ban_id'] = $v;
+            $taiBanData[$k]['ban_tai_type'] = 6;
+            $taiBanData[$k]['cuid'] = $finalRow['cuid'];
+            $taiBanData[$k]['ban_tai_remark'] = '管段调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData[$k]['data_json'] = [
+                'ban_inst_id' => [
+                    'old' => $finalRow['old_inst_id'],
+                    'new' => $finalRow['new_inst_id'],
+                ],
+            ];
+
+            // 3、添加异动统计表记录
+            $tableData = [];
+            $tableData['change_type'] = 10;
+            $tableData['change_order_number'] = $finalRow['change_order_number'];
+            $tableData['ban_id'] = $v;
+            $tableData['inst_id'] = $finalRow['old_inst_id'];
+            $tableData['new_inst_id'] = $finalRow['new_inst_id'];
+            $tableData['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
+            $tableData['owner_id'] = $finalRow['ban_info']['ban_owner_id']; 
+            $tableData['order_date'] = date('Ym',$finalRow['ftime']);
+
+            if($finalRow['ban_info']['ban_civil_rent'] > 0){ // 民用1
+                $tableData['use_id'] = 1;
+                $tableData['change_rent'] = $finalRow['ban_info']['ban_civil_rent'];
+                Db::name('change_table')->insert($tableData);
+                //$ChangeTableModel->save($tableData);
+            }
+            if($finalRow['ban_info']['ban_party_rent'] > 0){ // 机关3
+                $tableData['use_id'] = 3;
+                $tableData['change_rent'] = $finalRow['ban_info']['ban_party_rent'];
+                Db::name('change_table')->insert($tableData);
+                //$ChangeTableModel->save($tableData);
+            }
+            if($finalRow['ban_info']['ban_career_rent'] > 0){ // 企业2
+                $tableData['use_id'] = 2;
+                $tableData['change_rent'] = $finalRow['ban_info']['ban_career_rent'];
+                Db::name('change_table')->insert($tableData);
+                //$ChangeTableModel->save($tableData);
+            }
+             
+        }  
+        $BanTaiModel = new BanTaiModel;
+        $BanTaiModel->saveAll($taiBanData);
     }
 
 }

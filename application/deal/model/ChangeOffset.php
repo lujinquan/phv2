@@ -257,7 +257,7 @@ class ChangeOffset extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理
+     * 终审审核成功后的数据处理【完成】
      */
     private function finalDeal($finalRow)
     {//halt($finalRow);
