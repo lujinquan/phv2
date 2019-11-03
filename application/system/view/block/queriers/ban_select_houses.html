@@ -1,14 +1,5 @@
 <!-- 楼栋查询器，只能单选楼栋 ，并单选或多选房屋，用在暂停计租异动中 -->
 
-<!-- <style>
-	/*------------------ iframe页面去共用部分样式 S ----------------*/
-	.layui-header,.layui-side,.layui-footer,.bread-crumbs{ display: none; color: #f60;}
-	.layui-layout-admin .layui-body{top: 0;bottom: 0;}
-	.layui-body{left: 0;}
-	.page-tab-content{margin: 0;}
-	.j-table-content .layui-table-box{ min-height: auto;}
-	/*------------------ iframe页面去共用部分样式 E ----------------*/
-</style> -->
 <div class="j-table-content">
 <fieldset class="layui-elem-field layui-field-title j-field-box">
 	<legend>楼栋查询</legend>
@@ -176,15 +167,15 @@
 						]
 					],
 					done: function(res, curr, count) {
-						var	result = res.data;
-						for (var i = 0; i < result.length; i++) {
-							$("tr[data-index="+i+"]").attr('color-status',1);
-							if(parseInt(result[i].color_status) == 2){
-								$("tr[data-index="+i+"]").css('color','#E6E6E6').attr('color-status',2);
-							}else if(parseInt(result[i].color_status) == 3){
-								$("tr[data-index="+i+"]").css('color','red').attr('color-status',3);
-							}
-						}
+						// var	result = res.data;
+						// for (var i = 0; i < result.length; i++) {
+						// 	$("tr[data-index="+i+"]").attr('color-status',1);
+						// 	if(parseInt(result[i].color_status) == 2){
+						// 		$("tr[data-index="+i+"]").css('color','#E6E6E6').attr('color-status',2);
+						// 	}else if(parseInt(result[i].color_status) == 3){
+						// 		$("tr[data-index="+i+"]").css('color','red').attr('color-status',3);
+						// 	}
+						// }
 					}
 				}, isShowInst);
 				
