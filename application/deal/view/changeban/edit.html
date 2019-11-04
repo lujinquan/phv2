@@ -46,8 +46,8 @@
 			  <td><input type="text"  readonly value="{$data_info['old_floors']}" lay-verify="required" placeholder=""  autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" readonly value="{$data_info['new_floors']}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {else /}
-			   <td><input type="text"  readonly value="{$data_info['old_damage']}" lay-verify="required" placeholder=""  autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" readonly value="{$data_info['new_damage']}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input"></td>
+			   <td><input type="text"  readonly value="{$params.damages[$data_info['old_damage']]}" lay-verify="required" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$params.damages[$data_info['new_damage']]}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {/if}
 		  </tr>
 	  </tbody>
@@ -283,7 +283,6 @@
   <!-- 隐藏域赋默认值不作数据提交依据 -->
   <input type="hidden" id="j_floor_hidden" value="" />
   <input type="hidden" id="j_endloss_hidden" value="" />
-  <input type="hidden" id="j_endloss_hidden_id" name="old_damage" value="" />
   <input type="hidden" id="j_structure_hidden" value="" />
   <input type="hidden" id="j_nature_hidden" value="" />
   <input type="hidden" id="j_yield_hidden" value="" />

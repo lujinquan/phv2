@@ -30,6 +30,9 @@ class Changeinst extends Admin
             $data['msg'] = '';
             return json($data);
         }
+        $pid = Db::name('base_inst')->where([['inst_id','eq',INST]])->value('inst_pid');
+        $insts = Db::name('base_inst')->where([['inst_pid','eq',$pid]])->column('inst_id,inst_name');
+        $this->assign('insts',$insts);
         return $this->fetch();
     }
 
@@ -151,8 +154,12 @@ class Changeinst extends Admin
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
+            //halt($data);
             return json($data);
         }
+        $pid = Db::name('base_inst')->where([['inst_id','eq',INST]])->value('inst_pid');
+        $insts = Db::name('base_inst')->where([['inst_pid','eq',$pid]])->column('inst_id,inst_name');
+        $this->assign('insts',$insts);
         return $this->fetch();
     }
 
