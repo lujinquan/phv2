@@ -271,8 +271,8 @@ class ChangeRentAdd extends SystemBase
                 'rent_order_receive' => $finalRow['before_year_rent'],
                 'rent_order_paid' => $finalRow['before_year_rent'],
                 'rent_order_remark' => '租金追加调整创建的以前年回收订单，异动单号：'.$finalRow['change_order_number'],
-                'pay_way' => time(),
-                'ptime' => 1,
+                'pay_way' => 1,
+                'ptime' => time(),
                 'is_deal' => 1,
             ];  
         }
@@ -326,7 +326,7 @@ class ChangeRentAdd extends SystemBase
         $tableData['change_rent'] = $finalRow['this_month_rent'];
         $tableData['tenant_id'] = $finalRow['tenant_id'];
         $tableData['cuid'] = $finalRow['cuid'];
-        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $tableData['order_date'] = date('Ym'); 
         $ChangeTableModel = new ChangeTableModel;
         $ChangeTableModel->save($tableData);
 

@@ -160,7 +160,7 @@ class ChangeCut extends SystemBase
         $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -281,7 +281,7 @@ class ChangeCut extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {//halt($finalRow);
+    {//halt($finalRow->getData('ftime'));
         
         // 1、添加房屋台账
         $taiHouseData = [];
@@ -307,11 +307,11 @@ class ChangeCut extends SystemBase
         $tableData['owner_id'] = $banInfo['ban_owner_id'];
         $tableData['use_id'] = $houseInfo['house_use_id'];
         $tableData['change_rent'] = $finalRow['cut_rent']; //减免金额
-        $tableData['end_date'] = $finalRow['end_date']; //减免失效时间
+        $tableData['end_date'] = (date('Y')+1).'01'; //减免失效时间
         $tableData['cut_type'] = $finalRow['cut_type']; //减免类型
         $tableData['tenant_id'] = $finalRow['tenant_id']; 
         $tableData['cuid'] = $finalRow['cuid'];
-        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $tableData['order_date'] = date('Ym'); 
         $ChangeTableModel = new ChangeTableModel;
         $ChangeTableModel->save($tableData);
 

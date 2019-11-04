@@ -280,7 +280,7 @@ class ChangeOffset extends SystemBase
             'inst_pid' => $finalRow['ban_info']['ban_inst_pid'],
             'owner_id' => $finalRow['ban_info']['ban_owner_id'],
             'use_id' => $finalRow['house_info']['house_use_id'],
-            'order_date' => date('Ym',$finalRow['ftime']),
+            'order_date' => date('Ym'),
         ];
         $ChangeTableModel->allowField(true)->create($tableData);
 

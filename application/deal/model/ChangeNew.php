@@ -156,7 +156,7 @@ class ChangeNew extends SystemBase
         $processDescs = $this->processDesc;
         $data['change_desc'] = $processDescs[3];
         $data['curr_role'] = $processRoles[3];
-        
+        //halt($data);
         return $data; 
     }
 
@@ -317,7 +317,7 @@ class ChangeNew extends SystemBase
         $tableData['change_send_type'] = $finalRow['new_type'];
         $tableData['tenant_id'] = $finalRow['tenant_id']; 
         $tableData['cuid'] = $finalRow['cuid'];
-        $tableData['order_date'] = date('Ym',$finalRow['ftime']); 
+        $tableData['order_date'] = date('Ym'); 
         $ChangeTableModel = new ChangeTableModel;
         $ChangeTableModel->save($tableData);
         

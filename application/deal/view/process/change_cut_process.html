@@ -200,6 +200,19 @@
 			{/volist}
 			</div>
 		</div>
+		{else /}
+		<div class="j-enclosure-label clearfix">会审单</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+  				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCutForm'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
 		{/if}
   	</div>
   	<div class="layui-upload">

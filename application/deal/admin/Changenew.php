@@ -52,14 +52,14 @@ class Changenew extends Admin
 //halt($filData);
             // 入库使用权变更表
             unset($filData['id']);
-            $useRow = $ChangeModel->allowField(true)->create($filData);
-            if (!$useRow) {
+            $row = $ChangeModel->allowField(true)->create($filData);
+            if (!$row) {
                 return $this->error('申请失败');
             }
             if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $filData['change_id'] = $useRow['id'];
+                $filData['change_id'] = $row['id'];//halt($filData);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }

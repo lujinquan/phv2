@@ -175,7 +175,7 @@ class Process extends SystemBase
                     # code...
                     break;
             }
-//halt($result);
+
             if(is_array($result) && $result){
                 $process->change_desc = $result['change_desc'];
                 if(isset($result['curr_role'])){

@@ -23,7 +23,7 @@ class Changerentadd extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeRentAddModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
-            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
@@ -163,7 +163,7 @@ class Changerentadd extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeRentAddModel;
             $where = $ChangeModel->checkWhere($getData,'record');
-            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%S') as ftime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
@@ -180,15 +180,15 @@ class Changerentadd extends Admin
         $id = $this->request->param('id');       
 
         $row = ChangeRentAddModel::get($id);
-        if($row['change_status'] != 3){
-            $this->error('已被审批，无法删除！');
-        }
-        
-        if($row->delete()){
-            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-            $this->success('删除成功');
+        if($row['change_status'] == 2 && $row['is_back'] == 0){
+           if($row->delete()){
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功');
+            }else{
+                $this->error('删除失败');
+            } 
         }else{
-            $this->error('删除失败');
+            $this->error('已被审批，无法删除！');
         }
     }
 

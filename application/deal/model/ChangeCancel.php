@@ -394,7 +394,7 @@ class ChangeCancel extends SystemBase
                 $tableData[$k]['change_rent'] = $v['house_pre_rent'];
                 $tableData[$k]['tenant_id'] = $v['tenant_id'];
                 $tableData[$k]['cuid'] = $finalRow['cuid']; 
-                $tableData[$k]['order_date'] = date('Ym',$finalRow['ftime']);  
+                $tableData[$k]['order_date'] = date('Ym');  
             }
 
             // 添加楼栋台账

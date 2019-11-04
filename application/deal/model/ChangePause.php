@@ -295,7 +295,7 @@ class ChangePause extends SystemBase
             $tableData[$key]['change_rent'] = $houseArr[$h]['house_pre_rent'];
             $tableData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
             $tableData[$key]['cuid'] = $finalRow['cuid'];
-            $tableData[$key]['order_date'] = date('Ym',$finalRow['ftime']);  
+            $tableData[$key]['order_date'] = date('Ym');  
         }
 
         $HouseTaiModel = new HouseTaiModel;
