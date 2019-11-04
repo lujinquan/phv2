@@ -106,8 +106,7 @@ class ChangePause extends SystemBase
             $row = $this->get($data['id']); 
             if($row['is_back']){ //如果打回过
                 $data['child_json'] = $row['child_json'];
-            }
-            
+            }  
         }
         if($data['save_type'] == 'save'){ //保存
             $data['change_status'] = 2;
@@ -126,7 +125,7 @@ class ChangePause extends SystemBase
         $data['change_order_number'] = date('Ym').'03'.random(14);
         
         if($data['house_id']){
-            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$data['house_id']]])->field('house_id,house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
+            $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$data['house_id']]])->field('house_id,house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent')->select()->toArray();
             $data['house_id'] = implode(',',$data['house_id']);
         }
 

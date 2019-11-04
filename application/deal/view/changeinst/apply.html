@@ -202,24 +202,24 @@
 							//var trData = '';
 							var trData = '';
 							//$('.ban_ids').val("");
-						/* var banid = $(".ban_ids");
-						if(banid){
-								console.log(banid[0].va);
-						}
-						
-						// var s = new Array();
-						// for(var i=0;i<banid.length;i++) {
-						// 	console.log(banid[i]);
-						// 	//s[i] = banid[i].attr('value');
-						// } */
+							
+							// 组装比对数组，用于去重
+							var banid = $(".ban_ids");
+							var arr = new Array();
+							if(banid){
+								for(var i=0;i<banid.length;i++) {
+									arr.push(parseInt(banid[i].defaultValue));
+								} 		
+							}					
 						
 							//房屋信息
 							if(row){
 								//var houseidData = '';
 								for(var i=0;i<row.length;i++) {
-									
-									//去重
-
+									// 去重
+									if(arr && arr.indexOf(row[i].ban_id) > -1){
+										continue;
+									}
 									/*houseidData += ','+row[i].ban_number;
 									 var sumnum = parseFloat(row[i].ban_civil_num).toFixed(2)*100+parseFloat(row[i].ban_party_num).toFixed(2)*100+parseFloat(row[i].ban_career_num).toFixed(2)*100;//栋数
 									var sumarea = parseFloat(row[i].ban_civil_area).toFixed(2)*100+parseFloat(row[i].ban_party_area).toFixed(2)*100+parseFloat(row[i].ban_career_area).toFixed(2)*100;//建筑面积
@@ -247,10 +247,12 @@
 							    }
 								$('.j-house-box tbody').append(trData);
 						        computation();
+
+						        
 						}
-						},btn2: function(index, layero){
-							layer.close(index);
-						}
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
 			 });
 		})
 		//删除
