@@ -114,7 +114,36 @@
 			</div>
 		</div>
 	</div>
+	
+	
 	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">计算租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="rental_calculation" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租差</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_floor_id" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">泵费</label>
+			<div class="j-input-inline">
+				<input type="text" id="pump_fee" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">营业／协议租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="rental_business" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
@@ -185,6 +214,10 @@
 								$("#prescribed_rent").val(row.house_pre_rent);//获取规定租金
 								$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别
 								$("#reduction_nature").val(params.uses[row.house_use_id]);//获取楼栋使用性质
+								$("#rental_calculation").val(row.house_cou_rent);//获取计算租金
+								$("#house_floor_id").val(row.house_diff_rent);//获取租差
+								$("#pump_fee").val(row.house_pump_rent);//获取泵费
+								$("#rental_business").val(row.house_protocol_rent);//营业／协议租金
 								
 
 						},btn2: function(index, layero){

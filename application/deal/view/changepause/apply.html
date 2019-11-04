@@ -70,10 +70,11 @@
 		    <th>规定租金</th>
 		    <th>租差</th>
 		    <th>泵费</th>
+			<th>营业／协议租金</th>
 			<th>操作</th>
 		  </tr>
 	  </thead>
-	  <tbody><tr><td colspan="7"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
+	  <tbody><tr><td colspan="8"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
   <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
@@ -131,6 +132,7 @@
 												<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
 												<td class="house_diff_rent">'+rows[i].house_diff_rent+'</td>\
 												<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
+												<td class="house_agreement_rent">'+rows[i].house_protocol_rent+'</td>\
 												<td><a href="javascript:;" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 											</tr>';
 
@@ -155,7 +157,7 @@
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
 							//$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);//获取楼栋暂停月租金
 							if(	$('.j-house-box tbody').html()==''){
-								$('.j-house-box tbody').html("<tr><td colspan='7'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+								$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}
                       layer.close(index);
 					},btn2: function(index, layero){

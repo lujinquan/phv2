@@ -115,10 +115,11 @@
 		    <th>建筑面积</th>
 		    <th>规定租金</th>
 		    <th>计租面积</th>
+			<th>操作</th>
 		  </tr>
 	  </thead>
 	  <tbody>
-	    <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
+	    <tr><td colspan='7'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
 	 </tbody>
 	</table>
 	<div class="j-cancel-show hide">
@@ -292,6 +293,7 @@
 											<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
+											<td class="house_delete">删除</td>\
 										</tr>';
 						    initialvalue();
 							$('.j-house-box tbody').append(trData);
@@ -310,15 +312,12 @@
 							$('.cancel_after_2 label').text(sumuseold.toFixed(2) / 100);
 							$('.cancel_after_2 input').val(sumuseold.toFixed(2) / 100);//获取隐藏域的值
 							//建筑面积
-
-								sumbuildings += parseFloat(rows[i].house_area).toFixed(2)*100;
-								$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
-								$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
-								sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
-								$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
-								$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
-						
-							
+							sumbuildings += parseFloat(rows[i].house_area).toFixed(2)*100;
+							$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
+							$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
+							sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
+							$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
+							$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
 							//房屋原价
 							/* $(".house_original").bind("input propertychange",function(){ */
 								sumoriginal += parseFloat(rows[i].house_oprice).toFixed(2)*100;
@@ -344,38 +343,50 @@
 						else{
 							$(".j-house-box,.j-house-title").show();
 						}
-						
-						//输入框建筑面积改变重新计算
-						$(".house_builtuparea").bind("input propertychange",function(){
+						//计算
+						function computation(){
 							initialvalue();
 							sumbuildings = 0;
+							sumoriginal = 0;
 							var trList = $(".j-house-box tbody").children("tr");
 							for (var j=0;j<trList.length;j++) {
 								var tdArr = trList.eq(j).find("td"); //遍历td  
+								    //房屋原价改变重新计算
 									sumbuildings += parseFloat(tdArr.eq(3).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
 									$(".cancel_change_3 label").text(sumbuildings.toFixed(2) / 100);
 									$(".cancel_change_3 input").val(sumbuildings.toFixed(2) / 100);//获取隐藏域的值
 									sumbuildingsold = parseFloat($('.cancel_before_3 label').text()).toFixed(2)*100 -sumbuildings ;
 									$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
 									$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
-								
-							}
-						});
-						//输入框房屋原价改变重新计算
-						$(".house_original").bind("input propertychange",function(){
-							initialvalue();
-							sumoriginal = 0;
-							var trList = $(".j-house-box tbody").children("tr");
-							for (var j=0;j<trList.length;j++) {
-								var tdArr = trList.eq(j).find("td"); //遍历td  
+									//房屋原价改变重新计算
 									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
 									$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
 									$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
 									sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
 									$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
 									$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
+								
 							}
+						}
+						//删除
+						$(".house_delete").click(function(){
+							var that=$(this);
+						   layer.confirm('确定要删除吗？', function(index){
+						     that.parents("tr").remove();
+						     computation();
+						     layer.close(index);
+						   });  
+						})
+						//输入框房屋原价改变重新计算
+						$(".house_builtuparea").bind("input propertychange",function(){
+							computation();
 						});
+						//输入框房屋原价改变重新计算
+						$(".house_original").bind("input propertychange",function(){
+							computation();
+						});
+						
+					
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

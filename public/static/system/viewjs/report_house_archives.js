@@ -30,7 +30,7 @@ function archives_data(){
     $('#DOwnerTyp').text($('#OwnerTyp option:selected').text());
     $('.DQueryType').text($("#QueryTyp option:selected").text());
     $('.time').text(time_span[0]+'年'+time_span[1]+'月');
-    $('#below_com').text($('#TubulationI option:selected').text()||section_name);
+    $('#below_com').text($('#TubulationI option:selected').text()/* ||section_name */);
     
     var owner = $('#OwnerTyp').val();
     var tubulation = $('#TubulationI').val();
