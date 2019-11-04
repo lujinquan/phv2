@@ -111,15 +111,15 @@
 		                    return params.cuttypes[d.cut_type];
 		            }},
 					{field: 'cut_rent',align:'center',minWidth: 100,title: '减免金额',totalRow: true},
-					// ,{
-					// 	field: 'expire_time',
-					// 	align:'center',
-					// 	width: 160,
-					// 	title: '减免到期'
-					// }
+					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
+					{field: 'end_date',align:'center',minWidth: 160,title: '减免到期时间', templet: function(d) { 
+						var str = String(d.end_date);
+	                    return str.slice(0,4)+'-'+str.slice(4);
+	                }},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', templet: function(d) {
-		                    return process_config[d.change_status];
-		                }}, 
+	                    return process_config[d.change_status];
+	                }}, 
 					{title: '操作',width: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],

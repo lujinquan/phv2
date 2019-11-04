@@ -26,7 +26,7 @@ class Changerentadd extends Validate
         'id|异动单号' => 'require',
         'house_id|房屋编号' => 'require|isAllow',
         'before_year_rent|追加以前年金额' => 'float',
-        'before_month_rent|追加以前月金额' => 'float',
+        'before_month_rent|追加以前月金额' => 'float|hasoneRequire',
       
     ];
 
@@ -49,6 +49,16 @@ class Changerentadd extends Validate
         }
       	return $msg?$msg:true;
   	}
+
+    // 判断当前房屋是否可以申请异动
+    protected function hasoneRequire($value, $rule='', $data)
+    {
+        $msg = '';
+        if(!$value && !$data['before_year_rent']){
+           $msg = '以前年以前月数据必须有一个不为空！'; 
+        }
+        return $msg?$msg:true;
+    }
 
     //添加
     public function sceneForm()

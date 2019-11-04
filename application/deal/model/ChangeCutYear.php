@@ -68,7 +68,7 @@ class ChangeCutYear extends SystemBase
                 break;
         }
         // 检索原租户
-        if(isset($data['tenant_name']) && $data['enant_name']){
+        if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索楼栋地址

@@ -188,7 +188,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">减免证号</label>
   		<div class="j-input-inline">
-  			<input type="text" name="cut_rent_number" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" name="cut_rent_number" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   </div>
@@ -321,7 +321,10 @@
 						,btn: ['确定','关闭']
 						,yes: function(index, layero){
 							var row = window["layui-layer-iframe" + index].hoesedata();
-							console.log(row);
+							if(row.color_status != 1){ //正常状态下的才可以执行
+                  layer.msg("当前数据不可选！");
+                return false;
+              }
 							layer.close(index);
               $("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
               $("#check").removeClass('hide');

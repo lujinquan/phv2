@@ -29,6 +29,9 @@ class House extends Validate
         'house_unit_id|单元号' => 'require|number',
         'house_floor_id|楼层号' => 'require|number',
         'house_use_id|使用性质' => 'require|number',
+        'house_oprice|房屋原价' => 'gt:0',
+        'house_area|建筑面积' => 'gt:0',
+        'house_pre_rent|规定租金' => 'require|gt:0',
     ];
 
     //定义验证提示
@@ -57,13 +60,13 @@ class House extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id']);
+        return $this->only(['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id','house_oprice','house_area','house_pre_rent']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['house_id','ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id']);
+        return $this->only(['house_id','ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id','house_oprice','house_area','house_pre_rent']);
     }
 
     // 编辑

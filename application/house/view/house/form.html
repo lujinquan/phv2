@@ -68,6 +68,13 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>规定租金</label>
+				<div class="j-input-inline">
+					<input type="number" id="house_pre_rent" name="house_pre_rent" value="{$data_info['house_pre_rent']}" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div>
+			<div class="layui-col-md4">
 				<label class="j-form-label">房屋原价</label>
 				<div class="j-input-inline">
 					<input type="number" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">

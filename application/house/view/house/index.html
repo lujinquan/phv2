@@ -101,6 +101,7 @@
 	layui.use(['table', 'jquery'], function() {
 		var table = layui.table;
 		var isHide = ('{$group}' == 'x')?false:true;
+		var isHideXin = ('{$group}' == 'x')?true:false;
 		table.render({
 			elem: '#dataTable',
 			toolbar: true,
@@ -132,7 +133,7 @@
 					, {field: 'house_pre_rent',width: 100,align:'center',title: '规定租金',totalRow: true}
 					, {field: 'house_cou_rent',width: 100,align:'center',title: '计算租金',totalRow: true}
 					, {field: 'house_lease_area',width: 100,align:'center',title: '计租面积',totalRow: true}
-					, {field: 'last_print_time',width: 200,align:'center',title: '出证时间'}
+					, {field: 'last_print_time',hide: isHideXin,width: 200,align:'center',title: '出证时间'}
 					, {field: 'house_area',hide: true,width: 80,align:'center',title: '房屋建面',totalRow: true}
 					, {field: 'house_oprice',hide: true,width: 80,align:'center',title: '房屋原价',totalRow: true}
 					, {field: 'ban_struct_id', hide: true, minWidth: 100, align:'center', title: '结构类别', templet: function(d) {

@@ -166,6 +166,10 @@ class SystemData extends Model
         
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
+                case 1: //租金减免
+                    $where[] = ['a.house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',0]])->column('house_id'); //减免成功的或在减免中的不能再次申请
+                    break;
                 case 3: //暂停计租 【待优化】
                     $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1]])->column('house_id');
                     if($tempApplyHouseidArr){
@@ -187,7 +191,10 @@ class SystemData extends Model
                     $where[] = ['a.house_status','eq',1];
                     $applyHouseidArr = Db::name('change_house')->where([['change_status','>',1]])->column('house_id');
                     break;
-
+                case 11: //租金追加调整
+                    $where[] = ['a.house_status','eq',1];
+                    $applyHouseidArr = Db::name('change_rentadd')->where([['change_status','>',1]])->column('house_id');
+                    break;
                 case 13: //使用权变更
                     $where[] = ['a.house_status','eq',1];
                     $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
@@ -197,7 +204,7 @@ class SystemData extends Model
                     $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
-                    //halt($where);
+                    $applyHouseidArr = Db::name('change_cut_year')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 17: //别字更正
                     $where[] = ['a.house_status','eq',1];
@@ -224,7 +231,7 @@ class SystemData extends Model
 //halt($where);
         $HouseModel = new HouseModel;
 
-        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,b.*,c.*';
+        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,b.*,c.*';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）

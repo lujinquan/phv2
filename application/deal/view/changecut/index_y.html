@@ -30,10 +30,10 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="reduction_name" placeholder="租户名称" class="layui-input">
+					<input type="text" name="tenant_name" placeholder="租户名称" class="layui-input">
 				</div>
 				<div class="layui-input-inline" style="width:120px;">
-					<select name="reduction_class">
+					<select name="cut_type">
 						<option value="">减免类型</option>
 						{volist name="params['cuttypes']" id="v"}
 						<option value="{$key}">{$v}</option>
