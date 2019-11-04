@@ -171,7 +171,7 @@
 						for (var i = 0; i < result.length; i++) {
 							$("[lay-id='dataTable2'] tr[data-index="+i+"]").attr('color-status',1);
 							if(parseInt(result[i].color_status) == 2){
-								$("[lay-id='dataTable2'] tr[data-index="+i+"]").css('color','#E6E6E6').attr('color-status',2);
+								$("[lay-id='dataTable2'] tr[data-index="+i+"]").css('color','#9e9e9e').attr('color-status',2);
 							}else if(parseInt(result[i].color_status) == 3){
 								$("[lay-id='dataTable2'] tr[data-index="+i+"]").css('color','red').attr('color-status',3);
 							}
@@ -186,6 +186,7 @@
 			table.on('checkbox(dataTable2)', function(obj){
               var checkStatus = table.checkStatus('dataTable2');
               datas = checkStatus.data;
+			  //console.log(table.checkStatus('dataTable2').data);
 			  //console.log(datas.length);
 			 /* if(datas.length==0)
 			   {
