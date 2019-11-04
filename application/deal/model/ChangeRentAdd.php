@@ -57,9 +57,9 @@ class ChangeRentAdd extends SystemBase
                 # code...
                 break;
         }
-        // 检索原租户
+        // 检索租户
         if(isset($data['tenant_name']) && $data['tenant_name']){
-            $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
+            $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
@@ -72,6 +72,14 @@ class ChangeRentAdd extends SystemBase
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索追收以前年
+        if(isset($data['before_year_rent']) && $data['before_year_rent']){
+            $where[] = ['a.before_year_rent','eq',$data['before_year_rent']];
+        }
+        // 检索追收以前月
+        if(isset($data['before_month_rent']) && $data['before_month_rent']){
+            $where[] = ['a.before_month_rent','eq',$data['before_month_rent']];
         }
         // 检索申请时间(按天搜索)
         if(isset($data['ctime']) && $data['ctime']){
@@ -193,7 +201,7 @@ class ChangeRentAdd extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
