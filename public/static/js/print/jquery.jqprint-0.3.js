@@ -63,9 +63,9 @@
     
     $.fn.jqprint.defaults = {
 		debug: false,
-		importCSS: false, 
-		printContainer: false,
-		operaSupport: false
+		importCSS: true, 
+		printContainer: true,
+		operaSupport: true
 	};
 
     // Thanks to 9__, found at http://users.livejournal.com/9__/380664.html

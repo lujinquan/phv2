@@ -16,7 +16,7 @@
 	 	  <td id="write_type">管段调整</td>
 		  <td id="raw_pipesection">{$params.insts[$Think.INST]}</td>
 		  <td id="new_pipesection">
-			  <select id="ban_inst_id" name="new_inst_id" lay-verify="required" class="field-cid" type="select" required>
+			  <select id="ban_inst_id" name="new_inst_id" lay-verify="required" class="field-cid" lay-filter="requireds" lay-verify="required" type="select" required>
 				<option value="">请选择</option>
 				{volist name="$insts" id="v"}
 				<option value="{$key}" {if condition="$data_info['new_inst_id'] == $key"}selected{/if}>{$v}</option>
@@ -73,7 +73,7 @@
 	  <tr>
 		  <td>栋数</td>
 		  <td id="number_buildings_old">&nbsp;-{$data_info['change_ban_num']}</td>
-		  <td id="number_buildings_new">&nbsp;{$data_info['change_ban_num']}</td>
+		  <td id="number_buildings_new" name="pipe_segment_new">&nbsp;{$data_info['change_ban_num']}</td>
 	  </tr>
 <!-- 	  <tr>
 		  <td>户数</td>
@@ -120,6 +120,23 @@
 			,$ = layui.jquery
 			,upload = layui.upload
 			,layer = layui.layer;
+			form.on('select(requireds)', function(data){
+				selectedName = data.elem[data.elem.selectedIndex].text;
+				if(data.value==0)
+				{
+					$(".j-info-boxs tr:eq(0) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(1) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(2) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(3) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(4) td:eq(2)").find(".layui-input").hide();
+					$(".j-info-boxs tr:eq(5) td:eq(2)").find(".layui-input").hide();
+				}
+				else{
+					$("#pipe_segment").text(selectedName);
+					$(".j-info-boxs tr td").find(".layui-input").show();
+				}
+				form.render('select');
+			}); 
 		//获取房屋查询器
 		 $(".layui-form").on('click','.j-house_number',function(){
 			layer.open({
