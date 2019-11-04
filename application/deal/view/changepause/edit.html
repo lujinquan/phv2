@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">暂停月租金</label>
+			<label class="j-form-label">暂停规定租金</label>
 			<div class="j-input-inline">
 				<input type="number" name="change_pause_rent" readonly value="{$data_info['change_pause_rent']}" placeholder=""  autocomplete="off" class="layui-input">
 			</div>
@@ -67,6 +67,8 @@
 		    <th>规定租金</th>
 		    <th>租差</th>
 		    <th>泵费</th>
+			<th>营业／协议租金</th>
+			<th>操作</th>
 		  </tr>
 	  </thead>
 	  <tbody>
@@ -78,6 +80,8 @@
 		  <td class="house_monthly_rent">{$v['house_pre_rent']}</td>
 		  <td class="house_monthly_rent">{$v['house_diff_rent']}</td>
 		  <td class="house_monthly_rent">{$v['house_pump_rent']}</td>
+		  <td class="house_agreement_rent">{$v['house_protocol_rent']}</td>
+		  <td><a href="javascript:;" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>
 		</tr>
 		{/volist}
 	  </tbody>
@@ -99,6 +103,17 @@
 			upload = layui.upload,
 			form = layui.form;
 			//console.log(params);
+		function houserent(){
+			var HouseYuerent = 0; //暂停月租金之和初始值
+			//计算暂停月租金
+			var trList = $(".j-house-box tbody").children("tr");
+				for (var j=0;j<trList.length;j++) {
+					var tdArr = trList.eq(j).find("td"); //遍历td  
+						HouseYuerent += parseFloat(tdArr.eq(3).text()).toFixed(2)*100;//规定租金之和
+						$("input[name='change_pause_rent']").val(HouseYuerent.toFixed(2) / 100);
+					
+				}
+		}
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
 		layer.open({
@@ -130,6 +145,8 @@
 												<td class="house_pre_rent">'+rows[i].house_pre_rent+'</td>\
 												<td class="house_diff_rent">'+rows[i].house_diff_rent+'</td>\
 												<td class="house_pump_rent">'+rows[i].house_pump_rent+'</td>\
+												<td class="house_agreement_rent">'+rows[i].house_protocol_rent+'</td>\
+												<td><a href="javascript:;" isreload="y" class="j-tr-del-change"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a></td>\
 											</tr>';
 
 								$('.j-house-box tbody').append(trData);
@@ -149,7 +166,7 @@
 							$("input[name='ban_damage_id']").val(params.damages[row.ban_damage_id]);//获取楼栋完损等级
 							$("input[name='change_pause_rent']").val(HousePrerent.toFixed(2) / 100);//获取楼栋暂停月租金
 							if(	$('.j-house-box tbody').html()==''){
-								$('.j-house-box tbody').html("<tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+								$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 							}
 
 					},btn2: function(index, layero){
@@ -157,6 +174,14 @@
 					}
 		 });
 		})
-
+        //删除房屋信息
+        $(".layui-form").on('click','.j-tr-del-change',function(){
+        	var that = $(this);
+        	layer.confirm('删除之后无法恢复，您确定要删除吗？', {icon: 3, title:'提示'}, function(index){
+        	   that.parents("tr").remove();
+        	   houserent();
+        	  layer.close(index);
+        	});
+        })
 	});
 </script>

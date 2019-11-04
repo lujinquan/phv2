@@ -103,7 +103,7 @@
 					<input type="text" id="pump_fee" readonly value="{$data_info['house_info']['house_pump_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md4">
+			<div class="layui-col-md4 hide">
 				<label class="j-form-label">租金减免</label>
 				<div class="j-input-inline">
 					<input type="text" id="rent_relief" readonly value="占位" autocomplete="off" class="layui-input">
@@ -115,12 +115,10 @@
 					<input type="text" id="agreement_rent" readonly value="{$data_info['house_info']['house_protocol_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">电梯</label>
 				<div class="j-input-inline">
-					<input type="text" id="elevator" readonly value="{if condition="$data_info['ban_info']['ban_is_levator']"}有{else /}无{/if}" autocomplete="off" class="layui-input">
+					<input type="text" id="elevator" readonly value="无" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>

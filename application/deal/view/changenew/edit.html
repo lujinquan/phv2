@@ -111,7 +111,35 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">计算租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="rental_calculation" value="{$data_info['house_info']['house_cou_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">租差</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_floor_id" value="{$data_info['house_info']['house_diff_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">泵费</label>
+			<div class="j-input-inline">
+				<input type="text" id="ump_fee" value="{$data_info['house_info']['house_pump_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">营业／协议租金</label>
+			<div class="j-input-inline">
+				<input type="text" id="rental_business" value="{$data_info['house_info']['house_protocol_rent']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
