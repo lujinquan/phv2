@@ -254,7 +254,7 @@ class ChangeCancel extends SystemBase
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
-                    'action' => $processActions[$changeUpdateData['change_status']],
+                    'action' => $processActions[$changeRow['change_status']],
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
