@@ -1,12 +1,12 @@
 <div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
-					<input type="text" name="building_address" placeholder="楼栋地址" class="layui-input">
+					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2" style="width:120px;">
@@ -27,16 +27,16 @@
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="original_name"   placeholder="租户姓名" autocomplete="off" class="layui-input">
+					<input type="text" name="tenant_name"   placeholder="租户姓名" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="write_money"   placeholder="核销金额" autocomplete="off" class="layui-input">
-				</div>
+				<!-- <div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="change_money"   placeholder="核销金额" autocomplete="off" class="layui-input">
+				</div> -->
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="approval_time" id="date1"  placeholder="审批时间" autocomplete="off" class="layui-input">
+					<input type="text" name="ftime" id="date1"  placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -54,7 +54,7 @@
 		</form>
 	</div>
 	{include file="system@block/layui" /}
-	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" id="toolbar"></script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 		<a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">信息单</a>
@@ -63,9 +63,9 @@
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功'};
 	layui.use(['table', 'jquery','laydate'], function() {
-		var $ = layui.$;
-		var s = $('#dataTable').attr('params');
-		var params = JSON.parse(s);
+		// var $ = layui.$;
+		// var s = $('#dataTable').attr('params');
+		// var params = JSON.parse(s);
 		var table = layui.table
 		   ,laydate = layui.laydate;
 		

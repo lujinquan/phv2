@@ -34,7 +34,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label">减免到期</label>
 			<div class="j-input-inline">
-				<input type="text" name="reduction_date" value="" placeholder=""   readonly autocomplete="off" class="layui-input" required>
+				<input type="text" value="{:substr_replace($data_info['end_date'],'-',4,0)}" placeholder=""   readonly autocomplete="off" class="layui-input" required>
 			</div>
 		</div>
 		<div class="layui-col-md4">

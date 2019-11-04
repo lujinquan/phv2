@@ -61,6 +61,10 @@ class ChangeOffset extends SystemBase
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
@@ -69,6 +73,10 @@ class ChangeOffset extends SystemBase
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
         }
+        // 检索核销总金额
+        // if(isset($data['change_money']) && $data['change_money']){
+        //     $where[] = ['(a.before_year_rent + a.before_month_rent)','eq',$data['change_money']];
+        // }
         // 检索申请时间(按天搜索)
         if(isset($data['ctime']) && $data['ctime']){
             $startTime = strtotime($data['ctime']);
@@ -267,6 +275,8 @@ class ChangeOffset extends SystemBase
 
         // 2、将核销对应的，当月租金、以前月租金、以前年租金，入库到数据统计表中
         $ChangeTableModel = new ChangeTableModel;
+        $finalRow['ban_info'] = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+        $finalRow['house_info'] = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $tableData = [
             'change_rent' => $finalRow['this_month_rent'],
             'change_month_rent' => $finalRow['before_month_rent'],
