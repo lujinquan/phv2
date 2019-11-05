@@ -293,7 +293,7 @@
 											<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
-											<td class="house_delete">删除</td>\
+											<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
 										</tr>';
 						    initialvalue();
 							$('.j-house-box tbody').append(trData);
