@@ -75,14 +75,20 @@ class RoomTemp extends Admin
             
             //入库house_room表
             $HouseModel = new HouseModel;
-            foreach($filData['house_room'] as &$f){
-                $f['room_id'] = $RoomModel->room_id;
+            $HouseRoomModel = new HouseRoomModel;
+            foreach($filData['house_room'] as &$v){
+                $v['room_id'] = $RoomModel->room_id;
+            }
+            
+            $HouseRoomModel->saveAll($filData['house_room']);
+
+            foreach($filData['house_room'] as $f){
                 // 更新house表的计算租金
                 $house_cou_rent = $HouseModel->count_house_rent($f['house_id']);
-                $HouseModel->where([['house_id','eq',$f['house_id']]])->setField('house_cou_rent',$house_cou_rent);
+                $roomids = $HouseRoomModel->where([['house_id','eq',$f['house_id']]])->column('room_id');
+                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+                $HouseModel->where([['house_id','eq',$f['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
             }
-            $HouseRoomModel = new HouseRoomModel;
-            $HouseRoomModel->saveAll($filData['house_room']);
 
             return $this->success('新增成功');
         }

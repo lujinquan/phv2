@@ -130,7 +130,9 @@ class ChangeCancel extends SystemBase
         $data['change_order_number'] = date('Ym').'08'.random(14);
         
         $banRow = BanModel::get($data['ban_id']);
-
+        if(!isset($data['cancel_ban'])){
+            $data['cancel_ban'] = 0;
+        }
         $data['cancel_rent'] = $data['cancel_change_1'];
         $data['cancel_use_area'] = $data['cancel_change_2'];
         $data['cancel_area'] = $data['cancel_change_3'];

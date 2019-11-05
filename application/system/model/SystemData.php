@@ -104,6 +104,9 @@ class SystemData extends Model
         if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
             $where[] = ['tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
         }
+        if(isset($queryWhere['tenant_tel']) && $queryWhere['tenant_tel']){ //查询租户手机号
+            $where[] = ['tenant_tel','like','%'.$queryWhere['tenant_tel'].'%'];
+        }
         if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
             $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
         }
