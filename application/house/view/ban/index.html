@@ -82,7 +82,7 @@
         var isHide = ('{$group}' == 'x')?false:true;
         table.render({
             elem: '#dataTable'
-            ,toolbar: true
+            ,toolbar: 'myToolbar'
 			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,totalRow: true
