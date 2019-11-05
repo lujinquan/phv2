@@ -843,7 +843,7 @@
 									console.log(res.data.room[i]);
                             		switch(this_data.room_type){
                             			case 1:
-                            				$('#applyRoom'+ws+'_data1').val(this_data.room_door);
+                            				$('#applyRoom'+ws+'_data1').val(parseInt(this_data.room_door));
                             				$('#applyRoom'+ws+'_data2').val(this_data.room_use_area);
                             				$('#applyRoom'+ws+'_data3').val(this_data.room_lease_area);
                             				$('#applyRoom'+ws+'_data4').val(this_data.room_cou_rent);//没有参数
