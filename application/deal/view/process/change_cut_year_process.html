@@ -213,7 +213,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
-  			<select name="cut_type" class="field-cid">
+  			<select name="cut_type" class="field-cid" disabled required>
   				<option value="">请选择</option>
   				{volist name="params['cuttypes']" id="v"}
 				<option value="{$key}" {if condition="$data_info['cut_type'] == $key"}selected{/if}>{$v}</option>
@@ -224,13 +224,13 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" name="cut_rent" value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" name="cut_rent" readonly value="{$data_info['cut_rent']}" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   		<label class="j-form-label">减免证号</label>
   		<div class="j-input-inline">
-  			<input type="text" name="cut_rent_number" value="{$data_info['cut_rent_number']}" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="text" name="cut_rent_number" readonly value="{$data_info['cut_rent_number']}" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   </div>
