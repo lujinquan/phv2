@@ -198,7 +198,7 @@
 				
 					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}&house_number={$data_info['house_number']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
 					
-					<a href="" data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+					<a data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
 					
 					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
 				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
@@ -241,6 +241,37 @@
 {include file="system@block/layui" /}
 <script type="text/javascript">
 layui.use(['jquery'], function() {
+	// var table = layui.table
+	// 			,$ = layui.jquery;
+	//     $(document).on('click', '.j-tr-del', function() {
+ //        var that = $(this),
+ //            href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href');
+ //            isReload = that.attr('isreload');
+ //        layer.confirm('删除之后无法恢复，您确定要删除吗？', {title:false, closeBtn:0}, function(index){
+ //            if (!href) {
+ //                layer.msg('请设置data-href参数');
+ //                return false;
+ //            }
+ //            var data_index = that.parents('tr').attr('data-index');
+ //            console.log(that.parents('tr').attr('data-index'));
+ //            $("tr[data-index='"+data_index + "']").remove();
 
+ //            $.get(href, function(res) {
+ //                console.log(res);
+ //                if (res.code == 0) {
+ //                    layer.msg(res.msg);
+ //                } else {
+ //                    if(isReload){
+ //                        location.reload();
+ //                    }else{
+ //                        that.parents('tr').remove();
+ //                    }
+                    
+ //                }
+ //            });
+ //            layer.close(index);
+ //        });
+ //        return false;
+ //    });
 })
 </script>
