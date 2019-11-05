@@ -217,7 +217,7 @@
 								//var houseidData = '';
 								for(var i=0;i<row.length;i++) {
 									// 去重
-									if(arr && arr.indexOf(row[i].ban_id) > -1){
+									if(arr && arr.indexOf(parseInt(row[i].ban_id)) > -1){
 										continue;
 									}
 									/*houseidData += ','+row[i].ban_number;

@@ -167,9 +167,9 @@
 				var	result = res.data;
 				for (var i = 0; i < result.length; i++) {
 					if(parseInt(result[i].room_pub_num) == 2){
-						$("tr[data-index="+i+"]").css('color','blue');
+						$("tr[data-index="+i+"]").css('color','#007AFF');
 					}else if(parseInt(result[i].room_pub_num) > 2){
-						$("tr[data-index="+i+"]").css('color','red');
+						$("tr[data-index="+i+"]").css('color','#27B98B');
 					}
 				}
 				
