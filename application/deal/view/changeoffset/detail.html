@@ -63,7 +63,7 @@
 		  <td id="before_year">{$data_info['before_year_rent']}</td>
 		  <td id="before_month">{$data_info['before_month_rent']}</td>
 		  <td id="this_month">{$data_info['this_month_rent']}</td>
-		  <td id="total_sum">{$data_info['before_year_rent']}</td>
+		  <td id="total_sum">{:array_sum([$data_info['before_year_rent'],$data_info['before_month_rent'],$data_info['this_month_rent']])}</td>
 	   </tr>
 	 </tbody>
 	</table>
