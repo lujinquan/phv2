@@ -12,6 +12,7 @@
 
 namespace app\house\admin;
 
+use think\Db;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
@@ -73,17 +74,23 @@ class Room extends Admin
             // 补充房间计算租金，入库room表
             $room_cou_rent = $RoomModel->count_room_rent($RoomModel->room_id);
             $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_cou_rent',$room_cou_rent);
-            
+ 
             //入库house_room表
             $HouseModel = new HouseModel;
-            foreach($filData['house_room'] as &$f){
-                $f['room_id'] = $RoomModel->room_id;
+            $HouseRoomModel = new HouseRoomModel;
+            foreach($filData['house_room'] as &$v){
+                $v['room_id'] = $RoomModel->room_id;
+            }
+            
+            $HouseRoomModel->saveAll($filData['house_room']);
+
+            foreach($filData['house_room'] as $f){
                 // 更新house表的计算租金
                 $house_cou_rent = $HouseModel->count_house_rent($f['house_id']);
-                $HouseModel->where([['house_id','eq',$f['house_id']]])->setField('house_cou_rent',$house_cou_rent);
+                $roomids = $HouseRoomModel->where([['house_id','eq',$f['house_id']]])->column('room_id');
+                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+                $HouseModel->where([['house_id','eq',$f['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
             }
-            $HouseRoomModel = new HouseRoomModel;
-            $HouseRoomModel->saveAll($filData['house_room']);
 
             return $this->success('新增成功');
         }
@@ -121,17 +128,21 @@ class Room extends Admin
             //更新house_room表
             $HouseModel = new HouseModel;
 
-            foreach($filData['house_room'] as &$f){
+            foreach($filData['house_room'] as &$v){
                 $f['room_id'] = $filData['room_id'];
-                // 更新house表的计算租金
-                $house_cou_rent = $HouseModel->count_house_rent($f['house_id']);
-                $HouseModel->where([['house_id','eq',$f['house_id']]])->setField('house_cou_rent',$house_cou_rent);
             }
             $HouseRoomModel = new HouseRoomModel;
 
             HouseRoomModel::where([['room_id','eq',$filData['room_id']]])->delete();
             $HouseRoomModel->saveAll($filData['house_room']);
 
+            foreach($filData['house_room'] as &$f){
+               
+                // 更新house表的计算租金
+                $roomids = $HouseRoomModel->where([['house_id','eq',$f['house_id']]])->column('room_id');
+                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+                $HouseModel->where([['house_id','eq',$f['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            }
             return $this->success('修改成功');
         }
         $id = input('param.id/d');
@@ -159,10 +170,20 @@ class Room extends Admin
     public function del(){
         $id = input('param.id/d');
         $RoomModel = new RoomModel;
+        
         $re = $RoomModel->where([['room_id','eq',$id]])->setField('room_status',10);
         $HouseRoomModel = new HouseRoomModel;
         $HouseRoomModel->where([['room_id','eq',$id]])->setField('house_room_status',10);
+
         if($re){
+            $HouseRoomModel = new HouseRoomModel;
+            $houseArr = $HouseRoomModel->where([['room_id','eq',$id]])->column('house_id');
+            foreach ($houseArr as $f) {
+                // 更新house表的计算租金
+                $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
+                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+                $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            }
             return $this->success('删除成功');
         }
         return $this->error('删除失败');

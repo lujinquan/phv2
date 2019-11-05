@@ -208,8 +208,13 @@ class ChangeOffset extends SystemBase
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
-                if(isset($data['file']) && $data['file']){
-                    $changeUpdateData['change_imgs'] = implode(',',$data['file']);
+                // if(isset($data['file']) && $data['file']){
+                //     $changeUpdateData['change_imgs'] = implode(',',$data['file']);
+                // }
+                if($changeRow['change_status'] == 3){ 
+                    if(isset($data['file']) && $data['file']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    }
                 }
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;

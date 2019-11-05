@@ -100,6 +100,7 @@ class Changeoffset extends Admin
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
                 unset($filData['id']);
+                //halt($filData);
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -107,7 +108,7 @@ class Changeoffset extends Admin
             }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
-                $process = $ProcessModel->where([['change_type','eq',3],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                $process = $ProcessModel->where([['change_type','eq',4],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
                 if (!$process) {
                     return $this->error('未知错误');
                 }
@@ -146,7 +147,7 @@ class Changeoffset extends Admin
             $data = [];
             $data['data'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
-            $data['count'] = Db::name('change_offset')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $data['count'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
