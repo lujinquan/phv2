@@ -87,11 +87,20 @@ class ChangeCutYear extends SystemBase
         if(isset($data['cut_type']) && $data['cut_type']){
             $where[] = ['a.cut_type','eq',$data['cut_type']];
         }
+        // 检索减免金额
+        if(isset($data['cut_rent']) && $data['cut_rent']){
+            $where[] = ['a.cut_rent','eq',$data['cut_rent']];
+        }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){
             $startTime = strtotime($data['ctime']);
             //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
             $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
+        }
+        // 检索完成时间
+        if(isset($data['ftime']) && $data['ftime']){
+            $flishTime = strtotime($data['ftime']);
+            $where[] = ['a.ftime','between time',[$flishTime,$flishTime+3600*24]];
         }
         // 检索楼栋机构
         $insts = config('inst_ids');

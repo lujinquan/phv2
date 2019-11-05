@@ -66,12 +66,20 @@ class ChangeInst extends SystemBase
                 # code...
                 break;
         }
+        // 检索新管段
+        if(isset($data['new_inst_id']) && $data['new_inst_id']){
+            $where[] = ['a.new_inst_id','eq',$data['new_inst_id']];
+        }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){
             $startTime = strtotime($data['ctime']);
             $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
         }
-
+        // 检索完成时间
+        if(isset($data['ftime']) && $data['ftime']){
+            $endTime = strtotime($data['ftime']);
+            $where[] = ['a.ftime','between time',[$endTime,$endTime+3600*24]];
+        }
         // 检索楼栋机构
         $insts = config('inst_ids');
         if(isset($data['old_inst_id']) && $data['old_inst_id']){

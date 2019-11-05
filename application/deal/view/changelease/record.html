@@ -34,7 +34,7 @@
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ftime" id="date1"  placeholder="生效时间" autocomplete="off" class="layui-input">
+					<input type="text" name="ftime" id="date1"  placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
@@ -52,7 +52,7 @@
 		</form>
 	</div>
 	{include file="system@block/layui" /}
-	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" id="toolbar">
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
@@ -62,9 +62,6 @@
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功'};
 	layui.use(['table', 'jquery','laydate'], function() {
-		var $ = layui.$;
-		var s = $('#dataTable').attr('params');
-		var params = JSON.parse(s);
 		var table = layui.table
 		   ,laydate = layui.laydate;
 		

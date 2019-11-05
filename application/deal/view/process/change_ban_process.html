@@ -46,8 +46,8 @@
 			  <td><input type="text"  readonly value="{$data_info['old_floors']}" placeholder=""  autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" readonly value="{$data_info['new_floors']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {else /}
-			   <td><input type="text"  readonly value="{$data_info['old_damage']}" placeholder=""  autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" readonly value="{$data_info['new_damage']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			   <td><input type="text"  readonly value="{$params.damages[$data_info['old_damage']]}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$params.damages[$data_info['new_damage']]}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {/if}
 		  </tr>
 	  </tbody>
@@ -354,7 +354,7 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=13';
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=14';
 					if($('#change_reason').val()==''){
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
@@ -381,7 +381,7 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=13';
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=14';
 					if($('#back_reason').val()==''){
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1

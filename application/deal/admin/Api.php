@@ -72,31 +72,36 @@ class Api extends Common
             // 获取该楼栋下所有房屋
             $houseOldArr = HouseModel::with('tenant')->where([['ban_id','eq',$ban_id]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
             $HouseModel = new HouseModel;
-            // 更新所有房屋的计算租金
-            foreach($houseOldArr as $h){
-                $house_rent = $HouseModel->count_house_rent($h['house_id']);
-                HouseModel::where([['house_id','eq',$h['house_id']]])->update(['house_cou_rent'=>$house_rent]);
-            }
-            $houseNewArr = HouseModel::where([['ban_id','eq',$ban_id]])->column('house_id,house_cou_rent');
             $result = [];
-            $oldCouRents = $newCouRents = 0;
-            foreach ($houseOldArr as $k => $v) {
-                if($ban_floors < $v['house_floor_id']){
-                    return $this->error('总楼层不能小于居住层！');
-                    break;
+            $result['data'] = [];
+            // 更新所有房屋的计算租金
+            if($houseOldArr){
+                foreach($houseOldArr as $h){
+                    $house_rent = $HouseModel->count_house_rent($h['house_id']);
+                    HouseModel::where([['house_id','eq',$h['house_id']]])->update(['house_cou_rent'=>$house_rent]);
                 }
-                $oldCouRents = bcadd($oldCouRents,$v['house_cou_rent'],2); //统计所有房屋原计算租金之和
-                $newCouRents = bcadd($newCouRents,$houseNewArr[$v['house_id']],2); //统计所有房屋现计算租金之和
-                $result['data'][$k]['house_number'] = $v['house_number'];
-                $result['data'][$k]['tenant_name'] = $v['tenant_name'];
-                $result['data'][$k]['old_floor'] = $v['house_floor_id'].'/'.$oldFloors;
-                $result['data'][$k]['new_floor'] = $v['house_floor_id'].'/'.$ban_floors;
-                $result['data'][$k]['house_rent'] = $v['house_rent'];
-                $result['data'][$k]['house_old_cou_rent'] = $v['house_cou_rent'];
-                $result['data'][$k]['house_new_cou_rent'] = $houseNewArr[$v['house_id']];
-                $result['data'][$k]['diff_cou_rent'] = bcsub($houseNewArr[$v['house_id']],$v['house_cou_rent'] ,2);
-                //$v['house_cou_rent'];
+                $houseNewArr = HouseModel::where([['ban_id','eq',$ban_id]])->column('house_id,house_cou_rent');
+                
+                $oldCouRents = $newCouRents = 0;
+                foreach ($houseOldArr as $k => $v) {
+                    if($ban_floors < $v['house_floor_id']){
+                        return $this->error('总楼层不能小于居住层！');
+                        break;
+                    }
+                    $oldCouRents = bcadd($oldCouRents,$v['house_cou_rent'],2); //统计所有房屋原计算租金之和
+                    $newCouRents = bcadd($newCouRents,$houseNewArr[$v['house_id']],2); //统计所有房屋现计算租金之和
+                    $result['data'][$k]['house_number'] = $v['house_number'];
+                    $result['data'][$k]['tenant_name'] = $v['tenant_name'];
+                    $result['data'][$k]['old_floor'] = $v['house_floor_id'].'/'.$oldFloors;
+                    $result['data'][$k]['new_floor'] = $v['house_floor_id'].'/'.$ban_floors;
+                    $result['data'][$k]['house_pre_rent'] = $v['house_pre_rent'];
+                    $result['data'][$k]['house_old_cou_rent'] = $v['house_cou_rent'];
+                    $result['data'][$k]['house_new_cou_rent'] = $houseNewArr[$v['house_id']];
+                    $result['data'][$k]['diff_cou_rent'] = bcsub($houseNewArr[$v['house_id']],$v['house_cou_rent'] ,2);
+                    //$v['house_cou_rent'];
+                }               
             }
+
             $result['count'] = count($result['data']);
             $result['msg'] = '获取成功！';
             $result['code'] = 1;

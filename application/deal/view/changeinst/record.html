@@ -1,38 +1,47 @@
-<div class="j-table-content j-no-tab">
-	 <div class="layui-btn-container j-container-margin">
-	     <div class="layui-btn-container">       
-	         <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>增加管段申请</button></a>
-	     </div>
-	 </div>
+<div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline j-input-margin" style="width:140px;">
+					<select name="old_inst_id">
 						<option value="">原管段</option>
 						{volist name=":config('inst_data_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<select id="ban_inst_id" name="ban_inst_id" class="field-cid" type="select" required>
+				<div class="layui-input-inline j-input-margin" style="width:140px;">
+					<select name="new_inst_id">
 						<option value="">新管段</option>
-						{volist name=":config('inst_data_names')[INST]" id="v"}
+						{volist name=":config('inst_data_names')[$Think.INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
-				</div>
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="approval_status">
-						<option value="">审批状态</option>
-						<option value="1">审批状态1</option>
-						<option value="2">审批状态2</option>
+				{else /}
+				<div class="layui-input-inline j-input-margin" style="width:140px;">
+					<select name="new_inst_id">
+						<option value="">新管段</option>
+						{volist name="$insts" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
 					</select>
 				</div>
+				{/if}
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="ctime" id="date" title="申请时间" placeholder="申请时间" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="ftime" id="date1" title="完成时间" placeholder="完成时间" autocomplete="off" class="layui-input">
+				</div>
+				<!-- <div class="layui-input-inline" style="width:120px;">
+					<select name="approval_status">
+						<option value="">审批状态</option>
+						<option value="1">成功</option>
+						<option value="0">失败</option>
+					</select>
+				</div> -->
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -68,6 +77,9 @@
 		  laydate.render({
 		    elem: '#date'
 		  });
+		  laydate.render({
+		  elem: '#date1'
+		});
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -89,18 +101,18 @@
 		                    return d.LAY_INDEX ;
 		                }
 					}, */
-					{field: 'old_inst_id',minWidth: 180,align:'center',title: '原管段',fixed: 'left', unresize: true, totalRowText: '合计',templet: function(d) {
+					{field: 'old_inst_id',width: 120,align:'center',title: '原管段',fixed: 'left', unresize: true, totalRowText: '合计',templet: function(d) {
 		                    return params.insts[d.old_inst_id];
 		            }}, 
-					{field: 'new_inst_id',minWidth: 180,align:'center',title: '新管段', templet: function(d) {
+					{field: 'new_inst_id',width: 120,align:'center',title: '新管段', templet: function(d) {
 	                    return params.insts[d.new_inst_id];
 	                }}, 
-					{field: 'chang_ban_num',minWidth: 100,align:'center',title: '栋数'}, 
-					{field: 'households',minWidth: 100,align:'center',title: '户数'},
+					{field: 'change_ban_num',minWidth: 100,align:'center',title: '栋数'}, 
 					{field: 'change_ban_area',minWidth: 120,align:'center',title: '建筑面积',totalRow: true},  
 					{field: 'change_ban_rent',minWidth: 120,align:'center',title: '规定租金',totalRow: true},
 					{field: 'change_ban_oprice',minWidth: 120,align:'center',title: '原价',totalRow: true},
 					{field: 'change_ban_use_area',minWidth: 120,align:'center',title: '使用面积',totalRow: true},
+					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
 					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {
