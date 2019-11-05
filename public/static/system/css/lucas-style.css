@@ -29,7 +29,13 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-btn-grass{ background: #55C151;}
 .layui-btn-gray{background:#B6B9BE;}
 .j-form-box .layui-btn-normal.on{ background: #9B9B9B;}
+.j-iframe-pop-change{margin-right: 10px;}
 /* ----------按钮颜色 E----------*/
+/*-----------搜索输入框宽度 S-------------*/
+.j-width-inputs{width: 120px;}
+.j-narrow-inputs{width: 150px;}
+.j-wide-inputs{width: 180px;}
+/*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}

@@ -763,7 +763,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
      	})
     /*楼层导航 E*/
 	//显示搜索框title属性值S
-	$(".layui-input.layui-unselect").mouseover(function(){
+	$(".layui-input,.layui-unselect").mouseover(function(){
 	  var titles = $(this).val();
 	  $(this).attr("title",titles)
 	});

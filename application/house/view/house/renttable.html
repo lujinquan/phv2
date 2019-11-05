@@ -196,9 +196,11 @@
 				{if condition="$group == 'x'"}
 				<td>	
 				
-					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}&house_number={$data_info['house_number']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><i class="layui-icon layui-icon-edit table-edit" style="color:#1E9FFF;"></i></a>
+					<a href="{:url('room/edit')}?id={$vo['baseinfo']['room_id']}&house_number={$data_info['house_number']}" class="j-iframe-pop" style="color:#1E9FFF;" hisi-data="{width: '1200px', height: '550px'}" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a>
 					
+
 					<a data-href="{:url('room/del')}?id={$vo['baseinfo']['room_id']}" isreload="y" class="j-tr-del"><i class="layui-icon layui-icon-delete" style="color:#ff3333;"></i></a>
+
 					
 					<!-- <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal"></a>
 				    <a href="{:url('renttable')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租户</a> -->
