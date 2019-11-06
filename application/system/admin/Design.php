@@ -125,6 +125,7 @@ class Design extends Admin
 	    			$i++;
 	    		}
 	    	}
+            unset($a); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
 	    }
 
         //生成excel表格，自定义名
