@@ -616,7 +616,7 @@
 					</div> -->
 					<div class="layui-row layui-form-item layui-col-space15 j-input-margin">
 						<div class="layui-col-md4">
-							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
+							<label class="j-form-label"><i class="red">*</i><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
 								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
@@ -840,8 +840,8 @@
                             	//console.log(res.data.room);
                             	for(var i = 0;i < res.data.room.length;i++){
                             		var this_data = res.data.room[i];//$('#applyRoom7_data2').val(this_data.room_number);
-									console.log(res.data.room[i]);
-                            		switch(this_data.room_type){
+									console.log('每一组房间信息：',res.data.room[i]);
+                            		switch(parseInt(this_data.room_type)){
                             			case 1:
                             				$('#applyRoom'+ws+'_data1').val(this_data.room_door);
                             				$('#applyRoom'+ws+'_data2').val(this_data.room_use_area);
