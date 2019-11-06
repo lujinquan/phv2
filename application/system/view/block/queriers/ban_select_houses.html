@@ -178,7 +178,6 @@
 							$("[lay-id='dataTable2'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable2'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
 							$("[lay-id='dataTable2'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable2'] tr[color-status='2'] input[type='checkbox']").next().addClass('layui-btn-disabled');
 							$("[lay-id='dataTable2'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable2'] tr[color-status='2'] input[type='checkbox']").removeAttr('name');
-							//$("[lay-id='dataTable2'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable2'] tr[color-status='2'] input[type='checkbox']").next().remove();
 						}
 					}
 				}, isShowInst);
@@ -188,13 +187,14 @@
               var checkStatus = table.checkStatus('dataTable2');
               datas = checkStatus.data;
 			  //console.log(table.checkStatus('dataTable2').data);
-			  //console.log(datas.length);
+			  console.log(datas);
 			 /* if(datas.length==0)
 			   {
 			  	alert("房屋必须选择！");
 			   } */
 			 
           });
+		  
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		
     });
