@@ -120,11 +120,11 @@
 	</div>
 <div class="layui-row layui-form-item layui-col-space90">
 	<div class="layui-col-md12">
-		<div class="j-enclosure-label clearfix">报告</div>
+		<div class="j-enclosure-label clearfix">其它</div>
 		<div class="j-enclosure-img j-viewer-img clearfix">
 			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeOffsetUpload'"}
+				{if condition="$v['file_type'] == 'HouseForm'"}
 				<li>
 					<img src="{$v['file']}">
 				</li>
@@ -136,11 +136,11 @@
 </div>
 <div class="layui-row layui-form-item layui-col-space90">
 	<div class="layui-col-md12">
-		<div class="j-enclosure-label clearfix">其它</div>
+		<div class="j-enclosure-label clearfix">报告</div>
 		<div class="j-enclosure-img j-viewer-img clearfix">
 			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'HouseForm'"}
+				{if condition="$v['file_type'] == 'ChangeOffsetUpload'"}
 				<li>
 					<img src="{$v['file']}">
 				</li>
