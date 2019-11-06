@@ -28,7 +28,7 @@ class Room extends Validate
         'room_floor_id|层次' => 'require|number',
         'room_use_area|实有面积' => 'require',
         'ban_number|绑定楼栋' => 'require|existInBan', 
-        'house_number|绑定房屋' => 'require|existInHouse', 
+        'house_id|绑定房屋' => 'require|existInHouse', 
     ];
 
     //定义验证提示
@@ -57,12 +57,12 @@ class Room extends Validate
 		$val = array_filter($value);
 
 		$is = true;
-		foreach($val as $v){
-			$row = HouseModel::where([['house_number','eq',$v]])->value('house_id');
-			if(!$row){
-				$is = '房屋编号格式错误';
-			}
-		}
+		//foreach($val as $v){
+			// //$row = HouseModel::where([['house_id','eq',$v]])->value('house_id');
+			// if(!$row){
+			// 	$is = '房屋编号格式错误';
+			// }
+		//}
         if (count($val) != count(array_unique($val))) {
             $is = '房屋编号有重复值';
         }
@@ -72,7 +72,7 @@ class Room extends Validate
     //定义验证场景
     protected $scene = [
         //新增
-        'sceneForm'  =>  ['room_type','room_door','room_unit_id','room_floor_id','room_use_area','ban_number','house_number'],
+        'sceneForm'  =>  ['room_type','room_door','room_unit_id','room_floor_id','room_use_area','ban_number','house_id'],
         // //修改
         // 'edit'  =>  ['ban_struct_id'],    
     ];

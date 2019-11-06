@@ -86,7 +86,7 @@ class RoomTemp extends SystemBase
         
         $data['room_rent_point'] = 1 - $data['room_rent_point']/100;
         $data['ban_id'] = BanModel::where([['ban_number','eq',$data['ban_number']]])->value('ban_id');
-        $temp = array_filter($data['house_number']);
+        $temp = array_filter($data['house_id']);
         $data['room_pub_num'] = count($temp);
         //计租面积
         //halt($data);
@@ -95,9 +95,9 @@ class RoomTemp extends SystemBase
         //构造house_room关联表数据
         foreach($temp as $t){
             $data['house_room'][] = [
-                'house_id' => HouseModel::where([['house_number','eq',$t]])->value('house_id'), 
+                'house_id' => $t, 
                 'room_number' => $data['room_number'],
-                'house_number' => $t,
+                'house_number' => HouseModel::where([['house_id','eq',$t]])->value('house_number'),
             ];
             
         }

@@ -6,6 +6,7 @@ use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\HouseRoom as HouseRoomModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
 class House extends SystemBase
@@ -40,7 +41,7 @@ class House extends SystemBase
 
     public function house_room()
     {
-        return $this->hasMany('house_room', 'house_number', 'house_number');
+        return $this->hasMany('house_room', 'house_id', 'house_id');
     }
 
     // public function tenant()
@@ -216,6 +217,39 @@ class House extends SystemBase
             }
         }
         return $roomTables;
+    }
+
+    /**
+     * [计租表发生变化后，更新房屋的计算租金、使用面积、计租面积]
+     * @param  [string | array] $houseid [房屋编号]
+     * @return [错误信息]        
+     */
+    public function update_house_info($houseid = ''){
+        if(!is_array($houseid)){ //如果是更新单个房屋的数据
+            $houseidArr = [$houseid];
+        }else{ // 如果是批量更新一个数组内的数据
+            $houseidArr = $houseid;
+        }
+        $houseidArr = array_filter($houseidArr);
+        $RoomModel = new RoomModel;
+        $HouseModel = new HouseModel;
+        $HouseRoomModel = new HouseRoomModel;
+        $res = 0;
+        foreach ($houseidArr as $f) {
+            // 获取计算租金
+            $house_cou_rent = $HouseModel->count_house_rent($f); 
+            $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
+            // 获取房屋下使面合计、计租面积合计
+            $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+            // 更新房屋的计算租金
+            $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+        }
+        $diff = count($houseidArr) - $res;
+        if($diff){
+            return '有'+$diff+'个房屋未更新成功！';
+        }else{
+            return true;
+        }
     }
 
     /**

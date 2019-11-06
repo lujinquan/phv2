@@ -59,7 +59,7 @@ from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
 update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
 # 更新楼栋表的户数
-update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
+update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
 
 
 /**
@@ -102,7 +102,7 @@ from ph_v1.ph_room;
 truncate table ph_v2.test1;
 call split_str();
 # 将无逗号分隔的插入到test1表中
-insert into ph_v2.test1 (select * from ph_v2.test where locate(',',b) = 0);
+//insert into ph_v2.test1 (select * from ph_v2.test where locate(',',b) = 0);
 
 
 
@@ -460,3 +460,55 @@ drop table if exists ph_room;
 alter table ph_room_back rename ph_room;
 drop table if exists ph_tenant;
 alter table ph_tenant_back rename ph_tenant;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 创建字符串分隔存储过程函数
+delimiter $$
+CREATE DEFINER = `root`@`%` PROCEDURE `split_str`()
+    SQL SECURITY INVOKER
+BEGIN
+  DECLARE a1 varchar(20);
+  DECLARE b1 varchar(10000);
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE cur CURSOR FOR SELECT a,b from test ;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  OPEN cur; 
+  read_loop: LOOP
+    FETCH cur INTO a1,b1;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+    SET @num = LENGTH(b1) - LENGTH(REPLACE(b1, ',', ''));
+SET @i = 0;
+WHILE (@i <=@num ) DO
+    INSERT INTO test1
+VALUES
+    (
+        a1,
+      str_for_substr(@i,b1)
+);
+set @i = @i+1;
+END WHILE;
+  END LOOP;  
+  CLOSE cur;
+END$$

@@ -14,9 +14,9 @@ namespace app\house\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\house\model\RoomTemp as RoomModel;
 use app\house\model\HouseTemp as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
-use app\house\model\RoomTemp as RoomModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
 class HouseTemp extends Admin

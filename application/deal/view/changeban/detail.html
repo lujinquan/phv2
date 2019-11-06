@@ -52,6 +52,7 @@
 		  </tr>
 	  </tbody>
 	</table>
+	{if condition="$data_info['ban_change_id'] == 1"}
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-details">
 		<legend>异动明细</legend>
 	</fieldset>
@@ -83,6 +84,7 @@
 	  	{/volist}
 	  </tbody>
 	</table>
+	{/if}
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-lease-box">
   	<legend>租赁异动</legend>
   </fieldset>
@@ -134,7 +136,7 @@
 		{/if}
       <!-- 完损等级 -->
       {if condition="$data_info['ban_change_id'] == 2"}
-	  <table class="layui-table j-hides j-endloss-box hide">
+	  <table class="layui-table j-hides j-endloss-box">
 		  <thead>
 			  <tr>
 				<th>完损等级</th>

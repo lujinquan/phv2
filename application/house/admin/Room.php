@@ -15,10 +15,10 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\house\model\Ban as BanModel;
-use app\house\model\House as HouseModel;
-use app\house\model\HouseRoom as HouseRoomModel;
 use app\house\model\Room as RoomModel;
+use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
+use app\house\model\HouseRoom as HouseRoomModel;
 
 class Room extends Admin
 {
@@ -53,7 +53,6 @@ class Room extends Admin
         $row = HouseModel::with(['ban','tenant'])->get($id);
     	if ($this->request->isPost()) {
             $data = $this->request->post();
-
             // 数据验证
             $result = $this->validate($data, 'Room.sceneForm');
             if($result !== true) {
@@ -65,33 +64,23 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-            //halt($filData);
-            // 入库room表
+            // 1、入库room表
             if (!$RoomModel->allowField(true)->save($filData)) {
                 return $this->error('新增失败');
             }
-
-            // 补充房间计算租金，入库room表
+            // 2、补充房间计算租金，入库room表
             $room_cou_rent = $RoomModel->count_room_rent($RoomModel->room_id);
             $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_cou_rent',$room_cou_rent);
- 
-            //入库house_room表
+            // 3、入库house_room表
             $HouseModel = new HouseModel;
             $HouseRoomModel = new HouseRoomModel;
             foreach($filData['house_room'] as &$v){
                 $v['room_id'] = $RoomModel->room_id;
             }
-            
             $HouseRoomModel->saveAll($filData['house_room']);
-
-            foreach($filData['house_room'] as $f){
-                // 更新house表的计算租金
-                $house_cou_rent = $HouseModel->count_house_rent($f['house_id']);
-                $roomids = $HouseRoomModel->where([['house_id','eq',$f['house_id']]])->column('room_id');
-                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
-                $HouseModel->where([['house_id','eq',$f['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
-            }
-
+            // 4、更新房屋信息
+            // halt($filData['house_id']);
+            $HouseModel->update_house_info($filData['house_id']);
             return $this->success('新增成功');
         }
         $this->assign('data_info',$row);
@@ -101,7 +90,7 @@ class Room extends Admin
 
     public function edit()
     {   
-        
+
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
@@ -115,47 +104,35 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-
             // 入库room表
             if (!$RoomModel->allowField(true)->update($filData)) {
                 return $this->error('修改失败');
             }
-
-            // 补充房间计算租金，=更新room表
+            // 补充房间计算租金，更新room表
             $room_cou_rent = $RoomModel->count_room_rent($filData['room_id']);
-            $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_cou_rent',$room_cou_rent);
-            
+            $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_cou_rent',$room_cou_rent);      
             //更新house_room表
             $HouseModel = new HouseModel;
-
             foreach($filData['house_room'] as &$v){
                 $f['room_id'] = $filData['room_id'];
             }
             $HouseRoomModel = new HouseRoomModel;
+            HouseRoomModel::where([['room_id','eq',$filData['room_id']],['house_id','not in',$filData['house_id']]])->delete();
+            $HouseModel->update_house_info($filData['house_id']);
 
-            HouseRoomModel::where([['room_id','eq',$filData['room_id']]])->delete();
-            $HouseRoomModel->saveAll($filData['house_room']);
-
-            foreach($filData['house_room'] as &$f){
-               
-                // 更新house表的计算租金
-                $house_cou_rent = $HouseModel->count_house_rent($f['house_id']);
-                $roomids = $HouseRoomModel->where([['house_id','eq',$f['house_id']]])->column('room_id');
-                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
-                $HouseModel->where([['house_id','eq',$f['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
-            }
             return $this->success('修改成功');
         }
-        $id = input('param.id/d');
-        $house_number = input('param.house_number/s');
+
+        $id = input('param.id/d'); //从房屋列表页点进来的
+        //$house_number = input('param.house_number/s');
         $row = RoomModel::with('ban')->find($id);
         $row['room_rent_point'] = 100 - $row['room_rent_point']*100;
         $houseidArrs = HouseRoomModel::where([['room_id','eq',$id]])->column('house_id');
         //dump($row);halt($houseidArrs);
-        $houseArrsTemp = HouseModel::with('tenant')->where([['house_id','in',$houseidArrs]])->field('house_number,tenant_id')->select();
+        $houseArrsTemp = HouseModel::with('tenant')->where([['house_id','in',$houseidArrs]])->field('house_id,tenant_id')->select();
         $houseArrs = [];
         foreach($houseArrsTemp as $h){
-            if($h['house_number'] == $house_number){
+            if($h['house_id'] == $id){
                 array_unshift($houseArrs, $h);
             }else{
                 array_push($houseArrs, $h);
@@ -170,27 +147,49 @@ class Room extends Admin
 
     public function del(){
         $id = input('param.id/d');
-        $RoomModel = new RoomModel;
-        $HouseModel = new HouseModel;
-        $re = $RoomModel->where([['room_id','eq',$id]])->setField('room_status',10);
-        $HouseRoomModel = new HouseRoomModel;
-        $HouseRoomModel->where([['room_id','eq',$id]])->setField('house_room_status',10);
-
-        if($re){
-            $HouseRoomModel = new HouseRoomModel;
-            $houseArr = $HouseRoomModel->where([['room_id','eq',$id]])->column('house_id');
-            foreach ($houseArr as $f) {
-                // 更新house表的计算租金
-                $house_cou_rent = $HouseModel->count_house_rent($f);
-                $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
-                $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
-                $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
-            }
-            return $this->success('删除成功');
+        // 1、先获取要删除的房间绑定的房屋
+        $HouseRoomModel = new HouseRoomModel; 
+        $houseArr = $HouseRoomModel->where([['room_id','eq',$id]])->column('house_id');
+        if(!$houseArr){
+            return $this->error('参数错误！');
         }
-        return $this->error('删除失败');
+        // 2、删除房间数据
+        $RoomModel = new RoomModel;
+        $re = $RoomModel->where([['room_id','eq',$id]])->delete();
+        // 3、删除房屋房间关联数据
+        if($re){
+            $HouseRoomModel->where([['room_id','eq',$id]])->delete();
+        }
+        // 4、更新第一步获取的房屋的计算租金、计租面积、使用面积
+        $HouseModel = new HouseModel;
+        $HouseModel->update_house_info($houseArr);
 
+        return $this->success('删除成功');
     }
+
+    // public function del(){
+    //     $id = input('param.id/d');
+    //     $RoomModel = new RoomModel;
+    //     $HouseModel = new HouseModel;
+    //     $re = $RoomModel->where([['room_id','eq',$id]])->setField('room_status',10);
+    //     $HouseRoomModel = new HouseRoomModel;
+    //     $HouseRoomModel->where([['room_id','eq',$id]])->setField('house_room_status',10);
+
+    //     if($re){
+    //         $HouseRoomModel = new HouseRoomModel;
+    //         $houseArr = $HouseRoomModel->where([['room_id','eq',$id]])->column('house_id');
+    //         foreach ($houseArr as $f) {
+    //             // 更新house表的计算租金
+    //             $house_cou_rent = $HouseModel->count_house_rent($f);
+    //             $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
+    //             $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
+    //             $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+    //         }
+    //         return $this->success('删除成功');
+    //     }
+    //     return $this->error('删除失败');
+
+    // }
 
     public function detail()
     {

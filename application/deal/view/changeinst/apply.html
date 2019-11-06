@@ -226,7 +226,7 @@
 									var sumrent = parseFloat(row[i].ban_civil_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100+parseFloat(row[i].ban_party_rent).toFixed(2)*100;//规定租金
 									var sumoprice = parseFloat(row[i].ban_civil_oprice).toFixed(2)*100+parseFloat(row[i].ban_party_oprice).toFixed(2)*100+parseFloat(row[i].ban_career_oprice).toFixed(2)*100;//原价 */
 									trData +='<tr>\
-												<td class="building_number">'+row[i].ban_number+'</td>\
+												<td class="building_number"><input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].ban_id+'">'+row[i].ban_number+'</td>\
 												<td class="building_address">'+row[i].ban_address+'</td>\
 												<td class="building_buildings">'+row[i].ban_num+'</td>\
 												<td class="builtup_area">'+row[i].ban_area+'</td>\
@@ -242,7 +242,7 @@
 										  $('.j-house-box tbody').append(trData);	
 									}
 								 */
-									$('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].ban_id +'">');
+									// $('.j-house-box tbody').before('<input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].ban_id +'">');
 									//console.log(row[i].ban_number);
 							    }
 								$('.j-house-box tbody').append(trData);

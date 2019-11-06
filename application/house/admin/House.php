@@ -14,9 +14,9 @@ namespace app\house\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
-use app\house\model\Room as RoomModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
 class House extends Admin
@@ -24,12 +24,12 @@ class House extends Admin
 
     public function index()
     {
-        //$houserent = (new HouseModel)->count_house_rent(512);
+
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            //halt($getData);
+           
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
@@ -37,9 +37,16 @@ class House extends Admin
             //halt($where);
             $data = [];
             $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+
             foreach ($data['data'] as $k => &$v) {
-                $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                if($v['tenant_id']){ //如果当前房屋已经绑定租户
+                    $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                }else{
+                    $v['last_print_time'] = '';
+                }  
             }
+            
+            
 
             $data['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.house_id');
 
@@ -167,12 +174,16 @@ class House extends Admin
         $id = input('param.id/d');
         $group = input('param.group');
         $row = HouseModel::with(['ban','tenant'])->find($id);
+        $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','<',date('Ym')]])->value('cut_rent');
+        $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        //halt($row);
         //获取当前房屋的房间
         $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_number'); 
         //定义计租表房间数组
         $roomTables = [];
         if($rooms){
             $FloorPointModel =new FloorPointModel;
+            //halt($rooms);
             foreach($rooms as $roo){
                  $roomtype = RoomModel::where([['room_number','eq',$roo]])->find();
                  $sort = $roomtype->room_type_point()->value('sort');
@@ -211,7 +222,7 @@ class House extends Admin
             return json($data);
         }
 
-        //halt(json($roomTables));
+        //halt($row);
         $this->assign('room_tables',$roomTables);
         $this->assign('group',$group);
         $this->assign('data_info',$row);

@@ -54,7 +54,7 @@
 				<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 				<div class="j-input-inline">
 					 <input type="text" value="{$houseArrs[0]['tenant_name']}"  autocomplete="off" readonly placeholder="" class="layui-input j-explain-input">
-					 <input type="hidden" name="house_number[]" value="{$houseArrs[0]['house_number']}">
+					 <input type="hidden" name="house_id[]" value="{$houseArrs[0]['house_id']}">
 					 
 				</div> 
 			</div>
@@ -63,7 +63,7 @@
 				<label class="j-form-label"><i class="red">*</i>绑定房屋</label>
 			     <div class="j-input-inline">
 			         <input type="text" value="{$vo['tenant_name']}" autocomplete="off" readonly placeholder="点击查询" class="layui-input">
-			         <input type="hidden" name="house_number[]" value="{$vo['house_number']}">
+			         <input type="hidden" name="house_id[]" value="{$vo['house_id']}">
 					 <b class="j-explain-search j-house_number">查询</b>
 					 <i class="icon-cancel lu-del"></i>
 			     </div> 
@@ -117,7 +117,7 @@ layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
     
     $('.lu-add').click(function(){
-        var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><input type="hidden" name="house_number[]" value=""><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
+        var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><input type="hidden" name="house_id[]" value=""><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
         $('.lu-add').parent().before(html);
     });
     $('.e-house').on('click','.lu-del',function(){
@@ -193,7 +193,7 @@ layui.use(['form', 'func'], function() {
 						/* console.log(row); */
 						layer.close(index);
 						that.prev().prev("input[type='text']").val(row.tenant_name);//获取租户名
-						that.prev("input[type='hidden']").val(row.house_number);//获取房屋编号
+						that.prev("input[type='hidden']").val(row.house_id);//获取房屋编号
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
