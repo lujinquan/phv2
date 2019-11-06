@@ -1080,7 +1080,8 @@ function(e) {
 			// console.log('这是索引第几行：',e);
 			// console.log('这是第几行的数据：',l.color_status);
 			//新加功能
-			if(l.color_status == 1){
+            //console.log(l.color_status);
+			if(l.color_status === undefined || l.color_status == 1){
 				return l.constructor === Array ? void i++:void(l[d.config.checkName] && (t++, a.push(d.clearCacheKey(l))))
 			}
             
