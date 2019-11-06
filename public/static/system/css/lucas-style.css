@@ -32,9 +32,15 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-iframe-pop-change{margin-right: 10px;}
 /* ----------按钮颜色 E----------*/
 /*-----------搜索输入框宽度 S-------------*/
-.j-width-inputs{width: 120px;}
-.j-narrow-inputs{width: 150px;}
-.j-wide-inputs{width: 180px;}
+.j-width-80{width: 80px;}
+.j-width-90{width: 90px;}
+.j-width-100{width: 100px;}
+.j-width-110{width: 110px;}
+.j-width-115{width: 115px;}
+.j-width-120{width: 120px;}
+.j-width-130{width: 130px;}
+.j-width-150{width: 150px;}
+.j-width-180{width: 180px;}
 /*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
@@ -108,7 +114,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .page-toolbar.j-page-toolbar{margin: 8px 0 5px;}
 .j-table-content.j-no-title ,.j-table-content.j-no-tab,.j-table-content.j-no-searchs{padding: 0 8px;}
 .j-table-content.j-no-title .page-toolbar.j-page-toolbar{margin: 15px 0 5px;}
-.j-page-toolbar .layui-input-inline .layui-input,.j-page-toolbar .layui-input-inline .layui-form-select{ margin:0 10px 10px 0;}
+.j-page-toolbar .layui-input-inline .layui-input,.j-page-toolbar .layui-input-inline .layui-form-select{ margin:0 10px 10px 0;/* white-space: nowrap;text-overflow: ellipsis; */}
 .page-toolbar.j-page-toolbar  .layui-btn+.layui-btn,.page-toolbar.j-page-toolbar  .layui-btn{ margin: 0 0 10px 10px;}
 .page-toolbar.j-page-toolbar  .layui-btn.on{margin: 0 0 10px 10px;}
 .j-table-content .j-btn-reset{  background: none; color: #0084FF;padding: 0 10px;}/* 重置样式 */

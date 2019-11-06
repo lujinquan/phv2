@@ -8,10 +8,10 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="reduction_address" placeholder="楼栋地址" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="house_use_id">
 						<option value="">使用性质</option>
 						{volist name="params['uses']" id="v"}
@@ -19,7 +19,7 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-90">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
@@ -27,10 +27,10 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="tenant_name" placeholder="租户名称" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-120">
 					<select name="cut_type">
 						<option value="">减免类型</option>
 						{volist name="params['cuttypes']" id="v"}
@@ -38,10 +38,10 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="cut_rent" placeholder="减免金额" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>

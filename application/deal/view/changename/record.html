@@ -2,11 +2,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="ban_inst_id">
 						<option value="">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -15,7 +15,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-80">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
@@ -23,19 +23,19 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="old_tenant_name"   placeholder="原姓名" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="new_tenant_name"   placeholder="新姓名" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date1"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ftime" id="date2"  placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline" style="width:155px;">
+				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
 						<option value="1">成功</option>

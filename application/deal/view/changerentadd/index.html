@@ -9,14 +9,14 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8 fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="ban_inst_id">
 						<option value="">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -25,7 +25,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-width-100">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
@@ -33,16 +33,16 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin j-width-inputs">
+				<div class="layui-input-inline j-input-margin layui-col-md2 j-width-80">
 					<input type="text" name="tenant_name"   placeholder="租户" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin j-width-inputs">
+				<div class="layui-input-inline j-input-margin layui-col-md2 j-width-100">
 					<input type="text" name="before_year_rent"  placeholder="以前年" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin j-width-inputs">
+				<div class="layui-input-inline j-input-margin layui-col-md2 j-width-100">
 					<input type="text" name="before_month_rent"  placeholder="以前月" autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin j-width-inputs">
+				<div class="layui-input-inline j-input-margin layui-col-md2 j-width-110">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
@@ -107,7 +107,7 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'house_number',minWidth: 120,align:'center',title: '房屋编号', totalRowText: '合计'}, 
+					{field: 'house_number',minWidth: 100,align:'center',title: '房屋编号', totalRowText: '合计'}, 
 					{field: 'ban_address',minWidth: 120,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 80,align:'center',title: '机构',
 						templet: function(d) {
@@ -122,13 +122,13 @@
 					{field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'},  
 					{field: 'before_year_rent',minWidth: 100,align:'center',title: '追加以前年', totalRow: true},  
 					{field: 'before_month_rent',minWidth: 100,align:'center',title: '追加以前月', totalRow: true}, 
-					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
-					{field: 'change_status',align:'center',minWidth: 120,title: '审核状态', 
+					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
+					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',minWidth: 160,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
 

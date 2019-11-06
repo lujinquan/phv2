@@ -2,17 +2,17 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="room_number" title="房间编号" placeholder="房间编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
+				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-115">
 					<select name="ban_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -21,7 +21,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-115">
 					<select name="room_type">
 						<option value="">房间类型</option>
 						{volist name="params['roomtypes']" id="v"}
@@ -29,7 +29,7 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-115">
 					<select name="room_pub_num">
 						<option value="">租用状态</option>
 						<option value="1">独用</option>

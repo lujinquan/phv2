@@ -9,14 +9,14 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8 fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:140px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-120">
 					<select name="ban_inst_id">
 						<option value="">申请机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -25,7 +25,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline" style="width:120px;">
+				<div class="layui-input-inline j-width-80">
 					  <select name="ban_owner_id">
 						  <option value="">产别</option>
 						  {volist name="params['owners']" id="v"}
@@ -33,7 +33,7 @@
 						  {/volist}
 						</select>
 				</div>
-				<div class="layui-input-inline" style="width:140px;">
+				<div class="layui-input-inline j-width-120">
 					  <select name="ban_change_id">
 						  <option value="">调整类型</option>
 						  {volist name="params['ban_change_ids']" id="v"}

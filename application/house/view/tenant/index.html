@@ -10,11 +10,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="tenant_number" title="租户编号" placeholder="租户编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-width-90">
 					<select name="tenant_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -23,13 +23,13 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:120px;">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-150">
 					<input type="text" name="tenant_card" title="身份证号" placeholder="身份证号" class="layui-input">
 				</div>
 				<input type="hidden" name="group" value="{$group}" class="layui-input">

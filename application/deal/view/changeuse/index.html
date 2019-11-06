@@ -9,14 +9,14 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-80">
 					<input type="text" name="old_tenant_name" placeholder="原租户" class="layui-input">
 				</div>
-				<div class="layui-input-inline layui-col-md2 j-input-margin  j-narrow-inputs">
-					<input type="text" name="new_tenant_name" placeholder="变更后的租户" class="layui-input">
+				<div class="layui-input-inline layui-col-md2 j-input-margin  j-width-100">
+					<input type="text" name="new_tenant_name" placeholder="变更后租户" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="ban_inst_id">
 						<option value="">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
@@ -25,7 +25,7 @@
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-width-80">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
@@ -33,7 +33,7 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="change_use_type">
 						<option value="">转让形式</option>
 						{volist name="params['usetypes']" id="v"}
@@ -41,7 +41,7 @@
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin j-width-inputs">
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 			</div>
