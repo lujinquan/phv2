@@ -61,7 +61,11 @@
                 ,{title: '操作', minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
-               
+               //导出转换后台数据
+                 var exportData=res.data;
+                 for(i in exportData){
+               	  exportData[i].inst_id = params.insts[exportData[i].inst_id];//转化申请机构
+                 }
             }
         },isShowInst)
     });

@@ -131,7 +131,14 @@ var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'�
 				]
 			],
 			done: function(res, curr, count) {
-
+              //导出转换后台数据
+                var exportData=res.data;
+                for(i in exportData){
+              	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+              	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+				 exportData[i].cut_type = params.cuttypes[exportData[i].cut_type];//转化减免类型
+              	 exportData[i].change_status = process_config[exportData[i].change_status];//转化审核状态
+               }
 			}
 		},isShowInst)
 	});

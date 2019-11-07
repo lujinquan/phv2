@@ -93,7 +93,7 @@
 						align:'center',
 						title: '楼栋编号'
 					}, {
-						field: 'room_type',
+						field: 'room_pub_num',
 						width: 110,
 						title: '租用状态',
 						templet: function(d) {
@@ -164,14 +164,26 @@
 				]
 			],
 			done: function(res, curr, count) {
+				console.log(res);
 				var	result = res.data;
 				for (var i = 0; i < result.length; i++) {
 					if(parseInt(result[i].room_pub_num) == 2){
 						$("tr[data-index="+i+"]").css('color','#007AFF');
 					}else if(parseInt(result[i].room_pub_num) > 2){
 						$("tr[data-index="+i+"]").css('color','#27B98B');
+					};
+					result[i].room_type = params.roomtypes[result[i].room_type];//转化房间类型
+					result[i].ban_inst_id = params.insts[result[i].ban_inst_id];//转化管段
+					if(parseInt(result[i].room_pub_num) == 1){
+						result[i].room_pub_num= '独用';
+					}else if(parseInt(result[i].room_pub_num) == 2){
+						result[i].room_pub_num= '公摊';
+					}else{
+						result[i].room_pub_num= '共用';
 					}
-				}
+				};
+				
+				
 				
 			}
 		}, isShowInst)

@@ -135,7 +135,10 @@
 				]
 			],
 			done: function(res, curr, count) {
-
+				var exportData=res.data;
+				for(i in exportData){
+				  exportData[i].tenant_inst_id = params.insts[exportData[i].tenant_inst_id];//转化管段
+				}
 			}
 		}, isShowInst,isHide)
 	});

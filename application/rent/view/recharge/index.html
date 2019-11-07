@@ -100,7 +100,7 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                ,{field: 'house_number', width: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
+                {field: 'house_number', minWidth: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
                     return params.insts[d.ban_inst_id];
@@ -121,7 +121,14 @@
                 ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
-               
+                //导出转换后台数据
+				  var exportData=res.data;
+				  for(i in exportData){
+					 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化充值机构
+					 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+					 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+					 exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
+				  }
             }
         },isShowInst)
         //日期范围

@@ -122,7 +122,13 @@
 					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
-
+               //导出转换后台数据
+                 var exportData=res.data;
+                 for(i in exportData){
+               	 exportData[i].old_inst_id = params.insts[exportData[i].old_inst_id];//转化原管段
+               	 exportData[i].new_inst_id = params.insts[exportData[i].new_inst_id];//转化新管段
+               	 exportData[i].change_status = process_config[exportData[i].change_status];//转化审核状态
+                }
 			}
 		},isShowInst)
 	});

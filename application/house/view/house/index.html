@@ -163,12 +163,23 @@
 				]
 			],
 			done: function(res, curr, count) {
+				console.log(res);
               //导出转换后台数据
               var exportData=res.data;
               for(i in exportData){
               	exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
 				exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
-				exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+				exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+				exportData[i].ban_struct_id = params.structs[exportData[i].ban_struct_id];//转化结构类别
+				exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
+				exportData[i].house_unit_id = exportData[i].house_unit_id+'/'+exportData[i].ban_units;//转化单元数
+				exportData[i].house_floor_id = exportData[i].house_floor_id+'/'+exportData[i].ban_floors;//转化楼层
+				if(exportData[i].house_is_pause ==0){
+					exportData[i].house_is_pause =='否'
+				}
+                if(exportData[i].house_is_pause ==1){
+                	exportData[i].house_is_pause =='是'
+                }
               	if(exportData[i].last_print_time===null){
 				   	exportData[i].last_print_time='';
 				}

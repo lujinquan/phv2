@@ -54,8 +54,6 @@
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table;
-		
-		
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -64,16 +62,13 @@
 				,
 				defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
 			,url: '{:url("Lease/index")}' //数据接口
-				,
-
-			page: true //开启分页
-				,
-			limit: 10,
-			limits: [10,20,30,40,50,100,300,500,1000],
-			text: {
+			,page: true //开启分页
+			,limit: 10
+			,limits: [10,20,30,40,50,100,300,500,1000]
+			,text: {
 				none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
-			},
-			cols: [
+			}
+			,cols: [
 				[ //表头
 					{
 						field: 'change_order_number',
@@ -125,7 +120,13 @@
 				]
 			],
 			done: function(res, curr, count) {
-
+			   //导出转换后台数据
+               var exportData=res.data;
+               for(i in exportData){
+                 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+				 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+				 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+               }
 			}
 		},isShowInst)
 	});

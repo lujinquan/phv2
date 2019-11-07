@@ -118,7 +118,13 @@
 					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
-
+              //导出转换后台数据
+              var exportData=res.data;
+              for(i in exportData){
+              	exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化机构
+              	exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+                exportData[i].change_status = process_config[exportData[i].change_status];//转化审核状态
+              }
 			}
 		},isShowInst)
 	});
