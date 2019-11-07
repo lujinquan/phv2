@@ -19,7 +19,7 @@
         	<div class="layui-col-md4">
         		<label class="j-form-label">楼层数量</label>
         		<div class="j-input-inline">
-        			<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
+        			<input type="text" name="house_door" readonly value="{$data_info['house_floor_id']}/{$data_info['ban_floors']}" autocomplete="off" class="layui-input">
         		</div>
         	</div>
         </div>
@@ -27,9 +27,23 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">结构基价</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_door" readonly value="{$data_info['ban_number']}" autocomplete="off" class="layui-input">
+					<input type="text" name="house_door" readonly value="{$data_info['ban_struct_point']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋地址</label>
+				<div class="j-input-inline">
+					<input type="text" name="ban_address" readonly value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">单元</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_floor_id" readonly value="{$data_info['house_unit_id']}/{$data_info['ban_units']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">房屋编号</label>
 				<div class="j-input-inline">
@@ -42,26 +56,14 @@
 					<input type="text" name="house_unit_id" readonly value="{$data_info['tenant_name']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">居住层</label>
-				<div class="j-input-inline">
-					<input type="text" name="house_floor_id" readonly value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
+			
 			<div class="layui-col-md4">
 				<label class="j-form-label">产别</label>
 				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$params['owners'][$data_info['ban_owner_id']]}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">房屋地址</label>
-				<div class="j-input-inline">
-					<input type="text" name="ban_address" readonly value="{$data_info['ban_address']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
+			
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
