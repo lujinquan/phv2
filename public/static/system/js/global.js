@@ -654,7 +654,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                     layer.msg('请设置data-href参数');
                     return false;
                 }
-                console.log($('.checkbox-ids:checked'));
+                //console.log($('.checkbox-ids:checked'));
                 if ($('.checkbox-ids:checked').length <= 0) {
                     var checkStatus = table.checkStatus(tableObj);
                     if (checkStatus.data.length <= 0) {
