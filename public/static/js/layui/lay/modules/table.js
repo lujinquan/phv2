@@ -692,7 +692,8 @@ function(e) {
                         i.on("click",
                         function() {
                             var e = t(this).data("type");
-                            d.exportFile(o.id, null, e)
+                            d.exportFile(o.id, null, e);
+							//console.log('o是什么:',o);
                         })
                     }
                 });
