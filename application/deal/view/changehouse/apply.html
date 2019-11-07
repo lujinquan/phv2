@@ -474,7 +474,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 								<td>'+resData[k].baseinfo.floor_point+'</td>\
 								<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 								<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-								<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
+								<td><a data-href="{:url('house/RoomTemp/edit')}?house_id='+resData[k].houseinfo[0].house_id+'&id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
 							</tr>';
 							$('.j-table-tbodynew').append(trDatanew);
 							//房屋明细
@@ -593,7 +593,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 									<td>'+resData[k].baseinfo.floor_point+'</td>\
 									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-									<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
+									<td><a data-href="{:url('house/RoomTemp/edit')}?house_id='+resData[k].houseinfo[0].house_id+'&id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
 								</tr>';
 								$('.j-table-tbodynew').append(trDatanew);
 								//房屋明细
@@ -681,7 +681,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 									<td>'+resData[k].baseinfo.floor_point+'</td>\
 									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-									<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
+									<td><a data-href="{:url('house/RoomTemp/edit')}?house_id='+resData[k].houseinfo[0].house_id+'&id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
 								</tr>';
 								$('.j-table-tbodynew').append(trDatanew);
 								//房屋明细
@@ -761,7 +761,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		  			<td>'+resData[k].baseinfo.floor_point+'</td>\
 		  			<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
 		  			<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-		  			<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
+		  			<td><a data-href="{:url('house/RoomTemp/edit')}?house_id='+resData[k].houseinfo[0].house_id+'&id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
 		  		</tr>';
 		  		$('.j-table-tbodynew').append(trDatanew);
 		  		//房屋明细

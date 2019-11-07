@@ -22,7 +22,7 @@ class RoomTemp extends SystemBase
 
     public function house_room()
     {
-        return $this->hasMany('house_room_temp', 'room_number', 'room_number');
+        return $this->hasMany('house_room_temp', 'room_id', 'room_id');
     }
 
     public function ban()

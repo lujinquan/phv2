@@ -125,13 +125,13 @@ class HouseTemp extends SystemBase
         $row = HouseModel::with(['ban','tenant'])->find($houseid);
         //halt($row);
         //获取当前房屋的房间
-        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_number'); 
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_id'); 
         //定义计租表房间数组
         $roomTables = [];
         if($rooms){
             $FloorPointModel =new FloorPointModel;
             foreach($rooms as $roo){
-                 $roomtype = RoomModel::where([['room_number','eq',$roo]])->find();
+                 $roomtype = RoomModel::where([['room_id','eq',$roo]])->find();
                  $sort = $roomtype->room_type_point()->value('sort');
                  $roomsSort[$sort][] = $roo;
             }
@@ -140,18 +140,29 @@ class HouseTemp extends SystemBase
             //halt($roomsSort);
             foreach($roomsSort as $ro){
                 foreach($ro as $r){
-                    $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
+                    $roomRow = RoomModel::with('ban')->where([['room_id','eq',$r]])->find();//
                     //动态获取层次调解率
                     $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
                     $roomRow['floor_point'] = ($flor_point * 100).'%';
                     $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
-                    $room_houses = $roomRow->house_room()->column('house_number');
-                    //dump($row);halt($room_houses);
-                    $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
-                    //halt($houses);
+                    //halt($roomRow);
+                    $room_houses = $roomRow->house_room()->column('house_id');
+                    //dump($row);
+                    //halt($room_houses);
+                    $houses = HouseModel::with('tenant')->where([['house_id','in',$room_houses]])->field('house_id,house_number,tenant_id')->select();
+                    // 将被查询的房屋编号排在最前面
+                    $temp = [];
+                    foreach ($houses as $key => $value) {
+                        if($value['house_id'] == $houseid){
+                            array_unshift($temp, $value);
+                        }else{
+                            array_push($temp, $value);
+                        }
+                    }
+                    //halt($temp);
                     $roomTables[] = [
                         'baseinfo' => $roomRow,
-                        'houseinfo' => $houses,
+                        'houseinfo' => $temp,
                     ];
                 }
             }

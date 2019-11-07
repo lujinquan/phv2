@@ -154,39 +154,7 @@ class HouseTemp extends Admin
         $group = input('param.group');
         $HouseModel = new HouseModel;
         $roomTables = $HouseModel->get_house_renttable($id);
-        // $row = HouseModel::with(['ban','tenant'])->find($id);
-        // //获取当前房屋的房间
-        // $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_number'); 
-        // //定义计租表房间数组
-        // $roomTables = [];
-        // if($rooms){
-        //     $FloorPointModel =new FloorPointModel;
-        //     foreach($rooms as $roo){
-        //          $roomtype = RoomModel::where([['room_number','eq',$roo]])->find();
-        //          $sort = $roomtype->room_type_point()->value('sort');
-        //          $roomsSort[$sort][] = $roo;
-        //     }
-        //     //halt($roomsSort);
-        //     ksort($roomsSort);
-        //     //halt($roomsSort);
-        //     foreach($roomsSort as $ro){
-        //         foreach($ro as $r){
-        //             $roomRow = RoomModel::with('ban')->where([['room_number','eq',$r]])->find();
-        //             //动态获取层次调解率
-        //             $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
-        //             $roomRow['floor_point'] = ($flor_point * 100).'%';
-        //             $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
-        //             $room_houses = $roomRow->house_room()->column('house_number');
-        //             //dump($row);halt($room_houses);
-        //             $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
-        //             //halt($houses);
-        //             $roomTables[] = [
-        //                 'baseinfo' => $roomRow,
-        //                 'houseinfo' => $houses,
-        //             ];
-        //         }
-        //     }
-        // }
+
         if ($this->request->isAjax()) {
             $data = [];
             $data['data'] = $roomTables;
@@ -242,7 +210,14 @@ class HouseTemp extends Admin
 
     public function del()
     {
-        $ids = $this->request->param('id/a');        
+        $ids = $this->request->param('id/a');
+        $data = [];   
+        $data['house_id'] = $ids;
+        // 数据验证
+        $result = $this->validate($data, 'House.del');
+        if($result !== true) {
+            return $this->error($result);
+        }     
         $res = HouseModel::where([['house_id','in',$ids]])->delete();
         if($res){
             $this->success('删除成功');

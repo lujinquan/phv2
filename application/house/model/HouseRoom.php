@@ -17,6 +17,6 @@ class HouseRoom extends SystemBase
 
     public function house()
     {
-        return $this->belongsTo('house', 'house_number', 'house_number')->bind('room_number');
+        return $this->belongsTo('house', 'house_id', 'house_id')->bind('room_id,house_id');
     }
 }
