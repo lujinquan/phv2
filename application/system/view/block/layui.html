@@ -5,7 +5,9 @@
     layui.config({
     	base: '__ADMIN_JS__/',
         version: '{:config("hisiphp.version")}'
-    }).use('global');
+    }).extend({ 
+		
+	}).use('global');
     // 载入全局系统参数
     var paramsJson = document.getElementById("paramsJson").getAttribute('params');
     if(paramsJson){
