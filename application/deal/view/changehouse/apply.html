@@ -354,6 +354,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					var row = window["layui-layer-iframe" + index].hoesedata();
 					//console.log(row);
 					if(row.color_status != 1){ //正常状态下的才可以执行
+						layer.msg("当前数据不可选！");
 						return false;
 					}
 					layer.close(index);
@@ -378,7 +379,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#pump_fee").val(row.house_pump_rent);//获取泵费
 					$("#rent_relief").val(row.house_pump_rent);//获取租金减免(没字段随便取得值)
 					$("#agreement_rent").val(row.house_protocol_rent);//获取协议租金
-					if(row.ban_is_levator){ //获取电梯
+					if(parseInt(row.ban_is_levator)){ //获取电梯
 						$("#elevator").val('有');
 					}else{
 						$("#elevator").val('无');

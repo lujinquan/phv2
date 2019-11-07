@@ -327,7 +327,11 @@ class ChangeHouse extends SystemBase
         $roomChangeSql = "replace into ".config('database.prefix')."room select * from ".config('database.prefix')."room_temp where room_id in (".implode(',',$roomids).")";
         Db::execute($roomChangeSql);
         // 3、更新房屋房间中间表【待优化】
-        
+        Db::name('house_room')->where([['room_id','in',$roomids]])->delete();
+        $houseRoomData = [];
+        $tempRoomids = Db::name('house_room_temp')->where([['house_id','eq',$finalRow['house_id']]])->field('room_id,house_id')->select();
+
+        Db::name('house_room')->insertAll($tempRoomids);
         // 4、添加房屋台账
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];
