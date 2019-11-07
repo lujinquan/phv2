@@ -344,7 +344,7 @@ class ChangeHouse extends SystemBase
         $HouseTaiModel->allowField(true)->create($taiHouseData);
 
         // 5、更新房屋临时表
-        Db::query('call syn_temp_table');
+        Db::execute('call syn_temp_table');
 
         // $rowTemp = HouseTempModel::get($finalRow['house_id']);
         // $houseChangeData = [
