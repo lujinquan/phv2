@@ -117,14 +117,24 @@ class Room extends Admin
                 $f['room_id'] = $filData['room_id'];
             }
             $HouseRoomModel = new HouseRoomModel;
-            HouseRoomModel::where([['room_id','eq',$filData['room_id']],['house_id','not in',$filData['house_id']]])->delete();
+            HouseRoomModel::where([['room_id','eq',$filData['room_id']]])->delete();
+            $houseRoomArr = [];
+            foreach ($filData['house_id'] as $k => $v) {
+                if($v){
+                    $houseRoomArr[$k] = [
+                        'room_id' => $data['room_id'],
+                        'house_id' => $v,
+                    ];
+                }
+            }
+            $HouseRoomModel->saveAll($houseRoomArr);
             $HouseModel->update_house_info($filData['house_id']);
 
             return $this->success('修改成功');
         }
 
         $id = input('param.id/d'); //从房屋列表页点进来的
-        //$house_number = input('param.house_number/s');
+        $house_id = input('param.house_id/s');
         $row = RoomModel::with('ban')->find($id);
         $row['room_rent_point'] = 100 - $row['room_rent_point']*100;
         $houseidArrs = HouseRoomModel::where([['room_id','eq',$id]])->column('house_id');
@@ -132,13 +142,14 @@ class Room extends Admin
         $houseArrsTemp = HouseModel::with('tenant')->where([['house_id','in',$houseidArrs]])->field('house_id,tenant_id')->select();
         $houseArrs = [];
         foreach($houseArrsTemp as $h){
-            if($h['house_id'] == $id){
+            if($h['house_id'] == $house_id){
                 array_unshift($houseArrs, $h);
             }else{
                 array_push($houseArrs, $h);
             }
         }
-        //dump($house_number);halt($houseArrs);
+        //dump($house_number);
+        //halt($houseArrs);
         $this->assign('data_info',$row);
         $this->assign('houseArrs',$houseArrs);
         $this->assign('flag','normal');

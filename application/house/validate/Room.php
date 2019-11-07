@@ -64,7 +64,7 @@ class Room extends Validate
 			// }
 		//}
         if (count($val) != count(array_unique($val))) {
-            $is = '房屋编号有重复值';
+            $is = '绑定的租户不能重复！';
         }
       	return $is;	
   	}
