@@ -1120,7 +1120,8 @@ function(e) {
                 a.push(n.join(","))
             }),
             i.join(",") + "\r\n" + a.join("\r\n")
-        } ()), n.download = (a.title || "table_" + (a.index || "")) + "." + i, document.body.appendChild(n), n.click(), void document.body.removeChild(n))
+			//新加功能
+        } ()), n.download = (a.title || $("#switchBody li:eq(0) a").text()+"_"+ $("#switchBody li:eq(2) a").text()) + "." + i, document.body.appendChild(n), n.click(), void document.body.removeChild(n))
     },
     d.resize = function(e) {
         if (e) {
