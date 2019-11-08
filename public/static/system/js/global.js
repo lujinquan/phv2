@@ -837,25 +837,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
       
       $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
           e.stopPropagation();
-      });
-      //上传图片限制大小
-	  /* (function(global, config) { 
-	      var sizes =3;
-	      var sumsize=1024*3;
-	      global.sizes = sizes; // 将当前闭包内的某个变量绑定到全局环境
-		  global.sumsize = sumsize; // 将当前闭包内的某个变量绑定到全局环境
-	  }) (this, this.config || {}); */
-	  (function(global, config) {
-	      
-	      console.log(config); // 输出全局环境定义的变量config
-	  
-	      var hello = 'abc';
-	  
-	      global.hello = hello; // 将当前闭包内的某个变量绑定到全局环境
-	  
-	  
-	  }) (this, this.config || {});
-	  
+      });  
   })
 
 function bytesToSize(bytes) {  
