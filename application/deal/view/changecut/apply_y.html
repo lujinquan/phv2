@@ -172,17 +172,13 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
-  			<select name="cut_type" lay-verify="required" class="field-cid">
-  				{volist name="params['cuttypes']" id="v"}
-				<option value="{$key}">{$v}</option>
-				{/volist}
-  			</select>
+  			<input type="text" id="reduction_cut_year" name="reduction_cut_year" value="" placeholder="" readonly autocomplete="off" class="layui-input" title="">
   		</div>
   	</div>
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" lay-verify="required" name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" lay-verify="required" id="cut_rent_year" readonly name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
@@ -325,13 +321,13 @@
                   layer.msg("当前数据不可选！");
                 return false;
               }
-							layer.close(index);
+			 layer.close(index);
               $("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
               $("#check").removeClass('hide');
 
-							$.get('{:url("api/getChangeCutRow")}', {'house_id':row.house_id}, function(res) {
-								console.log(res);
-								var imgs = res.data.change_imgs;
+				$.get('{:url("api/getChangeCutRow")}', {'house_id':row.house_id}, function(res) {
+					console.log(res);
+					var imgs = res.data.change_imgs;
                 if(imgs){
                   for (var i = imgs.length - 1; i >= 0; i--) {
                     $('#'+imgs[i].file_type).append('<li><img src="'+imgs[i].file+'" class="img"></li>');
@@ -340,28 +336,28 @@
                 }
                 
                 //console.log(imgs.length);
-								$("#reduction_seach").val(res.data.house_number); //房屋编号
+				$("#reduction_seach").val(res.data.house_number); //房屋编号
                 $("#ban_id").val(res.data.ban_id); //楼栋id
-								$("#house_id").val(res.data.house_id); //房屋id
-								$("#tenant_id").val(res.data.tenant_id); //租户id
-								$("#reduction_class").val(params.owners[res.data.ban_info.ban_owner_id]); //产别
-								$("#reduction_id").val(res.data.ban_info.ban_number); //楼栋编号
-								$("#reduction_address").val(res.data.ban_info.ban_address); //楼栋地址
-								$("#reduction_nature").val(params.uses[res.data.house_use_id]); //使用性质
-								$("#reduction_monthly_rent").val(res.data.house_pre_rent); //月租金
-								$("#reduction_tenant").val(res.data.tenant_name); //租户
-								$("#reduction_idnumber").val(res.data.tenant_card); //身份证号
-								$("#reduction_tel").val(res.data.tenant_tel); //电话
-								$("#reduction_cut").val(params.cuttypes[res.data.cut_type]); //减免类型
-								$("#reduction_waiver_amount").val(res.data.cut_rent); //减免金额
-								$("#reduction_card_number").val(res.data.cut_rent_number); //减免证号
+				$("#house_id").val(res.data.house_id); //房屋id
+				$("#tenant_id").val(res.data.tenant_id); //租户id
+				$("#reduction_class").val(params.owners[res.data.ban_info.ban_owner_id]); //产别
+				$("#reduction_id").val(res.data.ban_info.ban_number); //楼栋编号
+				$("#reduction_address").val(res.data.ban_info.ban_address); //楼栋地址
+				$("#reduction_nature").val(params.uses[res.data.house_use_id]); //使用性质
+				$("#reduction_monthly_rent").val(res.data.house_pre_rent); //月租金
+				$("#reduction_tenant").val(res.data.tenant_name); //租户
+				$("#reduction_idnumber").val(res.data.tenant_card); //身份证号
+				$("#reduction_tel").val(res.data.tenant_tel); //电话
+				$("#reduction_cut").val(params.cuttypes[res.data.cut_type]); //减免类型
+				$("#reduction_cut_year").val(params.cuttypes[res.data.cut_type]); //年审减免类型
+				$("#reduction_waiver_amount").val(res.data.cut_rent); //减免金额
+				$("#cut_rent_year").val(res.data.cut_rent); //减免年审金额
+				$("#reduction_card_number").val(res.data.cut_rent_number); //减免证号
 
-							})
-
-
-						},btn2: function(index, layero){
-							layer.close(index);
-						}
+			})
+			},btn2: function(index, layero){
+				layer.close(index);
+			}
 			 });
 		})
 		//双击查询记租表
