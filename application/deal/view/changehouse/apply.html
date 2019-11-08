@@ -352,7 +352,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 				,btn: ['确定','关闭']
 				,yes: function(index, layero){
 					var row = window["layui-layer-iframe" + index].hoesedata();
-					//console.log(row);
+					console.log('查询器',row);
 					if(row.color_status != 1){ //正常状态下的才可以执行
 						layer.msg("当前数据不可选！");
 						return false;
@@ -639,7 +639,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	
 	//异动后房间信息编辑
 	$(".layui-form").on('click','.j-iframe-pop-change',function(){
-		var  urls=$(".j-iframe-pop-change").attr('data-href');
+		var  urls=$(this).attr('data-href');
 			layer.open({
 					title: '计租表异动'
 					,type: 2
