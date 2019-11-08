@@ -143,7 +143,7 @@
 				<i><img src="/static/system/image/Group8.png"></i>点击上传
 				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
 			</div>
-			<div class="layui-form-mid layui-word-aux">限制1M</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
 		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list3" class="upload_img_list j-viewer-img"> </div>
@@ -289,7 +289,7 @@ var upurl2 = "{:url('system/Api/upload')}?input=ChangeOffsetUpload&group=change&
 		upload.render({
 			elem: '#upload_img3',
 			url: upurl2,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'ChangeOffsetUpload',
 			before: function(obj) {

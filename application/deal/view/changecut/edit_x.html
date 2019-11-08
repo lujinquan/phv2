@@ -130,7 +130,7 @@
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
   			</div>
-  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  			<div class="layui-form-mid layui-word-aux">限制3M</div>
   		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list1" class="upload_img_list j-viewer-img">
@@ -159,7 +159,7 @@
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
   			</div>
-  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  			<div class="layui-form-mid layui-word-aux">限制3M</div>
   		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list2" class="upload_img_list j-viewer-img">
@@ -187,7 +187,7 @@
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
   			</div>
-  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  			<div class="layui-form-mid layui-word-aux">限制3M</div>
   		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list3" class="upload_img_list j-viewer-img">
@@ -215,7 +215,7 @@
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img4">上传图片</button>
   			</div>
-  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  			<div class="layui-form-mid layui-word-aux">限制3M</div>
   		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list4" class="upload_img_list j-viewer-img">
@@ -243,7 +243,7 @@
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img5">上传图片</button>
   			</div>
-  			<div class="layui-form-mid layui-word-aux">限制1M</div>
+  			<div class="layui-form-mid layui-word-aux">限制3M</div>
   		</div>
 		<div class="j-enclosure-imgs clearfix">
 			<div id="upload_img_list5" class="upload_img_list j-viewer-img">
@@ -343,7 +343,7 @@
         upload.render({
         	elem: '#upload_img1',
         	url: upurl,
-        	size: 1024,
+        	size: 1024*3,
         	multiple: duotu,
         	field: 'TenantReIDCard',
         	before: function(obj) {
@@ -372,7 +372,7 @@
 		upload.render({
 			elem: '#upload_img2',
 			url: upurl1,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'Residence',
 			before: function(obj) {
@@ -401,7 +401,7 @@
 		upload.render({
 			elem: '#upload_img3',
 			url: upurl2,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'HouseForm',
 			before: function(obj) {
@@ -430,7 +430,7 @@
 		upload.render({
 			elem: '#upload_img4',
 			url: upurl3,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'Lowassurance',
 			before: function(obj) {
@@ -459,7 +459,7 @@
 		upload.render({
 			elem: '#upload_img5',
 			url: upurl4,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'Housingsecurity',
 			before: function(obj) {

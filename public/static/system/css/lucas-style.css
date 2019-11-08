@@ -50,7 +50,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-row.on .viewer-button{ right: -26px;}
 .j-no-content,.j-no-contents{text-align: center; line-height: 200px; color: #999; font-size: 14px;}/* 表格无数据 */
 .j-no-content i,.j-no-contents i{ /* color: #FFB800; */font-size: 24px;}
-.j-no-contents{line-height: 450px;}/* 表格无数据行高 */
+.j-no-contents{/* line-height: 450px; *//* position: absolute;left: 50%;top: 50%;margin-left: -70px;margin-top: -100px; */margin-top: 80px;}/* 表格无数据行高 */
 .j-details-box input[readonly]{  background-color: #F4F4F5;} /*input不能输入框背景颜色*/
 .layui-select-title input[readonly]{ background: #fff;}
 .j-reportform .layui-table td,.j-reportform .report td{font-size: 12px!important;}/* 报表管理table字体大小 */

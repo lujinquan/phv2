@@ -350,7 +350,7 @@
    					<i><img src="/static/system/image/Group8.png"></i>点击上传
    					<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
    				</div>
-   				<div class="layui-form-mid layui-word-aux">限制1M</div>
+   				<div class="layui-form-mid layui-word-aux">限制3M</div>
    			</div>
    			<div class="j-enclosure-imgs clearfix">
    				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
@@ -375,7 +375,7 @@
    					<i><img src="/static/system/image/Group8.png"></i>点击上传
    					<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
    				</div>
-   				<div class="layui-form-mid layui-word-aux">限制1M</div>
+   				<div class="layui-form-mid layui-word-aux">限制3M</div>
    			</div>
    			<div class="j-enclosure-imgs clearfix">
    				<div id="upload_img_list2" class="upload_img_list j-viewer-img"> 
@@ -401,7 +401,7 @@
    					<i><img src="/static/system/image/Group8.png"></i>点击上传
    					<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
    				</div>
-   				<div class="layui-form-mid layui-word-aux">限制1M</div>
+   				<div class="layui-form-mid layui-word-aux">限制3M</div>
    			</div>
    			<div class="j-enclosure-imgs clearfix">
    				<div id="upload_img_list3" class="upload_img_list j-viewer-img">
@@ -459,7 +459,7 @@
 		upload.render({
 			elem: '#upload_img1',
 			url: upurl,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'LandCard',
 			before: function(obj) {
@@ -488,7 +488,7 @@
 		upload.render({
 			elem: '#upload_img2',
 			url: upurl1,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'RealestateCard',
 			before: function(obj) {
@@ -517,7 +517,7 @@
 		upload.render({
 			elem: '#upload_img3',
 			url: upurl2,
-			size: 1024,
+			size: 1024*3,
 			multiple: duotu,
 			field: 'ImagingData',
 			before: function(obj) {
