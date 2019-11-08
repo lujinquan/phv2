@@ -4,7 +4,7 @@
 			<div class="j-search-fl layui-col-md8  fl">
 		        {if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:140px;">
-					<select name="inst_id">
+					<select name="inst_id" id="TubulationI">
 					  <option value="">机构</option>
 					  {volist name=":config('inst_check_names')[INST]" id="v"}
 					  <option value="{$key}"{if condition="$key == $Think.INST"}selected{/if}>{$v}</option>
@@ -43,6 +43,10 @@
 				<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
 				    <i class="layui-icon layui-icon-print"></i>
 				    打印
+				</button>
+				<button type="button" class="layui-btn layui-bg-green on" id="button_create">
+				    <i class="layui-icon layui-icon-chart"></i>
+				    生成报表
 				</button>
 	          </div>
 			</div>
@@ -414,6 +418,21 @@
 		    $ = layui.$
 			,element = layui.element
 			,table = layui.table;
+
+		$('#button_create').click(function(){
+			var that = $(this);
+that.prop('disabled', true);
+that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
+return false;
+			$.post('{:url('house/makeArchivesReport')}', function(res) {
+                layer.msg(res.msg);
+                location.reload();
+            });
+// that.prop('disabled', false);
+// that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
+
+		})
+
         //年选择器
         laydate.render({
             elem: '#timeYear'

@@ -18,15 +18,23 @@ class House extends Admin
     	$owerLst = [1 => '市属',2 => '区属',3 => '代管',5 => '自管', 6 => '生活', 7 => '托管', 10 => '市代托',11 => '市区代托', 12 => '所有产别'];     
         if ($this->request->isAjax()) {
             $options = $this->request->post();
+            //halt($options);
             $owner = $options['owner'];
             $date = $options['month'];
-            $inst = $options['inst'];
+            $inst = isset($options['inst'])?$options['inst']:INST;
             $type = $options['type'];
 
             $data = [];
+            $data['data'] = [];
             $dataJson = Db::name('report')->where([['type','eq','HouseReport'],['date','eq',str_replace('-','',$date)]])->value('data');
-            $datas = json_decode($dataJson,true);
-            $data['data'] = $datas?$datas[$type][$owner][$inst]:array();
+            if($dataJson){
+                $datas = json_decode($dataJson,true);
+                $data['data'] = $datas[$type][$owner][$inst];
+            }
+
+            $HouseReportModel = new HouseReportModel;
+            $data['data'] = $HouseReportModel->index($type,$owner,$inst);
+
             $data['msg'] = '';
             if($data['data']){
                 $data['code'] = 1;
@@ -49,7 +57,7 @@ class House extends Admin
     public function makeArchivesReport()
     {
         //if ($this->request->isAjax()) {
-            //set_time_limit(0);
+            set_time_limit(0);
             $date = date('Ym');
             //$date = 201909;
             //Debug::remark('begin');

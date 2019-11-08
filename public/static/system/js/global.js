@@ -674,14 +674,16 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                         query = $('#pageListForm').serialize();
                     }
                 }
-
+that.prop('disabled', true);
+that.addClass('layui-btn-disabled').text('导出中……');
                 layer.msg('数据提交中...',{time:500000});
                 $.post(href, query, function(output) {
                     layer.msg(output.msg, {}, function(){
                         if(output.code){ //成功则直接下载                      
                             document.location.href = output.data;
                         }
-                        //console.log(output);
+that.prop('disabled', false);
+that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-download-circle"></i>导出表结构');
                     });
                 });
             };
@@ -690,10 +692,12 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
             layer.confirm(tips, {title:false, closeBtn:0}, function(index){
                 code(that);
                 layer.close(index);
+
             });
         } else {
            code(that); 
         }
+
         return false;
     });
 
