@@ -204,7 +204,7 @@ class Design extends Admin
         //设置子标题栏
         $j = 0;
         $objPHPExcel->createSheet();
-        $objPHPExcel->setActiveSheetIndex(0);
+        //$objPHPExcel->setActiveSheetIndex(0);
         $objActSheet = $objPHPExcel->getActiveSheet();
         $objActSheet->setTitle('表结构'); //设置当前活动sheet的名称
         foreach($tableData as $ak => $a){
@@ -214,18 +214,24 @@ class Design extends Admin
                 foreach($b as $ck => $c){
                     if($titleArr[$ck]){
                         if($bk == 1){ //如果是第一行，写入标题
-                            $objActSheet->mergeCells($letter[$i] . $j . ':' . $letter[5] . $j);
+                            $objActSheet->mergeCells($letter[0] . $j . ':' . $letter[5] . $j);
                             $objActSheet->getStyle($letter[0].$j)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                            $objActSheet->getStyle($letter[0].$j)->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);
+                            $objActSheet->getStyle($letter[0].$j)->getFill()->getStartColor()->setARGB('FF808080');
                             $objActSheet->setCellValue($letter[$i] . $j, $a['info'][0]['table_name'].'：'.$a['info'][0]['table_comment']);
                             $objActSheet->setCellValue($letter[$i] . ($j+1), $titleArr[$ck]);
+
                         } 
-                        $objActSheet->setCellValue($letter[$i] . ($j+2), $c);   
+                        $objActSheet->setCellValue($letter[$i] . ($j+2), $c); 
+                        $objActSheet->getColumnDimension($letter[$i])->setWidth(18); 
                         $i++;
                     }
                 }
                 $j++;
             }
             $j += 3;
+            $objActSheet->mergeCells($letter[0] . ($j-1) . ':' . $letter[5] . $j);
+            //$objActSheet->mergeCells($letter[0] . $j . ':' . $letter[5] . $j);
             unset($a); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
         }
 
