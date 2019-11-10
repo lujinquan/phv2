@@ -9,9 +9,9 @@ drop table if exists ph_v2.ph_ban_back;
 create table ph_v2.ph_ban_back like ph_v2.ph_ban;
 # 同步数据
 insert into ph_v2.ph_ban_back 
-(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_status) 
+(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_status) 
 select 
-BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,Status
+BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,Status
 from ph_v1.ph_ban;
 
 
@@ -99,11 +99,12 @@ from ph_v1.ph_room;
  * 9、运行存储过程，将逗号分隔的数据拆分到test1表中 耗时262.971s
  */
 # 运行存储过程函数（将有逗号分隔的插入到test1表中）
-truncate table ph_v2.test1;
-call split_str();
-# 将无逗号分隔的插入到test1表中
-//insert into ph_v2.test1 (select * from ph_v2.test where locate(',',b) = 0);
+#truncate table ph_v2.test1;
+# 【运行过一次就不用再运行了，因为这一步主要是拆分房间编号-房屋编号对应关系，而编号一直也没变】
+#call split_str();
 
+# 将无逗号分隔的插入到test1表中
+#insert into ph_v2.test1 (select * from ph_v2.test where locate(',',b) = 0);
 
 
 /**
@@ -153,7 +154,7 @@ from ph_v1.ph_rent_order;
 update ph_v2.ph_rent_order_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update ph_v2.ph_rent_order_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 update ph_v2.ph_rent_order_back set ptime = 0 where rent_order_receive > rent_order_paid;
-update ph_v2.ph_rent_order_back set is_deal = 1 where rent_order_paid > 0;
+update ph_v2.ph_rent_order_back set is_deal = 1,pay_way = 1 where rent_order_paid > 0;
 
 
 
@@ -419,6 +420,9 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b
 
 
 
+
+
+
 # 将back表同步到主表
 drop table if exists ph_ban;
 alter table ph_ban_back rename ph_ban;
@@ -460,55 +464,3 @@ drop table if exists ph_room;
 alter table ph_room_back rename ph_room;
 drop table if exists ph_tenant;
 alter table ph_tenant_back rename ph_tenant;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 创建字符串分隔存储过程函数
-delimiter $$
-CREATE DEFINER = `root`@`%` PROCEDURE `split_str`()
-    SQL SECURITY INVOKER
-BEGIN
-  DECLARE a1 varchar(20);
-  DECLARE b1 varchar(10000);
-  DECLARE done INT DEFAULT FALSE;
-  DECLARE cur CURSOR FOR SELECT a,b from test ;
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-  OPEN cur; 
-  read_loop: LOOP
-    FETCH cur INTO a1,b1;
-    IF done THEN
-      LEAVE read_loop;
-    END IF;
-    SET @num = LENGTH(b1) - LENGTH(REPLACE(b1, ',', ''));
-SET @i = 0;
-WHILE (@i <=@num ) DO
-    INSERT INTO test1
-VALUES
-    (
-        a1,
-      str_for_substr(@i,b1)
-);
-set @i = @i+1;
-END WHILE;
-  END LOOP;  
-  CLOSE cur;
-END$$

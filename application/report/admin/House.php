@@ -31,9 +31,10 @@ class House extends Admin
                 $datas = json_decode($dataJson,true);
                 $data['data'] = $datas[$type][$owner][$inst];
             }
-
-            $HouseReportModel = new HouseReportModel;
-            $data['data'] = $HouseReportModel->index($type,$owner,$inst);
+            if(!$dataJson && $date == date('Y-m')){
+                $HouseReportModel = new HouseReportModel;
+                $data['data'] = $HouseReportModel->index($type,$owner,$inst);
+            }
 
             $data['msg'] = '';
             if($data['data']){

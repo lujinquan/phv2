@@ -342,19 +342,19 @@ class HouseReport extends Model
             for($i = 1; $i<4; $i++){ //$i = 1 ,2 ,3  分别表示使用性质为 住宅 ，企业 ，机关
                 if ($i == 1) {
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_civil_num) as ban_nums ,sum(ban_holds) as ban_holds, sum(ban_civil_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_civil_num) as ban_nums ,sum(ban_civil_holds) as ban_holds, sum(ban_civil_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();
                 }elseif($i == 2){
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_career_num) as ban_nums ,sum(ban_holds) as ban_holds, sum(ban_career_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_career_num) as ban_nums ,sum(ban_career_holds) as ban_holds, sum(ban_career_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();
                 }elseif($i == 3){
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_party_num) as ban_nums ,sum(ban_holds) as ban_holds, sum(ban_party_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_party_num) as ban_nums ,sum(ban_party_holds) as ban_holds, sum(ban_party_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();

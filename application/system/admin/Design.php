@@ -165,7 +165,7 @@ class Design extends Admin
 	}
 
     // 页面直接输出模式：http://web.phv2.com/admin.php/system/design/export.html?id=ph_inst,ph_cparam
-    public function export_struct()
+    public function exportStruct()
     {
 
         $tables = $this->request->param('id/a');

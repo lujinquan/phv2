@@ -128,7 +128,7 @@ class SystemMenu extends Model
         if (config('sys.app_debug') == 0 && $level == 0) {
             $trees = cache($cache_tag);
         }
-
+        
         if (empty($trees)) {
             if (empty($data)) {
                 $map = [];
