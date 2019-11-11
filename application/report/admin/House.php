@@ -5,6 +5,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\report\model\Report as ReportModel;
 use app\report\model\HouseReport as HouseReportModel;
+use app\report\model\MonthPropertyReport as MonthPropertyReportModel;
 
 class House extends Admin
 {
@@ -117,5 +118,41 @@ class House extends Admin
         }
         $this->assign('owerLst',$owerLst);
         return $this->fetch();
+    }
+
+    /**
+     * [months 生成月产权统计报表]
+     * @return [type] [description]
+     */
+    public function makeMonthPropertysReport()
+    {
+        if ($this->request->isAjax()) {
+            //set_time_limit(0);
+            $date = date('Ym');
+            //$date = 201909;
+            //Debug::remark('begin');
+            $MonthPropertyReportModel = new MonthPropertyReportModel;
+            $HouseReportdata = $MonthPropertyReportModel->makeMonthPropertyReport($date);
+            //Debug::remark('end');
+            $where = [['type','eq','PropertyReport'],['date','eq',$date]];
+
+            $ReportModel = new ReportModel;
+            $res = $ReportModel->where($where)->find();
+
+            if($res){
+                $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
+            }else{
+                $re = $ReportModel->create([
+                    'data'=>json_encode($HouseReportdata),
+                    'type'=>'PropertyReport',
+                    'date'=>$date,
+                ]);
+            }
+            
+            $data = [];
+            $data['msg'] = $date.'月报，保存成功！';
+            $data['code'] = 1;
+            return json($data);
+        }
     }
 }
