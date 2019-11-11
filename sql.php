@@ -9,9 +9,9 @@ drop table if exists ph_v2.ph_ban_back;
 create table ph_v2.ph_ban_back like ph_v2.ph_ban;
 # 同步数据
 insert into ph_v2.ph_ban_back 
-(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_status) 
+(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_ctime,ban_status) 
 select 
-BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,Status
+BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,Status
 from ph_v1.ph_ban;
 
 
@@ -155,6 +155,7 @@ update ph_v2.ph_rent_order_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.ten
 update ph_v2.ph_rent_order_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 update ph_v2.ph_rent_order_back set ptime = 0 where rent_order_receive > rent_order_paid;
 update ph_v2.ph_rent_order_back set is_deal = 1,pay_way = 1 where rent_order_paid > 0;
+update ph_v2.ph_rent_order_back set is_deal = 1 where rent_order_date < left(replace(curdate(),'-',''),6);
 
 
 
@@ -343,6 +344,8 @@ from ph_v1.ph_change_order where ChangeType in (5,8) and Status < 2;
 
 update ph_v2.ph_change_cancel_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 update ph_v2.ph_change_cancel_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_cancel_back set cancel_type = 1 where cancel_type = 0;
+update ph_v2.ph_change_cancel_back as a left join ph_v1.ph_rent_table as b on a.change_order_number = b.ChangeOrderID set a.cancel_ban = b.ChangeNum,a.cancel_rent = b.InflRent,a.cancel_area = b.Area,a.cancel_use_area = b.UseArea,a.cancel_oprice = b.Oprice;
 
 
 # 同步房屋调整
@@ -391,10 +394,11 @@ update ph_v2.ph_change_offset_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.
 drop table if exists ph_v2.ph_change_name_back;
 create table ph_v2.ph_change_name_back like ph_v2.ph_change_name;
 # 同步数据
+update ph_v1.ph_cor_change_order as a left join (select FatherOrderID,CreateTime from ph_v1.ph_cor_child_order Order by id desc) as b on a.ChangeOrderID = b.FatherOrderID set a.FinishTime = b.CreateTime ;
 insert into ph_v2.ph_change_name_back 
-(change_order_number,house_id,tenant_id,old_tenant_name,new_tenant_name,change_remark,change_reason,change_imgs,ctime,change_status) 
+(change_order_number,house_id,tenant_id,old_tenant_name,new_tenant_name,change_remark,change_reason,change_imgs,ctime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,OldTenantID,OldTenantName,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,Status
+ChangeOrderID,HouseID,OldTenantID,OldTenantName,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_cor_change_order;
 
 

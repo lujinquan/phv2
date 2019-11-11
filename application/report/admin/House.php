@@ -33,6 +33,7 @@ class House extends Admin
             }
             if(!$dataJson && $date == date('Y-m')){
                 $HouseReportModel = new HouseReportModel;
+                //dump($type);dump($owner);halt($inst);
                 $data['data'] = $HouseReportModel->index($type,$owner,$inst);
             }
 

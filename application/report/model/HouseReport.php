@@ -342,19 +342,19 @@ class HouseReport extends Model
             for($i = 1; $i<4; $i++){ //$i = 1 ,2 ,3  分别表示使用性质为 住宅 ，企业 ，机关
                 if ($i == 1) {
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_civil_num) as ban_nums ,sum(ban_civil_holds) as ban_holds, sum(ban_civil_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_civil_num) as ban_nums ,sum(ban_civil_holds) as ban_holds, sum(ban_civil_area) as ban_areas,sum(ban_use_area) as ban_use_areas,sum(ban_civil_rent) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();
                 }elseif($i == 2){
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_career_num) as ban_nums ,sum(ban_career_holds) as ban_holds, sum(ban_career_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_career_num) as ban_nums ,sum(ban_career_holds) as ban_holds, sum(ban_career_area) as ban_areas,sum(ban_use_area) as ban_use_areas,sum(ban_career_rent) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();
                 }elseif($i == 3){
                     $datas[$k1][$i] = Db::name('ban') //根据使用性质和结构类型分类
-                        ->field('sum(ban_party_num) as ban_nums ,sum(ban_party_holds) as ban_holds, sum(ban_party_area) as ban_areas,sum(ban_use_area) as ban_use_areas,(sum(ban_civil_rent)+sum(ban_party_rent)+sum(ban_career_rent)) as ban_rents')
+                        ->field('sum(ban_party_num) as ban_nums ,sum(ban_party_holds) as ban_holds, sum(ban_party_area) as ban_areas,sum(ban_use_area) as ban_use_areas,sum(ban_party_rent) as ban_rents')
                         ->where($where)
                         ->where($wheress)
                         ->find();
@@ -506,7 +506,7 @@ class HouseReport extends Model
 
         //below = Db::name('house')->where($wheres)->where('Status',1)->group('UseNature')->column('UseNature ,count(HouseID) as HouseIDS'); //底部的户数统计
         $institutions = config('inst_check_names')[$ins];
-
+//dump($owner);halt($ins);
         //halt($wheres);
         $arr = ['1' => '1937年代' ,'2' => '40年代' ,'3' => '50年代' ,'4' => '60年代' ,'5' => '70年代' ,'6' =>'80年代以后'];
 
@@ -540,7 +540,7 @@ class HouseReport extends Model
                     ->field('(sum(ban_civil_num)+sum(ban_party_num)+sum(ban_career_num)) as ban_nums ,sum(ban_holds) as house_holds_arr, (sum(ban_civil_area)+sum(ban_party_area)+sum(ban_career_area)) as ban_areas')
                     ->where($where)
                     ->where($wheres)
-                    ->where([['ban_damage_id','eq',$i]])
+                    ->where([['ban_damage_id','eq',$i],['ban_inst_id','in',config('inst_ids')[$ins]]])
                     ->find();  //计算每一个（建成年份，完损等级）的结果集
 
                 foreach ($datas[$k1][$i] as &$v2) {  //保证每个结果的值不为null ，避免报错
