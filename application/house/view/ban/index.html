@@ -84,7 +84,7 @@
 		//var exportData = " ";//定义全局变量
        table.render({
             elem: '#dataTable'
-			,id:'datas'
+			//,id:'datas'
             ,toolbar: 'myToolbar'
 			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
@@ -126,6 +126,7 @@
             ,done:function(res,curr,count){
 				//导出转换后台数据
 				var exportData=res.data;
+
 				for(i in exportData){
 					exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
 					exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别

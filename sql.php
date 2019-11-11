@@ -248,7 +248,6 @@ create table ph_v2.ph_house_room_temp like ph_v2.ph_house_room;
 insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 
 
-
 /**
  * 21、同步使用权变更表[ph_use_change_order => ph_change_use]
  * 字段：异动编号、变更类型、转让金额、房屋编号、原租户编号、原租户姓名、新租户编号、新租户姓名、备注、失败原因、附件、创建时间、状态
@@ -256,10 +255,11 @@ insert into ph_v2.ph_house_room_temp select * from ph_house_room;
 drop table if exists ph_v2.ph_change_use_back;
 create table ph_v2.ph_change_use_back like ph_v2.ph_change_use;
 # 同步数据
+update ph_v1.ph_use_change_order as a left join (select FatherOrderID,CreateTime from ph_v1.ph_use_child_order Order by id desc) as b on a.ChangeOrderID = b.FatherOrderID set a.FinishTime = b.CreateTime ;
 insert into ph_v2.ph_change_use_back 
-(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,cuid,change_status) 
+(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,ftime,cuid,change_status) 
 select 
-ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,UserNumber,Status
+ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,UserNumber,Status
 from ph_v1.ph_use_change_order;
 
 /**
