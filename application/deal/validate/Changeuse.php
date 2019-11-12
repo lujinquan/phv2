@@ -12,6 +12,7 @@
 namespace app\deal\validate;
 
 use think\Validate;
+use think\Db;
 use app\house\model\House as HouseModel;
 use app\deal\model\ChangeUse as ChangeUseModel;
 
@@ -58,6 +59,21 @@ class Changeuse extends Validate
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
+        // // 检查该房屋是否在注销中
+        // $cancelRow = Db::name('change_cancel')->where([['house_id','eq',$value],['change_status','>',1]])->find();
+        // if($cancelRow){
+        //     $msg = '房屋已在注销异动中，无法申请当前异动！';
+        // }
+        // // 检查该房屋是否在减免年审中
+        // $cancelCutYear = Db::name('change_cut_year')->where([['house_id','eq',$value],['change_status','>',1]])->find();
+        // if($cancelCutYear){
+        //     $msg = '房屋已在减免年审异动中，无法申请当前异动！';
+        // }
+        // // 检查该房屋是否在减免年审中
+        // $cancelCutYear = Db::name('change_house')->where([['house_id','eq',$value],['change_status','>',1]])->find();
+        // if($cancelCutYear){
+        //     $msg = '房屋已在减免年审异动中，无法申请当前异动！';
+        // }
       	return $msg?$msg:true;
   	}
 

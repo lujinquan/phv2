@@ -358,7 +358,7 @@ select
 ChangeOrderID,HouseID,BanID,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 9 and Status < 2;
 
-update ph_v2.ph_change_house_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_house_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.tenant_id = b.tenant_id where a.house_id = b.house_number;
 update ph_v2.ph_change_house_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
 
 

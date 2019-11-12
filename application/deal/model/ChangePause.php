@@ -259,7 +259,7 @@ class ChangePause extends SystemBase
     private function finalDeal($finalRow)
     {
         // 1、将涉及的所有房屋，设置成暂停计租状态
-        HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
+        HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_is_pause'=>1]);
         $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,house_pre_rent,ban_id')->select()->toArray();
         $houseArr = [];
         foreach($houseTemps as $s){
@@ -281,6 +281,9 @@ class ChangePause extends SystemBase
                 ],
                 
             ];
+            // 3、如果有减免，则需要让减免失效
+            ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
+            Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['end_date'=>date('Ym')]);
 
             // 添加产权统计记录
             $tableData[$key]['change_type'] = 3;

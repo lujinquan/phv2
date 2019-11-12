@@ -324,6 +324,7 @@ class ChangeCancel extends SystemBase
                         'house_oprice' => $v['house_oprice'],
                         'house_area' => $v['house_area'],
                         'house_status' => 3,
+                        'house_is_pause' => 0,
                     ]);
                     //如果有暂停计租，则需要让暂停计租失效
                     ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
