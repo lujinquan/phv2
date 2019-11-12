@@ -3,9 +3,9 @@ return [
   'hisiphp' => 
   [
     'name' => '公房管理系统',
-    'version' => '2.0.1',
+    'version' => '2.0.0',
     'release' => 0,
     'copyright' => '公房管理系统',
-    'url' => 'http://pro.ctnmit.com',
+    'url' => 'https://pro.ctnmit.com',
   ],
 ];
