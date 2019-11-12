@@ -3,17 +3,15 @@ namespace app\report\model;
 
 use think\Db;
 use think\Model;
-use app\rent\model\RentRecycle as RentRecycleModel;
-use app\common\model\Cparam as ParamModel;
 
-class MonthPropertyReport extends Model
+class YearPropertyReport extends Model
 {
 	/**
      * 产权统计报表缓存数据
      * 机制：将所有产别，机构按照多维数组序列化存储，$data[产别][机构]
      * 这样要取出某个产别和机构的数据时直接读取缓存中的对应结构即可
      */
-    public function makeMonthPropertyReport($cacheDate){
+    public function makeYearPropertyReport($cacheDate){
         //注意所有与私房、区直共有房屋还没做
         //获取所有产别，去除代管产、托管产
         //$owerLst = Db::name('ban_owner_type')->where('id','not in','3,7')->column('id');
@@ -37,7 +35,7 @@ class MonthPropertyReport extends Model
             ['change_type' ,'eq',7],
             ['change_status','eq',1],
             //'OrderDate' => array('between', [$year . '01', $year . '12']),
-            ['order_date','eq', $cacheDate],
+            ['order_date','between', [$cacheDate . '01', $cacheDate . '12']],
         ];
 
         $zhuxiaoWhere = [
@@ -45,7 +43,7 @@ class MonthPropertyReport extends Model
             ['change_type' ,'eq',8],
             ['change_status','eq',1],
             //'OrderDate' => array('between', [$year . '01', $year . '12']),
-            ['order_date','eq', $cacheDate],
+            ['order_date','between', [$cacheDate . '01', $cacheDate . '12']],
         ];
 
         $tiaozhengWhere = [  //租金调整，上调的部分
@@ -53,7 +51,7 @@ class MonthPropertyReport extends Model
             ['change_type' ,'eq',9],
             ['change_status','eq',1],
             //'OrderDate' => array('between', [$year . '01', $year . '12']),
-            ['order_date','eq', $cacheDate],
+            ['order_date','between', [$cacheDate . '01', $cacheDate . '12']],
         ];
         // $tiaozhengDelWhere = [  //租金调整，上调的部分
         //     'ban_owner_id' => array('in',[1,2,3,5,6,7]),

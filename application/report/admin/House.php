@@ -6,6 +6,7 @@ use app\system\admin\Admin;
 use app\report\model\Report as ReportModel;
 use app\report\model\HouseReport as HouseReportModel;
 use app\report\model\MonthPropertyReport as MonthPropertyReportModel;
+use app\report\model\YearPropertyReport as YearPropertyReportModel;
 
 class House extends Admin
 {
@@ -100,6 +101,8 @@ class House extends Admin
             $options = $this->request->get();
             $owner = $options['owner'];
             $date = $options['month'];
+            $group = $options['group'];
+            //halt($group);
             $inst = isset($options['inst'])?$options['inst']:INST;
 
             $data = [];
@@ -116,8 +119,25 @@ class House extends Admin
             }
             return json($data);
         }
+        $group = input('group','m');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '月报',
+                'url' => '?group=m',
+            ],
+            [
+                'title' => '年报',
+                'url' => '?group=y',
+            ]
+        ];
+        $tabData['current'] = url('?group='.$group);
+        //$this->assign('ban_number',input('param.ban_number',''));
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
         $this->assign('owerLst',$owerLst);
-        return $this->fetch();
+        return $this->fetch('propertys_'.$group);
     }
 
     /**
@@ -128,8 +148,9 @@ class House extends Admin
     {
         if ($this->request->isAjax()) {
             //set_time_limit(0);
+
             $date = date('Ym');
-            //$date = 201909;
+
             //Debug::remark('begin');
             $MonthPropertyReportModel = new MonthPropertyReportModel;
             $HouseReportdata = $MonthPropertyReportModel->makeMonthPropertyReport($date);
@@ -155,4 +176,41 @@ class House extends Admin
             return json($data);
         }
     }
+
+    /**
+     * [months 生成月产权统计报表]
+     * @return [type] [description]
+     */
+    public function makeYearPropertysReport()
+    {
+        if ($this->request->isAjax()) {
+            //set_time_limit(0);
+            $date = date('Y');
+
+            //Debug::remark('begin');
+            $YearPropertyReportModel = new YearPropertyReportModel;
+            $HouseReportdata = $YearPropertyReportModel->makeYearPropertyReport($date);
+            //Debug::remark('end');
+            $where = [['type','eq','PropertyReport'],['date','eq',$date]];
+
+            $ReportModel = new ReportModel;
+            $res = $ReportModel->where($where)->find();
+
+            if($res){
+                $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
+            }else{
+                $re = $ReportModel->create([
+                    'data'=>json_encode($HouseReportdata),
+                    'type'=>'PropertyReport',
+                    'date'=>$date,
+                ]);
+            }
+            
+            $data = [];
+            $data['msg'] = $date.'年报，保存成功！';
+            $data['code'] = 1;
+            return json($data);
+        }
+    }
+
 }

@@ -5,7 +5,7 @@
 <div class="j-table-content j-no-title j-reportform">
   <div class="page-toolbar j-page-toolbar clearfix">
         <form class="layui-form layui-form-pane" >
-  		<div class="j-search-fl layui-col-md6  fl">
+  		<div class="j-search-fl layui-col-md4  fl">
   			{if condition="$Think.INST_LEVEL == 1"}
   			<div class="layui-input-inline" style="width:140px;">
                 <select name="inst" id="OwnerTyp" lay-filter="owner_id">
@@ -29,10 +29,10 @@
             </div>
           </div>
   		
-          <div class="j-search-fr layui-col-md6 fr">
+          <div class="j-search-fr layui-col-md8 fr">
             <div class="layui-input-inline fr">
   			<button type="reset" class="layui-btn j-btn-reset">重置</button>
-  			<button type="button" class="layui-btn"  id="yueQuery" lay-submit lay-filter="formDemo">
+  			<button type="button" class="layui-btn" id="yueQuery">
   			    <i class="layui-icon">&#xe615;</i>
   			    搜索
   			</button>
@@ -40,10 +40,12 @@
   			    <i class="layui-icon layui-icon-print"></i>
   			    打印
   			</button>
+  			{if condition="in_array(351,$auths) || $Think.ADMIN_ROLE == 1"}
   			<button type="button" class="layui-btn layui-bg-green on" id="button_create">
 			    <i class="layui-icon layui-icon-chart"></i>
-			    生成报表
+			    生成本月报表
 			</button>
+			{/if}
             </div>
   		</div>
         </form>
@@ -182,13 +184,13 @@
 		var data = $('form').serialize();
 		$('#yueQuery').click(function(){
 			var data = $(this).parents('form').serialize();
-			$.get("{:url()}", data ,function(res){
+			$.get("{:url()}?group=m", data ,function(res){
 				//console.log(res.code);
 				if(res.code == 1){
 					insert_data(res);
 				}else{
-					layer.msg(res.msg);
-					//$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
+					//layer.msg(res.msg);
+					$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
 				}
 			});
 		});
@@ -198,19 +200,23 @@
 			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
 
 			$.post('{:url('house/makeMonthPropertysReport')}', function(res) {
-                layer.msg(res.msg);
-                location.reload();
+                layer.msg(res.msg, {time:5000}, function(){
+                    if (res.code != 0) {
+                        location.reload();
+                    } 
+                });
             });
 // that.prop('disabled', false);
 // that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
 
 		})
 		
-		$.get("{:url()}", data,function(res){
+		$.get("{:url()}?group=m", data,function(res){
 			if(res.code == 1){
 				insert_data(res);
 			}else{
-				layer.msg(res.msg);
+				//layer.msg(res.msg);
+				$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
 			}
 		});
 

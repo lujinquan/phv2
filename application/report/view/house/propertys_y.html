@@ -1,0 +1,286 @@
+{include file="system@block/layui" /}
+{if condition="INST_LEVEL == 3"}
+<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>改页面只对房管所和区公司管理员开放！</div>
+{else /}
+<div class="j-table-content j-no-title j-reportform">
+  <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane">
+  		<div class="j-search-fl layui-col-md4  fl">
+  			{if condition="$Think.INST_LEVEL == 1"}
+  			<div class="layui-input-inline" style="width:140px;">
+                <select name="inst" id="OwnerTyp" lay-filter="owner_id">
+                    <option value="">机构</option>
+                    <option value="1" selected>武昌区公司</option>
+                    <option value="2" >紫阳所</option>
+                    <option value="3" >粮道所</option>      
+                </select>
+            </div>
+            {/if}
+            <div class="layui-input-inline" style="width:120px;">
+                <select name="owner" id="OwnerID" lay-filter="owner_id">
+                    <option value="">产别</option>
+                    {volist name="owerLst" id="v"}
+                    <option value="{$key}" {if condition="$key == 11"}selected{/if}>{$v}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width:120px;padding-left:5px">
+                <input type="text" name="month" value="" title="年份" placeholder="年份" id="timeYear" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+  		
+          <div class="j-search-fr layui-col-md8 fr">
+            <div class="layui-input-inline fr">
+  			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+  			<button type="button" class="layui-btn"  id="yueQuery">
+  			    <i class="layui-icon">&#xe615;</i>
+  			    搜索
+  			</button>
+  			<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
+  			    <i class="layui-icon layui-icon-print"></i>
+  			    打印
+  			</button>
+  			{if condition="in_array(354,$auths) || $Think.ADMIN_ROLE == 1"}
+  			<button type="button" class="layui-btn layui-bg-green on" id="button_create">
+			    <i class="layui-icon layui-icon-chart"></i>
+			    生成本年报表
+			</button>
+			{/if}
+            </div>
+  		</div>
+        </form>
+    </div>
+	<div class="j-report-con">
+	  <h1 class="j-report-title">武汉市房地局直管公房产权（<span class="DOwnerTyp"></span>）情况综合统计表</h1>
+	  <div class="j-report-table">
+	    <ul>
+			  <li class="j-bold-size">产别:<span class="OwnerID"></span></li>
+			  <li class="j-bold-size">填报单位:<span class="fontsize DOwnerTyp"></span></li>
+			  <li class="j-bold-size">填报时间:<span class="time"></span></li>
+	    </ul>
+		<table class="layui-table" id="PropertyForm">
+		        <tbody>
+		            <tr>
+		                <th rowspan="4" colspan="2" class="am-text-middle">产权基本情况</th>
+		                <th rowspan="1" colspan="3" class="am-text-middle">房屋总计</th>
+		                <th rowspan="1" colspan="9" class="am-text-middle">其中：</th>
+		            </tr>
+		            <tr>
+		                <td rowspan="2" colspan="1" >栋</td>
+		                <td rowspan="2" colspan="2" >建筑面积</td>
+		                <td rowspan="1" colspan="3" >代管房屋</td>
+		                <td rowspan="1" colspan="3" >托管房屋</td>
+		                <td rowspan="1" colspan="3" >与私房、区直共有房屋</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+		                <td rowspan="1" colspan="1" >栋</td>
+		                <td rowspan="1" colspan="2" >建筑面积</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" id="zongji_num"></td>
+		                <td rowspan="1" colspan="2" id="zongji_area"></td>
+		                <td rowspan="1" colspan="1" id="daiguan_num"></td>
+		                <td rowspan="1" colspan="2" id="daiguan_area"></td>
+		                <td rowspan="1" colspan="1" id="tuoguan_num"></td>
+		                <td rowspan="1" colspan="2" id="tuoguan_area"></td>
+		                <td rowspan="1" colspan="1" ></td>
+		                <td rowspan="1" colspan="2" ></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="4" colspan="2" class="am-text-middle">本期房屋增减</td>
+		                <td rowspan="1" colspan="6" class="am-text-middle">年房屋增加<span style="padding: 0 5px" id="ban_num_inc"></span>栋，建筑面积<span style="padding: 0 5px" id="ban_area_inc"></span>㎡</td>
+		                <td rowspan="1" colspan="9" class="am-text-middle">年度房减少<span style="padding: 0 5px" id="ban_num_dec"></span>栋，建筑面积<span style="padding: 0 5px" id="ban_area_dec"></span>㎡</td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >接管</td>
+		                <td rowspan="1" colspan="1" id="jieguan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="jieguan_area"></td>
+		                <td rowspan="1" colspan="1" >合建</td>
+		                <td rowspan="1" colspan="1" id="hejian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="hejian_area"></td>
+		                <td rowspan="1" colspan="1" >公房出售</td>
+		                <td rowspan="1" colspan="1" id="chushou_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chushou_area"></td>
+		                <td rowspan="1" colspan="1" >拆迁</td>
+		                <td rowspan="1" colspan="1" id="chaiqian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chaiqian_area"></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >危改还建</td>
+		                <td rowspan="1" colspan="1" id="huanjian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="huanjian_area"></td>
+		                <td rowspan="1" colspan="1" >加改扩</td>
+		                <td rowspan="1" colspan="1" id="jiagai_num">栋</td>
+		                <td rowspan="1" colspan="1" id="jiagai_area"></td>
+		                <td rowspan="1" colspan="1" >危改拆除</td>
+		                <td rowspan="1" colspan="1" id="chaichu_num">栋</td>
+		                <td rowspan="1" colspan="1" id="chaichu_area"></td>
+		                <td rowspan="1" colspan="1" >房屋划转</td>
+		                <td rowspan="1" colspan="1" id="huazhuan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="huazhuan_area"></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="1" >新建</td>
+		                <td rowspan="1" colspan="1" id="xinjian_num">栋</td>
+		                <td rowspan="1" colspan="1" id="xinjian_area"></td>
+		                <td rowspan="1" colspan="1" >其他</td>
+		                <td rowspan="1" colspan="1" id="qita_inc_num">栋</td>
+		                <td rowspan="1" colspan="1" id="qita_inc_area"></td>
+		                <td rowspan="1" colspan="1" >落私发还</td>
+		                <td rowspan="1" colspan="1" id="fahuan_num">栋</td>
+		                <td rowspan="1" colspan="1" id="fahuan_area"></td>
+		                <td rowspan="1" colspan="1" >其他</td>
+		                <td rowspan="1" colspan="1" id="qita_dec_num">栋</td>
+		                <td rowspan="1" colspan="1" id="qita_dec_area"></td>
+		            </tr>
+		            <tr>
+		                <td rowspan="1" colspan="3" class="am-text-middle">已登记房屋</td>
+		                <td rowspan="1" colspan="2" class="am-text-middle" id="dengji_num">栋</td>
+		                <td rowspan="1" colspan="4" class="am-text-middle">建筑面积<span style="padding: 0 5px" id="dengji_area"></span>㎡</td>
+		                <td rowspan="1" colspan="5" class="am-text-middle">备注：<span style="padding: 0 5px"></span></td>
+		            </tr>
+		
+		            </tbody>
+		
+		</table>
+	  </div>
+	</div>
+</div>
+
+<script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_propertys.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 E -->
+<script>
+    layui.use(['jquery', 'laydate', 'element','table'], function(){
+        var laydate = layui.laydate,
+		    $ = layui.$
+			,element = layui.element
+			,table = layui.table;
+        //年选择器
+        laydate.render({
+            elem: '#timeYear'
+            ,type: 'year'
+			,value: new Date() 
+            ,isInitValue: true,
+			ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+        });
+		//产品统计报表
+		var section_name = $('#userName').text();
+		var section_name_start = section_name.indexOf('(')+1;
+		var section_name_end = section_name.indexOf(')');
+		section_name = section_name.substring(section_name_start,section_name_end);
+
+		
+		var data = $('form').serialize();
+		$('#yueQuery').click(function(){
+			var data = $(this).parents('form').serialize();
+			$.get("{:url()}?group=y", data ,function(res){
+				//console.log(res.code);
+				if(res.code == 1){
+					insert_data(res);
+				}else{
+					//layer.msg(res.msg);
+					$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
+				}
+			});
+		});
+		$('#button_create').click(function(){
+			var that = $(this);
+			that.prop('disabled', true);
+			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
+
+			$.post('{:url('house/makeYearPropertysReport')}', function(res) {
+                layer.msg(res.msg, {time:5000}, function(){
+                    if (res.code != 0) {
+                        location.reload();
+                    } 
+                });
+            });
+// that.prop('disabled', false);
+// that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
+
+		})
+		
+		$.get("{:url()}?group=y", data,function(res){
+			if(res.code == 1){
+				insert_data(res);
+			}else{
+				$('.j-report-table').html('<div class="layui-row">'+res.msg+'</div>');
+			}
+		});
+
+    });
+
+    function insert_data(res){
+
+    	var time_span = $('#timeYear').val().split('-');
+		$('.time').text(' '+time_span[0]+'年');
+		var inst = $("#OwnerTyp option:selected").text();
+		if(inst){
+			$(".DQueryType,.DOwnerTyp").text(' '+inst);
+		}else{
+			var inst = '{$params.insts[$Think.INST]}';
+			//console.log(inst);
+			$(".DQueryType,.DOwnerTyp").text(' '+inst);
+		}
+		//$(".DQueryType,.DOwnerTyp").text(' '+$("#OwnerTyp option:selected").text());
+		$(".DQueryType,.OwnerID").text(' '+$("#OwnerID option:selected").text());
+
+    	$('#zongji_num').text(res.data[0][0]);
+	    $('#zongji_area').text(res.data[0][1]);
+	    $('#daiguan_num').text(res.data[0][2]);
+	    $('#daiguan_area').text(res.data[0][3]);
+	    $('#tuoguan_num').text(res.data[0][4]);
+	    $('#tuoguan_area').text(res.data[0][5]);
+
+	    $('#ban_num_inc').text(res.data[1][0]);
+	    $('#ban_area_inc').text(res.data[1][1]);
+	    $('#ban_num_dec').text(res.data[1][2]);
+	    $('#ban_area_dec').text(res.data[1][3]);
+
+	    $('#jieguan_num').text(res.data[2][0]+' 栋');
+	    $('#jieguan_area').text(res.data[2][1]);
+	    $('#hejian_num').text(res.data[2][2]+' 栋');
+	    $('#hejian_area').text(res.data[2][3]);
+	    $('#chushou_num').text(res.data[2][4]+' 栋');
+	    $('#chushou_area').text(res.data[2][5]);
+	    $('#chaiqian_num').text(res.data[2][6]+' 栋');
+	    $('#chaiqian_area').text(res.data[2][7]);
+
+	    $('#huanjian_num').text(res.data[3][0]+' 栋');
+	    $('#huanjian_area').text(res.data[3][1]);
+	    $('#jiagai_num').text(res.data[3][2]+' 栋');
+	    $('#jiagai_area').text(res.data[3][3]);
+	    $('#chaichu_num').text(res.data[3][4]+' 栋');
+	    $('#chaichu_area').text(res.data[3][5]);
+	    $('#huazhuan_num').text(res.data[3][6]+' 栋');
+	    $('#huazhuan_area').text(res.data[3][7]);
+
+	    $('#xinjian_num').text(res.data[4][0]+' 栋');
+	    $('#xinjian_area').text(res.data[4][1]);
+	    $('#qita_inc_num').text(res.data[4][2]+' 栋');
+	    $('#qita_inc_area').text(res.data[4][3]);
+	    $('#fahuan_num').text(res.data[4][4]+' 栋');
+	    $('#fahuan_area').text(res.data[4][5]);
+	    $('#qita_dec_num').text(res.data[4][6]+' 栋');
+	    $('#qita_dec_area').text(res.data[4][7]);
+
+	    $('#dengji_num').text(res.data[5][0]+' 栋');
+	    $('#dengji_area').text(res.data[5][1]);
+    }
+	//打印
+	function  click_print(){
+	 $(".j-report-con").jqprint();
+	}
+</script>
+{/if}

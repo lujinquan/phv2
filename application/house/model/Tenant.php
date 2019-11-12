@@ -71,4 +71,6 @@ class Tenant extends SystemBase
         $data['tenant_number'] = (self::max('tenant_number') + 1);
         return $data;  
     }
+
+    
 }

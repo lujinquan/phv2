@@ -39,10 +39,12 @@
 			    <i class="layui-icon layui-icon-print"></i>
 			    打印
 			</button>
+			{if condition="in_array(340,$auths) || $Think.ADMIN_ROLE == 1"}
 			<button type="button" class="layui-btn layui-bg-green on" id="button_create">
 			    <i class="layui-icon layui-icon-chart"></i>
-			    生成报表
+			    生成本月报表
 			</button>
+			{/if}
         </div>
 	   </div>
     </form>
@@ -92,6 +94,19 @@ layui.use(['jquery', 'laydate', 'element'], function(){
         });
 		//搜索
 		function datajson(data){
+			var data_17_1 = '';
+			if(data[17][1] != data[8][1] - data[8][1]){
+				data_17_1 = 'red';
+			}
+			var data_17_10 = '';
+			if(data[17][10] != data[8][10] - data[8][10]){
+				data_17_10 = 'red';
+			}
+			var data_17_13 = '';
+			if(data[17][13] != data[8][13] - data[8][13]){
+				data_17_13 = 'red';
+			}
+		
 			return '<tr>\
 				<th rowspan="2" colspan="3" class="am-text-middle">租金月报</th>\
 				<th rowspan="2" colspan="1" class="am-text-middle">合计</th>\
@@ -484,7 +499,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			<tr>\
 				<td rowspan="1" colspan="3">应收租金</td>\
 				<td rowspan="1" colspan="1" class="some_hide_18">'+ data[17][0] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[17][1] + '</td>\
+				<td rowspan="1" colspan="1" class="'+data_17_1+'">'+ data[17][1] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][2] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][3] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][4] + '</td>\
@@ -493,10 +508,10 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				<td rowspan="1" colspan="1" class="once_hide">'+ data[17][7] + '</td>\
 				<td rowspan="1" colspan="1" class="once_hide">'+ data[17][8] + '</td>\
 				<td rowspan="1" colspan="1" class="once_hide">'+ data[17][9] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[17][10] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide "'+data_17_10+'">'+ data[17][10] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][11] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][12] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[17][13] + '</td>\
+				<td rowspan="1" colspan="1" class="'+data_17_13+'">'+ data[17][13] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][14] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[17][15] + '</td>\
 			</tr>\
