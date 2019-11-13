@@ -34,7 +34,7 @@
 						<option value="">租用状态</option>
 						<option value="1">独用</option>
 						<option value="2">公摊</option>
-						<option value="3">共用</option>
+						<option value="3">公共</option>
 						{/volist}
 					</select>
 				</div>
@@ -102,7 +102,7 @@
 							}else if(parseInt(d.room_pub_num) == 2){
 								return '公摊';
 							}else{
-								return '共用';
+								return '公共';
 							}
 							//return params.roomtypes[d.room_type];
 						}

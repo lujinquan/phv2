@@ -167,7 +167,7 @@ class ChangeNew extends SystemBase
                 $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -282,10 +282,11 @@ class ChangeNew extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {//halt($finalRow);
+    {
+        //halt($finalRow);
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
-        BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
+        
         // 2、添加台账记录
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];
@@ -305,16 +306,55 @@ class ChangeNew extends SystemBase
         // 2、将数据写入到异动统计表
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+
+        // 1、将新发的房屋所在的楼栋变成正常状态
+        if(!$banInfo['ban_status']){
+           $tableData['change_num'] = $banInfo['ban_civil_num']+$banInfo['ban_career_num']+$banInfo['ban_party_num']; 
+        }
+
+        // 1、将新发的房屋基础数据加到所在的楼栋
+        if($houseInfo['house_use_id'] == 1){
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_civil_rent'=>Db::raw('ban_civil_rent+'.$houseInfo['house_pre_rent']),
+                'ban_civil_area'=>Db::raw('ban_civil_area+'.$houseInfo['house_area']),
+                'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$houseInfo['house_oprice']),
+                'ban_use_area'=>Db::raw('ban_use_area+'.$houseInfo['house_lease_area']),
+            ]);
+        }elseif($houseInfo['house_use_id'] == 2){
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_career_rent'=>Db::raw('ban_career_rent+'.$houseInfo['house_pre_rent']),
+                'ban_career_area'=>Db::raw('ban_career_area+'.$houseInfo['house_area']),
+                'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$houseInfo['house_oprice']),
+            ]);
+        }else{
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_party_rent'=>Db::raw('ban_party_rent+'.$houseInfo['house_pre_rent']),
+                'ban_party_area'=>Db::raw('ban_party_area+'.$houseInfo['house_area']),
+                'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$houseInfo['house_oprice']),
+            ]);
+        }
+
         $tableData = [];       
         $tableData['change_type'] = 7;
         $tableData['change_order_number'] = $finalRow['change_order_number'];
-        $tableData['house_id'] = $finalRow['house_id'];;
+        $tableData['house_id'] = $finalRow['house_id'];
         $tableData['ban_id'] = $finalRow['ban_id'];
         $tableData['inst_id'] = $banInfo['ban_inst_id'];
         $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
         $tableData['owner_id'] = $banInfo['ban_owner_id'];
         $tableData['use_id'] = $houseInfo['house_use_id'];
         $tableData['change_rent'] = $houseInfo['house_pre_rent']; 
+        $tableData['change_area'] = $houseInfo['house_area']; 
+        $tableData['change_oprice'] = $houseInfo['house_oprice'];
+        
+        if($houseInfo['house_use_id'] == 1){
+            $tableData['change_use_area'] = $houseInfo['house_lease_area']; 
+        }else{
+            $tableData['change_use_area'] = $houseInfo['house_use_area'];     
+        } 
         $tableData['change_send_type'] = $finalRow['new_type'];
         $tableData['tenant_id'] = $finalRow['tenant_id']; 
         $tableData['cuid'] = $finalRow['cuid'];

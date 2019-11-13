@@ -26,12 +26,14 @@ class Report extends Model
         $separate = substr($month,0,4).'00';
         $where = [];
         $where[] = ['a.rent_order_date','<=',$month];
+        $where[] = ['a.is_deal','eq',1];
         if($useid != 0){
             $where[] = ['b.house_use_id','eq',$useid];
         }
         if($ownerid != 0){
             $where[] = ['d.ban_owner_id','eq',$ownerid];
         }
+        //$where[] = ['a.rent_order_receive','exp',' = '.a.rent_order_paid];
         //$where[] = ['rent_order_receive','eq',rent_order_paid];
         $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
         $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';

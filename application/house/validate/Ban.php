@@ -34,7 +34,7 @@ class Ban extends Validate
         'ban_floors|楼层数' => 'require|number|gt:0',
         'ban_career_num|企业栋数' => 'require|in:0,1', 
         'ban_party_num|机关栋数' => 'require|in:0,1', 
-        'ban_civil_num|民用栋数' => 'require|in:0,1', 
+        'ban_civil_num|民用栋数' => 'require|in:0,1|isBanNum', 
         'ban_gpsx|经度' => 'require', 
         'ban_gpsy|纬度' => 'require', 
         'ban_property_id|产权证号' => 'require',
@@ -49,6 +49,15 @@ class Ban extends Validate
     { 
         $row = ChangeNewModel::where([['ban_id','in',$value],['change_status','>',2]])->value('id');
         return $row?'该楼栋已经在新发租异动中':true;  
+    }
+
+    protected function isBanNum($value, $rule='', $data)
+    { 
+        $msg = '';
+        if(($data['ban_career_num'] + $data['ban_party_num'] + $data['ban_civil_num']) > 1){
+            $msg = '合栋数不能大于1';
+        };
+        return $msg?$msg:true;
     }
 
     // 添加

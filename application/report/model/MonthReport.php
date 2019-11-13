@@ -33,6 +33,10 @@ class MonthReport extends Model
         //从租金订单表中,获取规定、已缴、欠缴、应缴租金
         $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$arr1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
+        //从租金订单表中,欠缴租金
+        $rentUnpaidData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids')->where([['a.rent_order_date','eq',$arr1],['a.is_deal','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        
+
         //从房屋表中分组获取年度欠租、租差
         $houseData = Db::name('house')->alias('b')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(b.house_id) as house_ids,sum(b.house_diff_rent) as house_diff_rents,sum(b.house_pump_rent) as house_pump_rents,sum(b.house_pre_rent) as house_pre_rents')->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')
             ->where([['b.house_status','eq',1]])
@@ -85,9 +89,16 @@ class MonthReport extends Model
                 'rent_order_cuts' => $v1['rent_order_cuts'],
                 'rent_order_receives' => $v1['rent_order_receives'],
                 'rent_order_paids' => $v1['rent_order_paids'],
-                'rent_order_unpaids' => $v1['rent_order_unpaids'],
+                //'rent_order_unpaids' => $v1['rent_order_unpaids'],
                 'rent_order_diffs' => $v1['rent_order_diffs'],
                 'rent_order_pumps' => $v1['rent_order_pumps']
+            ];
+        }
+
+        //重组为规定格式的租金数据
+        foreach($rentUnpaidData as $k1 => $v1){
+            $rentUnpaiddata[$v1['ban_owner_id']][$v1['house_use_id']][$v1['ban_inst_id']] = [
+                'rent_order_unpaids' => $v1['rent_order_unpaids'],
             ];
         }
 
@@ -204,9 +215,14 @@ class MonthReport extends Model
                             'rent_order_cuts' => 0,
                             'rent_order_receives' => 0,
                             'rent_order_paids' => 0,
-                            'rent_order_unpaids' => 0,
+                            //'rent_order_unpaids' => 0,
                             'rent_order_diffs' => 0,
                             'rent_order_pumps' => 0,
+                        ];
+                    }
+                    if(!isset($rentUnpaiddata[$owner][$i][$j])){
+                        $rentUnpaiddata[$owner][$i][$j] = [
+                            'rent_order_unpaids' => 0,
                         ];
                     }
                     if(!isset($housedata[$owner][$i][$j])){
@@ -778,7 +794,7 @@ class MonthReport extends Model
                     array_unshift($result[$owners][$j][19],array_sum($result[$owners][$j][19]) - $result[$owners][$j][19][1] - $result[$owners][$j][19][2] - $result[$owners][$j][19][3]);
                 }
 
-                $result[$owners][$j][20][1] = $rentdata[$owners][2][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][1] , $result[$owners][$j][18][1],2);
+                $result[$owners][$j][20][1] = $rentUnpaiddata[$owners][2][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][1] , $result[$owners][$j][18][1],2);
                 $result[$owners][$j][20][2] = bcsub($result[$owners][$j][17][2] , $result[$owners][$j][18][2],2);
                 $result[$owners][$j][20][3] = bcsub($result[$owners][$j][17][3] , $result[$owners][$j][18][3],2);
                 $result[$owners][$j][20][4] = 0.4 * $result[$owners][$j][20][1];
@@ -787,10 +803,10 @@ class MonthReport extends Model
                 $result[$owners][$j][20][7] = 0.6 * $result[$owners][$j][20][1];
                 $result[$owners][$j][20][8] = 0.6 * $result[$owners][$j][20][2];
                 $result[$owners][$j][20][9] = 0.6 * $result[$owners][$j][20][3];
-                $result[$owners][$j][20][10] = $rentdata[$owners][3][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][10] , $result[$owners][$j][18][10],2);
+                $result[$owners][$j][20][10] = $rentUnpaiddata[$owners][3][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][10] , $result[$owners][$j][18][10],2);
                 $result[$owners][$j][20][11] = bcsub($result[$owners][$j][17][11] , $result[$owners][$j][18][11],2);
                 $result[$owners][$j][20][12] = bcsub($result[$owners][$j][17][12] , $result[$owners][$j][18][12],2);
-                $result[$owners][$j][20][13] = $rentdata[$owners][1][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][13] , $result[$owners][$j][18][13],2);
+                $result[$owners][$j][20][13] = $rentUnpaiddata[$owners][1][$j]['rent_order_unpaids']; //bcsub($result[$owners][$j][17][13] , $result[$owners][$j][18][13],2);
                 $result[$owners][$j][20][14] = bcsub($result[$owners][$j][17][14] , $result[$owners][$j][18][14],2);
                 $result[$owners][$j][20][15] = bcsub($result[$owners][$j][17][15] , $result[$owners][$j][18][15],2);
                 array_unshift($result[$owners][$j][20],array_sum($result[$owners][$j][20]) - $result[$owners][$j][20][1] - $result[$owners][$j][20][2] - $result[$owners][$j][20][3]);

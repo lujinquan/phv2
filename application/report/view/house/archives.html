@@ -5,7 +5,6 @@
 		        {if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:140px;">
 					<select name="inst_id" id="TubulationI">
-					  <option value="">机构</option>
 					  {volist name=":config('inst_check_names')[INST]" id="v"}
 					  <option value="{$key}"{if condition="$key == $Think.INST"}selected{/if}>{$v}</option>
 					  {/volist}
