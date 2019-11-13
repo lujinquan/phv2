@@ -196,4 +196,87 @@ class Process extends SystemBase
             
     }
 
+    public function detail($change_type,$id)
+    {
+        switch ($change_type) {
+            case '1': // 租金减免
+                $ChangeModel = new ChangeCutModel;
+                $template = 'deal@changecut/detail_x';              
+                break;
+            case '2': // 空租
+                # code...
+                break;
+            case '3': //暂停计租
+                $ChangeModel = new ChangePauseModel;
+                $template = 'deal@changepause/detail'; 
+                break;
+            case '4': // 陈欠核销
+                $ChangeModel = new ChangeOffsetModel;
+                $template = 'deal@changeoffset/detail';
+                break;
+            case '5': // 房改
+                # code...
+                break;
+            case '6': // 维修
+                # code...
+                break;
+            case '7': // 新发租
+                $ChangeModel = new ChangeNewModel;
+                $template = 'deal@changenew/detail';
+                break;
+            case '8': //注销
+                $ChangeModel = new ChangeCancelModel;
+                $template = 'deal@changecancel/detail';
+                break;
+            case '9': // 房屋调整
+                $ChangeModel = new ChangeHouseModel;
+                $template = 'deal@changehouse/detail';
+                break;
+            case '10': // 管段调整
+                $ChangeModel = new ChangeInstModel;
+                $template = 'deal@changeinst/detail';
+                break;
+            case '11': // 租金追加调整
+                $ChangeModel = new ChangeRentAddModel;
+                $template = 'deal@changerentadd/detail';
+                break;
+            case '12': //租金调整
+                # code...
+                break;
+            case '13': //使用权变更
+                $ChangeModel = new ChangeUseModel;
+                $template = 'deal@changeuse/detail';
+                break;
+            case '14': //楼栋调整
+                $ChangeModel = new ChangeBanModel;
+                $template = 'deal@changeban/detail';
+                break;
+            case '16': // 租金减免年审
+                $ChangeModel = new ChangeCutYearModel;
+                $template = 'deal@changecut/detail_y';
+                break;
+            case '17': // 别字更正
+                $ChangeModel = new ChangeNameModel;
+                $template = 'deal@changename/detail';
+                break;
+            case '18': // 租约管理
+                $ChangeModel = new ChangeLeaseModel;
+                $template = 'deal@changelease/detail';
+                break;
+            default:
+                # code...
+                break;
+        }
+        $row = $ChangeModel->detail($id);
+        $result = [];
+        if($change_type == 16){
+            $ChangeCutModel = new ChangeCutModel;
+            $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
+            $result['old_data_info'] = $ChangeCutModel->detail($cutRow['id']);
+        }
+        $result['row'] = $row;
+        $result['template'] = $template;
+        return $result;
+    }
+
 }

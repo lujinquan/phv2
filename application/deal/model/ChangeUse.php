@@ -275,10 +275,10 @@ class ChangeUse extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        // 改变房屋绑定的租户;
+        // 1、改变房屋绑定的租户;
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
         
-        // 添加房屋台账记录
+        // 2、添加房屋台账记录
         $taiData = [];
         $taiData['house_id'] = $finalRow['house_id'];
         $taiData['tenant_id'] = $finalRow['old_tenant_id'];
@@ -297,6 +297,10 @@ class ChangeUse extends SystemBase
                 'new' => $finalRow['new_tenant_name'],
             ],
         ];
+        // 3、如果有减免，则需要让减免失效
+        ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['change_status'=>0]);
+        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['end_date'=>date('Ym')]);
+
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
     }

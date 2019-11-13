@@ -221,84 +221,13 @@ class Process extends Admin
         if(!$change_type || !$id){
             return $this->error('参数错误！');
         }
-        switch ($change_type) {
-            case '1': // 租金减免
-                $ChangeModel = new ChangeCutModel;
-                $template = 'changecut/detail_x';              
-                break;
-            case '2': // 空租
-                # code...
-                break;
-            case '3': //暂停计租
-                $ChangeModel = new ChangePauseModel;
-                $template = 'changepause/detail'; 
-                break;
-            case '4': // 陈欠核销
-                $ChangeModel = new ChangeOffsetModel;
-                $template = 'changeoffset/detail';
-                break;
-            case '5': // 房改
-                # code...
-                break;
-            case '6': // 维修
-                # code...
-                break;
-            case '7': // 新发租
-                $ChangeModel = new ChangeNewModel;
-                $template = 'changenew/detail';
-                break;
-            case '8': //注销
-                $ChangeModel = new ChangeCancelModel;
-                $template = 'changecancel/detail';
-                break;
-            case '9': // 房屋调整
-                $ChangeModel = new ChangeHouseModel;
-                $template = 'changehouse/detail';
-                break;
-            case '10': // 管段调整
-                $ChangeModel = new ChangeInstModel;
-                $template = 'changeinst/detail';
-                break;
-            case '11': // 租金追加调整
-                $ChangeModel = new ChangeRentAddModel;
-                $template = 'changerentadd/detail';
-                break;
-            case '12': //租金调整
-                # code...
-                break;
-            case '13': //使用权变更
-                $ChangeModel = new ChangeUseModel;
-                $template = 'changeuse/detail';
-                break;
-            case '14': //楼栋调整
-                $ChangeModel = new ChangeBanModel;
-                $template = 'changeban/detail';
-                break;
-            case '16': // 租金减免年审
-                $ChangeModel = new ChangeCutYearModel;
-                $template = 'changecut/detail_y';
-                break;
-            case '17': // 别字更正
-                $ChangeModel = new ChangeNameModel;
-                $template = 'changename/detail';
-                break;
-            case '18': // 租约管理
-                $ChangeModel = new ChangeLeaseModel;
-                $template = 'changelease/detail';
-                break;
-            default:
-                # code...
-                break;
+        $PorcessModel = new ProcessModel;
+        $result = $PorcessModel->detail($change_type,$id);
+        if(isset($result['old_data_info'])){
+            $this->assign('old_data_info',$result['old_data_info']);
         }
-        $row = $ChangeModel->detail($id);
-        if($change_type == 16){
-            $ChangeCutModel = new ChangeCutModel;
-            $cutRow = $ChangeCutModel->where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ftime desc')->find();
-            $oldRow = $ChangeCutModel->detail($cutRow['id']);
-            $this->assign('old_data_info',$oldRow);
-        }
-        $this->assign('data_info',$row);
-        return $this->fetch($template);
+        $this->assign('data_info',$result['row']);
+        return $this->fetch($result['template']);
     }
 
 }

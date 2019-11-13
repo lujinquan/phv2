@@ -285,6 +285,7 @@ class ChangeNew extends SystemBase
     {//halt($finalRow);
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
+        BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
         // 2、添加台账记录
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];

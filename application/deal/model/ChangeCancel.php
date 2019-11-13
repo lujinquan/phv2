@@ -189,7 +189,7 @@ class ChangeCancel extends SystemBase
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         //halt($row);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -338,7 +338,8 @@ class ChangeCancel extends SystemBase
                     $taiHouseData[$k]['house_tai_type'] = 4;
                     $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
                     $taiHouseData[$k]['data_json'] = [];
-
+                    $taiHouseData[$k]['change_type'] = 8;
+                    $taiHouseData[$k]['change_id'] = $finalRow['id'];
 
                     // 添加统计报表记录
                     $tableData[$k]['change_type'] = 8;
@@ -378,6 +379,8 @@ class ChangeCancel extends SystemBase
                 $taiHouseData[$k]['house_tai_type'] = 4;
                 $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
                 $taiHouseData[$k]['data_json'] = [];
+                $taiHouseData[$k]['change_type'] = 8;
+                $taiHouseData[$k]['change_id'] = $finalRow['id'];
 
                 if($v['house_use_id'] == 1){ // 住宅
                     $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);

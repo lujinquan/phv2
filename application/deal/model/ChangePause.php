@@ -2,6 +2,7 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
@@ -274,15 +275,12 @@ class ChangePause extends SystemBase
             $taiData[$key]['tenant_id'] = $houseArr[$h]['tenant_id'];
             $taiData[$key]['cuid'] = $finalRow['cuid'];
             $taiData[$key]['house_tai_type'] = 3;
-            $taiData[$key]['data_json'] = [
-                'house_status' => [
-                    'old' => 1,
-                    'new' => 2,
-                ],
-                
-            ];
+            $taiData[$key]['data_json'] = [];
+            $taiData[$key]['house_tai_remark'] = '暂停计租异动单号：'.$finalRow['change_order_number'];
+            $taiData[$key]['change_type'] = 3;
+            $taiData[$key]['change_id'] = $finalRow['id'];
             // 3、如果有减免，则需要让减免失效
-            ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
+            ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$h]])->update(['change_status'=>0]);
             Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['end_date'=>date('Ym')]);
 
             // 添加产权统计记录
