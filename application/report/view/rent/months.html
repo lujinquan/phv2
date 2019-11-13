@@ -15,7 +15,7 @@
 		</div>
 		{/if}
         <div class="layui-input-inline" style="width:140px;padding-left:5px">
-            <select name="owner_id" lay-filter="owner_id">
+            <select name="owner_id" lay-filter="owner_id" id="owner_id">
                 <option value="">产别</option>
                 {volist name="params['owners']" id="v"}
                 <option value="{$key}"{if condition="$key == 1"}selected{/if}>{$v}</option>
@@ -589,7 +589,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 					var data = JSON.parse(jsondata).data;//由JSON字符串转换为JSON对象
 					if(data.length==0)
 					{
-						$('tbody').html("<div class='j-no-data'><i class='layui-icon layui-icon-tips'></i>暂无数据！</div>");
+						$('tbody').html("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
 					}
 					else{
 						var trData = datajson(data);
@@ -605,6 +605,14 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 					            }
 					        });
 					});
+					//监听机构选择隐藏其中一其中二
+					var valueid = $('#owner_id option:selected').val();
+					if(valueid==3 || valueid==5 || valueid==7){
+						$(".once_hide").hide();
+					}
+					else{
+						$(".once_hide").show();
+					}
 				}
 			})
 		})
@@ -618,7 +626,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
 				if(data.length==0)
 				{
-					$('tbody').append("<div class='j-no-data'><i class='layui-icon layui-icon-tips'></i>暂无数据！</div>");
+					$('tbody').append("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
 				}
 				else{
 					var trData = datajson(data);
@@ -634,14 +642,14 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				            }
 				        });
 				});
-				//搜索
-				/* layui.form.on('select(inst_id)', function(data){
-					console.log(data.value); //得到被选中的值]
-				}); */
-//                var inst = $("select[name='inst_id']").val();
-//                var owner = $("select[name='owner_id']").val();
-//                var month = $("input[name='query_month']").val();
-
+				//监听机构选择隐藏其中一其中二
+				var valueid = $('#owner_id option:selected').val();
+				if(valueid==3 || valueid==5 || valueid==7){
+					$(".once_hide").hide();
+				}
+				else{
+					$(".once_hide").show();
+				}
 			},
 		  //返回错误
 			error:function(xhr){
