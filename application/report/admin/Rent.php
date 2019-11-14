@@ -27,7 +27,6 @@ class Rent extends Admin
             $ReportModel = new ReportModel;
             $where = [['type','eq','RentReport']];
             $getData = $this->request->post();
-
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:1;
             $where[] = (isset($getData['query_month']) && $getData['query_month'])?['date','eq',str_replace('-','',$getData['query_month'])]:['date','eq',date('Ym')];

@@ -22,7 +22,7 @@ class House extends Admin
             $options = $this->request->post();
             //halt($options);
             $owner = $options['owner'];
-            $date = $options['month'];
+            $date = $options['month']?$options['month']:date('Y-m');
             $inst = isset($options['inst'])?$options['inst']:INST;
             $type = $options['type'];
 
