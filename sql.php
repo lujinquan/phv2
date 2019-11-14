@@ -468,3 +468,8 @@ drop table if exists ph_room;
 alter table ph_room_back rename ph_room;
 drop table if exists ph_tenant;
 alter table ph_tenant_back rename ph_tenant;
+
+# 清空台账记录
+truncate ph_ban_tai;
+truncate ph_house_tai;
+truncate ph_tenant_tai;
