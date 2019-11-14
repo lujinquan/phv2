@@ -167,7 +167,7 @@ class ChangeNew extends SystemBase
                 $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
