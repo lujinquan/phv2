@@ -7,6 +7,7 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\house\model\BanTai as BanTaiModel;
 use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
@@ -140,7 +141,7 @@ class ChangeNew extends SystemBase
         }
         
         $data['child_json'][] = [
-            'success' => 1, 
+            'success' => 1,
             'action' => '提交申请',
             'time' => date('Y-m-d H:i:s'),
             'uid' => ADMIN_ID,
@@ -167,7 +168,7 @@ class ChangeNew extends SystemBase
                 $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -288,15 +289,29 @@ class ChangeNew extends SystemBase
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
         
         // 2、添加台账记录
-        $taiHouseData = [];
+        $taiHouseData = $taiBanData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];
         $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
         $taiHouseData['house_tai_type'] = 1;
         $taiHouseData['cuid'] = $finalRow['cuid'];
         $taiHouseData['house_tai_remark'] = '新发租异动单号：'.$finalRow['change_order_number'];
         $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 7;
+        $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+
+        $taiBanData['ban_id'] = $finalRow['ban_id'];
+        $taiBanData['ban_tai_type'] = 1;
+        $taiBanData['cuid'] = $finalRow['cuid'];
+        $taiBanData['house_tai_remark'] = '新发租异动单号：'.$finalRow['change_order_number'];
+        $taiBanData['data_json'] = [];
+        $taiBanData['change_type'] = 7;
+        $taiBanData['change_id'] = $finalRow['id'];
+        $BanTaiModel = new BanTaiModel;
+        $BanTaiModel->allowField(true)->create($taiBanData);
+
         // 3、修改涉及到的房间的状态
         $roomids = Db::name('house_room')->where([['house_id','eq',$finalRow['house_id']]])->column('room_id');
         if($roomids){
