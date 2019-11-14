@@ -68,11 +68,23 @@
 		//日期
 		  laydate.render({
 		    elem: '#date'
+		    ,type: 'month'
+		    ,ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
 		  });
 		  //日期
-		    laydate.render({
-		      elem: '#date1'
-		    });
+		  laydate.render({
+		    elem: '#date1'
+		    ,type: 'month'
+		    ,ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+		  });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */

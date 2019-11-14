@@ -81,15 +81,17 @@ class ChangeRentAdd extends SystemBase
         if(isset($data['before_month_rent']) && $data['before_month_rent']){
             $where[] = ['a.before_month_rent','eq',$data['before_month_rent']];
         }
-        // 检索申请时间(按天搜索)
+        // 检索申请时间(按月搜索)
         if(isset($data['ctime']) && $data['ctime']){
-            $startTime = strtotime($data['ctime']);
-            $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
+            $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));
+            //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
+            $where[] = ['a.ctime','between time',[$data['ctime'],$endTime]];
         }
-        // 检索申请时间(按天搜索)
+        // 检索申请时间(按月搜索)
         if(isset($data['ftime']) && $data['ftime']){
-            $startFilishTime = strtotime($data['ftime']);
-            $where[] = ['a.ftime','between time',[$startFilishTime,$startFilishTime+3600*24]];
+            $endFtime = date('Y-m',strtotime('+1 month',strtotime($data['ftime'])));
+            //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
+            $where[] = ['a.ftime','between time',[$data['ftime'],$endFtime]];
         }
         // 检索楼栋机构
         $insts = config('inst_ids');

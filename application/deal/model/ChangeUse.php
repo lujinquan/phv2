@@ -82,16 +82,17 @@ class ChangeUse extends SystemBase
         if(isset($data['change_use_type']) && $data['change_use_type']){
             $where[] = ['a.change_use_type','eq',$data['change_use_type']];
         }
-        // 检索申请时间
+        // 检索申请时间(按月搜索)
         if(isset($data['ctime']) && $data['ctime']){
-            $startTime = strtotime($data['ctime']);
+            $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));
             //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
-            $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
+            $where[] = ['a.ctime','between time',[$data['ctime'],$endTime]];
         }
-        // 检索完成时间
+        // 检索申请时间(按月搜索)
         if(isset($data['ftime']) && $data['ftime']){
-            $flishTime = strtotime($data['ftime']);
-            $where[] = ['a.ftime','between time',[$flishTime,$flishTime+3600*24]];
+            $endFtime = date('Y-m',strtotime('+1 month',strtotime($data['ftime'])));
+            //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
+            $where[] = ['a.ftime','between time',[$data['ftime'],$endFtime]];
         }
         // 检索楼栋机构
         $insts = config('inst_ids');

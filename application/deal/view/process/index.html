@@ -31,7 +31,6 @@
 						<option value="经租会计">经租会计</option>
 						<option value="经管所长">经管所长</option>
 						<option value="经管科长">经管科长</option>
-
 					</select>
 				</div>
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
@@ -77,9 +76,15 @@
 		var table = layui.table
 		   ,laydate = layui.laydate;
 		
-		//日期
+		  //日期
 		  laydate.render({
 		    elem: '#date'
+		    ,type: 'month'
+		    ,ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
 		  });
 		table.render({
 			elem: '#dataTable',

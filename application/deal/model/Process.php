@@ -66,9 +66,9 @@ class Process extends SystemBase
         }
         // 检索申请时间
         if(isset($data['ctime']) && $data['ctime']){
-            $startTime = strtotime($data['ctime']);
+            $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));
             //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
-            $where[] = ['a.ctime','between time',[$startTime,$startTime+3600*24]];
+            $where[] = ['a.ctime','between time',[$data['ctime'],$endTime]];
         }
         // 检索楼栋机构
         $insts = config('inst_ids');
