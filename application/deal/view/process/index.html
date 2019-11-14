@@ -16,6 +16,14 @@
 				<!-- </div> -->
 				{// /if}
 				<div class="layui-input-inline" style="width:120px;">
+					<select name="change_type">
+						<option value="">异动类型</option>
+						{volist name="params['changes']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
 						{volist name="params['owners']" id="v"}
