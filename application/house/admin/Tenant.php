@@ -125,23 +125,40 @@ class Tenant extends Admin
     public function detail()
     {
         $id = input('param.id/d');
+        
         $row = TenantModel::with(['system_user'])->find($id);
         if(!$row){
             return $this->error('当前租户不存在！');
         }
+        $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
+        // 获取租户的余额
+        $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
+        //获取租户的合计欠租情况
+        $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
+        $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
+
         $group = input('group','y');
-        $tabData = [];
-        $tabData['menu'] = [
-            [
-                'title' => '详情',
-                'url' => '?id='.$id.'&group=y',
-            ],
-            [
-                'title' => '台账',
-                'url' => '?id='.$id.'&group=t',
-            ]
-        ];
-        $tabData['current'] = url("detail?id=$id&group=$group");
+        $jump = input('param.jump');
+        if($jump){ //如果是从别的位置跳转过来的就不显示切换栏目
+
+        }else{
+            
+            $tabData = [];
+            $tabData['menu'] = [
+                [
+                    'title' => '详情',
+                    'url' => '?id='.$id.'&group=y',
+                ],
+                [
+                    'title' => '台账',
+                    'url' => '?id='.$id.'&group=t',
+                ]
+            ];
+            $tabData['current'] = url("detail?id=$id&group=$group");  
+            $this->assign('hisiTabData', $tabData);
+            $this->assign('hisiTabType', 3); 
+        }
+        
 
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
@@ -158,16 +175,7 @@ class Tenant extends Admin
             return json($data);
         }
 
-        $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
-        // 获取租户的余额
-        $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
-        //获取租户的合计欠租情况
-        $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
-        $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
-
         $this->assign('group', $group);
-        $this->assign('hisiTabData', $tabData);
-        $this->assign('hisiTabType', 3);
         $this->assign('data_info', $row);
         return $this->fetch();
     }

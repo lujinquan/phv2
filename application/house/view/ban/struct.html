@@ -137,26 +137,26 @@
 				      	</div>\
 				      </div>';
 	};
-	$('.j-structure-con').on('click', 'li', function(e) {
-		$('.j-structure-con li').removeClass('on');
-		$(e.target).addClass('on');
-		var dataInfo = $(e.target).attr('info');
-		//console.log(dataInfo);
-		var infoData = infodisplay(JSON.parse(dataInfo));//将一个 JSON 字符串转换为对象
-		/* console.log($(e.target).text()); */
-		$(".j-structure-data").html(infoData);
-
-	});
-	$(document).on('click', ".j-structure-box", function(){
-		$(".j-structure-data .layui-row:first").addClass("on"); //信息展示添加头部距离
-		$(".j-structure-con dl:odd").addClass("cur"); //隔行背景色
-	});
+	
 	layui.use(['jquery', 'form'], function() {
 		var id = {$data_info['ban_id']};
 		var unitNum = {$data_info['ban_units']};
 		var unit_id = 1;
 		var $ = layui.$,
 			form = layui.form;
+
+		$('.j-structure-con').on('click', 'li', function(e) {
+			$('.j-structure-con li').removeClass('on');
+			$(e.target).addClass('on');
+			var dataInfo = $(e.target).attr('info');
+			var infoData = infodisplay(JSON.parse(dataInfo));//将一个 JSON 字符串转换为对象
+			$(".j-structure-data").html(infoData);
+		});
+		$(document).on('click', ".j-structure-box", function(){
+			$(".j-structure-data .layui-row:first").addClass("on"); //信息展示添加头部距离
+			$(".j-structure-con dl:odd").addClass("cur"); //隔行背景色
+		});
+
 	    //监听楼层改变
 		form.on('select(sel-floor)', function(data){
              console.log(data.value);
@@ -203,5 +203,7 @@
 				}
 			});
 		});
+
+		
 	});
 </script>
