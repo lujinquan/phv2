@@ -124,8 +124,7 @@ class ChangeName extends SystemBase
             $row = $this->get($data['id']); 
             if($row['is_back']){ // 如果打回过
                 $data['child_json'] = $row['child_json'];
-            }
-            
+            } 
         }
         if($data['save_type'] == 'save'){ // 保存
             $data['change_status'] = 2;
