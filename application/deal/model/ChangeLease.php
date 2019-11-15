@@ -9,6 +9,7 @@ use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\house\model\HouseTai as HouseTaiModel;
 include EXTEND_PATH.'phpqrcode/phpqrcode.php';
 
 class ChangeLease extends SystemBase
@@ -316,8 +317,17 @@ class ChangeLease extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        // 将涉及的所有房屋，设置成暂停计租状态
-        //HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_status'=>2]);
-        
+        // 1、添加房屋台账
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 13;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '租约管理异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 18;
+        $taiHouseData['change_id'] = $finalRow['id'];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
     }
 }

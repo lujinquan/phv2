@@ -352,6 +352,8 @@ class ChangeRentAdd extends SystemBase
         $taiHouseData['cuid'] = $finalRow['cuid'];
         $taiHouseData['house_tai_remark'] = '租金追加调整异动单号：'.$finalRow['change_order_number'];
         $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 11;
+        $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
 

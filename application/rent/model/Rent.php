@@ -224,14 +224,16 @@ class Rent extends Model
             $houseModel = new House;
             $where = [];
             $where[] = ['a.house_status','eq',1];
+            $where[] = ['f.change_status','eq',1];
+            $where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-            $fields = 'house_id,house_number,tenant_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent';
-            $houseArr = $houseModel::alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
+            $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent';
+            $houseArr = $houseModel::alias('a')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','a.house_id = f.house_id','left')->where($where)->field($fields)->select();
             //halt($houseArr);
             $str = '';
             foreach ($houseArr as $k => $v) {
                 // 减免租金
-                $rent_order_cut = 0;
+                $rent_order_cut = $v['cut_rent'];
                 // 租金订单id
                 $rent_order_number = $v['house_number'].$currMonth;
 

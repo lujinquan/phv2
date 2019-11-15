@@ -332,6 +332,9 @@ class ChangeHouse extends SystemBase
         Db::name('house_room')->where([['room_id','in',$roomids]])->delete();
         $houseRoomData = [];
         $tempRoomids = Db::name('house_room_temp')->where([['house_id','eq',$finalRow['house_id']]])->field('room_id,house_id')->select();
+        //如果有减免，则需要让减免失效
+        ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['change_status'=>0]);
+        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['end_date'=>date('Ym')]);
 
         Db::name('house_room')->insertAll($tempRoomids);
         // 4、添加房屋台账
@@ -342,6 +345,8 @@ class ChangeHouse extends SystemBase
         $taiHouseData['cuid'] = $finalRow['cuid'];
         $taiHouseData['house_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
         $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 9;
+        $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
 

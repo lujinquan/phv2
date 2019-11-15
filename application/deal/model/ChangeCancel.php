@@ -316,6 +316,8 @@ class ChangeCancel extends SystemBase
             $taiBanData['ban_tai_type'] = 4;
             $taiBanData['ban_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
             $taiBanData['data_json'] = [];
+            $taiBanData['change_type'] = 8;
+            $taiBanData['change_id'] = $finalRow['id'];
 
             // 如果选择了房屋
             if($finalRow['data_json']){

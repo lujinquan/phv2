@@ -309,6 +309,8 @@ class ChangeOffset extends SystemBase
         $taiData['house_tai_type'] = 8;
         $taiData['house_tai_remark'] = '陈欠核销异动单号：'.$finalRow['change_order_number'];
         $taiData['data_json'] = [];
+        $taiData['change_type'] = 4;
+        $taiData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
     }

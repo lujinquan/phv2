@@ -171,6 +171,7 @@ class SystemData extends Model
             switch ($queryWhere['change_type']) {
                 case 1: //租金减免
                     $where[] = ['a.house_status','eq',1];
+                    $where[] = ['a.house_is_pause','eq',0];
                     $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',0]])->column('house_id'); //减免成功的或在减免中的不能再次申请
                     break;
                 case 3: //暂停计租 【待优化】
@@ -200,6 +201,7 @@ class SystemData extends Model
                     break;
                 case 13: //使用权变更
                     $where[] = ['a.house_status','eq',1];
+                    $where[] = ['house_is_pause','eq',0];
                     $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
                     break;
 
@@ -207,10 +209,12 @@ class SystemData extends Model
                     $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
+                    $where[] = ['house_is_pause','eq',0];
                     $applyHouseidArr = Db::name('change_cut_year')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 17: //别字更正
                     $where[] = ['a.house_status','eq',1];
+                    $where[] = ['a.house_is_pause','eq',0];
                     $applyHouseidArr = Db::name('change_name')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 18: //发租约
@@ -231,7 +235,7 @@ class SystemData extends Model
         }else{
             $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
         }
-//halt($where);
+
         $HouseModel = new HouseModel;
 
         $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_use_area,a.house_area,b.*,c.*';
@@ -253,7 +257,7 @@ class SystemData extends Model
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; //正常的
             if($unpaids){ 
-                if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4){
+                if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4 && $queryWhere['change_type'] != 11){
                     $v['color_status'] = 3; // 有欠租的
                 }
             }

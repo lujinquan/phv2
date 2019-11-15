@@ -301,6 +301,8 @@ class ChangeCut extends SystemBase
         $taiHouseData['cuid'] = $finalRow['cuid'];
         $taiHouseData['house_tai_remark'] = '租金减免异动单号：'.$finalRow['change_order_number'];
         $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 1;
+        $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
 

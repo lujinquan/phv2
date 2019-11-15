@@ -92,6 +92,7 @@
 			  }
 			  ,cols: [[ 
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];

@@ -13,7 +13,9 @@ insert into ph_v2.ph_ban_back
 select 
 BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,Status
 from ph_v1.ph_ban;
-
+# 更新楼栋的创建人信息 
+update ph_v2.ph_ban_back as a left join ph_v2.ph_system_user as b on a.ban_inst_id = b.inst_id set a.ban_cuid = b.id;
+update ph_v2.ph_ban_back set ban_cuid = 1 where ban_cuid = 0;
 
 /**
  * 2、将v1的房屋表中的ban_number全部替换成v2楼栋表中的ban_id [反向更新v1的房屋表]
@@ -40,8 +42,7 @@ from ph_v1.ph_tenant;
  */
 # update ph_v1.ph_house as a left join ph_v2.ph_tenant_back as b on a.TenantID = b.tenant_number set a.TenantID = b.tenant_id;
 update ph_v1.ph_house a,ph_v2.ph_tenant_back b set a.TenantID = b.tenant_id where a.TenantID = b.tenant_number;
-
-
+update ph_v2.ph_tenant_back as a left join ph_v2.ph_system_user as b on a.tenant_inst_id = b.inst_id set a.tenant_cuid = b.id;
 
 
 /**
@@ -52,12 +53,14 @@ drop table if exists ph_v2.ph_house_back;
 create table ph_v2.ph_house_back like ph_v2.ph_house;
 # 同步数据
 insert into ph_v2.ph_house_back 
-(house_number,ban_id,tenant_id,house_pre_rent,house_cou_rent,house_unit_id,house_floor_id,house_door,house_use_id,house_use_area,house_area,house_lease_area,house_oprice,house_pump_rent,house_diff_rent,house_protocol_rent,house_status) 
+(house_number,ban_id,tenant_id,house_pre_rent,house_cou_rent,house_unit_id,house_floor_id,house_door,house_use_id,house_use_area,house_area,house_lease_area,house_oprice,house_pump_rent,house_diff_rent,house_protocol_rent,house_is_pause,house_status) 
 select 
-HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,Status
+HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,IfSuspend,Status
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
 update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
+update ph_v2.ph_house_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
+
 # 更新楼栋表的户数
 update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
 
@@ -126,7 +129,7 @@ from ph_v2.test1;
  */
 update ph_v2.ph_house_room_back a,ph_v2.ph_room_back b set a.room_id = b.room_id where a.room_number = b.room_number;
 update ph_v2.ph_house_room_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_number = b.house_number;
-
+update ph_v2.ph_room_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.room_cuid = b.ban_cuid;
 
 /* 至此，档案数据全部同步完成 */
 
@@ -322,9 +325,9 @@ drop table if exists ph_v2.ph_change_cut_back;
 create table ph_v2.ph_change_cut_back like ph_v2.ph_change_cut;
 # 同步数据
 insert into ph_v2.ph_change_cut_back 
-(change_order_number,house_id,ban_id,tenant_id,cut_type,cut_rent,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,tenant_id,cut_type,cut_rent,change_imgs,ctime,ftime,end_date,change_status)
 select 
-ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,FinishTime,DateEnd,Status
 from ph_v1.ph_change_order where ChangeType = 1 and Status < 2;
 
 update ph_v2.ph_change_cut_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;

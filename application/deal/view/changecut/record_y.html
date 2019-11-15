@@ -102,6 +102,7 @@
 			  ,cols: [
 				[ //表头 
 				 {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+				 {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 				   {field: 'house_use_id',width: 120,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 
