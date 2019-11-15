@@ -117,6 +117,9 @@ class Admin extends Common
                 // 获取面包屑导航
                 $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                 $this->assign('hisiBreadcrumb', $breadCrumbs);
+
+                //dump($curMenu);
+                //halt(MenuModel::getMainMenu());
                 // 获取当前访问的菜单信息
                 $this->assign('hisiCurMenu', $curMenu);
                 // 获取当前菜单的顶级节点

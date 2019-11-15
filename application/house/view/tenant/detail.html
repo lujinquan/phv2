@@ -1,6 +1,6 @@
 {include file="system@block/layui" /}
 {if condition="$group == 'y'"}
-<style>
+<!-- <style>
 	.layui-nav-tree .layui-nav-child dd.layui-this,.layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover{
 		background-color:var(--hisi-layui-nav-child-a-bg)!important;
 		color:var(--hisi-layui-nav-child-a-c)!important;
@@ -20,7 +20,7 @@
 		color:var(--hisi-layui-side-layui-this-a)!important;
 	}
 	
-</style>
+</style> -->
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <div class="j-details-box j-no-border floorWrap layui-form">
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
@@ -149,8 +149,8 @@
 	$('.j-viewer-img').viewer({
 	   	url: 'data-original',
 	 });
-	 //处理租户左边栏目高亮显示问题
-	 $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
+	 // //处理租户左边栏目高亮显示问题
+	 // $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
 </script>
 {else /}
 <div class="j-table-content">
