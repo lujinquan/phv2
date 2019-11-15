@@ -2,6 +2,7 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;

@@ -475,15 +475,15 @@
     <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['ban_id']}&group={$group}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
         <div class="layui-input-inline" style="width:160px;">
-            <select name="house_tai_type">
+            <select name="ban_tai_type">
                 <option value="">业务类型</option>
-                {volist name="params['house_tai_type']" id="v"}
+                {volist name="params['ban_tai_type']" id="v"}
                 <option value="{$key}">{$v}</option>
                 {/volist}
               </select>
         </div>
         <div class="layui-input-inline" style="width:160px;">
-            <input type="text" name="house_tai_remark" placeholder="描述内容" class="layui-input">
+            <input type="text" name="ban_tai_remark" placeholder="描述内容" class="layui-input">
         </div>
         <input type="hidden" name="group" value="{$group}" class="layui-input">
         <input type="hidden" name="ban_id" value="{$data_info['ban_id']}" class="layui-input">

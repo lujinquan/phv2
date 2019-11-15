@@ -11,6 +11,7 @@ use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\HouseTemp as HouseTempModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeHouse extends SystemBase
 {
