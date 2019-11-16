@@ -128,7 +128,7 @@ class ChangeCancel extends SystemBase
         }
 
         $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 8; //使用权变更
+        $data['change_type'] = 8; //注销
         $data['change_order_number'] = date('Ym').'08'.random(14);
         
         $banRow = BanModel::get($data['ban_id']);
@@ -191,7 +191,7 @@ class ChangeCancel extends SystemBase
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         //halt($row);
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -266,7 +266,8 @@ class ChangeCancel extends SystemBase
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                $this->finalDeal($changeRow);
+                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -364,6 +365,7 @@ class ChangeCancel extends SystemBase
         // 按户注销   
         }else{
             $changeBanData = [];
+            $finalRow['ban_info'] = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
             // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
             foreach ($finalRow['data_json'] as $k => $v) {
                 HouseModel::where([['house_number','eq',$v['house_number']]])->update([

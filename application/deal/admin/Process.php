@@ -79,7 +79,7 @@ class Process extends Admin
         //检查当前页面或当前表单，是否允许被请求？
         $PorcessModel = new ProcessModel;
         $rowProcess = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
-        //dump($row['curr_role']);halt(ADMIN_ROLE);
+        //dump($rowProcess);halt(ADMIN_ROLE);
         if($rowProcess['curr_role'] != ADMIN_ROLE){
             return $this->error('审批状态错误');
         }
