@@ -110,6 +110,10 @@ class Api extends Common
         }
     }
 
+    /**
+     * 处理异动数据
+     * @return [type] [description]
+     */
     public function dealData()
     {
         // 1、同步house_id，和tenant_id
