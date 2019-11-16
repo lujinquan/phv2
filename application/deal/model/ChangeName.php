@@ -234,7 +234,8 @@ class ChangeName extends SystemBase
                 
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                $this->finalDeal($changeRow);
+                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];

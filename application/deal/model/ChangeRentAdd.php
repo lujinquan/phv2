@@ -231,7 +231,8 @@ class ChangeRentAdd extends SystemBase
                     'img' => '',
                 ];
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                $this->finalDeal($changeRow);
+                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新暂停计租表
                 $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表

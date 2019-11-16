@@ -251,7 +251,8 @@ class ChangeCut extends SystemBase
                     'img' => '',
                 ];
                 //终审成功后的数据处理
-                try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
+                $this->finalDeal($changeRow);
+                //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
 
                 // 更新使用权变更表
                 $changeRow->allowField(['child_json','change_status','ftime','end_date'])->save($changeUpdateData, ['id' => $data['id']]);

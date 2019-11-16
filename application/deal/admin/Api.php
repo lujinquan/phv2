@@ -109,4 +109,25 @@ class Api extends Common
             //halt(json($result));
         }
     }
+
+    public function dealData()
+    {
+        // 1、同步house_id，和tenant_id
+        // set_time_limit(0);
+        // Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
+        
+        // 2、入库注销数据
+        $jsonData = Db::name('json_data')->field('house_id,house_use_id,house_number,tenant_id,tenant_name,house_pump_rent,house_diff_rent,house_pre_rent')->where([['changetype','eq','注销']])->select();
+        //halt(count($jsonData));
+        $jsonArr = []; 
+        foreach($jsonData as $d){
+            $jsonArr[$d['change_order_number']][] = $d;
+        }
+        
+        foreach ($jsonArr as $k => $v) {
+            //halt(json_encode($v));
+            Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['data_json'=>json_encode($v)]);
+        }
+    }
+
 }

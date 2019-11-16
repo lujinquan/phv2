@@ -83,11 +83,13 @@ class Process extends Admin
         if($rowProcess['curr_role'] != ADMIN_ROLE){
             return $this->error('审批状态错误');
         }
+        if($rowProcess['ftime'] > 0){
+            return $this->error('异动已经完成，请刷新重试！');
+        }
   //halt($row);      
         // 提交审批表单
         if($this->request->isPost()) {
             $data = $this->request->post();
-            
             if($change_type == 18 && ADMIN_ROLE == 6){
                 $ChangeModel = new ChangeLeaseModel;
                 $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
@@ -95,11 +97,17 @@ class Process extends Admin
                     return $this->error('请先打印租约后再审批！');
                 }
             }
-//exit;
-            $res = $PorcessModel->process($change_type,$data); //$data必须包含子表的id
-            if (!$res) {
-                return $this->error('审批失败');
-            }
+
+            // 如果审批失败，数据回滚
+            Db::transaction(function () {
+                $model = new ProcessModel;
+                $change_type = input('param.change_type/d');
+                $data = $this->request->post();
+                $model->process($change_type,$data); //$data必须包含子表的id
+            });
+            // if (!$res) {
+            //     return $this->error('审批失败');
+            // }
             return $this->success('审批成功',url('index'));
         }
 

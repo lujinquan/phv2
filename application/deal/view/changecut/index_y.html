@@ -1,5 +1,5 @@
 <!-- 租金减免年审/申请列表 -->
-<div class="j-table-content {if condition='in_array(282,$auths)'}on{/if}">
+<div class="j-table-content {if condition='in_array(282,$auths) || $Think.ADMIN_ROLE == 1'}on{/if}">
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container"> 
 	     	{if condition="in_array(282,$auths) || $Think.ADMIN_ROLE == 1"}      
