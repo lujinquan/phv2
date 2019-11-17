@@ -120,7 +120,7 @@ class ChangeLease extends SystemBase
 
         $code = substr(md5(substr(uniqid(),-6)),6).substr(uniqid(),-6);
 
-        $value = 'https://www.mylucas.com.cn';          //二维码内容
+        $value = 'https://pro.ctnmit.com/erweima/'.$code;          //二维码内容
         $errorCorrectionLevel = 'L';    //容错级别 
         $matrixPointSize = 6;           //生成图片大小
         $url = '/upload/qrcode/'.$code.'.png';
@@ -128,7 +128,7 @@ class ChangeLease extends SystemBase
 
         $qrcode = new \QRcode;
 
-        $qrcodeUrl = $qrcode::png($value,$filename,$errorCorrectionLevel, $matrixPointSize, 2);
+        $qrcode::png($value,$filename,$errorCorrectionLevel, $matrixPointSize, 2);
 
         return $url;
     }

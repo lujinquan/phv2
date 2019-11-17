@@ -2,6 +2,7 @@
 
 namespace app\deal\model;
 
+use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
@@ -290,6 +291,13 @@ class ChangeName extends SystemBase
 
         $TenantTaiModel = new TenantTaiModel;
         $TenantTaiModel->allowField(true)->create($taiData);
+
+        // 4、租户更名后原租约失效
+        $qrcodeUrl = Db::name('change_lease')->where([['house_id'=>$finalRow['house_id'],'tenant_id'=>$finalRow['tenant_id']]])->value('qrcode');
+        if($qrcodeUrl){
+            @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
+        }
+
     }
 
 }
