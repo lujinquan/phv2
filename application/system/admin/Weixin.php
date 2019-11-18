@@ -38,9 +38,9 @@ class Weixin extends Controller
 	 */
     public function signin()
     {
-        if($this->request->isGet()){
+        if($this->request->isPost()){
             // 获取post数据
-            $data = $this->request->get();
+            $data = $this->request->post();
 
             $result = [];
             $result['code'] = 0;
