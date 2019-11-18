@@ -63,7 +63,7 @@ class Weixin extends Controller
             $result['data']['key'] = $key;
             $result['code'] = 1;
             $result['msg'] = '登录成功！';
-            return json($result);    
+            echo json($result);   
             //return $this->success('登录成功','',['key'=>$key]);
         //}
     }
