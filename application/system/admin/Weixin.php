@@ -37,7 +37,7 @@ class Weixin extends Controller
 	 */
 	public function signin()
     {
-        if ($this->request->isPost()) {
+        //if ($this->request->isPost()) {
             // 获取post数据
             $data = $this->request->post();
 
@@ -65,8 +65,7 @@ class Weixin extends Controller
             $result['msg'] = '登录成功！';
             return json($result);    
             //return $this->success('登录成功','',['key'=>$key]);
-        }
-        echo 1;
+        //}
     }
 
     /**
