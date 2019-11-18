@@ -204,7 +204,7 @@ from ph_v1.ph_lease_change_order;
  * 17、补充ph_change_lease表 
  */
 update ph_v2.ph_change_lease_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
-update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
 
 
 
@@ -271,25 +271,25 @@ from ph_v1.ph_use_change_order;
  */
 update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.old_tenant_id = b.tenant_id where a.old_tenant_id = b.tenant_number;
 update ph_v2.ph_change_use_back a,ph_v2.ph_tenant_back b set a.new_tenant_id = b.tenant_id where a.new_tenant_id = b.tenant_number;
-update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
 
 
 
 /**
- * 23、同步异动表[ph_change_order => ph_change_order]
+ * 23、同步数据中心处理的ph_json_data表和ph_json_child表
  * 
  */
 
 # 同步子异动表
-drop table if exists ph_v2.ph_change_child_back;
-create table ph_v2.ph_change_child_back like ph_v2.ph_change_child;
-# 同步数据
-insert into ph_v2.ph_change_child_back 
-(change_order_number,inst_id,child_step,child_remark,child_status,is_valid,child_cuid,child_ctime) 
-select 
-FatherOrderID,InstitutionID,Step,Reson,Status,IfValid,UserNumber,CreateTime
-from ph_v1.ph_use_child_order;
-
+# drop table if exists ph_v2.ph_change_child_back;
+# create table ph_v2.ph_change_child_back like ph_v2.ph_change_child;
+# insert into ph_v2.ph_change_child_back 
+# (change_order_number,inst_id,child_step,child_remark,child_status,is_valid,child_cuid,child_ctime) 
+# select 
+# FatherOrderID,InstitutionID,Step,Reson,Status,IfValid,UserNumber,CreateTime
+# from ph_v1.ph_use_child_order;
+# update ph_v2.ph_json_data as a left join ph_v2.ph_system_user as b on a.child_cuid = b.number set a.child_cuid = b.id;
+update ph_v2.ph_json_child as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
 
 # 同步暂停计租
 drop table if exists ph_v2.ph_change_pause_back;
@@ -302,7 +302,7 @@ ChangeOrderID,HouseID,BanID,InflRent,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 3 and Status < 2;
 
 update ph_v2.ph_change_pause_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_pause_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_pause_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 
 
 # 同步新发租
@@ -316,7 +316,7 @@ ChangeOrderID,HouseID,BanID,TenantID,NewLeaseType,ChangeImageIDS,CreateTime,Fini
 from ph_v1.ph_change_order where ChangeType = 7 and Status < 2;
 
 update ph_v2.ph_change_new_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_new_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_new_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_new_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
@@ -331,7 +331,7 @@ ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,
 from ph_v1.ph_change_order where ChangeType = 1 and Status < 2;
 
 update ph_v2.ph_change_cut_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_cut_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_cut_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_cut_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
@@ -346,7 +346,7 @@ ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,Stat
 from ph_v1.ph_change_order where ChangeType in (5,8) and Status < 2;
 
 update ph_v2.ph_change_cancel_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_cancel_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_cancel_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_cancel_back set cancel_type = 1 where cancel_type = 0;
 update ph_v2.ph_change_cancel_back as a left join ph_v1.ph_rent_table as b on a.change_order_number = b.ChangeOrderID set a.cancel_ban = b.ChangeNum,a.cancel_rent = b.InflRent,a.cancel_area = b.Area,a.cancel_use_area = b.UseArea,a.cancel_oprice = b.Oprice;
 
@@ -362,7 +362,7 @@ ChangeOrderID,HouseID,BanID,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 9 and Status < 2;
 
 update ph_v2.ph_change_house_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.tenant_id = b.tenant_id where a.house_id = b.house_number;
-update ph_v2.ph_change_house_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_house_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 
 
 # 同步管段调整
@@ -375,7 +375,7 @@ select
 ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 10 and Status < 2;
 
-update ph_v2.ph_change_inst_back a,ph_v2.ph_ban_back b set a.ban_ids = b.ban_id where a.ban_ids = b.ban_number;
+update ph_v2.ph_change_inst_back a,ph_v2.ph_ban_back b set a.ban_ids = b.ban_id,a.cuid = b.ban_cuid where a.ban_ids = b.ban_number;
 
 
 # 同步陈欠核销
@@ -389,7 +389,7 @@ ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,Cre
 from ph_v1.ph_change_order where ChangeType = 4 and Status < 2;
 
 update ph_v2.ph_change_offset_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_offset_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_offset_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_offset_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
@@ -406,7 +406,7 @@ from ph_v1.ph_cor_change_order;
 
 
 update ph_v2.ph_change_name_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
-update ph_v2.ph_change_name_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
+update ph_v2.ph_change_name_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
 
 
 # 同步租金追加调整
@@ -420,7 +420,7 @@ ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,Cre
 from ph_v1.ph_change_order where ChangeType = 11 and Status < 2;
 
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
-update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id where a.ban_id = b.ban_number;
+update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
@@ -435,8 +435,8 @@ drop table if exists ph_ban;
 alter table ph_ban_back rename ph_ban;
 drop table if exists ph_change_cancel;
 alter table ph_change_cancel_back rename ph_change_cancel;
-drop table if exists ph_change_child;
-alter table ph_change_child_back rename ph_change_child;
+#drop table if exists ph_change_child;
+#alter table ph_change_child_back rename ph_change_child;
 drop table if exists ph_change_cut;
 alter table ph_change_cut_back rename ph_change_cut;
 drop table if exists ph_change_house;

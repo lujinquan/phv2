@@ -106,8 +106,8 @@
 			  }
 			  ,cols: [
 				[  
-					{field: 'change_order_number',hide: true, minWidth: 180,align:'center',title: '异动编号'}, 
-					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'ban_address',minWidth: 180,align:'center',title:'楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];

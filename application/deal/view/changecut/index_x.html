@@ -112,6 +112,7 @@ var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'�
 			    ,cols: [
 				  [ //表头 
 				   {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+				   {field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 				   {field: 'house_use_id',width: 120,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 

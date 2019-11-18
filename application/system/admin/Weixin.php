@@ -13,6 +13,7 @@
 namespace app\system\admin;
 
 use think\Db;
+use think\Controller;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
 use app\rent\model\Rent as RentModel;
@@ -27,7 +28,7 @@ use app\common\model\Cparam as ParamModel;
 /**
  * 微信小程序用户版接口
  */
-class Weixin extends Common 
+class Weixin extends Controller 
 {
 	
 	/**
@@ -65,6 +66,7 @@ class Weixin extends Common
             return json($result);    
             //return $this->success('登录成功','',['key'=>$key]);
         }
+        echo 1;
     }
 
     /**
