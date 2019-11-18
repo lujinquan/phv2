@@ -32,12 +32,12 @@ class Weixin extends Controller
 {
 	
 	/**
-	 * [signin description]
+	 * [signin 用户版小程序登录]
 	 * @return [type] [description]
 	 */
-	public function signin()
+    public function signin()
     {
-        //if ($this->request->isPost()) {
+        if($this->request->isPost()){
             // 获取post数据
             $data = $this->request->post();
 
@@ -45,27 +45,28 @@ class Weixin extends Controller
             $result['code'] = 0;
             // 验证数据合法性
             if(!isset($data['username']) || !$data['username']){
-            	$result['msg'] = '请输入登录用户名！';
-            	return json($result);
+                $result['msg'] = '请输入登录用户名！';
+                
             }
             // 如果有重复的手机号，会只取第一条
             $row = TenantModel::where([['tenant_tel','eq',$data['username']],['tenant_status','eq',1]])->find();
             if(!$row){
-            	return $this->error('用户名错误或被禁用！');
-            } 
-			$key = str_coding($row['tenant_id'],'ENCODE');
-			// 更新用户登录的信息
-			TenantModel::where([['tenant_id','eq',$row['tenant_id']],['tenant_status','eq',1]])->update(['tenant_key'=>$key,'tenant_weixin_ctime'=>time()]);
-			$params = ParamModel::getCparams();
-			$result['data']['params'] = $params;
-            $systemNotice = new SystemNotice;
-            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select();
-            $result['data']['key'] = $key;
-            $result['code'] = 1;
-            $result['msg'] = '登录成功！';
-            echo json($result);   
-            //return $this->success('登录成功','',['key'=>$key]);
-        //}
+                $result['msg'] = '用户名错误或被禁用！';
+            } else {
+                $key = str_coding($row['tenant_id'],'ENCODE');
+                // 更新用户登录的信息
+                TenantModel::where([['tenant_id','eq',$row['tenant_id']],['tenant_status','eq',1]])->update(['tenant_key'=>$key,'tenant_weixin_ctime'=>time()]);
+                $params = ParamModel::getCparams();
+                $result['data']['params'] = $params;
+                $systemNotice = new SystemNotice;
+                $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select();
+                $result['data']['key'] = $key;
+                $result['code'] = 1;
+                $result['msg'] = '登录成功！';
+            }
+ 
+            return json($result);
+        }
     }
 
     /**
