@@ -68,10 +68,7 @@ class Weixin extends Controller
                     $key = str_coding($row['tenant_id'],'ENCODE');
                     // 更新用户登录的信息
                     TenantModel::where([['tenant_id','eq',$row['tenant_id']],['tenant_status','eq',1]])->update(['tenant_key'=>$key,'tenant_weixin_ctime'=>time()]);
-                    $params = ParamModel::getCparams();
-                    $result['data']['params'] = $params;
-                    $systemNotice = new SystemNotice;
-                    $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select();
+                    
                     $result['data']['key'] = $key;
                     $result['code'] = 1;
                     $result['msg'] = '登录成功！';
@@ -120,6 +117,34 @@ class Weixin extends Controller
             
             return json($result);
         }
+    }
+
+    public function noticeInfo()
+    {
+        $key = input('get.key');
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $result = [];
+        $result['code'] = 0;
+
+        if($tenantInfo){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $systemNotice = new SystemNotice;
+            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select();
+            $result['data']['message'] = [
+                '欢迎进入公房用户版小程序！！！','这是第二条消息推送，增加一下长度度度度度度度度度度度度度度度度度度度度……'
+            ];
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
     }
 
     /**
