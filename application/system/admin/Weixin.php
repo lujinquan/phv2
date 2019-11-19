@@ -51,9 +51,11 @@ class Weixin extends Controller
             // 验证数据合法性
             if(!isset($data['code']) || !$data['code']){
                 $result['msg'] = '请输入验证码！';
+                return json($result);
             }
             // 如果有重复的手机号，会只取第一条
             $row = TenantModel::where([['tenant_tel','eq',$data['username']],['tenant_status','eq',1]])->find();
+            //halt($data);
             if(!$row){
                 $result['msg'] = '用户名错误或被禁用！';
             } else {
