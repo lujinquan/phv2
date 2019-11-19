@@ -147,6 +147,27 @@ class Weixin extends Controller
         
     }
 
+    public function noticeDetail()
+    {
+        $key = input('get.key');
+        $id = input('get.id');
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $result = [];
+        $result['code'] = 0;
+        if($tenantInfo){
+            $systemNotice = new SystemNotice;
+            $result['data'] = $systemNotice->get($id);
+           
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
     /**
      * 
      * @param id 消息id

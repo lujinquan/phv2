@@ -302,10 +302,20 @@
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTp2">
 	  <!-- <a href="" class="j-download-color">审批</a> -->
-	  {{# if(d.change_type == 18 && d.curr_role == 6 && d.is_process){ }}
+	  {{# if(d.change_type == 18 && d.curr_role == 6){ }}
 	  <a href="{:url('deal/process/printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
 	  {{# } }}
+	  {{# if(d.curr_role != 4){ }}
+	  <!-- 如果是租约管理异动，当打印次数大于0的时候，才能审批 -->
+	  {{# if(d.change_type == 18 && d.print_times > 0){ }}
 	  <a href="{:url('deal/process/process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
+	  {{#  } else { }}
+	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
+	  {{#  } }}
+	  {{#  } else { }}
+	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
+	  {{#  } }}
+	  
 	</script>
 	{include file="block/layui" /}
 	<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>

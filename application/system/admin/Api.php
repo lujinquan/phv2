@@ -38,19 +38,20 @@ class Api extends Common
         //halt('确认处理child_json数据？会造成导入的数据详情页无法正常打开，如果确认处理，请在程序中注释改代码！');
         set_time_limit(0);
         //将字表中的数据json化，写入到对应的异动表中
-        $allChildData = Db::name('json_child')->column('change_order_number,step,uid,time,action,img');
-
+        $allChildData = Db::name('json_child')->column("change_order_number,success,step,uid,from_unixtime(time,'%Y-%m-%d %H:%i:%s') as time,action,img");
+//halt($allChildData);
         $result = [];
         foreach($allChildData as $k => &$v){
             unset($v['change_order_number']);
-            $result[$k] = json_encode($v);
+            $result[$k][] = $v;
         }
+
         $where = 1;
         // 处理原暂停计租异动
         $allPauseData = Db::name('change_pause')->where($where)->column('change_order_number');
         foreach($allPauseData as $a){
             if(isset($result[$a])){
-                Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -58,7 +59,7 @@ class Api extends Common
         $allNewData = Db::name('change_new')->where($where)->column('change_order_number');
         foreach($allNewData as $a){
             if(isset($result[$a])){
-                Db::name('change_new')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_new')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -66,7 +67,7 @@ class Api extends Common
         $allCutData = Db::name('change_cut')->where($where)->column('change_order_number');
         foreach($allCutData as $a){
             if(isset($result[$a])){
-                Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -74,7 +75,9 @@ class Api extends Common
         $allCancelData = Db::name('change_cancel')->where($where)->column('change_order_number');
         foreach($allCancelData as $a){
             if(isset($result[$a])){
-                Db::name('change_cancel')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                // dump($a);
+                // halt($result);
+                Db::name('change_cancel')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -82,7 +85,7 @@ class Api extends Common
         $allHouseData = Db::name('change_house')->where($where)->column('change_order_number');
         foreach($allHouseData as $a){
             if(isset($result[$a])){
-                Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -90,7 +93,7 @@ class Api extends Common
         $allOffsetData = Db::name('change_offset')->where($where)->column('change_order_number');
         foreach($allOffsetData as $a){
             if(isset($result[$a])){
-                Db::name('change_offset')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_offset')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
 
@@ -98,11 +101,9 @@ class Api extends Common
         $allRentaddData = Db::name('change_rentadd')->where($where)->column('change_order_number');
         foreach($allRentaddData as $a){
             if(isset($result[$a])){
-                Db::name('change_rentadd')->where([['change_order_number','eq',$a]])->update(['child_json'=>$result[$a]]);
+                Db::name('change_rentadd')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
-
-
 
         halt('ok');
     }
