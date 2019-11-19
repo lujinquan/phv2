@@ -48,11 +48,11 @@ class Weixin extends Controller
             if(!isset($data['username']) || !$data['username']){
                 $result['msg'] = '请输入登录用户名！';
             }
-            // 验证数据合法性
+            /*// 验证数据合法性
             if(!isset($data['code']) || !$data['code']){
                 $result['msg'] = '请输入验证码！';
                 return json($result);
-            }
+            }*/
             // 如果有重复的手机号，会只取第一条
             $row = TenantModel::where([['tenant_tel','eq',$data['username']],['tenant_status','eq',1]])->find();
             //halt($data);
@@ -60,11 +60,11 @@ class Weixin extends Controller
                 $result['msg'] = '用户名错误或被禁用！';
             } else {
 
-                $auth = new ServerCodeAPI();    
+                /*$auth = new ServerCodeAPI();    
                 $res = $auth->CheckSmsYzm($data['username'],$data['code']);
                 $res = json_decode($res);
                 // 验证短信码是否正确
-                if($res->code == '200'){ 
+                if($res->code == '200'){ */
                     $key = str_coding($row['tenant_id'],'ENCODE');
                     // 更新用户登录的信息
                     TenantModel::where([['tenant_id','eq',$row['tenant_id']],['tenant_status','eq',1]])->update(['tenant_key'=>$key,'tenant_weixin_ctime'=>time()]);
@@ -75,11 +75,11 @@ class Weixin extends Controller
                     $result['data']['key'] = $key;
                     $result['code'] = 1;
                     $result['msg'] = '登录成功！';
-                } else if($res->code == '413'){
+                /*} else if($res->code == '413'){
                     $result['msg'] = '验证失败！';
                 } else {
                     $result['msg'] = '请重新获取！';
-                }
+                }*/
               
             }
  
