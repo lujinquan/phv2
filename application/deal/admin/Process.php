@@ -36,7 +36,7 @@ class Process extends Admin
             $getData = $this->request->get();
             $ProcessModel = new ProcessModel;
             $where = $ProcessModel->checkWhere($getData);
-            $fields = "a.id,a.change_id,a.change_type,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = $dataTemps = [];
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
@@ -215,7 +215,7 @@ class Process extends Admin
         $qrcodeUrl = $ChangeLeaseModel->makeQrcode(); //生成新的二维码
         Db::name('system_config')->where('name','szno')->setInc('value',1); //更新计数器
         $findRow->update(['id'=>$id,'last_print_time'=>time(),'print_times'=>Db::raw('print_times+1'),'qrcode'=>$qrcodeUrl]);
-  
+        Db::name('change_process')->where([['change_id','eq',$id],['change_type','eq',18]])->update(['print_times'=>Db::raw('print_times+1')]);
         $row = $ChangeLeaseModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch('changelease/printout');

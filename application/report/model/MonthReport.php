@@ -704,7 +704,7 @@ class MonthReport extends Model
                 $result[$owners][$j][17][13] = $rentdata[$owners][1][$j]['rent_order_receives']; //bcsub($result[$owners][$j][8][13] , $result[$owners][$j][9][13],2);
                 $result[$owners][$j][17][14] = bcsub($result[$owners][$j][8][14] , $result[$owners][$j][9][14],2);
                 $result[$owners][$j][17][15] = bcsub($result[$owners][$j][8][15] , $result[$owners][$j][9][15],2);
-                array_unshift($result[$owners][$j][17],$result[$owners][$j][8][0] - $result[$owners][$j][9][0]);
+                array_unshift($result[$owners][$j][17],bcaddMerge([$result[$owners][$j][17][1], $result[$owners][$j][17][2], $result[$owners][$j][17][3], $result[$owners][$j][17][10], $result[$owners][$j][17][11], $result[$owners][$j][17][12], $result[$owners][$j][17][13], $result[$owners][$j][17][14], $result[$owners][$j][17][15]]));
 
                 //本月份实收租金 = 本月规租 - 本月订单欠租
                 $result[$owners][$j][18][1] = $rentdata[$owners][2][$j]['rent_order_paids'];

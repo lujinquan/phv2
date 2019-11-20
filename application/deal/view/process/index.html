@@ -68,7 +68,12 @@
 	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
 	  {{# } }}
 	  {{# if(d.is_process){ }}
+	  <!-- 如果是租约管理异动，当打印次数大于0的时候，才能审批 -->
+	  {{# if(d.change_type == 18 && d.print_times > 0){ }}
 	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
+	  {{#  } else { }}
+	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
+	  {{# } }}
 	  {{#  } else { }}
 	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
 	  {{# } }}
@@ -120,7 +125,7 @@
 						align:'center',
 						title: '楼栋地址'
 					},{
-						field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'
+						field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'
 					}, {
 						field: 'ban_inst_id',
 						hide: isShowInst,
