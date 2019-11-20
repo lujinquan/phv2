@@ -120,18 +120,20 @@ class Api extends Common
         // set_time_limit(0);
         // Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
         
-        // 2、入库注销数据
+/*        // 2、入库注销数据
         $jsonData = Db::name('json_data')->field('change_order_number,house_id,house_use_id,house_number,tenant_id,tenant_name,house_oprice,house_area,house_pre_rent,house_use_area,house_lease_area,house_diff_rent,house_pump_rent')->where([['changetype','eq','注销']])->select(); 
-
-        //halt(count($jsonData));
         $jsonArr = []; 
         foreach($jsonData as $d){
             $jsonArr[$d['change_order_number']][] = $d;
         }
-        
         foreach ($jsonArr as $k => $v) {
-            //halt(json_encode($v));
             Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['data_json'=>json_encode($v)]);
+        }*/
+
+        // 3、处理change_lease的child_json,data_json数据
+        $leaseJsonChild = Db::name('change_lease')->field('id,child_json,data_json')->where([['changetype','eq','注销']])->select();
+        foreach ($leaseJsonChild as $lease) {
+            
         }
     }
 
