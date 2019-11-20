@@ -340,9 +340,9 @@ drop table if exists ph_v2.ph_change_cancel_back;
 create table ph_v2.ph_change_cancel_back like ph_v2.ph_change_cancel;
 # 同步数据
 insert into ph_v2.ph_change_cancel_back 
-(change_order_number,house_id,ban_id,cancel_type,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,cancel_type,change_imgs,ctime,ftime,change_remark,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,Remark,Status
 from ph_v1.ph_change_order where ChangeType in (5,8) and Status < 2;
 
 update ph_v2.ph_change_cancel_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -425,8 +425,25 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b
 
 
 
-
-
+/**
+ * 24、同步附件表 ph_upload_file 到 ph_system_annex
+ * 实际上所有的附件都会
+ */
+drop table if exists ph_v2.ph_system_annex_back;
+create table ph_v2.ph_system_annex_back like ph_v2.ph_system_annex;
+# 同步数据
+insert into ph_v2.ph_system_annex_back 
+(id,remark,file,cuid,ctime) 
+select 
+id,FileTitle,FileUrl,UploadUserID,UploadTime
+from ph_v1.ph_upload_file;
+update ph_v2.ph_system_annex_back as a left join ph_v2.ph_system_user as b on a.cuid = b.number set a.cuid = b.id;
+update ph_system_annex_back set file = replace(file,'/uploads/','/upload/');
+update ph_system_annex_back set file = replace(file,'/changeOrder/','/change/image/20181201/');
+update ph_system_annex_back set file = replace(file,'/usechange/','/change/image/20181201/');
+update ph_system_annex_back set file = replace(file,'/house/','/house/image/20181201/');
+update ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20181201/');
+update ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
 
 
 
@@ -471,6 +488,8 @@ drop table if exists ph_room;
 alter table ph_room_back rename ph_room;
 drop table if exists ph_tenant;
 alter table ph_tenant_back rename ph_tenant;
+drop table if exists ph_system_annex;
+alter table ph_system_annex_back rename ph_system_annex;
 
 # 清空台账记录
 truncate ph_ban_tai;

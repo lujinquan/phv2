@@ -194,6 +194,22 @@
   	    </div>
   	</div>
   </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">其他</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelThree'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>审批状态</legend>
   </fieldset>
