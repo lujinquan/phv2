@@ -250,7 +250,7 @@ class Weixin extends Controller
 
     	if($tenantInfo){
 
-    		$fields = 'a.rent_order_id,a.house_id,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+    		$fields = 'a.rent_order_id,a.house_id,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
          
          	$where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
          	$where[] = ['a.tenant_id','eq',$tenantInfo['tenant_id']];
