@@ -77,7 +77,7 @@
 		  </div>
 	    </div>
 		<div class="layui-row layui-col-space15">
-			<div class="layui-col-md12">
+			<!-- <div class="layui-col-md12">
 			  <div class="j-col-box">
 				<div class="j-title-color clearfix">租金年计划</div>
 				<div class="j-money-max clearfix">
@@ -85,6 +85,35 @@
 					<p class="j-complete clearfix">已完成金额</p>
 					<span class="j-bottom-size clearfix">1,000,000<label>元</label></span>
 				</div>
+			  </div>
+			</div> -->
+			<!-- 公告 -->
+			<div class="layui-col-md12 j-title-size">
+			  <div class="j-product-title clearfix">
+			    <div class="j-title layui-col-md4 fl">公告</div>		  
+			  </div>
+			  <div class="j-index-notice">
+				  <div class="j-table-content clearfix">
+					  <div class="page-toolbar j-page-toolbar clearfix">
+						<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisiSearch">
+							<div class="j-search-fl layui-col-md8  fl">
+								  <div class="layui-input-inline j-input-margin" style="width:150px;">
+									  <input type="text" name="title" placeholder="标题查询" class="layui-input">
+								  </div>
+							</div>
+							<div class="j-search-fr layui-col-md4 fr">
+								<div class="layui-input-inline fr">
+								  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+									<button class="layui-btn" lay-submit lay-filter="formDemo">
+										<i class="layui-icon">&#xe615;</i>
+										搜索
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				  </div>
+				  <table id="dataTable" class="layui-table" lay-filter='dataTable'></table>
 			  </div>
 			</div>
 		</div>
@@ -154,7 +183,7 @@
 			</div>		  
 		  </div>
 		  <div class="layui-row layui-col-space15">
-		    <div class="layui-col-md12">
+		    <div class="layui-col-md4">
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<ul class="product-ul click-rent-list1">
@@ -177,7 +206,7 @@
 			  </div>
 			</div>
 		  </div>  
-		    <div class="layui-col-md4 hide">
+		    <div class="layui-col-md4">
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">房屋变动情况</div>
@@ -204,7 +233,7 @@
 			  </div>
 			</div>
 		  </div>
-		    <div class="layui-col-md4 hide">
+		    <div class="layui-col-md4">
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">租金收缴情况</div>
@@ -267,35 +296,6 @@
 			  <table id="dataTable2" class="layui-table" lay-filter='dataTable2'></table>
 		  </div>
 		</div>
-		<!-- 公告 -->
-		<div class="layui-col-md6 j-title-size">
-		  <div class="j-product-title clearfix">
-		    <div class="j-title layui-col-md4 fl">公告</div>		  
-		  </div>
-		  <div class="j-index-notice">
-			  <div class="j-table-content clearfix">
-				  <div class="page-toolbar j-page-toolbar clearfix">
-					<form class="layui-form layui-form-pane" action="{url('index')}"  method="post" id="hisiSearch">
-						<div class="j-search-fl layui-col-md8  fl">
-							  <div class="layui-input-inline j-input-margin" style="width:150px;">
-								  <input type="text" name="title" placeholder="标题查询" class="layui-input">
-							  </div>
-						</div>
-						<div class="j-search-fr layui-col-md4 fr">
-							<div class="layui-input-inline fr">
-							  <button type="reset" class="layui-btn j-btn-reset">重置</button>
-								<button class="layui-btn" lay-submit lay-filter="formDemo">
-									<i class="layui-icon">&#xe615;</i>
-									搜索
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			  </div>
-			  <table id="dataTable" class="layui-table" lay-filter='dataTable'></table>
-		  </div>
-		</div>
 	</div>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 	    <a href="" class="j-download-color">下载</a>
@@ -333,7 +333,7 @@
 		/* 待办事项 */
 		table.render({
 		    elem: '#dataTable3'
-		    ,height: 462
+		    ,height: 646
 		    //,toolbar: '#toolbar'
 		    // ,defaultToolbar: ['print']
 		    ,url: '{:url("rent/api/indexPartTwo")}' //数据接口
