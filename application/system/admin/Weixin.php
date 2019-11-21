@@ -243,15 +243,22 @@ class Weixin extends Controller
     {
     	$key = input('get.key');
     	$key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+    	$houseID = input('get.house_id');
     	$tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
-    	$result = [];
+    	$result = $where = [];
     	$result['code'] = 0;
 
     	if($tenantInfo){
 
-    		$fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+    		$fields = 'a.rent_order_id,a.house_id,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
          
-            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['a.tenant_id','eq',$tenantInfo['tenant_id']]])->select();
+         	$where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+         	$where[] = ['a.tenant_id','eq',$tenantInfo['tenant_id']];
+         	if($houseID){
+         		$where[] = ['a.house_id','eq',$houseID];
+         	}
+
+            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
 
     		// $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
             // foreach ($result['data']['rent'] as $key => &$value) {
