@@ -132,7 +132,7 @@ class Weixin extends Controller
             $params = ParamModel::getCparams();
             $result['data']['params'] = $params;
             $systemNotice = new SystemNotice;
-            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select();
+            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select()->toArray();
             $result['data']['message'] = [
                 '欢迎进入公房用户版小程序！！！','这是第二条消息推送，增加一下长度度度度度度度度度度度度度度度度度度度度……'
             ];
@@ -141,7 +141,7 @@ class Weixin extends Controller
         }else{
             $result['msg'] = '参数错误！';
         }
-
+//halt($result);
         return json($result); 
 
         
@@ -223,6 +223,36 @@ class Weixin extends Controller
             foreach ($result['data']['rent'] as $key => &$value) {
                 $value['id'] = $key + 1;
             }
+    		$result['data']['tenant'] = $tenantInfo;
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_unit_id,house_floor_id')->select();
+    		$result['code'] = 1;
+    		$result['msg'] = '获取成功！';
+    	}else{
+    		$result['msg'] = '参数错误！';
+    	}
+
+    	return json($result); 
+    }
+
+    /**
+     * 获取某个房屋的租金订单信息
+     * @param id 消息id
+     * @return json
+     */
+    public function myOrderInfo() 
+    {
+    	$key = input('get.key');
+    	$key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+    	$tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+    	$result = [];
+    	$result['code'] = 0;
+
+    	if($tenantInfo){
+    		//dump($tenantInfo['tenant_id']);halt($houseID);
+    		$result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
+            // foreach ($result['data']['rent'] as $key => &$value) {
+            //     $value['id'] = $key + 1;
+            // }
     		$result['data']['tenant'] = $tenantInfo;
     		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_unit_id,house_floor_id')->select();
     		$result['code'] = 1;

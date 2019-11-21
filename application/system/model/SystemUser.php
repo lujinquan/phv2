@@ -48,7 +48,7 @@ class SystemUser extends Model
         return json_encode($value);
     }
 
-    // 获取最后登陆ip
+    // 获取最后登录ip
     public function setLastLoginIpAttr()
     {
         return get_client_ip();
@@ -73,7 +73,7 @@ class SystemUser extends Model
             $error = '';
             foreach ($id as $k => $v) {
                 if ($v == ADMIN_ID) {
-                    $error .= '不能删除当前登陆的用户['.$v.']！<br>';
+                    $error .= '不能删除当前登录的用户['.$v.']！<br>';
                     continue;
                 }
 
@@ -107,7 +107,7 @@ class SystemUser extends Model
             }
 
             if ($id == ADMIN_ID) {
-                $this->error = '不能删除当前登陆的用户！';
+                $this->error = '不能删除当前登录的用户！';
                 return false;
             }
 
@@ -158,7 +158,7 @@ class SystemUser extends Model
 
         // 密码校验
         if (!password_verify($password, $user->password)) {
-            $this->error = '登陆密码错误！';
+            $this->error = '登录密码错误！';
             return false;
         }
 
@@ -183,7 +183,7 @@ class SystemUser extends Model
         $user->last_login_ip   = get_client_ip();
 
         if ($user->save()) {
-            // 执行登陆
+            // 执行登录
             $login = [];
             $login['uid'] = $user->id;
             $login['role_id'] = $user->role_id;
@@ -316,7 +316,7 @@ class SystemUser extends Model
     }
 
     /**
-     * 退出登陆
+     * 退出登录
      * @author Lucas <598936602@qq.com>
      * @return bool
      */

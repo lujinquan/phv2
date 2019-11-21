@@ -178,7 +178,7 @@ class SystemMenu extends Model
      * 后台顶部和左侧使用
      * @param int $pid 父ID
      * @param int $level 层级数
-     * @param int $uid 登陆用户ID
+     * @param int $uid 登录用户ID
      * @author Lucas <598936602@qq.com>
      * @return array
      */

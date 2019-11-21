@@ -52,7 +52,7 @@ class Admin extends Common
         parent::initialize();
         $model = new UserModel();
 
-        // 判断登陆
+        // 判断登录
         $login = $model->isLogin();
         if (!$login['uid']) {
             return $this->error('请登录之后在操作', ROOT_DIR.config('sys.admin_path'));

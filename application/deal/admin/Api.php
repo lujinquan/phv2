@@ -117,7 +117,7 @@ class Api extends Common
     public function dealData()
     {
         // 1、同步house_id，和tenant_id
-        // set_time_limit(0);
+        set_time_limit(0);
         // Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
         
 /*        // 2、入库注销数据
@@ -131,9 +131,27 @@ class Api extends Common
         }*/
 
         // 3、处理change_lease的child_json,data_json数据
-        $leaseJsonChild = Db::name('change_lease')->field('id,child_json,data_json')->where([['changetype','eq','注销']])->select();
+        $users = Db::name('system_user')->column('number,id');
+        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
+        $leaseJsonChild = Db::name('change_lease')->where([['reason','neq',1]])->field('id,child_json')->select();
         foreach ($leaseJsonChild as $lease) {
-            
+            $child = json_decode($lease['child_json'],true);
+//halt($lease);
+            //Db::name('change_lease')->where([['id','eq',$lease['id']]])->update([''=>]); ,"applyType":"2"
+            $a = [];
+            foreach ($child as $k => $v) {
+                $temp = [
+                    'step' => $v['Step'],
+                    'action' => $steps[$v['Step']],
+                    'time' => date('Y-m-d H:i:s',$v['CreateTime']),
+                    'uid' => isset($users[$v['UserNumber']])?$users[$v['UserNumber']]:1,
+                ];
+                array_unshift($a, $temp);
+            }
+
+            //halt($a);
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['reason'=> 1,'child_json'=>json_encode($a)]);
+            //halt($lease['id']);
         }
     }
 

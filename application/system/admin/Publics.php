@@ -22,7 +22,7 @@ use app\system\model\SystemUser as UserModel;
 class Publics extends Common
 {
     /**
-     * 登陆页面
+     * 登录页面
      * @author Lucas <598936602@qq.com>
      * @return mixed
      */
@@ -82,7 +82,7 @@ class Publics extends Common
     }
 
     /**
-     * 退出登陆
+     * 退出登录
      * @author Lucas <598936602@qq.com>
      * @return mixed
      */

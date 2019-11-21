@@ -54,7 +54,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box input[readonly]{  background-color: #F4F4F5;} /*input不能输入框背景颜色*/
 .layui-select-title input[readonly]{ background: #fff;}
 .j-reportform .layui-table td,.j-reportform .report td{font-size: 12px!important;}/* 报表管理table字体大小 */
-/* 登陆 S */
+/* 登录 S */
 .layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
 .layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}
 .layadmin-user-login .j-user-fr.fr{width: 440px;height: 450px;}
@@ -84,7 +84,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-con .layui-btn.on{background-color:#ADBECB;}
 .j-con .layui-btn-primary{ border: none; color: #fff;}
 .j-con .j-position{position: absolute; bottom: 60px; width: 100%;}
-/* 登陆 E */
+/* 登录 E */
 /* 操作菜单 S */
 .j-container-margin.layui-btn-container .layui-btn{ margin:8px 10px 10px 0;}
 .j-table-content.j-no-tab .j-container-margin.layui-btn-container .layui-btn{margin:18px 10px 10px 0;} /* 没有tab切换栏样式 */

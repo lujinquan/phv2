@@ -9,9 +9,9 @@ drop table if exists ph_v2.ph_ban_back;
 create table ph_v2.ph_ban_back like ph_v2.ph_ban;
 # 同步数据
 insert into ph_v2.ph_ban_back 
-(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_ctime,ban_status) 
+(ban_number,ban_door,ban_units,ban_floors,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_ctime,ban_gpsx,ban_gpsy,ban_status) 
 select 
-BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,Status
+BanID,BanNumber,BanUnitNum,BanFloorNum,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,BanGpsX,BanGpsY,Status
 from ph_v1.ph_ban;
 # 更新楼栋的创建人信息 
 update ph_v2.ph_ban_back as a left join ph_v2.ph_system_user as b on a.ban_inst_id = b.inst_id set a.ban_cuid = b.id;
@@ -205,8 +205,7 @@ from ph_v1.ph_lease_change_order;
  */
 update ph_v2.ph_change_lease_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
-
-
+update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.ban_id = b.ban_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
 
 /**
  * 18、同步异动统计表[ph_rent_table => ph_change_table]
@@ -444,8 +443,13 @@ update ph_system_annex_back set file = replace(file,'/usechange/','/change/image
 update ph_system_annex_back set file = replace(file,'/house/','/house/image/20181201/');
 update ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20181201/');
 update ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
-
-
+update ph_change_lease_back set data_json = replace(data_json,'"}','","applyType":"2"}');
+# 翻译附件名对应新的data_id
+update ph_system_annex_back set name='TenantReIDCard' where remark = '身份证';
+update ph_system_annex_back set name='Houselease' where remark = '计租表';
+update ph_system_annex_back set name='HouseForm' where remark = '租约';
+update ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
+update ph_system_annex_back as a left join ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
 
 # 将back表同步到主表
 drop table if exists ph_ban;

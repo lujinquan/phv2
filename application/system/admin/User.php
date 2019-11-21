@@ -190,7 +190,7 @@ class User extends Admin
             }
             
             $row = UserModel::where('id', $id)->field('role_id,auth')->find();
-            if ($data['id'] == 1 || ADMIN_ID == $id) {// 禁止更改超管角色，当前登陆用户不可更改自己的角色和自定义权限
+            if ($data['id'] == 1 || ADMIN_ID == $id) {// 禁止更改超管角色，当前登录用户不可更改自己的角色和自定义权限
                 unset($data['role_id'], $data['auth']);
                 if (!$row['auth']) {
                     $data['auth'] = '';
@@ -375,7 +375,7 @@ class User extends Admin
 
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            // 当前登陆用户不可更改自己的分组角色
+            // 当前登录用户不可更改自己的分组角色
             if (ADMIN_ROLE == $data['id']) {
                 return $this->error('禁止修改当前角色(原因：您不是超级管理员)');
             }
