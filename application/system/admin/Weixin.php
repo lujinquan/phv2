@@ -248,8 +248,12 @@ class Weixin extends Controller
     	$result['code'] = 0;
 
     	if($tenantInfo){
-    		//dump($tenantInfo['tenant_id']);halt($houseID);
-    		$result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
+
+    		$fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+         
+            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['a.tenant_id','eq',$tenantInfo['tenant_id']]])->select();
+
+    		// $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
             // foreach ($result['data']['rent'] as $key => &$value) {
             //     $value['id'] = $key + 1;
             // }
@@ -260,7 +264,7 @@ class Weixin extends Controller
     	}else{
     		$result['msg'] = '参数错误！';
     	}
-
+//halt($result);
     	return json($result); 
     }
 

@@ -150,13 +150,33 @@
 </script>
 {include file="system@block/layui" /}
 <script type="text/javascript" src="{$http_type}api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/map/js/draw.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/map/js/maplib.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/map/js/textIconOverlay.js?v={:config('hisiphp.version')}"></script>
 <script>
+
+	// var xy = [
+	// 	{'x':114.257789,'y':30.628016,'z':'武汉市1'},
+	// 	{'x':114.45326,'y':30.526532,'z':'武汉市2'},
+	// 	{'x':114.45326,'y':30.496664,'z':'武汉市3'},
+	// 	{'x':114.653331,'y':30.650885,'z':'武汉市4'},
+	// 	{'x':114.093363,'y':30.712504,'z':'武汉市5'},
+	// 	{'x':114.577442,'y':30.263371,'z':'武汉市6'}
+	// ];
+
+
 layui.use('table', function(){
-  var table = layui.table;
-  
+  	var table = layui.table,
+		    $ = layui.$;
+  	$.ajax({
+		type:"post",// 请求方式
+		url:"{:url('map/index')}",
+		async:false,// 同步异步
+		dataType:"json",
+	   //回调函数
+		success:function(result){
+			xy = result.data;
+			
+		}
+	})
+  console.log(xy);
   //第一个实例
   table.render({
     elem: '#tenant'
@@ -179,4 +199,7 @@ layui.use('table', function(){
   
 });
 </script>
+<script type="text/javascript" src="__PUBLIC_JS__/map/js/draw.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/map/js/maplib.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/map/js/textIconOverlay.js?v={:config('hisiphp.version')}"></script>
 
