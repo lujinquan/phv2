@@ -184,13 +184,21 @@ class Weixin extends Controller
 
     	if($tenantInfo){
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,house_unit_id,house_floor_id')->select();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_status,house_floor_id')->select()->toArray();
+    		foreach ($result['data']['house'] as $k => &$v) {
+    			//halt($v);
+    			$row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+
+    			$v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
+    			$v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
+                //$value['id'] = $key + 1;
+            }
     		$result['code'] = 1;
     		$result['msg'] = '获取成功！';
     	}else{
     		$result['msg'] = '参数错误！';
     	}
-
+//halt($result);
     	return json($result); 
     }
 
