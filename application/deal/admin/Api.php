@@ -36,7 +36,7 @@ class Api extends Common
         // 2、处理change_lease的child_json,data_json数据
         $users = Db::name('system_user')->column('number,id');
         $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
-        $leaseJsonChild = Db::name('change_lease')->where([['reason','neq',1]])->field('id,child_json')->select();
+        $leaseJsonChild = Db::name('change_lease')->where([['process_id','neq',1]])->field('id,child_json')->select();
         foreach ($leaseJsonChild as $lease) {
             $child = json_decode($lease['child_json'],true);
             $a = [];
@@ -49,7 +49,7 @@ class Api extends Common
                 ];
                 array_unshift($a, $temp);
             }
-            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['reason'=> 1,'child_json'=>json_encode($a)]);
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'child_json'=>json_encode($a)]);
         }
     }
     /**
@@ -60,7 +60,18 @@ class Api extends Common
     {
         // 1、同步house_id，和tenant_id
         set_time_limit(0);
-        
+        $users = Db::name('system_user')->column('number,id');
+        $houses = Db::name('house')->column('house_id,house_number');
+        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
+        $data = Db::name('change_pause')->where([['process_id','neq',1]])->field('id,house_id,child_json')->select();
+        foreach($data as $d){
+            $housearr = explode(',', $d['house_id']);
+            // if(count($housearr) == 1){
+
+            // }else{
+
+            // }
+        }
     }
     /**
      * 处理数据【预计耗时s】

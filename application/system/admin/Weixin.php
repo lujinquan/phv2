@@ -219,7 +219,7 @@ class Weixin extends Controller
 
     	if($tenantInfo){
     		//dump($tenantInfo['tenant_id']);halt($houseID);
-    		$result['data']['rent'] = RentModel::where([['house_id','eq',$houseID],['tenant_id','eq',$tenantInfo['tenant_id']]])->select();
+    		$result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['tenant_id','eq',$tenantInfo['tenant_id']]])->select();
             foreach ($result['data']['rent'] as $key => &$value) {
                 $value['id'] = $key + 1;
             }
