@@ -15,6 +15,7 @@ class SystemNotice extends Model
 
     protected $type = [
         'create_time' => 'timestamp:Y-m-d H:i',
+        'reads' => 'json'
     ];
 
     public function getInstIdAttr($value){
@@ -83,7 +84,7 @@ class SystemNotice extends Model
         $reads = [];
         $i = true;
         if($row['reads']){
-            $reads = json_decode($row['reads'],true);
+            $reads = $row['reads'];
             foreach($reads as $r){
                 if($r['uid'] == session('admin_user.uid')){
                     $i = false;
@@ -98,7 +99,7 @@ class SystemNotice extends Model
             ];
             array_unshift($reads,$tempArr);
             //dump($id);halt($reads);
-            $re = self::where([['id','eq',$id]])->update(['reads'=>json_encode($reads)]);
+            $re = self::where([['id','eq',$id]])->update(['reads'=>$reads]);
             if($re){
                 return '阅读记录更新成功！';
             }else{

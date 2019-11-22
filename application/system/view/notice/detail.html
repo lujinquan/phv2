@@ -2,7 +2,7 @@
 <div class="j-notice-details">
 	<div class="j-title clearfix">
 	  <h1>{$data_info['title']}</h1>
-	  <h2><span class="j-time">{$data_info['cuid']} {$data_info['create_time']}<span> <span class="j-browse"><i class="layui-icon iconfont j-icon-yanjing"></i>{:count(json_decode($data_info['reads'],true))}</span></h2>  
+	  <h2><span class="j-time">{$data_info['cuid']} {$data_info['create_time']}<span> <span class="j-browse"><i class="layui-icon iconfont j-icon-yanjing"></i>{:count($data_info['reads'])}</span></h2>  
 	</div>
 	<hr />
 	<!-- 详细内容 S -->
@@ -18,11 +18,11 @@
 		</div>
 		<div class="j-record-name clearfix">
 			<ul class="layui-row layui-col-space30">
-				{volist name="(json_decode($data_info['reads'],true))" id="vo"}
+				{volist name="$data_info['reads']" id="vo"}
 				<li class="layui-col-md4">
 					<span class="fr">{:tranTime($vo['time'])}</span>
 					<span class="j-size">
-						{$systemusers[$vo['uid']]}
+						{$systemusers[$vo['uid']]['nick']}
 					</span>
 				</li>
 				{/volist}

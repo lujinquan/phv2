@@ -224,7 +224,7 @@ class Weixin extends Controller
                 $value['id'] = $key + 1;
             }
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_unit_id,house_floor_id')->select();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_id,house_unit_id,house_floor_id')->select();
     		$result['code'] = 1;
     		$result['msg'] = '获取成功！';
     	}else{
@@ -265,7 +265,7 @@ class Weixin extends Controller
             //     $value['id'] = $key + 1;
             // }
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_unit_id,house_floor_id')->select();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,house_id,ban_id,house_unit_id,house_floor_id')->select();
     		$result['code'] = 1;
     		$result['msg'] = '获取成功！';
     	}else{

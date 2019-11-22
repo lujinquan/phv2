@@ -25,6 +25,131 @@ use app\deal\model\ChangeCut as ChangeCutModel;
 class Api extends Common 
 {
     /**
+     * 处理异动数据
+     * @return [type] [description]
+     */
+    public function dealDataJson()
+    {
+        // 1、同步house_id，和tenant_id
+        set_time_limit(0);
+        // Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
+        
+/*        // 2、入库注销数据
+        $jsonData = Db::name('json_data')->field('change_order_number,house_id,house_use_id,house_number,tenant_id,tenant_name,house_oprice,house_area,house_pre_rent,house_use_area,house_lease_area,house_diff_rent,house_pump_rent')->where([['changetype','eq','注销']])->select(); 
+        $jsonArr = []; 
+        foreach($jsonData as $d){
+            $jsonArr[$d['change_order_number']][] = $d;
+        }
+        foreach ($jsonArr as $k => $v) {
+            Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['data_json'=>json_encode($v)]);
+        }*/
+
+        // 3、处理change_lease的child_json,data_json数据
+        $users = Db::name('system_user')->column('number,id');
+        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
+        $leaseJsonChild = Db::name('change_lease')->where([['reason','neq',1]])->field('id,child_json')->select();
+        foreach ($leaseJsonChild as $lease) {
+            $child = json_decode($lease['child_json'],true);
+//halt($lease);
+            //Db::name('change_lease')->where([['id','eq',$lease['id']]])->update([''=>]); ,"applyType":"2"
+            $a = [];
+            foreach ($child as $k => $v) {
+                $temp = [
+                    'step' => $v['Step'],
+                    'action' => $steps[$v['Step']],
+                    'time' => date('Y-m-d H:i:s',$v['CreateTime']),
+                    'uid' => isset($users[$v['UserNumber']])?$users[$v['UserNumber']]:1,
+                ];
+                array_unshift($a, $temp);
+            }
+
+            //halt($a);
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['reason'=> 1,'child_json'=>json_encode($a)]);
+            //halt($lease['id']);
+        }
+    }
+
+        /**
+     * 数据处理
+     * @param id 消息id
+     * @return json
+     */
+    public function dealChildJson()
+    {
+        //halt('确认处理child_json数据？会造成导入的数据详情页无法正常打开，如果确认处理，请在程序中注释改代码！');
+        set_time_limit(0);
+        //将字表中的数据json化，写入到对应的异动表中
+        $allChildData = Db::name('json_child')->column("change_order_number,success,step,uid,from_unixtime(time,'%Y-%m-%d %H:%i:%s') as time,action,img");
+//halt($allChildData);
+        $result = [];
+        foreach($allChildData as $k => &$v){
+            unset($v['change_order_number']);
+            $result[$k][] = $v;
+        }
+
+        $where = 1;
+        // 处理原暂停计租异动
+        $allPauseData = Db::name('change_pause')->where($where)->column('change_order_number');
+        foreach($allPauseData as $a){
+            if(isset($result[$a])){
+                Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理新发租异动
+        $allNewData = Db::name('change_new')->where($where)->column('change_order_number');
+        foreach($allNewData as $a){
+            if(isset($result[$a])){
+                Db::name('change_new')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理租金减免异动
+        $allCutData = Db::name('change_cut')->where($where)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理注销+房改异动
+        $allCancelData = Db::name('change_cancel')->where($where)->column('change_order_number');
+        foreach($allCancelData as $a){
+            if(isset($result[$a])){
+                // dump($a);
+                // halt($result);
+                Db::name('change_cancel')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理房屋调整异动
+        $allHouseData = Db::name('change_house')->where($where)->column('change_order_number');
+        foreach($allHouseData as $a){
+            if(isset($result[$a])){
+                Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理陈欠核销异动
+        $allOffsetData = Db::name('change_offset')->where($where)->column('change_order_number');
+        foreach($allOffsetData as $a){
+            if(isset($result[$a])){
+                Db::name('change_offset')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        // 处理租金追加调整异动
+        $allRentaddData = Db::name('change_rentadd')->where($where)->column('change_order_number');
+        foreach($allRentaddData as $a){
+            if(isset($result[$a])){
+                Db::name('change_rentadd')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+        halt('ok');
+    }
+
+    /**
      * 
      * @param id 消息id
      * @return json
@@ -110,49 +235,6 @@ class Api extends Common
         }
     }
 
-    /**
-     * 处理异动数据
-     * @return [type] [description]
-     */
-    public function dealData()
-    {
-        // 1、同步house_id，和tenant_id
-        set_time_limit(0);
-        // Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
-        
-/*        // 2、入库注销数据
-        $jsonData = Db::name('json_data')->field('change_order_number,house_id,house_use_id,house_number,tenant_id,tenant_name,house_oprice,house_area,house_pre_rent,house_use_area,house_lease_area,house_diff_rent,house_pump_rent')->where([['changetype','eq','注销']])->select(); 
-        $jsonArr = []; 
-        foreach($jsonData as $d){
-            $jsonArr[$d['change_order_number']][] = $d;
-        }
-        foreach ($jsonArr as $k => $v) {
-            Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['data_json'=>json_encode($v)]);
-        }*/
-
-        // 3、处理change_lease的child_json,data_json数据
-        $users = Db::name('system_user')->column('number,id');
-        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
-        $leaseJsonChild = Db::name('change_lease')->where([['reason','neq',1]])->field('id,child_json')->select();
-        foreach ($leaseJsonChild as $lease) {
-            $child = json_decode($lease['child_json'],true);
-//halt($lease);
-            //Db::name('change_lease')->where([['id','eq',$lease['id']]])->update([''=>]); ,"applyType":"2"
-            $a = [];
-            foreach ($child as $k => $v) {
-                $temp = [
-                    'step' => $v['Step'],
-                    'action' => $steps[$v['Step']],
-                    'time' => date('Y-m-d H:i:s',$v['CreateTime']),
-                    'uid' => isset($users[$v['UserNumber']])?$users[$v['UserNumber']]:1,
-                ];
-                array_unshift($a, $temp);
-            }
-
-            //halt($a);
-            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['reason'=> 1,'child_json'=>json_encode($a)]);
-            //halt($lease['id']);
-        }
-    }
+    
 
 }
