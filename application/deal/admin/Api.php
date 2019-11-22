@@ -58,19 +58,30 @@ class Api extends Common
      */
     public function deal_change_pause()
     {
-        // 1、同步house_id，和tenant_id
+        // 同步data_json和
         set_time_limit(0);
         $users = Db::name('system_user')->column('number,id');
-        $houses = Db::name('house')->column('house_id,house_number');
+        $houses = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->column('a.house_number,a.house_id,a.tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent,b.tenant_name,b.tenant_number,b.tenant_card,b.tenant_tel');
+        $housesss = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->column('a.house_id,a.house_number,a.tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent,b.tenant_name,b.tenant_number,b.tenant_card,b.tenant_tel');
+        //halt($houses);
         $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
         $data = Db::name('change_pause')->where([['process_id','neq',1]])->field('id,house_id,child_json')->select();
         foreach($data as $d){
             $housearr = explode(',', $d['house_id']);
-            // if(count($housearr) == 1){
-
-            // }else{
-
-            // }
+            $datajson = [];
+            if(count($housearr) == 1){
+                $datajson[0] = $housesss[$housearr[0]];
+                $implodeHouses = $housearr[0];
+            }else{
+                foreach ($housearr as &$v) {
+                    $v = $houses[$v]['house_id'];
+                    $datajson[] = $houses[$v];
+                }
+                $implodeHouses = implode(',', $housearr);
+                //halt($housearr);
+            }
+            Db::name('change_pause')->where([['id','eq',$d['id']]])->update(['process_id'=>1,'house_id'=>$implodeHouses,'data_json'=>json_encode($datajson)]);
+            //halt(1);
         }
     }
     /**
