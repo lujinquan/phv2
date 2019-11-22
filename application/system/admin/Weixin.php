@@ -88,7 +88,7 @@ class Weixin extends Controller
     {
         if ($this->request->isPost()) {
 
-            $username   = $this->request->post('username');
+            $username = $this->request->post('username');
             $where = [];
             $where[] = ['tenant_tel','eq',$username];
             $where[] = ['tenant_status','eq',1];

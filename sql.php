@@ -206,6 +206,7 @@ from ph_v1.ph_lease_change_order;
 update ph_v2.ph_change_lease_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
 update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.ban_id = b.ban_id,a.cuid = b.house_cuid where a.house_id = b.house_number;
+update ph_v2.ph_change_lease_back a,ph_v2.ph_house_back b set a.ban_id = b.ban_id where a.house_id = b.house_id;
 
 /**
  * 18、同步异动统计表[ph_rent_table => ph_change_table]
