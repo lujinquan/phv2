@@ -120,6 +120,7 @@ class ChangePause extends SystemBase
         }else{ //保存并提交
             $data['change_status'] = 3;
             $data['child_json'][] = [
+                'success' => 1, 
                 'step' => 1,
                 'action' => '提交申请',
                 'time' => date('Y-m-d H:i:s'),

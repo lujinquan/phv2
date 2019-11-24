@@ -289,7 +289,7 @@ update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house
 # FatherOrderID,InstitutionID,Step,Reson,Status,IfValid,UserNumber,CreateTime
 # from ph_v1.ph_use_child_order;
 # update ph_v2.ph_json_data as a left join ph_v2.ph_system_user as b on a.child_cuid = b.number set a.child_cuid = b.id;
-update ph_v2.ph_json_child as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
+#update ph_v2.ph_json_child as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
 
 # 同步暂停计租
 drop table if exists ph_v2.ph_change_pause_back;
@@ -370,9 +370,9 @@ drop table if exists ph_v2.ph_change_inst_back;
 create table ph_v2.ph_change_inst_back like ph_v2.ph_change_inst;
 # 同步数据
 insert into ph_v2.ph_change_inst_back 
-(change_order_number,ban_ids,old_inst_id,new_inst_id,change_imgs,ctime,ftime,change_status) 
+(change_order_number,ban_ids,old_inst_id,new_inst_id,change_imgs,change_ban_rent,ctime,ftime,change_status) 
 select 
-ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,InflRent,CreateTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 10 and Status < 2;
 
 update ph_v2.ph_change_inst_back a,ph_v2.ph_ban_back b set a.ban_ids = b.ban_id,a.cuid = b.ban_cuid where a.ban_ids = b.ban_number;
@@ -446,6 +446,25 @@ update ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20
 update ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
 update ph_change_lease_back set data_json = replace(data_json,'"}','","applyType":"2"}');
 # 翻译附件名对应新的data_id
+#租金减免
+update ph_system_annex_back set name='Lowassurance' where remark = '低保证';
+update ph_system_annex_back set name='Residence' where remark = '户口本';
+update ph_system_annex_back set name='HouseApplicationForm' where remark = '房产证';
+update ph_system_annex_back set name='Housingsecurity' where remark = '住房保障申请表';
+#暂停计租
+update ph_system_annex_back set name='ChangePauseUpload' where remark = '上传报告';
+#陈欠核销
+update ph_system_annex_back set name='ChangeOffsetUpload' where remark = '陈欠核销情况说明报告';
+#新发租
+update ph_system_annex_back set name='ChangeNewUpload' where remark = '新发租情况说明';
+#租金追加调整
+update ph_system_annex_back set name='RentAddPaper' where remark = '其他(票据)';
+#注销
+update ph_system_annex_back set name='ChangeCancelOne' where remark = '武汉市直管公有住房出售收入专用票据';
+update ph_system_annex_back set name='ChangeCancelTwo' where remark = '武昌区房地局出售直管公有住房审批表';
+#房屋调整
+#update ph_system_annex_back set name='' where remark = '调整附件报告';
+#租约管理
 update ph_system_annex_back set name='TenantReIDCard' where remark = '身份证';
 update ph_system_annex_back set name='Houselease' where remark = '计租表';
 update ph_system_annex_back set name='HouseForm' where remark = '租约';

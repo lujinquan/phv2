@@ -1,0 +1,61 @@
+{include file="block/layui" /}
+<style type="text/css">
+
+</style>
+<div class="layui-row">
+<fieldset class="layui-elem-field site-demo-button" style="padding:30px;">
+  <legend>异动数据同步</legend>
+  <div class="layui-col-md12">
+	  <div class="layui-btn-group">
+	    <button type="button" data-value="8" class="layui-btn layui-btn-normal deal w300">注销(已完成)</button>
+	    <button type="button" data-value="3" class="layui-btn layui-btn-normal deal w300">暂停计租(已完成)</button>
+	    <button type="button" data-value="1" class="layui-btn layui-btn-normal deal w300">租金减免(已完成)</button>
+	      
+	  </div>
+	  <hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="10" class="layui-btn layui-btn-normal deal w300">管段调整(已完成)</button>
+	    <button type="button" data-value="7" class="layui-btn layui-btn-normal deal w300">新发租(已完成)</button> 
+	    <button type="button" data-value="14" class="layui-btn layui-btn-normal deal w300">楼栋调整(已完成)</button> 
+	  </div>
+	  <hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="17" class="layui-btn layui-btn-normal deal w300">别字更正</button>
+	    <button type="button" data-value="11" class="layui-btn layui-btn-normal deal w300">租金追加</button>
+	    <button type="button" data-value="4" class="layui-btn layui-btn-normal deal w300">陈欠核销(已完成)</button>
+	  </div>
+	<hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="18" class="layui-btn layui-btn-normal deal w300">租约管理(已完成)</button>
+	    <button type="button" data-value="13" class="layui-btn layui-btn-normal deal w300">使用权变更</button>
+	    <button type="button" data-value="9" class="layui-btn layui-btn-normal deal w300">房屋调整</button>
+	    
+	  </div>
+  </div>
+</fieldset> 
+</div>
+
+<script type="text/javascript">
+    layui.use(['table', 'jquery', 'layer'], function() {
+        var table = layui.table,
+            $ = layui.jquery,
+            layer = layui.layer;
+
+        $('.deal').on('click', function(){
+        	var that = $(this);
+        	var v = that.attr('data-value');
+
+        	that.prop('disabled', true).removeClass('layui-btn-green').removeClass('layui-btn-danger').addClass('layui-bg-normal').html('<font color="yellow">提交中...</font>');
+            $.post('{:url('deal/api/deal_change')}', {type: v}, function(res) {
+            	//console.log(res);
+            	that.prop('disabled', false).text(res.msg);
+                if (res.code == 1) {
+                    that.removeClass('layui-btn-normal').addClass('layui-bg-green');
+                } else {
+                    that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
