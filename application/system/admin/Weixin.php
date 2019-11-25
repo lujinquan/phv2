@@ -169,6 +169,7 @@ class Weixin extends Controller
             $systemNotice = new SystemNotice;
             $result['data'] = $systemNotice->get($id);
             $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
+            $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
