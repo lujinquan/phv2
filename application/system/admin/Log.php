@@ -32,7 +32,7 @@ class Log extends Admin
 
             $where  = $data = [];
             $page   = $this->request->param('page/d', 1);
-            $limit  = $this->request->param('limit/d', 15);
+            $limit  = $this->request->param('limit/d', 10);
             $uid    = $this->request->param('uid/d');
             
             if ($uid) {

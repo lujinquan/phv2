@@ -36,6 +36,7 @@ class Help extends Admin
             $SystemHelp = new SystemHelp;
             $data = [];
             $data['data'] = $SystemHelp->page($page)->order('sort asc')->limit($limit)->select();
+            $data['count'] = $SystemHelp->count();
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

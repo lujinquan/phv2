@@ -38,6 +38,7 @@ class Notice extends Admin
             $SystemNotice = new SystemNotice;
             $data = [];
             $data['data'] = $SystemNotice->page($page)->order('sort asc')->limit($limit)->select();
+            $data['count'] = $SystemNotice->count();
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
