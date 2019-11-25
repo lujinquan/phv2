@@ -80,6 +80,10 @@ class ChangeNew extends SystemBase
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];

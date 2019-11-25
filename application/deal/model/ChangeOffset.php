@@ -61,6 +61,10 @@ class ChangeOffset extends SystemBase
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];

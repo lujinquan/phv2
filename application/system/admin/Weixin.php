@@ -168,7 +168,7 @@ class Weixin extends Controller
         if($tenantInfo){
             $systemNotice = new SystemNotice;
             $result['data'] = $systemNotice->get($id);
-           
+            $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{

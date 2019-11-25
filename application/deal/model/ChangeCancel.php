@@ -74,6 +74,10 @@ class ChangeCancel extends SystemBase
         if(isset($data['cancel_type']) && $data['cancel_type']){
             $where[] = ['a.cancel_type','eq',$data['cancel_type']];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索申请时间(按月搜索)
         if(isset($data['ctime']) && $data['ctime']){
             $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));

@@ -70,6 +70,10 @@ class ChangeInst extends SystemBase
         if(isset($data['new_inst_id']) && $data['new_inst_id']){
             $where[] = ['a.new_inst_id','eq',$data['new_inst_id']];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索申请时间(按月搜索)
         if(isset($data['ctime']) && $data['ctime']){
             $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));

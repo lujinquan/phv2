@@ -60,6 +60,10 @@ class ChangePause extends SystemBase
         if(isset($data['old_tenant_name']) && $data['old_tenant_name']){
             $where[] = ['a.old_tenant_name','like','%'.$data['old_tenant_name'].'%'];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索异动单号
         if(isset($data['change_order_number']) && $data['change_order_number']){
             $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];

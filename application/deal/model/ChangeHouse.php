@@ -71,6 +71,10 @@ class ChangeHouse extends SystemBase
         if(isset($data['ban_number']) && $data['ban_number']){
             $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];

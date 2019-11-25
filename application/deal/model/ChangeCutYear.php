@@ -71,6 +71,10 @@ class ChangeCutYear extends SystemBase
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
+        // 检索审核状态
+        if(isset($data['change_status']) && $data['change_status'] !== ''){
+            $where[] = ['a.change_status','eq',$data['change_status']];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
