@@ -89,7 +89,7 @@ from ph_v1.ph_room;
 /**
  * 8、同步由逗号分隔的数据到test表中
  */
-truncate table ph_v2.test;
+truncate table ph_v2.test; 
 insert into ph_v2.test 
 (a,b) 
 select 
@@ -106,8 +106,7 @@ from ph_v1.ph_room;
 # 【运行过一次就不用再运行了，因为这一步主要是拆分房间编号-房屋编号对应关系，而编号一直也没变】
 #call split_str();
 
-# 将无逗号分隔的插入到test1表中
-#insert into ph_v2.test1 (select * from ph_v2.test where locate(',',b) = 0);
+
 
 
 /**
