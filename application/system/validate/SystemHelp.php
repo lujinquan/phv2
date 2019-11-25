@@ -24,7 +24,7 @@ class SystemHelp extends Validate
         'title|标题'       => 'require|unique:system_help',
         'type|文档类型'    => 'require|number',
         'content|内容'      => 'require',
-        '__token__'      => 'require|token',
+        //'__token__'      => 'require|token',
     ];
 
     //定义验证提示

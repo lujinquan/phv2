@@ -25,7 +25,7 @@ class SystemNotice extends Validate
         'inst_id|可见范围'    => 'require|number',
         'type|公告类型'    => 'require|number',
         'content|内容'      => 'require',
-        '__token__'      => 'require|token',
+        //'__token__'      => 'require|token',
     ];
 
     //定义验证提示
