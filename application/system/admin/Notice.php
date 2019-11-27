@@ -110,7 +110,8 @@ class Notice extends Admin
         $systemNotice = new SystemNotice;
         $id = input('param.id/d');
         $row = $systemNotice->find($id);
-        $systemusers = session('systemusers');
+        //halt($row);
+        //$systemusers = session('systemusers');
         //halt($systemusers[1]);
         // 更新已读记录 
         $systemNotice->updateReads($id);

@@ -21,13 +21,15 @@ class SystemNotice extends Model
     public function getInstIdAttr($value){
     	switch ($value) {
     		case 1:
-    			return '全部';
+    			return '全部工作人员';
     			break;
     		case 2:
     			return '紫阳所';
     			break;
     		case 3:
     			return '粮道所';
+            case 4:
+                return '全部（包含租户）';
     			break;
     		default:
     			# code...
@@ -67,13 +69,15 @@ class SystemNotice extends Model
         if(INST == 1){
             //
         }elseif(INST == 2){
-            $where[] = ['inst_id','in',[1,2]];
+            $where[] = ['inst_id','in',[1,2,4]];
         }elseif(INST == 3){
-            $where[] = ['inst_id','in',[1,3]];
+            $where[] = ['inst_id','in',[1,3,4]];
+        }elseif(INST == 4){
+            $where[] = ['inst_id','eq',4];
         }elseif(INST < 19 || INST == 35){
-            $where[] = ['inst_id','in',[1,2]];
+            $where[] = ['inst_id','in',[1,2,4]];
         }else{
-            $where[] = ['inst_id','in',[1,3]];
+            $where[] = ['inst_id','in',[1,3,4]];
         }
 
         return $where;
@@ -100,7 +104,7 @@ class SystemNotice extends Model
             ];
             array_unshift($reads,$tempArr);
             //dump($id);halt($reads);
-            $re = self::where([['id','eq',$id]])->update(['reads'=>$reads]);
+            $re = self::where([['id','eq',$id]])->update(['reads'=>json_encode($reads)]);
             if($re){
                 return '阅读记录更新成功！';
             }else{

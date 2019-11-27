@@ -136,7 +136,7 @@ class Weixin extends Controller
             $params = ParamModel::getCparams();
             $result['data']['params'] = $params;
             $systemNotice = new SystemNotice;
-            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->order('sort asc')->select()->toArray();
+            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0],['inst_id','eq',4]])->order('sort asc')->select()->toArray();
             $result['data']['message'] = [
                 '欢迎进入公房用户版小程序！！！','这是第二条消息推送，增加一下长度度度度度度度度度度度度度度度度度度度度……'
             ];
@@ -199,7 +199,7 @@ class Weixin extends Controller
     
     	if($tenantInfo){
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_status,house_floor_id')->select()->toArray();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
     		foreach ($result['data']['house'] as $k => &$v) {
     			//halt($v);
     			$row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
@@ -244,7 +244,7 @@ class Weixin extends Controller
                 $value['id'] = $key + 1;
             }
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_id,house_unit_id,house_floor_id')->select();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
     		$result['code'] = 1;
     		$result['msg'] = '获取成功！';
     	}else{
@@ -291,7 +291,7 @@ class Weixin extends Controller
             //     $value['id'] = $key + 1;
             // }
     		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,house_id,ban_id,house_unit_id,house_floor_id')->select();
+    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
     		$result['code'] = 1;
     		$result['msg'] = '获取成功！';
     	}else{
