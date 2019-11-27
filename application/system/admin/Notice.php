@@ -96,6 +96,7 @@ class Notice extends Admin
         }
         $id = input('param.id/d');
         $row = $systemNotice->find($id);
+        //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch('form');
     }
