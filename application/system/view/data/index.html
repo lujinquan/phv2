@@ -35,6 +35,38 @@
 </fieldset> 
 </div>
 
+<div class="layui-row">
+<fieldset class="layui-elem-field site-demo-button" style="padding:30px;">
+  <legend>异常数据检测</legend>
+  <div class="layui-col-md12">
+	  <div class="layui-btn-group">
+	    <button type="button" data-value="1" class="layui-btn layui-btn-normal check w300">楼栋信息</button>
+	    <button type="button" data-value="2" class="layui-btn layui-btn-normal check w300">房屋信息</button>
+	    <button type="button" data-value="3" class="layui-btn layui-btn-normal check w300">房间信息</button>
+	      
+	  </div>
+	  <hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="4" class="layui-btn layui-btn-normal check w300">租户信息</button>
+	    <button type="button" data-value="5" class="layui-btn layui-btn-normal check w300">订单信息</button> 
+	    <button type="button" data-value="6" class="layui-btn layui-btn-normal check w300">异动信息</button> 
+	  </div>
+	  <hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="7" class="layui-btn layui-btn-normal check w300">管理员信息</button>
+	    <button type="button" data-value="8" class="layui-btn layui-btn-normal check w300">日志信息</button>
+	    <button type="button" data-value="9" class="layui-btn layui-btn-normal check w300">配置信息</button>
+	  </div>
+	<hr />
+	  <div class="layui-btn-group">
+	  	<button type="button" data-value="10" class="layui-btn layui-btn-normal check w300">工单信息</button>
+	    <button type="button" data-value="11" class="layui-btn layui-btn-normal check w300">报表信息</button>
+	    <button type="button" data-value="12" class="layui-btn layui-btn-normal check w300">消息推送</button>
+	  </div>
+  </div>
+</fieldset> 
+</div>
+
 <script type="text/javascript">
     layui.use(['table', 'jquery', 'layer'], function() {
         var table = layui.table,
@@ -44,10 +76,8 @@
         $('.deal').on('click', function(){
         	var that = $(this);
         	var v = that.attr('data-value');
-
         	that.prop('disabled', true).removeClass('layui-btn-green').removeClass('layui-btn-danger').addClass('layui-bg-normal').html('<font color="yellow">提交中...</font>');
             $.post('{:url('deal/api/deal_change')}', {type: v}, function(res) {
-            	//console.log(res);
             	that.prop('disabled', false).text(res.msg);
                 if (res.code == 1) {
                     that.removeClass('layui-btn-normal').addClass('layui-bg-green');
@@ -57,5 +87,21 @@
             }, 'json');
             return false;
         });
+
+        $('.check').on('click', function(){
+        	var that = $(this);
+        	var v = that.attr('data-value');
+        	that.prop('disabled', true).removeClass('layui-btn-green').removeClass('layui-btn-danger').addClass('layui-bg-normal').html('<font color="yellow">提交中...</font>');
+            $.post('{:url('house/api/check_data')}', {type: v}, function(res) {
+            	that.prop('disabled', false).text(res.msg);
+                if (res.code == 1) {
+                    that.removeClass('layui-btn-normal').addClass('layui-bg-green');
+                } else {
+                    that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
+                }
+            }, 'json');
+            return false;
+        });
+
     });
 </script>

@@ -156,6 +156,38 @@ class Api extends Common
     }
 
     /**
+     * 楼栋调整，预计耗时s
+     */
+    public function deal_change_ban($result)
+    {
+        // 1、处理 child_json 数据
+        // $allCutData = Db::name('change_ban')->where(1)->column('change_order_number');
+        // foreach($allCutData as $a){
+        //     if(isset($result[$a])){
+        //         Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+        //     }
+        // }
+
+        return '楼栋调整同步完成！';
+    }
+
+    /**
+     * 租金追加调整，预计耗时s
+     */
+    public function deal_change_add($result)
+    {
+        // 1、处理 child_json 数据
+        // $allCutData = Db::name('change_ban')->where(1)->column('change_order_number');
+        // foreach($allCutData as $a){
+        //     if(isset($result[$a])){
+        //         Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+        //     }
+        // }
+
+        return '租金追加调整同步完成！';
+    }
+
+    /**
      * 陈欠核销，预计耗时s
      */
     public function deal_change_offset($result)

@@ -93,7 +93,7 @@ class Api extends Common
     {
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
-            $limit = input('param.limit/d', 10);
+            $limit = input('param.limit/d', 5);
             $getData = $this->request->get();
             $where[] = ['a.status','eq',1];
             // 检索申请时间
