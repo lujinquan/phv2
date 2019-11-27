@@ -35,9 +35,12 @@ class Notice extends Admin
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
             $SystemNotice = new SystemNotice;
+            $where = $SystemNotice->checkWhere($getData);
             $data = [];
-            $data['data'] = $SystemNotice->page($page)->order('sort asc')->limit($limit)->select();
+            $data['data'] = $SystemNotice->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+            //halt($data['data']);
             $data['count'] = $SystemNotice->count();
             $data['code'] = 0;
             $data['msg'] = '';

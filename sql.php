@@ -514,6 +514,7 @@ alter table ph_tenant_back rename ph_tenant;
 drop table if exists ph_system_annex;
 alter table ph_system_annex_back rename ph_system_annex;
 
+truncate ph_v2.ph_change_process;
 # 清空台账记录
 truncate ph_ban_tai;
 truncate ph_house_tai;

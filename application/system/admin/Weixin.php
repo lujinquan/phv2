@@ -138,7 +138,7 @@ class Weixin extends Controller
             $systemNotice = new SystemNotice;
             $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0],['inst_id','eq',4]])->order('sort asc')->select()->toArray();
             $result['data']['message'] = [
-                '欢迎进入公房用户版小程序！！！','这是第二条消息推送，增加一下长度度度度度度度度度度度度度度度度度度度度……'
+                '欢迎使用公房用户版小程序！！！','小程序由智慧公房系统提供数据服务支持，更多功能敬请期待……'
             ];
             $result['code'] = 1;
             $result['msg'] = '获取成功！';

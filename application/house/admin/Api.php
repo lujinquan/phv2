@@ -79,10 +79,10 @@ class Api extends Common
         return $this->success($msg.'，耗时：'.$time);
     }
 
-    public function check_ban_data()
-    {
+    // public function check_ban_data()
+    // {
     	
-    }
+    // }
 
     
 
