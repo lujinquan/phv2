@@ -168,7 +168,9 @@ class Weixin extends Controller
         if($tenantInfo){
             $systemNotice = new SystemNotice;
             $result['data'] = $systemNotice->get($id);
-            $result['data']['content'] = str_replace('/static/js/editor/', 'https://pro.ctnmit.com/static/js/editor/', htmlspecialchars_decode($result['data']['content']));
+
+            //$result['data']['content'] = str_replace('/static/js/editor/', 'https://pro.ctnmit.com/static/js/editor/', htmlspecialchars_decode($result['data']['content']));
+            $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
             
             $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
             $result['code'] = 1;
