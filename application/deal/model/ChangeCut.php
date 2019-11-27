@@ -317,7 +317,7 @@ class ChangeCut extends SystemBase
         $tableData = [];       
         $tableData['change_type'] = 1;
         $tableData['change_order_number'] = $finalRow['change_order_number'];
-        $tableData['house_id'] = $finalRow['house_id'];;
+        $tableData['house_id'] = $finalRow['house_id'];
         $tableData['ban_id'] = $finalRow['ban_id'];
         $tableData['inst_id'] = $banInfo['ban_inst_id'];
         $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
@@ -332,7 +332,9 @@ class ChangeCut extends SystemBase
         $ChangeTableModel = new ChangeTableModel;
         $ChangeTableModel->save($tableData);
 
-        //HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        // 3、检查如果当前房屋正在租金减免异动生效的过程中，则将原生效的减免异动自动失效掉
+        //Db::name('change_cut')->where([['house_id','eq',$finalRow['house_id']],['','',]])->
+        
         
     }
 
