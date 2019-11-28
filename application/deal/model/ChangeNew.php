@@ -226,12 +226,18 @@ class ChangeNew extends SystemBase
                     'img' => '',
                 ];
 
-                if(isset($data['file']) && $data['file']){
-                    $changeUpdateData['change_imgs'] = implode(',',$data['file']);
+                //如果是第二步经租会计（则可以修改附件）
+                if($changeRow['change_status'] == 3){ 
+                    if(isset($data['file']) && $data['file']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    }
                 }
+                // if(isset($data['file']) && $data['file']){
+                //     $changeUpdateData['change_imgs'] = implode(',',$data['file']);
+                // }
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];

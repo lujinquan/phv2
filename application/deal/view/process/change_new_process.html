@@ -180,7 +180,7 @@
 	   			</div>
 			{/if}
 			<div class="j-enclosure-imgs clearfix">
-				<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
+				<div id="upload_img_list2" class="upload_img_list j-viewer-img"> </div>
 				<div class="j-enclosure-img j-viewer-img clearfix">
 					<ul>
 						{volist name="$data_info['change_imgs']" id="v"}
@@ -243,6 +243,8 @@
   </div>
 </form>
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	var upurl = "{:url('system/Api/upload')}?input=ChangeNewUpload&group=ban&water=no"; //资料上传
 	var duotu = true; //是否为多图上传true false
@@ -280,7 +282,7 @@
 	    		scrollbar: false,
 	    		area: ['400px','400px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='change_reason' id='change_reason' value='不通过原因'></div>",
+	    		content: "<div class='j-open-reason'><input type='text' name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
@@ -289,8 +291,7 @@
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
 						});
-					}
-					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -308,7 +309,7 @@
 	    		scrollbar: false,
 	    		area: ['400px','400px'],
 	    		offset: 'auto',
-	    		content: "<div><input type='text'name='back_reason' id='back_reason' value='打回原因'></div>",
+	    		content: "<div class='j-open-reason'><input type='text' name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
@@ -317,8 +318,7 @@
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1
 						});
-					}
-					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					}else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -357,10 +357,18 @@
         		}
         	}
         })
+        /*
+		删除上传图片
+		*/
+		$(document).on("click", ".upload_img_list dd i", function() {
+			$(this).parents("dd").remove();
+		})
+		
+        //图片查看
+		$('.j-viewer-img').viewer({
+		   	url: 'data-original',
+		});
 
 	});
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
+	
 </script>
