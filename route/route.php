@@ -11,6 +11,6 @@
 
 //帮助文档
 //Route::rule('help/[:id]','system/index/help?flag=:id'); 
-//Route::rule('help/[:id]','http://web.phv2.com/help/index.html'); 
+//Route::rule('help/[:id]','/help/index.html'); 
 Route::rule('help/[:id]','/help/index.html'); 
 Route::rule('erweima/[:name]','deal/Api/codeCert'); 
