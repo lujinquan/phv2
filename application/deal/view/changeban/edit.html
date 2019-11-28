@@ -171,7 +171,8 @@
 	  </table>
 	  {/if}
 	  <!-- 结构类别 -->
-<!-- 	  <table class="layui-table j-hides j-structure-boxs hide">
+	  {if condition="$data_info['ban_change_id'] == 3"}
+	  <table class="layui-table j-hides j-structure-boxs">
 		  <thead>
 			  <tr>
 				<th>结构类别</th>
@@ -185,26 +186,27 @@
 		  </thead>
 		  <tbody>
 			<tr>
-			  <td><input type="text"  id="structure_class" name="structure_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_household" name="structure_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_prescribed" name="structure_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_areaofuse" name="structure_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_builtuparea" name="structure_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_original" name="structure_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_class" name="structure_class" readonly  value="{$data_info['data_json']['changeDetail']['structure_class']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_household" name="structure_household" readonly  value="{$data_info['data_json']['changeDetail']['structure_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_prescribed" name="structure_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['structure_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_areaofuse" name="structure_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['structure_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_builtuparea" name="structure_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['structure_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_original" name="structure_original" readonly  value="{$data_info['data_json']['changeDetail']['structure_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  id="structure_tung" name="structure_tung" readonly  value="{$data_info['data_json']['changeDetail']['structure_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 			<tr>
-			  <td><input type="text" id="structure_changes_class" name="structure_changes_class" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_household" name="structure_changes_household" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_prescribed" name="structure_changes_prescribed" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_areaofuse" name="structure_changes_areaofuse" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_builtuparea" name="structure_changes_builtuparea" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_original" name="structure_changes_original" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="structure_changes_tung" name="structure_changes_tung" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_class" name="structure_changes_class" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_class']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_household" name="structure_changes_household" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_prescribed" name="structure_changes_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_areaofuse" name="structure_changes_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_builtuparea" name="structure_changes_builtuparea" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_builtuparea']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_original" name="structure_changes_original" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_original']}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="structure_changes_tung" name="structure_changes_tung" readonly  value="{$data_info['data_json']['changeDetail']['structure_changes_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 		  </tbody>
 		  
-	  </table> -->
+	  </table>
+	  {/if}
       <!-- 使用性质 -->
 <!-- 	  <table class="layui-table j-hides j-nature-box hide">
 		  <thead>

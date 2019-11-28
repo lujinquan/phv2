@@ -155,7 +155,7 @@
 		  </tbody>
 	  </table>
 	  <!-- 结构类别 -->
-<!-- 	  <table class="layui-table j-hides j-structure-boxs hide">
+	  <table class="layui-table j-hides j-structure-boxs hide">
 		  <thead>
 			  <tr>
 				<th>结构类别</th>
@@ -188,7 +188,7 @@
 			</tr>
 		  </tbody>
 		  
-	  </table> -->
+	  </table>
       <!-- 使用性质 -->
 <!-- 	  <table class="layui-table j-hides j-nature-box hide">
 		  <thead>
@@ -317,14 +317,18 @@
 						$("input[name='endloss_grade_old_id']").val($("#j_endloss_hidden_id").val()); 
 						form.render('select');
 						break;
-					/* case '3':
+					case '3':
 						$(".j-house-boxs td:eq(1) input").attr("name","structure_category_old");
-						$(".j-house-boxs td:eq(2)").html('<select name="ban_struct_id"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-house-boxs td:eq(2)").html('<select name="ban_struct_id" lay-filter="structure"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
 						$(".j-hides").hide();
+						$(".j-lease-box").show();//租赁异动导航显示
+						$(".j-details").hide();//异动明细导航隐藏
+						$(".j-house-box").hide();//异动明细隐藏
 						$(".j-structure-boxs").show();
 						$("input[name='structure_category_old']").val($("#j_structure_hidden").val());
 						form.render('select');
 						break;	
+					/* 
 					case '4':
 						$(".j-house-boxs td:eq(1) input").attr("name","nature_use_old");
 						$(".j-house-boxs td:eq(2)").html('<select name="house_use_id"><option value="">使用性质</option>{volist name="params['uses']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
@@ -366,7 +370,7 @@
 							var row = window["layui-layer-iframe" + index].callbackdata();
 							//var rows = window["layui-layer-iframe" + index].callbackdatas();
 							var HousePrerent = 0;
-							 //console.log(row);
+							 console.log(row);
 							 //console.log(rows);
 							layer.close(index);
 							$("input[name='new_floors']").val();
@@ -379,7 +383,8 @@
 								$("#mechanism").val(params.insts[row.ban_inst_id]);//获取机构
 								$("#j_floor_hidden").val(row.ban_floors);//楼层原信息
 								$("#j_endloss_hidden").val(params.damages[row.ban_damage_id]);//完损等级原信息
-								$("#j_endloss_hidden_id").val(row.ban_damage_id);//完损等级原信息
+								$("#j_endloss_hidden_id").val(row.ban_damage_id);//隐藏域完损等级原信息
+								$("#j_structure_hidden").val(params.structs[row.ban_struct_id]);//隐藏域结构类别原信息
 
 								/* 无数据 */
 								if(	$('.j-house-box tbody').html()==''){
@@ -487,7 +492,7 @@
 									var rents = 0;//规定租金异动金额
 									var rents_sum = 0;//规定租金异动后金额
 
-									//完损等级异动监听delected改变
+									//完损等级异动监听selected改变
 									form.on('select(lossgrade)', function (data) {
 										 var message=params.damages[data.value];
 										 $("input[name='endloss_class']").val($("input[name='endloss_grade_old']").val());//获取完损等级前
@@ -507,7 +512,25 @@
 										 $("input[name='endloss_changes_original']").val(row.ban_oprice);//获取异动后原价
 										 $("input[name='endloss_changes_tung']").val(row.ban_num);//获取异动后栋数
 									});
-								
+									//结构类别异动监听selected改变
+								    form.on('select(structure)', function (data) {
+										$("input[name='structure_class']").val($("input[name='structure_category_old']").val());//获取结构类别前
+										$("input[name='structure_changes_class']").val(params.structs[data.value]);//获取结构类别后 
+										//完损等级异动前
+										$("input[name='structure_household']").val('-'+row.ban_holds);//获取异动前户数
+										$("input[name='structure_prescribed']").val('-'+row.ban_area);//获取异动前建筑面积
+										$("input[name='structure_areaofuse']").val('-'+row.ban_rent);//获取异动前规定租金
+										$("input[name='structure_builtuparea']").val('-'+row.ban_use_area);//获取异动前使用面积
+										$("input[name='structure_original']").val('-'+row.ban_oprice);//获取异动前原价
+										$("input[name='structure_tung']").val('-'+row.ban_num);//获取异动前栋数
+										//完损等级异动后
+										$("input[name='structure_changes_household']").val(row.ban_holds);//获取异动后户数
+										$("input[name='structure_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
+										$("input[name='structure_changes_areaofuse']").val(row.ban_rent);//获取异动后规定租金
+										$("input[name='structure_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
+										$("input[name='structure_changes_original']").val(row.ban_oprice);//获取异动后原价
+										$("input[name='structure_changes_tung']").val(row.ban_num);//获取异动后栋数
+									});	
 								//houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 								//$("input[name='house_id']").val(houseidData);//获取房屋编号
 								
