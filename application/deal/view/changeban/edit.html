@@ -45,10 +45,15 @@
 		  	  {if condition="$data_info['ban_change_id'] == 1"}
 			  <td><input type="text"  readonly value="{$data_info['old_floors']}" lay-verify="required" placeholder=""  autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" readonly value="{$data_info['new_floors']}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input"></td>
+			  {elseif condition="$data_info['ban_change_id'] == 2" /}
+			   <td><input type="text"  readonly value="{$params.damages[$data_info['old_damage']]}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$params.damages[$data_info['new_damage']]}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {else /}
-			   <td><input type="text"  readonly value="{$params.damages[$data_info['old_damage']]}" lay-verify="required" placeholder=""  autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" readonly value="{$params.damages[$data_info['new_damage']]}" lay-verify="required" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text"  readonly value="{$params.structs[$data_info['old_struct']]}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$params.structs[$data_info['new_struct']]}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {/if}
+
+			   
 		  </tr>
 	  </tbody>
 	</table>

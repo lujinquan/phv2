@@ -270,6 +270,7 @@
   <input type="hidden" id="j_floor_hidden" value="" />
   <input type="hidden" id="j_endloss_hidden" value="" />
   <input type="hidden" id="j_endloss_hidden_id" name="old_damage" value="" />
+  <input type="hidden" id="j_structure_hidden_id" name="old_struct" value="" />
   <input type="hidden" id="j_structure_hidden" value="" />
   <input type="hidden" id="j_nature_hidden" value="" />
   <input type="hidden" id="j_yield_hidden" value="" />
@@ -318,14 +319,15 @@
 						form.render('select');
 						break;
 					case '3':
-						$(".j-house-boxs td:eq(1) input").attr("name","structure_category_old");
-						$(".j-house-boxs td:eq(2)").html('<select name="ban_struct_id" lay-filter="structure"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
+						$(".j-house-boxs td:eq(1) input").attr("name","structure_grade_old");
+						$(".j-house-boxs td:eq(2)").html('<select name="new_struct" lay-filter="structure"><option value="">结构类别</option>{volist name="params['structs']" id="v"}<option value="{$key}">{$v}</option>{/volist}</select>');
 						$(".j-hides").hide();
 						$(".j-lease-box").show();//租赁异动导航显示
 						$(".j-details").hide();//异动明细导航隐藏
 						$(".j-house-box").hide();//异动明细隐藏
 						$(".j-structure-boxs").show();
-						$("input[name='structure_category_old']").val($("#j_structure_hidden").val());
+						$("input[name='structure_grade_old']").val($("#j_structure_hidden").val()); 
+						$("input[name='structure_grade_old_id']").val($("#j_structure_hidden_id").val());
 						form.render('select');
 						break;	
 					/* 
@@ -385,6 +387,7 @@
 								$("#j_endloss_hidden").val(params.damages[row.ban_damage_id]);//完损等级原信息
 								$("#j_endloss_hidden_id").val(row.ban_damage_id);//隐藏域完损等级原信息
 								$("#j_structure_hidden").val(params.structs[row.ban_struct_id]);//隐藏域结构类别原信息
+								$("#j_structure_hidden_id").val(row.ban_struct_id);//隐藏域结构类别原信息
 
 								/* 无数据 */
 								if(	$('.j-house-box tbody').html()==''){
@@ -514,7 +517,7 @@
 									});
 									//结构类别异动监听selected改变
 								    form.on('select(structure)', function (data) {
-										$("input[name='structure_class']").val($("input[name='structure_category_old']").val());//获取结构类别前
+										$("input[name='structure_class']").val($("input[name='structure_grade_old']").val());//获取结构类别前
 										$("input[name='structure_changes_class']").val(params.structs[data.value]);//获取结构类别后 
 										//完损等级异动前
 										$("input[name='structure_household']").val('-'+row.ban_holds);//获取异动前户数

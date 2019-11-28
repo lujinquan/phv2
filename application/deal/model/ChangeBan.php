@@ -183,7 +183,7 @@ class ChangeBan extends SystemBase
                         'floor_changes_tung' => $data['floor_changes_tung'],
                     ],
                 ]; 
-            }else{
+            }elseif($data['ban_change_id'] == 2){
                 $data['data_json'] = [
                     'houseDetail'=>[],
                     'changeDetail'=>[
@@ -205,7 +205,30 @@ class ChangeBan extends SystemBase
                         'endloss_changes_tung' => $data['endloss_changes_tung'],
                     ],
                 ];
+            }else{
+                $data['data_json'] = [
+                    'houseDetail'=>[],
+                    'changeDetail'=>[
+                        // 异动前
+                        'structure_class' => $data['structure_class'],
+                        'structure_household' => $data['structure_household'],
+                        'structure_prescribed' => $data['structure_prescribed'],
+                        'structure_areaofuse' => $data['structure_areaofuse'],
+                        'structure_builtuparea' => $data['structure_builtuparea'],
+                        'structure_original' => $data['structure_original'],
+                        'structure_tung' => $data['structure_tung'],
+                        // 异动后
+                        'structure_changes_class' => $data['structure_changes_class'],
+                        'structure_changes_household' => $data['structure_changes_household'],
+                        'structure_changes_prescribed' => $data['structure_changes_prescribed'],
+                        'structure_changes_areaofuse' => $data['structure_changes_areaofuse'],
+                        'structure_changes_builtuparea' => $data['structure_changes_builtuparea'],
+                        'structure_changes_original' => $data['structure_changes_original'],
+                        'structure_changes_tung' => $data['structure_changes_tung'],
+                    ],
+                ];
             }
+
         }
 
         
@@ -365,7 +388,7 @@ class ChangeBan extends SystemBase
             // 3、批量处理房屋计算租金变化
 
 
-        }else{ // 如果是调整完损等级
+        }elseif($finalRow['ban_change_id'] == 2){ // 如果是调整完损等级
 
             // 1、修改楼栋完损等级
             $BanModel = new BanModel;
@@ -381,6 +404,27 @@ class ChangeBan extends SystemBase
                 'ban_damage_id' => [
                     'old' => $finalRow['old_damage'],
                     'new' => $finalRow['new_damage'],
+                ],
+            ];
+            $BanTaiModel = new BanTaiModel;
+            $BanTaiModel->allowField(true)->create($taiBanData);
+
+        }else{ // 如果是调整结构类别
+
+            // 1、修改楼栋结构类别
+            $BanModel = new BanModel;
+            $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_struct_id'=>$finalRow['new_struct']]);
+
+            // 2、添加楼栋台账
+            $taiBanData = [];
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_tai_type'] = 5;
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['ban_tai_remark'] = '楼栋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [
+                'ban_struct_id' => [
+                    'old' => $finalRow['old_struct'],
+                    'new' => $finalRow['new_struct'],
                 ],
             ];
             $BanTaiModel = new BanTaiModel;

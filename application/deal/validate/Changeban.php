@@ -64,13 +64,22 @@ class Changeban extends Validate
                     $msg = '异动前后楼层不能相同！';
                 } 
             }
-        }else{
+        }elseif($data['ban_change_id'] == 2){
             if(!$data['new_damage']){
                 $msg = '异动后的完损等级不能为空！';
             }else{
                 $damage = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_damage_id');
                 if($damage == $data['new_damage']){
                     $msg = '异动前后完损等级不能相同！';
+                }
+            }
+        }else{
+            if(!$data['new_struct']){
+                $msg = '异动后的结构类别不能为空！';
+            }else{
+                $struct = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_struct_id');
+                if($struct == $data['new_struct']){
+                    $msg = '异动前后结构类别不能相同！';
                 }
             }
         }
