@@ -127,8 +127,10 @@ class SystemAnnex extends Model
             default:// 默认使用layui.upload上传控件
                 break;
         }
-        //halt(ini_get('upload_max_filesize'));
-        $file = request()->file($input);
+        //halt($input);
+        $iniFileSzie = ini_get('upload_max_filesize');
+        //$file = request()->file($input);
+        try{$file = request()->file($input);}catch(\Exception $e){return self::result('文件大小超过PHP'.$iniFileSzie.'限制！', $from);}
 //halt($file);
         $data = [];
         if (empty($file)) {
