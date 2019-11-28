@@ -284,8 +284,13 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=13';
-					if(!$('.layui-layer-btn0').hasClass('disabled')){
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=7';
+					if($('#change_reason').val()==''){
+						layer.tips('原因不能为空！', '#change_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -307,8 +312,13 @@
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=13';
-					if(!$('.layui-layer-btn0').hasClass('disabled')){
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=7';
+					if($('#back_reason').val()==''){
+						layer.tips('原因不能为空！', '#back_reason', {
+						  tips: 1
+						});
+					}
+					else if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}

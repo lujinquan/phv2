@@ -443,6 +443,7 @@ update ph_system_annex_back set file = replace(file,'/usechange/','/change/image
 update ph_system_annex_back set file = replace(file,'/house/','/house/image/20181201/');
 update ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20181201/');
 update ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
+update ph_change_lease_back set change_remark = replace(change_remark,'&nbsp&nbsp',' ');
 update ph_change_lease_back set data_json = replace(data_json,'"}','","applyType":"2"}');
 # 翻译附件名对应新的data_id
 #租金减免
