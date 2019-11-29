@@ -123,6 +123,14 @@
 				</div>
 			</div>
 		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label">异动原因</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_reason" value="{$data_info['change_remark']}" readonly  autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>异动明细</legend>
 		</fieldset>
@@ -134,7 +142,7 @@
 			    <th class="cancel" width="50%">异动后</th>
 			  </tr>
 		  </thead>
-		  <tbody>
+		  <tbody class="j-difference">
 		    <tr>
 			  <td>租差</td>
 			  <td id="changes_difference_old">{$data_info['data_json']['before_base_info']['house_diff_rent']}</td>
@@ -422,7 +430,14 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		  layer.msg(msg);
 	  }
 	}); 
-
+	//异动后数据不等于异动前数据标注颜色区分
+	var trList = $(".j-difference").children("tr");
+    for (var j=0;j<trList.length;j++) {
+    	var tdArr = trList.eq(j).find("td"); //遍历td  
+		if(tdArr.eq(1).text()!=tdArr.eq(2).find("input").val()){
+			tdArr.eq(2).addClass("on");
+		}
+	}
 	
 })
 </script>

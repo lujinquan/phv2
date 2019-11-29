@@ -38,6 +38,9 @@
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ftime" id="date1"  placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
+				<div class="layui-input-inline j-input-margin j-width-100">
+					<input type="text" name="effective" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
+				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -89,6 +92,16 @@
 			    });
 			}
 		  });
+		  //生效时间
+		  laydate.render({
+		    elem: '#date2'
+		    ,type: 'month'
+		    ,ready: function(date){
+		  			    $('.layui-laydate li').click(function () {
+		  			       $('.laydate-btns-confirm').trigger('click');
+		  			    });
+		  			}
+		  });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -121,8 +134,9 @@
 					{field: 'tenant_name',minWidth: 120,align:'center',title: '租户姓名'},  
 					{field: 'before_month_rent',minWidth: 140,align:'center',title: '核销以前月金额', totalRow: true},  
 					{field: 'before_year_rent',minWidth: 140,align:'center',title: '核销以前年金额', totalRow: true},  
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
-					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
+					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 100,title: '完成时间'},
+					{field: 'effective',align:'center',width: 100,title: '生效时间'},
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态',
 						templet: function(d) {
 					        return process_config[d.change_status];

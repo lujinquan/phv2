@@ -36,6 +36,9 @@
 						{/volist}
 					</select>
 				</div>
+				<div class="layui-input-inline j-input-margin j-width-100">
+					<input type="text" name="effective" id="date3"  placeholder="生效时间" autocomplete="off" class="layui-input">
+				</div>
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -86,6 +89,16 @@
 			    });
 			}
 		  });
+		  //生效时间
+		  laydate.render({
+		    elem: '#date3'
+		    ,type: 'month'
+		    ,ready: function(date){
+		  			    $('.layui-laydate li').click(function () {
+		  			       $('.laydate-btns-confirm').trigger('click');
+		  			    });
+		  			}
+		  });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -125,6 +138,7 @@
 					{field: 'house_door',width: 80,align:'center',title: '门牌号'},
 					{field: 'ctime',width: 140,align:'center',title: '申请时间'},
 					{field: 'ftime',width: 140,align:'center',title: '完成时间'},
+					{field: 'effective',align:'center',width: 100,title: '生效时间'},
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];

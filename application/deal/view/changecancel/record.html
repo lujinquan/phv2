@@ -37,6 +37,9 @@
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
+				<div class="layui-input-inline j-input-margin j-width-100">
+					<input type="text" name="effective" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
+				</div>
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -86,6 +89,16 @@
 			    });
 			}
 		  });
+		  //生效时间
+		  laydate.render({
+		    elem: '#date2'
+		    ,type: 'month'
+		    ,ready: function(date){
+		  			    $('.layui-laydate li').click(function () {
+		  			       $('.laydate-btns-confirm').trigger('click');
+		  			    });
+		  			}
+		  });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -122,8 +135,9 @@
 					{field: 'cancel_area',minWidth: 120,align:'center',title: '注销建面',totalRow: true},
 					{field: 'cancel_use_area',minWidth: 120,align:'center',title: '注销使面',totalRow: true},
 					{field: 'cancel_oprice',minWidth: 120,align:'center',title: '注销原价',totalRow: true},
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'}, 
-					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'}, 
+					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'}, 
+					{field: 'ftime',align:'center',minWidth: 100,title: '完成时间'}, 
+					{field: 'effective',align:'center',width: 100,title: '生效时间'},
 					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];

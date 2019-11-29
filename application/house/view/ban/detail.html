@@ -435,6 +435,20 @@
 				</ul>
 			</div>
 		</div>
+		<div class="layui-col-md6">
+			<div class="j-enclosure-label clearfix">图卡</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['ban_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChartCard'"}
+					<li>
+						<img src="{$v['file']}" />
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
 	</div>
   </div>
 	<div class="layui-row layui-form-item layui-col-space90">
