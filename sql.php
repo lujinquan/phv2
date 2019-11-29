@@ -423,6 +423,21 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_i
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
 
 
+update ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_year set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_house set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_inst set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_lease set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_name set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_new set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_offset set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_pause set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_rentadd set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_use set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+
 
 /**
  * 24、同步附件表 ph_upload_file 到 ph_system_annex
@@ -470,6 +485,8 @@ update ph_system_annex_back set name='Houselease' where remark = '计租表';
 update ph_system_annex_back set name='HouseForm' where remark = '租约';
 update ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
 update ph_system_annex_back as a left join ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
+
+
 
 # 将back表同步到主表
 drop table if exists ph_ban;

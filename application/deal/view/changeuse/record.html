@@ -107,11 +107,11 @@
 		    elem: '#date3'
 		    ,type: 'month'
 		    ,ready: function(date){
-		  			    $('.layui-laydate li').click(function () {
-		  			       $('.laydate-btns-confirm').trigger('click');
-		  			    });
-		  			}
-		  });
+	  			    $('.layui-laydate li').click(function () {
+	  			       $('.laydate-btns-confirm').trigger('click');
+	  			    });
+	  			}
+		   });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -154,7 +154,7 @@
 					{field: 'new_tenant_name',minWidth: 100,align:'center',title: '变更后租户'},
 					{field: 'ctime',align:'center',width: 100,title: '申请时间'},
 					{field: 'ftime',align:'center',width: 100,title: '完成时间'},
-					{field: 'effective',align:'center',width: 100,title: '生效时间'},
+					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
 					{field: 'change_status',align:'center',width: 100,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];

@@ -140,7 +140,7 @@ class Changenew extends Admin
             $ChangeModel = new ChangeNewModel;
             $where = $ChangeModel->checkWhere($getData,'record');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.new_type,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,d.ban_address,b.house_number,e.change_rent,e.change_oprice,e.change_area,e.change_use_area,b.house_use_id,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_struct_id,d.ban_damage_id";
+            $fields = "a.id,a.change_order_number,a.new_type,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.entry_date,a.is_back,d.ban_address,b.house_number,e.change_rent,e.change_oprice,e.change_area,e.change_use_area,b.house_use_id,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_struct_id,d.ban_damage_id";
             $data = [];
             $data['data'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('change_table e','a.change_order_number = e.change_order_number','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             //halt($data['data']);

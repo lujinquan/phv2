@@ -328,7 +328,7 @@ class Changecut extends Admin
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
-                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,a.end_date,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id,e.change_status as change_cut_status";
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,a.end_date,a.entry_date,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id,e.change_status as change_cut_status";
                 //,CONCAT(left(a.end_date,4),'-',right(end_date,2)) as end_date
                 $data = [];
                 $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('change_cut_cancel e','a.id = e.change_cut_id','left')->field($fields)->where($where)->order('a.change_status desc,ftime desc')->page($page)->limit($limit)->select();
@@ -338,7 +338,7 @@ class Changecut extends Admin
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
                 //halt($where);
-                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,a.entry_date,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
                 $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');

@@ -110,9 +110,14 @@ class Tenant extends Admin
                 $TenantTaiModel->store($oldRow,$newRow); 
             }
             
-
-            return $this->success('修改成功');
+            //halt($res);
+            return $this->success('修改成功','',['tenant_card'=>$data['tenant_card']]);
         }
+        $flag = input('param.flag','');
+       
+        //if($flag){
+        $this->assign('flag',$flag);
+        //}
         $id = input('param.id/d');
         $group = input('param.group/s');
         $row = TenantModel::get($id);
