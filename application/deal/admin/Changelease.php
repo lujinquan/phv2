@@ -169,6 +169,19 @@ class Changelease extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangeLeaseModel;
         if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            
+                
+                if(!$data['change_reason']){
+                    return $this->error('请输入不通过的原因！');
+                }
+                $ProcessModel = new ProcessModel;
+
+                $res = $ProcessModel->process(18,$data);
+                if (!$res) {
+                    return $this->error('操作失败');
+                }
+                return $this->success('操作成功');
             
         }
         $row = $ChangeModel->detail($id);

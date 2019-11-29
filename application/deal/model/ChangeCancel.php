@@ -402,14 +402,17 @@ class ChangeCancel extends SystemBase
                     $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
                     $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
                     $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
+                    $changeBanData['ban_civil_holds'] => Db::raw('ban_civil_holds-1'),
                 }else if($v['house_use_id'] == 2){ // 企业
                     $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
                     $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
                     $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
+                    $changeBanData['ban_career_holds'] => Db::raw('ban_career_holds-1'),
                 }else{ // 机关
                     $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
                     $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
                     $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
+                    $changeBanData['ban_party_holds'] => Db::raw('ban_party_holds-1'),
                 }
                 BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
          

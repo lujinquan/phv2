@@ -353,7 +353,9 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                         if (options.callback) {
                             options.callback(that, res);
                         }
+                        console.log(options);
                         if (options.pop == true) {
+                            console.log('关闭父级弹框');
                             if (options.refresh == true) {
                                 parent.location.reload();
                             } else if (options.jump == true && res.url != '') {
@@ -361,6 +363,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
                             }
                             parent.layui.layer.closeAll();
                         } else if (options.refresh == true) {
+                            console.log('关闭当前弹框');
                             if (res.url != '') {
                                 location.href = res.url;
                             } else {

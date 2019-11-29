@@ -70,7 +70,9 @@
 		{{#  } else if(d.change_status == 7){ }}
 		<!-- <a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a> -->
 		<a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '600px', height: '500px',refresh: 1}" title="上传签字图片">上传签字图片</a>
-		<a href="{:url('unpass')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger">不通过</a>
+		<!-- <a href="" class="layui-btn layui-btn-xs layui-btn-danger">不通过</a> -->
+		<!-- <a href="javascript:;" value="{{ d.id }}" id="handover" class="layui-btn layui-btn-xs layui-btn-danger handover">不通过</a> -->
+		<a href="{:url('unpass')}?id={{ d.id }}" hisi-data="{pop: true, width: '500px', height: '500px',refresh: 1}" title="不通过" class="layui-btn layui-btn-xs layui-btn-danger j-iframe-pop">不通过</a>
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
@@ -166,5 +168,35 @@
                 }
 			}
 		},isShowInst)
+
+		// //审批不通过
+	 //    $(".handover").on("click",function(){
+	 //    	console.log(1);
+	 //    	console.log($(this).attr('value'));
+	 //    	layer.open({
+	 //    		type: 1,
+	 //    		btn: ["确定","取消"],
+	 //    		title: ['审批不通过原因'],
+	 //    		scrollbar: false,
+	 //    		area: ['400px','200px'],
+	 //    		offset: 'auto',
+	 //    		content: "<div class='j-open-reason'><input type='text' name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	 //    		yes: function(index, layero){
+					
+		// 			var formData = $('.layui-form').serialize();
+		// 			var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=18';
+		// 			if($('#change_reason').val()==''){
+		// 				layer.tips('原因不能为空！', '#change_reason', {
+		// 				  tips: 1
+		// 				});
+		// 			}else if(!$('.layui-layer-btn0').hasClass('disabled')){
+		// 				$('.layui-layer-btn0').addClass('disabled').text('提交中...');
+		// 				formSubmit('post',"{:url()}",data,index);
+		// 			}
+
+		// 		}
+		// 	});
+	 //    })
+
 	});
 </script>

@@ -97,7 +97,7 @@
 					<div style="float: left; margin: 0 130px 50px 75px;">
 						<span>出租人：（甲方）</span><br>
 						<span style="color:red;font-size:14px;">区公司审核后在此盖章</span>
-						
+						<img id="qrcodeImg" src="" class="img">
 					</div>
 					<div style="float: right; margin: 0 75px 50px 50px;">
 						<span>承租人：（乙方）</span><br>
@@ -803,6 +803,7 @@
 		$.get('{:url("changelease/detail")}', {'id':id}, function(res) {
 			console.log(res);
 			$('#house_number').val(res.data.house_info.house_number);
+			$('#qrcodeImg').attr('src',res.data.qrcode);
 			/* $('#ban_id').val(res.data.house.ban_id);
 			$('#house_id').val(res.data.house.house_id);
 			$('#tenant_id').val(res.data.house.tenant_id);
@@ -978,12 +979,13 @@
 			$('#applyDev5_data5').val(res.data.data_json.applyDev5_data5);
 			$('#applyDev5_data6').val(res.data.data_json.applyDev5_data6);
 		})
-		/*
-		删除上传图片
-		*/
-		$(document).on("click", ".upload_img_list dd i", function() {
-			$(this).parents("dd").remove();
-		})					
+
+		// /*
+		// 删除上传图片
+		// */
+		// $(document).on("click", ".upload_img_list dd i", function() {
+		// 	$(this).parents("dd").remove();
+		// })					
 
 });
 </script>

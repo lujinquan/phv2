@@ -51,7 +51,23 @@
 	<div class="j-report-con">
 	  <h1 class="j-report-title">武汉市房地局直管公房产权（<span class="DOwnerTyp"></span>）情况综合统计表</h1>
 	  <div class="j-report-table">
-	    <ul>
+	    
+	  </div>
+	</div>
+</div>
+
+<script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_propertys.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 E -->
+<script>
+    layui.use(['jquery', 'laydate', 'element','table'], function(){
+        var laydate = layui.laydate,
+		    $ = layui.$
+			,element = layui.element
+			,table = layui.table;
+		var _html = `<ul>
 			  <li class="j-bold-size">产别:<span class="OwnerID"></span></li>
 			  <li class="j-bold-size">填报单位:<span class="fontsize DOwnerTyp"></span></li>
 			  <li class="j-bold-size">填报时间:<span class="time"></span></li>
@@ -144,22 +160,7 @@
 		
 		            </tbody>
 		
-		</table>
-	  </div>
-	</div>
-</div>
-
-<script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_propertys.js?v={:config('hisiphp.version')}"></script>
-<!-- 打印 S -->
-<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
-<!-- 打印 E -->
-<script>
-    layui.use(['jquery', 'laydate', 'element','table'], function(){
-        var laydate = layui.laydate,
-		    $ = layui.$
-			,element = layui.element
-			,table = layui.table;
+		</table>`;			
         //年选择器
         laydate.render({
             elem: '#timeYear'
@@ -186,6 +187,7 @@
 			$.get("{:url()}?group=y", data ,function(res){
 				//console.log(res.code);
 				if(res.code == 1){
+					$('.j-report-table').html(_html);
 					insert_data(res);
 				}else{
 					//layer.msg(res.msg);
@@ -212,6 +214,7 @@
 		
 		$.get("{:url()}?group=y", data,function(res){
 			if(res.code == 1){
+				$('.j-report-table').html(_html);
 				insert_data(res);
 			}else{
 				$('.j-report-table').html('<div class="j-no-contents"><i class="layui-icon iconfont j-icon-wushuju"></i>'+res.msg+'</div>');

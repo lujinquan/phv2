@@ -300,6 +300,8 @@ class ChangeNew extends SystemBase
         //halt($finalRow);
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
+        Db::name('tenant')->where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_status'=>1]);
+        Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['tenant_status'=>1]);
         
         // 2、添加台账记录
         $taiHouseData = $taiBanData = [];
@@ -348,6 +350,7 @@ class ChangeNew extends SystemBase
                 'ban_civil_area'=>Db::raw('ban_civil_area+'.$houseInfo['house_area']),
                 'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$houseInfo['house_oprice']),
                 'ban_use_area'=>Db::raw('ban_use_area+'.$houseInfo['house_lease_area']),
+                'ban_civil_holds'=>Db::raw('ban_civil_holds+1'),
             ]);
         }elseif($houseInfo['house_use_id'] == 2){
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
@@ -355,6 +358,7 @@ class ChangeNew extends SystemBase
                 'ban_career_rent'=>Db::raw('ban_career_rent+'.$houseInfo['house_pre_rent']),
                 'ban_career_area'=>Db::raw('ban_career_area+'.$houseInfo['house_area']),
                 'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$houseInfo['house_oprice']),
+                'ban_career_holds'=>Db::raw('ban_career_holds+1'),
             ]);
         }else{
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
@@ -362,6 +366,7 @@ class ChangeNew extends SystemBase
                 'ban_party_rent'=>Db::raw('ban_party_rent+'.$houseInfo['house_pre_rent']),
                 'ban_party_area'=>Db::raw('ban_party_area+'.$houseInfo['house_area']),
                 'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$houseInfo['house_oprice']),
+                'ban_party_holds'=>Db::raw('ban_party_holds+1'),
             ]);
         }
 
