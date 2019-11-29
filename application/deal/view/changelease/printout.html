@@ -118,7 +118,7 @@
                         </tr>
 						<tr>                          
 							<td style="width: 30px;height:24px;">承租人电话</td>
-							<td id="detailRentTel" colspan="4" style="height:24px;">18971219008</td>
+							<td id="detailRentTel" colspan="4" style="height:24px;"></td>
 						</tr>
                         <tr>
                             <td rowspan="2">承租人代表/监护人 姓名</td>
@@ -587,7 +587,8 @@
 			$('#print_1_HouseFloor').text(res.data.ban_info.ban_floors);
 			$('#print_1_LiveFloor').text(res.data.house_info.house_floor_id);
 			$('#print_1_RentName').text(res.data.tenant_info.tenant_name);
-			$('#print_1_RentNumber').text(res.data.tenant_info.tenant_tel);
+            $('#print_1_RentNumber').text(res.data.tenant_info.tenant_card);
+			$('#detailRentTel').text(res.data.tenant_info.tenant_tel);
 			/* $('#print_1_RentName1').text('监护人 姓名:张三');
 			$('#print_1_RentNumber1').text('监护人身份证号:4203...'); */
 			$('#print_1_Year').text(res.data.data_json.applyYear);
@@ -708,9 +709,9 @@
 			$('#print_1_Room20_data3').text(res.data.data_json.applyRoom20_data3);
 			$('#print_1_Room20_data4').text(res.data.data_json.applyRoom20_data4);
 			$('#print_1_Room20_data5').text(res.data.data_json.applyRoom20_data5);
-			$('#print_1_Room21_data1').text(res.data.data_json.applyRoom21_data1);
-			$('#print_1_Room21_data2').text(res.data.data_json.applyRoom21_data2);
-			$('#print_1_Room21_data3').text(res.data.data_json.applyRoom21_data3);
+			// $('#print_1_Room21_data1').text(res.data.data_json.applyRoom21_data1);
+			// $('#print_1_Room21_data2').text(res.data.data_json.applyRoom21_data2);
+			// $('#print_1_Room21_data3').text(res.data.data_json.applyRoom21_data3);
             //console.log(res);
         });
 	});

@@ -51,6 +51,13 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				<div class="layui-input-inline j-width-110">
+					<select name="is_valid">
+						<option value="">是否有效</option>
+						<option value="1">有效</option>
+						<option value="0">无效</option>
+					</select>
+				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -154,6 +161,16 @@
 					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
+		                }
+					}, 
+					{field: 'is_valid',align:'center',minWidth: 100,title: '是否有效', 
+						templet: function(d) {
+							if(parseInt(d.is_valid)){
+								return '有效';
+							}else{
+								return '无效';
+							}
+		                    
 		                }
 					}, 
 					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}

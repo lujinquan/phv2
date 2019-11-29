@@ -506,11 +506,11 @@
 					¥<input readonly style="width: 150px; font-family: 微软雅黑; font-size: 13px;" type="text" name="applyRoom20_data5" id="applyRoom20_data5" value="" class="validate[custom[onlyNumberWide]] textinput"  truetype="textinput" yzid="80">元</td>
 			</tr>
 			<tr>
-				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" name="applyRoom21_data1" id="applyRoom21_data1">
+				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" {if condition="isset($data_info['child_json'][1]['uid'])"}value="{$systemusers[$data_info['child_json'][1]['uid']]['nick']}"{/if} name="applyRoom21_data1" id="applyRoom21_data1">
 					&nbsp;  &nbsp;  &nbsp;
-					经管所长：<input readonly style="width: 120px; margin-right: 30px;" type="" name="applyRoom21_data2" id="applyRoom21_data2">
+					经管所长：<input readonly style="width: 120px; margin-right: 30px;" type="" {if condition="isset($data_info['child_json'][2]['uid'])"}value="{$systemusers[$data_info['child_json'][2]['uid']]['nick']}"{/if} name="applyRoom21_data2" id="applyRoom21_data2">
 					&nbsp;  &nbsp;  &nbsp;
-					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type="" name="applyRoom21_data3" id="applyRoom21_data3" value="">
+					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type="" {if condition="isset($data_info['child_json'][3]['uid'])"}value="{$systemusers[$data_info['child_json'][3]['uid']]['nick']}"{/if} name="applyRoom21_data3" id="applyRoom21_data3" value="">
 				</td>
 			</tr>
 		</tbody></table>
@@ -943,9 +943,9 @@
 			$('#applyRoom20_data3').val(res.data.data_json.applyRoom20_data3);
 			$('#applyRoom20_data4').val(res.data.data_json.applyRoom20_data4);
 			$('#applyRoom20_data5').val(res.data.data_json.applyRoom20_data5);
-			$('#applyRoom21_data1').val(res.data.data_json.applyRoom21_data1);
-			$('#applyRoom21_data2').val(res.data.data_json.applyRoom21_data2);
-			$('#applyRoom21_data3').val(res.data.data_json.applyRoom21_data3);
+			// $('#applyRoom21_data1').val(res.data.data_json.applyRoom21_data1);
+			// $('#applyRoom21_data2').val(res.data.data_json.applyRoom21_data2);
+			// $('#applyRoom21_data3').val(res.data.data_json.applyRoom21_data3);
 			$('#applyReason').val(res.data.data_json.applyReason);
 			//房屋构件设备点交记载
 			$('#applyDev1_data1').val(res.data.data_json.applyDev1_data1);
