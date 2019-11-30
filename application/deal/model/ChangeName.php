@@ -293,7 +293,7 @@ class ChangeName extends SystemBase
         $TenantTaiModel->allowField(true)->create($taiData);
 
         // 4、租户更名后原租约失效
-        $qrcodeUrl = Db::name('change_lease')->where([['house_id'=>$finalRow['house_id'],'tenant_id'=>$finalRow['tenant_id']]])->value('qrcode');
+        $qrcodeUrl = Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['tenant_id']]])->value('qrcode');
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
         }

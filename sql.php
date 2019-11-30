@@ -420,7 +420,7 @@ from ph_v1.ph_change_order where ChangeType = 11 and Status < 2;
 
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
-update ph_v2.ph_change_rentadd_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.tenant_id = b.tenant_id where a.house_id = b.house_id;
 
 
 update ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;

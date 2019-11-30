@@ -147,8 +147,26 @@
 		                }
 					}, 
 					{field: 'ctime',align:'center',width: 140,title: '申请时间'}, 
-					{field: 'ftime',align:'center',width: 140,title: '完成时间'}, 
-					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
+					{field: 'ftime',align:'center',width: 140,title: '完成时间', 
+						templet: function(d) {
+							if(d.ftime == '1970-01-01'){
+								return '';
+							}else{
+								return d.ftime;
+							}
+		                    //return process_config[d.change_status];
+		                }
+					},  
+					{field: 'entry_date',align:'center',width: 100,title: '生效时间', 
+						templet: function(d) {
+							if(d.entry_date == '0'){
+								return '';
+							}else{
+								return d.entry_date;
+							}
+		                    //return process_config[d.change_status];
+		                }
+					},  
 					{field: 'change_status',align:'center',width: 120,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
