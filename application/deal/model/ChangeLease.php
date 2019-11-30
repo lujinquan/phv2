@@ -297,6 +297,7 @@ class ChangeLease extends SystemBase
 
             /* 如果审批不通过：更新暂停计租的child_json、change_status，更新审批表change_desc、curr_role */
             }else if (isset($data['change_reason'])){
+                
                 $changeUpdateData['change_status'] = 0;
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
