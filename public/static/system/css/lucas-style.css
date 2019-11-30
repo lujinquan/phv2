@@ -41,6 +41,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-width-130{width: 130px;}
 .j-width-150{width: 150px;}
 .j-width-180{width: 180px;}
+.yellow{color: #ff8700#;}
 /*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
@@ -425,7 +426,12 @@ opacity: .8color: #333;}
  .print_1_ td,.print_1_ th{}
 /* 打印样式 E */
 
-
+/* 租约 */
+.j-code-table span{display: block;}
+.j-code-table .img{display: block;max-width: 200px;margin-top: 40px;}
+/* 不通过原因 */
+.j-open-reason.j-height{height: 440px;overflow: hidden;}
+.j-open-reason .j-margin-btn{margin-top: 15px;}
 /* 首页样式 S */
 .j-download-color{ color: #2E77EF;}
 .j-download-color:hover{ color: #2E77EF;text-decoration:underline;}
