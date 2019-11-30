@@ -83,13 +83,14 @@
 </div>
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功'};
+	var process_take = {'0':'无效','1':'有效'};
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table
 		   ,laydate = layui.laydate;
-		
+		console.log(params);
 		//日期
 		  laydate.render({
 		    elem: '#date'
@@ -182,6 +183,7 @@
                	 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化申请机构
                	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
                	 exportData[i].change_status = process_config[exportData[i].change_status];//转化审核状态
+				 exportData[i].is_valid = process_take[exportData[i].is_valid];//转化是否有效
                  }
 			}
 		},isShowInst)
