@@ -122,15 +122,15 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
+					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
 					    }
 					}, 
-					{field: 'house_use_id',minWidth: 80,align:'center',title: '使用性质',
+					{field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质',
 						templet: function(d) {
 							return params.uses[d.house_use_id];
 						}
@@ -155,16 +155,16 @@
 					{field: 'change_oprice',minWidth: 120,align:'center',title: '原价', totalRow: true},  
 					{field: 'change_area',minWidth: 120,align:'center',title: '建筑面积', totalRow: true},  
 					{field: 'change_use_area',minWidth: 120,align:'center',title: '计租面积', totalRow: true}, 
-					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
-					{field: 'ftime',align:'center',minWidth: 100,title: '完成时间'},
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'},
 					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
-					{field: 'change_status',align:'center',minWidth: 160,title: '状态', 
+					{field: 'change_status',align:'center',minWidth: 100,title: '状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					},
 					//{field: 'effective_times',align:'center',minWidth: 160,title: '生效时间'},
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth:100,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
               //导出转换后台数据

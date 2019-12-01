@@ -46,6 +46,13 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				<div class="layui-input-inline j-width-110">
+					<select name="is_valid">
+						<option value="">是否有效</option>
+						<option value="1">有效</option>
+						<option value="0">无效</option>
+					</select>
+				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -118,12 +125,12 @@
 			    }
 			    ,cols: [
 				  [ //表头 
-				   {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
-				   {field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-				   {field: 'house_use_id',width: 120,align:'center',title: '使用性质', templet: function(d) {
+				   {field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+				   {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+				   {field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 
-		           {field: 'ban_owner_id',width: 120,align:'center',title: '产别', templet:function(d) {
+		           {field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', templet:function(d) {
 		                return params.owners[d.ban_owner_id];
 		           }},
 				   {field: 'tenant_name',align:'center',minWidth: 100,title: '租户'},
@@ -131,17 +138,27 @@
 		                    return params.cuttypes[d.cut_type];
 		            }},
 					{field: 'cut_rent',align:'center',minWidth: 100,title: '减免金额',totalRow: true},
-					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
-					{field: 'ftime',align:'center',minWidth: 100,title: '完成时间'},
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'},
 					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
-					{field: 'end_date',align:'center',minWidth: 160,title: '减免到期时间', templet: function(d) { 
+					{field: 'end_date',align:'center',minWidth: 120,title: '减免到期时间', templet: function(d) { 
 						var str = String(d.end_date);
 	                    return str.slice(0,4)+'-'+str.slice(4);
 	                }},
-					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', templet: function(d) {
+					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', templet: function(d) {
 	                    return process_config[d.change_status];
-	                }}, 
-					{title: '操作',width: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+	                }},
+	                {field: 'is_valid',align:'center',minWidth: 100,title: '是否有效', 
+						templet: function(d) {
+							if(parseInt(d.is_valid)){
+								return '有效';
+							}else{
+								return '无效';
+							}
+		                    
+		                }
+					},  
+					{title: '操作',minWidth: 160,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
 			done: function(res, curr, count) {

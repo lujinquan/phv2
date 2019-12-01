@@ -73,6 +73,10 @@ class ChangeLease extends SystemBase
         if(isset($data['change_status']) && $data['change_status'] !== ''){
             $where[] = ['a.change_status','eq',$data['change_status']];
         }
+        // 检索是否有效
+        if(isset($data['is_valid']) && $data['is_valid'] !== ''){
+            $where[] = ['a.is_valid','eq',$data['is_valid']];
+        }
         // 检索租户姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['a.tenant_name','like','%'.$data['tenant_name'].'%'];
@@ -268,6 +272,7 @@ class ChangeLease extends SystemBase
 
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,

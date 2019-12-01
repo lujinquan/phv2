@@ -79,21 +79,19 @@
 	
 	layui.use(['table', 'jquery','laydate'], function() {
 		var $ = layui.$;
-		var s = $('#dataTable').attr('params');
-		var params = JSON.parse(s);
 		var table = layui.table
 		   ,laydate = layui.laydate;
 		
-		  //日期
-		  laydate.render({
-		    elem: '#date'
-		    ,type: 'month'
-		    ,ready: function(date){
+	  	//日期
+	  	laydate.render({
+	    	elem: '#date'
+	    	,type: 'month'
+	    	,ready: function(date){
 			    $('.layui-laydate li').click(function () {
 			       $('.laydate-btns-confirm').trigger('click');
 			    });
 			}
-		  });
+	  	});
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -103,67 +101,26 @@
 			    ,url: '{:url()}' //数据接口
 				,page: true //开启分页
 				,limit: 10
-			   ,limits: [10,20,30,40,50,100,300,500,1000]
-			  ,text: {
-					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
-			  }
+			   	,limits: [10,20,30,40,50,100,300,500]
+				  ,text: {
+						none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+				  }
 			  ,cols: [
-				[ //表头
-					// {
-					// 	field: '', align:'center',width:60, title: '#', templet:function(d){
-					// 	     return d.LAY_INDEX ;
-					// 	}
-					// },
-					{
-						field: 'ban_address',
-						minWidth: 180,
-						align:'center',
-						title: '楼栋地址'
-					},{
-						field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'
-					}, {
-						field: 'ban_inst_id',
-						hide: isShowInst,
-						minWidth: 120,
-						align:'center',
-						title: '申请机构',
-						templet: function(d) {
-		                    return params.insts[d.ban_inst_id];
-		                }
-					}, {
-						field: 'ban_owner_id',
-						width: 80,
-						align:'center',
-						title: '产别',
-						templet: function(d) {
-		                    return params.owners[d.ban_owner_id];
-		                }
-					}, {
-						field: 'change_type',
-						width: 130,
-						align:'center',
-						title: '异动类型',
-						templet: function(d) {
-		                    return params.changes[d.change_type];
-		                }
-					}, {
-						field: 'ctime',
-						align:'center',
-						width: 160,
-						title: '申请时间'
-					}, {
-						field: 'change_desc',
-						align:'center',
-						width: 150,
-						title: '审核状态'
-					}, {
-						title: '操作',
-						width: 200,
-						//minWidth: 260,
-						align:'center',
-						templet: '#buttonTpl',
-						fixed: 'right'
-					}
+				[
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}
+					,{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'}
+					,{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构',templet: function(d) {
+		                return params.insts[d.ban_inst_id];
+		            }}
+		            ,{field: 'ban_owner_id',width: 80,align:'center',title: '产别',templet: function(d) {
+	                    return params.owners[d.ban_owner_id];
+		            }}
+		            ,{field: 'change_type',width: 130,align:'center',title: '异动类型',templet: function(d) {
+	                    return params.changes[d.change_type];
+	                }}
+	                ,{field: 'ctime',align:'center',width: 160,title: '申请时间'}
+	                ,{field: 'change_desc',align:'center',width: 150,title: '审核状态'}
+	                ,{title: '操作',width: 200,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
 			done: function(res, curr, count) {

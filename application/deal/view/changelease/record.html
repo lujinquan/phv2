@@ -49,6 +49,13 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				<div class="layui-input-inline j-width-110">
+					<select name="is_valid">
+						<option value="">是否有效</option>
+						<option value="1">有效</option>
+						<option value="0">无效</option>
+					</select>
+				</div>
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -122,8 +129,8 @@
 					none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 			  }
 			  ,cols: [[ 
-					{field: 'house_number',minWidth: 150,align:'center',title: '房屋编号'}, 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'},
 					{field: 'ban_owner_id',minWidth: 100,align:'center',title: '产别',
 						templet: function(d) {
@@ -141,13 +148,13 @@
 					    }
 					}, 
 					{field: 'tenant_name',width: 100,align:'center',title: '租户'},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];
 		                }
 					}, 
-					{field: 'ctime',align:'center',width: 140,title: '申请时间'}, 
-					{field: 'ftime',align:'center',width: 140,title: '完成时间', 
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'}, 
+					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间', 
 						templet: function(d) {
 							if(d.ftime == '1970-01-01'){
 								return '';
@@ -167,12 +174,22 @@
 		                    //return process_config[d.change_status];
 		                }
 					},  
-					{field: 'change_status',align:'center',width: 120,title: '审核状态', 
+					{field: 'change_status',align:'center',minWidth: 90,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
-					}, 
-					{title: '操作',width: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					},
+					{field: 'is_valid',align:'center',minWidth: 100,title: '是否有效', 
+						templet: function(d) {
+							if(parseInt(d.is_valid)){
+								return '有效';
+							}else{
+								return '无效';
+							}
+		                    
+		                }
+					},  
+					{title: '操作',minWidth: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
                //导出转换后台数据

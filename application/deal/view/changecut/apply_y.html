@@ -173,6 +173,7 @@
   		<label class="j-form-label"><i class="red">*</i>减免类型</label>
   		<div class="j-input-inline">
   			<input type="text" id="reduction_cut_year" name="reduction_cut_year" value="" placeholder="" readonly autocomplete="off" class="layui-input" title="">
+        <input type="hidden" id="cut_type" name="cut_type" value="">
   		</div>
   	</div>
   	<div class="layui-col-md4">
@@ -349,7 +350,8 @@
 				$("#reduction_idnumber").val(res.data.tenant_card); //身份证号
 				$("#reduction_tel").val(res.data.tenant_tel); //电话
 				$("#reduction_cut").val(params.cuttypes[res.data.cut_type]); //减免类型
-				$("#reduction_cut_year").val(params.cuttypes[res.data.cut_type]); //年审减免类型
+        $("#reduction_cut_year").val(params.cuttypes[res.data.cut_type]); //年审减免类型
+				$("#cut_type").val(res.data.cut_type); //年审减免类型
 				$("#reduction_waiver_amount").val(res.data.cut_rent); //减免金额
 				$("#cut_rent_year").val(res.data.cut_rent); //减免年审金额
 				$("#reduction_card_number").val(res.data.cut_rent_number); //减免证号

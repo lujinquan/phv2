@@ -118,8 +118,8 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'house_number',minWidth: 180,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号',fixed: 'left', unresize: true, totalRowText: '合计'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
@@ -132,17 +132,17 @@
 		                }
 					}, 
 					{field: 'tenant_name',minWidth: 120,align:'center',title: '租户姓名'},  
-					{field: 'before_month_rent',minWidth: 140,align:'center',title: '核销以前月金额', totalRow: true},  
-					{field: 'before_year_rent',minWidth: 140,align:'center',title: '核销以前年金额', totalRow: true},  
-					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
-					{field: 'ftime',align:'center',minWidth: 100,title: '完成时间'},
-					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
-					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态',
+					{field: 'before_month_rent',minWidth: 120,align:'center',title: '核销以前月', totalRow: true},  
+					{field: 'before_year_rent',minWidth: 120,align:'center',title: '核销以前年', totalRow: true},  
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'},
+					{field: 'entry_date',align:'center',minWidth: 120,title: '生效时间'},
+					{field: 'change_status',align:'center',minWidth: 80,title: '审核状态',
 						templet: function(d) {
 					        return process_config[d.change_status];
 					    }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
               //导出转换后台数据
