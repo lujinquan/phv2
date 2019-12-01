@@ -387,7 +387,7 @@ class ChangeCancel extends SystemBase
                 ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
                 //如果有减免，则需要让减免失效
                 ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
-                Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['end_date'=>date('Ym')]);
+                Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
 
                 $taiHouseData[$k]['house_id'] = $v['house_id'];
                 $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];

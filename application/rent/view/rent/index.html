@@ -121,7 +121,9 @@
                 {type: 'checkbox'}
                 ,{field: 'rent_order_number',hide:true,minWidth: 200, align:'center', title: '订单编号' ,totalRowText: '合计：'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
-                ,{field: 'rent_order_date', minWidth: 140, align:'center', title: '账单期'}
+                ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
+                    return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);
+                }}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -133,21 +135,21 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
-                ,{field: 'rent_order_diff', minWidth: 140, align:'center', title: '租差',totalRow: true}
-                ,{field: 'rent_order_pump', minWidth: 140, align:'center', title: '泵费',totalRow: true}
-                ,{field: 'rent_order_cut', minWidth: 140, align:'center', title: '减免',totalRow: true}
-                ,{field: 'house_pre_rent', minWidth: 140, align:'center', title: '规定租金',totalRow: true}
-                ,{field: 'house_cou_rent', minWidth: 140, align:'center', title: '计算租金',totalRow: true}
-                ,{field: 'rent_order_receive', minWidth: 140, align:'center', title: '应收租金',totalRow: true}                
-                ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'rent_order_diff', minWidth: 80, align:'center', title: '租差',totalRow: true}
+                ,{field: 'rent_order_pump', minWidth: 80, align:'center', title: '泵费',totalRow: true}
+                ,{field: 'rent_order_cut', minWidth: 80, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 100, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent', minWidth: 100, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金',totalRow: true}                
+                ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                //导出转换后台数据
                var exportData=res.data;
                for(i in exportData){
                  exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
-				 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
-				 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+        				 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+        				 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
                }
             }
         },isShowInst)

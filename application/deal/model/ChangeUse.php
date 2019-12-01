@@ -304,11 +304,12 @@ class ChangeUse extends SystemBase
         ];
         // 3、如果有减免，则需要让减免失效
         ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['change_status'=>0]);
-        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['end_date'=>date('Ym')]);
+        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
 
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
         // 4、使用权变更后原租约失效
+        Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['old_tenant_id']]])->update(['is_valid'=>0]);
         $qrcodeUrl = Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['old_tenant_id']]])->value('qrcode');
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);

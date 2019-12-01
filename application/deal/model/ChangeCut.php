@@ -248,6 +248,7 @@ class ChangeCut extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['end_date'] = (date('Y')+1).'01';
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['entry_time'] = date('Y-m');

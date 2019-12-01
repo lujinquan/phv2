@@ -101,23 +101,23 @@
             ,cols: [[ //表头
                 {field: 'house_number', minWidth: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
-                ,{field: 'ban_inst_id', width: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
+                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
-                ,{field: 'ban_owner_id', width: 80, align:'center', title: '产别', templet: function(d) {
+                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
-                ,{field: 'house_use_id', width: 100, align:'center', title: '使用性质', templet: function(d) {
+                ,{field: 'house_use_id', minWidth: 100, align:'center', title: '使用性质', templet: function(d) {
                     return params.uses[d.house_use_id];
                 }}
-                ,{field: 'tenant_name', width: 140, align:'center', title: '租户姓名'}
+                ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
                 
-                ,{field: 'pay_way', width: 100, align:'center', title: '充值方式', templet: function(d) {
+                ,{field: 'pay_way', minWidth: 100, align:'center', title: '充值方式', templet: function(d) {
                     return params.pay_way[d.pay_way];
                 }}
-                ,{field: 'ctime', width: 160, align:'center', title: '充值时间'}
-                ,{field: 'pay_rent', width: 100, align:'center', totalRow: true ,title: '充值金额'}
-                ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'ctime', minWidth: 160, align:'center', title: '充值时间'}
+                ,{field: 'pay_rent', minWidth: 100, align:'center', totalRow: true ,title: '充值金额'}
+                ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                 //导出转换后台数据

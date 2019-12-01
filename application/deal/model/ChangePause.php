@@ -225,6 +225,7 @@ class ChangePause extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
@@ -298,7 +299,7 @@ class ChangePause extends SystemBase
             $taiData[$key]['change_id'] = $finalRow['id'];
             // 3、如果有减免，则需要让减免失效
             ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$h]])->update(['change_status'=>0]);
-            Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['end_date'=>date('Ym')]);
+            Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
 
             // 添加产权统计记录
             $tableData[$key]['change_type'] = 3;
