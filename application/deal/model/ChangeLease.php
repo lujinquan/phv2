@@ -10,6 +10,7 @@ use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\house\model\TenantTai as TenantTaiModel;
 include EXTEND_PATH.'phpqrcode/phpqrcode.php';
 
 class ChangeLease extends SystemBase
@@ -345,5 +346,18 @@ class ChangeLease extends SystemBase
         $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+        // 2、添加租户台账
+        $taiData = [];
+        $taiData['tenant_id'] = $finalRow['tenant_id'];
+        $taiData['cuid'] = $finalRow['cuid'];
+        $taiData['tenant_tai_type'] = 3;
+        $taiData['tenant_tai_remark'] = '租约管理异动单号：'.$finalRow['change_order_number'];
+        $taiData['data_json'] = [];
+        $taiData['change_type'] = 18;
+        $taiData['change_id'] = $finalRow['id'];
+
+        $TenantTaiModel = new TenantTaiModel;
+        $TenantTaiModel->allowField(true)->create($taiData);
     }
 }
