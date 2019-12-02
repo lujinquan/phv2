@@ -62,8 +62,9 @@ update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent
 update ph_v2.ph_house_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
 
 # 更新楼栋表的户数
-update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_holds = b.houseids; 
-
+update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 and house_use_id = 1 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_civil_holds = b.houseids; 
+update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 and house_use_id = 2 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_career_holds = b.houseids;
+update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 and house_use_id = 3 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_party_holds = b.houseids;
 
 /**
  * 6、将v1的房间表中的ban_number全部替换成v2房间中的ban_id [反向更新v1的房屋表]
@@ -423,20 +424,20 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_i
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.tenant_id = b.tenant_id where a.house_id = b.house_id;
 
 
-update ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_year set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_house set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_inst set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_lease set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_name set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_new set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_offset set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_pause set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_rentadd set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_use set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_ban_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_year_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_house_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_inst_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_lease_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_name_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_new_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_offset_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_pause_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_rentadd_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_use_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 
 
 /**

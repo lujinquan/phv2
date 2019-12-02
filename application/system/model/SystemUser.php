@@ -175,8 +175,8 @@ class SystemUser extends Model
             return false;
         }
 
-        // 自动清除过期的系统日志
-        LogModel::where('ctime', '<', strtotime('-'.(int)config('sys.system_log_retention').' days'))->delete();
+        // 自动清除过期的系统日志（暂不清楚系统日志记录）
+        // LogModel::where('ctime', '<', strtotime('-'.(int)config('sys.system_log_retention').' days'))->delete();
 
         // 更新登录信息
         $user->last_login_time = time();

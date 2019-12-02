@@ -38,7 +38,7 @@ class SystemData extends Model
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
                 case 3: //暂停计租
-                    $where[] = ['ban_holds','>',0];
+                    $where[] = ['ban_civil_holds|ban_party_holds|ban_career_holds','>',0];
                     break;
                 case 7: //新发
                     $where[] = ['ban_status','<',2];
