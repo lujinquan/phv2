@@ -84,7 +84,7 @@ class Ban extends Admin
             if (!$BanModel->allowField(true)->create($filData)) {
                 return $this->error('新增失败');
             }
-            return $this->success('新增成功');
+            return $this->success('新增成功','index?group=x');
         }
         return $this->fetch();
     }

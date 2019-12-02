@@ -234,7 +234,7 @@ class ChangeName extends SystemBase
                     'img' => '',
                 ];
                 
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}

@@ -239,7 +239,7 @@ class ChangeRentAdd extends SystemBase
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新暂停计租表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];

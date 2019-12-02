@@ -265,7 +265,7 @@ class ChangeCut extends SystemBase
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime','entry_time','is_valid','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
                 
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];

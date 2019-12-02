@@ -66,7 +66,7 @@ class Rent extends Admin
     }
 
     /**
-     *  按上期欠缴处理
+     *  按上期欠缴处理(比如上期欠30，本期就欠30)
      */
     public function dealAsLast()
     {
