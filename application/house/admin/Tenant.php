@@ -20,6 +20,7 @@ use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\TenantTai as TenantTaiModel;
+use app\deal\model\Process as ProcessModel;
 
 class Tenant extends Admin
 {
@@ -205,6 +206,16 @@ class Tenant extends Admin
             }
             $this->assign('datas',$datas);
             return $this->fetch();
+        }elseif($row['change_type'] && $row['change_id']){  
+            $PorcessModel = new ProcessModel;
+            //dump($row['change_type']);halt($row['change_id']);
+            $result = $PorcessModel->detail($row['change_type'],$row['change_id']);
+            if(isset($result['old_data_info'])){
+                $this->assign('old_data_info',$result['old_data_info']);
+            }
+            //halt($result['template']);
+            $this->assign('data_info',$result['row']);
+            return $this->fetch($result['template']);
         }else{
             return $this->error('数据为空！');
         }

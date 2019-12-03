@@ -251,7 +251,7 @@ class ChangeCut extends SystemBase
                 $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['end_date'] = (date('Y')+1).'01';
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_time'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -265,7 +265,7 @@ class ChangeCut extends SystemBase
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime','entry_time','is_valid','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime','entry_date','is_valid','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
                 
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
