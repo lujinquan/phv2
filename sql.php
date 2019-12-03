@@ -131,6 +131,11 @@ update ph_v2.ph_house_room_back a,ph_v2.ph_room_back b set a.room_id = b.room_id
 update ph_v2.ph_house_room_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_number = b.house_number;
 update ph_v2.ph_room_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.room_cuid = b.ban_cuid;
 
+
+update ph_house_back set house_status = 2 where house_status > 1;
+update ph_ban_back set ban_status = 2 where ban_status > 1;
+update ph_tenant_back set tenant_status = 2 where tenant_status > 1;
+update ph_room_back set room_status = 2 where room_status > 1;
 /* 至此，档案数据全部同步完成 */
 
 
