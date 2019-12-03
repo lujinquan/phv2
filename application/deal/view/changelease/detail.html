@@ -784,7 +784,7 @@
 	var upurl1 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //住宅租约
 	var upurl2 = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证
 	var duotu = true; //是否为多图上传true false
-	console.log(params)
+	//console.log(params)
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
 		var table = layui.table
 			,form = layui.form
@@ -800,7 +800,7 @@
 			}
 		});
 		var id="{$data_info['id']}";
-		$.get('{:url("changelease/detail")}', {'id':id}, function(res) {
+		$.get('{:url("deal/changelease/detail")}', {'id':id}, function(res) {
 			console.log(res);
 			$('#house_number').val(res.data.house_info.house_number);
 			$('#qrcodeImg').attr('src',res.data.qrcode);

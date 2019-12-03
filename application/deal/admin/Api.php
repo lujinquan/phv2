@@ -103,7 +103,9 @@ class Api extends Common
                 Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
-
+        $curDate = date('Ym');
+        // 2、标记仍然生效的减免异动
+        Db::name('change_cut')->where([['change_status','eq',1],['end_date','>',$curDate]])->update(['is_valid'=>1]);
         return '租金减免同步完成！';
     }
 
@@ -228,6 +230,9 @@ class Api extends Common
             }
             Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'child_json'=>json_encode($a)]);
         }
+
+        // 2、标记仍然生效的新发租异动
+        Db::name('change_cut')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
 
         return '租约管理同步完成！';
     }

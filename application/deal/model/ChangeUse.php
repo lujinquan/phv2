@@ -229,6 +229,7 @@ class ChangeUse extends SystemBase
 
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -238,7 +239,7 @@ class ChangeUse extends SystemBase
                     'img' => '',
                 ];
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
@@ -303,11 +304,12 @@ class ChangeUse extends SystemBase
         ];
         // 3、如果有减免，则需要让减免失效
         ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['change_status'=>0]);
-        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['end_date'=>date('Ym')]);
+        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
 
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
         // 4、使用权变更后原租约失效
+        Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['old_tenant_id']]])->update(['is_valid'=>0]);
         $qrcodeUrl = Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['old_tenant_id']]])->value('qrcode');
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);

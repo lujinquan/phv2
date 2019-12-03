@@ -26,7 +26,7 @@ class Map extends Admin
             $getData = $this->request->get();
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
-            //$fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,ban_holds';
+            //$fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
             $fields = 'ban_id,ban_number,ban_address as z,ban_gpsx as x,ban_gpsy as y';
             $data = [];
             $data['data'] = $banModel->field($fields)->where($where)->order('ban_ctime desc')->limit(100)->select()->toArray();

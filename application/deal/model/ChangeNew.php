@@ -247,6 +247,7 @@ class ChangeNew extends SystemBase
 
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -256,7 +257,7 @@ class ChangeNew extends SystemBase
                     'img' => '',
                 ];
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
@@ -301,7 +302,7 @@ class ChangeNew extends SystemBase
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
         Db::name('tenant')->where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_status'=>1]);
-        Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['tenant_status'=>1]);
+        Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
         
         // 2、添加台账记录
         $taiHouseData = $taiBanData = [];

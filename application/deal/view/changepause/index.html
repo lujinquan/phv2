@@ -101,8 +101,8 @@
 			  }
 			  ,cols: [[ 
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 140,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];
 		                }
@@ -113,13 +113,13 @@
 		                }
 					}, 
 					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '暂停规定租金',totalRow: true},
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'}, 
-					{field: 'change_status',align:'center',minWidth: 180,title: '审核状态', 
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'}, 
+					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth: 180,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 				done: function(res, curr, count) {
 				  //导出转换后台数据

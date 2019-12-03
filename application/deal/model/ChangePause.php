@@ -65,9 +65,9 @@ class ChangePause extends SystemBase
             $where[] = ['a.change_status','eq',$data['change_status']];
         }
         // 检索是否有效
-        // if(isset($data['is_valid']) && $data['is_valid'] !== ''){
-        //     $where[] = ['a.is_valid','eq',$data['is_valid']];
-        // }
+        if(isset($data['is_valid']) && $data['is_valid'] !== ''){
+            $where[] = ['a.is_valid','eq',$data['is_valid']];
+        }
         // 检索异动单号
         if(isset($data['change_order_number']) && $data['change_order_number']){
             $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
@@ -225,7 +225,9 @@ class ChangePause extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -235,7 +237,7 @@ class ChangePause extends SystemBase
                     'img' => '',
                 ];
                 // 更新暂停计租表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
@@ -297,7 +299,7 @@ class ChangePause extends SystemBase
             $taiData[$key]['change_id'] = $finalRow['id'];
             // 3、如果有减免，则需要让减免失效
             ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$h]])->update(['change_status'=>0]);
-            Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['end_date'=>date('Ym')]);
+            Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
 
             // 添加产权统计记录
             $tableData[$key]['change_type'] = 3;

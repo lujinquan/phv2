@@ -120,32 +120,32 @@
 						     return d.LAY_INDEX ;
 						}
 					}, */
-					{field: 'house_number',width: 140,align:'center',title: '房屋编号'}, 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-					{field: 'ban_address',width: 180,align:'center',title: '楼栋地址'},
-					{field: 'ban_owner_id',width: 80,align:'center',title: '产别',
+					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'},
+					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
 					    }
 					}, 
-					{field: 'house_use_id',width: 100,align:'center',title: '使用性质',
+					{field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质',
 						templet: function(d) {
 					        return params.uses[d.house_use_id];
 					    }
 					}, 
-					{field: 'ban_struct_id',width: 100,align:'center',title: '结构',
+					{field: 'ban_struct_id',minWidth: 100,align:'center',title: '结构',
 						templet: function(d) {
 					        return params.structs[d.ban_struct_id];
 					    }
 					}, 
-					{field: 'tenant_name',width: 100,align:'center',title: '租户'},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 160,align:'center',title: '申请机构', 
+					{field: 'tenant_name',minWidth: 100,align:'center',title: '租户'},
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];
 		                }
 					}, 
-					{field: 'ctime',align:'center',width: 120,title: '申请时间'}, 
-					{field: 'change_status',align:'center',width: 180,title: '审核状态', 
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'}, 
+					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }

@@ -224,6 +224,7 @@ class ChangeName extends SystemBase
 
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -233,7 +234,7 @@ class ChangeName extends SystemBase
                     'img' => '',
                 ];
                 
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 //终审成功后的数据处理
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
@@ -274,10 +275,10 @@ class ChangeName extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        // 别字更正
+        // 1、别字更正
         TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
 
-        // 添加台账记录
+        // 2、添加租户台账记录
         $taiData = [];
         $taiData['tenant_id'] = $finalRow['tenant_id'];
         $taiData['cuid'] = $finalRow['cuid'];
@@ -292,7 +293,8 @@ class ChangeName extends SystemBase
         $TenantTaiModel = new TenantTaiModel;
         $TenantTaiModel->allowField(true)->create($taiData);
 
-        // 4、租户更名后原租约失效
+        // 3、租户更名后原租约失效
+        Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['tenant_id']]])->update(['is_valid'=>0]);
         $qrcodeUrl = Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['tenant_id']]])->value('qrcode');
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);

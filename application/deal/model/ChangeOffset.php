@@ -234,6 +234,7 @@ class ChangeOffset extends SystemBase
 
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -246,7 +247,7 @@ class ChangeOffset extends SystemBase
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新暂停计租表
-                $changeRow->allowField(['child_json','change_status','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];

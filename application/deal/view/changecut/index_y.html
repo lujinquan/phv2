@@ -112,12 +112,12 @@
 			  }
 			  ,cols: [
 				[ //表头 
-				 {field: 'ban_address',width: 150,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
-				 {field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-				   {field: 'house_use_id',width: 120,align:'center',title: '使用性质', templet: function(d) {
+				 {field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+				 {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+				   {field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 
-		           {field: 'ban_owner_id',width: 120,align:'center',title: '产别', templet:function(d) {
+		           {field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', templet:function(d) {
 		                return params.owners[d.ban_owner_id];
 		           }},
 					{field: 'tenant_name',align:'center',minWidth: 100,title: '租户'},
@@ -131,11 +131,11 @@
 					// 	width: 160,
 					// 	title: '减免到期'
 					// }
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', templet: function(d) {
 		                    return process_config[d.change_status];
 		                }}, 
-					{title: '操作',width: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth: 180,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
 			done: function(res, curr, count) {

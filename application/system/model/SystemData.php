@@ -38,7 +38,7 @@ class SystemData extends Model
         if(isset($queryWhere['change_type']) && $queryWhere['change_type']){ //如果异动类型有值，则验证房屋是否符合暂停计租要求
             switch ($queryWhere['change_type']) {
                 case 3: //暂停计租
-                    $where[] = ['ban_holds','>',0];
+                    $where[] = ['ban_civil_holds|ban_party_holds|ban_career_holds','>',0];
                     break;
                 case 7: //新发
                     $where[] = ['ban_status','<',2];
@@ -69,7 +69,7 @@ class SystemData extends Model
         
 
         $BanModel = new BanModel;
-        $fields = 'ban_id,ban_holds,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,ban_civil_num,ban_party_num,ban_career_num,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent + ban_party_rent + ban_career_rent) as ban_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_use_area,ban_floors';
+        $fields = 'ban_id,(ban_civil_holds + ban_party_holds + ban_career_holds) as ban_holds,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,ban_civil_num,ban_party_num,ban_career_num,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent + ban_party_rent + ban_career_rent) as ban_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_use_area,ban_floors';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
@@ -251,9 +251,10 @@ class SystemData extends Model
         //      },
         //      ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc,house_id desc')->limit($limit)->select();
         
-        $temps = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-        
+        $temps = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','inner')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+      //halt($temps);  
         foreach ($temps as $k => &$v) {
+            
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; //正常的
             if($unpaids){ 
@@ -266,7 +267,9 @@ class SystemData extends Model
                     $v['color_status'] = 2; // 已在异动中
                 }
             }
+
         }
+
         $data['data'] = $temps;
         $data['count'] = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->count();
         $data['code'] = 0;

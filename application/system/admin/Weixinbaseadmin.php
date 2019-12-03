@@ -17,23 +17,23 @@ use think\Controller;
 use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
+use app\system\model\SystemUser as UserModel;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
-//use app\system\model\SystemUser as UserModel;
 
 
 /**
- * 微信小程序用户版接口
+ * 微信小程序房管员版接口
  */
-class Weixin extends Controller 
+class Weixinbaseadmin extends Controller 
 {
 	
 	/**
-	 * [signin 用户版小程序登录]
+	 * [signin 房管员版小程序登录]
 	 * @return [type] [description]
 	 */
     public function signin()
@@ -41,85 +41,53 @@ class Weixin extends Controller
         if($this->request->isPost()){
             // 获取post数据
             $data = $this->request->post();
-
             $result = [];
             $result['code'] = 0;
-            // 验证数据合法性
+            // 验证是否输入账户名
             if(!isset($data['username']) || !$data['username']){
                 $result['msg'] = '请输入账户名！';
-            }
-            // 验证数据合法性
-            if(!isset($data['code']) || !$data['code']){
-                $result['msg'] = '请输入验证码！';
                 return json($result);
             }
-            // 如果有重复的手机号，会只取第一条
-            $row = TenantModel::where([['tenant_tel','eq',$data['username']],['tenant_status','eq',1]])->find();
-            //halt($data);
+            // 验证是否输入密码
+            if(!isset($data['password']) || !$data['password']){
+                $result['msg'] = '请输入密码！';
+                return json($result);
+            }
+            $row = UserModel::where([['username','eq',$data['username']],['status','eq',1]])->find();
+            // 验证账户是否存在且状态正常
             if(!$row){
                 $result['msg'] = '账户异常！';
-            } else {
-
-                $auth = new ServerCodeAPI();    
-                $res = $auth->CheckSmsYzm($data['username'],$data['code']);
-                $res = json_decode($res);
-                // 验证短信码是否正确
-                if($res->code == '200'){ 
-                    $key = str_coding($row['tenant_id'],'ENCODE');
-                    // 更新用户登录的信息
-                    TenantModel::where([['tenant_id','eq',$row['tenant_id']],['tenant_status','eq',1]])->update(['tenant_key'=>$key,'tenant_weixin_ctime'=>time()]);
-                    
-                    $result['data']['key'] = $key;
-                    $result['code'] = 1;
-                    $result['msg'] = '登录成功！';
-                } else if($res->code == '413'){
-                    $result['msg'] = '验证失败！';
-                } else {
-                    $result['msg'] = '请重新获取！';
-                }
-              
+                return json($result);
             }
- 
+        	// 验证角色
+        	if($row['role_id'] != 4){
+        		$result['msg'] = '角色异常！';
+        		return json($result);
+        		
+        	}
+        	// 验证登录账户是否为房管员
+        	if($row['inst_level'] != 3){
+        		$result['msg'] = '非房管员用户！';
+        		return json($result);
+        	}
+    		// 验证密码是否正确
+    		if (!password_verify(md5(trim($data['password'])), $row['password'])) {
+	            $result['msg'] = '登录密码错误！';
+	            return json($result);
+	        }
+        	$key = str_coding($row['id'],'ENCODE');
+        	// 更新用户登录的信息
+            UserModel::where([['id','eq',$row['id']]])->update(['user_key'=>$key,'user_weixin_ctime'=>time()]);
+            
+            $result['data']['key'] = $key;
+            $result['code'] = 1;
+            $result['msg'] = '登录成功！';
             return json($result);
+
         }
     }
 
-    public function sendMessage()
-    {
-        if ($this->request->isPost()) {
-
-            $username = $this->request->post('username');
-            $where = [];
-            $where[] = ['tenant_tel','eq',$username];
-            $where[] = ['tenant_status','eq',1];
-            $row = TenantModel::where($where)->find();
-            $result = [];
-            $result['code'] = 0;
-            if(!$row){
-                $result['msg'] = '用户名不存在或被禁用！';
-            }else{
-                //通过类型判断是否超出当日短信发送限额！
-            
-                //验证通过即发送短信
-                $auth = new ServerCodeAPI();
-                $res = json_decode($auth->SendSmsCode($username));
-
-                
-
-                if($res->code == '416'){
-                    $result['msg'] = '验证次数过多，请更换登录方式！';
-                    //$this->error('验证次数过多，请更换登录方式');
-                }else{
-                   $result['code'] = 1; 
-                   $result['msg'] = '发送成功！';
-                }
-            }
-            
-            return json($result);
-        }
-    }
-
-    public function noticeInfo()
+    public function banList()
     {
         $key = input('get.key');
         $result = [];
@@ -130,22 +98,41 @@ class Weixin extends Controller
         }
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         //$id = str_coding($key,'DECODE');
-        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
 
-        if($tenantInfo){
+        if($row){
             $params = ParamModel::getCparams();
             $result['data']['params'] = $params;
-            $systemNotice = new SystemNotice;
-            $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0],['inst_id','eq',4]])->order('sort asc')->select()->toArray();
-            $result['data']['message'] = [
-                '欢迎使用公房用户版小程序！！！','小程序由智慧公房系统提供数据服务支持，更多功能敬请期待……'
-            ];
+            $damage = input('ban_damage_id');
+            $owner = input('ban_owner_id');
+            $struct = input('ban_struct_id');
+            $status = input('ban_status');
+
+            $BanModel = new BanModel;
+            $where = [];
+            $where[] = ['ban_status','eq',1];
+            $where[] = ['ban_inst_id','eq',$row['inst_id']];
+            
+            if($damage){
+            	$where[] = ['ban_damage_id','eq',$damage];
+            }
+            if($owner){
+            	$where[] = ['ban_owner_id','eq',$owner];
+            }
+            if($struct){
+            	$where[] = ['ban_struct_id','eq',$struct];
+            }
+            if($status !== null){
+            	$where[] = ['ban_status','eq',$status];
+            }
+            //halt($where);
+            $result['data']['ban'] = $BanModel->where($where)->order('ban_ctime desc')->select()->toArray();
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
             $result['msg'] = '参数错误！';
         }
-//halt($result);
+
         return json($result); 
 
         

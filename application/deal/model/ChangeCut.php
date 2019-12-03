@@ -83,6 +83,10 @@ class ChangeCut extends SystemBase
         if(isset($data['change_status']) && $data['change_status'] !== ''){
             $where[] = ['a.change_status','eq',$data['change_status']];
         }
+        // 检索是否有效
+        if(isset($data['is_valid']) && $data['is_valid'] !== ''){
+            $where[] = ['a.is_valid','eq',$data['is_valid']];
+        }
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
@@ -244,8 +248,10 @@ class ChangeCut extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['end_date'] = (date('Y')+1).'01';
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -259,7 +265,7 @@ class ChangeCut extends SystemBase
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
 
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status','ftime','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','ftime','entry_time','is_valid','end_date'])->save($changeUpdateData, ['id' => $data['id']]);
                 
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];

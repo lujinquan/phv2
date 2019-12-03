@@ -110,19 +110,19 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-					{field: 'ban_address',minWidth: 120,align:'center',title: '楼栋地址'}, 
+					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', 
 						templet: function(d) {
 		                    return params.owners[d.ban_owner_id];
 		                }
 					}, 
-					{field: 'house_use_id',hide: true, minWidth: 80,align:'center',title: '使用性质', 
+					{field: 'house_use_id',hide: true, minWidth: 100,align:'center',title: '使用性质', 
 						templet: function(d) {
 		                    return params.uses[d.house_use_id];
 		                }
 					},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 100,align:'center',title: '申请机构', 
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];
 		                }
@@ -135,13 +135,13 @@
 					{field: 'transfer_rent',hide: true,minWidth: 120,align:'center',title: '转让金额'},
 					{field: 'old_tenant_name',minWidth: 100,align:'center',title: '原租户姓名'},
 					{field: 'new_tenant_name',minWidth: 100,align:'center',title: '变更后租户'}, 
-					{field: 'ctime',align:'center',minWidth: 100,title: '申请时间'},
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth: 180,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
                 //导出转换后台数据

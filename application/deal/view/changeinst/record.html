@@ -128,27 +128,27 @@
 		                    return d.LAY_INDEX ;
 		                }
 					}, */
-					{field: 'old_inst_id',width: 120,align:'center',title: '原管段',fixed: 'left', unresize: true, totalRowText: '合计',templet: function(d) {
+					{field: 'old_inst_id',minWidth: 120,align:'center',title: '原管段',totalRowText: '合计',templet: function(d) {
 		                    return params.insts[d.old_inst_id];
 		            }}, 
-		            {field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
-					{field: 'new_inst_id',width: 120,align:'center',title: '新管段', templet: function(d) {
+		            {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段', templet: function(d) {
 	                    return params.insts[d.new_inst_id];
 	                }}, 
-					{field: 'change_ban_num',minWidth: 100,align:'center',title: '栋数'}, 
-					{field: 'change_ban_area',minWidth: 120,align:'center',title: '建筑面积',totalRow: true},  
-					{field: 'change_ban_rent',minWidth: 120,align:'center',title: '规定租金',totalRow: true},
-					{field: 'change_ban_oprice',minWidth: 120,align:'center',title: '原价',totalRow: true},
-					{field: 'change_ban_use_area',minWidth: 120,align:'center',title: '使用面积',totalRow: true},
-					{field: 'ctime',align:'center',minWidth: 160,title: '申请时间'},
-					{field: 'ftime',align:'center',minWidth: 160,title: '完成时间'},
+					{field: 'change_ban_num',minWidth: 80,align:'center',title: '栋数',totalRow: true}, 
+					{field: 'change_ban_area',minWidth: 100,align:'center',title: '建筑面积',totalRow: true},  
+					{field: 'change_ban_rent',minWidth: 100,align:'center',title: '规定租金',totalRow: true},
+					{field: 'change_ban_oprice',minWidth: 100,align:'center',title: '原价',totalRow: true},
+					{field: 'change_ban_use_area',minWidth: 100,align:'center',title: '使用面积',totalRow: true},
+					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
+					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'},
 					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
-					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
+					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 
 						templet: function(d) {
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',minWidth: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
                //导出转换后台数据

@@ -311,10 +311,12 @@ class House extends Admin
         // 如果是异动形成的台账，则调取异动记录信息
         }elseif($row['change_type'] && $row['change_id']){  
             $PorcessModel = new ProcessModel;
+            //dump($row['change_type']);halt($row['change_id']);
             $result = $PorcessModel->detail($row['change_type'],$row['change_id']);
             if(isset($result['old_data_info'])){
                 $this->assign('old_data_info',$result['old_data_info']);
             }
+            //halt($result['template']);
             $this->assign('data_info',$result['row']);
             return $this->fetch($result['template']);
         }else{

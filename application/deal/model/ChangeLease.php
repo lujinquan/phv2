@@ -10,6 +10,7 @@ use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\house\model\TenantTai as TenantTaiModel;
 include EXTEND_PATH.'phpqrcode/phpqrcode.php';
 
 class ChangeLease extends SystemBase
@@ -72,6 +73,10 @@ class ChangeLease extends SystemBase
         // 检索审核状态
         if(isset($data['change_status']) && $data['change_status'] !== ''){
             $where[] = ['a.change_status','eq',$data['change_status']];
+        }
+        // 检索是否有效
+        if(isset($data['is_valid']) && $data['is_valid'] !== ''){
+            $where[] = ['a.is_valid','eq',$data['is_valid']];
         }
         // 检索租户姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
@@ -267,7 +272,9 @@ class ChangeLease extends SystemBase
             }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
 
                 $changeUpdateData['change_status'] = 1;
+                $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['ftime'] = time();
+                $changeUpdateData['entry_time'] = date('Y-m');
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -289,7 +296,7 @@ class ChangeLease extends SystemBase
                 $this->finalDeal($changeRow);
                 //try{$this->finalDeal($changeRow);}catch(\Exception $e){return false;}
                 // 更新暂停计租表
-                $changeRow->allowField(['child_json','change_status','change_imgs','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
+                $changeRow->allowField(['child_json','change_status','entry_time','is_valid','change_imgs','ftime'])->save($changeUpdateData, ['id' => $data['id']]);
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['ftime'] = $changeUpdateData['ftime'];
@@ -297,6 +304,7 @@ class ChangeLease extends SystemBase
 
             /* 如果审批不通过：更新暂停计租的child_json、change_status，更新审批表change_desc、curr_role */
             }else if (isset($data['change_reason'])){
+                
                 $changeUpdateData['change_status'] = 0;
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
@@ -338,5 +346,18 @@ class ChangeLease extends SystemBase
         $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+        // 2、添加租户台账
+        $taiData = [];
+        $taiData['tenant_id'] = $finalRow['tenant_id'];
+        $taiData['cuid'] = $finalRow['cuid'];
+        $taiData['tenant_tai_type'] = 3;
+        $taiData['tenant_tai_remark'] = '租约管理异动单号：'.$finalRow['change_order_number'];
+        $taiData['data_json'] = [];
+        $taiData['change_type'] = 18;
+        $taiData['change_id'] = $finalRow['id'];
+
+        $TenantTaiModel = new TenantTaiModel;
+        $TenantTaiModel->allowField(true)->create($taiData);
     }
 }
