@@ -80,20 +80,27 @@ class Rent extends Admin
 
         $RentModel = new RentModel;
         // 获取上期订单
-        $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive');
+        $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive,a.rent_order_paid');
 
         $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.ptime','eq',0]])->column('a.house_id,a.rent_order_id,a.rent_order_paid,a.rent_order_receive');
 
         $data = [];
         foreach($nowRents as $k => $v){
             // 过滤
-            if(isset($v[''])){
-
+            if(isset($lastRents[$k])){
+                if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
+                    if($lastRents[$k]['rent_order_receive'] == $lastRents[$k]['rent_order_paid']){
+                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
+                    }
+                    if($lastRents[$k]['rent_order_paid'] == 0){
+                        $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+                    }
+                }
             }
-            if(in_array($key,$lastRents)){
+            // if(in_array($key,$lastRents)){
 
-                $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
-            }
+            //     $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$nowRents[$v['house_id']]['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
+            // }
         }
 
         //halt($data);
