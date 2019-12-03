@@ -35,40 +35,40 @@ class Api extends Common
         debug('begin');
         switch (input('type')) { 
             case 1:
-                $msg = $this->check_ban_data($result);
+                $msg = $this->check_ban_data();
                 break;
             case 2:
-                $msg = $this->check_house_data($result);
+                $msg = $this->check_house_data();
                 break;
             case 3:
-                $msg = $this->check_room_data($result);
+                $msg = $this->check_room_data();
                 break;
             case 4:
-                $msg = $this->check_tenant_data($result);
+                $msg = $this->check_tenant_data();
                 break;
             case 5:
-                $msg = $this->check_rent_data($result);
+                $msg = $this->check_rent_data();
                 break;
             case 6:
-                $msg = $this->check_change_data($result);
+                $msg = $this->check_change_data();
                 break;
             case 7:
-                $msg = $this->check_admin_data($result);
+                $msg = $this->check_admin_data();
                 break;
             case 8:
-                $msg = $this->check_log_data($result);
+                $msg = $this->check_log_data();
                 break;
             case 9:
-                $msg = $this->check_config_data($result);
+                $msg = $this->check_config_data();
                 break;
             case 10:
-                $msg = $this->check_order_data($result);
+                $msg = $this->check_order_data();
                 break;
             case 11:
-                $msg = $this->check_report_data($result);
+                $msg = $this->check_report_data();
                 break;
             case 12:
-                $msg = $this->check_msg_data($result);
+                $msg = $this->check_msg_data();
                 break;
             default:
                 return $this->error('暂未开发！');
@@ -83,6 +83,20 @@ class Api extends Common
     // {
     	
     // }
+    
+    public function check_house_data()
+    {
+        $owners = ['1'=>'市','2'=>'区','3'=>'代','5'=>'自','6'=>'','7'=>''];
+        $houses = Db::name('house')->alias('a')->where([['house_szno','eq','']])->join('ban d','a.ban_id = d.ban_id','left')->field('house_id,ban_inst_pid,ban_owner_id')->order('house_id asc')->select();
+        foreach ($houses as $v) {
+           $str = '租直昌'.$owners[$v['ban_owner_id']].'0'.$v['ban_inst_pid'].'-';
+           Db::name('house')->where([['house_id','eq',$v['house_id']]])->update(['house_szno'=>$str]); 
+           
+        }
+        return $msg = '检测完毕，无误！';
+        
+    } 
+    
 
     
 

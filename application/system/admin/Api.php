@@ -255,7 +255,7 @@ class Api extends Common
                         }elseif($v['room_type'] == 2){ //三户共用卫生间
                             $result['house']['toilet'] += 1;
                         }elseif($v['room_type'] == 3){ //三户共用室内走道
-                            $result['house']['innerAisle'] += 1;
+                            $result['house']['inner_aisle'] += 1;
                         }elseif($v['room_type'] == 6){ //三户共用厨房
                             $result['house']['kitchen'] += 1;
                         }

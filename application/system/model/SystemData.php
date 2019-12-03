@@ -204,7 +204,11 @@ class SystemData extends Model
                     $where[] = ['house_is_pause','eq',0];
                     $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
                     break;
-
+                case 14: //楼栋调整
+                    $where[] = ['a.house_status','eq',1];
+                    $where[] = ['house_is_pause','eq',0];
+                    //$applyHouseidArr = Db::name('change_rentadd')->where([['change_status','>',1]])->column('house_id');
+                    break;
                 case 16: //减免年审
                     $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
                     $where[] = ['house_id','in',$houseids];
