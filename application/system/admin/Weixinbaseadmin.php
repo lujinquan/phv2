@@ -87,6 +87,32 @@ class Weixinbaseadmin extends Controller
         }
     }
 
+    public function params()
+    {
+        $key = input('get.key');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+        $result = [];
+        $result['code'] = 0;
+        if($row){
+            $result['code'] = 1;
+            $params = ParamModel::getCparams();
+            $result['data'] = $params;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result); 
+
+    }
+
     public function banList()
     {
         $key = input('get.key');
@@ -107,6 +133,9 @@ class Weixinbaseadmin extends Controller
             $owner = input('ban_owner_id');
             $struct = input('ban_struct_id');
             $status = input('ban_status');
+            $address = input('ban_address');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
 
             $BanModel = new BanModel;
             $where = [];
@@ -119,14 +148,18 @@ class Weixinbaseadmin extends Controller
             if($owner){
             	$where[] = ['ban_owner_id','eq',$owner];
             }
+            if($address){
+            	$where[] = ['ban_address','like','%'.$address.'%'];
+            }
             if($struct){
-            	$where[] = ['ban_struct_id','eq',$struct];
+                $where[] = ['ban_struct_id','eq',$struct];
             }
             if($status !== null){
             	$where[] = ['ban_status','eq',$status];
             }
             //halt($where);
-            $result['data']['ban'] = $BanModel->where($where)->order('ban_ctime desc')->select()->toArray();
+            $result['data'] = $BanModel->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
+            $result['count'] = $BanModel->where($where)->order('ban_ctime desc')->count('ban_id');
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{

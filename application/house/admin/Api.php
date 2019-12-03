@@ -89,9 +89,10 @@ class Api extends Common
         $owners = ['1'=>'市','2'=>'区','3'=>'代','5'=>'自','6'=>'','7'=>''];
         $houses = Db::name('house')->alias('a')->where([['house_szno','eq','']])->join('ban d','a.ban_id = d.ban_id','left')->field('house_id,ban_inst_pid,ban_owner_id')->order('house_id asc')->select();
         foreach ($houses as $v) {
-           $str = '租直昌'.$owners[$v['ban_owner_id']].'0'.$v['ban_inst_pid'].'-';
-           Db::name('house')->where([['house_id','eq',$v['house_id']]])->update(['house_szno'=>$str]); 
-           
+            if(isset($v['ban_owner_id'])){
+                $str = '租直昌'.$owners[$v['ban_owner_id']].'0'.$v['ban_inst_pid'].'-';
+                Db::name('house')->where([['house_id','eq',$v['house_id']]])->update(['house_szno'=>$str]);
+            }   
         }
         return $msg = '检测完毕，无误！';
         
