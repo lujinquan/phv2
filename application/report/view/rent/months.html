@@ -100,15 +100,15 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 		function datajson(data){
 			var data_17_1 = '';
 			if(data[17][1] != data[8][1] - data[8][1]){
-				data_17_1 = 'red';
+				data_17_1 = 'yellow';
 			}
 			var data_17_10 = '';
 			if(data[17][10] != data[8][10] - data[8][10]){
-				data_17_10 = 'red';
+				data_17_10 = 'yellow';
 			}
 			var data_17_13 = '';
 			if(data[17][13] != data[8][13] - data[8][13]){
-				data_17_13 = 'red';
+				data_17_13 = 'yellow';
 			}
 		
 			return '<tr>\
@@ -254,7 +254,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			</tr>\
 			<tr>\
 				<td rowspan="1" colspan="2">公房出售</td>\
-				<td rowspan="1" colspan="1" class="some_hide_7" style="color:red">'+ data[6][0] + '</td>\
+				<td rowspan="1" colspan="1" class="some_hide_7">'+ data[6][0] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[6][1] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[6][2] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[6][3] + '</td>\
