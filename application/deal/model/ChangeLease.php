@@ -132,8 +132,10 @@ class ChangeLease extends SystemBase
         ob_end_clean();
 
         $code = substr(md5(substr(uniqid(),-6)),6).substr(uniqid(),-6);
-
-        $value = 'https://pro.ctnmit.com/erweima/'.$code;          //二维码内容
+        $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+        //dump($http_type);dump($_SERVER['HTTP_HOST']);halt($_SERVER['SERVER_NAME']);
+        $value = $http_type.$_SERVER['HTTP_HOST'].'/erweima/'.$code;          //二维码内容
+        //halt($value);
         $errorCorrectionLevel = 'L';    //容错级别 
         $matrixPointSize = 6;           //生成图片大小
         $url = '/upload/qrcode/'.$code.'.png';
