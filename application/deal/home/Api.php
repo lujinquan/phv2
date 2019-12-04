@@ -40,6 +40,7 @@ class Api extends Common
         // }
 //halt($find);
         if(!$find){
+            
 $info = <<<EOF
             
 <!DOCTYPE html>
