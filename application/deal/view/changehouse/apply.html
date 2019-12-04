@@ -8,20 +8,29 @@
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="" placeholder="点击查询" autocomplete="off" class="layui-input">
+					<input type="hidden" id="house_id" name="house_id" value="">
+					<input type="hidden" id="ban_id" name="ban_id" value="">
+					<input type="hidden" id="tenant_id" name="tenant_id" value="">
 					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
+			<div class="layui-col-md3">
 				<label class="j-form-label">计租表</label>
 				<div class="j-input-inline">
 					<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
 					<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
 				</div>
 			</div>
-			<div class="layui-col-md8">
+			<div class="layui-col-md3">
+				<label class="j-form-label">租户</label>
+				<div class="j-input-inline">
+					<input type="text" id="tenant_name" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md6">
 				<label class="j-form-label">异动原因</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_reason" name="change_remark" value="" placeholder="请输入异动原因" autocomplete="off" class="layui-input">
@@ -326,7 +335,9 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#j_house_id").val(row.house_id);//获取房屋id
 					$("#house_number").val(row.house_number);//获取房屋编号
 					$("#house_id").val(row.house_id);//获取房屋编号
-					$("#ban_id").val(row.ban_id);//获取房屋编号
+					$("#ban_id").val(row.ban_id);//获取楼栋编号
+					$("#tenant_id").val(row.tenant_id);//获取租户编号
+					$("#tenant_name").val(row.tenant_name);//获取租户姓名
 
 				},btn2: function(index, layero){
 					layer.close(index);

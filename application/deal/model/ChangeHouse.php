@@ -162,6 +162,56 @@ class ChangeHouse extends SystemBase
                 'img' => '',
             ];
         }
+        //halt($data);
+        $data['data_json'] = [
+            'ban' => $data['Ban'],
+            'before_base_info' => $before_base_info,
+        ];
+
+
+        $data['cuid'] = ADMIN_ID;
+        $data['change_type'] = 9; //楼栋调整
+        $data['change_order_number'] = date('Ym').'09'.random(14);
+
+        // 审批表数据
+        $processRoles = $this->processRole;
+        $processDescs = $this->processDesc;
+        $data['change_desc'] = $processDescs[3];
+        $data['curr_role'] = $processRoles[3];
+        
+        return $data; 
+    }
+
+    public function dataFilter_old($data,$flag = 'add')
+    {
+
+        if(($flag === 'add' && isset($data['file']) && $data['file']) || ($flag === 'edit' && isset($data['file']))){
+            $data['change_imgs'] = trim(implode(',',$data['file']),',');
+        }
+        if($flag === 'edit' && !isset($data['file'])){
+            $data['change_imgs'] = '';
+        }
+        if(isset($data['id'])){
+            $row = $this->get($data['id']); 
+            if($row['is_back']){ // 如果打回过
+                $data['child_json'] = $row['child_json'];
+            }
+            
+        }
+        $before_base_info = HouseModel::get($data['house_id']);
+        if($data['save_type'] == 'save'){ // 保存
+            $data['change_status'] = 2;
+        // 保存并提交
+        }else{ 
+            $data['change_status'] = 3;
+            $data['child_json'][] = [
+                'success' => 1, 
+                'action' => '提交申请',
+                'time' => date('Y-m-d H:i:s'),
+                'uid' => ADMIN_ID,
+                'img' => '',
+            ];
+        }
         $data['data_json'] = [
             'before' => [
                 'floor_households' => $data['floor_households'],

@@ -54,6 +54,48 @@ class Changehouse extends Admin
             unset($filData['id']);
             $row = $ChangeModel->allowField(true)->create($filData);
 
+            
+            if (!$row) {
+                return $this->error('申请失败');
+            }
+            if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
+                // 入库审批表
+                $ProcessModel = new ProcessModel;
+                $filData['change_id'] = $row['id'];
+                if (!$ProcessModel->allowField(true)->create($filData)) {
+                    return $this->error('未知错误');
+                }
+                $msg = '保存并提交成功';
+            }else{
+                $msg = '保存成功';
+            }
+            return $this->success($msg,url('index'));
+        }
+        return $this->fetch();
+    }
+
+    // 带计租表修改的版本
+    public function apply_old()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'Changehouse.form');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $ChangeModel = new ChangeHouseModel;
+            //halt($data);
+            // 数据过滤
+            $filData = $ChangeModel->dataFilter($data,'add');
+            if(!is_array($filData)){
+                return $this->error($filData);
+            }
+            
+            // 入库使用权变更表
+            unset($filData['id']);
+            $row = $ChangeModel->allowField(true)->create($filData);
+
             // 更新档案临时表
             HouseTempModel::where([['house_id','eq',$data['house_id']]])->update([
                 'house_diff_rent' => $data['changes_difference_news'],
