@@ -213,10 +213,93 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					}
 
 					$.get('{:url('system/api/houseGetBans')}?house_id='+row.house_id, {}, function(res) {
-						console.log(res);
+						console.log('res的值',res);
 						// 获取成功代码写到这里
 						if(res.code){
-						
+						   ban_length = res.data.length;//数据长度
+						   $('.table_data_2').hide();
+						   $('.table_data_3').hide();
+						   for(var i = 0; i < res.data.length;i++){
+						       $('.HABanID').eq(i).text( res.data[i].ban_number);//楼栋编号
+						       $('.HAAddress').eq(i).text(res.data[i].ban_address);//楼栋地址
+						       $('.HABeforeRent').eq(i).find("input").val(res.data[i].ban_rent);//租金调整前
+						       $('.HABeforeLeasedArea').eq(i).find("input").val(res.data[i].ban_use_area);//计租面积调整前
+						       $('.HABeforeBanArea').eq(i).find("input").val(res.data[i].ban_area);//建筑面积调整前
+						       $('.HABeforePrice').eq(i).find("input").val(res.data[i].ban_oprice);//楼栋原价调整前
+						       $('.HAAfterRent').eq(i).val(res.data[i].ban_rent);//租金调整后
+						       $('.HAAfterLeasedArea').eq(i).val(res.data[i].ban_use_area);//计租面积调整后
+						       $('.HAAfterBanArea').eq(i).val(res.data[i].ban_area);//建筑面积调整后
+						       $('.HAAfterPrice').eq(i).val(res.data[i].ban_oprice);//楼栋原价调整前
+						   
+						       $('.table_data_'+(i+1)).show();
+						   }
+						   for (var p = res.data.length; p < 3; p++) {
+						   	$('.table_data_'+(p+1)).find("input").removeAttr("name");
+						   }
+						   $('.HARent').off('input');
+						   $('.HARent').on('input',function(){
+						       var this_index = $(this).index('.HARent');
+						       var number_1 = res.data[this_index].ban_rent;
+						       var number_2 = $('.HARent').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						       
+						   });
+						   $('.HALeasedArea').off('input');
+						   $('.HALeasedArea').on('input',function(){
+						       var this_index = $(this).index('.HALeasedArea');
+						       var number_1 = res.data[this_index].ban_use_area;
+						       var number_2 = $('.HALeasedArea').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						   });
+						   $('.HABanArea').off('input');
+						   $('.HABanArea').on('input',function(){
+						       var this_index = $(this).index('.HABanArea');
+						       var number_1 = res.data[this_index].ban_area;
+						       var number_2 = $('.HABanArea').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						   });
+						   $('.HAPrice').off('input');
+						   $('.HAPrice').on('input',function(){
+						       var this_index = $(this).index('.HAPrice');
+						       var number_1 = res.data[this_index].ban_oprice;
+						       var number_2 = $('.HAPrice').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						        }else{
+						           $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						        }
+						   });
+						   //layer.msg(row.msg,{time:4000});
+						   for(var i = 0; i < ban_length;i++){
+						   	$(".HABeforeRent").eq(i).find("input").attr("name","Ban["+i+"][HABeforeRent]");//传给后台的调整前租金
+						   	$(".HARent").eq(i).attr("name","Ban["+i+"][HARent]");//传给后台的调整租金
+						   	$(".HAAfterRent").eq(i).attr("name","Ban["+i+"][HAAfterRent]");//传给后台的调整后租金
+						   	$(".HABeforeLeasedArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeLeasedArea]");//传给后台的调整前计租面积
+						   	$(".HALeasedArea").eq(i).attr("name","Ban["+i+"][HALeasedArea]");//传给后台的调整计租面积
+						   	$(".HAAfterLeasedArea").eq(i).attr("name","Ban["+i+"][HAAfterLeasedArea]");//传给后台的调整后计租面积
+						   	$(".HABeforeBanArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeBanArea]");//传给后台的调整前建筑面积
+						   	$(".HABanArea").eq(i).attr("name","Ban["+i+"][HABanArea]");//传给后台的调整建筑面积
+						   	$(".HAAfterBanArea").eq(i).attr("name","Ban["+i+"][HAAfterBanArea]");//传给后台的调整后建筑面积
+						   	$(".HABeforePrice").eq(i).find("input").attr("name","Ban["+i+"][HABeforePrice]");//传给后台的调整前楼栋原价
+						   	$(".HAPrice").eq(i).attr("name","Ban["+i+"][HAPrice]");//传给后台的调整楼栋原价
+						   	$(".HAAfterPrice").eq(i).attr("name","Ban["+i+"][HAAfterPrice]");//传给后台的调整后楼栋原价
+						   }
 
 						// 参数错误弹出提示	
 						}else{
@@ -237,7 +320,6 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 
 					layer.close(index);
 					var hosue_number = row.house_number;
-					ban_length = 3;//数据长度
 					$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
 					$("#check").removeClass('hide');
 					
@@ -245,90 +327,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 					$("#house_number").val(row.house_number);//获取房屋编号
 					$("#house_id").val(row.house_id);//获取房屋编号
 					$("#ban_id").val(row.ban_id);//获取房屋编号
-					$('.table_data_2').hide();
-					$('.table_data_3').hide();
-					for(var i = 0; i < 2;i++){
-					    $('.HABanID').eq(i).text("1080010482");//楼栋编号
-					    $('.HAAddress').eq(i).text("新桥街大楼43#");//楼栋地址
-					    $('.HABeforeRent').eq(i).find("input").val("669.60");//租金调整前
-					    $('.HABeforeLeasedArea').eq(i).find("input").val("507.62");//计租面积调整前
-					    $('.HABeforeBanArea').eq(i).find("input").val("659.04");//建筑面积调整前
-					    $('.HABeforePrice').eq(i).find("input").val("138630.84");//楼栋原价调整前
-					    $('.HAAfterRent').eq(i).val("669.60");//租金调整后
-					    $('.HAAfterLeasedArea').eq(i).val("507.62");//计租面积调整后
-					    $('.HAAfterBanArea').eq(i).val("659.04");//建筑面积调整后
-					    $('.HAAfterPrice').eq(i).val("138630.84");//楼栋原价调整前
 
-					    $('.table_data_'+(i+1)).show();
-					}
-					$('.HARent').off('input');
-					$('.HARent').on('input',function(){
-					    var this_index = $(this).index('.HARent');
-					    // var number_1 = res.data.Ban[this_index].PreRent;
-						var number_1 ="669.60";//租金调整前金额
-					    var number_2 = $('.HARent').eq(this_index).val() || "0";
-					    if(number_2 < 0){
-					        number_2 = Math.abs(number_2).toString();
-					        $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'-'));
-					    }else{
-					        $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'+'));
-					    }
-					    
-					});
-					$('.HALeasedArea').off('input');
-					$('.HALeasedArea').on('input',function(){
-					    var this_index = $(this).index('.HALeasedArea');
-					    // var number_1 = res.data.Ban[this_index].BanUsearea;
-						var number_1 ="507.62";//计租面积调整前
-					    var number_2 = $('.HALeasedArea').eq(this_index).val() || "0";
-					    if(number_2 < 0){
-					        number_2 = Math.abs(number_2).toString();
-					        $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
-					    }else{
-					        $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
-					    }
-					});
-					$('.HABanArea').off('input');
-					$('.HABanArea').on('input',function(){
-					    var this_index = $(this).index('.HABanArea');
-					    // var number_1 = res.data.Ban[this_index].TotalArea;
-						var number_1 ="659.04";//建筑面积调整前
-					    var number_2 = $('.HABanArea').eq(this_index).val() || "0";
-					    if(number_2 < 0){
-					        number_2 = Math.abs(number_2).toString();
-					        $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
-					    }else{
-					        $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
-					    }
-					});
-					$('.HAPrice').off('input');
-					$('.HAPrice').on('input',function(){
-					    var this_index = $(this).index('.HAPrice');
-					    // var number_1 = res.data.Ban[this_index].TotalOprice;
-						var number_1 ="138630.84";//楼栋原价调整前
-					    var number_2 = $('.HAPrice').eq(this_index).val() || "0";
-					    if(number_2 < 0){
-					        number_2 = Math.abs(number_2).toString();
-					        $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'-'));
-					     }else{
-					        $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'+'));
-					     }
-					});
-					//layer.msg(row.msg,{time:4000});
-					for(var i = 0; i < 2;i++){
-						$(".HABeforeRent").eq(i).find("input").attr("name","Ban["+i+"][HABeforeRent]");//传给后台的调整前租金
-						$(".HARent").eq(i).attr("name","Ban["+i+"][HARent]");//传给后台的调整租金
-						$(".HAAfterRent").eq(i).attr("name","Ban["+i+"][HAAfterRent]");//传给后台的调整后租金
-						$(".HABeforeLeasedArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeLeasedArea]");//传给后台的调整前计租面积
-						$(".HALeasedArea").eq(i).attr("name","Ban["+i+"][HALeasedArea]");//传给后台的调整计租面积
-						$(".HAAfterLeasedArea").eq(i).attr("name","Ban["+i+"][HAAfterLeasedArea]");//传给后台的调整后计租面积
-						$(".HABeforeBanArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeBanArea]");//传给后台的调整前建筑面积
-						$(".HABanArea").eq(i).attr("name","Ban["+i+"][HABanArea]");//传给后台的调整建筑面积
-						$(".HAAfterBanArea").eq(i).attr("name","Ban["+i+"][HAAfterBanArea]");//传给后台的调整后建筑面积
-						$(".HABeforePrice").eq(i).find("input").attr("name","Ban["+i+"][HABeforePrice]");//传给后台的调整前楼栋原价
-						$(".HAPrice").eq(i).attr("name","Ban["+i+"][HAPrice]");//传给后台的调整楼栋原价
-						$(".HAAfterPrice").eq(i).attr("name","Ban["+i+"][HAAfterPrice]");//传给后台的调整后楼栋原价
-					}
 				},btn2: function(index, layero){
 					layer.close(index);
 				}
