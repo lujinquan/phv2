@@ -277,14 +277,14 @@
 						$("#ban_address").val(row.ban_address);//获取地址
 						//楼栋信息
 						$("#floor_number").text(row.ban_number);//获取表格楼栋编号
-						$("#floor_prescribed label").text(row.ban_civil_rent);//获取表格规定租金
-						$("#floor_prescribed input").val(row.ban_civil_rent);//获取隐藏域的值
+						$("#floor_prescribed label").text(row.ban_rent);//获取表格规定租金
+						$("#floor_prescribed input").val(row.ban_rent);//获取隐藏域的值
 						$("#floor_areaofuse label").text(row.ban_use_area);//获取表格使用面积
 						$("#floor_areaofuse input").val(row.ban_use_area);//获取隐藏域的值
-						$("#floor_builtuparea label").text(row.ban_civil_area);//获取表格建筑面积
-						$("#floor_builtuparea input").val(row.ban_civil_area);//获取隐藏域的值
-						$("#floor_original label").text(row.ban_civil_oprice);//获取表格房屋原价
-						$("#floor_original input").val(row.ban_civil_oprice);//获取隐藏域的值
+						$("#floor_builtuparea label").text(row.ban_area);//获取表格建筑面积
+						$("#floor_builtuparea input").val(row.ban_area);//获取隐藏域的值
+						$("#floor_original label").text(row.ban_oprice);//获取表格房屋原价
+						$("#floor_original input").val(row.ban_oprice);//获取隐藏域的值
 						$('.j-house-box tbody').html('');
 						$('.cancel_change_1 label').text($('#floor_prescribed label').text());//异动规定租金
 						/* $('#changes_floor_prescribed label').text($('#floor_prescribed').text());//异动后规定租金初始值

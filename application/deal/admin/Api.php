@@ -463,7 +463,7 @@ class Api extends Common
                 RoomModel::where([['room_id','eq',$roomid]])->update(['room_cou_rent'=>$room_rent]);
             }
             // 获取该楼栋下所有房屋
-            $houseOldArr = HouseModel::with('tenant')->where([['ban_id','eq',$ban_id],['tenant_id','>',0]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
+            $houseOldArr = HouseModel::with('tenant')->where([['house_status','eq',1],['ban_id','eq',$ban_id],['tenant_id','>',0]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
             $HouseModel = new HouseModel;
             $result = [];
             $result['data'] = [];
