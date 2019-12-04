@@ -172,10 +172,10 @@ class SystemData extends Model
                 case 1: //租金减免
                     $where[] = ['a.house_status','eq',1];
                     $where[] = ['a.house_is_pause','eq',0];
-                    $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',0]])->column('house_id'); //减免成功的或在减免中的不能再次申请
+                    $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',1]])->column('house_id'); //在减免中的不能再次申请
                     break;
                 case 3: //暂停计租 【待优化】
-                    $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1]])->column('house_id');
+                    $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1]])->column('house_id'); //在减免中的不能再次申请
                     if($tempApplyHouseidArr){
                         $applyHouseidArr = explode(',',implode(',',$tempApplyHouseidArr));
                     }
@@ -184,7 +184,7 @@ class SystemData extends Model
                     break;
                 case 4: //陈欠核销 【待优化】
                     $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
-                    $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');  //在减免中的不能再次申请
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
                     break;

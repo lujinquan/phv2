@@ -80,6 +80,34 @@ class Api extends Common
         }
     }
 
+    public function houseGetBans()
+    {
+        $house_id = input('get.house_id');
+        $result = [];
+        $result['code'] = 0;
+        $result['msg'] = '参数错误！';
+        $fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+        if($house_id){
+            $roomids = Db::name('house_room')->where([['house_id','eq',$house_id]])->column('room_id');
+            // 如果当前房屋有房间
+            if($roomids){
+                $banids = Db::name('room')->where([['room_id','in',$roomids],['room_status','eq',1]])->column('ban_id');
+                if($banids){
+                    $result['code'] = 1;
+                    $result['msg'] = '获取成功';
+                    $result['data'] = Db::name('ban')->where([['ban_id','in',array_unique($banids)]])->field($fields)->select();
+                    return json($result);
+                }
+            }
+            // 如果当前房屋没有房间
+            $banid = Db::name('house')->where([['house_id','eq',$house_id]])->value('ban_id');
+            $result['code'] = 1;
+            $result['msg'] = '获取成功';
+            $result['data'] = Db::name('ban')->where([['ban_id','in',$banid]])->field($fields)->select();
+        }
+        return json($result);
+    }
+
 
 
     /**

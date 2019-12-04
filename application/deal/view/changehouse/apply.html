@@ -91,6 +91,8 @@
 		    <td rowspan="1" colspan="1">调整面积</td>
 		    <td rowspan="1" colspan="1">调整后</td>
 		  </tr>
+
+
 		  <tr class="table_data_2">
 		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="text" readonly value="" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HARent layui-input" /></td>
@@ -121,6 +123,7 @@
 		  </tr>
 		  
 		  
+
 		  <tr class="table_data_3">
 		    <td rowspan="6" colspan="2" class="HABanID"></td>
 		    <td rowspan="6" colspan="2" class="HAAddress"></td>
@@ -208,6 +211,30 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						layer.msg("当前数据不可选！");
 						return false;
 					}
+
+					$.get('{:url('system/api/houseGetBans')}?house_id='+row.house_id, {}, function(res) {
+						console.log(res);
+						// 获取成功代码写到这里
+						if(res.code){
+						
+
+						// 参数错误弹出提示	
+						}else{
+							layer.msg(res.msg, {time:5000});
+						}
+		                // layer.msg(res.msg, {time:5000}, function() {
+		                //     if(res.data.refresh === undefined || res.data.refresh){
+		                //         if (refresh == 'yes') {
+		                //             if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+		                //                 location.href = res.url;
+		                //             } else {
+		                //                 location.reload();
+		                //             }
+		                //         }
+		                //     }
+		                // });
+		            });
+
 					layer.close(index);
 					var hosue_number = row.house_number;
 					ban_length = 3;//数据长度
