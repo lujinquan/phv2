@@ -142,8 +142,13 @@
 					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'},
 					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
 					{field: 'end_date',align:'center',minWidth: 120,title: '减免到期时间', templet: function(d) { 
-						var str = String(d.end_date);
-	                    return str.slice(0,4)+'-'+str.slice(4);
+						if(d.end_date){
+							var str = String(d.end_date);
+	                    	return str.slice(0,4)+'-'+str.slice(4);
+						}else{
+							return '';
+						}
+						
 	                }},
 					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', templet: function(d) {
 	                    return process_config[d.change_status];
