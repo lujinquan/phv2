@@ -32,7 +32,7 @@ class Api extends Common
 
         $filename = $_SERVER['DOCUMENT_ROOT'].$upload;
 
-        $fields = "a.id,a.szno,a.data_json,a.change_order_number,a.tenant_name,a.change_status,b.house_id,b.house_number,b.house_floor_id,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_floors,d.ban_inst_id";
+        $fields = "a.id,a.szno,a.data_json,a.change_order_number,a.tenant_id,a.tenant_name,a.change_status,b.house_id,b.house_number,b.house_floor_id,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_floors,d.ban_inst_id";
 
         $find = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['qrcode','eq',$upload]])->whereOr([['qrcode','like','%'.$route['name'].'%']])->find();
 
