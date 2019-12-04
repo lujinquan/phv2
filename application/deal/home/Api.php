@@ -38,7 +38,7 @@ class Api extends Common
         // if(!$find){ ->whereOr([['qrcode','like','%'.$route['name'].'%']])
         //     $find = Db::name('change_lease')->find();
         // }
-//halt($find);
+halt($find);
         $houseRow = Db::name('house')->where([['house_id','eq',$find['house_id']]])->find();
 
         $detail = json_decode($find['data_json'],true);
