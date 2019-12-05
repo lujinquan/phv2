@@ -321,7 +321,7 @@ class Weixinbaseadmin extends Controller
         $id = input('get.ban_id');
         $result = [];
         $result['code'] = 0;
-        if(!$key || $id){
+        if(!$key || !$id){
             $result['msg'] = '参数错误！';
             return json($result);
         }
