@@ -158,11 +158,11 @@ class Weixinbaseadmin extends Controller
             	$where[] = ['ban_status','eq',$status];
             }
             //halt($where);
-            $temps = $BanModel->field('ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds')->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
+            $temps = $BanModel->field('ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_status')->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
             $result['data'] = [];
             foreach ($temps as $v) {
                 $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
-                //$v['ban_inst_pid'] = $params['insts'][$v['ban_inst_pid']];
+                $v['ban_status'] = $params['status'][$v['ban_status']];
                 $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
                 $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
                 $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
@@ -227,7 +227,7 @@ class Weixinbaseadmin extends Controller
                 $where[] = ['d.ban_status','eq',1]; 
             }
             //halt($where);
-            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
             //halt($where);
             $data = [];
             $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
@@ -237,6 +237,7 @@ class Weixinbaseadmin extends Controller
                 $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                 $v['house_use_id'] = $params['uses'][$v['house_use_id']];
                 $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['house_status'] = $params['status'][$v['house_status']];
                 //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
                 //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
                 $result['data'][] = $v;
@@ -285,20 +286,20 @@ class Weixinbaseadmin extends Controller
             }else{
                 $where[] = ['a.tenant_status','eq',1];   
             }
-            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance';
+            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance,a.tenant_status';
             $result = [];
             //halt($where);
-            $result['data'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+            $temps = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
             
-            // $result['data'] = [];
-            // foreach ($temps as $v) {
-            //     // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
-            //     // $v['ban_inst_pid'] = $params['insts'][$v['ban_inst_pid']];
-            //     // $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-            //     // $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
-            //     // $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
-            //     $result['data'][] = $v;
-            // }
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
+                $v['tenant_status'] = $params['status'][$v['tenant_status']];
+                // $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                // $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                // $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
             $result['count'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->count('a.tenant_id');
             $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
