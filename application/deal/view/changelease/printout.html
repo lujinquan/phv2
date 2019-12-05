@@ -486,10 +486,31 @@
                                 </td>
                         </tr>
                         <tr>
-                            <td colspan="11" style="text-align: center">资料员：<span id="print_1_Room21_data1"></span>
+                            <td colspan="11" style="text-align: center">资料员：<span id="print_1_Room21_data1">
+                            {volist name="$data_info['child_json']" id="v"}
+                                {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
+                                    {$systemusers[$v['uid']]['nick']}
+                                {/if} 
+                            {/volist}    
+
+                            </span>
                                 &nbsp;  &nbsp;  &nbsp;
-                        经管所长：<span id="print_1_Room21_data2"></span>
-                                &nbsp;  &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3"></span>
+                        经管所长：<span id="print_1_Room21_data2">
+                            {volist name="$data_info['child_json']" id="v"}
+                                {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
+                                    {$systemusers[$v['uid']]['nick']}
+                                {/if} 
+                            {/volist}   
+
+                        </span>
+                                &nbsp;  &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3">
+                        {volist name="$data_info['child_json']" id="v"}
+                            {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
+                                {$systemusers[$v['uid']]['nick']}
+                            {/if} 
+                        {/volist}
+
+                                </span>
                             </td>
                         </tr>
                     </tbody></table>

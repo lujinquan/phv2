@@ -320,7 +320,7 @@ class ChangeCancel extends SystemBase
         // 按栋注销
         if($finalRow['cancel_ban']){ 
             // 将楼栋状态改成注销
-            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>3]);
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>2]);
             // 新增楼栋台账
             $taiBanData['ban_id'] = $finalRow['ban_id'];
             $taiBanData['cuid'] = $finalRow['cuid'];

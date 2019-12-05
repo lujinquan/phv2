@@ -429,11 +429,11 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_i
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.tenant_id = b.tenant_id where a.house_id = b.house_id;
 
 
-update ph_change_ban_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_change_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_change_cut_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_year_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_change_cut_year set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_change_house_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_change_inst_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_change_lease_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;

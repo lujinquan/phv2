@@ -509,7 +509,7 @@
 				
 				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" 
 					{volist name="$data_info['child_json']" id="v"}
-						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5"}
+						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist}
@@ -517,7 +517,7 @@
 					&nbsp;  &nbsp;  &nbsp;
 					经管所长：<input readonly style="width: 120px; margin-right: 30px;"
 					{volist name="$data_info['child_json']" id="v"}
-						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8"}
+						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist} 
@@ -525,7 +525,7 @@
 					&nbsp;  &nbsp;  &nbsp;
 					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type="" 
 					{volist name="$data_info['child_json']" id="v"}
-						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9"}
+						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist} name="applyRoom21_data3" id="applyRoom21_data3" value="">

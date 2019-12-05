@@ -221,7 +221,8 @@ class Api extends Common
             $a = [];
             foreach ($child as $k => $v) {
                 $temp = [
-                    'success' => 1,
+                    'reason' => $v['Reson'],
+                    'success' => $v['IfValid'],
                     'step' => $v['Step'],
                     'action' => $steps[$v['Step']],
                     'time' => date('Y-m-d H:i:s',$v['CreateTime']),

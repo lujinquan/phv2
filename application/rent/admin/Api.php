@@ -131,5 +131,69 @@ class Api extends Common
         }  
     }
 
+    /**
+     * 首页的第二部分
+     * @param ctime 月份
+     * @return json 
+     */
+    public function indexPartThree()
+    {
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 5);
+            $getData = $this->request->get();
+            $where[] = ['change_status','eq',1];
+            $where[] = ['change_type','in',[3,7,8]];
+            // 检索月份时间
+            if(isset($getData['ctime']) && $getData['ctime']){
+                $startTime = str_replace('/', '', $getData['ctime']);
+                $where[] = ['order_date','eq',$startTime];
+                //$where[] = ['order_date','eq',201911];
+            }else{
+                $where[] = ['order_date','eq',date('Ym')];
+                //$where[] = ['order_date','eq',201911];
+            }
+// 暂停计租，新发组，注销，
+            // if(isset($getData['change_type']) && $getData['change_type']){
+            //     
+            // }
+            // 检索楼栋机构
+            $insts = config('inst_ids');
+            if(isset($data['inst_id']) && $data['inst_id']){
+                $where[] = ['inst_id','in',$insts[$data['inst_id']]];
+            }else{
+                $instid = (isset($data['inst_id']) && $data['inst_id'])?$data['inst_id']:session('admin_user.inst_id');
+                $where[] = ['inst_id','in',$insts[$instid]];
+            }
+            
+            $data = $result = [];
+            
+            $result = Db::name('change_table')->group('change_type')->where($where)->column('change_type,sum(change_rent) as change_rents');
+
+            if(!isset($result[3])){
+               $result[3] = 0; 
+            }
+            if(!isset($result[7])){
+               $result[7] = 0; 
+            }
+            if(!isset($result[8])){
+               $result[8] = 0; 
+            }
+//halt($result);
+
+            // foreach($temps as $k => $v){
+            //     // 如果业务审批角色 = 当前登录角色，且当前角色不是房管员
+            //     if($v['curr_role'] == session('admin_user.role_id') && session('admin_user.role_id') != 4){
+            //         $result[] = $v;
+            //     }
+            // }
+            $data['data'] = $result;
+            //$data['count'] = count($result);
+            $data['code'] = 1;
+            $data['msg'] = '获取成功';
+            return json($data);
+        }  
+    }
+
    
 }

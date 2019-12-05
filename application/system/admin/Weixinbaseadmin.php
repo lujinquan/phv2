@@ -270,7 +270,7 @@ class Weixinbaseadmin extends Controller
 
         if($row){
             $params = ParamModel::getCparams();
-            $result['data']['params'] = $params;
+            //$result['data']['params'] = $params;
             $status = input('ban_status');
             $tenant = input('tenant');
             $page = input('param.page/d', 1);
@@ -289,8 +289,8 @@ class Weixinbaseadmin extends Controller
             $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance,a.tenant_status';
             $result = [];
             //halt($where);
-            $temps = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
-            
+            $temps = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('a.tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
+            //halt($temps);
             $result['data'] = [];
             foreach ($temps as $v) {
                 // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
