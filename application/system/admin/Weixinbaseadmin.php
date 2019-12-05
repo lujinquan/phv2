@@ -158,8 +158,18 @@ class Weixinbaseadmin extends Controller
             	$where[] = ['ban_status','eq',$status];
             }
             //halt($where);
-            $result['data'] = $BanModel->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
+            $temps = $BanModel->field('ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds')->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                //$v['ban_inst_pid'] = $params['insts'][$v['ban_inst_pid']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
             $result['count'] = $BanModel->where($where)->order('ban_ctime desc')->count('ban_id');
+            $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
@@ -171,7 +181,7 @@ class Weixinbaseadmin extends Controller
         
     }
 
-    public function noticeDetail()
+    public function houseList()
     {
         $key = input('get.key');
         $result = [];
@@ -180,19 +190,152 @@ class Weixinbaseadmin extends Controller
             $result['msg'] = '参数错误！';
             return json($result);
         }
-        $id = input('get.id');
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         //$id = str_coding($key,'DECODE');
-        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
 
-        if($tenantInfo){
-            $systemNotice = new SystemNotice;
-            $result['data'] = $systemNotice->get($id);
+        if($row){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $use = input('house_use_id');
+            $owner = input('ban_owner_id');
+            $tenant = input('tenant_name');
+            $status = input('house_status');
+            $address = input('ban_address');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            
+            $where = [];
+            $where[] = ['d.ban_inst_id','eq',$row['inst_id']];
+            
+            if($use){
+                $where[] = ['a.house_use_id','eq',$use];
+            }
+            if($owner){
+                $where[] = ['d.ban_owner_id','eq',$owner];
+            }
+            if($address){
+                $where[] = ['d.ban_address','like','%'.$address.'%'];
+            }
+            if($tenant){
+                $where[] = ['c.tenant_name','like','%'.$tenant.'%'];
+            }
+            if($status !== null){
+                $where[] = ['a.house_status','eq',$status];
+            }else{
+                $where[] = ['d.ban_status','eq',1]; 
+            }
+            //halt($where);
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            //halt($where);
+            $data = [];
+            $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
+            $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.house_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    public function tenantList()
+    {
+        $key = input('get.key');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $status = input('ban_status');
+            $tenant = input('tenant');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            $where = [];
+            $where[] = ['tenant_inst_id','eq',$row['inst_id']];
+            if($tenant){
+                $where[] = ['a.tenant_name','like','%'.$tenant.'%'];
+            }
+            if($status !== null){
+                $where[] = ['a.tenant_status','eq',$status];
+            }else{
+                $where[] = ['a.tenant_status','eq',1];   
+            }
+            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance';
+            $result = [];
+            //halt($where);
+            $result['data'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+            
+            // $result['data'] = [];
+            // foreach ($temps as $v) {
+            //     // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
+            //     // $v['ban_inst_pid'] = $params['insts'][$v['ban_inst_pid']];
+            //     // $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+            //     // $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+            //     // $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+            //     $result['data'][] = $v;
+            // }
+            $result['count'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->count('a.tenant_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+
+
+    public function banDetail()
+    {
+        $key = input('get.key');
+        $id = input('get.ban_id');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || $id){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            $BanModel = new BanModel;
+            $result['data'] = $BanModel->get($id);
 
             //$result['data']['content'] = str_replace('/static/js/editor/', 'https://pro.ctnmit.com/static/js/editor/', htmlspecialchars_decode($result['data']['content']));
-            $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
+            //$result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
             
-            $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
+            //$result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
