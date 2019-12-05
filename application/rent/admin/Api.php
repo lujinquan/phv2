@@ -195,5 +195,73 @@ class Api extends Common
         }  
     }
 
+    /**
+     * 首页的第二部分
+     * @param ctime 月份
+     * @return json 
+     */
+    public function indexPartFour()
+    {
+        //if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 5);
+            $getData = $this->request->get();
+            $where = $where1 = $where2 =[];
+            $where[] = ['is_deal','eq',1];
+            // $where[] = ['change_type','in',[3,7,8]];
+            // 检索月份时间
+            if(isset($getData['ctime']) && $getData['ctime']){
+                $startTime = str_replace('/', '', $getData['ctime']);
+                $where1[] = ['rent_order_date','eq',$startTime];
+                $where2[] = ['rent_order_date','<',$startTime];
+            }else{
+                $where1[] = ['rent_order_date','eq',date('Ym')];
+                $where2[] = ['rent_order_date','<',date('Ym')];
+            }
+            // 检索楼栋机构
+            $insts = config('inst_ids');
+            if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+                $where[] = ['ban_inst_id','in',$insts[$data['ban_inst_id']]];
+            }else{
+                $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:session('admin_user.inst_id');
+                $where[] = ['ban_inst_id','in',$insts[$instid]];
+            }
+            
+            $data = $result = [];
+            
+            $row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where1)->field('sum(rent_order_receive-rent_order_paid) as rent_unpaids,sum(rent_order_paid) as rent_paids')->find();
+            if(!$row){
+                $result['rent_paids'] = 0;
+                $result['rent_unpaids'] = 0;
+            }else{
+                $result['rent_paids'] = $row['rent_paids'];
+                $result['rent_unpaids'] = $row['rent_unpaids'];
+            }
+
+            $rent_before_unpaids = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where2)->value('sum(rent_order_receive-rent_order_paid) as rent_unpaids');
+//halt($rent_order_before_unpaids);
+            
+            if(!$rent_before_unpaids){
+                $result['rent_before_unpaids'] = 0; 
+            }else{
+                $result['rent_before_unpaids'] = $rent_before_unpaids; 
+            }
+            //$result['rent_before_unpaids'] = 20000;
+//halt($result);
+
+            // foreach($temps as $k => $v){
+            //     // 如果业务审批角色 = 当前登录角色，且当前角色不是房管员
+            //     if($v['curr_role'] == session('admin_user.role_id') && session('admin_user.role_id') != 4){
+            //         $result[] = $v;
+            //     }
+            // }
+            $data['data'] = $result;
+            //$data['count'] = count($result);
+            $data['code'] = 1;
+            $data['msg'] = '获取成功';
+            return json($data);
+        //}  
+    }
+
    
 }

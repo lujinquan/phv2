@@ -853,8 +853,10 @@
 			//console.log(data.value); //得到被选中的值
 			ban_inst_id1 = data.value;//获取机构
 			ban_inst_id2 = data.value;//获取机构
+			ban_inst_id3 = data.value;//获取机构
 			ajaxdata1();
 			ajaxdata2();
+			ajaxdata3();
 		});
 		//年选择器
 		laydate.render({
@@ -871,10 +873,11 @@
 			done: function(value, date){ //监听日期被切换
 			  ctime1=value;
 			  ctime2=value;
+			  ctime3=value;
 			 //执行函数
 			  ajaxdata1();
 			  ajaxdata2();
-			  
+			  ajaxdata3();
 			}
 		});
 		//房屋变动情况
@@ -1017,15 +1020,15 @@
 
 		//租金收缴情况
 		var myChart3 = echarts.init(document.getElementById('chart-panel3'));
-		var ban_inst_id1 = {$Think.INST},//获取机构
-			    ctime1 = time;//获取日期改变
+		var ban_inst_id3= {$Think.INST},//获取机构
+			    ctime3 = time;//获取日期改变
 		ajaxdata3();
 	function ajaxdata3(){
 
 		$.ajax({
 				type: "post",
-				url: "{:url('rent/api/indexPartThree')}?inst_id="+ban_inst_id2+'&ctime='+ctime2,
-				data: {'inst_id':ban_inst_id2,'ctime':ctime2}, 
+				url: "{:url('rent/api/indexPartFour')}?ban_inst_id="+ban_inst_id3+'&ctime='+ctime3,
+				data: {'ban_inst_id':ban_inst_id3,'ctime':ctime3}, 
 				dataType: "json", 
 				success: function(res) {
 				    console.log(res);
@@ -1058,9 +1061,9 @@
 					            },
 					
 					            data:[
-					                {value:500000.16, name:'已缴租金'},
-					                {value:200000.00, name:'欠缴租金'},
-					                {value:100000.00, name:'陈欠租金'},
+					                {value:res.data.rent_paids, name:'已缴租金'},
+					                {value:res.data.rent_unpaids, name:'欠缴租金'},
+					                {value:res.data.rent_before_unpaids, name:'陈欠租金'},
 					               
 					            ]
 					        }
