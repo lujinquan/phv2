@@ -14,9 +14,7 @@ namespace app\system\admin;
 
 use think\Db;
 use think\Controller;
-use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
-use app\system\model\SystemNotice;
 use app\system\model\SystemUser as UserModel;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Ban as BanModel;
@@ -24,6 +22,8 @@ use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
+use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 
 
 /**
@@ -331,12 +331,20 @@ class Weixinbaseadmin extends Controller
 
         if($row){
             $BanModel = new BanModel;
-            $result['data'] = $BanModel->get($id);
+            $temp = $BanModel->get($id);
+            $params = ParamModel::getCparams();
 
-            //$result['data']['content'] = str_replace('/static/js/editor/', 'https://pro.ctnmit.com/static/js/editor/', htmlspecialchars_decode($result['data']['content']));
-            //$result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
-            
-            //$result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['ban_status'] = $params['status'][$temp['ban_status']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
+            $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+
+            $result['data'] = $temp;
+//halt($result['data']);
+                      
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
@@ -344,6 +352,83 @@ class Weixinbaseadmin extends Controller
         }
         return json($result);  
     }
+
+    public function houseDetail()
+    {
+        $key = input('get.key');
+        $id = input('get.house_id');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || !$id){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            $HouseModel = new HouseModel;
+            $temp = HouseModel::with(['ban','tenant'])->get($id);
+            $params = ParamModel::getCparams();
+
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+            // $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            // $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
+            // $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+            $temp['rooms'] = $HouseModel->get_house_renttable($id);
+//halt($roomTables);
+            $result['data'] = $temp;
+//halt($result['data']);  
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
+    public function tenantDetail()
+    {
+        $key = input('get.key');
+        $id = input('get.tenant_id');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || !$id){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            $TenantModel = new TenantModel;
+            $temp = $TenantModel->get($id);
+            $params = ParamModel::getCparams();
+
+            $temp['tenant_inst_id'] = $params['insts'][$temp['tenant_inst_id']];
+            // $temp['ban_status'] = $params['status'][$temp['ban_status']];
+            // $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            // $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            // $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            $temp['tenant_imgs'] = SystemAnnex::changeFormat($temp['tenant_imgs'],$complete = true);
+            //$temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+
+            $result['data'] = $temp;
+//halt($result['data']);
+                      
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
 
     /**
      * 

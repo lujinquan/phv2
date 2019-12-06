@@ -416,13 +416,18 @@ class SystemAnnex extends Model
      * @param  array  $data   [description]
      * @return [type]         [description]
      */
-    public static function changeFormat($data = []){
+    public static function changeFormat($data = [] , $complete = false){
         if($data){
 
             $result = self::with('system_annex_type')->where([['id','in',$data]])->field('id,data_id,file')->select();
+            if($complete && $result){
+                foreach ($result as &$v) {
+                    $v['file'] = 'https://pro.ctnmit.com'.$v['file'];
+                }
+            }
             return $result;
         }else{
-            return '附件为空！';
+            return '';
         }
     }
 
