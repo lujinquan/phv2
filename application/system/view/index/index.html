@@ -211,17 +211,17 @@
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">房屋变动情况</div>
 				<ul class="product-ul click-rent-list2">
-				  <li class="cur">所有</li>
-				  <li class="">市属</li>
-				  <li class="">区属</li>
-				  <li class="">自管</li>
+				  <li class="cur" data-id2="11">所有</li>
+				  <li class="" data-id2="10">市属</li>
+				  <li class="" data-id2="2">区属</li>
+				  <li class="" data-id2="5">自管</li>
 				</ul>
 			  </div>
 			  <div class="product-con clearfix">
 			    <div class="product-box clearfix">
 			      <div id="chart-panel2" style="width:100%;min-height:220px;"></div>
 			    </div>
-			    <div class="product-box clearfix hide">
+			    <!-- <div class="product-box clearfix hide">
 			  	 <div>2</div>  
 			    </div>
 				<div class="product-box clearfix hide">
@@ -229,7 +229,7 @@
 				</div>
 				<div class="product-box clearfix hide">
 				 <div>4</div>  
-				</div>
+				</div> -->
 			  </div>
 			</div>
 		  </div>
@@ -238,17 +238,17 @@
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">租金收缴情况</div>
 				<ul class="product-ul click-rent-list3">
-				  <li class="cur">所有</li>
-				  <li class="">市属</li>
-				  <li class="">区属</li>
-				  <li class="">自管</li>
+				  <li class="cur" data-id3="11">所有</li>
+				  <li class="" data-id3="10">市属</li>
+				  <li class="" data-id3="2">区属</li>
+				  <li class="" data-id3="5">自管</li>
 				</ul>
 			  </div>
 			  <div class="product-con clearfix">
 			    <div class="product-box clearfix">
 			      <div id="chart-panel3" style="width:100%;min-height:220px;"></div>
 			    </div>
-			    <div class="product-box clearfix hide">
+			    <!-- <div class="product-box clearfix hide">
 			  	 <div>2</div>  
 			    </div>
 				<div class="product-box clearfix hide">
@@ -256,7 +256,7 @@
 				</div>
 				<div class="product-box clearfix hide">
 				 <div>4</div>  
-				</div>
+				</div> -->
 			  </div>
 			</div>
 		  </div>
@@ -482,8 +482,6 @@
 		  success: function(res) {
 			  var resData = res.data;
 			  var data_id = $('.click-rent li.cur').attr('data-id');
-			  var data_id1 = $('.click-rent-list1 li.cur').attr('data-id1');
-			  
 			   if (res) {
 				function statistics(){
 					$('.j-rent-box tbody').html("");
@@ -749,6 +747,7 @@
 			  success: function(res) {
 				  var resData = res.data;
 				  var data_id1 = $('.click-rent-list1 li.cur').attr('data-id1');
+				  console.log('第一个数据',res)
 				   if (res) {
 					 //生成可视化数据
 					 myChart.hideLoading();
@@ -847,44 +846,84 @@
 			});
 		   }
 		ajaxdata1();
-		//监听机构变化
-		
-		form.on('select(inst_id1)', function(data){
-			//console.log(data.value); //得到被选中的值
-			ban_inst_id1 = data.value;//获取机构
-			ban_inst_id2 = data.value;//获取机构
-			ban_inst_id3 = data.value;//获取机构
-			ajaxdata1();
-			ajaxdata2();
-			ajaxdata3();
-		});
-		//年选择器
-		laydate.render({
-		    elem: '#query_month1'
-		    ,type: 'month'
-			,value: new Date() 
-			,isInitValue: true,
-			format: 'yyyy/MM',
-			ready: function(date){
-			    $('.layui-laydate li').click(function () {
-			       $('.laydate-btns-confirm').trigger('click');
-			    });
-			},
-			done: function(value, date){ //监听日期被切换
-			  ctime1=value;
-			  ctime2=value;
-			  ctime3=value;
-			 //执行函数
-			  ajaxdata1();
-			  ajaxdata2();
-			  ajaxdata3();
-			}
-		});
 		//房屋变动情况
 		var myChart2 = echarts.init(document.getElementById('chart-panel2'));
+		option2 = {
+		  backgroundColor:'#fff',
+		      //color: ['#3398DB'],
+		      tooltip : {
+		          trigger: 'axis',
+		  		//formatter: "{b}: {c} 元",
+		  		padding: 10,
+		          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		          },
+		          textStyle:{
+		              color:'#fff',
+		          },
+		          backgroundColor:'rgba(0,0,0,0.5)',
+		      },
+		      grid: {
+		          left:50,
+		          bottom: 20, 
+		          top:40,
+		      },
+		      xAxis : [
+		          {
+		              nameTextStyle:{
+		                  color:'#999'
+		              },
+		              type : 'category',
+		              data: ['暂停租金','新发租','注销'],
+		              axisTick:{show:false},
+		              axisLabel:{
+		                  textStyle:{
+		                      color:'#999'
+		                  },
+		                  interval:0,
+		                  rotate:''
+		              },
+		              axisLine:{
+		                   show:false,
+		                  lineStyle:{
+		                      color:'#fff'
+		                  }
+		              },
+		          }
+		      ],
+		      yAxis : [
+		          {
+		              name:'金额/元',
+		              nameTextStyle:{
+		                  color:'#999'
+		              },
+		              type : 'value',
+		              axisTick:{show:false},
+		              axisLabel:{
+		                  textStyle:{
+		                      color:'#999'
+		                  },
+		                  
+		              },
+		              axisLine:{
+		                  show:false,
+		                  lineStyle:{
+		                      color:'#6986c9'
+		                  }
+		              },
+		              splitLine: {
+		              lineStyle: {
+		                  color: '#35518f', //分割线颜色
+		                  type: "solid",
+		                  opacity:0.1
+		              }
+		          },
+		          }
+		      ],
+		}
+		myChart2.setOption(option2);
 		var ban_inst_id2 = {$Think.INST},//获取机构
 			    ctime2 = time;//获取日期改变
-		ajaxdata2();
 		  function ajaxdata2(){
 			$.ajax({
 				type: "post",
@@ -892,79 +931,12 @@
 				data: {'inst_id':ban_inst_id2,'ctime':ctime2}, 
 				dataType: "json", 
 				success: function(res) {
-				    console.log(res);
-				    		option2 = {
-			    backgroundColor:'#fff',
-			        //color: ['#3398DB'],
-			        tooltip : {
-			            trigger: 'axis',
-						//formatter: "{b}: {c} 元",
-						padding: 10,
-			            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-			                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-			            },
-			            textStyle:{
-			                color:'#fff',
-			            },
-			            backgroundColor:'rgba(0,0,0,0.5)',
-			        },
-			        grid: {
-			            left:50,
-			            bottom: 20, 
-			            top:40,
-			        },
-			        xAxis : [
-			            {
-			                nameTextStyle:{
-			                    color:'#999'
-			                },
-			                type : 'category',
-			                data: ['暂停租金','新发租','注销'],
-			                axisTick:{show:false},
-			                axisLabel:{
-			                    textStyle:{
-			                        color:'#999'
-			                    },
-			                    interval:0,
-			                    rotate:''
-			                },
-			                axisLine:{
-			                     show:false,
-			                    lineStyle:{
-			                        color:'#fff'
-			                    }
-			                },
-			            }
-			        ],
-			        yAxis : [
-			            {
-			                name:'金额/元',
-			                nameTextStyle:{
-			                    color:'#999'
-			                },
-			                type : 'value',
-			                axisTick:{show:false},
-			                axisLabel:{
-			                    textStyle:{
-			                        color:'#999'
-			                    },
-			                    
-			                },
-			                axisLine:{
-			                    show:false,
-			                    lineStyle:{
-			                        color:'#6986c9'
-			                    }
-			                },
-			                splitLine: {
-			                lineStyle: {
-			                    color: '#35518f', //分割线颜色
-			                    type: "solid",
-			                    opacity:0.1
-			                }
-			            },
-			            }
-			        ],
+					var data_id2 = $('.click-rent-list2 li.cur').attr('data-id2');
+				    console.log('房屋变动情况',res);
+					 //生成可视化数据
+					 myChart2.hideLoading();
+				function statistics2(){	 
+				myChart2.setOption({
 			        series : [
 			            {
 			                name:'金额',
@@ -973,7 +945,7 @@
 			                data:[
 			                    {
 			                        name:'暂停租金',
-			                        value:res.data[3],
+			                        value:res.data[data_id2][3],
 			                        itemStyle:{
 			                            normal:{
 			                                color:'#7460EE',
@@ -982,7 +954,7 @@
 			                    },
 			                    {
 			                        name:'新发租',
-			                        value:res.data[7],
+			                        value:res.data[data_id2][7],
 			                        itemStyle:{
 			                            normal:{
 			                                color:'#7ACE4C',
@@ -991,7 +963,7 @@
 			                    },
 			                     {
 			                        name:'注销',
-			                        value:res.data[8],
+			                        value:res.data[data_id2][8],
 			                        itemStyle:{
 			                            normal:{
 			                                color:'#FFC740',
@@ -1012,39 +984,50 @@
 			            }
 			        ]
 			    
-			};
-			myChart2.setOption(option2);
-				}
-			});
-		}
-
+			  });
+			}
+			statistics2();
+			//每月缴费情况分析第一个栏目tab切换
+			$(".click-rent-list2 li").click(function(){
+				$(this).addClass("cur").siblings().removeClass("cur");
+				data_id2 =$(this).attr('data-id2');
+				statistics2();
+			})
+		  },
+		});
+	}
+	ajaxdata2();
 		//租金收缴情况
 		var myChart3 = echarts.init(document.getElementById('chart-panel3'));
+		option3 = {
+			tooltip: {
+			    trigger: 'item',
+			    formatter: "{a} <br/>{b}: {c} ({d}%)"
+			},
+			backgroundColor:'#fff',
+			legend: {
+			    orient: 'vertical',
+				right: 'right',
+				bottom:'30%',
+			    data:['已缴租金','欠缴租金','陈欠租金']
+			},
+			color:['#7B62E9','#11A0F8','#7ACE4C','#F9B048'],
+		}
+		myChart3.setOption(option3);
 		var ban_inst_id3= {$Think.INST},//获取机构
 			    ctime3 = time;//获取日期改变
-		ajaxdata3();
 	function ajaxdata3(){
-
 		$.ajax({
 				type: "post",
 				url: "{:url('rent/api/indexPartFour')}?ban_inst_id="+ban_inst_id3+'&ctime='+ctime3,
 				data: {'ban_inst_id':ban_inst_id3,'ctime':ctime3}, 
 				dataType: "json", 
 				success: function(res) {
-				    console.log(res);
-				    option3 = {
-					    tooltip: {
-					        trigger: 'item',
-					        formatter: "{a} <br/>{b}: {c} ({d}%)"
-					    },
-					    backgroundColor:'#fff',
-					    legend: {
-					        orient: 'vertical',
-							right: 'right',
-							bottom:'30%',
-					        data:['已缴租金','欠缴租金','陈欠租金']
-					    },
-						color:['#7B62E9','#11A0F8','#7ACE4C','#F9B048'],
+					console.log('租金收缴情况',res);
+					var data_id3 = $('.click-rent-list3 li.cur').attr('data-id3');
+					myChart3.hideLoading();
+				function statistics3(){
+				    myChart3.setOption({
 					    series: [
 					       
 					        {
@@ -1061,21 +1044,59 @@
 					            },
 					
 					            data:[
-					                {value:res.data.rent_paids, name:'已缴租金'},
-					                {value:res.data.rent_unpaids, name:'欠缴租金'},
-					                {value:res.data.rent_before_unpaids, name:'陈欠租金'},
+					                {value:res.data[data_id3].rent_paids, name:'已缴租金'},
+					                {value:res.data[data_id3].rent_unpaids, name:'欠缴租金'},
+					                {value:res.data[data_id3].rent_before_unpaids, name:'陈欠租金'},
 					               
 					            ]
 					        }
 					    ]
-					};
-					myChart3.setOption(option3);
+					});
+				  }
+					statistics3();
+					//每月缴费情况分析第一个栏目tab切换
+					$(".click-rent-list3 li").click(function(){
+						$(this).addClass("cur").siblings().removeClass("cur");
+						data_id3 =$(this).attr('data-id3');
+						statistics3();
+					})
 				}
 		});
-		
-		
 	}
-		
+	
+	//监听机构变化
+	form.on('select(inst_id1)', function(data){
+		//console.log(data.value); //得到被选中的值
+		ban_inst_id1 = data.value;//获取机构
+		ban_inst_id2 = data.value;//获取机构
+		ban_inst_id3 = data.value;//获取机构
+		ajaxdata1();
+		ajaxdata2();
+		ajaxdata3();
+	});
+	//年选择器
+	laydate.render({
+	    elem: '#query_month1'
+	    ,type: 'month'
+		,value: new Date() 
+		,isInitValue: true,
+		format: 'yyyy/MM',
+		ready: function(date){
+		    $('.layui-laydate li').click(function () {
+		       $('.laydate-btns-confirm').trigger('click');
+		    });
+		},
+		done: function(value, date){ //监听日期被切换
+		  ctime1=value;
+		  ctime2=value;
+		  ctime3=value;
+		 //执行函数
+		  ajaxdata1();
+		  ajaxdata2();
+		  ajaxdata3();
+		}
+	});
+	
 		setTimeout(function (){
 		    window.onresize = function () {
 		     myChart.resize();
