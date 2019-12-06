@@ -259,8 +259,16 @@ class Api extends Common
             }
 
             //halt($temp2);
-            //halt($result);
+            
 
+            $result[10]['rent_unpaids'] = $result[1]['rent_unpaids'] + $result[3]['rent_unpaids'] + $result[7]['rent_unpaids'];
+            $result[10]['rent_paids'] = $result[1]['rent_paids'] + $result[3]['rent_paids'] + $result[7]['rent_paids'];
+            $result[10]['rent_before_unpaids'] = $result[1]['rent_before_unpaids'] + $result[3]['rent_before_unpaids'] + $result[7]['rent_before_unpaids'];
+           
+            $result[11]['rent_unpaids'] = $result[1]['rent_unpaids'] + $result[2]['rent_unpaids']+ $result[3]['rent_unpaids'] + $result[5]['rent_unpaids'] + $result[7]['rent_unpaids'];
+            $result[11]['rent_paids'] = $result[1]['rent_paids'] + $result[2]['rent_paids']+ $result[3]['rent_paids'] + $result[5]['rent_paids'] + $result[7]['rent_paids'];
+            $result[11]['rent_before_unpaids'] = $result[1]['rent_before_unpaids'] + $result[2]['rent_before_unpaids']+ $result[3]['rent_before_unpaids'] + $result[5]['rent_before_unpaids'] + $result[7]['rent_before_unpaids'];
+//halt($result);
 //             if(!$row){
 //                 $result['rent_paids'] = 0;
 //                 $result['rent_unpaids'] = 0;
