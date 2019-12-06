@@ -170,43 +170,29 @@ class Api extends Common
             $data = $result = [];
             
             $temp = Db::name('change_table')->group('owner_id,change_type')->where($where)->field('owner_id,change_type,sum(change_rent) as change_rents')->select();
-//halt($temp);
-            // if(!isset($result[3])){
-            //    $result[3] = 0; 
-            // }
-            // if(!isset($result[7])){
-            //    $result[7] = 0; 
-            // }
-            // if(!isset($result[8])){
-            //    $result[8] = 0; 
-            // }
 
             foreach($temp as $t){
-                $result[$t['owner_id']][$t['change_type']] = [
-                    'change_rents' => (float)$t['change_rents'],
-                ];
+                $result[$t['owner_id']][$t['change_type']] = (float)$t['change_rents'];
             }
+            //halt($result);
             $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
             foreach ($ownertypes as $owner) {
                 foreach ($types as $i) {
                     if(!isset($result[$owner][$i])){
-                        $result[$owner][$i] = [
-                            //'rent_order_receives' => 0, 
-                            'change_rents' => 0, 
-                        ];
+                        $result[$owner][$i] = 0;
                     }
                 }
             }
-//halt($result);
 
-            // foreach($temps as $k => $v){
-            //     // 如果业务审批角色 = 当前登录角色，且当前角色不是房管员
-            //     if($v['curr_role'] == session('admin_user.role_id') && session('admin_user.role_id') != 4){
-            //         $result[] = $v;
-            //     }
-            // }
+            $result[10][3] = $result[1][3] + $result[3][3] + $result[7][3];
+            $result[10][7] = $result[1][7] + $result[3][7] + $result[7][7];
+            $result[10][8] = $result[1][8] + $result[3][8] + $result[7][8];
+           
+            $result[11][3] = $result[1][3] + $result[2][3]+ $result[3][3] + $result[5][3] + $result[7][3];
+            $result[11][7] = $result[1][7] + $result[2][7]+ $result[3][7] + $result[5][7] + $result[7][7];
+            $result[11][8] = $result[1][8] + $result[2][8]+ $result[3][8] + $result[5][8] + $result[7][8];
+           
             $data['data'] = $result;
-            //$data['count'] = count($result);
             $data['code'] = 1;
             $data['msg'] = '获取成功';
             return json($data);
