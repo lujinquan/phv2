@@ -262,7 +262,8 @@ class ChangeHouse extends SystemBase
         $HouseModel = new HouseModel;
         $row['house_info'] = HouseModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         $row['house_table'] = $HouseModel->get_house_renttable($row['house_id']);
-        $row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
+        //$row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
+        //halt($row);
         //$this->finalDeal($row);
         return $row;
     }

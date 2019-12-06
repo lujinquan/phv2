@@ -56,9 +56,9 @@
 		    <td rowspan="1" colspan="1">调整后</td>
 		  </tr>
 		  <tr>
-		    <td rowspan="4" colspan="2" class="HABanID"></td>
-		    <td rowspan="4" colspan="2" class="HAAddress"></td>
-		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="tetx" readonly value="" class="layui-input" /></td>
+		    <td rowspan="4" colspan="2" class="HABanID"><input type="text" readonly value="" class="layui-input"></td>
+		    <td rowspan="4" colspan="2" class="HAAddress"><input type="text" readonly value="" class="layui-input"></td>
+		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="text" readonly value="" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HARent layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforeLeasedArea"><input type="text" readonly value="" class="layui-input" /></td>
@@ -87,8 +87,8 @@
 		  </tr>
 		  
 		  <tr class="table_data_2">
-		    <td rowspan="6" colspan="2" class="HABanID"></td>
-		    <td rowspan="6" colspan="2" class="HAAddress"></td>
+		    <td rowspan="6" colspan="2" class="HABanID"><input type="text" readonly value="" class="layui-input"></td>
+		    <td rowspan="6" colspan="2" class="HAAddress"><input type="text" readonly value="" class="layui-input"></td>
 		    <th colspan="3">租金</th>
 		    <th colspan="3">计租面积</th>
 		  </tr>
@@ -132,10 +132,9 @@
 		  </tr>
 		  
 		  
-
 		  <tr class="table_data_3">
-		    <td rowspan="6" colspan="2" class="HABanID"></td>
-		    <td rowspan="6" colspan="2" class="HAAddress"></td>
+		    <td rowspan="6" colspan="2" class="HABanID"><input type="text" readonly value="" class="layui-input"></td>
+		    <td rowspan="6" colspan="2" class="HAAddress"><input type="text" readonly value="" class="layui-input"></td>
 		    <th colspan="3">租金</th>
 		    <th colspan="3">计租面积</th>
 		  </tr>
@@ -229,8 +228,10 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						   $('.table_data_2').hide();
 						   $('.table_data_3').hide();
 						   for(var i = 0; i < res.data.length;i++){
-						       $('.HABanID').eq(i).text( res.data[i].ban_number);//楼栋编号
-						       $('.HAAddress').eq(i).text(res.data[i].ban_address);//楼栋地址
+						       //$('.HABanID').eq(i).text( res.data[i].ban_number);//楼栋编号
+						       $('.HABanID').eq(i).find("input").val(res.data[i].ban_number);//楼栋编号
+						       //$('.HAAddress').eq(i).text(res.data[i].ban_address);//楼栋地址
+						       $('.HAAddress').eq(i).find("input").val(res.data[i].ban_address);//楼栋地址
 						       $('.HABeforeRent').eq(i).find("input").val(res.data[i].ban_rent);//租金调整前
 						       $('.HABeforeLeasedArea').eq(i).find("input").val(res.data[i].ban_use_area);//计租面积调整前
 						       $('.HABeforeBanArea').eq(i).find("input").val(res.data[i].ban_area);//建筑面积调整前
@@ -296,6 +297,8 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 						   });
 						   //layer.msg(row.msg,{time:4000});
 						   for(var i = 0; i < ban_length;i++){
+						   	$(".HABanID").eq(i).find("input").attr("name","Ban["+i+"][HABanID]");
+						   	$(".HAAddress").eq(i).find("input").attr("name","Ban["+i+"][HAAddress]");
 						   	$(".HABeforeRent").eq(i).find("input").attr("name","Ban["+i+"][HABeforeRent]");//传给后台的调整前租金
 						   	$(".HARent").eq(i).attr("name","Ban["+i+"][HARent]");//传给后台的调整租金
 						   	$(".HAAfterRent").eq(i).attr("name","Ban["+i+"][HAAfterRent]");//传给后台的调整后租金

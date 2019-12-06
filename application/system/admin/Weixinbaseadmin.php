@@ -400,6 +400,46 @@ class Weixinbaseadmin extends Controller
         
     }
 
+    public function rentDetail()
+    {
+        $key = input('get.key');
+        $id = input('get.rent_order_id');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || !$id){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            $BanModel = new BanModel;
+
+            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
+
+            $params = ParamModel::getCparams();
+
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['rent_order_date'] = substr($temp['rent_order_date'],0,4).'年'.substr($temp['rent_order_date'],4,2).'月01日';
+            if($temp['ptime']){
+                $temp['ptime'] = date('Y年m月d日',$temp['ptime']);
+            }
+
+            $result['data'] = $temp;
+//halt($result['data']);
+                      
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
 
 
     public function banDetail()

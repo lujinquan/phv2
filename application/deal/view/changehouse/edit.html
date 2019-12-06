@@ -7,277 +7,108 @@
 			<div class="layui-col-md12">
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 				<div class="j-input-inline j-tips">
-					<input type="text" id="house_number" readonly value="{$data_info['house_info']['house_number']}" autocomplete="off" class="layui-input">
-					<input type="hidden" id="id" name="id" value="{$data_info['id']}">
-					<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
+					<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
+					<input type="hidden" name="id" value="{$data_info['id']}">
 					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
+					<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
 					<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
+					<b class="j-explain-search j-house_number">查询</b>
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
 			</div>
 		</div>
-        <div class="layui-row layui-form-item layui-col-space90">
-        	<div class="layui-col-md4">
-        		<label class="j-form-label">楼栋编号</label>
-        		<div class="j-input-inline">
-        			<input type="text"  id="ban_number" readonly value="{$data_info['ban_info']['ban_number']}" placeholder="" autocomplete="off" class="layui-input">
-        		</div>
-        	</div>
-        	<div class="layui-col-md4">
-        		<label class="j-form-label">房屋结构</label>
-        		<div class="j-input-inline">
-        			<input type="text" id="tenant_number" readonly value="{$params.structs[$data_info['ban_info']['ban_struct_id']]}" placeholder="" autocomplete="off" class="layui-input">
-        		</div>
-        	</div>
-        	<div class="layui-col-md4">
-        		<label class="j-form-label">楼层数量</label>
-        		<div class="j-input-inline">
-        			<input type="text" id="house_door" readonly value="{$data_info['ban_info']['ban_floors']}" autocomplete="off" class="layui-input">
-        		</div>
-        	</div>
-        </div>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
+			<div class="layui-col-md3">
+				<label class="j-form-label">计租表</label>
+				<div class="j-input-inline">
+					<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+					<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
+				</div>
+			</div>
+			<div class="layui-col-md3">
 				<label class="j-form-label">租户</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_tenant" readonly value="{$data_info['house_info']['tenant_name']}" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_name" value="{$data_info['house_info']['tenant_name']}" placeholder="" readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">居住层</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_floor_layer"  readonly value="{$data_info['house_info']['house_floor_id']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">产别</label>
-				<div class="j-input-inline">
-					<input type="text" id="ban_owner_id"  readonly value="{$params.owners[$data_info['ban_info']['ban_owner_id']]}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">房屋地址</label>
-				<div class="j-input-inline">
-					<input type="text" id="ban_address" readonly value="{$data_info['ban_info']['ban_address']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">实有面积</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_oprice" readonly value="{$data_info['house_info']['house_area']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">计租面积</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_area" readonly value="{$data_info['house_info']['house_lease_area']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">规定租金</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_money" readonly value="{$data_info['house_info']['house_pre_rent']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">计算租金</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_unit_id" readonly value="{$data_info['house_info']['house_cou_rent']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">租差</label>
-				<div class="j-input-inline">
-					<input type="text" id="house_floor_id" readonly value="{$data_info['house_info']['house_diff_rent']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">泵费</label>
-				<div class="j-input-inline">
-					<input type="text" id="pump_fee" readonly value="{$data_info['house_info']['house_pump_rent']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">租金减免</label>
-				<div class="j-input-inline">
-					<input type="text" id="rent_relief" readonly value="占位" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-col-md4">
-				<label class="j-form-label">协议租金</label>
-				<div class="j-input-inline">
-					<input type="text" id="agreement_rent" readonly value="{$data_info['house_info']['house_protocol_rent']}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
-				<label class="j-form-label">电梯</label>
-				<div class="j-input-inline">
-					<input type="text" id="elevator" readonly value="{if condition="$data_info['ban_info']['ban_is_levator']"}有{else /}无{/if}" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md8">
+			<div class="layui-col-md6">
 				<label class="j-form-label">异动原因</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_reason" name="change_remark" value="{$data_info['change_remark']}" placeholder="请输入备注信息" autocomplete="off" class="layui-input">
+					<input type="text" id="tenant_reason" name="change_remark" value="{$data_info['change_remark']}" placeholder="请输入异动原因" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
+
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-			<legend>异动明细</legend>
+			<legend>楼栋信息</legend>
 		</fieldset>
 		<table  class="layui-table">
-		  <thead>
-			  <tr>
-			    <th width="20%">异动类型</th>
-			    <th class="cancel" width="30%">异动前</th>
-			    <th class="cancel" width="50%">异动后</th>
-			  </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-			  <td>租差</td>
-			  <td id="changes_difference_old">{$data_info['house_info']['house_diff_rent']}</td>
-			  <td class="changes_difference_news"><input type="number" class="layui-input cancel_change" id="changes_difference_news" name="changes_difference_news" value="{$data_info['new_house_info']['house_diff_rent']}" autocomplete="off"></td>
-		    </tr>
-			<tr>
-			  <td>泵费</td>
-			  <td id="changes_pumpfee_old">{$data_info['house_info']['house_pump_rent']}</td>
-			  <td class="changes_pumpfee_news"><input type="number" class="layui-input ancel_change" id="changes_pumpfee_news" name="changes_pumpfee_news" value="{$data_info['new_house_info']['house_pump_rent']}" autocomplete="off"></td>
-			</tr>
-			<tr>
-			  <td>协议租金</td>
-			  <td id="changes_agreement_old">{$data_info['house_info']['house_protocol_rent']}</td>
-			  <td class="changes_agreement_news"><input type="number" class="layui-input ancel_change" id="changes_agreement_news" name="changes_agreement_news" value="{$data_info['new_house_info']['house_protocol_rent']}" autocomplete="off"></td>
-			</tr>
-			<tr>
-			  <td>建筑面积</td>
-			  <td id="changes_architecture_old">{$data_info['house_info']['house_area']}</td>
-			  <td><input type="number" class="layui-input ancel_change" id="changes_architecture_news" name="changes_architecture_news" value="{$data_info['new_house_info']['house_area']}" autocomplete="off"></td>
-			</tr>
-			<tr>
-			  <td>原价</td>
-			  <td id="changes_originalprice_old">{$data_info['house_info']['house_oprice']}</td>
-			  <td><input type="number" class="layui-input ancel_change" id="changes_originalprice_news" name="changes_originalprice_news" value="{$data_info['new_house_info']['house_oprice']}" autocomplete="off"></td>
-			</tr>
-			<tr>
-			  <td>规定租金</td>
-			  <td id="changes_rule_old">{$data_info['house_info']['house_pre_rent']}</td>
-			  <td id="changes_rule_news">{$data_info['data_json']['after']['changes_floor_areaofuse']}</td>
-			</tr>
-		  </tbody>
-		</table>
-		<fieldset class="layui-elem-field layui-field-title j-field-box">
-			<legend>原房间信息</legend>
-		</fieldset>
-		<table class="layui-table ">
-			<thead class="j-table-center">
-				<tr>
-					<th>房屋类型</th>
-					<th>房间编号</th>
-					<th>间号</th>
-					<th>绑定楼栋</th>
-					<th>绑定房屋</th>
-					<th>产别</th>
-					<th>单元号</th>
-					<th>层次</th>
-					<th>实有面积</th>
-					<th>基价折减</th>
-					<th>计租面积</th>
-					<th>层次调解率</th>
-					<th>计算租金</th>
-					<th>状态</th>
-				</tr> 
-			</thead>
-			<tbody  class="j-table-tbody">
-				
-			</tbody>
-		</table>
-		<fieldset class="layui-elem-field layui-field-title j-field-box">
-			<legend>异动后房间信息</legend>
-		</fieldset>
-		<div class="layui-row">
-			  <a data-href="{:url('house/room/add')}?id={$data_info['house_id']}" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-add-change" style="color:#0084FF;" hisi-data="{width: '60%', height: '600px'}" title="新增房间">新增房间</a>
-		</div>
-		<!-- 异动后房间信息 -->
-		<table class="layui-table ">
-		<thead class="j-table-center">
-			<tr>
-				<th>房屋类型</th>
-				<th>房间编号</th>
-				<th>间号</th>
-				<th>绑定楼栋</th>
-				<th>绑定房屋</th>
-				<th>产别</th>
-				<th>单元号</th>
-				<th>层次</th>
-				<th>实有面积</th>
-				<th>基价折减</th>
-				<th>计租面积</th>
-				<th>层次调解率</th>
-				<th>计算租金</th>
-				<th>状态</th>
-				<th>操作</th>
-			</tr> 
-		</thead>
-		<tbody  class="j-table-tbodynew">
-			
-		</tbody>
-	</table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>基数异动</legend>
-	</fieldset>
-	<table  class="layui-table">
-	  <thead>
+			{volist name="$data_info['data_json']['ban']" id="v"}
 		  <tr>
-		    <th>基本情况</th>
-			<th class="cancel">户数</th>
-		    <th class="cancel">建筑面积</th>
-		    <th class="cancel">规定租金</th>
-		    <th class="cancel">使用面积</th>
-		    <th class="cancel">原价</th>
-			<th class="cancel">栋数</th>
+		      <th colspan="2" rowspan="2">楼栋编号</th>
+		      <th colspan="2" rowspan="2">楼栋地址</th>
+		      <th colspan="3">租金</th>
+		      <th colspan="3">计租面积</th>
 		  </tr>
-	  </thead>
-	  <tbody>
-	    <tr>
-		  <td>异动前</td>
-		  <td class="cancel_before_0" id="floor_households"><input type="hidden" name="floor_households" value="{$data_info['data_json']['before']['floor_households']}"><label>{$data_info['data_json']['before']['floor_households']}</label></td>
-		  <td class="cancel_before_1" id="floor_prescribed"><input type="hidden" name="floor_prescribed" value="{$data_info['data_json']['before']['floor_prescribed']}"><label>{$data_info['data_json']['before']['floor_prescribed']}</label></td>
-		  <td class="cancel_before_2" id="floor_areaofuse"><input type="hidden" name="floor_areaofuse" value="{$data_info['data_json']['before']['floor_areaofuse']}"><label>{$data_info['data_json']['before']['floor_areaofuse']}</label></td>
-		  <td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value="{$data_info['data_json']['before']['floor_builtuparea']}"><label>{$data_info['data_json']['before']['floor_builtuparea']}</label></td>
-		  <td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value="{$data_info['data_json']['before']['floor_original']}"><label>{$data_info['data_json']['before']['floor_original']}</label></td>
-		  <td class="cancel_before_5" id="floor_buildings"><input type="hidden" name="floor_buildings" value="{$data_info['data_json']['before']['floor_buildings']}"><label>{$data_info['data_json']['before']['floor_buildings']}</label></td>
-	    </tr>
-		<tr>
-		  <td>异动</td>
-		  <td id="cancel_before_0edit"><input type="hidden" name="cancel_before_0edit" value="{$data_info['data_json']['change']['cancel_before_0edit']}"><label>{$data_info['data_json']['change']['cancel_before_0edit']}</label></td>
-		  <td id="cancel_before_1edit"><input type="hidden" name="cancel_before_1edit" value="{$data_info['data_json']['change']['cancel_before_1edit']}"><label>{$data_info['data_json']['change']['cancel_before_1edit']}</label></td>
-		  <td id="cancel_before_2edit"><input type="hidden" name="cancel_before_2edit" value="{$data_info['data_json']['change']['cancel_before_2edit']}"><label>{$data_info['data_json']['change']['cancel_before_2edit']}</label></td>
-		  <td id="cancel_before_3edit"><input type="hidden" name="cancel_before_3edit" value="{$data_info['data_json']['change']['cancel_before_3edit']}"><label>{$data_info['data_json']['change']['cancel_before_3edit']}</label></td>
-		  <td id="cancel_before_4edit"><input type="hidden" name="cancel_before_4edit" value="{$data_info['data_json']['change']['cancel_before_4edit']}"><label>{$data_info['data_json']['change']['cancel_before_4edit']}</label></td>
-		  <td id="cancel_before_5edit"><input type="hidden" name="cancel_before_5edit" value="{$data_info['data_json']['change']['cancel_before_5edit']}"><label>{$data_info['data_json']['change']['cancel_before_5edit']}</label></td>
-		</tr>
-		<tr>
-		  <td>异动后</td>
-		  <td class="cancel_after_0" id="changes_floor_households"><input type="hidden" name="changes_floor_households" value="{$data_info['data_json']['after']['changes_floor_households']}"><label>{$data_info['data_json']['after']['changes_floor_households']}</label></td>
-		  <td class="cancel_after_1" id="changes_floor_prescribed"><input type="hidden" name="changes_floor_prescribed" value="{$data_info['data_json']['after']['changes_floor_prescribed']}"><label>{$data_info['data_json']['after']['changes_floor_prescribed']}</label></td>
-		  <td class="cancel_after_2" id="changes_floor_areaofuse"><input type="hidden" name="changes_floor_areaofuse" value="{$data_info['data_json']['after']['changes_floor_areaofuse']}"><label>{$data_info['data_json']['after']['changes_floor_areaofuse']}</label></td>
-		  <td class="cancel_after_3" id="changes_floor_builtuparea"><input type="hidden" name="changes_floor_builtuparea" value="{$data_info['data_json']['after']['changes_floor_builtuparea']}"><label>{$data_info['data_json']['after']['changes_floor_builtuparea']}</label></td>
-		  <td class="cancel_after_4" id="changes_floor_original"><input type="hidden" name="changes_floor_original" value="{$data_info['data_json']['after']['changes_floor_original']}"><label>{$data_info['data_json']['after']['changes_floor_original']}</label></td>
-		  <td class="cancel_after_5" id="changes_floor_buildings"><input type="hidden" name="changes_floor_buildings" value="{$data_info['data_json']['after']['changes_floor_buildings']}"><label>{$data_info['data_json']['after']['changes_floor_buildings']}</label></td>
-		</tr>
-	  </tbody>
-	</table>
+		  <tr>
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整金额</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整面积</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		  </tr>
+		  <tr>
+		    <td rowspan="4" colspan="2" class="HABanID">{$v['HABanID']}</td>
+		    <td rowspan="4" colspan="2" class="HAAddress">{$v['HAAddress']}</td>
+		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="tetx" readonly name="Ban[{$key}]HABeforeRent" value="{$v['HABeforeRent']}" class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HARent" value="{$v['HARent']}" class="HARent layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" name="Ban[{$key}]HAAfterRent" value="{$v['HAAfterRent']}"/></td>
+		    <td rowspan="1" colspan="1" class="HABeforeLeasedArea"><input type="text" readonly name="Ban[{$key}]HABeforeLeasedArea" value="{$v['HABeforeLeasedArea']}" class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HALeasedArea" value="{$v['HALeasedArea']}" class="HALeasedArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" readonly name="Ban[{$key}]HAAfterLeasedArea" value="{$v['HAAfterLeasedArea']}" class="HAAfterLeasedArea layui-input" /></td>
+		  </tr>
+		  <tr>
+		    <th colspan="3">建筑面积</th>
+		    <th colspan="3">楼栋原价</th>
+		  </tr>
+		  <tr>
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整面积</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整金额</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		  </tr>
+		  <tr>
+		    <td rowspan="1" colspan="1" class="HABeforeBanArea"><input type="text" readonly name="HABeforeBanArea[{$key}]" value="{$v['HABeforeBanArea']}"  class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="HABanArea[{$key}]" value="{$v['HABanArea']}" class="HABanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="HAAfterBanArea[{$key}]" value="{$v['HAAfterBanArea']}" readonly class="HAAfterBanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1" class="HABeforePrice"><input type="text" readonly name="HABeforePrice[{$key}]" value="{$v['HABeforePrice']}" class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="HAPrice[{$key}]" value="{$v['HAPrice']}" class="HAPrice layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" readonly name="HAAfterPrice[{$key}]" value="{$v['HAAfterPrice']}" class="HAAfterPrice layui-input" /></td>
+		  </tr>
+		  
+		  <tr class="table_data_2">
+		    <td rowspan="6" colspan="2" class="HABanID"></td>
+		    <td rowspan="6" colspan="2" class="HAAddress"></td>
+		    <th colspan="3">租金</th>
+		    <th colspan="3">计租面积</th>
+		  </tr>
+		  <tr class="table_data_2">
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整金额</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		    <td rowspan="1" colspan="1">调整前</td>
+		    <td rowspan="1" colspan="1">调整面积</td>
+		    <td rowspan="1" colspan="1">调整后</td>
+		  </tr>
+		  {/volist}
+
+		  
+		  
+		 
+		</table>
     <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
@@ -286,7 +117,6 @@
 		</div>
 	</div>
 </div>
-<input type="hidden" id="j_house_id" value="{$data_info['house_id']}" />
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript">
@@ -296,428 +126,185 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
   	,$ = layui.jquery
   	,upload = layui.upload
   	,layer = layui.layer;
-	
-	//计算函数
-	var sumhouseholds =0, //租赁异动户数初始值
-	    sumconstruction=0,//租赁异动建筑面积初始值
-		sumrule=0,//租赁异动规定租金初始值
-		sumuse=0,//租赁异动使用面积初始值
-		sumoriginalprice=0,//租赁异动原价初始值
-		sumbuildings=0,//租赁异动栋数初始值
-		sumcalculated=0,//table计算租金之和初始值
-		sumcalculation=0;//table计算计租面积初始值
-	//console.log(params);
-	function statistics(){
-	  //异动后房间信息table计算租金之和
-	  	var trList = $(".j-table-tbodynew").children("tr");
-		sumcalculated = 0;
-		sumcalculation=0;
-	  	for (var j=0;j<trList.length;j++) {
-			$("#changes_rule_news").text();
-	  		var tdArr = trList.eq(j).find("td"); //遍历td  
-	  			sumcalculated += parseFloat(tdArr.eq(12).text()).toFixed(1)*100;//计算租金之和
-				if($("#changes_difference_news").val()==""){
-				    $("#changes_difference_news").val(0);
-				}
-				else if($("#changes_pumpfee_news").val()==""){
-					$("#changes_pumpfee_news").val(0);
-				}
-				else if($("#changes_agreement_news").val()==""){
-					$("#changes_agreement_news").val(0);
-				}
-				$("#changes_rule_news").text(
-				  (                  
-					sumcalculated
-					+parseFloat($('#changes_difference_news').val()).toFixed(1)*100
-					+parseFloat($('#changes_pumpfee_news').val()).toFixed(1)*100
-					+parseFloat($('#changes_agreement_news').val()).toFixed(1)*100
-					).toFixed(1) / 100
-				);	//异动明细异动后规定租金
-				$("#changes_floor_areaofuse label").text($("#changes_rule_news").text());//租赁异动异动后规定租金
-				$("#cancel_before_2edit label").text((parseFloat($("#changes_floor_areaofuse").text()).toFixed(2)*100-parseFloat($("#floor_areaofuse").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动规定租金
-				$("#changes_floor_areaofuse input").val($("#changes_rule_news").text());//提交后台隐藏域租赁异动异动后规定租金
-				$("#cancel_before_2edit input").val($("#cancel_before_2edit label").text());//提交后台隐藏域租赁异动异动规定租金
-				sumcalculation += parseFloat(tdArr.eq(10).text()).toFixed(2)*100;//计租面积之和
-				$("#changes_floor_builtuparea label").text(sumcalculation.toFixed(2) / 100);//租赁异动异动后使用面积
-				$("#cancel_before_3edit label").text((parseFloat($("#changes_floor_builtuparea").text()).toFixed(2)*100-parseFloat($("#floor_builtuparea").text()).toFixed(2)*100).toFixed(2) / 100);//租赁异动异动使用面积
-				$("#changes_floor_builtuparea input").val($("#changes_floor_builtuparea label").text());//提交后台隐藏域租赁异动异动后使用面积
-				$("#cancel_before_3edit input").val($("#cancel_before_3edit label").text());
-	  	}
-	}
-	var house_id = '{$data_info['house_id']}';
-	$(".j-iframe-add-change").attr('data-href','{:url('house/RoomTemp/add')}?id='+house_id); //新增
-	$.ajax({
-	  type: "post",
-	  url: "{:url('house/House/renttable')}?id="+house_id,
-	  data: { 'house_id': house_id}, 
-	  dataType: "json", 
-	  success: function(res) {
-		  console.log(res);
-		if(res.code == 0){
-			layer.msg(res.msg);
-		}else{
-		  $('.j-table-tbody').html("");
-		  //原房屋信息
-		  var resData = res.data;
-		  //console.log(resData);
-		  for(var k=0;k<resData.length;k++) {
-		  	var trDataold ='<tr>\
-			<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
-			<td>'+resData[k].baseinfo.room_number+'</td>\
-			<td>'+resData[k].baseinfo.room_door+'</td>\
-			<td>'+resData[k].baseinfo.ban_number+'</td>\
-			<td>'+resData[k].houseinfo[0].house_number+'</td>\
-			<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
-			<td>'+resData[k].baseinfo.room_unit_id+'</td>\
-			<td>'+resData[k].baseinfo.room_floor_id+'</td>\
-			<td>'+resData[k].baseinfo.room_use_area+'</td>\
-			<td>'+resData[k].baseinfo.room_rent_point+'</td>\
-			<td>'+resData[k].baseinfo.room_lease_area+'</td>\
-			<td>'+resData[k].baseinfo.floor_point+'</td>\
-			<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
-			<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-		</tr>';
-		$('.j-table-tbody').append(trDataold);
-			  }
-			 statistics(); 
-			 //监听异动明细异动后租差input
-			 $(".changes_difference_news").bind("input propertychange",function(){					  
-			 	statistics();
-			 });
-			 //监听异动明细异动后泵费input
-			 $(".changes_pumpfee_news").bind("input propertychange",function(){						 
-			 	statistics();
-			 });
-			 //监听异动明细异动后泵费input
-			 $(".changes_agreement_news").bind("input propertychange",function(){						  
-			 	statistics();
-			 });
-		}
-		   
-	  },
-	  error: function(msg) {
-		  layer.msg(msg);
-	  }
-	}); 
-	$.ajax({
-	  type: "post",
-	  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
-	  data: { 'house_id': house_id}, 
-	  dataType: "json", 
-	  success: function(res) {
-		if(res.code == 0){
-			layer.msg(res.msg);
-		}else{
-		  $('.j-table-tbodynew').html("");
-		  //原房屋信息
-		  var resData = res.data;
-		  //console.log(resData);
-		  for(var k=0;k<resData.length;k++) {
+	//限制input输入框字符
+	// $('input[type=number]').keypress(function(e) {
+	// 　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+	// 　　　　return false;
+	// 　　}
+	// });
+	var ban_length = 0;
+	$('.table_data_2').hide();
+	$('.table_data_3').hide();
+	//获取房屋查询器
+	 $(".layui-form").on('click','.j-house_number',function(){
+		layer.open({
+				title: '房屋查询器'
+				,type: 2
+				,offset: 'auto'
+				,area: ['70%', '60%']
+				, btn:false
+				,pageTabs: false
+				,content: '{:url('system/index/house')}?hisi_iframe=yes&change_type=9'
+				,btn: ['确定','关闭']
+				,yes: function(index, layero){
+					var row = window["layui-layer-iframe" + index].hoesedata();
+					console.log('查询器',row);
+					if(row.color_status != 1){ //正常状态下的才可以执行
+						layer.msg("当前数据不可选！");
+						return false;
+					}
 
-			//异动后房间信息
-			var trDatanew ='<tr>\
-				<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
-				<td>'+resData[k].baseinfo.room_number+'</td>\
-				<td>'+resData[k].baseinfo.room_door+'</td>\
-				<td>'+resData[k].baseinfo.ban_number+'</td>\
-				<td>'+resData[k].houseinfo[0].house_number+'</td>\
-				<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
-				<td>'+resData[k].baseinfo.room_unit_id+'</td>\
-				<td>'+resData[k].baseinfo.room_floor_id+'</td>\
-				<td>'+resData[k].baseinfo.room_use_area+'</td>\
-				<td>'+resData[k].baseinfo.room_rent_point+'</td>\
-				<td>'+resData[k].baseinfo.room_lease_area+'</td>\
-				<td>'+resData[k].baseinfo.floor_point+'</td>\
-				<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
-				<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-				<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
-			</tr>';
-			$('.j-table-tbodynew').append(trDatanew);
-			//房屋明细
-			for(var j=1;j<resData[k].houseinfo.length;j++) {
-				//异动后房屋信息
-				var trDatahousenew='<tr>\
-					<td></td>\
-					<td></td>\
-					<td></td>\
-					<td></td>\
-					<td>'+resData[k].houseinfo[j].house_number+'</td>\
-					<td></td>\
-					<td></td>\
-					<td></td>\
-					<td></td>\
-					<td></td>\
-					<td>0</td>\
-					<td></td>\
-					<td>0</td>\
-					<td></td>\
-					<td></td>\
-				</tr>';
-				$('.j-table-tbodynew').append(trDatahousenew);
-			}
-		  } 
-			 statistics(); 
-		}
-		   
-	  },
-	  error: function(msg) {
-		  layer.msg(msg);
-	  }
-	}); 
-	//异动后房间信息新增
-	$(".layui-form").on('click','.j-iframe-add-change',function(){
-		var  urls=$(".j-iframe-add-change").attr('data-href');
-		
-			layer.open({
-					title: '计租表异动'
-					,type: 2
-					,offset: 'auto'
-					,area: ['70%', '60%']
-					, btn:false
-					,pageTabs: false
-					,content: urls+'&&hisi_iframe=yes'
-					//,btn: ['确定','关闭']
-					,cancel: function(index, layero){
-						//获取原房间信息
-						var house_id = $("#j_house_id").val();//获取房屋ID
-						$.ajax({
-						  type: "post",
-						  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
-						  data: { 'house_id': house_id}, 
-						  dataType: "json", 
-						  success: function(res) {
-							  console.log(res);
-							if(res.code == 0){
-								layer.msg(res.msg);
-							}else{
-							  $('.j-table-tbodynew').html("");
-							  //原房屋信息
-							  var resData = res.data;
-							  //console.log(resData);
-							  for(var k=0;k<resData.length;k++) {
-								//异动后房间信息
-								var trDatanew ='<tr>\
-									<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
-									<td>'+resData[k].baseinfo.room_number+'</td>\
-									<td>'+resData[k].baseinfo.room_door+'</td>\
-									<td>'+resData[k].baseinfo.ban_number+'</td>\
-									<td>'+resData[k].houseinfo[0].house_number+'</td>\
-									<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
-									<td>'+resData[k].baseinfo.room_unit_id+'</td>\
-									<td>'+resData[k].baseinfo.room_floor_id+'</td>\
-									<td>'+resData[k].baseinfo.room_use_area+'</td>\
-									<td>'+resData[k].baseinfo.room_rent_point+'</td>\
-									<td>'+resData[k].baseinfo.room_lease_area+'</td>\
-									<td>'+resData[k].baseinfo.floor_point+'</td>\
-									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
-									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-									<td><a data-href="{:url('house/RoomTemp/edit')}?house_id='+resData[k].houseinfo[0].house_id+'&id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
-								</tr>';
-								$('.j-table-tbodynew').append(trDatanew);
-								//房屋明细
-								for(var j=1;j<resData[k].houseinfo.length;j++) {
-									//异动后房屋信息
-									var trDatahousenew='<tr>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td>'+resData[k].houseinfo[j].house_number+'</td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td>0</td>\
-										<td></td>\
-										<td>0</td>\
-										<td></td>\
-										<td></td>\
-									</tr>';
-									$('.j-table-tbodynew').append(trDatahousenew);
-								}
-							  } 
-								 statistics(); 
-							}
-							   
-						  },
-						  error: function(msg) {
-							  layer.msg(msg);
-						  }
-						}); 
-						layer.close(index)
-					},
-					btn2: function(index, layero){
-						layer.close(index);
-					}
+					$.get('{:url('system/api/houseGetBans')}?house_id='+row.house_id, {}, function(res) {
+						console.log('res的值',res);
+						// 获取成功代码写到这里
+						if(res.code){
+						   ban_length = res.data.length;//数据长度
+						   $('.table_data_2').hide();
+						   $('.table_data_3').hide();
+						   for(var i = 0; i < res.data.length;i++){
+						       $('.HABanID').eq(i).text( res.data[i].ban_number);//楼栋编号
+						       $('.HAAddress').eq(i).text(res.data[i].ban_address);//楼栋地址
+						       $('.HABeforeRent').eq(i).find("input").val(res.data[i].ban_rent);//租金调整前
+						       $('.HABeforeLeasedArea').eq(i).find("input").val(res.data[i].ban_use_area);//计租面积调整前
+						       $('.HABeforeBanArea').eq(i).find("input").val(res.data[i].ban_area);//建筑面积调整前
+						       $('.HABeforePrice').eq(i).find("input").val(res.data[i].ban_oprice);//楼栋原价调整前
+						       $('.HAAfterRent').eq(i).val(res.data[i].ban_rent);//租金调整后
+						       $('.HAAfterLeasedArea').eq(i).val(res.data[i].ban_use_area);//计租面积调整后
+						       $('.HAAfterBanArea').eq(i).val(res.data[i].ban_area);//建筑面积调整后
+						       $('.HAAfterPrice').eq(i).val(res.data[i].ban_oprice);//楼栋原价调整前
+						   
+						       $('.table_data_'+(i+1)).show();
+						   }
+						   for (var p = res.data.length; p < 3; p++) {
+						   	$('.table_data_'+(p+1)).find("input").removeAttr("name");
+						   }
+						   $('.HARent').off('input');
+						   $('.HARent').on('input',function(){
+						       var this_index = $(this).index('.HARent');
+						       var number_1 = res.data[this_index].ban_rent;
+						       var number_2 = $('.HARent').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterRent').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						       
+						   });
+						   $('.HALeasedArea').off('input');
+						   $('.HALeasedArea').on('input',function(){
+						       var this_index = $(this).index('.HALeasedArea');
+						       var number_1 = res.data[this_index].ban_use_area;
+						       var number_2 = $('.HALeasedArea').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterLeasedArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						   });
+						   $('.HABanArea').off('input');
+						   $('.HABanArea').on('input',function(){
+						       var this_index = $(this).index('.HABanArea');
+						       var number_1 = res.data[this_index].ban_area;
+						       var number_2 = $('.HABanArea').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						       }else{
+						           $('.HAAfterBanArea').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						       }
+						   });
+						   $('.HAPrice').off('input');
+						   $('.HAPrice').on('input',function(){
+						       var this_index = $(this).index('.HAPrice');
+						       var number_1 = res.data[this_index].ban_oprice;
+						       var number_2 = $('.HAPrice').eq(this_index).val() || "0";
+						       if(number_2 < 0){
+						           number_2 = Math.abs(number_2).toString();
+						           $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'-'));
+						        }else{
+						           $('.HAAfterPrice').eq(this_index).val(numberMethod(number_1,number_2,'+'));
+						        }
+						   });
+						   //layer.msg(row.msg,{time:4000});
+						   for(var i = 0; i < ban_length;i++){
+						   	$(".HABeforeRent").eq(i).find("input").attr("name","Ban["+i+"][HABeforeRent]");//传给后台的调整前租金
+						   	$(".HARent").eq(i).attr("name","Ban["+i+"][HARent]");//传给后台的调整租金
+						   	$(".HAAfterRent").eq(i).attr("name","Ban["+i+"][HAAfterRent]");//传给后台的调整后租金
+						   	$(".HABeforeLeasedArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeLeasedArea]");//传给后台的调整前计租面积
+						   	$(".HALeasedArea").eq(i).attr("name","Ban["+i+"][HALeasedArea]");//传给后台的调整计租面积
+						   	$(".HAAfterLeasedArea").eq(i).attr("name","Ban["+i+"][HAAfterLeasedArea]");//传给后台的调整后计租面积
+						   	$(".HABeforeBanArea").eq(i).find("input").attr("name","Ban["+i+"][HABeforeBanArea]");//传给后台的调整前建筑面积
+						   	$(".HABanArea").eq(i).attr("name","Ban["+i+"][HABanArea]");//传给后台的调整建筑面积
+						   	$(".HAAfterBanArea").eq(i).attr("name","Ban["+i+"][HAAfterBanArea]");//传给后台的调整后建筑面积
+						   	$(".HABeforePrice").eq(i).find("input").attr("name","Ban["+i+"][HABeforePrice]");//传给后台的调整前楼栋原价
+						   	$(".HAPrice").eq(i).attr("name","Ban["+i+"][HAPrice]");//传给后台的调整楼栋原价
+						   	$(".HAAfterPrice").eq(i).attr("name","Ban["+i+"][HAAfterPrice]");//传给后台的调整后楼栋原价
+						   }
+
+						// 参数错误弹出提示	
+						}else{
+							layer.msg(res.msg, {time:5000});
+						}
+		                // layer.msg(res.msg, {time:5000}, function() {
+		                //     if(res.data.refresh === undefined || res.data.refresh){
+		                //         if (refresh == 'yes') {
+		                //             if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+		                //                 location.href = res.url;
+		                //             } else {
+		                //                 location.reload();
+		                //             }
+		                //         }
+		                //     }
+		                // });
+		            });
+
+					layer.close(index);
+					var hosue_number = row.house_number;
+					$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
+					$("#check").removeClass('hide');
+					
+					$("#j_house_id").val(row.house_id);//获取房屋id
+					$("#house_number").val(row.house_number);//获取房屋编号
+					$("#house_id").val(row.house_id);//获取房屋编号
+					$("#ban_id").val(row.ban_id);//获取楼栋编号
+					$("#tenant_id").val(row.tenant_id);//获取租户编号
+					$("#tenant_name").val(row.tenant_name);//获取租户姓名
+
+				},btn2: function(index, layero){
+					layer.close(index);
+				}
+		 });
+	});	
+
 	
-	  })
-	})
-	
-	
-	//异动后房间信息编辑
-	$(".layui-form").on('click','.j-iframe-pop-change',function(){
-		var  urls=$(this).attr('data-href');
-			layer.open({
-					title: '计租表异动'
-					,type: 2
-					,offset: 'auto'
-					,area: ['70%', '60%']
-					, btn:false
-					,pageTabs: false
-					,content: urls+'&&hisi_iframe=yes'
-					//,btn: ['确定','关闭']
-					,cancel: function(index, layero){
-						//获取原房间信息
-						var house_id = $("#j_house_id").val();//获取房屋ID
-						$.ajax({
-						  type: "post",
-						  url: "{:url('house/HouseTemp/renttable')}?id="+house_id,
-						  data: { 'house_id': house_id}, 
-						  dataType: "json", 
-						  success: function(res) {
-							if(res.code == 0){
-								layer.msg(res.msg);
-							}else{
-							  $('.j-table-tbodynew').html("");
-							  //原房屋信息
-							  var resData = res.data;
-							  //console.log(resData);
-							  for(var k=0;k<resData.length;k++) {
-								//异动后房间信息
-								var trDatanew ='<tr>\
-									<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
-									<td>'+resData[k].baseinfo.room_number+'</td>\
-									<td>'+resData[k].baseinfo.room_door+'</td>\
-									<td>'+resData[k].baseinfo.ban_number+'</td>\
-									<td>'+resData[k].houseinfo[0].house_number+'</td>\
-									<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
-									<td>'+resData[k].baseinfo.room_unit_id+'</td>\
-									<td>'+resData[k].baseinfo.room_floor_id+'</td>\
-									<td>'+resData[k].baseinfo.room_use_area+'</td>\
-									<td>'+resData[k].baseinfo.room_rent_point+'</td>\
-									<td>'+resData[k].baseinfo.room_lease_area+'</td>\
-									<td>'+resData[k].baseinfo.floor_point+'</td>\
-									<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
-									<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-									<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
-								</tr>';
-								$('.j-table-tbodynew').append(trDatanew);
-								//房屋明细
-								for(var j=1;j<resData[k].houseinfo.length;j++) {
-									//异动后房屋信息
-									var trDatahousenew='<tr>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td>'+resData[k].houseinfo[j].house_number+'</td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td></td>\
-										<td>0</td>\
-										<td></td>\
-										<td>0</td>\
-										<td></td>\
-										<td></td>\
-									</tr>';
-									$('.j-table-tbodynew').append(trDatahousenew);
-								}
-							  } 
-								 statistics(); 
-							}
-							   
-						  },
-						  error: function(msg) {
-							  layer.msg(msg);
-						  }
-						}); 
-						layer.close(index)
-					},
-					btn2: function(index, layero){
-						layer.close(index);
-					}
-	
-	  })
-	})
-	
-	//异动后房间信息删除
-	$(".layui-form").on('click','.j-tr-del-change',function(){
-		var  urls=$(this).attr('data-href');
-		layer.confirm('删除之后无法恢复，您确定要删除吗？', {icon: 3, title:'提示'}, function(index){
-		  //获取原房间信息
-		  var house_id = $("#j_house_id").val();//获取房屋ID
-		  $.ajax({
-		    type: "post",
-		    url: urls,
-		    data: {'house_id': house_id}, 
-		    dataType: "json", 
-		    success: function(res) {
-				console.log(res);
-		  	if(res.code == 0){
-		  		layer.msg(res.msg);
-		  	}else{
-		  	  $('.j-table-tbodynew').html("");
-		  	  //原房屋信息
-		  	  var resData = res.data;
-		  	  //console.log('删除一个房间后：'+resData);
-		  	  for(var k=0;k<resData.length;k++) {
-		  		//异动后房间信息
-		  		var trDatanew ='<tr>\
-		  			<td>'+params.roomtypes[resData[k].baseinfo.room_type]+'</td>\
-		  			<td>'+resData[k].baseinfo.room_number+'</td>\
-		  			<td>'+resData[k].baseinfo.room_door+'</td>\
-		  			<td>'+resData[k].baseinfo.ban_number+'</td>\
-		  			<td>'+resData[k].houseinfo[0].house_number+'</td>\
-		  			<td>'+params.owners[resData[k].baseinfo.ban_owner_id]+'</td>\
-		  			<td>'+resData[k].baseinfo.room_unit_id+'</td>\
-		  			<td>'+resData[k].baseinfo.room_floor_id+'</td>\
-		  			<td>'+resData[k].baseinfo.room_use_area+'</td>\
-		  			<td>'+resData[k].baseinfo.room_rent_point+'</td>\
-		  			<td>'+resData[k].baseinfo.room_lease_area+'</td>\
-		  			<td>'+resData[k].baseinfo.floor_point+'</td>\
-		  			<td>'+resData[k].baseinfo.room_cou_rent+'</td>\
-		  			<td>'+params.house_status[resData[k].baseinfo.room_status]+'</td>\
-		  			<td><a data-href="{:url('house/RoomTemp/edit')}?id='+ resData[k].baseinfo.room_id +'" class="j-iframe-pop-change" style="color:#1E9FFF;" hisi-data="" title="修改房间"><label class="layui-btn layui-btn-xs layui-btn-normal">修改</label></a><a data-href="{:url('house/RoomTemp/del')}?id='+ resData[k].baseinfo.room_id +'" isreload="y" class="j-tr-del-change"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></a></td>\
-		  		</tr>';
-		  		$('.j-table-tbodynew').append(trDatanew);
-		  		//房屋明细
-		  		for(var j=1;j<resData[k].houseinfo.length;j++) {
-		  			//异动后房屋信息
-		  			var trDatahousenew='<tr>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td>'+resData[k].houseinfo[j].house_number+'</td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td></td>\
-		  				<td>0</td>\
-		  				<td></td>\
-		  				<td>0</td>\
-		  				<td></td>\
-		  				<td></td>\
-		  			</tr>';
-		  			$('.j-table-tbodynew').append(trDatahousenew);
-		  		}
-		  	  } 
-		  		 statistics(); 
-		  	}
-		  	   
-		    },
-		    error: function(msg) {
-		  	  layer.msg(msg);
-		    }
-		  });
-		  layer.close(index);
-		});
-	
-	  })
+	// 目前只适用于加减法 浮点小数加减法
+	function numberMethod(number1,number2,method){
+	    var array_1 = number1.split('.');
+	    var array_2 = number2.split('.');
+	    var number = 0;
+	    var multiple = 0;
+	    var dot_diff_1 = 0;
+	    var dot_diff_2 = 0;
+	    array_1[1] = (array_1[1] == undefined ? '0' : array_1[1]);
+	    array_2[1] = (array_2[1] == undefined ? '0' : array_2[1]);
+	    if(array_1[1].length > array_2[1].length){
+	        multiple = array_1[1].length;
+	        dot_diff_2 = array_1[1].length - array_2[1].length;
+	    }else{
+	        multiple = array_2[1].length;
+	        dot_diff_1 = array_2[1].length - array_1[1].length;
+	    }
+	    number1 = parseFloat(array_1[0]) * Math.pow(10,multiple)+parseFloat(array_1[1]) * Math.pow(10,dot_diff_1);
+	    number2 = parseFloat(array_2[0]) * Math.pow(10,multiple)+parseFloat(array_2[1]) * Math.pow(10,dot_diff_2);
+	    if(method == '+'){
+	        number = (number1 + number2)/Math.pow(10,multiple);
+	    }else if(method == '-'){
+	        number = (number1 - number2)/Math.pow(10,multiple);
+	    }
+	    return number;
+	}
 	
 })
 </script>
