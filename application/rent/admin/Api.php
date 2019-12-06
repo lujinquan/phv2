@@ -143,7 +143,8 @@ class Api extends Common
             $limit = input('param.limit/d', 5);
             $getData = $this->request->get();
             $where[] = ['change_status','eq',1];
-            $where[] = ['change_type','in',[3,7,8]];
+            $types = [3,7,8];
+            $where[] = ['change_type','in',$types];
             // 检索月份时间
             if(isset($getData['ctime']) && $getData['ctime']){
                 $startTime = str_replace('/', '', $getData['ctime']);
@@ -168,16 +169,33 @@ class Api extends Common
             
             $data = $result = [];
             
-            $result = Db::name('change_table')->group('change_type')->where($where)->column('change_type,sum(change_rent) as change_rents');
+            $temp = Db::name('change_table')->group('owner_id,change_type')->where($where)->field('owner_id,change_type,sum(change_rent) as change_rents')->select();
+//halt($temp);
+            // if(!isset($result[3])){
+            //    $result[3] = 0; 
+            // }
+            // if(!isset($result[7])){
+            //    $result[7] = 0; 
+            // }
+            // if(!isset($result[8])){
+            //    $result[8] = 0; 
+            // }
 
-            if(!isset($result[3])){
-               $result[3] = 0; 
+            foreach($temp as $t){
+                $result[$t['owner_id']][$t['change_type']] = [
+                    'change_rents' => (float)$t['change_rents'],
+                ];
             }
-            if(!isset($result[7])){
-               $result[7] = 0; 
-            }
-            if(!isset($result[8])){
-               $result[8] = 0; 
+            $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
+            foreach ($ownertypes as $owner) {
+                foreach ($types as $i) {
+                    if(!isset($result[$owner][$i])){
+                        $result[$owner][$i] = [
+                            //'rent_order_receives' => 0, 
+                            'change_rents' => 0, 
+                        ];
+                    }
+                }
             }
 //halt($result);
 
@@ -229,23 +247,50 @@ class Api extends Common
             
             $data = $result = [];
             
-            $row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where1)->field('sum(rent_order_receive-rent_order_paid) as rent_unpaids,sum(rent_order_paid) as rent_paids')->find();
-            if(!$row){
-                $result['rent_paids'] = 0;
-                $result['rent_unpaids'] = 0;
-            }else{
-                $result['rent_paids'] = $row['rent_paids'];
-                $result['rent_unpaids'] = $row['rent_unpaids'];
+            $temp1 = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where1)->field('ban_owner_id,sum(rent_order_receive-rent_order_paid) as rent_unpaids,sum(rent_order_paid) as rent_paids')->group('d.ban_owner_id')->select();
+
+            $temp2 = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where2)->field('ban_owner_id,sum(rent_order_receive-rent_order_paid) as rent_unpaids')->group('d.ban_owner_id')->select();
+
+            foreach($temp1 as $t){
+                $result[$t['ban_owner_id']] = [
+                    'rent_unpaids' => (float)$t['rent_unpaids'],
+                    'rent_paids' => (float)$t['rent_paids'],
+                ];
+            }
+            foreach($temp2 as $p){
+                $result[$p['ban_owner_id']]['rent_before_unpaids'] = (float)$t['rent_unpaids'];
             }
 
-            $rent_before_unpaids = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where2)->value('sum(rent_order_receive-rent_order_paid) as rent_unpaids');
-//halt($rent_order_before_unpaids);
-            
-            if(!$rent_before_unpaids){
-                $result['rent_before_unpaids'] = 0; 
-            }else{
-                $result['rent_before_unpaids'] = $rent_before_unpaids; 
+            $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
+            foreach ($ownertypes as $owner) {
+                if(!isset($result[$owner])){
+                    $result[$owner] = [ 
+                        'rent_unpaids' => 0, 
+                        'rent_paids' => 0, 
+                        'rent_before_unpaids' => 0, 
+                    ];
+                } 
             }
+
+            //halt($temp2);
+            //halt($result);
+
+//             if(!$row){
+//                 $result['rent_paids'] = 0;
+//                 $result['rent_unpaids'] = 0;
+//             }else{
+//                 $result['rent_paids'] = $row['rent_paids'];
+//                 $result['rent_unpaids'] = $row['rent_unpaids'];
+//             }
+
+//             $rent_before_unpaids = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where2)->value('sum(rent_order_receive-rent_order_paid) as rent_unpaids');
+// //halt($rent_order_before_unpaids);
+            
+//             if(!$rent_before_unpaids){
+//                 $result['rent_before_unpaids'] = 0; 
+//             }else{
+//                 $result['rent_before_unpaids'] = $rent_before_unpaids; 
+//             }
             //$result['rent_before_unpaids'] = 20000;
 //halt($result);
 

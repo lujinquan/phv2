@@ -274,7 +274,7 @@ class Weixinbaseadmin extends Controller
             $params = ParamModel::getCparams();
             //$result['data']['params'] = $params;
             $status = input('ban_status');
-            $tenant = input('tenant');
+            $tenant = input('tenant_name');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
 
