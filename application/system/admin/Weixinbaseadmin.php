@@ -139,7 +139,7 @@ class Weixinbaseadmin extends Controller
 
             $BanModel = new BanModel;
             $where = [];
-            $where[] = ['ban_status','eq',1];
+            
             $where[] = ['ban_inst_id','eq',$row['inst_id']];
             
             if($damage){
@@ -156,6 +156,8 @@ class Weixinbaseadmin extends Controller
             }
             if($status !== null){
             	$where[] = ['ban_status','eq',$status];
+            }else{
+                $where[] = ['ban_status','eq',1];
             }
             //halt($where);
             $temps = $BanModel->field('ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_status')->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
