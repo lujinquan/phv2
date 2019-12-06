@@ -12,7 +12,7 @@
 					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
 					<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
 					<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
-					<b class="j-explain-search j-house_number">查询</b>
+					<!-- <b class="j-explain-search j-house_number">查询</b> -->
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
 			</div>
@@ -22,7 +22,7 @@
 				<label class="j-form-label">计租表</label>
 				<div class="j-input-inline">
 					<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
-					<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
+					<a id="checktable" href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
 				</div>
 			</div>
 			<div class="layui-col-md3">
@@ -59,8 +59,8 @@
 		    <td rowspan="1" colspan="1">调整后</td>
 		  </tr>
 		  <tr>
-		    <td rowspan="4" colspan="2" class="HABanID">{$v['HABanID']}</td>
-		    <td rowspan="4" colspan="2" class="HAAddress">{$v['HAAddress']}</td>
+		    <td rowspan="4" colspan="2" class="HABanID"><input type="tetx" readonly name="Ban[{$key}]HABanID" value="{$v['HABanID']}" class="layui-input" /></td>
+		    <td rowspan="4" colspan="2" class="HAAddress"><input type="tetx" readonly name="Ban[{$key}]HAAddress" value="{$v['HAAddress']}" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="tetx" readonly name="Ban[{$key}]HABeforeRent" value="{$v['HABeforeRent']}" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HARent" value="{$v['HARent']}" class="HARent layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" name="Ban[{$key}]HAAfterRent" value="{$v['HAAfterRent']}"/></td>
@@ -81,12 +81,12 @@
 		    <td rowspan="1" colspan="1">调整后</td>
 		  </tr>
 		  <tr>
-		    <td rowspan="1" colspan="1" class="HABeforeBanArea"><input type="text" readonly name="HABeforeBanArea[{$key}]" value="{$v['HABeforeBanArea']}"  class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="HABanArea[{$key}]" value="{$v['HABanArea']}" class="HABanArea layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="HAAfterBanArea[{$key}]" value="{$v['HAAfterBanArea']}" readonly class="HAAfterBanArea layui-input" /></td>
-		    <td rowspan="1" colspan="1" class="HABeforePrice"><input type="text" readonly name="HABeforePrice[{$key}]" value="{$v['HABeforePrice']}" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="HAPrice[{$key}]" value="{$v['HAPrice']}" class="HAPrice layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" readonly name="HAAfterPrice[{$key}]" value="{$v['HAAfterPrice']}" class="HAAfterPrice layui-input" /></td>
+		    <td rowspan="1" colspan="1" class="HABeforeBanArea"><input type="text" readonly name="Ban[{$key}]HABeforeBanArea" value="{$v['HABeforeBanArea']}"  class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HABanArea" value="{$v['HABanArea']}" class="HABanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HAAfterBanArea" value="{$v['HAAfterBanArea']}" readonly class="HAAfterBanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1" class="HABeforePrice"><input type="text" readonly name="Ban[{$key}]HABeforePrice" value="{$v['HABeforePrice']}" class="layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}]HAPrice" value="{$v['HAPrice']}" class="HAPrice layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" readonly name="Ban[{$key}]HAAfterPrice" value="{$v['HAAfterPrice']}" class="HAAfterPrice layui-input" /></td>
 		  </tr>
 		  
 		  <tr class="table_data_2">
