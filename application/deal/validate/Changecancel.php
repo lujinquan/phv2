@@ -66,7 +66,7 @@ class Changecancel extends Validate
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['post']);
+        return $this->only(['id','cancel_ban']);
     }
 
     

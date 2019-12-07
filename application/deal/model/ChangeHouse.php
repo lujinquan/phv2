@@ -7,6 +7,7 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
+use app\house\model\BanTai as BanTaiModel;
 use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\HouseTemp as HouseTempModel;
@@ -377,6 +378,94 @@ class ChangeHouse extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
+    {//halt($finalRow);
+        $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();
+
+        foreach ($finalRow['data_json']['ban'] as $k => $v) {
+            // 1、调整楼栋信息
+            if($houseInfo['house_use_id'] == 1){
+                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                    'ban_civil_rent'=>Db::raw('ban_civil_rent+'.$v['HARent']),
+                    'ban_civil_area'=>Db::raw('ban_civil_area+'.$v['HABanArea']),
+                    'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$v['HAPrice']),
+                    'ban_use_area'=>Db::raw('ban_use_area+'.$v['HALeasedArea']),
+                ]);
+            }elseif($houseInfo['house_use_id'] == 2){
+                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                    'ban_career_rent'=>Db::raw('ban_career_rent+'.$v['HARent']),
+                    'ban_career_area'=>Db::raw('ban_career_area+'.$v['HABanArea']),
+                    'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$v['HAPrice']),
+                ]);
+            }else{
+                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                    'ban_party_rent'=>Db::raw('ban_party_rent+'.$v['HARent']),
+                    'ban_party_area'=>Db::raw('ban_party_area+'.$v['HABanArea']),
+                    'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$v['HAPrice']),
+                ]);
+            }
+            // 3、添加楼栋调整
+            $taiBanData = [];
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_tai_type'] = 7;
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['house_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [];
+            $taiBanData['change_type'] = 9;
+            $taiBanData['change_id'] = $finalRow['id'];
+            $BanTaiModel = new BanTaiModel;
+            $BanTaiModel->allowField(true)->create($taiBanData);
+
+            // 2、调整房屋信息
+            Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->update([
+                'house_pre_rent'=>Db::raw('house_pre_rent+'.$v['HARent']),
+                'house_area'=>Db::raw('house_area+'.$v['HABanArea']),
+                'house_oprice'=>Db::raw('house_oprice+'.$v['HAPrice']),
+            ]);
+
+            // 5、写入到table表
+            $tableData = [];       
+            $tableData['change_type'] = 12;
+            $tableData['change_order_number'] = $finalRow['change_order_number'];
+            $tableData['house_id'] = $finalRow['house_id'];
+            $tableData['ban_id'] = $finalRow['ban_id'];
+            $tableData['inst_id'] = $houseInfo['ban_inst_id'];
+            $tableData['inst_pid'] = $houseInfo['ban_inst_pid'];
+            $tableData['owner_id'] = $houseInfo['ban_owner_id'];
+            $tableData['use_id'] = $houseInfo['house_use_id'];
+
+            $tableData['change_rent'] = $v['HARent']; 
+            $tableData['change_area'] = $v['HABanArea']; 
+            $tableData['change_oprice'] = $v['HAPrice'];
+            $tableData['change_use_area'] = $v['HALeasedArea']; 
+
+            $tableData['tenant_id'] = $finalRow['tenant_id']; 
+            $tableData['cuid'] = $finalRow['cuid'];
+            $tableData['order_date'] = date('Ym'); 
+            $ChangeTableModel = new ChangeTableModel;
+            $ChangeTableModel->save($tableData);
+        }
+        // 4、添加房屋台账
+        $taiHouseData = [];
+        $taiHouseData['house_id'] = $finalRow['house_id'];
+        $taiHouseData['tenant_id'] = $finalRow['tenant_id'];
+        $taiHouseData['house_tai_type'] = 12;
+        $taiHouseData['cuid'] = $finalRow['cuid'];
+        $taiHouseData['house_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
+        $taiHouseData['data_json'] = [];
+        $taiHouseData['change_type'] = 9;
+        $taiHouseData['change_id'] = $finalRow['id'];
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->allowField(true)->create($taiHouseData);
+        
+        
+        
+    }
+
+    /**
+     * 终审审核成功后的数据处理【完成，待优化】
+     * @return [type] [description]
+     */
+    private function finalDeal_old($finalRow)
     {//halt($finalRow);
 
         // 1、更新房屋信息（临时表的房屋id替换主表，房间信息，房屋房间中间表信息）
