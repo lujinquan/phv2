@@ -14,13 +14,14 @@ namespace app\house\admin;
 
 use think\Db;
 use app\system\admin\Admin;
-use app\house\model\Ban as BanModel;
-use app\house\model\Room as RoomModel;
-use app\house\model\BanTai as BanTaiModel;
 use app\common\model\SystemAnnex;
+use app\house\model\Ban as BanModel;
 use app\common\model\SystemAnnexType;
+use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
+use app\house\model\BanTai as BanTaiModel;
+use app\deal\model\Process as ProcessModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
 class Ban extends Admin
@@ -266,8 +267,19 @@ class Ban extends Admin
             }
             $this->assign('datas',$datas);
             return $this->fetch();
+        // 如果是异动形成的台账，则调取异动记录信息
+        }elseif($row['change_type'] && $row['change_id']){  
+            $PorcessModel = new ProcessModel;
+            //dump($row['change_type']);halt($row['change_id']);
+            $result = $PorcessModel->detail($row['change_type'],$row['change_id']);
+            if(isset($result['old_data_info'])){
+                $this->assign('old_data_info',$result['old_data_info']);
+            }
+            //halt($result['template']);
+            $this->assign('data_info',$result['row']);
+            return $this->fetch($result['template']);
         }else{
-            return $this->error('数据为空！');
+            return $this->error('数据为空！');  
         }         
     }
 }

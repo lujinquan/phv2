@@ -408,7 +408,7 @@ class ChangeHouse extends SystemBase
             $taiBanData['ban_id'] = $finalRow['ban_id'];
             $taiBanData['ban_tai_type'] = 7;
             $taiBanData['cuid'] = $finalRow['cuid'];
-            $taiBanData['house_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['ban_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
             $taiBanData['data_json'] = [];
             $taiBanData['change_type'] = 9;
             $taiBanData['change_id'] = $finalRow['id'];

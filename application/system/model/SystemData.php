@@ -242,7 +242,7 @@ class SystemData extends Model
 
         $HouseModel = new HouseModel;
 
-        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_use_area,a.house_area,b.*,c.*,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_use_area,a.house_area,a.house_is_pause,b.*,c.*,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
@@ -269,6 +269,14 @@ class SystemData extends Model
             if(isset($applyHouseidArr) && $applyHouseidArr){
                 if(in_array($v['house_id'], $applyHouseidArr)){
                     $v['color_status'] = 2; // 已在异动中
+                }
+            }
+            if($queryWhere['change_type'] == 18){ //如果是发租约类型
+                if($v['house_pre_rent'] != $v['house_cou_rent']){ 
+                    $v['color_status'] = 4;  //如果规租不等于计算租金
+                }
+                if($v['house_is_pause']){ 
+                    $v['color_status'] = 5;  //如果是暂停计租
                 }
             }
 

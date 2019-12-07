@@ -816,27 +816,43 @@ class MonthReport extends Model
                 $result[$owners][$j][100][3] = $housedata[$owners][1][$j]['house_ids']; //民用总户数
             }
         }
+        //第一步：将所有管段加上市代托、市区代托、全部
+        $ownertype = [10,11,12]; //市、区、代、自、托、市代托、市区代托、全部
+        foreach ($ownertype as $ow) {
+            for ($d = 33; $d >3; $d--) { //公司和所，从1到3（1公司，2紫阳，3粮道），注意顺序公司的数据由所加和得来，所以是3、2、1的顺序
+                if($ow == 10){
+                    $result[$ow][$d] = array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]);
+                } 
+                if($ow == 11 && $d > 3){
+                    $result[$ow][$d] = array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]);
+                }     
+                if($ow == 12 && $d > 3){
+                    $result[$ow][$d] = array_merge_add(array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]),$result[5][$d]);
+                }
+            }
+        }
 
-        //第一步：处理市代托，市区代托，全部下的公司，紫阳，粮道的数据（注意只有所和公司才有市代托、市区代托、全部）
+
+        //第二步：处理市代托，市区代托，全部下的公司，紫阳，粮道的数据（注意只有所和公司才有市代托、市区代托、全部）
         $ownertypess = [1,2,3,5,7,10,11,12]; //市、区、代、自、托、市代托、市区代托、全部
         foreach ($ownertypess as $own) {
-
             for ($d = 3; $d >0; $d--) { //公司和所，从1到3（1公司，2紫阳，3粮道），注意顺序公司的数据由所加和得来，所以是3、2、1的顺序
                 if($own < 10 && $d ==3){
                     $result[$own][$d] = array_merge_addss($result[$own][19],$result[$own][20],$result[$own][21],$result[$own][22],$result[$own][23],$result[$own][24],$result[$own][25],$result[$own][26],$result[$own][27],$result[$own][28],$result[$own][29],$result[$own][30],$result[$own][31],$result[$own][32],$result[$own][33]);
                 }elseif($own < 10 && $d ==2){
                     $result[$own][$d] = array_merge_addss($result[$own][4],$result[$own][5],$result[$own][6],$result[$own][7],$result[$own][8],$result[$own][9],$result[$own][10],$result[$own][11],$result[$own][12],$result[$own][13],$result[$own][14],$result[$own][15],$result[$own][16],$result[$own][17],$result[$own][18]);
-                }elseif($own < 10 && $d ==1){
+                }elseif($own < 10 && $d == 1){
                     $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
-                }elseif($own == 10 && $d > 1){
+                }elseif($own == 10 && $d > 1 && $d < 4){
                     $result[$own][$d] = array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]);
                 }elseif($own == 10 && $d == 1){
                     $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
-                }elseif($own == 11 && $d > 1){
+                
+                }elseif($own == 11 && $d > 1 && $d < 4){
                     $result[$own][$d] = array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]);
                 }elseif($own == 11 && $d == 1){
                     $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
-                }elseif($own == 12 && $d > 1){
+                }elseif($own == 12 && $d > 1 && $d < 4){
                     $result[$own][$d] = array_merge_add(array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]),$result[5][$d]);
                 }elseif($own == 12 && $d == 1){
                     $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);

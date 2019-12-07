@@ -97,6 +97,40 @@ class Api extends Common
         return $msg = '检测完毕，无误！';
         
     } 
+
+    public function check_report_data()
+    {
+        $datas = Db::name('report')->where([['type','eq','RentReport']])->field('date,data')->select();
+        foreach ($datas as $key => $data) {
+            $dataArr = json_decode($data['data'],true);
+            if(!isset($dataArr[10][4])){
+                foreach($dataArr as $k1 => $v1){
+                    // $k1是产别，1市、2区、3代、5自、7托、10市代托、11市区代托、12全部
+                    for ($d = 33; $d >3; $d--) {
+                        // $k2是机构，1~33
+                        if(!isset($v1[$d])){
+                            if($k1 == 10){
+                                $dataArr[$k1][$d] =  array_merge_add(array_merge_add($dataArr[1][$d] ,$dataArr[3][$d]),$dataArr[7][$d]);
+                            }
+                            if($k1 == 11){
+                                $dataArr[$k1][$d] =  array_merge_add(array_merge_add(array_merge_add($dataArr[1][$d] ,$dataArr[3][$d]),$dataArr[7][$d]),$dataArr[2][$d]);
+                            }
+                            if($k1 == 12){
+                                $dataArr[$k1][$d] =  array_merge_add(array_merge_add(array_merge_add(array_merge_add($dataArr[1][$d] ,$dataArr[3][$d]),$dataArr[7][$d]),$dataArr[2][$d]),$dataArr[5][$d]);
+                            }
+                            
+                        }
+                    }
+                }
+                //halt($dataArr[10][4]);
+                Db::name('report')->where([['type','eq','RentReport'],['date','eq',$data['date']]])->update(['data'=>json_encode($dataArr)]);
+            }
+        }
+        
+        
+        return $msg = '检测完毕，无误！';
+        
+    } 
     
 
     

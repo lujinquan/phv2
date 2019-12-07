@@ -16,10 +16,9 @@ use think\Db;
 use app\system\admin\Admin;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
+use app\deal\model\Process as ProcessModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\FloorPoint as FloorPointModel;
-use app\deal\model\Process as ProcessModel;
-
 
 class House extends Admin
 {

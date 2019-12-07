@@ -26,62 +26,53 @@ class Api extends Common
      * 首页的第一部分
      * @param ban_inst_id 机构id 
      * @param ctime 月份
-     * @return json 10：市属、2区属、5自管、11所有
+     * @return json 10：市属、2区属、5自管、12所有
      */
     public function indexPartOne() 
     {
-        $getData = $this->request->get();
-    	// 检索楼栋机构
-        $insts = config('inst_ids');
-        if(isset($getData['ban_inst_id']) && $getData['ban_inst_id']){
-            $where[] = ['d.ban_inst_id','in',$insts[$getData['ban_inst_id']]];
-        }else{
-            $instid = (isset($getData['ban_inst_id']) && $getData['ban_inst_id'])?$getData['ban_inst_id']:session('admin_user.inst_id');
-            $where[] = ['d.ban_inst_id','in',$insts[$instid]];
-        }
-        // 检索月份时间
-        if(isset($getData['ctime']) && $getData['ctime']){
-            $startTime = str_replace('/', '', $getData['ctime']);
-            $where[] = ['a.rent_order_date','eq',$startTime];
-        }
-        $fields = 'sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,b.house_use_id,d.ban_owner_id';
-        $data = [];
-        $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('b.house_use_id,d.ban_owner_id')->where($where)->select();
-        $result = [];
-        foreach($temp as $t){
-        	$result[$t['ban_owner_id']][$t['house_use_id']] = [
-        		'rent_order_receives' => (float)$t['rent_order_receives'],
-        		'rent_order_paids' => (float)$t['rent_order_paids'],
-        	];
-        }
-        $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
-        foreach ($ownertypes as $owner) {
-            for ($i=1;$i<4;$i++ ) {
-                if(!isset($result[$owner][$i])){
-                    $result[$owner][$i] = [
-                        'rent_order_receives' => 0, 
-                        'rent_order_paids' => 0, 
-                    ];
+        if ($this->request->isAjax()) {
+            $getData = $this->request->get();
+            // 检索月份时间
+            if(isset($getData['ctime']) && $getData['ctime']){
+                $startTime = str_replace('/', '', $getData['ctime']);
+                $where[] = ['date','eq',$startTime];
+            }else{
+                $where[] = ['date','eq',date('Ym')];
+            }
+            $tempData = Db::name('report')->where($where)->value('data');
+            $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $data = $result = [];
+            $owners = [2,5,10,12];
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                foreach ($owners as $v) {
+                    for ($i=1;$i<4;$i++ ) {
+                        if($i == 1){
+                            $j = 1;
+                        }
+                        if($i == 2){
+                            $j = 10;
+                        }
+                        if($i == 3){
+                            $j = 13;
+                        }
+                        $data['data'][$v][$i] = [
+                            'rent_order_receives' => $temps[$v][$instid][8][$j], //统计应收租金的合计（住宅+机关+企业）
+                            'rent_order_paids' => $temps[$v][$instid][18][$j],  //统计已缴租金的合计（住宅+机关+企业）
+                        ];
+                    }
+                }
+            }else{
+                foreach ($owners as $v) {
+                    for ($i=1;$i<4;$i++ ) {
+                        $data['data'][$v][$i] = ['rent_order_receives' => 0,'rent_order_paids' => 0];
+                    }
                 }
             }
-        }
-        $result[10][1]['rent_order_receives'] = $result[1][1]['rent_order_receives'] + $result[3][1]['rent_order_receives'] + $result[7][1]['rent_order_receives'];
-        $result[10][2]['rent_order_receives'] = $result[1][2]['rent_order_receives'] + $result[3][2]['rent_order_receives'] + $result[7][2]['rent_order_receives'];
-        $result[10][3]['rent_order_receives'] = $result[1][3]['rent_order_receives'] + $result[3][3]['rent_order_receives'] + $result[7][3]['rent_order_receives'];
-        $result[10][1]['rent_order_paids'] = $result[1][1]['rent_order_paids'] + $result[3][1]['rent_order_paids'] + $result[7][1]['rent_order_paids'];
-        $result[10][2]['rent_order_paids'] = $result[1][2]['rent_order_paids'] + $result[3][2]['rent_order_paids'] + $result[7][2]['rent_order_paids'];
-        $result[10][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
-
-        $result[11][1]['rent_order_receives'] = $result[1][1]['rent_order_receives'] + $result[2][1]['rent_order_receives'] + $result[3][1]['rent_order_receives'] + $result[5][1]['rent_order_receives'] + $result[7][1]['rent_order_receives'];
-        $result[11][2]['rent_order_receives'] = $result[1][2]['rent_order_receives'] + $result[2][2]['rent_order_receives'] + $result[3][2]['rent_order_receives'] + $result[5][2]['rent_order_receives'] + $result[7][2]['rent_order_receives'];
-        $result[11][3]['rent_order_receives'] = $result[1][3]['rent_order_receives'] + $result[2][3]['rent_order_receives'] + $result[3][3]['rent_order_receives'] + $result[5][3]['rent_order_receives'] + $result[7][3]['rent_order_receives'];
-        $result[11][1]['rent_order_paids'] = $result[1][1]['rent_order_paids'] + $result[2][1]['rent_order_paids'] + $result[3][1]['rent_order_paids'] + $result[5][1]['rent_order_paids'] + $result[7][1]['rent_order_paids'];
-        $result[11][2]['rent_order_paids'] = $result[1][2]['rent_order_paids'] + $result[2][2]['rent_order_paids'] + $result[3][2]['rent_order_paids'] + $result[5][2]['rent_order_paids'] + $result[7][2]['rent_order_paids'];
-        $result[11][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[2][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[5][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
-        $data['data'] = $result;
-        $data['code'] = 0;
-        $data['msg'] = '获取成功';
-        return json($data);
+            $data['code'] = 1;
+            $data['msg'] = '获取成功';
+            return json($data);
+        }  
     }
 
     /**
@@ -132,11 +123,198 @@ class Api extends Common
     }
 
     /**
+     * 首页的第三部分
+     * @param ban_inst_id 机构id 
+     * @param ctime 月份
+     * @return json 10：市属、2区属、5自管、12所有
+     */
+    public function indexPartThree()
+    {
+        if ($this->request->isAjax()) {
+            $getData = $this->request->get();
+            // 检索月份时间
+            if(isset($getData['ctime']) && $getData['ctime']){
+                $startTime = str_replace('/', '', $getData['ctime']);
+                $where[] = ['date','eq',$startTime];
+                //$where[] = ['order_date','eq',201911];
+            }else{
+                $where[] = ['date','eq',date('Ym')];
+            }
+            $tempData = Db::name('report')->where($where)->value('data');
+            $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $data = $result = [];   
+            $owners = [2,5,10,12];
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                foreach ($owners as $v) {
+                    $data['data'][$v] = [
+                        3 => bcaddMerge([$temps[$v][$instid][12][1], $temps[$v][$instid][12][10], $temps[$v][$instid][12][13]]), //统计暂停计租的合计（住宅+机关+企业）
+                        7 => bcaddMerge([$temps[$v][$instid][2][1], $temps[$v][$instid][2][10], $temps[$v][$instid][2][13]]), //统计新发租的合计（住宅+机关+企业）
+                        8 => bcaddMerge([$temps[$v][$instid][4][1], $temps[$v][$instid][4][10], $temps[$v][$instid][4][13]]), //统计注销的合计（住宅+机关+企业）
+                    ];
+                }
+            }else{
+                foreach ($owners as $v) {
+                    $data['data'][$v] = [3 => 0,7 => 0,8 => 0];
+                }
+            }
+            $data['code'] = 1;
+            $data['msg'] = '获取成功';
+            return json($data);
+        }  
+    }
+
+    
+
+    /**
+     * 首页的第四部分
+     * @param ban_inst_id 机构id 
+     * @param ctime 月份
+     * @return json 10：市属、2区属、5自管、12所有
+     */
+    public function indexPartFour()
+    {
+        if ($this->request->isAjax()) {
+            $getData = $this->request->get();
+            // 检索月份时间
+            if(isset($getData['ctime']) && $getData['ctime']){
+                $startTime = str_replace('/', '', $getData['ctime']);
+                $where[] = ['date','eq',$startTime];
+                //$where[] = ['order_date','eq',201911];
+            }else{
+                $where[] = ['date','eq',date('Ym')];
+            }
+            $tempData = Db::name('report')->where($where)->value('data');
+            $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $data = $result = [];  
+            $owners = [2,5,10,12];
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                foreach ($owners as $v) {
+                    $data['data'][$v] = [
+                        'rent_unpaids' => bcaddMerge([$temps[$v][$instid][20][1], $temps[$v][$instid][20][10], $temps[$v][$instid][20][13]]), //统计暂停计租的合计（住宅+机关+企业）
+                        'rent_paids' => bcaddMerge([$temps[$v][$instid][18][1], $temps[$v][$instid][18][10], $temps[$v][$instid][18][13]]),
+                        'rent_before_unpaids' => bcaddMerge([$temps[$v][$instid][20][2],$temps[$v][$instid][20][3], $temps[$v][$instid][20][11],$temps[$v][$instid][20][12], $temps[$v][$instid][20][14], $temps[$v][$instid][20][15]]),
+                    ];
+                }
+            }else{
+                foreach ($owners as $v) {
+                    $data['data'][$v] = ['rent_unpaids' => 0,'rent_paids' => 0,'rent_before_unpaids' => 0];
+                }
+            }
+            $data['code'] = 1;
+            $data['msg'] = '获取成功';
+            return json($data);
+        }   
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 首页的第一部分
+     * @param ban_inst_id 机构id 
+     * @param ctime 月份
+     * @return json 10：市属、2区属、5自管、11所有
+     */
+    public function indexPartOne_old() 
+    {
+        $getData = $this->request->get();
+        // 检索楼栋机构
+        $insts = config('inst_ids');
+        if(isset($getData['ban_inst_id']) && $getData['ban_inst_id']){
+            $where[] = ['d.ban_inst_id','in',$insts[$getData['ban_inst_id']]];
+        }else{
+            $instid = (isset($getData['ban_inst_id']) && $getData['ban_inst_id'])?$getData['ban_inst_id']:session('admin_user.inst_id');
+            $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+        }
+        // 检索月份时间
+        if(isset($getData['ctime']) && $getData['ctime']){
+            $startTime = str_replace('/', '', $getData['ctime']);
+            $where[] = ['a.rent_order_date','eq',$startTime];
+        }
+        $fields = 'sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,b.house_use_id,d.ban_owner_id';
+        $data = [];
+        $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('b.house_use_id,d.ban_owner_id')->where($where)->select();
+        $result = [];
+        foreach($temp as $t){
+            $result[$t['ban_owner_id']][$t['house_use_id']] = [
+                'rent_order_receives' => (float)$t['rent_order_receives'],
+                'rent_order_paids' => (float)$t['rent_order_paids'],
+            ];
+        }
+        $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
+        foreach ($ownertypes as $owner) {
+            for ($i=1;$i<4;$i++ ) {
+                if(!isset($result[$owner][$i])){
+                    $result[$owner][$i] = [
+                        'rent_order_receives' => 0, 
+                        'rent_order_paids' => 0, 
+                    ];
+                }
+            }
+        }
+        $result[10][1]['rent_order_receives'] = $result[1][1]['rent_order_receives'] + $result[3][1]['rent_order_receives'] + $result[7][1]['rent_order_receives'];
+        $result[10][2]['rent_order_receives'] = $result[1][2]['rent_order_receives'] + $result[3][2]['rent_order_receives'] + $result[7][2]['rent_order_receives'];
+        $result[10][3]['rent_order_receives'] = $result[1][3]['rent_order_receives'] + $result[3][3]['rent_order_receives'] + $result[7][3]['rent_order_receives'];
+        $result[10][1]['rent_order_paids'] = $result[1][1]['rent_order_paids'] + $result[3][1]['rent_order_paids'] + $result[7][1]['rent_order_paids'];
+        $result[10][2]['rent_order_paids'] = $result[1][2]['rent_order_paids'] + $result[3][2]['rent_order_paids'] + $result[7][2]['rent_order_paids'];
+        $result[10][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
+
+        $result[11][1]['rent_order_receives'] = $result[1][1]['rent_order_receives'] + $result[2][1]['rent_order_receives'] + $result[3][1]['rent_order_receives'] + $result[5][1]['rent_order_receives'] + $result[7][1]['rent_order_receives'];
+        $result[11][2]['rent_order_receives'] = $result[1][2]['rent_order_receives'] + $result[2][2]['rent_order_receives'] + $result[3][2]['rent_order_receives'] + $result[5][2]['rent_order_receives'] + $result[7][2]['rent_order_receives'];
+        $result[11][3]['rent_order_receives'] = $result[1][3]['rent_order_receives'] + $result[2][3]['rent_order_receives'] + $result[3][3]['rent_order_receives'] + $result[5][3]['rent_order_receives'] + $result[7][3]['rent_order_receives'];
+        $result[11][1]['rent_order_paids'] = $result[1][1]['rent_order_paids'] + $result[2][1]['rent_order_paids'] + $result[3][1]['rent_order_paids'] + $result[5][1]['rent_order_paids'] + $result[7][1]['rent_order_paids'];
+        $result[11][2]['rent_order_paids'] = $result[1][2]['rent_order_paids'] + $result[2][2]['rent_order_paids'] + $result[3][2]['rent_order_paids'] + $result[5][2]['rent_order_paids'] + $result[7][2]['rent_order_paids'];
+        $result[11][3]['rent_order_paids'] = $result[1][3]['rent_order_paids'] + $result[2][3]['rent_order_paids'] + $result[3][3]['rent_order_paids'] + $result[5][3]['rent_order_paids'] + $result[7][3]['rent_order_paids'];
+        $data['data'] = $result;
+        $data['code'] = 0;
+        $data['msg'] = '获取成功';
+        return json($data);
+    }
+
+    /**
      * 首页的第二部分
      * @param ctime 月份
      * @return json 
      */
-    public function indexPartThree()
+    public function indexPartThree_old()
     {
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
@@ -204,7 +382,7 @@ class Api extends Common
      * @param ctime 月份
      * @return json 
      */
-    public function indexPartFour()
+    public function indexPartFour_old()
     {
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
@@ -257,10 +435,6 @@ class Api extends Common
                     ];
                 } 
             }
-
-            //halt($temp2);
-            
-
             $result[10]['rent_unpaids'] = $result[1]['rent_unpaids'] + $result[3]['rent_unpaids'] + $result[7]['rent_unpaids'];
             $result[10]['rent_paids'] = $result[1]['rent_paids'] + $result[3]['rent_paids'] + $result[7]['rent_paids'];
             $result[10]['rent_before_unpaids'] = $result[1]['rent_before_unpaids'] + $result[3]['rent_before_unpaids'] + $result[7]['rent_before_unpaids'];
@@ -268,32 +442,6 @@ class Api extends Common
             $result[11]['rent_unpaids'] = $result[1]['rent_unpaids'] + $result[2]['rent_unpaids']+ $result[3]['rent_unpaids'] + $result[5]['rent_unpaids'] + $result[7]['rent_unpaids'];
             $result[11]['rent_paids'] = $result[1]['rent_paids'] + $result[2]['rent_paids']+ $result[3]['rent_paids'] + $result[5]['rent_paids'] + $result[7]['rent_paids'];
             $result[11]['rent_before_unpaids'] = $result[1]['rent_before_unpaids'] + $result[2]['rent_before_unpaids']+ $result[3]['rent_before_unpaids'] + $result[5]['rent_before_unpaids'] + $result[7]['rent_before_unpaids'];
-//halt($result);
-//             if(!$row){
-//                 $result['rent_paids'] = 0;
-//                 $result['rent_unpaids'] = 0;
-//             }else{
-//                 $result['rent_paids'] = $row['rent_paids'];
-//                 $result['rent_unpaids'] = $row['rent_unpaids'];
-//             }
-
-//             $rent_before_unpaids = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($where2)->value('sum(rent_order_receive-rent_order_paid) as rent_unpaids');
-// //halt($rent_order_before_unpaids);
-            
-//             if(!$rent_before_unpaids){
-//                 $result['rent_before_unpaids'] = 0; 
-//             }else{
-//                 $result['rent_before_unpaids'] = $rent_before_unpaids; 
-//             }
-            //$result['rent_before_unpaids'] = 20000;
-//halt($result);
-
-            // foreach($temps as $k => $v){
-            //     // 如果业务审批角色 = 当前登录角色，且当前角色不是房管员
-            //     if($v['curr_role'] == session('admin_user.role_id') && session('admin_user.role_id') != 4){
-            //         $result[] = $v;
-            //     }
-            // }
             $data['data'] = $result;
             //$data['count'] = count($result);
             $data['code'] = 1;

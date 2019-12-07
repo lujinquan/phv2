@@ -339,7 +339,7 @@ class ChangeCut extends SystemBase
         $ChangeTableModel->save($tableData);
 
         // 3、检查如果当前房屋正在租金减免异动生效的过程中，则将原生效的减免异动自动失效掉
-        Db::name('change_cut')->where([['house_id','eq',$finalRow['house_id']],['change_status','eq',1],['end_date','>',date('Ym')],['change_order_number','neq',$finalRow['change_order_number']]])->update(['end_date'=>date('Ym')]);
+        Db::name('change_cut')->where([['house_id','eq',$finalRow['house_id']],['change_status','eq',1],['end_date','>',date('Ym')],['change_order_number','neq',$finalRow['change_order_number']]])->update(['end_date'=>date('Ym'),'is_valid'=>0]);
         Db::name('change_table')->where([['house_id','eq',$finalRow['house_id']],['change_type','eq',1],['end_date','>',date('Ym')],['change_order_number','neq',$finalRow['change_order_number']]])->delete();
         
     }

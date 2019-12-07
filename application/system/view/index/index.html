@@ -34,7 +34,7 @@
 	    <div class="j-index-notice j-chart-box j-no-padding">
 		  <div class="product-title">
 			<ul class="product-ul click-rent">
-			  <li class="cur" data-id="11">所有</li>
+			  <li class="cur" data-id="12">所有</li>
 			  <li class="" data-id="10">市属</li>
 			  <li class="" data-id="2">区属</li>
 			  <li class="" data-id="5">自管</li>
@@ -187,7 +187,7 @@
 			<div class="j-index-notice j-chart-box j-no-padding">
 			  <div class="product-title clearfix">
 				<ul class="product-ul click-rent-list1">
-				  <li class="cur" data-id1="11">所有</li>
+				  <li class="cur" data-id1="12">所有</li>
 				  <li class="" data-id1="10">市属</li>
 				  <li class="" data-id1="2">区属</li>
 				  <li class="" data-id1="5">自管</li>
@@ -211,7 +211,7 @@
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">房屋变动情况</div>
 				<ul class="product-ul click-rent-list2">
-				  <li class="cur" data-id2="11">所有</li>
+				  <li class="cur" data-id2="12">所有</li>
 				  <li class="" data-id2="10">市属</li>
 				  <li class="" data-id2="2">区属</li>
 				  <li class="" data-id2="5">自管</li>
@@ -238,7 +238,7 @@
 			  <div class="product-title clearfix">
 				<div class="j-size-title fl">租金收缴情况</div>
 				<ul class="product-ul click-rent-list3">
-				  <li class="cur" data-id3="11">所有</li>
+				  <li class="cur" data-id3="12">所有</li>
 				  <li class="" data-id3="10">市属</li>
 				  <li class="" data-id3="2">区属</li>
 				  <li class="" data-id3="5">自管</li>
@@ -476,8 +476,8 @@
 		function ajaxdata(){
 		  $.ajax({
 		  type: "post",
-		  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id+'&ctime='+ctime,
-		  data: {'ban_inst_id':ban_inst_id,'ctime':ctime}, 
+		  url: "{:url('rent/api/indexPartOne')}?inst_id="+ban_inst_id+'&ctime='+ctime,
+		  data: {'inst_id':ban_inst_id,'ctime':ctime}, 
 		  dataType: "json", 
 		  success: function(res) {
 			  var resData = res.data;
@@ -741,8 +741,8 @@
 			function ajaxdata1(){
 			  $.ajax({
 			  type: "post",
-			  url: "{:url('rent/api/indexPartOne')}?ban_inst_id="+ban_inst_id1+'&ctime='+ctime1,
-			  data: {'ban_inst_id':ban_inst_id1,'ctime':ctime1}, 
+			  url: "{:url('rent/api/indexPartOne')}?inst_id="+ban_inst_id1+'&ctime='+ctime1,
+			  data: {'inst_id':ban_inst_id1,'ctime':ctime1}, 
 			  dataType: "json", 
 			  success: function(res) {
 				  var resData = res.data;
@@ -1016,11 +1016,12 @@
 		myChart3.setOption(option3);
 		var ban_inst_id3= {$Think.INST},//获取机构
 			    ctime3 = time;//获取日期改变
+			   ajaxdata3();
 	function ajaxdata3(){
 		$.ajax({
 				type: "post",
-				url: "{:url('rent/api/indexPartFour')}?ban_inst_id="+ban_inst_id3+'&ctime='+ctime3,
-				data: {'ban_inst_id':ban_inst_id3,'ctime':ctime3}, 
+				url: "{:url('rent/api/indexPartFour')}?inst_id="+ban_inst_id3+'&ctime='+ctime3,
+				data: {'inst_id':ban_inst_id3,'ctime':ctime3}, 
 				dataType: "json", 
 				success: function(res) {
 					console.log('租金收缴情况',res);
