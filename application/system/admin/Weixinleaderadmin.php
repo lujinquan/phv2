@@ -272,7 +272,7 @@ class Weixinleaderadmin extends Controller
         if($row){
             $params = ParamModel::getCparams();
             //$result['data']['params'] = $params;
-            $status = input('ban_status');
+            $status = input('tenant_status');
             $tenant = input('tenant_name');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
