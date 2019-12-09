@@ -86,7 +86,25 @@ class House extends SystemBase
         }
         // 检索【楼栋】编号
         if(isset($data['ban_number']) && $data['ban_number']){
-            $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
+            $banids = BanModel::where([['ban_number','like','%'.$data['ban_number'].'%']])->column('ban_id');
+            if($banids){
+                //halt($banid);
+                $roomids = RoomModel::where([['ban_id','in',$banids]])->column('room_id');
+
+                if($roomids){
+                    $houses = HouseRoomModel::where([['room_id','in',$roomids]])->column('house_id');
+
+                    $bans = HouseModel::where([['house_id','in',array_unique($houses)]])->column('ban_id');
+                    $where[] = ['d.ban_id','in',$bans];
+                }else{
+                    $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%']; 
+                }
+            }else{
+                $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
+            }
+            
+            
+            
         }
         // 检索【楼栋】地址
         if(isset($data['ban_address']) && $data['ban_address']){
