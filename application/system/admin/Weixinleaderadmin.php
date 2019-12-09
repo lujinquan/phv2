@@ -115,6 +115,7 @@ class Weixinleaderadmin extends Controller
 
     public function banList()
     {
+        //halt(get_domain());
         $key = input('get.key');
         $result = [];
         $result['code'] = 0;

@@ -422,7 +422,7 @@ class SystemAnnex extends Model
             $result = self::with('system_annex_type')->where([['id','in',$data]])->field('id,data_id,file')->select();
             if($complete && $result){
                 foreach ($result as &$v) {
-                    $v['file'] = 'https://pro.ctnmit.com'.$v['file'];
+                    $v['file'] = get_domain().$v['file'];
                 }
             }
             return $result;
