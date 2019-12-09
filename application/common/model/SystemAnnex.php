@@ -418,7 +418,6 @@ class SystemAnnex extends Model
      */
     public static function changeFormat($data = [] , $complete = false){
         if($data){
-
             $result = self::with('system_annex_type')->where([['id','in',$data]])->field('id,data_id,file')->select();
             if($complete && $result){
                 foreach ($result as &$v) {

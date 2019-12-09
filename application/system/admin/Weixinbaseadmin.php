@@ -557,6 +557,30 @@ class Weixinbaseadmin extends Controller
         return json($result);  
     }
 
+    public function rentPay()
+    {
+        $key = input('get.key');
+        $id = input('get.rent_order_id');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || !$id){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        if($row){
+            Db::name('rent_order')->where([['rent_order_id','eq',$id]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);        
+            $result['code'] = 1;
+            $result['msg'] = '缴费成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
 
     /**
      * 
