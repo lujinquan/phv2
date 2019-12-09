@@ -461,6 +461,9 @@ class Weixinbaseadmin extends Controller
             $temp = $BanModel->get($id);
             $params = ParamModel::getCparams();
 
+            $temp['ban_rent'] = bcaddMerge($temp['ban_civil_rent'],$temp['ban_party_rent'],$temp['ban_career_rent']);
+            $temp['ban_area'] = bcaddMerge($temp['ban_civil_area'],$temp['ban_party_area'],$temp['ban_career_area']);
+            $temp['ban_oprice'] = bcaddMerge($temp['ban_civil_oprice'],$temp['ban_party_oprice'],$temp['ban_career_oprice']);
             $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
             $temp['ban_status'] = $params['status'][$temp['ban_status']];
             $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];

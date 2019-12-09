@@ -22,6 +22,7 @@ use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
+use app\deal\model\Process as ProcessModel;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 
@@ -207,7 +208,7 @@ class Weixinleaderadmin extends Controller
 
             
             $where = [];
-            $where[] = ['d.ban_inst_id','eq',config('inst_ids')[$row['inst_id']]];
+            $where[] = ['d.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
             
             if($use){
                 $where[] = ['a.house_use_id','eq',$use];
@@ -277,7 +278,7 @@ class Weixinleaderadmin extends Controller
             $limit = input('param.limit/d', 10);
 
             $where = [];
-            $where[] = ['tenant_inst_id','eq',config('inst_ids')[$row['inst_id']]];
+            $where[] = ['tenant_inst_id','in',config('inst_ids')[$row['inst_id']]];
             if($tenant){
                 $where[] = ['a.tenant_name','like','%'.$tenant.'%'];
             }
@@ -313,7 +314,7 @@ class Weixinleaderadmin extends Controller
         
     }
 
-    public function rentList()
+    public function processList()
     {
         $key = input('get.key');
         $result = [];
@@ -324,113 +325,94 @@ class Weixinleaderadmin extends Controller
         }
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         //$id = str_coding($key,'DECODE');
-        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,role_id,nick,mobile')->find();
 
         if($row){
-            $params = ParamModel::getCparams();
-            $result['data']['params'] = $params;
-            $type = input('type');
-            $use = input('house_use_id');
-            $owner = input('ban_owner_id');
-            $tenant = input('tenant_name');
-            $status = input('house_status');
-            $address = input('ban_address');
-            $date = input('rent_order_date');
+                    
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
+            $type = input('type',1);
+            $changetype = input('change_type');
+            $inst = input('ban_inst_id');
 
-            
-            $where = [];
-            $where[] = ['d.ban_inst_id','eq',$row['inst_id']];
-            if($type){
-                $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-                $where[] = ['a.ptime','>',0];
+            $ProcessModel = new ProcessModel;
+            if($changetype){
+                $where[] = ['change_type','eq',$changetype];
+            }
+            $insts = config('inst_ids');
+            if($inst){
+                $where[] = ['d.ban_inst_id','in',$insts[$inst]];
             }else{
-               $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
+                $instid = $inst?$data['ban_inst_id']:$row['inst_id'];
+                $where[] = ['d.ban_inst_id','in',$insts[$instid]];
             }
-            
-            if($use){
-                $where[] = ['a.house_use_id','eq',$use];
-            }
-            if($owner){
-                $where[] = ['d.ban_owner_id','eq',$owner];
-            }
-            if($address){
-                $where[] = ['d.ban_address','like','%'.$address.'%'];
-            }
-            if($tenant){
-                $where[] = ['c.tenant_name','like','%'.$tenant.'%'];
-            }
-            if($date){
-                $tempDate = str_replace('-', '', $date);
-                $where[] = ['rent_order_date','eq',$tempDate];
-            }
-            //halt($where);
-            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-            $data = [];
-            $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
-           
 
-            $result['data'] = [];
-            foreach ($temps as $v) {
-                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
-                $v['house_use_id'] = $params['uses'][$v['house_use_id']];
-                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-                $v['rent_order_date'] = substr($v['rent_order_date'],0,4).'年'.substr($v['rent_order_date'],4,2).'月01日';
-                if($v['ptime']){
-                    $v['ptime'] = date('Y年m月d日',$v['ptime']);
+
+            $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $result = [];
+            $result['data'] = $dataTemps = [];
+            $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
+            foreach($temps as $k => $v){
+                if($type == 1){ // 
+                    if($v['curr_role'] == $row['role_id']){
+                        //$v['is_process'] = 1;
+                        array_unshift($dataTemps,$v);
+                    }
+                }else{
+                    if($v['curr_role'] != $row['role_id']){
+                        //$v['is_process'] = 1;
+                        array_unshift($dataTemps,$v);
+                    }
                 }
-                //$v['house_status'] = $params['status'][$v['house_status']];
-                //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
-                //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
-                $result['data'][] = $v;
+
+                // if($v['curr_role'] == $row['role_id']){
+                //     $v['is_process'] = 1;
+                //     array_unshift($dataTemps,$v);
+                // }else{
+                //     $v['is_process'] = 0;
+                //     array_push($dataTemps,$v);
+                // }
             }
-            $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
+
+            $result['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
+            $result['count'] = count($result['data']);   
+
+        
             $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
             $result['msg'] = '参数错误！';
         }
-//halt($result);
+
         return json($result); 
 
         
     }
 
-    public function rentDetail()
+    public function processDetail()
     {
         $key = input('get.key');
-        $id = input('get.rent_order_id');
+        $id = input('get.id/d');
+        $change_type = input('param.change_type/d');
         $result = [];
         $result['code'] = 0;
-        if(!$key || !$id){
+        if(!$key || !$id || !$change_type){
             $result['msg'] = '参数错误！';
             return json($result);
         }
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
-        //$id = str_coding($key,'DECODE');
         $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
-
         if($row){
-            $BanModel = new BanModel;
-
-            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-            $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
-
-            $params = ParamModel::getCparams();
-
-            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
-            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
-            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
-            $temp['rent_order_date'] = substr($temp['rent_order_date'],0,4).'年'.substr($temp['rent_order_date'],4,2).'月01日';
-            if($temp['ptime']){
-                $temp['ptime'] = date('Y年m月d日',$temp['ptime']);
+            // 显示对应的审批页面
+            $id = input('param.id/d');
+            
+            if(!$change_type || !$id){
+                return $this->error('参数错误！');
             }
-
-            $result['data'] = $temp;
-//halt($result['data']);
-                      
+            $PorcessModel = new ProcessModel;
+            $result = [];
+            $result['data'] = $PorcessModel->detail($change_type,$id);         
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
@@ -458,7 +440,9 @@ class Weixinleaderadmin extends Controller
             $BanModel = new BanModel;
             $temp = $BanModel->get($id);
             $params = ParamModel::getCparams();
-
+            $temp['ban_rent'] = bcaddMerge($temp['ban_civil_rent'],$temp['ban_party_rent'],$temp['ban_career_rent']);
+            $temp['ban_area'] = bcaddMerge($temp['ban_civil_area'],$temp['ban_party_area'],$temp['ban_career_area']);
+            $temp['ban_oprice'] = bcaddMerge($temp['ban_civil_oprice'],$temp['ban_party_oprice'],$temp['ban_career_oprice']);
             $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
             $temp['ban_status'] = $params['status'][$temp['ban_status']];
             $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
