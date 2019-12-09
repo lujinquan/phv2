@@ -46,6 +46,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}
 .tangram-suggestion-main{ z-index: 9999;/* 百度地图搜索 */}
+.layui-elem-quote{    border-left: 5px solid #0084FF!important; color: red!important;}/* 提示文字左边border颜色 */
 /* 大图查看关闭按钮样式 */
 .layui-row.on .viewer-button{ right: -26px;}
 .j-no-content,.j-no-contents{text-align: center; line-height: 200px; color: #999; font-size: 14px;}/* 表格无数据 */

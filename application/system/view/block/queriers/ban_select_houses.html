@@ -4,6 +4,7 @@
 <fieldset class="layui-elem-field layui-field-title j-field-box">
 	<legend>楼栋查询</legend>
 </fieldset>
+<blockquote class="layui-elem-quote">红色表示房屋存在欠租，无法申请注销</blockquote>
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{:url('system/Index/cancellation')}?change_type={$changeType}" method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
@@ -39,6 +40,15 @@
     layui.use(['table','jquery'], function() {
         var table = layui.table
 		    ,$ = layui.$;
+		//判断当前异动类型改变提示文字
+		var changeType = '{$changeType}';
+		if(changeType==8){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租，无法申请注销");
+		}
+		if(changeType==3){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请暂停计租");
+		}
+		//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
 		//楼栋查询
         table.render({
 			elem: '#dataTable'

@@ -1,6 +1,7 @@
 <!-- 房屋查询器 -->
 <div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
+		<blockquote class="layui-elem-quote"></blockquote>
 		<form class="layui-form layui-form-pane" action="{:url('system/Index/house')}?change_type={$changeType}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				<div class="layui-input-inline" style="width:150px;">
@@ -46,7 +47,28 @@
 	var data;
 	layui.use(['table', 'jquery'], function() {
 		var table = layui.table
-		    ,$ = layui.$;;
+		    ,$ = layui.$;
+		//判断当前异动类型改变提示文字
+				var changeType = '{$changeType}';
+				if(changeType==13){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请使用权变更");
+				}
+				else if(changeType==9){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请房屋调整");
+				}
+				else if(changeType==18){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，橙色表示规定租金与计算租金不一致");
+				}
+				else if(changeType==1){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请租金减免");
+				}
+				else if(changeType==17){
+					$(".layui-elem-quote").text("灰色表示房屋已暂停计租，无法申请注销");
+				}
+				else{
+					$(".layui-elem-quote").hide();
+				}
+				//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
 		table.render({
 			elem: '#dataTable'
 			,toolbar: true
