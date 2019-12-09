@@ -207,7 +207,7 @@ class Weixinleaderadmin extends Controller
 
             
             $where = [];
-            $where[] = ['d.ban_inst_id','eq',$row['inst_id']];
+            $where[] = ['d.ban_inst_id','eq',config('inst_ids')[$row['inst_id']]];
             
             if($use){
                 $where[] = ['a.house_use_id','eq',$use];
@@ -277,7 +277,7 @@ class Weixinleaderadmin extends Controller
             $limit = input('param.limit/d', 10);
 
             $where = [];
-            $where[] = ['tenant_inst_id','eq',$row['inst_id']];
+            $where[] = ['tenant_inst_id','eq',config('inst_ids')[$row['inst_id']]];
             if($tenant){
                 $where[] = ['a.tenant_name','like','%'.$tenant.'%'];
             }
