@@ -483,13 +483,12 @@ class Weixinleaderadmin extends Controller
 
             $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
             $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
-            // $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
             $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
             $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
             // $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
             // $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
             $temp['rooms'] = $HouseModel->get_house_renttable($id);
-//halt($roomTables);
             $result['data'] = $temp;
 //halt($result['data']);  
             $result['code'] = 1;
