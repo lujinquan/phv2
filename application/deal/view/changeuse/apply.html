@@ -52,7 +52,7 @@
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
 									<i class="layui-icon layui-icon-tips"></i>请补充完整身份证号
-									<a href="javascript:;" id="old_tenant_info" class="j-iframe-pop" hisi-data="{flag: 'change', width: '700px', height: '500px',refresh: 2}" title="修改租户信息" target="_blank">
+									<a id="old_tenant_info" title="修改租户信息" target="_blank">
 										<label>点击跳转</label>
 									</a>
 								</div>
@@ -97,7 +97,7 @@
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
 									<i class="layui-icon layui-icon-tips"></i>请补充完整身份证号
-									<a href="javascript:;" id="new_tenant_info" class="j-iframe-pop" hisi-data="{flag:'change', width: '700px', height: '500px',refresh: 2}" title="修改租户信息" target="_blank">
+									<a id="new_tenant_info" title="修改租户信息" target="_blank">
 									  <label>点击跳转</label>
 									</a>
 								</div>
@@ -262,7 +262,10 @@
 						$("#old_tenant_number").val(row.tenant_number);//当前租户编号
 						$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
 						$("#old_tenant_card").val(row.tenant_card);//当前租户身份证号
-						$('#old_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&flag=change&id='+row.tenant_id);
+						if(!row.tenant_card){
+							$(".j-tips-boxs").removeClass("j-visibility");
+						}
+						//$('#old_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&flag=change&id='+row.tenant_id);
 					}else{
 						layer.msg("房屋没选择!");
 						return false;
@@ -273,6 +276,40 @@
 				  });
 				 })	
 
+
+
+			$("#old_tenant_info").on('click',function(){
+				var old_tenant_id = $("#old_tenant_id").val();
+				layer.open({
+					title: '修改租户'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('house/tenant/edit')}?group=y&hisi_iframe=yes&flag=change&id='+old_tenant_id
+					,btn: false
+					,yes: function(index, layero){
+
+					}
+					,cancel: function(){ 
+					    console.log(old_tenant_id);
+					    $.ajax({
+					        type: 'get',
+					        url: '{:url('house/api/tenant_info')}?id='+old_tenant_id,
+					        success: function(res) {
+					            console.log(res);
+					            if(res.data.tenant_card){
+					            	$("#old_tenant_card").val(res.data.tenant_card);
+					            	$(".j-tips-boxs").addClass("j-visibility");
+					            }
+					        }
+					    });
+					}
+			  	});
+			})
+
+			
 
 /*			//获取楼栋查询器
 			$("#old_tenant_info").on('click',function(){
@@ -327,19 +364,53 @@
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].tenantdata();
-						console.log(row);
+						//console.log(row);
 						href="{:url('house/tenant/index')}?tenant_number="
 						layer.close(index);
 						$("#new_tenant_id").val(row.tenant_id);//获取租户id
 						$("#new_tenant_number").val(row.tenant_number);//获取租户编号
 						$("#new_tenant_name").val(row.tenant_name);
 						$("#new_tenant_card").val(row.tenant_card);
-						$('#new_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&flag=change&id='+row.tenant_id);
+						if(!row.tenant_card){
+							$(".j-tips-newboxs").removeClass("j-visibility");
+						}
+						//$('#new_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&flag=change&id='+row.tenant_id);
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
 		   		});
 		  	})
+
+		   $("#new_tenant_info").on('click',function(){
+				var new_tenant_id = $("#new_tenant_id").val();
+				layer.open({
+					title: '修改租户'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('house/tenant/edit')}?group=y&hisi_iframe=yes&flag=change&id='+new_tenant_id
+					,btn: false
+					,yes: function(index, layero){
+
+					}
+					,cancel: function(){ 
+					    console.log(old_tenant_id);
+					    $.ajax({
+					        type: 'get',
+					        url: '{:url('house/api/tenant_info')}?id='+new_tenant_id,
+					        success: function(res) {
+					            //console.log(res);
+					            if(res.data.tenant_card){
+					            	$("#new_tenant_card").val(res.data.tenant_card);
+					            	$(".j-tips-newboxs").addClass("j-visibility");
+					            }
+					        }
+					    });
+					}
+			  	});
+			})
 		  
 		  //审批表
 		  upload.render({

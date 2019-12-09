@@ -159,12 +159,14 @@ class Ban extends Admin
         $roomArr = $RoomModel->with('ban')->where([['ban_id','eq',$id],['room_pub_num','>',2]])->select();
         $FloorPointModel = new FloorPointModel;
         $roomTables = [];
+
         foreach ($roomArr as $k => $roomRow) {
             $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $row['ban_floors']);
             $roomRow['floor_point'] = ($flor_point * 100).'%';
             $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
-            $room_houses = $roomRow->house_room()->column('house_number');
-            $houses = HouseModel::with('tenant')->where([['house_number','in',$room_houses]])->field('house_number,tenant_id')->select();
+            $room_houses = $roomRow->house_room()->column('house_id');
+            //halt($roomArr);
+            $houses = HouseModel::with('tenant')->where([['house_id','in',$room_houses]])->field('house_number,tenant_id')->select();
             $roomTables[] = [
                 'baseinfo' => $roomRow,
                 'houseinfo' => $houses,

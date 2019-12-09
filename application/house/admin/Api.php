@@ -14,10 +14,13 @@ namespace app\house\admin;
 
 use think\Db;
 use think\Debug;
+use app\common\model\SystemAnnex;
 use app\common\controller\Common;
 use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
+use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\house\model\Tenant as TenantModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 
 /**
@@ -83,6 +86,27 @@ class Api extends Common
     // {
     	
     // }
+    // 
+    public function tenant_info()
+    {
+        $id = input('param.id/d');
+        $result = [];
+        $result['code'] = 0;
+        $row = TenantModel::with(['system_user'])->find($id);
+        if(!$row){
+            $result['msg'] = '当前租户不存在！';
+            return $result;
+        }
+        $row['tenant_imgs'] = SystemAnnex::changeFormat($row['tenant_imgs']);
+        // 获取租户的余额
+        $row['tenant_balance'] = HouseModel::where([['tenant_id','eq',$row['tenant_id']]])->sum('house_balance');
+        //获取租户的合计欠租情况
+        $rentRow = RentModel::where([['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive) as rent_order_receives,sum(rent_order_paid) as rent_order_paid')->find(); //欠租
+        $row['rent_order_unpaid'] = $rentRow['rent_order_receives']-$rentRow['rent_order_paid'];
+        $result['code'] = 1;
+        $result['data'] = $row;
+        return $result;
+    }
     
     public function check_house_data()
     {
