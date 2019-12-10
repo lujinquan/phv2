@@ -430,7 +430,7 @@
 			<div class="j-enclosure-imgs clearfix">
 				<div id="upload_img_list4" class="upload_img_list j-viewer-img">
 					{volist name="$data_info['ban_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChartCard'"}
+					{if condition="$v['file_type'] == 'BanCard'"}
 					<dd class="item_img" id="">
 						<div class="operate">
 							<i  class="layui-icon-close-fill layui-icon"></i>
@@ -462,7 +462,7 @@
 	var upurl = "{:url('system/Api/upload')}?input=LandCard&group=ban&water=no"; //土地证电子版上传图片地址
 	var upurl1 = "{:url('system/Api/upload')}?input=RealestateCard&group=ban&water=no"; //不动产电子版上传图片地址
 	var upurl2 = "{:url('system/Api/upload')}?input=ImagingData&group=ban&water=no"; //影像资料上传图片地址
-	var upurl3 = "{:url('system/Api/upload')}?input=ChartCard&group=ban&water=no"; //图卡
+	var upurl3 = "{:url('system/Api/upload')}?input=BanCard&group=ban&water=no"; //图卡
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
         var laydate = layui.laydate,
@@ -573,7 +573,7 @@
 			url: upurl3,
 			size: 1024*3,
 			multiple: duotu,
-			field: 'ChartCard',
+			field: 'BanCard',
 			before: function(obj) {
 				layer.msg('图片上传中...', {
 					icon: 16,
