@@ -48,16 +48,16 @@ class Api extends Common
                 foreach ($owners as $v) {
                     for ($i=1;$i<4;$i++ ) {
                         if($i == 1){
-                            $j = 1;
-                        }
-                        if($i == 2){
-                            $j = 10;
-                        }
-                        if($i == 3){
                             $j = 13;
                         }
+                        if($i == 2){
+                            $j = 1;
+                        }
+                        if($i == 3){
+                            $j = 10;
+                        }
                         $data['data'][$v][$i] = [
-                            'rent_order_receives' => $temps[$v][$instid][8][$j], //统计应收租金的合计（住宅+机关+企业）
+                            'rent_order_receives' => $temps[$v][$instid][17][$j], //统计应收租金的合计（住宅+机关+企业）
                             'rent_order_paids' => $temps[$v][$instid][18][$j],  //统计已缴租金的合计（住宅+机关+企业）
                         ];
                     }

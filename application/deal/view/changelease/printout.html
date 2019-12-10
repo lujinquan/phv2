@@ -605,8 +605,8 @@
 			$('#print_1_NO').text(res.data.szno);
 			$('#print_1_Address').text(res.data.ban_info.ban_address);
 			$('#print_1_Struct').text(params.structs[res.data.ban_info.ban_struct_id]);
-			$('#print_1_HouseFloor').text(res.data.ban_info.ban_floors);
-			$('#print_1_LiveFloor').text(res.data.house_info.house_floor_id);
+			$('#print_1_HouseFloor').text(res.data.data_json.applyHouseFloor);
+			$('#print_1_LiveFloor').text(res.data.data_json.applyLiveFloor);
 			$('#print_1_RentName').text(res.data.tenant_info.tenant_name);
             $('#print_1_RentNumber').text(res.data.tenant_info.tenant_card);
 			$('#detailRentTel').text(res.data.tenant_info.tenant_tel);
