@@ -178,7 +178,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=12';
+					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=9';
 					if($('#change_reason').val()==''){
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
@@ -205,7 +205,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=12';
+					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=9';
 					if($('#back_reason').val()==''){
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1
