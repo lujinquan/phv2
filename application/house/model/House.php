@@ -224,7 +224,6 @@ class House extends SystemBase
                     $roomRow['floor_point'] = ($flor_point * 100).'%';
                     $roomRow['room_rent_point'] = 100*(1 - $roomRow['room_rent_point']).'%';
                     $room_houses = $roomRow->house_room()->column('house_id');
-                    
                     $houses = HouseModel::with('tenant')->where([['house_id','in',$room_houses]])->field('house_id,house_number,tenant_id')->select()->toArray();
                     // 将被查询的房屋编号排在最前面
                     $temp = [];
@@ -237,13 +236,13 @@ class House extends SystemBase
                     }
                     //dump($roomRow);dump($temp);
                     $roomTables[] = [
-                        'baseinfo' => $roomRow,
+                        'baseinfo' => $roomRow->toArray(),
                         'houseinfo' => $temp,
                     ];
                 }
             }
         }
-        //exit;//halt($roomTables);
+        //halt($roomTables);
         return $roomTables;
     }
 

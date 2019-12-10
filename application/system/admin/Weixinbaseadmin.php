@@ -461,9 +461,9 @@ class Weixinbaseadmin extends Controller
             $temp = $BanModel->get($id);
             $params = ParamModel::getCparams();
 
-            $temp['ban_rent'] = bcaddMerge($temp['ban_civil_rent'],$temp['ban_party_rent'],$temp['ban_career_rent']);
-            $temp['ban_area'] = bcaddMerge($temp['ban_civil_area'],$temp['ban_party_area'],$temp['ban_career_area']);
-            $temp['ban_oprice'] = bcaddMerge($temp['ban_civil_oprice'],$temp['ban_party_oprice'],$temp['ban_career_oprice']);
+            $temp['ban_rent'] = bcaddMerge([$temp['ban_civil_rent'],$temp['ban_party_rent'],$temp['ban_career_rent']]);
+            $temp['ban_area'] = bcaddMerge([$temp['ban_civil_area'],$temp['ban_party_area'],$temp['ban_career_area']]);
+            $temp['ban_oprice'] = bcaddMerge([$temp['ban_civil_oprice'],$temp['ban_party_oprice'],$temp['ban_career_oprice']]);
             $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
             $temp['ban_status'] = $params['status'][$temp['ban_status']];
             $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
@@ -498,6 +498,9 @@ class Weixinbaseadmin extends Controller
         if($row){
             $HouseModel = new HouseModel;
             $temp = HouseModel::with(['ban','tenant'])->get($id);
+            $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$temp['tenant_id']],['change_status','eq',1],['end_date','<',date('Ym')]])->value('cut_rent');
+            $temp['cut_rent'] = $cutRent?$cutRent:'0.00';
+            
             $params = ParamModel::getCparams();
 
             $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
@@ -507,8 +510,16 @@ class Weixinbaseadmin extends Controller
             $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
             // $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
             // $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
-            $temp['rooms'] = $HouseModel->get_house_renttable($id);
-//halt($roomTables);
+            $rooms = $HouseModel->get_house_renttable($id);
+            foreach($rooms as &$t){
+                $t['baseinfo']['room_type'] = $params['roomtypes'][$t['baseinfo']['room_type']];
+                $t['baseinfo']['room_status'] = $params['status'][$t['baseinfo']['room_status']];
+                $t['baseinfo']['ban_owner_id'] = $params['owners'][$t['baseinfo']['ban_owner_id']];
+                $t['baseinfo']['ban_inst_id'] = $params['insts'][$t['baseinfo']['ban_inst_id']];
+                $t['baseinfo']['ban_struct_id'] = $params['structs'][$t['baseinfo']['ban_struct_id']];
+            }
+            $temp['rooms'] = $rooms;
+//halt($temp['rooms']);
             $result['data'] = $temp;
 //halt($result['data']);  
             $result['code'] = 1;

@@ -176,6 +176,10 @@
                	 exportData[i].cut_type = params.cuttypes[exportData[i].cut_type];//转化减免类型
                	 exportData[i].change_status = process_config[exportData[i].change_status];//转化审核状态
 				 exportData[i].is_valid = process_take[exportData[i].is_valid];//转化是否有效
+				 if(exportData[i].end_date == 0){
+				 	exportData[i].end_date = '';
+				 }
+
                 }
 			}
 		},isShowInst)
