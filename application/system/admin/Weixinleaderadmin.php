@@ -329,7 +329,7 @@ class Weixinleaderadmin extends Controller
         $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,role_id,nick,mobile')->find();
 
         if($row){
-                    
+            $params = ParamModel::getCparams();        
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $type = input('type',1);
@@ -354,6 +354,9 @@ class Weixinleaderadmin extends Controller
             $result['data'] = $dataTemps = [];
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
             foreach($temps as $k => $v){
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['change_type'] = $params['changes'][$v['change_type']];
                 if($type == 1){ // 
                     if($v['curr_role'] == $row['role_id']){
                         //$v['is_process'] = 1;
@@ -405,6 +408,7 @@ class Weixinleaderadmin extends Controller
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
         if($row){
+            $params = ParamModel::getCparams();
             // 显示对应的审批页面
             $id = input('param.id/d');
             
@@ -413,7 +417,20 @@ class Weixinleaderadmin extends Controller
             }
             $PorcessModel = new ProcessModel;
             $result = [];
-            $result['data'] = $PorcessModel->detail($change_type,$id);         
+            $temps = $PorcessModel->detail($change_type,$id);
+            switch ($change_type) {
+                case 1:
+                    $temps['row']['cut_type'] = $params['cuttypes'][$temps['row']['cut_type']];
+                    break;
+                default:
+                    break;
+            }
+            if($temps['row']['change_imgs']){
+                foreach ($temps['row']['change_imgs'] as $k => $v) {
+                    $temps['row']['change_imgs'][$k]['file'] = get_domain().$v['file'];
+                }
+            }  
+            $result['data'] = $temps;      
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
