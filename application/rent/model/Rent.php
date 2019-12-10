@@ -227,16 +227,22 @@ class Rent extends Model
             //$where[] = ['f.change_status','eq',1];
             //$where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-            $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.change_status';
-            $houseArr = $houseModel::alias('a')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','a.house_id = f.house_id','left')->where($where)->field($fields)->select();
+            $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid';
+            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
+            
             //halt($houseArr);
             $str = '';
             foreach ($houseArr as $k => $v) {
+                // if($v['house_id'] == '14239'){
+                //     dump(1);
+                // }
                 // 减免租金
-                if($v['change_status']){
+                if($v['is_valid'] == 1){
                     $rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
-                }else{
+                }elseif($v['is_valid'] === null){
                     $rent_order_cut = 0;
+                }else{
+                    continue;
                 }
                 //$rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
                 // 租金订单id
@@ -247,6 +253,7 @@ class Rent extends Model
                 // 待入库的数据
                 $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id'] . "),";
             }
+            //exit;
             if($str){
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id) values " . rtrim($str, ','));
