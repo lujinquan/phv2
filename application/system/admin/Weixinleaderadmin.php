@@ -480,7 +480,7 @@ class Weixinleaderadmin extends Controller
         if($row){
             $HouseModel = new HouseModel;
             $temp = HouseModel::with(['ban','tenant'])->get($id);
-            $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$temp['tenant_id']],['change_status','eq',1],['end_date','<',date('Ym')]])->value('cut_rent');
+            $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$temp['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
             $temp['cut_rent'] = $cutRent?$cutRent:'0.00';
             $params = ParamModel::getCparams();
 

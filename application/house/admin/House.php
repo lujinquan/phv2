@@ -175,8 +175,9 @@ class House extends Admin
         $id = input('param.id/d');
         $group = input('param.group');
         $row = HouseModel::with(['ban','tenant'])->find($id);
-        $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','<',date('Ym')]])->value('cut_rent');
+        $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
         $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        //halt($row);
         $row['ban_struct_point'] = Db::name('ban_struct_type')->where([['id','eq',$row['ban_struct_id']]])->value('new_point');
         //halt($row);
         //获取当前房屋的房间
@@ -250,6 +251,7 @@ class House extends Admin
     {
         $id = input('param.id/d');
         $row = HouseModel::with(['ban','tenant'])->get($id);
+
         $group = input('group','y');
         $tabData = [];
         $tabData['menu'] = [

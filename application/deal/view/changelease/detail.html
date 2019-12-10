@@ -830,8 +830,8 @@
 			$('#rent_straight').val(res.data.szno);
 			$('#applyAddress').val(res.data.ban_info.ban_address);
 			$('#applyStruct').val(params.structs[res.data.ban_info.ban_struct_id]);
-			$('#applyHouseFloor').val(res.data.ban_info.ban_floors);
-			$('#applyLiveFloor').val(res.data.house_info.house_floor_id);
+			$('#applyHouseFloor').val(res.data.data_json.applyHouseFloor);
+			$('#applyLiveFloor').val(res.data.data_json.applyLiveFloor);
 			$('#applyRentName').val(res.data.tenant_info.tenant_name);
 			$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
 			$('#applyRentNumber').val(res.data.tenant_info.tenant_card);
