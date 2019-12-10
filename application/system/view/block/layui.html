@@ -1,7 +1,7 @@
 <script src="__PUBLIC_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
 <div params="{if condition='isset($paramsJson)'}{$paramsJson}{/if}" isShowInst="{if condition='isset($inst_level)'}{$inst_level}{/if}" id="paramsJson"></div>
 <script>
-    var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 60;
+    var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 50;
     layui.config({
     	base: '__ADMIN_JS__/',
         version: '{:config("hisiphp.version")}'

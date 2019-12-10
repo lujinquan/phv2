@@ -55,7 +55,7 @@ layui.define(['element', 'form', 'table', 'md5'], function(exports) {
         $('#switchNav a[href="'+window.localStorage.getItem("adminNavTag")+'"]').parent('dd').addClass('layui-this').parents('li').addClass('layui-nav-itemed').siblings('li').removeClass('layui-nav-itemed');
     }
     if (typeof(LAYUI_OFFSET) == 'undefined') {
-        layer.config({offset:'60px'});
+        layer.config({offset:'50px'});
     } else {
         layer.config({offset:LAYUI_OFFSET});  
     }

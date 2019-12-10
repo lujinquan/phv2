@@ -21,7 +21,7 @@ class SystemData extends Model
     public function queryBan($queryWhere)
     {
     	$page = input('param.page/d', 1);
-        $limit = input('param.limit/d', 10);
+        $limit = input('param.limit/d', 5);
         $where[] = ['ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         if(isset($queryWhere['ban_number']) && $queryWhere['ban_number']){ //查询楼栋编号
             $where[] = ['ban_number','like','%'.$queryWhere['ban_number'].'%'];
@@ -58,7 +58,6 @@ class SystemData extends Model
                     break;
                 case 18: //发租约
                     break;
-                
                 default:
                     $where[] = ['ban_status','eq',1]; // 默认查询正常状态下的房屋
                     break;
@@ -66,19 +65,13 @@ class SystemData extends Model
         }else{
             $where[] = ['ban_status','eq',1]; // 默认查询正常状态下的房屋
         }
-        
-
         $BanModel = new BanModel;
         $fields = 'ban_id,(ban_civil_holds + ban_party_holds + ban_career_holds) as ban_holds,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,ban_civil_num,ban_party_num,ban_career_num,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent + ban_party_rent + ban_career_rent) as ban_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_use_area,ban_floors';
-
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
         $temps = $BanModel->field($fields)->where($where)->page($page)->order('ban_ctime desc,ban_id desc')->limit($limit)->select();
-//halt();
         foreach ($temps as $k => &$v) {
-            
             $v['color_status'] = 1; //正常的
-            
             if(isset($applyBanidArr) && $applyBanidArr){
                 if(in_array($v['ban_id'], $applyBanidArr)){
                     $v['color_status'] = 2; // 已在异动中
@@ -89,14 +82,13 @@ class SystemData extends Model
         $data['count'] = $BanModel->where($where)->count();
         $data['code'] = 0;
         $data['msg'] = '';
-
         return $data;
     }
 
     public function queryTenant($queryWhere)
     {
     	$page = input('param.page/d', 1);
-        $limit = input('param.limit/d', 10);
+        $limit = input('param.limit/d', 5);
         $where[] = ['tenant_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的租户
         if(isset($queryWhere['tenant_number']) && $queryWhere['tenant_number']){ //查询租户编号
             $where[] = ['tenant_number','like','%'.$queryWhere['tenant_number'].'%'];
@@ -148,7 +140,7 @@ class SystemData extends Model
     public function queryHouse($queryWhere)
     {
     	$page = input('param.page/d', 1);
-        $limit = input('param.limit/d', 10);
+        $limit = input('param.limit/d', 5);
         
         $where[] = ['c.ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
