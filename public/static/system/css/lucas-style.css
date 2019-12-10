@@ -102,6 +102,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_PRINT"]{position: absolute;top:2px; right:10px;}
 .j-table-content .layui-table-tool{ min-height: 0; padding: 0;border-width:0;position: initial;}
 .j-table-content .layui-table-box{min-height: 450px;}
+.j-table-content.j-five-height .layui-table-box{min-height: 262px;}
 .j-table-content .layui-form-checked i,.j-table-content .layui-form-checked:hover i{ color: #fff!important;}/* 处理checkbox对勾不显示的问题 */
 .layui-form-item .layui-inline.j-inline-margin{ margin: -5px 0 15px 0;}
 .j-inline-margin .layui-form-checkbox[lay-skin=primary]:hover i{border-color:#0084FF;}
