@@ -397,6 +397,10 @@ class Weixinleaderadmin extends Controller
         }
         $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,nick,mobile')->find();
+
+        $userRoles = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->column('a.id,a.nick,a.role_id,b.name as role_name');
+        //halt(session('systemusers'));
+
         if($row){
             $params = ParamModel::getCparams();
             // 显示对应的审批页面
@@ -415,9 +419,17 @@ class Weixinleaderadmin extends Controller
                 default:
                     break;
             }
+            //halt($temps);
             if($temps['row']['change_imgs']){
                 foreach ($temps['row']['change_imgs'] as $k => $v) {
                     $temps['row']['change_imgs'][$k]['file'] = get_domain().$v['file'];
+                }
+            }
+            if($temps['row']['child_json']){
+                //halt($temps['row']['child_json']);
+                foreach ($temps['row']['child_json'] as $a => $b) {
+                    $temps['row']['child_json'][$a]['role_name'] = $userRoles[$b['uid']]['role_name'];
+                    $temps['row']['child_json'][$a]['nick'] = $userRoles[$b['uid']]['nick'];
                 }
             }  
             $result['data'] = $temps;      
