@@ -98,6 +98,7 @@ class Process extends SystemBase
 
     public function process($change_type,$data)
     {
+        
         $process = self::where([['change_type','eq',$change_type],['change_id','eq',$data['id']]])->find();
 
         switch ($change_type) {

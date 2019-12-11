@@ -23,6 +23,19 @@ use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeBan as ChangeBanModel;
+use app\deal\model\ChangeHouse as ChangeHouseModel;
+use app\deal\model\ChangeCancel as ChangeCancelModel;
+use app\deal\model\ChangeLease as ChangeLeaseModel;
+use app\deal\model\ChangeName as ChangeNameModel;
+use app\deal\model\ChangeNew as ChangeNewModel;
+use app\deal\model\ChangeOffset as ChangeOffsetModel;
+use app\deal\model\ChangePause as ChangePauseModel;
+use app\deal\model\ChangeRentAdd as ChangeRentAddModel;
+use app\deal\model\ChangeUse as ChangeUseModel;
+use app\deal\model\ChangeInst as ChangeInstModel;
+use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeCutYear as ChangeCutYearModel;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 
@@ -339,6 +352,8 @@ class Weixinleaderadmin extends Controller
             $ProcessModel = new ProcessModel;
             if($changetype){
                 $where[] = ['change_type','eq',$changetype];
+            }else{
+                $where[] = ['change_type','in',[1,3,4,7,8,9,10,11,13,14,17]];
             }
             $insts = config('inst_ids');
             if($inst){
@@ -412,28 +427,42 @@ class Weixinleaderadmin extends Controller
             $PorcessModel = new ProcessModel;
             $result = [];
             $temps = $PorcessModel->detail($change_type,$id);
+            $temps['row'] = $temps['row']->toArray();
             switch ($change_type) {
-                case 1:
+                case 1: // 租金减免
                     $temps['row']['cut_type'] = $params['cuttypes'][$temps['row']['cut_type']];
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['house_use_id'] = $params['uses'][$temps['row']['house_use_id']];
+                    break;
+                case 3: // 暂停计租
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
+                        }
+                    }
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['ban_info']['ban_struct_id'] = $params['structs'][$temps['row']['ban_info']['ban_struct_id']];
+                    break;
+                case 4: // 陈欠核销
+                    
                     break;
                 default:
                     break;
             }
-            $temps['row'] = $temps['row']->toArray();
+            
+            
             if($temps['row']['change_imgs']){
                 foreach ($temps['row']['change_imgs'] as $k => $v) {
                     $temps['row']['change_imgs'][$k]['file'] = get_domain().$v['file'];
                 }
-            }
-            //halt($temps['row']->toArray());
-            
+            }        
             if($temps['row']['child_json']){
-                //halt($temps['row']['child_json']);
                 foreach ($temps['row']['child_json'] as $a => $b) {
                     $temps['row']['child_json'][$a]['role_name'] = $userRoles[$b['uid']]['role_name'];
                     $temps['row']['child_json'][$a]['nick'] = $userRoles[$b['uid']]['nick'];
                 }
-            }  
+            }
+
             $result['data'] = $temps;      
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
@@ -441,6 +470,82 @@ class Weixinleaderadmin extends Controller
             $result['msg'] = '参数错误！';
         }
         return json($result);  
+    }
+
+    public function process()
+    {
+        $key = input('get.key');
+        $id = input('param.id/d');
+        $change_type = input('param.change_type/d');
+        $result = [];
+        $result['code'] = 0;
+        if(!$key || !$id || !$change_type){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        $row = UserModel::where([['user_key','eq',$key]])->field('id,inst_id,role_id,nick,mobile')->find();
+//halt($row);
+        define('ADMIN_ID', $row['id']);
+        define('ADMIN_ROLE', $row['role_id']);
+
+
+        if(!$row){
+            $result['msg'] = '参数错误！';
+            return json($result);
+        }
+        // 显示对应的审批页面
+        //$id = input('param.id/d');
+        //$change_type = input('param.change_type/d');
+        
+        // if(!$change_type || !$id){
+        //     return $this->error('参数错误！');
+        // }
+
+        //检查当前页面或当前表单，是否允许被请求？
+        $PorcessModel = new ProcessModel;
+        $rowProcess = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
+        //dump($rowProcess);halt(ADMIN_ROLE);
+        if($rowProcess['curr_role'] != ADMIN_ROLE){
+            //return $this->error('审批状态错误');
+            $result['msg'] = '审批状态错误!';
+            return json($result);
+        }
+        if($rowProcess['ftime'] > 0){
+            $result['msg'] = '异动已经完成，请刷新重试！';
+            return json($result);
+            //return $this->error('异动已经完成，请刷新重试！');
+        }
+
+        //if($this->request->isPost()) {
+            $data = $this->request->get();
+            //halt($data);
+            if($change_type == 18 && ADMIN_ROLE == 6){
+                $ChangeModel = new ChangeLeaseModel;
+                $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
+                if(!$changeRow['print_times']){
+                    $result['msg'] = '请先打印租约后再审批！';
+                    return json($result);
+                    //return $this->error('请先打印租约后再审批！');
+                }
+            }
+
+            // 如果审批失败，数据回滚
+            Db::transaction(function () {
+                $model = new ProcessModel;
+                $change_type = input('param.change_type/d');
+                $data = $this->request->get();
+                $model->process($change_type,$data); //$data必须包含子表的id
+            });
+            // if (!$res) {
+            //     return $this->error('审批失败');
+            // }
+            $result['msg'] = '审批成功！';
+            $result['code'] = 1;
+            return json($result);
+        //}
+
+
     }
 
 
