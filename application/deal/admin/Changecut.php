@@ -302,6 +302,7 @@ class Changecut extends Admin
             $ChangeCutModel = new ChangeCutModel;
             $row = $ChangeCutModel->get($data['id']);
             $row->end_date = date('Ym');
+            $row->is_valid = 0;
             $row->save();
             //$ChangeCutModel->where([['id','eq',$data['id']]])->update(['end_date'=>date('Ym')]);
             // 将异动统计表的该减免结束时间改成当月
