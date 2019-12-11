@@ -419,12 +419,14 @@ class Weixinleaderadmin extends Controller
                 default:
                     break;
             }
-            //halt($temps);
+            $temps['row'] = $temps['row']->toArray();
             if($temps['row']['change_imgs']){
                 foreach ($temps['row']['change_imgs'] as $k => $v) {
                     $temps['row']['change_imgs'][$k]['file'] = get_domain().$v['file'];
                 }
             }
+            //halt($temps['row']->toArray());
+            
             if($temps['row']['child_json']){
                 //halt($temps['row']['child_json']);
                 foreach ($temps['row']['child_json'] as $a => $b) {

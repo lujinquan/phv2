@@ -175,9 +175,9 @@ class ChangeCut extends SystemBase
 
     public function detail($id)
     {
-        $row = self::with(['house','tenant'])->get($id)->toArray();
+        $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['ban_info'] = BanModel::get($row['ban_id'])->toArray();
+        $row['ban_info'] = BanModel::get($row['ban_id']);
         //$this->finalDeal($row);
         return $row;
     }
