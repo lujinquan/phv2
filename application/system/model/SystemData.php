@@ -202,7 +202,8 @@ class SystemData extends Model
                     //$applyHouseidArr = Db::name('change_rentadd')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 16: //减免年审
-                    $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
+                    $endDate = (date('Y')+1).'01';
+                    $houseids = Db::name('change_cut')->where([['change_status','eq',1],['end_date','eq',$endDate]])->column('house_id');
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
                     $where[] = ['house_is_pause','eq',0];
@@ -252,23 +253,23 @@ class SystemData extends Model
         foreach ($temps as $k => &$v) {
             
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
-            $v['color_status'] = 1; //正常的
+            $v['color_status'] = 1; // 正常的
             if($unpaids){ 
                 if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4 && $queryWhere['change_type'] != 11){
-                    $v['color_status'] = 3; // 有欠租的
+                    $v['color_status'] = 3; // 如果有欠租的
                 }
             }
             if(isset($applyHouseidArr) && $applyHouseidArr){
                 if(in_array($v['house_id'], $applyHouseidArr)){
-                    $v['color_status'] = 2; // 已在异动中
+                    $v['color_status'] = 2; // 如果已在当前异动中
                 }
             }
             if($queryWhere['change_type'] == 18){ //如果是发租约类型
                 if($v['house_pre_rent'] != $v['house_cou_rent']){ 
-                    $v['color_status'] = 4;  //如果规租不等于计算租金
+                    $v['color_status'] = 4;  // 如果规租不等于计算租金
                 }
                 if($v['house_is_pause']){ 
-                    $v['color_status'] = 5;  //如果是暂停计租
+                    $v['color_status'] = 5;  // 如果是暂停计租
                 }
             }
 

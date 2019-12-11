@@ -487,26 +487,38 @@
                         </tr>
                         <tr>
                             <td colspan="11" style="text-align: center">资料员：<span id="print_1_Room21_data1">
+                            <?php $a = 1; ?>
                             {volist name="$data_info['child_json']" id="v"}
                                 {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
+                                <?php $a++; ?>
+                                <?php if($a == 2){; ?>
                                     {$systemusers[$v['uid']]['nick']}
+                                <?php }; ?>
                                 {/if} 
                             {/volist}    
 
                             </span>
                                 &nbsp;  &nbsp;  &nbsp;
                         经管所长：<span id="print_1_Room21_data2">
+                            <?php $b = 1; ?>
                             {volist name="$data_info['child_json']" id="v"}
                                 {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
+                                <?php $b++; ?>
+                                <?php if($b == 2){; ?>
                                     {$systemusers[$v['uid']]['nick']}
+                                <?php }; ?>
                                 {/if} 
                             {/volist}   
 
                         </span>
                                 &nbsp;  &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3">
+                        <?php $c = 1; ?>
                         {volist name="$data_info['child_json']" id="v"}
                             {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
+                            <?php $c++; ?>
+                            <?php if($c == 2){; ?>
                                 {$systemusers[$v['uid']]['nick']}
+                            <?php }; ?>
                             {/if} 
                         {/volist}
 

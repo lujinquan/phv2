@@ -136,12 +136,16 @@
 				for (var i = 0; i < result.length; i++) {
 					$("[lay-id='dataTable'] tr[data-index="+i+"]").attr('color-status',1);
 					if(parseInt(result[i].color_status) == 2){
+						// 如果已在当前异动中
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#A4A4A4').attr('color-status',2);
 					}else if(parseInt(result[i].color_status) == 3){
-						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','red').attr('color-status',3);
+						// 如果有欠租的
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#ff0000').attr('color-status',3);
 					}else if(parseInt(result[i].color_status) == 4){
-						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#D54D2B').attr('color-status',4);
+						// 如果规租不等于计算租金
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#ff8700').attr('color-status',4);
 					}else if(parseInt(result[i].color_status) == 5){
+						// 如果是暂停计租
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#FFCC00').attr('color-status',5);
 					}
 					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
