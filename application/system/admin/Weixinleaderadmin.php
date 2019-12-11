@@ -356,26 +356,16 @@ class Weixinleaderadmin extends Controller
             foreach($temps as $k => $v){
                 $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                 $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-                $v['change_type'] = $params['changes'][$v['change_type']];
+                $v['change_type_name'] = $params['changes'][$v['change_type']];
                 if($type == 1){ // 
                     if($v['curr_role'] == $row['role_id']){
-                        //$v['is_process'] = 1;
                         array_unshift($dataTemps,$v);
                     }
                 }else{
                     if($v['curr_role'] != $row['role_id']){
-                        //$v['is_process'] = 1;
                         array_unshift($dataTemps,$v);
                     }
                 }
-
-                // if($v['curr_role'] == $row['role_id']){
-                //     $v['is_process'] = 1;
-                //     array_unshift($dataTemps,$v);
-                // }else{
-                //     $v['is_process'] = 0;
-                //     array_push($dataTemps,$v);
-                // }
             }
 
             $result['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
