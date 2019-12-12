@@ -483,7 +483,7 @@ class Weixinleaderadmin extends Controller
                     $temps['row']['change_use_type'] = $params['usetypes'][$temps['row']['change_use_type']];
                     break;
                 case 14: // 楼栋调整
-                    $temps['row']['ban_change_id'] = $params['ban_change_ids'][$temps['row']['ban_change_id']];
+                    $temps['row']['ban_change_id_name'] = $params['ban_change_ids'][$temps['row']['ban_change_id']];
                     if($temps['row']['old_damage']){
                         $temps['row']['old_damage'] = $params['damages'][$temps['row']['old_damage']];
                     }
