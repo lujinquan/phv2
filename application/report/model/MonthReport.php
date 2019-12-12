@@ -39,48 +39,48 @@ class MonthReport extends Model
 
         //从房屋表中分组获取年度欠租、租差
         $houseData = Db::name('house')->alias('b')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(b.house_id) as house_ids,sum(b.house_diff_rent) as house_diff_rents,sum(b.house_pump_rent) as house_pump_rents,sum(b.house_pre_rent) as house_pre_rents')->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')
-            ->where([['b.house_status','eq',1]])
-            ->select();
+        ->where([['b.house_status','eq',1]])
+        ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,change_type')->group('use_id,owner_id,inst_id,change_type')
-            ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$arr1],['change_status','eq',1]])
-            ->select();
+        ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$arr1],['change_status','eq',1]])
+        ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-            ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
-            ->select();
+        ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
+        ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanIncData = Db::name('change_table')->field('use_id,owner_id,new_inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,new_inst_id')
-            ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
-            ->select();
+        ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
+        ->select();
 
         //获取非基数异动
         $changeNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents,change_type')->group('use_id,owner_id,inst_id,change_type')
-            ->where([['change_cancel_type','neq',1],['change_type','neq',1],['change_status','eq',1]])
-            ->select();
+        ->where([['change_cancel_type','neq',1],['change_type','neq',1],['change_status','eq',1]])
+        ->select();
 
         //陈欠核销的是一个特别的非基数异动，以前年月必须是当月数据，不能同本月一样每个月继承
         $changeHeXiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-            ->where([['order_date','eq',$arr1],['change_type','eq',4],['change_status','eq',1]])
-            ->select();
+        ->where([['order_date','eq',$arr1],['change_type','eq',4],['change_status','eq',1]])
+        ->select();
 
         //房屋出售
         $changeSaleData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['order_date','eq',$arr1],['change_cancel_type','eq',1],['change_status','eq',1]])
-            ->select();
+        ->where([['order_date','eq',$arr1],['change_cancel_type','eq',1],['change_status','eq',1]])
+        ->select();
 
         //政策减免
         $changeZhengceData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['end_date','gt',$cacheDate],['cut_type','eq',5],['change_status','eq',1]])
-            ->select();
+        ->where([['end_date','gt',$cacheDate],['cut_type','eq',5],['change_status','eq',1]])
+        ->select();
 
         //减免（除去政策减免）
         $changejianmianData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['end_date','gt',$cacheDate],['change_type','eq',1],['cut_type','neq',5],['change_status','eq',1]])
-            ->select();
+        ->where([['end_date','gt',$cacheDate],['change_type','eq',1],['cut_type','neq',5],['change_status','eq',1]])
+        ->select();
 
         //重组为规定格式的租金数据
         foreach($rentData as $k1 => $v1){
@@ -375,7 +375,7 @@ class MonthReport extends Model
                     array_unshift($result[$owners][$j][0],array_sum($result[$owners][$j][0]) - $result[$owners][$j][0][1] - $result[$owners][$j][0][2] - $result[$owners][$j][0][3]);
                 }
                 
-              
+                
                 //新发租异动ChangeType = 7
                 $result[$owners][$j][2][1] = $changedata[$owners][2][$j][7]['change_rents'];
                 $result[$owners][$j][2][2] = 0;
@@ -847,7 +847,7 @@ class MonthReport extends Model
                     $result[$own][$d] = array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]);
                 }elseif($own == 10 && $d == 1){
                     $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
-                
+                    
                 }elseif($own == 11 && $d > 1 && $d < 4){
                     $result[$own][$d] = array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]);
                 }elseif($own == 11 && $d == 1){

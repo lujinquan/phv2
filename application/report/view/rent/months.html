@@ -18,11 +18,9 @@
                 {volist name="params['owners']" id="v"}
                 <option value="{$key}"{if condition="$key == 1"}selected{/if}>{$v}</option>
                 {/volist}
-                {if condition="INST_LEVEL != 3"}
                 <option value="10">市代托</option>
                 <option value="11">市区代托</option>
                 <option value="12">所有产别</option>
-                {/if}
             </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">

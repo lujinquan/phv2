@@ -362,7 +362,7 @@ class Weixinleaderadmin extends Controller
                 $instid = $inst?$data['ban_inst_id']:$row['inst_id'];
                 $where[] = ['d.ban_inst_id','in',$insts[$instid]];
             }
-
+            $where[] = ['a.status','eq',1];
 
             $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $result = [];
