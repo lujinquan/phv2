@@ -455,15 +455,7 @@ class Weixinleaderadmin extends Controller
                     }
                     break;
                 case 7: // 新发租
-                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
-
-                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
-                    if($temps['row']['data_json']){
-                        foreach ($temps['row']['data_json'] as $a => $b) {
-                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
-                            $temps['row']['data_json'][$a]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']]; 
-                        }
-                    }
+                    $temps['row']['new_type'] = $params['news'][$temps['row']['new_type']];
                     break;
                 case 8: // 注销
                     $temps['row']['cancel_type'] = $params['cancels'][$temps['row']['cancel_type']];
