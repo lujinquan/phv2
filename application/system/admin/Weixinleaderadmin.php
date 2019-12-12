@@ -444,6 +444,61 @@ class Weixinleaderadmin extends Controller
                     $temps['row']['ban_info']['ban_struct_id'] = $params['structs'][$temps['row']['ban_info']['ban_struct_id']];
                     break;
                 case 4: // 陈欠核销
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
+                            $temps['row']['data_json'][$a]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']]; 
+                        }
+                    }
+                    break;
+                case 7: // 新发租
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
+                            $temps['row']['data_json'][$a]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']]; 
+                        }
+                    }
+                    break;
+                case 8: // 注销
+                    $temps['row']['cancel_type'] = $params['cancels'][$temps['row']['cancel_type']];
+                    break;
+                case 9: // 房屋调整
+                    
+                    break;
+                case 10: // 管段调整
+                    
+                    break;
+                case 11: // 租金追加调整
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    break;
+                case 13: // 使用权变更
+                    $temps['row']['change_use_type'] = $params['usetypes'][$temps['row']['change_use_type']];
+                    break;
+                case 14: // 楼栋调整
+                    $temps['row']['ban_change_id'] = $params['ban_change_ids'][$temps['row']['ban_change_id']];
+                    if($temps['row']['old_damage']){
+                        $temps['row']['old_damage'] = $params['damages'][$temps['row']['old_damage']];
+                    }
+                    if($temps['row']['new_damage']){
+                        $temps['row']['new_damage'] = $params['damages'][$temps['row']['new_damage']];
+                    }
+                    if($temps['row']['old_struct']){
+                        $temps['row']['old_struct'] = $params['structs'][$temps['row']['old_struct']];
+                    }
+                    if($temps['row']['new_struct']){
+                        $temps['row']['new_struct'] = $params['structs'][$temps['row']['new_struct']];
+                    }
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    break;
+                case 17: // 别字更正
                     
                     break;
                 default:
