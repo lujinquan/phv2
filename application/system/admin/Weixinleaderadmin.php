@@ -456,6 +456,8 @@ class Weixinleaderadmin extends Controller
                     break;
                 case 7: // 新发租
                     $temps['row']['new_type'] = $params['news'][$temps['row']['new_type']];
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['house_info']['house_use_id'] = $params['uses'][$temps['row']['house_info']['house_use_id']];
                     break;
                 case 8: // 注销
                     $temps['row']['cancel_type'] = $params['cancels'][$temps['row']['cancel_type']];
