@@ -443,6 +443,7 @@ class Weixinleaderadmin extends Controller
                     }
                     $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
                     $temps['row']['ban_info']['ban_struct_id'] = $params['structs'][$temps['row']['ban_info']['ban_struct_id']];
+                    $temps['row']['ban_info']['ban_damage_id'] = $params['damages'][$temps['row']['ban_info']['ban_damage_id']];
                     break;
                 case 4: // 陈欠核销
                     $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
