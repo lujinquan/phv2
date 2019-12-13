@@ -376,15 +376,16 @@ class Weixinleaderadmin extends Controller
                     if($v['curr_role'] == $row['role_id']){
                         array_unshift($dataTemps,$v);
                     }
-                }else{
-                    if($v['curr_role'] != $row['role_id']){
-                        array_unshift($dataTemps,$v);
-                    }
                 }
+                // else{
+                //     if($v['curr_role'] != $row['role_id']){
+                //         array_unshift($dataTemps,$v);
+                //     }
+                // }
             }
 
             $result['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
-            $result['count'] = count($result['data']);   
+            $result['count'] = count($dataTemps);   
 
         
             $result['pages'] = ceil($result['count'] / $limit);
