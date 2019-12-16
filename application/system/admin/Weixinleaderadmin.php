@@ -468,7 +468,13 @@ class Weixinleaderadmin extends Controller
                     
                     break;
                 case 10: // 管段调整
-                    
+                    $temps['row']['old_inst_id'] = $params['insts'][$temps['row']['old_inst_id']];
+                    $temps['row']['new_inst_id'] = $params['insts'][$temps['row']['new_inst_id']];
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['ban_inst_id'] = $params['insts'][$b['ban_inst_id']];
+                        }
+                    }
                     break;
                 case 11: // 租金追加调整
                     $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
