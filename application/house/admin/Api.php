@@ -82,11 +82,51 @@ class Api extends Common
         return $this->success($msg.'，耗时：'.$time);
     }
 
-    // public function check_ban_data()
-    // {
-    	
-    // }
-    // 
+    public function check_msg_data()
+    {
+        //$query = Db::connect('mysql://root:ctnm@127.0.0.1:3306/hk#utf8')->query('select table_schema,table_name,table_type,table_rows from information_schema.tables where table_schema="hk" and table_rows > 0 and table_name in (select hk_field from test);');
+        //$hk_db = 'mysql://root:ctnm@127.0.0.1:3306/hk#utf8';
+        //$shop_db = 'mysql://root:ctnm@127.0.0.1:3306/shop#utf8';
+        $query = Db::query('select * from hk.test');
+        $apply_tables = [];
+        foreach($query as $v){ 
+            $counts = Db::query("select count(*) as counts FROM hk.".$v['hk_field']);
+            //halt($counts);
+            if(!$counts[0]['counts']){
+                continue;
+            }
+            //halt($counts);
+            $hk_field = Db::query("SHOW FULL FIELDS FROM hk.".$v['hk_field']);
+            $shop_field = Db::query("SHOW FULL FIELDS FROM shop.".$v['shop_field']);
+            $hk_field_arr = [];
+            $shop_field_arr = [];
+            $apply_fields = [];
+            foreach ($hk_field as $v1) {
+                $hk_field_arr[] = $v1['Field'];
+            }
+            foreach ($shop_field as $v2) {
+                $shop_field_arr[] = $v2['Field'];
+                //dump($hk_field_arr);halt($v2['Field']);
+                if(in_array($v2['Field'],$hk_field_arr)){
+                    $apply_fields[] = $v2['Field'];
+                }
+            }
+            $appply_fields_str = implode(',',$apply_fields);
+            $executeSql = "insert into shop.".$v['shop_field']."(". $appply_fields_str.") select ". $appply_fields_str ." from hk.".$v['hk_field'];
+            //halt($executeSql);
+            Db::execute('truncate shop.'.$v['shop_field']);
+            $res = Db::execute($executeSql);
+            if($res){
+                $apply_tables[] = $v['shop_field'];
+            }
+            //dump($v);halt($res);
+            //dump($v);dump($apply_fields);dump($shop_field_arr);halt($hk_field_arr);
+        }
+        return $msg = count($apply_tables).'张表同步完成！';
+        //halt($query);
+    	//$id = 
+    }
+    
     public function tenant_info()
     {
         $id = input('param.id/d');
