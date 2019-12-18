@@ -36,19 +36,27 @@ class Process extends Admin
             $getData = $this->request->get();
             $ProcessModel = new ProcessModel;
             $where = $ProcessModel->checkWhere($getData);
-            $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%s') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = $dataTemps = [];
+            $data['data'] = $dataTemps = $dataTemps1 = [];
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
             foreach($temps as $k => $v){
                 if($v['curr_role'] == ADMIN_ROLE){
                     $v['is_process'] = 1;
-                    array_unshift($dataTemps,$v);
+                    array_push($dataTemps,$v);
                 }else{
                     $v['is_process'] = 0;
-                    array_push($dataTemps,$v);
+                    array_push($dataTemps1,$v);
                 }
             }
+            if($dataTemps1){
+                foreach ($dataTemps1 as $v1) {
+                    array_push($dataTemps,$v1);
+                }
+            }
+            //$dataTemps = $dataTemps1;
+            
+            // array_unshift($dataTemps,$dataTemps1);
             //$data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.id');
 
             $data['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);

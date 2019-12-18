@@ -374,7 +374,7 @@ class Weixinleaderadmin extends Controller
                 $v['change_type_name'] = $params['changes'][$v['change_type']];
                 if($type == 1){ // 
                     if($v['curr_role'] == $row['role_id']){
-                        array_unshift($dataTemps,$v);
+                        array_push($dataTemps,$v);
                     }
                 }
                 // else{
