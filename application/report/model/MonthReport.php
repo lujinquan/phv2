@@ -816,6 +816,7 @@ class MonthReport extends Model
                 $result[$owners][$j][100][3] = $housedata[$owners][1][$j]['house_ids']; //民用总户数
             }
         }
+        
         //第一步：将所有管段加上市代托、市区代托、全部
         $ownertype = [10,11,12]; //市、区、代、自、托、市代托、市区代托、全部
         foreach ($ownertype as $ow) {

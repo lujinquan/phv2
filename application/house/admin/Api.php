@@ -87,7 +87,7 @@ class Api extends Common
         //$query = Db::connect('mysql://root:ctnm@127.0.0.1:3306/hk#utf8')->query('select table_schema,table_name,table_type,table_rows from information_schema.tables where table_schema="hk" and table_rows > 0 and table_name in (select hk_field from test);');
         //$hk_db = 'mysql://root:ctnm@127.0.0.1:3306/hk#utf8';
         //$shop_db = 'mysql://root:ctnm@127.0.0.1:3306/shop#utf8';
-        $query = Db::query('select * from hk.test');
+        $query = Db::query('select * from shop.test');
         $apply_tables = [];
         foreach($query as $v){ 
             $counts = Db::query("select count(*) as counts FROM hk.".$v['hk_field']);
@@ -122,7 +122,8 @@ class Api extends Common
             //dump($v);halt($res);
             //dump($v);dump($apply_fields);dump($shop_field_arr);halt($hk_field_arr);
         }
-        return $msg = count($apply_tables).'张表同步完成！';
+        $msg = count($apply_tables).'张表同步完成！';
+        return $msg;
         //halt($query);
     	//$id = 
     }
