@@ -1,10 +1,8 @@
-
 <form action="{:url('?group='.input('param.group', 'base'))}" class="page-list-form layui-form" method="post">
     <div class="j-details-box floorWrap">
       <div class="layui-row layui-form-item layui-col-space90">  
     {volist name="data_list" id="v"}
     {if condition="$v['type'] == 'input'"}
-    
         <div class="layui-col-md4">
             <label class="j-form-label"><i class="red"></i>{$v['title']}</label>
             <div class="j-input-inline">

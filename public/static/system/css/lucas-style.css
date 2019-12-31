@@ -101,7 +101,9 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_EXPORT"]{position: absolute;top:2px; right:44px;}
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_PRINT"]{position: absolute;top:2px; right:10px;}
 .j-table-content .layui-table-tool{ min-height: 0; padding: 0;border-width:0;position: initial;}
-.j-table-content .layui-table-box{min-height: 450px;}
+/* .j-table-content .layui-table-box{max-height: 450px;min-height: 450px;overflow-y: auto;} */
+.j-table-content .layui-table-body.layui-table-main{max-height: 400px;min-height: 400px;overflow-y: auto;}
+.layui-table-total table.layui-table{box-shadow: -1px 0 8px rgba(0,0,0,.08);}
 .j-table-content.j-five-height .layui-table-box{min-height: 262px;}
 .j-table-content .layui-form-checked i,.j-table-content .layui-form-checked:hover i{ color: #fff!important;}/* 处理checkbox对勾不显示的问题 */
 .layui-form-item .layui-inline.j-inline-margin{ margin: -5px 0 15px 0;}
@@ -402,10 +404,11 @@ opacity: .8color: #333;}
 /* 时间控件选中样式 */
 .layui-laydate .layui-this{ background: #2E77EF!important;}
 /* 房屋报表 S */
-.j-report-table{ min-height: 350px;}
+/* .j-report-table{ max-height: 350px;overflow-y: auto;} */
 .j-report-con .j-report-title{ font:bold 20px/25px 'MicrosoftYaHei-Bold'; text-align: center; margin-bottom: 15px;}
 .layui-table .j-bold-size,.j-report-con .j-bold-size,.am-text-middle{ font-weight: bold; color: #666;  font-size: 14px;}
 .j-report-table li{float: left; width: 33.3%;margin-bottom: 15px;}
+.j-PropertyForm{max-height: 390px;  overflow-y: auto; display: block;}
 /* 房屋报表 E */
 /* 表格样式 */
 .report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #666;} 

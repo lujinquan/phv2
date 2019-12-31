@@ -84,20 +84,20 @@
 		//var exportData = " ";//定义全局变量
        table.render({
             elem: '#dataTable'
-			//,id:'datas'
+			// ,height: 330
             ,toolbar: true
 			,defaultToolbar: ['filter','exports','print']//设置右边筛选，导出，打印显示
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,totalRow: true
             ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
             ,limit: 10
-            ,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox', hide: isHide ,fixed: 'left'}
-                ,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
+                // {type: 'checkbox', hide: isHide ,fixed: 'left'}
+                {field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
                 ,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -126,14 +126,17 @@
             ,done:function(res,curr,count){
 				//导出转换后台数据
 				var exportData=res.data;
-
 				for(i in exportData){
 					exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
 					exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
 					exportData[i].ban_struct_id = params.structs[exportData[i].ban_struct_id];//转化结构类别
 					exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
-				}
-            }
+				};
+				table.resize('dataTable');//解决表格宽度设置为minWidth时表格错位问题 
+            }, 
+			success: function (layero, index) {
+				table.resize('dataTable');  //demo是表格的id
+		  }
         },isShowInst,isHide);
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){

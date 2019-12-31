@@ -845,6 +845,17 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
       $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
           e.stopPropagation();
       });  
+	  //解决table出现竖向滚动条错位的问题
+	  $(".j-table-content").bind("change",'.layui-laypage-limits select', function(){
+	    if( $(".layui-table-body.layui-table-main").scrollTop()>0 ){
+	      $(".layui-table-header").css({"padding-right":"0","box-sizing":"border-box"});
+		  $(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
+		  
+	    }else{
+	      $(".layui-table-header").css({"padding-right":"16px","box-sizing":"border-box"});
+		  $(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
+	    }
+	  });
   })
 
 function bytesToSize(bytes) {  
@@ -886,7 +897,6 @@ function formSubmit(type,url,data,index){
     });
     return false;
 }
-
 /* $('.j-upload-from').bind("click",".j-viewer-img,.upload_img_list",function(){
     $(this).viewer({
      		url: 'data-original',
