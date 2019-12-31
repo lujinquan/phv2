@@ -103,7 +103,7 @@ class Api extends Common
                 $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:session('admin_user.inst_id');
                 $where[] = ['d.ban_inst_id','in',$insts[$instid]];
             }
-            $fields = "a.id,a.change_id,a.print_times,a.change_type,a.curr_role,from_unixtime(a.ctime, '%Y-%m-%d') as ctime";
+            $fields = "a.id,a.change_id,a.print_times,a.change_type,a.curr_role,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%s') as ctime";
             $data = $result = [];
             
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();

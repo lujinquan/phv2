@@ -201,6 +201,13 @@ class User extends Admin
             if (isset($data['inst_ids']) && $data['inst_ids']) {
                 $data['inst_ids'] = implode(',',$data['inst_ids']);
             }
+            if($data['inst_id'] == 1){
+                $data['inst_level'] = 1;
+            }else if($data['inst_id']<4){
+                $data['inst_level'] = 2;
+            }else{
+                $data['inst_level'] = 3;
+            }
 
             if (isset($data['role_id']) && RoleModel::where('id', $data['role_id'])->value('auth') == json_encode($data['auth'])) {// 如果自定义权限与角色权限一致，则设置自定义权限为空
                 $data['auth'] = '';
