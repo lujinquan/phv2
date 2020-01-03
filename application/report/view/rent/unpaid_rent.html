@@ -1,3 +1,6 @@
+<style>
+	.j-table-content.j-no-title{min-height: 300px;}
+</style>
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
 	      <form class="layui-form layui-form-pane" >
@@ -56,22 +59,36 @@
 			  </ul> -->
 			  <table class="layui-table" id="PropertyForm">
 			          <!-- 完损等级分 -->
-					  <thead>
+					  <thead style="display:block;background-color: #f2f2f2;">
+						 <tr>
+						 	  <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">房屋编号</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">地址</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">户名</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">使用性质</th>
+						       <th rowspan="1" colspan="4" class="j-bold-size" style="min-width:600px">房屋欠租情况</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">备注</th>
+						     </tr>
+						     <tr>
+						       <td rowspan="1" colspan="1" style="min-width:150px">本月份</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">以前月份</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">以前年度</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">合计</td>
+						     </tr>  
 					  </thead>
 			          <tbody id="Tbody" class="j-PropertyForm">
-			              
+			             
 			          </tbody>
-					  <tfoot id="Statistics">
+					  <tfoot id="Statistics" style="display:block;">
 						<tr>
-							<td>统计</td>
-							<td id="j-heji">&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td id="j-month"></td>
-							<td id="j-previous-months"></td>
-							<td id="j-previous-year"></td>
-							<td id="j-sum"></td>
-							<td>&nbsp;</td>
+							<td style="min-width:150px">统计</td>
+							<td id="j-heji" style="min-width:150px">&nbsp;</td>
+							<td style="min-width:150px">&nbsp;</td>
+							<td style="min-width:150px">&nbsp;</td>
+							<td id="j-month" style="min-width:150px"></td>
+							<td id="j-previous-months" style="min-width:150px"></td>
+							<td id="j-previous-year" style="min-width:150px"></td>
+							<td id="j-sum" style="min-width:150px"></td>
+							<td style="min-width:150px">&nbsp;</td>
 						</tr>   
 					  </tfoot>
 			  </table>
@@ -129,26 +146,13 @@
 			    //回调函数
 				success:function(jsondata){
 
-					var tableStr = `<tr>
-						  <th rowspan="2" colspan="1" class="j-bold-size">房屋编号</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">地址</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">户名</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">使用性质</th>
-		                  <th rowspan="1" colspan="4" class="j-bold-size">房屋欠租情况</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">备注</th>
-		                </tr>
-		                <tr>
-		                  <td rowspan="1" colspan="1" >本月份</td>
-		                  <td rowspan="1" colspan="1" >以前月份</td>
-		                  <td rowspan="1" colspan="1" >以前年度</td>
-		                  <td rowspan="1" colspan="1" >合计</td>
-		                </tr>`;
+					var tableStr = ``;
 
 					var data = jsondata.data;//由JSON字符串转换为JSON对象
 					console.log(data);
 					var k = 0;
 					for(var i in data) {
-						tableStr += "<tr><td>" + data[i].number + "</td><td>" + data[i].address + "</td><td>" + data[i].tenant + "</td><td>" + data[i].use + "</td><td>"+ data[i].curMonthUnpaidRent + "</td><td>" +data[i].beforeMonthUnpaidRent+ "</td><td>" +data[i].beforeYearUnpaidRent+ "</td><td>" +data[i].total+ "</td><td>" + data[i].remark+"</td></tr>";
+						tableStr += "<tr><td style='min-width:150px'>" + data[i].number + "</td><td style='min-width:150px'>" + data[i].address + "</td><td style='min-width:150px'>" + data[i].tenant + "</td><td style='min-width:150px'>" + data[i].use + "</td><td style='min-width:150px'>"+ data[i].curMonthUnpaidRent + "</td><td style='min-width:150px'>" +data[i].beforeMonthUnpaidRent+ "</td><td style='min-width:150px'>" +data[i].beforeYearUnpaidRent+ "</td><td style='min-width:150px'>" +data[i].total+ "</td><td style='min-width:150px'>" + data[i].remark+"</td></tr>";
 						k++;
 					}
 					$('#j-heji').text('总数：'+k+'条');
@@ -179,20 +183,7 @@
 			success:function(jsondata){
 				var data = jsondata.data;//由JSON字符串转换为JSON对象
 
-				var str = `<tr>
-						  <th rowspan="2" colspan="1" class="j-bold-size">房屋编号</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">地址</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">户名</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">使用性质</th>
-		                  <th rowspan="1" colspan="4" class="j-bold-size">房屋欠租情况</th>
-		                  <th rowspan="2" colspan="1" class="j-bold-size">备注</th>
-		                </tr>
-		                <tr>
-		                  <td rowspan="1" colspan="1" >本月份</td>
-		                  <td rowspan="1" colspan="1" >以前月份</td>
-		                  <td rowspan="1" colspan="1" >以前年度</td>
-		                  <td rowspan="1" colspan="1" >合计</td>
-		                </tr>`;
+				var str = ``;
 				var k = 0;
 				for(var i in data) {
 					//console.log(data[i].address);
@@ -206,7 +197,7 @@
 					// 				<td rowspan='1' colspan='1'>7</td>\
 					// 				<td rowspan='1' colspan='1'>8</td>\
 					// 			</tr>";
-					str += "<tr><td>" + data[i].number + "</td><td>" + data[i].address + "</td><td>" + data[i].tenant + "</td><td>" + data[i].use + "</td><td>"+ data[i].curMonthUnpaidRent + "</td><td>" + data[i].beforeMonthUnpaidRent + "</td><td>" +data[i].beforeYearUnpaidRent+ "</td><td>" +data[i].total+ "</td><td>" + data[i].remark+"</td></tr>";
+					str += "<tr><td style='min-width:150px'>" + data[i].number + "</td><td style='min-width:150px'>" + data[i].address + "</td><td style='min-width:150px'>" + data[i].tenant + "</td><td style='min-width:150px'>" + data[i].use + "</td><td style='min-width:150px'>"+ data[i].curMonthUnpaidRent + "</td><td style='min-width:150px'>" + data[i].beforeMonthUnpaidRent + "</td><td style='min-width:150px'>" +data[i].beforeYearUnpaidRent+ "</td><td style='min-width:150px'>" +data[i].total+ "</td><td style='min-width:150px'>" + data[i].remark+"</td></tr>";
 					k++;
 				}
 				
@@ -262,10 +253,6 @@
 				}
 			});
         })
-
-        
-		
-		
     });
 	
 </script>

@@ -165,6 +165,7 @@
    		</div>
    	</div>
    	<input type="hidden" name="id" value="{$data_info['id']}">
+	<span class="j-tip-danger">不通过：异动失效，申请人需要重新填写申请；</span><span class="j-tip-warm">打回：打回到申请人，申请人可修改资料重新提交申请；</span>
   	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
@@ -174,7 +175,34 @@
 		</div>
 	</div>
   </div>
+  <!-- 打回弹框内容 -->
+  <div class="layui-form-item" id="j-repulse-box" hidden='hidden'>
+   <select name="repulse_name" lay-filter="repulse">
+		<option value="0">打回原因1</option>
+		<option value="1">打回原因2</option>
+		<option value="2">打回原因3</option>
+		<option value="3">其它</option>
+    </select>
+    <div class='j-open-reason j-open-repulse hide'>
+		<input type='text' name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''>
+    </div>
+  </div>
+  <!-- 不通过弹框内容 -->
+  <div class="layui-form-item" id="j-notpass-box" hidden='hidden'>
+   <select name="notpass_name" lay-filter="notpass">
+  		<option value="0">不通过原因1</option>
+  		<option value="1">不通过原因2</option>
+  		<option value="2">不通过原因3</option>
+		<option value="3">其它</option>
+    </select>
+    <div class='j-open-reason j-open-notpass hide'>
+		<input type='text' name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''>
+	</div>
+  </div>
 </form>
+<form class="layui-form" action="" >
+	
+</from>
 {include file="system@block/layui" /}
 <!-- 图片查看 -->
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
@@ -187,6 +215,7 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
+		layui.form.render('select');
 		//审批不通过
 	    $("#handover").on("click",function(){
 	    	layer.open({
@@ -194,11 +223,15 @@
 	    		btn: ["确定","取消"],
 	    		title: ['审批不通过原因'],
 	    		scrollbar: false,
-	    		area: ['400px','200px'],
+	    		area: ['400px','300px'],
 	    		offset: 'auto',
-	    		content: "<div class='j-open-reason'><input type='text' name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	    		content: $("#j-notpass-box"),
+				success:function(layero){
+				     var mask = $(".layui-layer-shade");
+				     mask.appendTo(layero.parent());
+				     //其中：layero是弹层的DOM对象
+				},
 	    		yes: function(index, layero){
-					
 					var formData = $('.layui-form').serialize();
 					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=3';
 					if($('#change_reason').val()==''){
@@ -213,8 +246,16 @@
 
 				}
 			});
-	    })
-
+	    });
+		//监听不通过
+		form.on('select(notpass)', function(data){
+		   if(data.elem[data.elem.selectedIndex].text==='其它'){
+			  $(".j-open-notpass").show();
+		   }
+		   else{
+			  $(".j-open-notpass").hide();
+		   }
+		});
 	    //打回
 	    $("#backover").on("click",function(){
 	    	layer.open({
@@ -222,11 +263,15 @@
 	    		btn: ["确定","取消"],
 	    		title: ['打回原因'],
 	    		scrollbar: false,
-	    		area: ['400px','200px'],
+	    		area: ['400px','300px'],
 	    		offset: 'auto',
-	    		content: "<div class='j-open-reason'><input type='text' name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
+	    		content: $('#j-repulse-box'),
+				success:function(layero){
+				     var mask = $(".layui-layer-shade");
+				     mask.appendTo(layero.parent());
+				     //其中：layero是弹层的DOM对象
+                },
 	    		yes: function(index, layero){
-					
 					var formData = $('.layui-form').serialize();
 					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=3';
 					if($('#back_reason').val()==''){
@@ -241,10 +286,16 @@
 
 				}
 			});
-	    })
-
-
-
+	    });
+		//监听打回
+		form.on('select(repulse)', function(data){
+		   if(data.elem[data.elem.selectedIndex].text==='其它'){
+			  $(".j-open-repulse").show();
+		   }
+		   else{
+			  $(".j-open-repulse").hide();
+		   }
+		});
         //资料上传
         upload.render({
         	elem: '#upload_img1',

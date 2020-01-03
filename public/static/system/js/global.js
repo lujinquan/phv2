@@ -846,16 +846,32 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
           e.stopPropagation();
       });  
 	  //解决table出现竖向滚动条错位的问题
-	  $(".j-table-content").bind("change",'.layui-laypage-limits select', function(){
-	    if( $(".layui-table-body.layui-table-main").scrollTop()>0 ){
-	      $(".layui-table-header").css({"padding-right":"0","box-sizing":"border-box"});
-		  $(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
-		  
-	    }else{
-	      $(".layui-table-header").css({"padding-right":"16px","box-sizing":"border-box"});
-		  $(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
-	    }
-	  });
+	  $(".j-table-content .layui-table-view").each(function(){
+		  var that=$(this);
+		 $(this).bind("change",'.layui-laypage-limits select', function(){
+		  //   if( $(this).parents(".layui-table-view").find(".layui-table-body.layui-table-main").scrollTop()>0 ){
+				// alert("有滚动条！");
+		  //     $(this).parents(".layui-table-view").find(".layui-table-box .layui-table-header:first").css({"padding-right":"16px","box-sizing":"border-box"});
+			 //  $(this).parents(".layui-table-view").find(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
+			 //  
+		  //   }else{
+				// alert("没有滚动条！");
+		  //    $(this).parents(".layui-table-view").find(".layui-table-box .layui-table-header:first").css({"padding-right":"0","box-sizing":"border-box"});
+			 // $(this).parents(".layui-table-view").find(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
+		  //   }
+			   var result =that.find(".layui-laypage-limits select").val();
+			   if(result>10){
+				 console.log("大于10!");
+				 that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"16px","box-sizing":"border-box"});
+				 that.find(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
+			   }
+			   else{
+				  console.log("小于10!");
+				  that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"0","box-sizing":"border-box"});
+				  that.find(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
+			   }
+		  });
+	})
   })
 
 function bytesToSize(bytes) {  

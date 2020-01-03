@@ -132,11 +132,7 @@
 					exportData[i].ban_struct_id = params.structs[exportData[i].ban_struct_id];//转化结构类别
 					exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
 				};
-				table.resize('dataTable');//解决表格宽度设置为minWidth时表格错位问题 
-            }, 
-			success: function (layero, index) {
-				table.resize('dataTable');  //demo是表格的id
-		  }
+            }
         },isShowInst,isHide);
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){

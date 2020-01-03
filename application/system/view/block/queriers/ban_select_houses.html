@@ -91,10 +91,11 @@
 				table.render({
 					elem: '#dataTable2'
 					//,height: 400
-						//,height: 'full-20' //浏览器最大高度
+					//,height: 'full-20' //浏览器最大高度
 					,toolbar: true
 					//,defaultToolbar: false //设置右边筛选，导出，打印显示
-					,url: '{:url("system/Index/house")}?change_type={$changeType}&ban_number='+data.ban_number //数据接口
+					,url: '{:url("system/Index/house")}?change_type={$changeType}&ban_number='+data.ban_number//数据接口
+					,page: true //开启分页
 					,limit: 5
             		,limits: [5,10,20,30,40,50,100,300]
 					,text: {
