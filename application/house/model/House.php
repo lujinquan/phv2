@@ -228,6 +228,7 @@ class House extends SystemBase
                     // 将被查询的房屋编号排在最前面
                     $temp = [];
                     foreach ($houses as $key => $value) {
+                        $value['room_pub_num'] = count($houses);
                         if($value['house_id'] == $houseid){
                             array_unshift($temp, $value);
                         }else{

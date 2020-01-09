@@ -15,6 +15,7 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemAnnex;
+use app\common\model\SystemExport;
 use app\house\model\Ban as BanModel;
 use app\common\model\SystemAnnexType;
 use app\house\model\Room as RoomModel;
@@ -247,6 +248,39 @@ class Ban extends Admin
         //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
+    }
+
+    public function export()
+    {   
+        if ($this->request->isAjax()) {
+            $getData = $this->request->post();
+            $banModel = new BanModel;
+            $where = $banModel->checkWhere($getData);
+            $fields = 'ban_number,ban_address';
+            
+            $tableData = $banModel->field($fields)->where($where)->order('ban_ctime desc')->select()->toArray(); //表数据
+            
+            if($tableData){
+
+                $SystemExportModel = new SystemExport;
+                $titleArr = [
+                    'ban_number' => '楼栋编号',
+                    'ban_address' => '楼栋地址'
+                ];
+                $tableInfo = [
+                    'FileName' => '楼栋数据',
+                ];
+                
+                return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+            }else{
+                $result = [];
+                $result['code'] = 0;
+                $result['msg'] = '数据为空！';
+                return json($result); 
+            }
+            
+        }
+        
     }
 
     public function taiDetail()
