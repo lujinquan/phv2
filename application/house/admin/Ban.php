@@ -256,17 +256,34 @@ class Ban extends Admin
             $getData = $this->request->post();
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
-            $fields = 'ban_number,ban_address';
+            $fields = 'ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
             
             $tableData = $banModel->field($fields)->where($where)->order('ban_ctime desc')->select()->toArray(); //表数据
             
             if($tableData){
 
                 $SystemExportModel = new SystemExport;
+
                 $titleArr = [
                     'ban_number' => '楼栋编号',
-                    'ban_address' => '楼栋地址'
+                    'ban_inst_id' => '管段',
+                    'ban_owner_id' => '产别',
+                    'ban_address' => '地址',
+                    'ban_property_id' => '产权证号',
+                    'ban_build_year' => '建成年份',
+                    'ban_damage_id' => '完损等级',
+                    'ban_struct_id' => '结构类别',
+                    'ban_damage_id' => '完损等级',
+                    'ban_rent' => '合规租',
+                    'ban_area' => '合建面',
+                    'ban_use_area' => '使用面积',
+                    'ban_oprice' => '合原价',
+                    'ban_property_source' => '产权来源',
+                    'ban_units' => '单元数量',
+                    'ban_floors' => '楼层数量',
+                    'ban_holds' => '合户数'
                 ];
+
                 $tableInfo = [
                     'FileName' => '楼栋数据',
                 ];

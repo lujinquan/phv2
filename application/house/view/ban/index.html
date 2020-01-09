@@ -164,10 +164,9 @@
 				data :{'ban_inst_id':ban_inst_id,'ban_address':ban_address,'ban_owner_id':ban_owner_id,'ban_stuct_id':ban_stuct_id,'ban_damage_id':ban_damage_id},//这里是前台传到后台的数据
 			    //回调函数
 				success:function(output){
-					console.log(output);
 					layer.msg(output.msg);
 					if(output.code){ //成功则直接下载		
-						console.log(output);				
+						//console.log(output);				
 						document.location.href = output.data;
 					}
 					

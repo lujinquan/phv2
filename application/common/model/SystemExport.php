@@ -77,7 +77,7 @@ class SystemExport extends Model
         /*----------------创建sheet-----------------*/
         
 
-        $letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'];
+        $letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ','BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN','BO','BP','BQ','BR','BS','BT','BU','BV','BW','BX','BY','BZ','CA','CB','CC','CD','CE','CF','CG','CH','CI','CJ','CK','CL','CM','CN','CO','CP','CQ','CR','CS','CT','CU','CV','CW','CX','CY','CZ'];
 
         /*----------------创建sheet-----------------*/
 
@@ -89,20 +89,23 @@ class SystemExport extends Model
 
         //设置第一行（标题行）
         $i = 0;
+        $keyIndexArr = [];
         foreach($titleArr as $titleKey => $title){ 
-        		
+        	$keyIndexArr[$titleKey] = $i; //将键名与索引对应
             $objPHPExcel->getActiveSheet()->setCellValue($letter[$i].'1' , ' ' . $title . ' ');  
             $i++;
         }
 
+		//halt($keyIndexArr);
         $j = 2; //从第2行开始写数据
         foreach ($tableData as $rowIndex => $row) {
-        	$i = 0;
-        	foreach($row as $r){ 	
-	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$i]. $j , ' ' . $r . ' ');  
-	            $i++;
+        	//$i = 0;
+        	foreach($row as $rIndex => $r){ // $rIndex是关联数组的key	
+	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$keyIndexArr[$rIndex]]. $j , ' ' . $r . ' ');  
+	            //$i++;
 	        }
 	        $j++;
+	        unset($row); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
         }
 
 //halt($tableData);
