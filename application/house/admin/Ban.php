@@ -256,36 +256,52 @@ class Ban extends Admin
             $getData = $this->request->post();
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
-            $fields = 'ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+            $fields = 'ban_number,ban_ratio,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,ban_civil_holds,ban_party_holds,ban_career_holds,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_gpsx,ban_gpsy,ban_status';
             
-            $tableData = $banModel->field($fields)->where($where)->order('ban_ctime desc')->select()->toArray(); //表数据
+            $tableData = $banModel->field($fields)->where($where)->order('ban_ctime desc')->limit(100)->select()->toArray(); //表数据
             
             if($tableData){
 
                 $SystemExportModel = new SystemExport;
 
-                $titleArr = [
-                    'ban_number' => '楼栋编号',
-                    'ban_inst_id' => '管段',
-                    'ban_owner_id' => '产别',
-                    'ban_address' => '地址',
-                    'ban_property_id' => '产权证号',
-                    'ban_build_year' => '建成年份',
-                    'ban_damage_id' => '完损等级',
-                    'ban_struct_id' => '结构类别',
-                    'ban_damage_id' => '完损等级',
-                    'ban_rent' => '合规租',
-                    'ban_area' => '合建面',
-                    'ban_use_area' => '使用面积',
-                    'ban_oprice' => '合原价',
-                    'ban_property_source' => '产权来源',
-                    'ban_units' => '单元数量',
-                    'ban_floors' => '楼层数量',
-                    'ban_holds' => '合户数'
-                ];
+                $titleArr = array(
+                    array('title' => '楼栋编号', 'field' => 'ban_number', 'width' => 12 ,'type' => 'string'),
+                    array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
+                    array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
+                    array('title' => '完损等级', 'field' => 'ban_damage_id', 'width' => 12,'type' => 'number'),
+                    array('title' => '结构类别', 'field' => 'ban_struct_id', 'width' => 12,'type' => 'number'),
+                    array('title' => '栋系数', 'field' => 'ban_ratio', 'width' => 12,'type' => 'string'),
+                    array('title' => '单元数量', 'field' => 'ban_units', 'width' => 12,'type' => 'number'),
+                    array('title' => '楼层数量', 'field' => 'ban_floors', 'width' => 12,'type' => 'number'),
+                    array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
+                    array('title' => '经度', 'field' => 'ban_gpsx', 'width' => 12,'type' => 'string'),
+                    array('title' => '纬度', 'field' => 'ban_gpsy', 'width' => 12,'type' => 'string'),
+                    array('title' => '产权证号', 'field' => 'ban_property_id', 'width' => 12,'type' => 'string'),
+                    array('title' => '建成年份', 'field' => 'ban_build_year', 'width' => 12,'type' => 'string'),
+                    array('title' => '民规租', 'field' => 'ban_civil_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '机规租', 'field' => 'ban_party_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '企规租', 'field' => 'ban_career_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '合规租', 'field' => 'ban_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '民建面', 'field' => 'ban_civil_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '机建面', 'field' => 'ban_party_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '企建面', 'field' => 'ban_career_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '合建面', 'field' => 'ban_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '使用面积', 'field' => 'ban_use_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '民原价', 'field' => 'ban_civil_oprice', 'width' => 12,'type' => 'number'),
+                    array('title' => '机原价', 'field' => 'ban_party_oprice', 'width' => 12,'type' => 'number'),
+                    array('title' => '企原价', 'field' => 'ban_career_oprice', 'width' => 12,'type' => 'number'),
+                    array('title' => '合原价', 'field' => 'ban_oprice', 'width' => 12,'type' => 'number'),
+                    array('title' => '民户数', 'field' => 'ban_civil_holds', 'width' => 12,'type' => 'number'),
+                    array('title' => '机户数', 'field' => 'ban_party_holds', 'width' => 12,'type' => 'number'),
+                    array('title' => '企户数', 'field' => 'ban_career_holds', 'width' => 12,'type' => 'number'),
+                    array('title' => '合户数', 'field' => 'ban_holds', 'width' => 12,'type' => 'number'),
+                    array('title' => '产权来源', 'field' => 'ban_property_source', 'width' => 24,'type' => 'string'),
+                    array('title' => '状态', 'field' => 'ban_status', 'width' => 12,'type' => 'number'),
+                );
 
                 $tableInfo = [
                     'FileName' => '楼栋数据',
+                    'Title' => '楼栋数据',
                 ];
                 
                 return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);

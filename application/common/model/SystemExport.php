@@ -14,6 +14,7 @@ use think\Model;
 use think\Loader;
 use hisi\PclZip;
 use think\Db;
+use app\common\model\Cparam as ParamModel;
 include EXTEND_PATH.'phpexcel/PHPExcel.php';
 use hisi\Dir;
 use Env;
@@ -45,16 +46,16 @@ class SystemExport extends Model
 		
 		// 默认表基本信息
 		$tableInfoInit = [
-			'Creator' => 'Lucas',
-			'LastModifiedBy' => 'Admin',
-			'Title' => 'Title',
-			'Subject' => 'Subject',
-			'Description' => 'Description',
-			'Keywords' => 'Keywords',
-			'Category' => 'Category' ,
-			'FilePath' => '/upload/excel/' , 
-			'FileName' => 'FileName',
-			'FileSuffix' => 'xlsx'
+			'Creator' => 'Lucas', 				// 创建人
+			'LastModifiedBy' => 'Lucas', 		// 最后修改人
+			'Title' => '导出数据',				// 标题
+			'Subject' => 'Subject',				// 题目
+			'Description' => 'Description',		// 描述
+			'Keywords' => 'Keywords',			// 关键字
+			'Category' => 'Category' ,			// 种类
+			'FilePath' => '/upload/excel/' ,	// 文件存储位置
+			'FileName' => 'FileName',			// 文件名
+			'FileSuffix' => 'csv'				// 文件类型后缀,可选 xlsx 、 csv 、xls
 		]; 
 		foreach($tableInfoInit as $k => &$t){
 			if(!isset($tableInfo[$k]) || empty($tableInfo[$k])){
@@ -80,73 +81,61 @@ class SystemExport extends Model
         $letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ','BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN','BO','BP','BQ','BR','BS','BT','BU','BV','BW','BX','BY','BZ','CA','CB','CC','CD','CE','CF','CG','CH','CI','CJ','CK','CL','CM','CN','CO','CP','CQ','CR','CS','CT','CU','CV','CW','CX','CY','CZ'];
 
         /*----------------创建sheet-----------------*/
+        //如果只有一个工作组
+        if($sheetType == 1){ 
 
-        $objPHPExcel->setActiveSheetIndex(0);
-        //$objActSheet = $objPHPExcel->getActiveSheet();
-
-        //设置当前活动sheet的名称
-        //$objPHPExcel->setTitle($tableInfo['Title']);
-
-        //设置第一行（标题行）
-        $i = 0;
-        $keyIndexArr = [];
-        foreach($titleArr as $titleKey => $title){ 
-        	$keyIndexArr[$titleKey] = $i; //将键名与索引对应
-            $objPHPExcel->getActiveSheet()->setCellValue($letter[$i].'1' , ' ' . $title . ' ');  
-            $i++;
-        }
-
-		//halt($keyIndexArr);
-        $j = 2; //从第2行开始写数据
-        foreach ($tableData as $rowIndex => $row) {
-        	//$i = 0;
-        	foreach($row as $rIndex => $r){ // $rIndex是关联数组的key	
-	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$keyIndexArr[$rIndex]]. $j , ' ' . $r . ' ');  
-	            //$i++;
+        	$objPHPExcel->setActiveSheetIndex(0);
+	        //设置当前活动sheet的名称
+	        $objPHPExcel->getActiveSheet()->setTitle($tableInfo['Title']);
+	  
+	        //设置第一行（标题行）
+	        $i = 0;
+	        $keyIndexArr = [];
+	        $objPHPExcel->getActiveSheet()->freezePane('A2'); //冻结A2左侧及上侧数据窗口
+	        
+	        foreach($titleArr as $titleIndex => $titleRow){ 
+	        	$keyIndexArr[$titleRow['field']] = $titleIndex; //将键名与索引对应
+	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$i].'1' , $titleRow['title'] ); 
+	            
+	            $objPHPExcel->getActiveSheet()->getStyle($letter[$i].'1')->getFont()->setBold(true);
+	            //$objPHPExcel->getActiveSheet()->getColumnDimension($letter[$i])->setAutoSize(true);
+				$objPHPExcel->getActiveSheet()->getColumnDimension($letter[$i])->setWidth($titleRow['width']); 
+	            $objPHPExcel->getActiveSheet()->getStyle($letter[$i].'1')->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);
+	            $objPHPExcel->getActiveSheet()->getStyle($letter[$i].'1')->getFill()->getStartColor()->setARGB('80EEEEEE');
+	            $i++;
 	        }
-	        $j++;
-	        unset($row); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
+
+	        //主体数据的数据过滤
+	        $tableData = $this->dataFormat($tableData);
+			
+			//从第2行开始向Excel中写数据
+	        $j = 2; 
+	        foreach ($tableData as $rowIndex => $row) {
+	        	//$i = 0;
+	        	foreach($row as $rIndex => $r){ // $rIndex是关联数组的key	
+	        		//halt($titleArr[$keyIndexArr[$rIndex]]['type']);
+	        		if($titleArr[$keyIndexArr[$rIndex]]['type'] == 'string'){
+	        			$objPHPExcel->getActiveSheet()->setCellValueExplicit($letter[$keyIndexArr[$rIndex]]. $j ,$r,\PHPExcel_Cell_DataType::TYPE_STRING);
+	        		}else{
+	        			$objPHPExcel->getActiveSheet()->setCellValue($letter[$keyIndexArr[$rIndex]]. $j , $r);
+	        		}
+	        		//$objPHPExcel->getActiveSheet()->setCellValueExplicit($letter[$keyIndexArr[$rIndex]]. $j ,$r,\PHPExcel_Cell_DataType::TYPE_STRING);
+		            //$objPHPExcel->getActiveSheet()->setCellValue($letter[$keyIndexArr[$rIndex]]. $j , $r . "\t" );  // $r . "\t"
+		            //$i++;
+		        }
+		        $j++;
+		        unset($row); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
+	        }
+
+	    //如果有多个工作组
+        }else{
+
         }
 
-//halt($tableData);
-        // ak 是行索引
-        //foreach($tableData as $a){ 
-            //$objActSheet->getRowDimension($ak+1)->setRowHeight(18);//设置行高度
-            // bk 是列
-            //$lineIndex = 1; // 行索引
-
-            //$colIndex = 1; // 列索引
-
-// foreach($a as $ab => $b){
-// 	dump($ab);
-// }
-// exit;
-            //foreach($a as $b){
-            	//halt($b);
-                // if($ak === 0){ //如果是第一行
-                //     $objActSheet->getColumnDimension($letter[$bk])->setWidth(20); //设置列宽度                  
-                //     $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFont()->setBold(true); //设置是否加粗
-                //     $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);//设置填充颜色
-                //     $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->getStartColor()->setRGB('E6E6E6'); //设置填充颜色
-
-                //     $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
-                // }
-                // if($bk == 'A'){ //将第一列的格式改成文本，其他列不变
-                //     $objActSheet->setCellValue($letter[$bk] . ($ak+2), ' ' . $b . ' ');
-                // }else{
-                //     $objActSheet->setCellValue($letter[$bk] . ($ak+2), $b);  
-                // }
-                
-                // $bk++;  
-            //}
-            //unset($a); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
-        //}
 
         //生成excel表格，自定义名
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
-//$downloadType = 3;
-
+//halt($tableInfo['FileName'] . '.'.$tableInfo['FileSuffix']);
         // 方案一：直接在浏览器上下载
         if($downloadType == 1){
 
@@ -157,7 +146,7 @@ class SystemExport extends Model
 	        header("Content-Type:application/vnd.ms-execl");
 	        header("Content-Type:application/octet-stream");
 	        header("Content-Type:application/download");
-	        header('Content-Disposition:attachment;filename=' . $tableInfo['FileName']);
+	        header('Content-Disposition:attachment;filename=' . $tableInfo['FileName'] . '.'.$tableInfo['FileSuffix']);
 	        header("Content-Transfer-Encoding:binary");
 	        $objWriter->save('php://output');
 
@@ -174,7 +163,7 @@ class SystemExport extends Model
 	        }
 
 	        //$filePath = $tableInfo['FilePath'] . $filename . date('YmdHis', time()) . '.xlsx';
-	        $suffix = '_'.date('YmdHis', time()) . '.'.$tableInfo['FileSuffix'];
+	        $suffix = '_'.date('Y-m-d', time()) . '.'.$tableInfo['FileSuffix'];
 	        $objWriter->save('.'.$tableInfo['FilePath'].$filename.$suffix);
 
 	        $result = [];
@@ -185,5 +174,29 @@ class SystemExport extends Model
         }     
   
 	   
+	}
+
+	public function dataFormat($data){
+		$params = ParamModel::getCparams();
+		foreach($data as &$d){
+			if(isset($d['ban_owner_id'])){
+				$d['ban_owner_id'] = $params['owners'][$d['ban_owner_id']];
+			}
+			if(isset($d['ban_damage_id'])){
+				$d['ban_damage_id'] = $params['damages'][$d['ban_damage_id']];
+			}
+			if(isset($d['ban_struct_id'])){
+				$d['ban_struct_id'] = $params['structs'][$d['ban_struct_id']];
+			}
+			if(isset($d['ban_inst_id'])){
+				$d['ban_inst_id'] = $params['insts'][$d['ban_inst_id']];
+			}
+			if(isset($d['ban_status'])){
+				$d['ban_status'] = $params['status'][$d['ban_status']];
+			}
+			
+		}
+		//halt($params);
+		return $data;
 	}
 }
