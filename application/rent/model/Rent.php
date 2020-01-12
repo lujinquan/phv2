@@ -263,12 +263,12 @@ class Rent extends Model
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
                 //halt($res);
-                return ['code'=>1,'msg'=>'生成成功，共生成'.$res.'条订单！')];
+                return ['code'=>1,'msg'=>'生成成功，共生成'.$res.'条订单！'];
             }else{
-                return ['code'=>0,'msg'=>'未知错误！')];
+                return ['code'=>0,'msg'=>'未知错误！'];
             }
         }else{
-            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！')];
+            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！'];
         }
         
     }
