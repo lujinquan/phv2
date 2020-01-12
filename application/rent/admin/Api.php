@@ -214,7 +214,7 @@ class Api extends Common
      */
     public function createMonthRentOrders(){
         $RentModel = new RentModel;
-        echo json_encode($RentModel->configRentOrder($is_all_inst = 1));
+        return json_encode($RentModel->configRentOrder($is_all_inst = 1));
     }
 
 
