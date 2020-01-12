@@ -256,19 +256,19 @@ class Rent extends Model
                 // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
                 $rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
                 // 待入库的数据
-                $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id'] . "),";
+                $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id']. "," . time() . "),";
             }
             //halt($str);
             if($str){
                 //halt($str);
-                $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id) values " . rtrim($str, ','));
+                $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
                 //halt($res);
-                return ['code'=>1,'msg'=>'生成成功！'];
+                return ['code'=>1,'msg'=>'生成成功！','date'=>date('Y-m-d H:i:s',time())];
             }else{
-                return ['code'=>0,'msg'=>'未知错误！'];
+                return ['code'=>0,'msg'=>'未知错误！','date'=>date('Y-m-d H:i:s',time())];
             }
         }else{
-            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！'];
+            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！','date'=>date('Y-m-d H:i:s',time())];
         }
         
     }
