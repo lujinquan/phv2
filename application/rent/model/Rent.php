@@ -265,7 +265,7 @@ class Rent extends Model
 
                 unset($str);
                 //halt($res);
-                return ['code'=>1,'msg'=>'生成成功，共生成'.$res.'条订单！'];
+                return ['code'=>1,'msg'=>'生成成功，一共生成'.$res.'条帐单'];
             }else{
                 return ['code'=>0,'msg'=>'未知错误！'];
             }
