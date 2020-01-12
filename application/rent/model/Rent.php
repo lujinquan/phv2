@@ -262,6 +262,8 @@ class Rent extends Model
             if($str){
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
+
+                unset($str);
                 //halt($res);
                 return ['code'=>1,'msg'=>'生成成功，共生成'.$res.'条订单！'];
             }else{
