@@ -211,7 +211,7 @@ class Rent extends Model
         $currMonth = date('Ym');
         $instid = $is_all_inst?$is_all_inst:session('admin_user.inst_id');
 
-        $instid = 5;
+        //$instid = 5;
         //halt($instid);
         $res = [];
         // $undealOrders = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','<',$currMonth],['is_deal','eq',0],['ban_inst_id','in',config('inst_ids')[$instid]]])->count('rent_order_id');
@@ -233,7 +233,7 @@ class Rent extends Model
             //$where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid';
-            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->limit(10)->select();
+            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
             
             //halt($houseArr);
             $str = '';
@@ -263,12 +263,12 @@ class Rent extends Model
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
                 //halt($res);
-                return ['code'=>1,'msg'=>'生成成功！','date'=>date('Y-m-d H:i:s',time())];
+                return ['code'=>1,'msg'=>'生成成功，共生成'.$res.'条订单！')];
             }else{
-                return ['code'=>0,'msg'=>'未知错误！','date'=>date('Y-m-d H:i:s',time())];
+                return ['code'=>0,'msg'=>'未知错误！')];
             }
         }else{
-            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！','date'=>date('Y-m-d H:i:s',time())];
+            return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！')];
         }
         
     }
