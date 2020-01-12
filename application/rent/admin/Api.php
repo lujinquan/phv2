@@ -208,8 +208,15 @@ class Api extends Common
         }   
     }
 
-
-
+    /**
+     * 创建每月的账单
+     * @return [type] [description]
+     */
+    public function createMonthRentOrders(){
+        //halt(3);
+        $RentModel = new RentModel;
+        return $RentModel->configRentOrder($is_all_inst = 1);
+    }
 
 
 

@@ -205,10 +205,14 @@ class Rent extends Model
      * @param  [type] $data [description]
      * @return [type]       [description]
      */
-    public function configRentOrder()
+    public function configRentOrder($is_all_inst = 0)
     {
+        //defined('INST');
         $currMonth = date('Ym');
-        $instid = INST;
+        $instid = $is_all_inst?$is_all_inst:session('admin_user.inst_id');
+
+        $instid = 5;
+        //halt($instid);
         $res = [];
         // $undealOrders = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','<',$currMonth],['is_deal','eq',0],['ban_inst_id','in',config('inst_ids')[$instid]]])->count('rent_order_id');
         // if($undealOrders){
@@ -217,7 +221,8 @@ class Rent extends Model
         // 只生成当前机构下的订单
         
         //获取当月的租金订单，如果没有则自动生成，有则跳过
-        $currMonthOrder = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','eq',$currMonth],['ban_inst_id','in',config('inst_ids')[$instid]]])->value('a.rent_order_id'); 
+        $currMonthOrder = self::alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_date','eq',$currMonth],['ban_inst_id','in',config('inst_ids')[$instid]]])->value('a.rent_order_id');
+        //halt(config('inst_ids')[$instid]);
         //halt($currMonthOrder);
         
         if(!$currMonthOrder){
@@ -228,7 +233,7 @@ class Rent extends Model
             //$where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid';
-            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
+            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->limit(10)->select();
             
             //halt($houseArr);
             $str = '';
@@ -251,12 +256,13 @@ class Rent extends Model
                 // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
                 $rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
                 // 待入库的数据
-                $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut . $v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id'] . "),";
+                $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id'] . "),";
             }
-            //exit;
+            //halt($str);
             if($str){
                 //halt($str);
                 $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id) values " . rtrim($str, ','));
+                //halt($res);
                 return ['code'=>1,'msg'=>'生成成功！'];
             }else{
                 return ['code'=>0,'msg'=>'未知错误！'];
