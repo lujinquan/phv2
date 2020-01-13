@@ -186,6 +186,7 @@ class House extends Admin
         //定义计租表房间数组
         $HouseModel = new HouseModel;
         $roomTables = $HouseModel->get_house_renttable($id);
+
         // $roomTables = [];
         // if($rooms){
         //     $FloorPointModel =new FloorPointModel;

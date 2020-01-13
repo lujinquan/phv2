@@ -32,6 +32,7 @@ class Ban extends SystemBase
             $data = request()->param();
         }
         $group = isset($data['group'])?$data['group']:'y';
+        $option = '';
         switch ($group) {
             case 'y':
                 $where = [['ban_status','eq',1]];

@@ -178,23 +178,24 @@
 				<td></td>
 			</tr> -->
 			{volist name="room_tables" id="vo"}
+			<?php if($vo['baseinfo']['room_pub_num'] == 3){ $class="#27B98B"; }else{ $class=""; } ?>
 			<tr>
-				<td>{$params['roomtypes'][$vo['baseinfo']['room_type']]}</td>
-				<td>{$vo['baseinfo']['room_number']}</td>
-				<td>{$vo['baseinfo']['room_door']}</td>
-				<td>{$vo['baseinfo']['ban_number']}</td>
-				<td>{$vo['houseinfo'][0]['house_number']}</td>
-				<td>{$vo['houseinfo'][0]['tenant_name']}</td>
-				<td>{$params['owners'][$vo['baseinfo']['ban_owner_id']]}</td>
-				<td>{$vo['baseinfo']['room_unit_id']}</td>
-				<td>{$vo['baseinfo']['room_floor_id']}</td>
-				<td>{$vo['baseinfo']['room_use_area']}</td>
-				<td>{$vo['baseinfo']['room_rent_point']}</td>
-				<td>{$vo['baseinfo']['room_lease_area']}</td>
-				<td>{$vo['baseinfo']['floor_point']}</td>
-				<td>{$vo['baseinfo']['room_pre_rent']}</td>
-				<td>{$vo['baseinfo']['room_cou_rent']}</td>
-				<td>{$params['status'][$vo['baseinfo']['room_status']]}</td>
+				<td style="color:{$class}">{$params['roomtypes'][$vo['baseinfo']['room_type']]}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_number']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_door']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['ban_number']}</td>
+				<td style="color:{$class}">{$vo['houseinfo'][0]['house_number']}</td>
+				<td style="color:{$class}">{$vo['houseinfo'][0]['tenant_name']}</td>
+				<td style="color:{$class}">{$params['owners'][$vo['baseinfo']['ban_owner_id']]}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_unit_id']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_floor_id']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_use_area']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_rent_point']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_lease_area']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['floor_point']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_pre_rent']}</td>
+				<td style="color:{$class}">{$vo['baseinfo']['room_cou_rent']}</td>
+				<td style="color:{$class}">{$params['status'][$vo['baseinfo']['room_status']]}</td>
 				{if condition="$group == 'x'"}
 				<td>	
 				
@@ -211,13 +212,14 @@
 			</tr>
 			{if condition="isset($vo['houseinfo'][1])"}
 			{volist name="$vo['houseinfo']" offset="1" id="vv"}
+			<?php if($vv['room_pub_num'] == 3){ $class_e="#27B98B"; }else{ $class_e=""; } ?>
 			<tr>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
-				<td>{$vv['house_number']}</td>
-				<td>{$vv['tenant_name']}</td>
+				<td style="color:{$class_e}">{$vv['house_number']}</td>
+				<td style="color:{$class_e}">{$vv['tenant_name']}</td>
 				<td></td>
 				<td></td>
 				<td></td>

@@ -27,15 +27,15 @@ class Rent extends Admin
 
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
-            $limit = input('param.limit/d', 10);
+            $limit = input('param.limit', 10);
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
-            // $res = $RentModel->configRentOrder(); //生成本月份订单
-            // if(!$res){
-            //     $this->error('本月份订单生成失败！');
-            // }
-
+            $res = $RentModel->configRentOrder(); //生成本月份订单
+            if(!$res){
+                $this->error('本月份订单生成失败！');
+            }
+            //halt($limit);
             $where = $RentModel->checkWhere($getData,'rent');
             
             $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
