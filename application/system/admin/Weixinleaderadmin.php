@@ -73,14 +73,14 @@ class Weixinleaderadmin extends Controller
                 $result['msg'] = '账户异常！';
                 return json($result);
             }
-        	// 验证角色
-        	if(in_array($row['role_id'], [4,5,6])){
+        	// 验证角色，非行政所长，经管所长，经管科长，超级管理员无法登录
+        	if(!in_array($row['role_id'], [7,8,9,1])){
         		$result['msg'] = '角色异常！';
         		return json($result);
         	}
         	// 验证登录账户是否为房管员
-        	if($row['inst_level'] != 1){
-        		$result['msg'] = '非区公司用户！';
+        	if($row['inst_level'] == 3){
+        		$result['msg'] = '非高管用户！';
         		return json($result);
         	}
     		// 验证密码是否正确
