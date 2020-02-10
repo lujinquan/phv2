@@ -62,6 +62,10 @@
         <div class="j-search-fr layui-col-md4 fr">
         	<div class="layui-input-inline fr">
         		<div class="layui-input-inline" style="margin-left:10px;">
+                    <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+                        <i class="layui-icon layui-icon-print"></i>
+                        导出
+                    </button>
         			<button type="reset" class="layui-btn j-btn-reset">重置</button>
         			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
         				<i class="layui-icon">&#xe615;</i>
@@ -157,5 +161,35 @@
                }
             }
         },isShowInst)
+
+        $('#button_print').click(function(){
+            var queryWhere = new Object();
+            queryWhere.house_number = $("input[name='house_number']").val();  // 搜索房屋编号
+            queryWhere.tenant_name = $("input[name='tenant_name']").val();  // 搜索租户名
+            queryWhere.ban_address = $("input[name='ban_address']").val(); // 搜索地址
+            queryWhere.ban_inst_id = $("select[name='ban_inst_id']").val(); // 搜索机构
+            queryWhere.ban_owner_id = $("select[name='ban_owner_id']").val(); // 搜索产别
+            queryWhere.house_use_id = $("select[name='house_use_id']").val(); // 搜索使用性质
+            queryWhere.rent_order_date = $("select[name='rent_order_date']").val(); // 搜索月份
+            queryWhere.pay_way = $("select[name='pay_way']").val(); // 搜索以前月/以前年
+            //console.log(queryWhere);
+            $('#button_print').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+            $.ajax({
+                type:"post",// 请求方式
+                url:"{:url('record/export')}",
+                async:true,// 同步异步
+                dataType:"json",
+                data : queryWhere,//这里是前台传到后台的数据
+                //回调函数
+                success:function(output){
+                    layer.msg(output.msg);
+                    if(output.code){ //成功则直接下载      
+                        $('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-print"></i> 导出');  
+                        document.location.href = output.data;
+                    }
+                    
+                }
+            });
+        })
     });
 </script>

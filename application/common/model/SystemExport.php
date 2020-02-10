@@ -39,11 +39,9 @@ class SystemExport extends Model
     public function exportExcel($tableData = array() , $titleArr = array() , $sheetType = 1 , $tableInfo = array() , $downloadType = 1)
 	{
 		//ob_clean();
-		
 		if(empty($tableData)){
 			return $this->error('暂无数据导出！');
 		}
-		
 		// 默认表基本信息
 		$tableInfoInit = [
 			'Creator' => 'Lucas', 				// 创建人
@@ -191,8 +189,32 @@ class SystemExport extends Model
 			if(isset($d['ban_inst_id'])){
 				$d['ban_inst_id'] = $params['insts'][$d['ban_inst_id']];
 			}
+			if(isset($d['tenant_inst_id'])){
+				$d['tenant_inst_id'] = $params['insts'][$d['tenant_inst_id']];
+			}
 			if(isset($d['ban_status'])){
 				$d['ban_status'] = $params['status'][$d['ban_status']];
+			}
+			if(isset($d['house_status'])){
+				$d['house_status'] = $params['status'][$d['house_status']];
+			}
+			if(isset($d['tenant_status'])){
+				$d['tenant_status'] = $params['status'][$d['tenant_status']];
+			}
+			if(isset($d['change_status'])){
+				$d['change_status'] = $params['op_order_status'][$d['change_status']];
+			}
+			if(isset($d['house_use_id'])){
+				$d['house_use_id'] = $params['uses'][$d['house_use_id']];
+			}
+			if(isset($d['house_is_pause'])){
+				$d['house_is_pause'] = $params['is_status'][$d['house_is_pause']];
+			}
+			if(isset($d['is_invoice'])){
+				$d['is_invoice'] = $params['is_invoice'][$d['is_invoice']];
+			}
+			if(isset($d['pay_way'])){
+				$d['pay_way'] = $params['pay_way'][$d['pay_way']];
 			}
 			
 		}

@@ -14,6 +14,7 @@ namespace app\rent\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\rent\model\Recharge as RechargeModel;
@@ -80,4 +81,52 @@ class Recharge extends Admin
         $this->assign('data_info',$row);
         return $this->fetch();
     }
+
+    public function export()
+    {   
+        if ($this->request->isAjax()) {
+            $getData = $this->request->post();
+            $rechargeModel = new RechargeModel;
+            $where = $rechargeModel->checkWhere($getData);
+
+            $fields = "a.pay_rent,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+
+            $tableData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('ctime desc')->select();
+
+            if($tableData){
+
+                $SystemExportModel = new SystemExport;
+
+                $titleArr = array(
+                    array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
+                    array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
+                   
+                    array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
+                    array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
+                    
+                    array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                    array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
+                    array('title' => '充值方式', 'field' => 'pay_way', 'width' => 12,'type' => 'number'),
+                    array('title' => '充值时间', 'field' => 'ctime', 'width' => 24,'type' => 'number'),
+                    array('title' => '充值金额', 'field' => 'pay_rent', 'width' => 12,'type' => 'number'),
+                );
+
+                $tableInfo = [
+                    'FileName' => '账户充值记录数据',
+                    'Title' => '账户充值记录数据',
+                ];
+                
+                return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+            }else{
+                $result = [];
+                $result['code'] = 0;
+                $result['msg'] = '数据为空！';
+                return json($result); 
+            }
+            
+        }
+        
+    }
+
+
 }

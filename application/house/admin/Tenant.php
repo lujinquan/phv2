@@ -14,6 +14,7 @@ namespace app\house\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\common\model\SystemExport;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
@@ -220,6 +221,46 @@ class Tenant extends Admin
             return $this->error('数据为空！');
         }
                
+    }
+
+    public function export()
+    {   
+        if ($this->request->isAjax()) {
+            $getData = $this->request->post();
+            $tenantModel = new TenantModel;
+            $where = $tenantModel->checkWhere($getData);
+            $fields = 'tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_status,sum(house_balance) as tenant_balance';
+            $tableData = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->group('a.tenant_id')->order('tenant_ctime desc')->select();
+            //halt($tableData);
+            if($tableData){
+
+                $SystemExportModel = new SystemExport;
+
+                $titleArr = array(
+                    array('title' => '租户编号', 'field' => 'tenant_number', 'width' => 12 ,'type' => 'string'),
+                    array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                    array('title' => '管段', 'field' => 'tenant_inst_id', 'width' => 12 ,'type' => 'number'),
+                    array('title' => '联系方式', 'field' => 'tenant_tel', 'width' => 24,'type' => 'number'),
+                    array('title' => '身份证号', 'field' => 'tenant_card', 'width' => 24,'type' => 'string'),
+                    array('title' => '余额', 'field' => 'tenant_balance', 'width' => 12,'type' => 'number'),
+                    array('title' => '状态', 'field' => 'tenant_status', 'width' => 12,'type' => 'number'),
+                );
+
+                $tableInfo = [
+                    'FileName' => '租户数据',
+                    'Title' => '租户数据',
+                ];
+                
+                return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+            }else{
+                $result = [];
+                $result['code'] = 0;
+                $result['msg'] = '数据为空！';
+                return json($result); 
+            }
+            
+        }
+        
     }
 
     public function del()

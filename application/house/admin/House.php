@@ -14,6 +14,7 @@ namespace app\house\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\common\model\SystemExport;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\deal\model\Process as ProcessModel;
@@ -365,6 +366,74 @@ class House extends Admin
             } 
             return json($data);
         }
+    }
+
+    public function export()
+    {   
+        if ($this->request->isAjax()) {
+            $getData = $this->request->post();
+            $houseModel = new HouseModel;
+            $where = $houseModel->checkWhere($getData);
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+
+            $tableData = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('house_ctime desc')->select();
+
+            foreach ($tableData as $k => &$v) {
+                if($v['tenant_id']){ //如果当前房屋已经绑定租户
+                    $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                }else{
+                    $v['last_print_time'] = '';
+                }  
+                unset($v['house_id'],$v['tenant_id']);
+            }
+            // halt($tableData);
+            if($tableData){
+
+                $SystemExportModel = new SystemExport;
+
+                $titleArr = array(
+                    array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
+                    array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
+                    array('title' => '楼栋编号', 'field' => 'ban_number', 'width' => 12 ,'type' => 'string'),
+                    array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
+                    array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
+                    
+                    array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                    array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
+                    array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '计算租金', 'field' => 'house_cou_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '租差', 'field' => 'house_diff_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '泵费', 'field' => 'house_pump_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '协议租金', 'field' => 'house_protocol_rent', 'width' => 12,'type' => 'number'),
+                    array('title' => '使用面积', 'field' => 'house_use_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '计租面积', 'field' => 'house_lease_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '房屋建面', 'field' => 'house_area', 'width' => 12,'type' => 'number'),
+                    array('title' => '房屋原价', 'field' => 'house_oprice', 'width' => 12,'type' => 'number'),
+                    array('title' => '是否已暂停计租', 'field' => 'house_is_pause', 'width' => 24,'type' => 'string'),
+                    array('title' => '居住单元', 'field' => 'house_unit_id', 'width' => 12,'type' => 'number'),
+                    array('title' => '居住层', 'field' => 'house_floor_id', 'width' => 12,'type' => 'number'),
+                    array('title' => '门牌号', 'field' => 'house_door', 'width' => 12,'type' => 'string'),
+                    array('title' => '结构类别', 'field' => 'ban_struct_id', 'width' => 12,'type' => 'string'),
+                    array('title' => '完损等级', 'field' => 'ban_damage_id', 'width' => 12,'type' => 'string'),
+                    array('title' => '出证时间', 'field' => 'last_print_time', 'width' => 24,'type' => 'string'),
+                    array('title' => '状态', 'field' => 'house_status', 'width' => 12,'type' => 'number'),
+                );
+
+                $tableInfo = [
+                    'FileName' => '房屋数据',
+                    'Title' => '房屋数据',
+                ];
+                
+                return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+            }else{
+                $result = [];
+                $result['code'] = 0;
+                $result['msg'] = '数据为空！';
+                return json($result); 
+            }
+            
+        }
+        
     }
 
     public function houseRoom()
