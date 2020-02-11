@@ -204,6 +204,7 @@ class Weixinbaseadmin extends Controller
             $tenant = input('tenant_name');
             $status = input('house_status');
             $address = input('ban_address');
+            $iscut = input('is_cut');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
 
@@ -228,12 +229,26 @@ class Weixinbaseadmin extends Controller
             }else{
                 $where[] = ['d.ban_status','eq',1]; 
             }
-            //halt($where);
-            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            if($iscut === '1'){
+                $cutWhere = 'not null';
+            }
+            if($iscut === '0'){
+                $cutWhere = 'null';
+            }
+            //halt($cutWhere);
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id,f.cut_type';
             //halt($where);
             $data = [];
-            $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-
+            if(isset($cutWhere)){
+                $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','f.house_id = a.house_id','left')->field($fields)->where($where)->where('cut_type',$cutWhere)->page($page)->limit($limit)->select();
+                $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','f.house_id = a.house_id','left')->where($where)->where('cut_type',$cutWhere)->count('a.house_id');
+            }else{
+                $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','f.house_id = a.house_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+                $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('change_cut f','f.house_id = a.house_id','left')->where($where)->count('a.house_id');
+            }
+            
+//             halt($temps);
+// halt(Db::name('house')->getLastSql());
             $result['data'] = [];
             foreach ($temps as $v) {
                 $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
@@ -244,7 +259,7 @@ class Weixinbaseadmin extends Controller
                 //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
                 $result['data'][] = $v;
             }
-            $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.house_id');
+            // $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.house_id');
             $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
