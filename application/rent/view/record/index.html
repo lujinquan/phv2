@@ -1,6 +1,8 @@
 <style>
     .j-table-content.on .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:115px}/* 标题筛选定位 */
 </style>
+<!-- 新增后台导出按钮 -->
+<button id="button_print"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">
@@ -62,10 +64,10 @@
         <div class="j-search-fr layui-col-md4 fr">
         	<div class="layui-input-inline fr">
         		<div class="layui-input-inline" style="margin-left:10px;">
-                    <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+                   <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
                         <i class="layui-icon layui-icon-print"></i>
                         导出
-                    </button>
+                    </button> -->
         			<button type="reset" class="layui-btn j-btn-reset">重置</button>
         			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
         				<i class="layui-icon">&#xe615;</i>
@@ -108,7 +110,7 @@
             //,height: 550
             ,url: '{:url("index")}'
 			,toolbar: '#toolbar'
-			,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			,defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
             ,totalRow: true
             ,page: true 
             ,limit: 10
@@ -187,7 +189,9 @@
                         $('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-print"></i> 导出');  
                         document.location.href = output.data;
                     }
-                    
+                    else{
+                    	$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                    }
                 }
             });
         })

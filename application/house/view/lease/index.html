@@ -1,3 +1,5 @@
+<!-- 新增后台导出按钮 -->
+<button id="button_print"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content  j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
@@ -28,10 +30,10 @@
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
 					<div class="layui-input-inline" style="margin-left:10px;">
-						<button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+						<!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
 						    <i class="layui-icon layui-icon-print"></i>
 						    导出
-					  	</button>
+					  	</button> -->
 						<button type="reset" class="layui-btn j-btn-reset">重置</button>
 						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
 							<i class="layui-icon">&#xe615;</i>
@@ -64,7 +66,7 @@
 			toolbar: '#toolbar'
 				// ,defaultToolbar: ['print']
 				,
-				defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+				defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
 			,url: '{:url("Lease/index")}' //数据接口
 			,page: true //开启分页
 			,limit: 10
@@ -153,8 +155,11 @@
 				success:function(output){
 					layer.msg(output.msg);
 					if(output.code){ //成功则直接下载		
-						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-print"></i> 导出');	
+						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');	
 						document.location.href = output.data;
+					}
+					else{
+						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
 					}
 					
 				}
