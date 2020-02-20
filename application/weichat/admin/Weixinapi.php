@@ -92,7 +92,7 @@ class Weixinapi extends Controller
         $result = [];
         if(is_array($resultOpenid)){
             $resultAccessToken = $WeixinModel->getAccessToken();
-            $resultOpenid[] = $resultAccessToken['access_token'];
+            $resultOpenid['access_token'] = $resultAccessToken['access_token'];
             $result['code'] = 1;
             $result['data'] = $resultOpenid;
             $result['msg'] = '获取成功！';
