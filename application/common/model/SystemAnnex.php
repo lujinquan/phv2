@@ -126,12 +126,13 @@ class SystemAnnex extends Model
             
             default:// 默认使用layui.upload上传控件
                 break;
-        }
-        //halt($input);
+        }  
+        
         $iniFileSzie = ini_get('upload_max_filesize');
+        
         //$file = request()->file($input);
         try{$file = request()->file($input);}catch(\Exception $e){return self::result('文件大小超过PHP'.$iniFileSzie.'限制！', $from);}
-//halt($file);
+
         $data = [];
         if (empty($file)) {
             return self::result('未找到上传的文件(文件大小可能超过php.ini默认2M限制)！', $from);

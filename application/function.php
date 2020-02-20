@@ -45,6 +45,48 @@ if (!function_exists('tranTime')) {
 
 } 
 
+if (!function_exists('http_request')) {
+
+	function http_request($url,$data = null,$headers=array())
+	{
+		$curl = curl_init();
+		if( count($headers) >= 1 ){
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+		}
+		curl_setopt($curl, CURLOPT_URL, $url);
+
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+
+		if (!empty($data)){
+			curl_setopt($curl, CURLOPT_POST, 1);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+		}
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		$output = curl_exec($curl);
+		curl_close($curl);
+		return $output;
+	}
+}
+
+if (!function_exists('curl_get')) {
+	
+	function curl_get($url, &$httpCode = 0) {
+	    $ch = curl_init();
+	    curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+	    //不做证书校验,部署在linux环境下请改为true
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+	    $file_contents = curl_exec($ch);
+	    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	    curl_close($ch);
+	    return $file_contents;
+	}
+
+}
+
 if (!function_exists('bubble_sort')) {
 	
 	function bubble_sort(&$sort,&$a,$type='asc'){//默认为正序排列
