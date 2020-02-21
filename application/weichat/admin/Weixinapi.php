@@ -136,6 +136,7 @@ class Weixinapi extends Controller
                 ),
             )
         ];
+        //halt($data);
         $WeixinModel = new WeixinModel;
         $res = $WeixinModel->sendSubscribeTemplate($data);
         $result = [];
@@ -150,6 +151,7 @@ class Weixinapi extends Controller
         return json($result);  
     }
 
+
     public function getAccessToken()
     {
         $WeixinModel = new WeixinModel;
@@ -157,7 +159,6 @@ class Weixinapi extends Controller
 
         halt($res); 
     }
-
 	
 
     public function sendMessage()

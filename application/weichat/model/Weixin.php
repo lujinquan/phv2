@@ -121,8 +121,7 @@ class Weixin extends Model
 	 */
 	public function sendSubscribeTemplate($data = [])
 	{
-		
-	    
+
 		$postData=json_encode($data);//转化成json数组让微信可以接收
 	    //请求拼接好的url
 	    //获取access_token
@@ -134,7 +133,7 @@ class Weixin extends Model
 
 	    $result = http_request($postUrl , $postData);
 	    $wxResult = json_decode($result, true);
-	    halt($wxResult);
+	    //halt($wxResult);
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
 	    } else {
@@ -147,6 +146,7 @@ class Weixin extends Model
 	        	return $wxResult;
 	        }
 	    }
+
 	}
 
 
