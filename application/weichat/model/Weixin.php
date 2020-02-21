@@ -84,11 +84,8 @@ class Weixin extends Model
 	 * @return  返回值  
 	 * @version 版本  1.0
 	 */
-	public function getAccessToken($code = '')
+	public function getAccessToken()
 	{
-		if(!$code){
-			$code = input('code'); //小程序传来的code值
-		}
 	    $wxUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
 	    //把appid，appsecret，code拼接到url里
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret);
@@ -109,6 +106,48 @@ class Weixin extends Model
 	    }
 	}
 
+	/**
+	 * 功能描述：发送订阅消息
+	 * =====================================
+	 * @author  Lucas 
+	 * email:   598936602@qq.com 
+	 * Website  address:  www.mylucas.com.cn
+	 * =====================================
+	 * 创建时间: 2020-02-20 18:36:28
+	 * @example 
+	 * @link    文档参考地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
+	 * @return  返回值  
+	 * @version 版本  1.0
+	 */
+	public function sendSubscribeTemplate($data = [])
+	{
+		
+	    
+		$postData=json_encode($data);//转化成json数组让微信可以接收
+	    //请求拼接好的url
+	    //获取access_token
+		$resultAccessToken = $this->getAccessToken();
+
+		$wxUrl = 'https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s';
+	    //把appid，appsecret，code拼接到url里
+	    $postUrl = sprintf($wxUrl, $resultAccessToken['access_token']);
+
+	    $result = http_request($postUrl , $postData);
+	    $wxResult = json_decode($result, true);
+	    halt($wxResult);
+	    if (empty($wxResult)) {
+	        return '请求失败，微信内部错误';
+	    } else {
+	        $loginFail = array_key_exists('errcode', $wxResult);
+	        // 如果有错误码，则请求失败
+	        if ($loginFail) {//请求失败
+	            return '请求失败，错误码：' . $wxResult['errcode'];
+	        //请求成功
+	        } else {
+	        	return $wxResult;
+	        }
+	    }
+	}
 
 
 
