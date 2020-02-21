@@ -137,9 +137,9 @@ class Weixin extends Model
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
 	    } else {
-	        $loginFail = array_key_exists('errcode', $wxResult);
+	        //$loginFail = array_key_exists('errcode', $wxResult);
 	        // 如果有错误码，则请求失败
-	        if ($loginFail) {//请求失败
+	        if ($wxResult['errcode']) {//请求失败
 	            return '请求失败，错误码：' . $wxResult['errcode'];
 	        //请求成功
 	        } else {
