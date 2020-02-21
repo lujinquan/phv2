@@ -140,13 +140,19 @@ class Weixinapi extends Controller
         $WeixinModel = new WeixinModel;
         $res = $WeixinModel->sendSubscribeTemplate($data);
         $result = [];
-        if($res['errcode'] == 0){
-            $result['code'] = 1;
-            $result['msg'] = '发送成功！';
+        if(is_array($res)){
+            if($res['errcode'] == 0){
+                $result['code'] = 1;
+                $result['msg'] = '发送成功！';
+            }else{
+                $result['code'] = 0;
+                $result['msg'] = '发送失败！';
+            }
         }else{
             $result['code'] = 0;
-            $result['msg'] = '发送失败！';
+            $result['msg'] = $res;
         }
+        
         //halt($res);
         return json($result);  
     }
