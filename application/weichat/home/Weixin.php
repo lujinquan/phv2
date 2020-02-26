@@ -25,7 +25,7 @@ use app\weichat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
 class Weixin extends Common
 {
-	protected $debug = true;
+	protected $debug = false;
 
     public function index()
     {
@@ -300,6 +300,7 @@ class Weixin extends Common
             $result['msg'] = '令牌已失效！';
             return json($result);
     	}
+    	$tel = input('tel');
     	// 验证手机号
     	if(!$tel){
     		$result['msg'] = '请输入手机号！';
