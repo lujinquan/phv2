@@ -17,6 +17,7 @@ use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
 use app\house\model\House as HouseModel;
+use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\weichat\model\Weixin as WeixinModel;
 use app\weichat\model\WeixinToken as WeixinTokenModel;
@@ -33,7 +34,7 @@ class Weixin extends Common
     }
 
     /**
-     * 功能描述：用户进入小程序
+     * 功能描述：用户进入小程序 [前端每隔3000秒请求一次]
      * @author  Lucas 
      * 创建时间: 2020-02-26 11:39:34
      */
@@ -64,24 +65,208 @@ class Weixin extends Common
 		    }else{
 		    	$resultAccessToken = $WeixinModel->getAccessToken();
 		    }
+
+		    
         	
         	$expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
 			$token = md5($resultOpenid['openid'].time()); //设置token
-			session('weixin_openid_'.$token, $resultOpenid['openid']); //存储openid
-			session('weixin_expires_time_'.$token, $expires_time);  //存储过期时间
-			session('weixin_session_key_'.$token, $resultOpenid['session_key']);  //存储session_key
-			session('weixin_unionid_'.$token, $resultOpenid['unionid']);  //存储unionid
+
+			cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
+			cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
+			cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
+			cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
             $result['code'] = 1;
             $result['data'] = [
             	'openid' => $resultOpenid['openid'],
             	'token' => $token,
             ];
             $result['msg'] = '获取成功！';
+
+            $WeixinMemberModel = new WeixinMemberModel;
+			$member_info = $WeixinMemberModel->where([['openid','eq',$resultOpenid['openid']]])->find();
+			if( empty($member_info) )
+			{
+				$member_info = $WeixinMemberModel->where([['unionid','eq',$resultOpenid['unionid']]])->find();
+			}
+			// 如果在系统中能查到微信会员信息
+			if(!empty($member_info) )
+			{
+				$member_id = $member_info['member_id'];
+				// 更新授权用户的信息
+				// $member_info->member_name = $data['nickName'];
+				// $member_info->avatar = $data['avatarUrl'];
+				$member_info->last_login_time = time();
+				$member_info->last_login_ip = get_client_ip();
+				$member_info->login_count = Db::raw('login_count+1');
+		        $member_info->save();	
+				// 添加微信Token记录
+				$WeixinTokenModel = new WeixinTokenModel;
+				$WeixinTokenModel->token = $token;
+				$WeixinTokenModel->member_id = $member_id;
+				$WeixinTokenModel->session_key = $resultOpenid['session_key'];
+				$WeixinTokenModel->expires_in = $expires_time;
+				$WeixinTokenModel->save();
+				
+			// 如果在系统中查不到微信会员信息
+			}else{
+				$WeixinMemberModel->openid = $resultOpenid['openid'];
+				$WeixinMemberModel->unionid = $resultOpenid['unionid'];
+				$WeixinMemberModel->last_login_time = time();
+				$WeixinMemberModel->last_login_ip = get_client_ip();
+		        $WeixinMemberModel->save();
+		        $member_id = $WeixinMemberModel->member_id;   
+		        // 添加微信Token记录
+				$WeixinTokenModel = new WeixinTokenModel;
+				$WeixinTokenModel->token = $token;
+				$WeixinTokenModel->member_id = $member_id;
+				$WeixinTokenModel->session_key = $resultOpenid['session_key'];
+				$WeixinTokenModel->expires_in = $expires_time;
+				$WeixinTokenModel->save();
+
+			}
+
+			// 清除该会员前所有的token失效
+			$member_house_id = $WeixinTokenModel->id;
+			$cache_token_dead = $WeixinTokenModel->where([['member_id','eq',$member_id],['id','neq',$member_house_id],['token_status','eq',1]])->select();
+			if($cache_token_dead){
+				foreach ($cache_token_dead as $k => $t) {
+					cache('weixin_openid_'.$t['token'], NULL); //清除openid缓存
+					cache('weixin_expires_time_'.$t['token'], NULL); //清除openid缓存
+					cache('weixin_session_key_'.$t['token'], NULL); //清除openid缓存
+					cache('weixin_unionid_'.$t['token'], NULL); //清除openid缓存
+					$t->token_status = 0; //token状态设置为失效
+					$t->save();
+				}
+			}
+			
         }else{
             $result['code'] = 0;
             $result['msg'] = $resultOpenid;
         }
         return json($result);  
+	}
+
+	/**
+     * 功能描述：用户授权小程序
+     * @author  Lucas 
+     * 创建时间: 2020-02-26 11:39:34
+     */
+	public function applogin_do()
+	{
+		// 验证令牌
+    	$result = [];
+    	$result['code'] = 0;
+    	if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+    	}
+		$token = input('token');
+		$data_json = file_get_contents('php://input');
+		
+		if($this->debug){
+			$data = [
+				'avatarUrl' => "https://wx.qlogo.cn/mmopen/vi_32/molOLezL8XLRnpH34rtdJrl1z0UE3PR55zv6axNbiaM6tWibmcOyLrm6ibAY4xIRLoAJ9fnOdzHcz1wl3N4fsMicYw/132",
+				'city' => '',
+				'country' => 'Egypt',
+				'gender' => 1,
+				'language' => 'zh_CN',
+				'nickName' => 'Lucas',
+				'province' => '',
+			];
+		}else{
+			$data = json_decode($data_json, true);
+			//halt($data);
+		}
+		//$user_info = $data['userinfo']; //获取授权的用户信息
+		//$share_id = $data['share_id']; //获取授权的分享id
+		
+		$openid = cache('weixin_openid_'.$token);
+		$expires_time = cache('weixin_expires_time_'.$token);
+		$session_key = cache('weixin_session_key_'.$token);
+		$unionid = cache('weixin_unionid_'.$token);
+		
+		// 清除用户表情符号
+		//$user_info['nickName'] = \Lib\Weixin\WeChatEmoji::clear($user_info['nickName']);
+		$nickName = trim(emoji_encode($data['nickName']));
+		
+		$WeixinMemberModel = new WeixinMemberModel;
+
+		$member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+		
+		if( !empty($unionid) && empty($member_info) )
+		{
+			$member_info = $WeixinMemberModel->where([['unionid','eq',$unionid]])->find();
+		}
+		// 如果在系统中能查到微信会员信息
+		if(!empty($member_info) )
+		{
+			$member_id = $member_info['member_id'];
+
+			// 更新授权用户的信息
+			$member_info->member_name = $data['nickName'];
+			$member_info->avatar = $data['avatarUrl'];
+			$member_info->last_login_time = time();
+			$member_info->last_login_ip = get_client_ip();
+			$member_info->login_count = Db::raw('login_count+1');
+	        $member_info->save();
+			
+			// 添加微信Token记录
+			// $WeixinTokenModel = new WeixinTokenModel;
+			// $WeixinTokenModel->token = $token;
+			// $WeixinTokenModel->member_id = $member_id;
+			// $WeixinTokenModel->session_key = $session_key;
+			// $WeixinTokenModel->expires_in = $expires_time;
+			// $WeixinTokenModel->save();
+
+		// 如果在系统中查不到微信会员信息
+		}else{
+
+	        $WeixinMemberModel->openid = $openid;
+	        $WeixinMemberModel->unionid = $unionid;
+	        $WeixinMemberModel->member_name = $data['nickName'];
+			$WeixinMemberModel->avatar = $data['avatarUrl'];
+			$WeixinMemberModel->last_login_time = time();
+			$WeixinMemberModel->last_login_ip = get_client_ip();
+	        $WeixinMemberModel->save();
+	        $member_id = $WeixinMemberModel->member_id;
+
+	        
+	        // 添加微信Token记录
+			// $WeixinTokenModel = new WeixinTokenModel;
+			// $WeixinTokenModel->token = $token;
+			// $WeixinTokenModel->member_id = $member_id;
+			// $WeixinTokenModel->session_key = $session_key;
+			// $WeixinTokenModel->expires_in = $expires_time;
+			// $WeixinTokenModel->save();
+
+			// if($share_id > 0)
+			// {
+			// 	$share_member = M('member')->field('we_openid')->where( array('member' => $share_id) )->find();
+				
+			// 	$member_formid_info = M('member_formid')->where( array('member_id' => $share_id, 'state' => 0) )->find();
+			// 	//更新
+			// 	if(!empty($member_formid_info))
+			// 	{
+			// 		$template_data['keyword1'] = array('value' => $data['name'], 'color' => '#030303');
+			// 		$template_data['keyword2'] = array('value' => '普通会员', 'color' => '#030303');
+			// 		$template_data['keyword3'] = array('value' => date('Y-m-d H:i:s'), 'color' => '#030303');
+			// 		$template_data['keyword4'] = array('value' => '恭喜你，获得一位新成员', 'color' => '#030303');
+					
+			// 		$pay_order_msg_info =  M('config')->where( array('name' => 'wxprog_member_take_in') )->find();
+			// 		$template_id = $pay_order_msg_info['value'];
+			// 		$url =C('SITE_URL');
+			// 		$pagepath = 'pages/dan/me';
+			// 		send_wxtemplate_msg($template_data,$url,$pagepath,$share_member['we_openid'],$template_id,$member_formid_info['formid']);
+			// 		M('member_formid')->where( array('id' => $member_formid_info['id']) )->save( array('state' => 1) );
+			// 	}
+				
+			// }
+		}
+		
+		
+		$result['code'] = 1;
+		$result['msg'] = '授权成功！';
+		return json($result);
 	}
 
 	/**
@@ -155,7 +340,7 @@ class Weixin extends Common
     	}
     	$token = input('token');
     	$house_number = input('house_number');
-    	$openid = session('weixin_openid_'.$token); //存储openid
+    	$openid = cache('weixin_openid_'.$token); //存储openid
         // 绑定手机号
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
@@ -194,7 +379,7 @@ class Weixin extends Common
             return json($result);
     	}
     	$token = input('token');
-    	$openid = session('weixin_openid_'.$token); //存储openid
+    	$openid = cache('weixin_openid_'.$token); //存储openid
         // 绑定手机号
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
@@ -245,6 +430,11 @@ class Weixin extends Common
         if(!$tel){
             $result['msg'] = '请输入手机号！';
         }
+        $TenantModel = new TenantModel;
+        $tenant_id = $TenantModel->where([['tenant_tel','eq',$tel]])->value('tenant_id');
+        if(!$tenant_id){
+        	$result['msg'] = '手机号未绑定租户！';
+        }
         // 验证验证码
         if(!$code){
             $result['msg'] = '请输入验证码！';
@@ -255,7 +445,7 @@ class Weixin extends Common
         // 验证短信码是否正确
         if($res->code == '200'){
         	$WeixinMemberModel = new WeixinMemberModel;
-	        $openid = session('weixin_openid_'.$token); //存储openid
+	        $openid = cache('weixin_openid_'.$token); //存储openid
 	        // 绑定手机号
 	        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
 	        $member_info->tel = $tel;
@@ -278,9 +468,12 @@ class Weixin extends Common
     protected function check_token()
     {
     	$token = input('token');
-        $openid = session('weixin_openid_'.$token);
-        $expires_time = session('weixin_expires_time_'.$token);  
-        if(!$openid || $expires_time > time()){
+        $openid = cache('weixin_openid_'.$token);
+
+        $expires_time = cache('weixin_expires_time_'.$token);
+        //halt($expires_time);  
+        if(!$openid){
+        //if(!$openid || $expires_time < time()){
         	return false;
         }
 		return true;
@@ -319,119 +512,7 @@ class Weixin extends Common
         
     }
 
-	/**
-     * 功能描述：用户授权小程序
-     * @author  Lucas 
-     * 创建时间: 2020-02-26 11:39:34
-     */
-	public function applogin_do()
-	{
-		$token = input('token');
-		$data_json = file_get_contents('php://input');
-		
-		if($this->debug){
-			$data = [
-				'avatarUrl' => "https://wx.qlogo.cn/mmopen/vi_32/molOLezL8XLRnpH34rtdJrl1z0UE3PR55zv6axNbiaM6tWibmcOyLrm6ibAY4xIRLoAJ9fnOdzHcz1wl3N4fsMicYw/132",
-				'city' => '',
-				'country' => 'Egypt',
-				'gender' => 1,
-				'language' => 'zh_CN',
-				'nickName' => 'Lucas',
-				'province' => '',
-			];
-		}else{
-			$data = json_decode($data_json, true);
-			//halt($data);
-		}
-		//$user_info = $data['userinfo']; //获取授权的用户信息
-		//$share_id = $data['share_id']; //获取授权的分享id
-		
-		$openid = session('weixin_openid_'.$token);
-		$expires_time = session('weixin_expires_time_'.$token);
-		$session_key = session('weixin_session_key_'.$token);
-		$unionid = session('weixin_unionid_'.$token);
-		
-		// 清除用户表情符号
-		//$user_info['nickName'] = \Lib\Weixin\WeChatEmoji::clear($user_info['nickName']);
-		$nickName = trim(emoji_encode($data['nickName']));
-		
-		$WeixinMemberModel = new WeixinMemberModel;
-
-		$member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-		
-		if( !empty($unionid) && empty($member_info) )
-		{
-			$member_info = $WeixinMemberModel->where([['unionid','eq',$unionid]])->find();
-		}
-		// 如果在系统中能查到微信会员信息
-		if(!empty($member_info) )
-		{
-			$member_id = $member_info['member_id'];
-
-			// 更新授权用户的信息
-			$member_info->member_name = $data['nickName'];
-			$member_info->avatar = $data['avatarUrl'];
-			$member_info->last_login_time = time();
-			$member_info->last_login_ip = get_client_ip();
-			$member_info->login_count = Db::raw('login_count+1');
-	        $member_info->save();
-			
-			// 添加微信Token记录
-			$WeixinTokenModel = new WeixinTokenModel;
-			$WeixinTokenModel->token = $token;
-			$WeixinTokenModel->member_id = $member_id;
-			$WeixinTokenModel->session_key = $session_key;
-			$WeixinTokenModel->expires_in = $expires_time;
-			$WeixinTokenModel->save();
-
-		// 如果在系统中查不到微信会员信息
-		}else{
-
-			$member_info->openid = $openid;
-			$member_info->member_name = $data['nickName'];
-			$member_info->avatar = $data['avatarUrl'];
-			$member_info->last_login_time = time();
-			$member_info->last_login_ip = get_client_ip();
-	        $member_info->save();
-
-	        $member_id = $member_info->member_id;
-	        
-	        // 添加微信Token记录
-			$WeixinTokenModel = new WeixinTokenModel;
-			$WeixinTokenModel->token = $token;
-			$WeixinTokenModel->member_id = $member_id;
-			$WeixinTokenModel->session_key = $session_key;
-			$WeixinTokenModel->expires_in = $expires_time;
-			$WeixinTokenModel->save();
-
-			// if($share_id > 0)
-			// {
-			// 	$share_member = M('member')->field('we_openid')->where( array('member' => $share_id) )->find();
-				
-			// 	$member_formid_info = M('member_formid')->where( array('member_id' => $share_id, 'state' => 0) )->find();
-			// 	//更新
-			// 	if(!empty($member_formid_info))
-			// 	{
-			// 		$template_data['keyword1'] = array('value' => $data['name'], 'color' => '#030303');
-			// 		$template_data['keyword2'] = array('value' => '普通会员', 'color' => '#030303');
-			// 		$template_data['keyword3'] = array('value' => date('Y-m-d H:i:s'), 'color' => '#030303');
-			// 		$template_data['keyword4'] = array('value' => '恭喜你，获得一位新成员', 'color' => '#030303');
-					
-			// 		$pay_order_msg_info =  M('config')->where( array('name' => 'wxprog_member_take_in') )->find();
-			// 		$template_id = $pay_order_msg_info['value'];
-			// 		$url =C('SITE_URL');
-			// 		$pagepath = 'pages/dan/me';
-			// 		send_wxtemplate_msg($template_data,$url,$pagepath,$share_member['we_openid'],$template_id,$member_formid_info['formid']);
-			// 		M('member_formid')->where( array('id' => $member_formid_info['id']) )->save( array('state' => 1) );
-			// 	}
-				
-			// }
-		}
-		$result = [];
-		$result['code'] = 1;
-		$result['msg'] = '授权成功！';
-		return json($result);
-	}
+	
 
 	/**
 	 * 功能描述：
