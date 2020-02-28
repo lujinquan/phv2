@@ -412,6 +412,76 @@ class Weixin extends Common
     }
 
     /**
+     * 功能描述： 获取我的订单列表数据
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function my_order_list() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+        }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        //$openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+
+        $houseID = input('get.house_id');
+        $datasel = input('get.data_sel');
+
+        // $key = input('get.key');
+        // $result = [];
+        // $result['code'] = 0;
+        // if(!$key){
+        //     $result['msg'] = '参数错误！';
+        //     return json($result);
+        // }
+        // $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        // $houseID = input('get.house_id');
+        // $datasel = input('get.data_sel'); //
+        // $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        // $where = [];
+
+
+        if($member_info['tenant_id']){
+
+            $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+         
+            $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+            $where[] = ['a.tenant_id','eq',$member_info['tenant_id']];
+            if($houseID){
+                $where[] = ['a.house_id','eq',$houseID];
+            }
+            if($datasel){
+                $startDate = substr($datasel,0,4);
+                $endDate = substr($datasel,5,2);
+                $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
+            }
+//halt($where);
+            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+
+            // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
+            // foreach ($result['data']['rent'] as $key => &$value) {
+            //     $value['id'] = $key + 1;
+            // }
+            $result['data']['tenant'] = $member_info;
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+//halt($result);
+        return json($result); 
+    }
+
+    /**
      * 功能描述： 给openid绑定手机号
      * @author  Lucas 
      * 创建时间: 2020-02-26 16:26:08
