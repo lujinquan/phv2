@@ -16,6 +16,7 @@ use think\Db;
 use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
+use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
@@ -24,6 +25,19 @@ use app\weichat\model\WeixinToken as WeixinTokenModel;
 use app\weichat\model\WeixinMember as WeixinMemberModel;
 use app\weichat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
+/**
+ * 功能描述：用户版小程序
+ * =====================================
+ * @author  Lucas 
+ * email:   598936602@qq.com 
+ * Website  address:  www.mylucas.com.cn
+ * =====================================
+ * 创建时间: 2020-02-28 11:47:10
+ * @example 
+ * @link    文档参考地址：
+ * @return  返回值  
+ * @version 版本  1.0
+ */
 class Weixin extends Common
 {
     protected $debug = false;
@@ -302,6 +316,33 @@ class Weixin extends Common
     }
 
     /**
+     * 功能描述：获取公告列表
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 11:29:57
+     */
+    public function notice_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+        }
+        $page = input('page',1);
+        $limit = 1;
+        // 获取公告列表
+        $systemNotice = new SystemNotice;
+        $result['data'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0]])->order('sort asc')->page($page)->limit($limit)->select()->toArray(); 
+        $result['count'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0]])->count('id');
+        $result['pages'] = ceil($result['count'] / $limit);
+        $result['curr_page'] = $page;
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！'; 
+        return json($result);    
+    }
+
+    /**
      * 功能描述：获取主页公告的详情
      * @author  Lucas 
      * 创建时间: 2020-02-26 16:21:03
@@ -435,20 +476,6 @@ class Weixin extends Common
         $houseID = input('get.house_id');
         $datasel = input('get.data_sel');
 
-        // $key = input('get.key');
-        // $result = [];
-        // $result['code'] = 0;
-        // if(!$key){
-        //     $result['msg'] = '参数错误！';
-        //     return json($result);
-        // }
-        // $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
-        // $houseID = input('get.house_id');
-        // $datasel = input('get.data_sel'); //
-        // $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
-        // $where = [];
-
-
         if($member_info['tenant_id']){
 
             $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
@@ -463,7 +490,7 @@ class Weixin extends Common
                 $endDate = substr($datasel,5,2);
                 $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
             }
-//halt($where);
+            //halt($where);
             $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
 
             // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
@@ -478,6 +505,100 @@ class Weixin extends Common
             $result['msg'] = '参数错误！';
         }
 //halt($result);
+        return json($result); 
+    }
+
+    public function house_detail()
+    {
+        
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+        }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        //$openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        
+        $id = input('get.house_id');
+        if($member_info['tenant_id']){
+            $HouseModel = new HouseModel;
+            $temp = HouseModel::with(['ban','tenant'])->get($id);
+            $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$temp['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+            $temp['cut_rent'] = $cutRent?$cutRent:'0.00';
+            
+            $params = ParamModel::getCparams();
+
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            // $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
+            // $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+            $rooms = $HouseModel->get_house_renttable($id);
+            foreach($rooms as &$t){
+                $t['baseinfo']['room_type'] = $params['roomtypes'][$t['baseinfo']['room_type']];
+                $t['baseinfo']['room_status'] = $params['status'][$t['baseinfo']['room_status']];
+                $t['baseinfo']['ban_owner_id'] = $params['owners'][$t['baseinfo']['ban_owner_id']];
+                $t['baseinfo']['ban_inst_id'] = $params['insts'][$t['baseinfo']['ban_inst_id']];
+                $t['baseinfo']['ban_struct_id'] = $params['structs'][$t['baseinfo']['ban_struct_id']];
+            }
+            $temp['rooms'] = $rooms;
+//halt($temp['rooms']);
+            $result['data'] = $temp;
+//halt($result['data']);  
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
+
+    /**
+     * 获取某个房屋的租金订单信息
+     * @param id 消息id
+     * @return json
+     */
+    public function rent_order_info() 
+    {
+        // 验证令牌
+        // $result = [];
+        // $result['code'] = 0;
+        // if(!$this->check_token()){
+        //     $result['msg'] = '令牌已失效！';
+        //     return json($result);
+        // }
+        // $token = input('token');
+        // $openid = cache('weixin_openid_'.$token); //存储openid
+        $openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        $houseID = input('get.house_id'); //获取房屋id
+       
+
+        if($member_info['tenant_id']){
+            //dump($tenantInfo['tenant_id']);halt($houseID);
+            $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['tenant_id','eq',$member_info['tenant_id']]])->order('rent_order_id desc')->select();
+            foreach ($result['data']['rent'] as $key => &$value) {
+                $value['id'] = $key + 1;
+            }
+            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
         return json($result); 
     }
 
