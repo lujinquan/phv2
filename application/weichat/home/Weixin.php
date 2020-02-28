@@ -453,6 +453,47 @@ class Weixin extends Common
     }
 
     /**
+     * 功能描述：租户详情
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 15:06:57 
+     */
+    public function tenant_info() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+        }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token);
+        // $openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+    
+        if($member_info['tenant_id']){
+            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
+            foreach ($result['data']['house'] as $k => &$v) {
+                //halt($v);
+                $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+
+                $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
+                $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
+                //$value['id'] = $key + 1;
+            }
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+    }
+
+    /**
      * 功能描述： 获取我的订单列表数据
      * @author  Lucas 
      * 创建时间: 2020-02-28 10:13:33
@@ -497,7 +538,7 @@ class Weixin extends Common
             // foreach ($result['data']['rent'] as $key => &$value) {
             //     $value['id'] = $key + 1;
             // }
-            $result['data']['tenant'] = $member_info;
+            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
             $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
@@ -570,15 +611,15 @@ class Weixin extends Common
     public function rent_order_info() 
     {
         // 验证令牌
-        // $result = [];
-        // $result['code'] = 0;
-        // if(!$this->check_token()){
-        //     $result['msg'] = '令牌已失效！';
-        //     return json($result);
-        // }
-        // $token = input('token');
-        // $openid = cache('weixin_openid_'.$token); //存储openid
-        $openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
+        $result = [];
+        $result['code'] = 0;
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
+            return json($result);
+        }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        //$openid = 'oxgVt5RZHUzam9oAHlJRGRlpDwFY';
         // 绑定手机号
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
