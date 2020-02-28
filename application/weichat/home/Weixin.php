@@ -295,10 +295,10 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if(!$this->check_token()){
-            $result['msg'] = '令牌已失效！';
-            return json($result);
-        }
+        // if(!$this->check_token()){
+        //     $result['msg'] = '令牌已失效！';
+        //     return json($result);
+        // }
         // 获取参数对照数据
         $params = ParamModel::getCparams();
         $result['data']['params'] = $params;
