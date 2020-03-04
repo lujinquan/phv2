@@ -24,9 +24,11 @@ class Weixin extends Model
 	// 小程序传来的code值
     protected $code = '';
     // 小程序的appid值
-    protected $appid = 'wxdbbb0de34151bfc1';
+    //protected $appid = 'wxdbbb0de34151bfc1';
+    protected $appid = 'wxaac82b178a3ef1d2';
     // 小程序的appSecret值
-    protected $appSecret = 'b41aa54fda7fe0e7feec878456c9e012';
+    //protected $appSecret = 'b41aa54fda7fe0e7feec878456c9e012';
+    protected $appSecret = '2035d07676392ac121549f66384b04e4';
 
 	protected function initialize()
     {
