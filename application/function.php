@@ -274,3 +274,55 @@ if (!function_exists('array_merge_add')) {
 	    return $re;
 	}
 }
+
+/**
+ * 功能描述：微信小程序用户emoji表情转义
+ * @author  Lucas 
+ * 创建时间: 2020-02-26 11:53:23
+ */
+if (!function_exists('emoji_encode')) {
+	function emoji_encode($nickname)
+	{
+	    $strEncode = '';
+	    $length = mb_strlen($nickname, 'utf-8');
+	    for ($i = 0; $i < $length; $i++) {
+	        $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
+	        if (strlen($_tmpStr) >= 4) {
+	            $strEncode .= '[[EMOJI:' . rawurlencode($_tmpStr) . ']]';
+	        } else {
+	            $strEncode .= $_tmpStr;
+	        }
+	    }
+	    return $strEncode;
+	}
+}
+
+/**
+ * 功能描述：微信小程序用户emoji表情反转义
+ * @author  Lucas 
+ * 创建时间: 2020-02-26 11:53:23
+ */
+if (!function_exists('emoji_decode')) {
+	function emoji_decode($str)
+	{
+	    $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
+	        return rawurldecode($matches[1]);
+	    }, $str);
+
+	    return $strDecode;
+	}
+}
+
+/**
+ * 功能描述：判断是否是微信客户端
+ * @author  Lucas 
+ * 创建时间: 2020-02-26 11:53:23
+ */
+if (!function_exists('is_weixin')) {
+	function is_weixin(){ 
+		if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
+				return true;
+		}	
+		return false;
+	}
+}
