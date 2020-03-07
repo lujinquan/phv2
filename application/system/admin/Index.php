@@ -92,7 +92,20 @@ class Index extends Admin
         $this->assign('changeType',$changeType);
 		return $this->fetch('block/queriers/house');
 	}
-
+	
+   //房屋选择器
+	public function houseselected()
+	{
+        if ($this->request->isAjax()) {
+            $queryWhere = $this->request->param();
+            $DataModel = new DataModel;
+            $data = $DataModel->queryHouse($queryWhere);
+            return json($data);
+        }
+        $changeType = input('param.change_type');
+        $this->assign('changeType',$changeType);
+		return $this->fetch('block/queriers/house_selected');
+	}
 	//异动注销查询器
 	public function cancellation()
 	{

@@ -1,2 +1,90 @@
-用户管理页面
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
+      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+		<div class="j-search-fl layui-col-md8  fl">
+			  <div class="layui-input-inline j-input-margin j-width-100">
+				  <input type="text" name="tenant_number" title="租户ID" placeholder="租户ID" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="weixin_nickname" title="微信昵称" placeholder="微信昵称" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="weixin_name" title="真实姓名" placeholder="真实姓名" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  	<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
+			  </div>
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+			  
+          </div>
+		</div>
+      </form>
+  </div>
 {include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
+	<a href="{:url('noticeindex')}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
+    <a href="" class="layui-btn layui-btn-xs layui-btn-normal">支付订单</a>
+	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
+    <a href="" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate;
+       table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
+            ,url: '' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {field: 'weixin_id', minWidth: 110, align:'center', title: '用户ID'}
+                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名'}
+                ,{field: 'weixin_name',minWidth:200,align:'center', title: '真实姓名'}
+                ,{field: 'weixin_tel', minWidth: 80, align:'center', title: '手机号'}
+                ,{field: 'weixin_time',minWidth: 100, align:'center', title: '注册时间'}
+                ,{field: 'weixin_type', align:'center',minWidth:80, title: '状态', templet:function(d){
+                	if(parseInt(d.weixin_type) == 1){
+                    	return '<div class="layui-table-cell">启用</div>';
+                    }else if(parseInt(d.weixin_type) == 2){
+                		return '<div class="layui-table-cell">禁用</div>';
+                    }
+                    
+                }}
+                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]],
+			data: [{
+            'weixin_id': '100010',
+            'weixin_username': 'lsn',
+			'weixin_name': '张三',
+            'weixin_tel': 15369856932,
+            "weixin_time": '2020.03.06',
+            "weixin_type": 2,
+          }
+        ]
+            ,done:function(res,curr,count){
+				
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+    });
+</script>

@@ -475,3 +475,9 @@ opacity: .8color: #333;}
 /* #Statistics{position:absolute; bottom:0px;left:0; width: 100%;} */
 #Statistics{background-color: #f2f2f2;}
 /* 报表管理 E */
+
+/* ----------小程序后台管理样式------------- */
+/* .j-definition .layui-form-label{min-width: auto!important;} */
+.j-definition .layui-input-block{margin-left: 120px!important;}
+.j-definition .layui-form-mid img{width: 20px;height: 20px;border-radius: 50%;margin-right: 10px;}
+.j-definition .layui-form-mid{font-size: 14px!important;}

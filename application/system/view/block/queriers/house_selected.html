@@ -1,0 +1,204 @@
+<!-- 房屋查询器 -->
+<div class="j-table-content j-five-height j-no-title">
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<blockquote class="layui-elem-quote"></blockquote>
+		<form class="layui-form layui-form-pane" action="{:url('system/Index/house')}?change_type={$changeType}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				<div class="layui-input-inline" style="width:150px;">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+				</div>
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
+				</div>
+				
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
+				</div>
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+					<select name="ban_inst_id">
+						<option value="">机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				<input type="hidden" name="" value="" class="layui-input">
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+</div>
+<script type="text/javascript">
+	var conId;
+	var data;
+	layui.use(['table', 'jquery'], function() {
+		var table = layui.table
+		    ,$ = layui.$;
+		//判断当前异动类型改变提示文字
+				var changeType = '{$changeType}';
+				if(changeType==13){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请使用权变更");
+				}
+				else if(changeType==9){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请房屋调整");
+				}
+				else if(changeType==18){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，橙色表示规定租金与计算租金不一致");
+				}
+				else if(changeType==1){
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请租金减免");
+				}
+				else if(changeType==17){
+					$(".layui-elem-quote").text("灰色表示房屋已暂停计租，无法申请别字更正");
+				}
+				else{
+					$(".layui-elem-quote").hide();
+				}
+				//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
+		table.render({
+			elem: '#dataTable'
+			,toolbar: true
+			,defaultToolbar: false //设置右边筛选，导出，打印显示
+			,url: '{:url("system/Index/house")}?change_type={$changeType}' //数据接口
+			,page: true //开启分页
+			,limit: 5
+            ,limits: [5,10,20,30,40,50]
+			,text: {
+				none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+			}
+			,cols: [
+				[ //表头
+				{type:'checkbox'},
+					{
+						field: 'house_number',
+						minWidth: 140,
+						align:'center',
+						title: '房屋编号'
+					}, {
+						field: 'tenant_name',
+						minWidth: 100,
+						align:'center',
+						title: '租户姓名'
+					}, {
+						field: 'ban_inst_id',
+						minWidth: 120,
+						align:'center',
+						title: '管段',
+						hide: isShowInst,
+						templet: function(d) {
+							return params.insts[d.ban_inst_id];
+						}
+					}, {
+						field: 'ban_owner_id',
+						minWidth: 60,
+						align:'center',
+						title: '产别',
+						templet: function(d) {
+							return params.owners[d.ban_owner_id];
+						}
+					}, {
+						field: 'house_use_id',
+						minWidth: 90,
+						align:'center',
+						title: '使用性质',
+						templet: function(d) {
+							return params.uses[d.house_use_id];
+						}
+					}, {
+						field: 'ban_address',
+						minWidth: 160,
+						align:'center',
+						title: '地址'
+					}, {
+						field: 'tenant_card',
+						minWidth: 200,
+						align:'center',
+						title: '身份证号'
+					}
+
+				]
+			],
+			done: function(res, curr, count) {
+				var	result = res.data;
+				for (var i = 0; i < result.length; i++) {
+					$("[lay-id='dataTable'] tr[data-index="+i+"]").attr('color-status',1);
+					if(parseInt(result[i].color_status) == 2){
+						// 如果已在当前异动中
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#A4A4A4').attr('color-status',2);
+					}else if(parseInt(result[i].color_status) == 3){
+						// 如果有欠租的
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#ff0000').attr('color-status',3);
+					}else if(parseInt(result[i].color_status) == 4){
+						// 如果规租不等于计算租金
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#ff8700').attr('color-status',4);
+					}else if(parseInt(result[i].color_status) == 5){
+						// 如果是暂停计租
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#FFCC00').attr('color-status',5);
+					}
+					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
+					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").next().addClass('layui-btn-disabled');
+					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").removeAttr('name');
+					
+					$("[lay-id='dataTable'] tr[color-status='4'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
+					$("[lay-id='dataTable'] tr[color-status='4'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").next().addClass('layui-btn-disabled');
+					$("[lay-id='dataTable'] tr[color-status='4'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").removeAttr('name');
+
+					$("[lay-id='dataTable'] tr[color-status='5'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
+					$("[lay-id='dataTable'] tr[color-status='5'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").next().addClass('layui-btn-disabled');
+					$("[lay-id='dataTable'] tr[color-status='5'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").removeAttr('name');
+					
+					
+				}
+			}
+		}, isShowInst);
+		 //监听行单击事件（单击事件为：rowDouble）
+			table.on('checkbox(dataTable)', function(obj){
+			      var checkStatus = table.checkStatus('dataTable');
+			      datas = checkStatus.data;
+			      //console.log(datas);
+			  });
+			  
+			$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+// 		//点击tr选中对应的checkbox
+// 		  $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
+// 			  var index = $(this).attr('data-index');
+// 			  // var color_status = $(this).attr('color-status');
+// 			  // if(color_status == 1){
+// 			  	  var tableBox = $(this).parents('.layui-table-box');
+// 				  //存在固定列
+// 				  if (tableBox.find(".layui-table-fixed.layui-table-fixed-l").length>0) {
+// 					  tableDiv = tableBox.find(".layui-table-fixed.layui-table-fixed-l");
+// 				  } else {
+// 					  tableDiv = tableBox.find(".layui-table-body.layui-table-main");
+// 				  }
+// 				  var checkCell = tableDiv.find("tr[data-index=" + index + "]").find("td div.laytable-cell-checkbox div.layui-form-checkbox i");
+// 				  if (checkCell.length>0) {
+// 					  checkCell.click();
+// 				  }
+// 			  // }
+// 			  
+// 		  });
+		  
+// 		  $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
+// 			  e.stopPropagation();
+// 		  });
+		
+	});
+	var hoesedata = function () {
+	     return datas;
+	}
+</script>
