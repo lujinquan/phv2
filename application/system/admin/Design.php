@@ -63,8 +63,9 @@ class Design extends Admin
 		if ($this->request->isAjax()) {
 			$table = input('id');
 			//$tableData = Db::query("DESC ".$table);	
-			$tableData = Db::query("SHOW FULL FIELDS FROM ".$table);	
-			//halt($tableData);
+			$tableData = Db::query("SHOW FULL FIELDS FROM ".$table);
+            	
+			
 			$data['data'] = $tableData;
             $data['code'] = 0;
             return json($data);
@@ -72,6 +73,51 @@ class Design extends Admin
 		$this->assign('table',$table);
 		return $this->fetch();
 	}
+
+    public function php_to_markdown(){
+
+        //$table = input('id');
+
+        //$sql = "SHOW TABLE STATUS WHERE NAME = '".$table."'";
+        $sql = "SHOW TABLE STATUS";
+        $tableStatus = Db::query($sql);
+        //$tableDesc = Db::query("SELECT * FROM mysql.`innodb_index_stats` a WHERE a.table_name = 'ph_ban'");
+        //$tableDesc = Db::query("select * from information_schema.tables where table_name = 'ph_ban'");
+// dump($tableDesc);
+//halt($tableStatus);
+        foreach ($tableStatus as $key => $s) {
+
+            $tableData = Db::query("SHOW FULL FIELDS FROM ".$s['Name']);
+            $mark = '';
+            // 字段
+            $mark .= '### ' . $s['Name'] . ' ' . $s['Comment'] . PHP_EOL;
+
+            $mark .= '|  编号  |  中文名  |  字段名称  |  数据类型  |  主键  |  外键  |  是否允许为空  |  备注  |' . PHP_EOL;
+            $mark .= '|: ------ :|: ------ :|: ------ :|: ------ :|: ------ :|: ------ :|: ------ :|: ------ :|' . PHP_EOL;
+            foreach($tableData as $k => $t){
+                //halt($t);
+                $mark .= '| ' . ($k+1) .' | ' . $t['Comment'] . ' | ' . $t['Field'] . ' | '. $t['Type'] . ' | ' . $t['Key'] . ' |  | ' . $t['Null'] . ' |  |'  . PHP_EOL;
+            }  
+            // 索引 
+            $mark .= PHP_EOL;
+            $mark .= '### 索引' . PHP_EOL;
+            $mark .= PHP_EOL;
+            $mark .= '|  编号  |  名  |  字段  |  索引类型  |  索引方法  |' . PHP_EOL;
+            $mark .= '|: ------ :|: ------ :|: ------ :|: ------ :|: ------ :|' . PHP_EOL;
+            $mark .= '|   1 |    |    |    |    |' . PHP_EOL;
+            // 引擎
+            $mark .= PHP_EOL;
+            $mark .= '### 引擎' . PHP_EOL;
+            $mark .= PHP_EOL;
+            $mark .= '|  引擎  |  排序规则  |  字符集  |  数据目录  |' . PHP_EOL;
+            $mark .= '|: ------ :|: ------ :|: ------ :|: ------ :|' . PHP_EOL;
+            $mark .= '| '.$s['Engine'].' | '.$s['Collation'].' | '.$s['Collation'].' |'.$s['Collation'].' |' . PHP_EOL;
+            @unlink('./md/'.$s['Name'].'.md');
+            file_put_contents('./md/'.$s['Name'].'.md', $mark); 
+        }
+        //file_put_contents($table.'.md', $mark, FILE_APPEND); 
+
+    }
 	// 页面直接输出模式：http://web.phv2.com/admin.php/system/design/export.html?id=ph_inst,ph_cparam
 	public function export()
 	{
