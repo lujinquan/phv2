@@ -1,4 +1,4 @@
-<!-- 退款 -->
+<!-- 支付记录详情 -->
 <form class="layui-form j-definition" action="">
   <div class="layui-form-item">
 	<label class="layui-form-label">订单编号：</label>
@@ -32,25 +32,5 @@
  	<label class="layui-form-label">退款时间：</label>
  	<div class="layui-form-mid layui-word-aux">2020-03-02 15:25:26</div>
  </div>
- <div class="pop-bottom-bar">
-   <div class="layui-input-block">
-     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">退款</button>
-     <a href="{:url('payrecord')}" class="layui-btn layui-btn-primary j-cancel">取消</a>
-   </div>
- </div>
 </form>	
 {include file="system@block/layui" /}
-<script>
-var formData = {:json_encode($formData)};
-layui.use(['form', 'func','jquery'], function() {
-
-    var $ = layui.jquery, form = layui.form;
-    layui.func.assign(formData);
-	$(".j-cancel").click(function(){
-		// 在子页面关闭弹出层
-		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-		parent.layer.close(index); //再执行关闭   
-		
-	})
-});
-</script>

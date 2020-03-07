@@ -49,29 +49,25 @@
       <textarea name="textarea" placeholder="请输入内容" class="layui-textarea"></textarea>
     </div>
   </div>
-  <div class="layui-form-item">
+  <div class="pop-bottom-bar">
     <div class="layui-input-block">
-      <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">修改</button>
+      <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">修改</button>
       <button type="reset" class="layui-btn layui-btn-primary j-cancel">取消</button>
     </div>
   </div>
 </form>	
 {include file="system@block/layui" /}
-<script type="text/javascript">
-layui.use(['form', 'layedit', 'laydate'], function(){
-	  var form = layui.form
-	  ,layer = layui.layer
-	  ,layedit = layui.layedit
-	  ,laydate = layui.laydate;
+<script>
+var formData = {:json_encode($formData)};
+layui.use(['form', 'func','jquery'], function() {
 
-		//监听提交
-	  form.on('submit(submit)', function(data){
+    var $ = layui.jquery, form = layui.form;
+    layui.func.assign(formData);
+	$(".j-cancel").click(function(){
+		// 在子页面关闭弹出层
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index); //再执行关闭   
 		
-	  });
-	  // 点击取消关闭弹框
-	  $(".j-cancel").click(function(){
-		  var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-	  })
-  });
+	})
+});
 </script>
