@@ -63,11 +63,11 @@
 								//var houseidData = '';
 								for(var i=0;i<row.length;i++) {
 									// 去重
-									if(arr && arr.indexOf(parseInt(row[i].ban_id)) > -1){
+									if(arr && arr.indexOf(parseInt(row[i].house_number)) > -1){
 										continue;
 									}
 									trData +='<tr>\
-												<td class="building_number"><input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].ban_id+'">'+row[i].house_number+'</td>\
+												<td class="building_number"><input type="hidden" name="ban_ids[]" class="ban_ids" value="'+row[i].house_number+'">'+row[i].house_number+'</td>\
 												<td class="building_address">'+row[i].ban_address+'</td>\
 												<td class="prescribed_rent">'+row[i].ban_rent+'</td>\
 												<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-normal">未认证</label><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
