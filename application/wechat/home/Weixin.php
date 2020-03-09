@@ -821,6 +821,7 @@ class Weixin extends Common
             // 绑定手机号
             $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
             $member_info->tel = $tel;
+            $member_info->auth_time = time();
             $member_info->save();
             $result['code'] = 1;
             $result['msg'] = '绑定成功！';

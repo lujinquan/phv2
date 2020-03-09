@@ -1,0 +1,80 @@
+<!-- 退款 -->
+<form class="layui-form j-definition" action="{:url()}">
+  <div class="layui-form-item">
+	<label class="layui-form-label">用户：</label>
+	<div class="layui-form-mid layui-word-aux">{$data_info['member_name']}</div>
+ </div>
+ <div class="layui-form-item">
+	<label class="layui-form-label">头像：</label>
+	<div class="layui-form-mid layui-word-aux"><img src="{$data_info['avatar']}"></div>
+ </div>
+ <div class="layui-form-item">
+	<label class="layui-form-label">OPENID：</label>
+	<div class="layui-form-mid layui-word-aux">{$data_info['openid']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">真实姓名：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['real_name']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">认证手机号：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['tel']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">微信关联手机号：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['weixin_tel']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">身份证号：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['tenant_card']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">用户状态：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['is_show']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">注册时间：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['create_time']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">认证时间：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['auth_time']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">绑定房屋数：</label>
+ 	<div class="layui-form-mid layui-word-aux">{:count($houselist)}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">支付订单数：</label>
+ 	<div class="layui-form-mid layui-word-aux">占位</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">成交金额：</label>
+ 	<div class="layui-form-mid layui-word-aux">占位</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">备注：</label>
+ 	<div class="layui-form-mid layui-word-aux">占位</div>
+ </div>
+ <div class="pop-bottom-bar">
+   <div class="layui-input-block">
+     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>
+     <a href="javascript:;" class="layui-btn layui-btn-primary j-cancel">取消</a>
+   </div>
+ </div>
+</form>	
+{include file="system@block/layui" /}
+<script>
+var formData = {:json_encode($formData)};
+layui.use(['form', 'func','jquery'], function() {
+
+    var $ = layui.jquery, form = layui.form;
+    layui.func.assign(formData);
+	$(".j-cancel").click(function(){
+		// 在子页面关闭弹出层
+		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		parent.layer.close(index); //再执行关闭   
+		
+	})
+});
+</script>
