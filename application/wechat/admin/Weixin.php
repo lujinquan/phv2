@@ -33,7 +33,7 @@ class Weixin extends Admin
             $where = $WeixinMemberModel->checkWhere($getData);
             $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
-            $data['data'] = WeixinMemberModel::field($fields)->where($where)->page($page)->group('tenant_id')->order('create_time desc')->limit($limit)->select();
+            $data['data'] = WeixinMemberModel::field($fields)->where($where)->page($page)->order('create_time desc')->limit($limit)->select();
             $data['count'] = WeixinMemberModel::where($where)->count('member_id');//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';
