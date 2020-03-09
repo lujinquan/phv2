@@ -58,6 +58,16 @@ class Weixin extends Admin
 		return $this->fetch();
 	}
 
+	public function bindHouselist()
+	{
+		$id = input('id');
+		$WeixinMemberHouseModel = new WeixinMemberHouseModel;
+		$houselist = $WeixinMemberHouseModel->house_list($id);
+		//halt($houselist);
+		$this->assign('houselist',$houselist);
+		return $this->fetch();
+	}
+
 	/**
 	 * 功能描述：用户详情
 	 * @author  Lucas 

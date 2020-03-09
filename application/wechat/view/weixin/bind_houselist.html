@@ -1,0 +1,45 @@
+<div class="layui-form">
+  <table class="layui-table">
+    <colgroup>
+      <col width="150">
+      <col width="150">
+      <col width="150">
+      <col width="200">
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>房屋编号</th>
+        <th>房屋地址</th>
+        <th>租户姓名</th>
+        <th>规定租金</th>
+        <th>操作</th>
+      </tr> 
+    </thead>
+    <tbody>
+    {volist name="houselist" id="v"}
+      <tr>
+        <td>{$v['house_number']}</td>
+        <td>{$v['ban_address']}</td>
+        <td>{$v['tenant_name']}</td>
+        <td>{$v['house_pre_rent']}</td>
+        <td>
+        {if condition="$v['is_auth']"}
+        	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-warm">已认证</a>
+        {else /}
+        	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+        {/if}
+        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-danger">删除</a>
+        </td>
+      </tr>
+     {/volist}
+      
+    </tbody>
+  </table>
+</div>
+ <!-- <div class="pop-bottom-bar">
+   <div class="layui-input-block">
+     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>
+     <a href="javascript:;" class="layui-btn layui-btn-primary j-cancel">取消</a>
+   </div>
+ </div> -->
