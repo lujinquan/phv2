@@ -14,6 +14,20 @@
 			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
 			  </div>
+			  <div class="layui-input-inline j-width-110">
+				  <select name="pay_state">
+					  <option value="">状态</option>
+					  <option value="1">启用</option>
+					  <option value="2">禁用</option>
+				  </select>
+			  </div>
+			  <div class="layui-input-inline j-width-110">
+				  <select name="pay_prove">
+					  <option value="">认证状态</option>
+					  <option value="1">已认证</option>
+					  <option value="2">未认证</option>
+				  </select>
+			  </div>
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
@@ -57,7 +71,10 @@
             }
             ,cols: [[ //表头
                 {field: 'weixin_id', minWidth: 110, align:'center', title: '用户ID'}
-                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名'}
+				,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
+                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
+					return '<div class="j-user"><img src="'+d.weixin_url+'" alt="" width="28px" height="28px"></a>  ' + d.weixin_username + '</div>';
+            }}
                 ,{field: 'weixin_name',minWidth:200,align:'center', title: '真实姓名'}
                 ,{field: 'weixin_tel', minWidth: 80, align:'center', title: '手机号'}
                 ,{field: 'weixin_time',minWidth: 100, align:'center', title: '注册时间'}
@@ -73,6 +90,7 @@
             ]],
 			data: [{
             'weixin_id': '100010',
+			'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
             'weixin_username': 'lsn',
 			'weixin_name': '张三',
             'weixin_tel': 15369856932,

@@ -67,7 +67,10 @@
             }
             ,cols: [[ //表头
                 {field: 'weixin_id', minWidth: 200, align:'center', title: '订单编号'}
-                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户'}
+               ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
+               ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
+               		return '<div class="j-user"><img src="'+d.weixin_url+'" alt="" width="28px" height="28px"></a>  ' + d.weixin_username + '</div>';
+               }}
                 ,{field: 'weixin_openid',minWidth:200,align:'center', title: 'OPENID'}
                 ,{field: 'weixin_number', minWidth: 200, align:'center', title: '房屋编号'}
 				,{field: 'weixin_address', minWidth: 200, align:'center', title: '楼栋地址'}
@@ -85,6 +88,7 @@
             ]],
 			data: [{
             'weixin_id': '10500335300299202002',
+            'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
             'weixin_username': 'lsn',
 			'weixin_openid': 'oH4X25ZJjygxqcgzcI5x18KQvzCc',
             'weixin_number': '10500335300299',
