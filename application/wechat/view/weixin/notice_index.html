@@ -1,43 +1,131 @@
-<!-- 业务管理编辑 -->
-<form class="layui-form j-definition j-top-height" action="">
- <div class="j-details-box  floorWrap layui-form">
-  <div class="layui-form-item">
-	<div class="j-form-label">业务名称：</div>
-	<div class="j-input-inline">
-	  <input type="text" name="business_name"  value="办事指引" autocomplete="off" readonly=""  class="layui-input">
-	</div>
-  </div>
-  <div class="layui-form-item">
-	<div class="j-form-label">业务图标：</div>
-	<div class="j-input-inline j-details-imgs">
-		<div class="j-enclosure-img j-viewer-imgs clearfix">
-			<ul>
-				<li>
-					<img src="/upload/ban/image/20191210/8f6c18b2f7225234e443875a16bcc12f.jpg">
-				</li>
-			</ul>
-		</div>
-	</div>
-  </div>
-  <div class="layui-form-item">
-	<div class="j-form-label">业务简介：</div>
-  	<div class="j-input-inline">
-      <textarea name="business_textarea" readonly=""  value="" class="layui-textarea">用户通过小程序查询办事指引！
-	  </textarea>
-    </div>
-  </div>
-  <div class="layui-form-item">
-	<div class="j-form-label">小程序链接：</div>
-    <div class="layui-input-inline" style="margin-left: -2px;">
-      <input type="text" name="business_link" value="/weporn/business/help" readonly=""   class="layui-input">
-    </div>
-  </div>
-  <div class="pop-bottom-bar">
-    <div class="layui-input-block">
-      <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">修改</button>
-      <button type="reset" class="layui-btn layui-btn-primary j-cancel">取消</button>
-    </div>
-  </div>
- </div>
-</form>	
-{include file="system@block/layui" /}
+<!-- 业务管理 -->
+<div class="j-table-content j-table-readjust j-top-height">
+  <div class="layui-btn-container j-container-margin">
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+		<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="编辑业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
+		<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="查看业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">查看</a>
+	</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate','form'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate
+			,form = layui.form;
+       table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: false//设置右边筛选，导出，打印显示
+            ,url: '' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {field: 'weixin_business', minWidth: 500, align:'center', title: '业务板块',templet: function(d){
+					return '<div class="j-user-con"><img src="'+d.weixin_url+'" alt="" width="60px" height="60px"> <div class="txt"><p>'+d.weixin_column+'</p><p>简介：'+d.weixin_briefing+'</p></div></div>';
+                }
+			    }
+                ,{field: 'weixin_type', align:'center',minWidth:80, title: '是否置顶', templet:function(d){
+                	var strCheck = d.weixin_type == "0" ? "checked" : "";
+                	return '<input type="checkbox" name="status_type" lay-filter="status_type" lay-skin="switch" lay-text="是|否" ' +strCheck+ '>';
+				}  
+                }
+				,{field: 'weixin_state', align:'center',minWidth:80, title: '模块状态', templet:function(d){
+					var strChecks = d.weixin_state == "0" ? "checked" : "";
+					return '<input type="checkbox" name="status_state" lay-filter="status_state" lay-skin="switch" lay-text="启用|禁用" ' +strChecks+ '>';
+				}  
+				}
+                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]],
+			data: [{
+			'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+            'weixin_column':'办事指引',
+			'weixin_briefing':'用户通过小程序查询办事指引！'
+            },
+			{
+			'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+			'weixin_column':'缴费',
+			'weixin_briefing':'用户通过小程序进行缴费'
+			}
+        ]
+            ,done:function(res,curr,count){
+				
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		 //监听置顶
+		  
+        form.on('switch(status_type)', function (data) {
+			var taht = $(this)
+			var swt =  $(data.elem);
+			 // 获取当前控件                                                                  
+	        var selectIfKey=data.othis;   
+			// 获取当前所在行                                                                 
+	        var parentTr = selectIfKey.parents("tr"); 
+			var dataField = $(parentTr).find("td:eq(2)").find(".layui-form-switch");
+			var dataInput = $(parentTr).find("td:eq(1)").find("input");
+			$(parentTr).find("td:eq(1)").removeClass("ons");	
+			 if(dataField.hasClass("layui-form-onswitch"))
+			 {
+				 if(this.checked==true)
+				 { 
+				 	console.log('点击了置顶！');
+					$(parentTr).addClass("ons").siblings().removeClass("ons");
+					$(".layui-table-main tr").each(function(){		  
+					  if(!$(this).hasClass("ons"))
+					  {
+						$(this).find("td:eq(1)").find("input").prop('checked',!data.elem.checked); //修改switch开关
+						layui.form.render();//刷新表格
+						return ;
+					  }		  
+					})
+				 }
+				 else{
+				 	console.log('不置顶！')
+				 }
+			 }
+			 else{
+				 layer.msg("该栏目已禁用无法置顶！");
+				 swt.prop('checked',!data.elem.checked); //修改switch开关
+                 layui.form.render();//刷新表格
+                 return ;
+				 
+			 }
+			
+		})
+		//监听模块状态
+		form.on('switch(status_state)', function (data) {
+			var taht = $(this)
+			var swt =  $(data.elem);
+			 // 获取当前控件                                                                  
+			var selectIfKey=data.othis;   
+			// 获取当前所在行                                                                 
+			var parentTr = selectIfKey.parents("tr"); 
+			var dataField = $(parentTr).find("td:eq(2)").find(".layui-form-switch");
+			var dataInput = $(parentTr).find("td:eq(1)").find("input");
+			 if(dataField.hasClass("layui-form-onswitch"))
+			{
+				if(this.checked==true)
+				{
+					console.log('启用！')
+				}
+				else{
+					console.log('禁用！')
+				}
+			}
+			else{
+				$(parentTr).removeClass("ons");
+				dataInput.prop('checked',data.elem.checked); //修改switch开关
+			    layui.form.render();//刷新表格
+			    return ;
+							 
+			}
+		})
+    });
+</script>

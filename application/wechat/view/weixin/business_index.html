@@ -1,15 +1,12 @@
 <!-- 业务管理 -->
 <div class="j-table-content j-table-readjust j-top-height">
   <div class="layui-btn-container j-container-margin">
-	<div class="layui-btn-container">
-        <a href="javascript:;"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增楼栋</button></a>
-  </div>
-{include file="system@block/layui" /}
-<table id="dataTable" lay-filter='dataTable'></table>
-<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="编辑业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="查看业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">查看</a>
-</script>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+		<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="编辑业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
+		<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="查看业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">查看</a>
+	</script>
 </div>
 <script type="text/javascript">
     layui.use(['table','jquery','layer','laydate','form'], function() {
@@ -63,23 +60,71 @@
         },isShowInst);
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		 //监听置顶
+		  
         form.on('switch(status_type)', function (data) {
-			if(this.checked==true)
-			{
-				console.log('点击了置顶！')
-			}
-			else{
-				console.log('不置顶！')
-			}
+			var taht = $(this)
+			var swt =  $(data.elem);
+			 // 获取当前控件                                                                  
+	        var selectIfKey=data.othis;   
+			// 获取当前所在行                                                                 
+	        var parentTr = selectIfKey.parents("tr"); 
+			var dataField = $(parentTr).find("td:eq(2)").find(".layui-form-switch");
+			var dataInput = $(parentTr).find("td:eq(1)").find("input");
+			$(parentTr).find("td:eq(1)").removeClass("ons");	
+			 if(dataField.hasClass("layui-form-onswitch"))
+			 {
+				 if(this.checked==true)
+				 { 
+				 	console.log('点击了置顶！');
+					$(parentTr).addClass("ons").siblings().removeClass("ons");
+					$(".layui-table-main tr").each(function(){		  
+					  if(!$(this).hasClass("ons"))
+					  {
+						$(this).find("td:eq(1)").find("input").prop('checked',!data.elem.checked); //修改switch开关
+						layui.form.render();//刷新表格
+						return ;
+					  }		  
+					})
+				 }
+				 else{
+				 	console.log('不置顶！')
+				 }
+			 }
+			 else{
+				 layer.msg("该栏目已禁用无法置顶！");
+				 swt.prop('checked',!data.elem.checked); //修改switch开关
+                 layui.form.render();//刷新表格
+                 return ;
+				 
+			 }
+			
 		})
 		//监听模块状态
 		form.on('switch(status_state)', function (data) {
-			if(this.checked==true)
+			var taht = $(this)
+			var swt =  $(data.elem);
+			 // 获取当前控件                                                                  
+			var selectIfKey=data.othis;   
+			// 获取当前所在行                                                                 
+			var parentTr = selectIfKey.parents("tr"); 
+			var dataField = $(parentTr).find("td:eq(2)").find(".layui-form-switch");
+			var dataInput = $(parentTr).find("td:eq(1)").find("input");
+			 if(dataField.hasClass("layui-form-onswitch"))
 			{
-				console.log('启用！')
+				if(this.checked==true)
+				{
+					console.log('启用！')
+				}
+				else{
+					console.log('禁用！')
+				}
 			}
 			else{
-				console.log('禁用！')
+				$(parentTr).removeClass("ons");
+				dataInput.prop('checked',data.elem.checked); //修改switch开关
+			    layui.form.render();//刷新表格
+			    return ;
+							 
 			}
 		})
     });
