@@ -1,4 +1,5 @@
 /*---------------------公用样式 S--------------------*/
+/* .ons{pointer-events: none;} */
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;/* 去谷歌默认背景色 */
 }
