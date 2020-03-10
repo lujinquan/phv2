@@ -20,6 +20,8 @@ if(version_compare(PHP_VERSION,'5.6.0','<'))  die('PHP版本过低，最少需�
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/application/');
 
+define('EXTEND_PATH', __DIR__ .'/../extend/');
+
 // 加载基础文件
 require __DIR__ . '/../thinkphp/base.php';
 

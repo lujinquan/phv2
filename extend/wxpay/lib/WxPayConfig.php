@@ -21,8 +21,7 @@ class WxPayConfig
 	 * APPSECRET：公众帐号secert（仅JSAPI支付的时候需要配置， 登录公众平台，进入开发者中心可设置），
 	 * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
 	 * @var string
-	 */
-	//const APPID = 'wxaac82b178a3ef1d2';
+	 */		
     const APPID = 'wx2cb8b9b001e3b37b';
 	const MCHID = '1244050802';
 	const KEY = 'odlkcxyjx425IMKILAXS84LOKHKglhhh';

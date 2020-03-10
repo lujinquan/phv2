@@ -2,27 +2,27 @@
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
-			  <div class="layui-input-inline j-input-margin j-width-100">
+			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 				  <input type="text" name="tenant_number" title="租户ID" placeholder="租户ID" class="layui-input">
+			  </div> -->
+			  <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="member_name" title="用户名" placeholder="用户名" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline j-input-margin j-width-100">
-			  	  <input type="text" name="weixin_nickname" title="微信昵称" placeholder="微信昵称" class="layui-input">
-			  </div>
-			  <div class="layui-input-inline j-input-margin j-width-100">
-			  	  <input type="text" name="weixin_name" title="真实姓名" placeholder="真实姓名" class="layui-input">
+			  	  <input type="text" name="real_name" title="真实姓名" placeholder="真实姓名" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
-			  	<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
+			  	<input type="text" name="tel" title="手机号" placeholder="手机号" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline j-width-110">
-				  <select name="pay_state">
+				  <select name="is_show">
 					  <option value="">状态</option>
-					  <option value="1">启用</option>
+					  <option value="1">正常</option>
 					  <option value="2">禁用</option>
 				  </select>
 			  </div>
 			  <div class="layui-input-inline j-width-110">
-				  <select name="pay_prove">
+				  <select name="tenant_id">
 					  <option value="">认证状态</option>
 					  <option value="1">已认证</option>
 					  <option value="2">未认证</option>
@@ -44,12 +44,18 @@
   </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.member_id }}">
+</script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
-	<a href="{:url('noticeindex')}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
-    <a href="" class="layui-btn layui-btn-xs layui-btn-normal">支付订单</a>
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
-    <a href="" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+	<a href="{:url('memberdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
+	<a href="{:url('bindhouselist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
+    <a href="javasript:;" class="layui-btn layui-btn-xs layui-btn-normal">支付订单</a>
+    {{#  if (d.tenant_id > 0) { }}
+	<a href="{:url('authdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
+	{{#  } else { }}
+   	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+    {{#  }  }} 
 </script>
 </div>
 <script type="text/javascript">
@@ -62,7 +68,7 @@
 			// ,height: 330
             ,toolbar: true
 			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
-            ,url: '' //数据接口
+            ,url: '{:url()}' //数据接口
             ,page: true //开启分页
 			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
             ,limit: 10
@@ -70,34 +76,17 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'weixin_id', minWidth: 110, align:'center', title: '用户ID'}
-				,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
-					return '<div class="j-user"><img src="'+d.weixin_url+'" alt="" width="28px" height="28px"></a>  ' + d.weixin_username + '</div>';
-            }}
-                ,{field: 'weixin_name',minWidth:200,align:'center', title: '真实姓名'}
-                ,{field: 'weixin_tel', minWidth: 80, align:'center', title: '手机号'}
-                ,{field: 'weixin_time',minWidth: 100, align:'center', title: '注册时间'}
-                ,{field: 'weixin_type', align:'center',minWidth:80, title: '状态', templet:function(d){
-                	if(parseInt(d.weixin_type) == 1){
-                    	return '<div class="layui-table-cell">启用</div>';
-                    }else if(parseInt(d.weixin_type) == 2){
-                		return '<div class="layui-table-cell">禁用</div>';
-                    }
-                    
-                }}
-                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
-            ]],
-			data: [{
-            'weixin_id': '100010',
-			'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
-            'weixin_username': 'lsn',
-			'weixin_name': '张三',
-            'weixin_tel': 15369856932,
-            "weixin_time": '2020.03.06',
-            "weixin_type": 2,
-          }
-        ]
+                {field: 'member_id', width: 100, align:'center', title: '用户ID'}
+				
+                ,{field: 'member_name', minWidth: 120, align:'center', title: '用户名',templet: function(d){
+					return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+            	}}
+                ,{field: 'real_name',width:100,align:'center', title: '真实姓名'}
+                ,{field: 'tel', minWidth: 80, align:'center', title: '手机号'}
+                ,{field: 'create_time',minWidth: 120, align:'center', title: '注册时间'}
+                ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', minWidth: 300, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
             ,done:function(res,curr,count){
 				
             }
