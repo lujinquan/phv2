@@ -72,7 +72,7 @@ class Weixinpay extends Common
          */
         $notify = new \NativePay();
         //$notify
-        halt($notify->appid);
+        //halt($notify->appid);
         $url1 = $notify->GetPrePayUrl("123456789");
         //模式二
         /**
