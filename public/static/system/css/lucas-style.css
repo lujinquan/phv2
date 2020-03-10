@@ -23,6 +23,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-table-cell span{ font-weight: bold;}
 .j-open-reason{box-sizing: border-box; margin-top: 10px;}/* 业务办理审核不通过原因 */
 .layui-table td.j-table-back{ background: #f2f2f2!important;} /* 自定义表格背景色*/
+.j-top-height{padding-top: 10px;}
 /*---------- 按钮颜色 S----------*/
 .layui-btn{ font-weight: bold;}
 .layui-btn-orange{ background: #F9B048;}/*  */
@@ -245,6 +246,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
     border: 1px solid rgba(198,210,223,1);color: #8592A3;font-weight: bold;border-radius: 2px 0 0 2px;}
 .j-map-height{ width: 100%; height: 224px;}
 .j-enclosure-img li{ margin:20px 10px 0 0;width: 120px; height: 112px; float: left; border-radius: 4px;}
+.j-details-imgs .j-enclosure-img li{margin:0 10px 0 10px;}
 .j-enclosure-img li img{width: 120px; height: 112px;}
 .j-margin-btn{padding: 40px 0 40px 15px;}
 .layui-col-space90>*{padding: 15px 45px 0;}
@@ -482,3 +484,6 @@ opacity: .8color: #333;}
 .j-definition .layui-form-mid img{width: 20px;height: 20px;border-radius: 50%;margin-right: 10px;}
 .j-definition .layui-form-mid{font-size: 14px!important;}
 .j-user img{border-radius: 50%;float: left;}
+.j-user-con img{float: left;}
+.j-user-con .txt{text-align: left; padding-left: 80px;}
+.j-table-readjust .layui-table-fixed-r tbody .layui-table-cell{min-height: 60px!important; line-height:60px!important;}
