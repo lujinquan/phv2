@@ -2,9 +2,9 @@
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
-			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
-				  <input type="text" name="tenant_number" title="用户编号" placeholder="用户编号" class="layui-input">
-			  </div> -->
+			  <div class="layui-input-inline j-input-margin j-width-100">
+				  <input type="text" name="member_id" title="用户编号" placeholder="用户编号" class="layui-input">
+			  </div>
 			  <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="member_name" title="用户名" placeholder="用户名" class="layui-input">
 			  </div>
@@ -76,14 +76,14 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'member_id', width: 100, align:'center', title: '用户ID'}
+                {field: 'member_id', width: 100, align:'center', title: '用户编号'}
 				
                 ,{field: 'member_name', minWidth: 120, align:'center', title: '用户名',templet: function(d){
 					return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
             	}}
                 ,{field: 'real_name',width:100,align:'center', title: '真实姓名'}
-                ,{field: 'tel', minWidth: 80, align:'center', title: '手机号'}
-                ,{field: 'create_time',minWidth: 120, align:'center', title: '注册时间'}
+                ,{field: 'tel', minWidth: 120, align:'center', title: '手机号'}
+                ,{field: 'create_time',width: 160, align:'center', title: '注册时间'}
                 ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
                 ,{title: '操作', minWidth: 300, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]

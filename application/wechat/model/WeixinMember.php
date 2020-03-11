@@ -44,7 +44,10 @@ class WeixinMember extends Model
             $data = request()->param();
         }
         $where = [];
-
+        // 检索会员编号
+        if(isset($data['member_id']) && $data['member_id']){
+            $where[] = ['member_id','eq',$data['member_id']];
+        }
         // 检索会员昵称
         if(isset($data['member_name']) && $data['member_name']){
             $where[] = ['member_name','like','%'.$data['member_name'].'%'];

@@ -326,3 +326,59 @@ if (!function_exists('is_weixin')) {
 		return false;
 	}
 }
+
+/**
+ * 微信对账单数据处理
+ * @param $response 对账单数据
+ * @return array 返回结果
+ */
+if (!function_exists('deal_wechat_response')) {
+    function deal_wechat_response($response){
+      $result  = array();
+      $response = str_replace(","," ",$response);
+      $response = explode(PHP_EOL, $response);
+      
+      foreach ($response as $key=>$val){
+        if(strpos($val, '`') !== false){
+          $data = explode('`', $val);
+          array_shift($data); // 删除第一个元素并下标从0开始
+          if(count($data) == 24){ // 处理账单数据
+            $result['bill'][] = array(
+              'pay_time'       => $data[0], // 支付时间
+              'APP_ID'        => $data[1], // app_id
+              'MCH_ID'        => $data[2], // 商户id
+              'IMEI'         => $data[4], // 设备号
+              'order_sn_wx'     => $data[5], // 微信订单号
+              'order_sn_sh'     => $data[6], // 商户订单号
+              'user_tag'       => $data[7], // 用户标识
+              'pay_type'       => $data[8], // 交易类型
+              'pay_status'      => $data[9], // 交易状态
+              'bank'         => $data[10], // 付款银行
+              'money_type'      => $data[11], // 货币种类
+              'total_amount'     => $data[12], // 总金额
+              'coupon_amount'    => $data[13], // 代金券或立减优惠金额
+              'refund_number_wx'   => $data[14], // 微信退款单号
+              'refund_number_sh'   => $data[15], // 商户退款单号
+              'refund_amount'    => $data[16], // 退款金额
+              'coupon_refund_amount' => $data[17], // 代金券或立减优惠退款金额
+              'refund_type'     => $data[18], // 退款类型
+              'refund_status'    => $data[19], // 退款状态
+              'goods_name'      => $data[20], // 商品名称
+              'service_charge'    => $data[22], // 手续费
+              'rate'         => $data[23], // 费率
+            );
+          }
+          if(count($data) == 5){ // 统计数据
+            $result['summary'] = array(
+              'order_num'    => $data[0],  // 总交易单数
+              'turnover'    => $data[1],  // 总交易额
+              'refund_turnover' => $data[2],  // 总退款金额
+              'coupon_turnover' => $data[3],  // 总代金券或立减优惠退款金额
+              'rate_turnover'  => $data[4],  // 手续费总金额
+            );
+          }
+        }
+      }
+      return $result;
+    }
+}
