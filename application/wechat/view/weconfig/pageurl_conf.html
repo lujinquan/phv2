@@ -1,1 +1,76 @@
-小程序路径
+<!-- 小程序路径 -->
+<div class="j-table-content">
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate','form'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate
+			,form = layui.form;
+       table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: false//设置右边筛选，导出，打印显示
+            ,url: '' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {field: 'page_name', width: '50%', align:'center', title: '页面'}
+				,{field: 'page_path', width: '50%', align:'center', title: '路径'}
+               
+            ]],
+			data: [{
+			'page_name':'首页',
+			'page_path':'/pages/index/index',
+            },
+			{
+			'page_name':'公告列表',
+			'page_path':'/pages/noticelist/noticelist',
+			},
+			{
+			'page_name':'业务',
+			'page_path':'/pages/business/business',
+			},
+			{
+			'page_name':'我的',
+			'page_path':'/pages/center/center',
+			},
+			{
+			'page_name':'缴费列表',
+			'page_path':'/pages/payment/houselist',
+			},
+			{
+			'page_name':'报修',
+			'page_path':'/pages/repair/repair',
+			},
+			{
+			'page_name':'办事指引',
+			'page_path':'/pages/guide/guide',
+			},
+			{
+			'page_name':'我的房屋',
+			'page_path':'/pages/myhouse/myhouse',
+			},
+			{
+			'page_name':'历史账单',
+			'page_path':'/pages/mybill/mybill',
+			},
+			{
+			'page_name':'通用设置',
+			'page_path':'/pages/center/common',
+			}
+        ]
+            ,done:function(res,curr,count){
+				
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+    });
+</script>
