@@ -1,0 +1,136 @@
+<!-- 业务管理 -->
+<div class="j-table-content">
+  <div class="layui-btn-container j-container-margin">
+	<div class="layui-btn-container">
+		<a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>添加幻灯片</button></a>
+		<button data-href="{:url('del')}" data-id="tenant_id" class="layui-btn layui-btn-danger j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+	</div>
+  </div>
+  <div class="page-toolbar j-page-toolbar clearfix">
+  	<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+  		<div class="j-search-fl layui-col-md8  fl">
+  			<div class="layui-input-inline layui-col-md2 j-width-90">
+  				<select name="tenant_inst_id">
+  					<option value="">状态</option>
+  					<option value="1">显示</option>
+					<option value="2">隐藏</option>
+  				</select>
+  			</div>
+  			<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
+  				<input type="text" name="tenant_name" title="幻灯片名称" placeholder="输入幻灯片名称" class="layui-input">
+  			</div>
+  		</div>
+  		<div class="j-search-fr layui-col-md4 fr">
+  			<div class="layui-input-inline fr">
+  				<div class="layui-input-inline" style="margin-left:10px;">
+  					<!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+  					    <i class="layui-icon layui-icon-print"></i>
+  					    导出
+  				  	</button> -->
+  					<button type="reset" class="layui-btn j-btn-reset">重置</button>
+  					<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+  						<i class="layui-icon">&#xe615;</i>
+  						搜索
+  					</button>
+  				</div>
+  			</div>
+  		</div>
+  	</form>
+  </div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable'></table>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+		<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="编辑幻灯片" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
+	</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate','form'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate
+			,form = layui.form;
+       table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: false//设置右边筛选，导出，打印显示
+            ,url: '' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+				{
+					type: 'checkbox',
+					fixed: 'left'
+					
+				}
+                ,{field: 'slide_id', minWidth: 80, align:'center', title: 'ID'}
+				,{field: 'slide_name', minWidth: 120, align:'center', title: '幻灯片名称'}
+				,{field: 'brand_img_url',minWidth: 150,title: '图片',sort: true,templet: function(d){
+                      return '<div οnclick="show_img(this)" ><img src="'+d.brand_img_url+'" alt="" width="120px" height="26px"></a></div>';
+				  }
+				}
+				,{field: 'slide_link', minWidth: 200, align:'center', title: '链接'}
+				,{field: 'slide_state', align:'center',minWidth:80, title: '状态', templet:function(d){
+					var strChecks = d.slide_state == "0" ? "checked" : "";
+					return '<input type="checkbox" name="slide_state" lay-filter="slide_state" lay-skin="switch" lay-text="启用|禁用" ' +strChecks+ '>';
+				  }  
+				}
+				,{field: 'slide_sort', minWidth: 80, align:'center', title: '排序'}
+                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]],
+			data: [{
+			'slide_id':'1',
+			'slide_name':'幻灯1',
+			'brand_img_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+			'slide_link':'www.baidu.com',
+            'slide_state':'1',
+			'slide_sort':'10'
+            },
+			{
+			'slide_id':'2',
+			'slide_name':'幻灯2',
+			'brand_img_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+			'slide_link':'www.baidu.com',
+			'slide_state':'0',
+			'slide_sort':'12'
+			}
+        ]
+            ,done:function(res,curr,count){
+				
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+     //显示大图片
+        function show_img(t){
+			alert("点击了！")
+            var t = $(t).find("img");
+            //页面层
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                 area: ['80%', '80%'], //宽高
+                shadeClose: true, //开启遮罩关闭
+                end: function (index, layero) {
+                    return false;
+                },
+                content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '" /></div>'
+            });
+		}
+		//监听状态
+		form.on('switch(slide_state)', function (data) {
+
+				if(this.checked==true)
+				{
+					console.log('启用！')
+				}
+				else{
+					console.log('禁用！')
+				}
+		})
+    });
+</script>
