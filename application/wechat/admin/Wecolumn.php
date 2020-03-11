@@ -84,8 +84,10 @@ class Wecolumn extends Admin
 	{
 		$id = input('id');
 		$WeixinColumnModel = new WeixinColumnModel;
-		$info = $WeixinColumnModel->find($id);
-		$this->assign('data_info',$info);
+		$row = $WeixinColumnModel->find($id);
+		$row['col_icon'] = SystemAnnex::changeFormat($row['col_icon']);
+		//halt($row);
+		$this->assign('data_info',$row);
 		return $this->fetch();
 	}
 
