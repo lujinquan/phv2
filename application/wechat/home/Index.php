@@ -2,6 +2,9 @@
 
 namespace app\wechat\home;
 use app\common\controller\Common;
+use app\rent\model\Rent as RentModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
 /**
  * 功能描述：H5完整支付
@@ -19,6 +22,7 @@ use app\common\controller\Common;
 class Index extends Common
 {
     private $config;
+    protected $debug = true;
     /**
      * 初始化方法
      */
@@ -157,34 +161,88 @@ class Index extends Common
      */
     public function jsapi()
     {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+        // 检查订单id是否为空
+        $rent_order_id = input('rent_order_id');
+        if(!$rent_order_id){
+            $result['code'] = 10030;
+            $result['msg'] = 'Order ID is empty';
+            return json($result);
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+
+        $RentModel = new RentModel;
+        $rent_order_info = $RentModel->find($rent_order_id);
+        // 检查订单是否存在
+        if(!$rent_order_info){
+            $result['code'] = 10031;
+            $result['msg'] = 'Order ID is error';
+            return json($result);
+        }
+        // 检查订单是否已经完成支付
+        if($rent_order_info['ptime']){
+            $result['code'] = 10032;
+            $result['msg'] = 'Order has been paid, please do not pay repeatedly';
+            return json($result);
+        }
+        $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
+        //halt($member_houses);
+        // 检查订单绑定的房屋是否以被当前会员绑定
+        if(!in_array($rent_order_info['house_id'],$member_houses)){
+            $result['code'] = 10033;
+            $result['msg'] = 'The house is not bound by the current member';
+            return json($result);
+        }
+        
+        // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
         // 下面的参数注意要换成动态的
         $options = [
             'body'             => '测试商品',
             'out_trade_no'     => time(),
-            'total_fee'        => '1',
-            'openid'           => 'oRqsn49gtDoiVPFcZ6luFjGwqT1g', //用世念的openid
+            'total_fee'        => $rent_order_info['rent_order_receive'] * 100,
+            'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/orderquery',
             'spbill_create_ip' => '127.0.0.1',
         ];
+        if ($this->debug === true) {
+            $result['code'] = 1;
+            $result['msg'] = '获取成功，这是测试数据';
+            $result['data'] = $options;
+            return json($result);
+        }
         // 生成预支付码
-        $result = $wechat->createOrder($options);
+        $res = $wechat->createOrder($options);
         //halt($result);
         // 创建JSAPI参数签名
-        $options = $wechat->createParamsForJsApi($result['prepay_id']);
+        $options = $wechat->createParamsForJsApi($res['prepay_id']);
         //dump($result );halt($options);
         // echo '<pre>';
         // echo "\n--- 创建预支付码 ---\n";
         // var_export($result);
         // echo "\n\n--- JSAPI 及 H5 参数 ---\n";
         // var_export($options);
-        $res = [];
-        $res['code'] = 1;
-        $res['msg'] = '获取成功';
-        $res['data'] = $options;
-        return json($res);
+       
+        $result['code'] = 1;
+        $result['msg'] = '获取成功';
+        $result['data'] = $options;
+        return json($result);
 
     }
 

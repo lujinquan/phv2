@@ -39,7 +39,6 @@ class Weixin extends Admin
             $data['msg'] = '';
             return json($data);
         }
-		
 		return $this->fetch();
 	}
 

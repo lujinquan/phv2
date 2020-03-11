@@ -17,7 +17,7 @@
 			  <div class="layui-input-inline j-width-110">
 				  <select name="is_show">
 					  <option value="">状态</option>
-					  <option value="1">正常</option>
+					  <option value="1">启用</option>
 					  <option value="2">禁用</option>
 				  </select>
 			  </div>
@@ -45,7 +45,7 @@
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" id="statusTpl">
-    <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.member_id }}">
+    <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.member_id }}">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 	<a href="{:url('memberdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
@@ -63,7 +63,7 @@
         var table = layui.table
 		    ,$ = layui.$
 			,laydate = layui.laydate;
-       table.render({
+        table.render({
             elem: '#dataTable'
 			// ,height: 330
             ,toolbar: true
