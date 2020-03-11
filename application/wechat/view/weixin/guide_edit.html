@@ -1,7 +1,24 @@
-<!-- 添加服务协议 S -->
+<!-- 编辑办事指引 S -->
 <form class="layui-form j-top-height" id="form1" action="{url('add')}" method="post">
 	<div class="j-details-box floorWrap layui-form">
 		<div class="layui-form-item">
+			<div class="j-form-label"><i class="red">*</i>标题：</div>
+			<div class="layui-input-inline" style="margin-left: -2px;">
+				<input type="text" maxlength="12" id="title" lay-verify="required" name="title" autocomplete="off" class="layui-input">
+			</div>
+			<div class="layui-form-mid layui-word-aux">12字以内</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="j-form-label">简介：</div>
+			<div class="j-input-inline">
+			 <textarea name="business_textarea" maxlength="30" placeholder="请输入简介" class="layui-textarea"></textarea>
+			 <div>30字以内</div>
+		   </div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-col-md12" style="margin-bottom: 15px;">
+				<label class="j-form-label"><i class="red">*</i>详细：</label>
+			</div>
 			<div class="layui-col-md12">
 			 <textarea id="editor_id" name="content" style="width:100%;height:300px;"></textarea>
 			</div>
@@ -12,6 +29,13 @@
 				<input type="radio" name="lisk_state" value="0" title="显示" checked="">
 				<input type="radio" name="lisk_state" value="1" title="隐藏" >
 			  </div>
+		</div>
+		<div class="layui-form-item">
+			<div class="j-form-label">排序：</div>
+		  <div class="layui-input-inline" style="margin-left: -2px;">
+			<input type="text" name="sort"  placeholder="请输入序号"  class="layui-input">
+		  </div>
+			<div class="layui-form-mid layui-word-aux">数字越大，排名越靠前</div>
 		</div>
 	{:token()}
 	<div class="layui-form-item">
