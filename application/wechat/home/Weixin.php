@@ -45,7 +45,7 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
  */
 class Weixin extends Common
 {
-    protected $debug = true;
+    protected $debug = false;
 
     public function index()
     {
