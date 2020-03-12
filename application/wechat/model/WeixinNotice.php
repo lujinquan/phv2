@@ -24,5 +24,10 @@ class WeixinNotice extends Model
 	// 设置模型名称
     protected $name = 'weixin_notice';
 
-	
+	// 自动写入时间戳
+    protected $autoWriteTimestamp = true;
+
+    protected $type = [
+        'ctime' => 'timestamp:Y-m-d H:i:s',
+    ];
 }
