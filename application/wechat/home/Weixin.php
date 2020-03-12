@@ -16,12 +16,16 @@ use think\Db;
 use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
+use app\wechat\model\WeixinNotice as WeixinNoticeModel;
+use app\common\model\SystemAnnex;
+use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
+use app\wechat\model\WeixinColumn as WeixinColumnModel;
 use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\wechat\model\WeixinBanner as WeixinBannerModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
@@ -313,9 +317,16 @@ class Weixin extends Common
         
         $result['data']['app_user_index_banner'] = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
         // 获取公告列表
-        $systemNotice = new SystemNotice;
-        $result['data']['notice'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where([['delete_time','eq',0]])->order('sort asc')->select()->toArray();
-
+        $WeixinNoticeModel = new WeixinNoticeModel;
+        $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort asc')->select()->toArray();
+        // 获取业务列表
+        $WeixinColumnModel = new WeixinColumnModel;
+        $columns = $WeixinColumnModel->field('col_id,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        foreach ($columns as $k => &$v) {
+            $v['file'] = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
+        }
+        $result['data']['column'] = $columns;
+        // 基础配置
         $configs = WeixinConfigModel::column('name,value');
         $result['data']['app_user_index_message'] = [$configs['app_user_index_message']]; // 主页滚动信息
         $result['data']['app_user_index_title'] = $configs['app_user_index_title']; // 主页标题
@@ -348,8 +359,8 @@ class Weixin extends Common
         $limit = 5;
         // 获取公告列表
  
-        $result['data'] = WeixinNoticeModel::field('id,title,type,content')->where([['dtime','eq',0]])->order('sort desc')->page($page)->limit($limit)->select()->toArray(); 
-        $result['count'] = WeixinNoticeModel::field('id,title,type,content')->where([['dtime','eq',0]])->count('id');
+        $result['data'] = WeixinNoticeModel::field('id,title,type,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort desc')->page($page)->limit($limit)->select()->toArray(); 
+        $result['count'] = WeixinNoticeModel::where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->count('id');
         $result['pages'] = ceil($result['count'] / $limit);
         $result['curr_page'] = $page;
         $result['code'] = 1;
@@ -820,6 +831,7 @@ class Weixin extends Common
             $openid = cache('weixin_openid_'.$token); //存储openid
             // 绑定手机号
             $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            $member_info->tenant_id = $tenant_id;
             $member_info->tel = $tel;
             $member_info->auth_time = time();
             $member_info->save();
