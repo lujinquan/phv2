@@ -3,6 +3,7 @@
 namespace app\wechat\home;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
+use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -22,7 +23,7 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 class Index extends Common
 {
     private $config;
-    protected $debug = true;
+    protected $debug = false;
     /**
      * 初始化方法
      */
@@ -200,6 +201,11 @@ class Index extends Common
             return json($result);
         }
         $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
+        if($member_info->tenant_id){
+            $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
+            $member_houses = array_merge($member_houses,$houses);
+        }
+        
         //halt($member_houses);
         // 检查订单绑定的房屋是否以被当前会员绑定
         if(!in_array($rent_order_info['house_id'],$member_houses)){
