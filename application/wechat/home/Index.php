@@ -171,6 +171,7 @@ class Index extends Common
                 $result['msg'] = 'Invalid token';
                 return json($result);
             }
+            $token = input('token');
             $openid = cache('weixin_openid_'.$token); //存储openid
         }else{
             $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
