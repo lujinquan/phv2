@@ -15,8 +15,6 @@ namespace app\wechat\home;
 use think\Db;
 use SendMessage\ServerCodeAPI;
 use app\common\controller\Common;
-use app\system\model\SystemNotice;
-use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
@@ -47,7 +45,7 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
  */
 class Weixin extends Common
 {
-    protected $debug = false;
+    protected $debug = true;
 
     public function index()
     {
@@ -323,7 +321,8 @@ class Weixin extends Common
         $WeixinColumnModel = new WeixinColumnModel;
         $columns = $WeixinColumnModel->field('col_id,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
         foreach ($columns as $k => &$v) {
-            $v['file'] = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
+             $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
+             $v['file'] = 'https://procheck.ctnmit.com'.$file;
         }
         $result['data']['column'] = $columns;
         // 基础配置
