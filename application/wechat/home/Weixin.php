@@ -319,7 +319,7 @@ class Weixin extends Common
         $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort asc')->select()->toArray();
         // 获取业务列表
         $WeixinColumnModel = new WeixinColumnModel;
-        $columns = $WeixinColumnModel->field('col_id,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        $columns = $WeixinColumnModel->field('col_id,col_name,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
