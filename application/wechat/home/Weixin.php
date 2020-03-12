@@ -445,11 +445,12 @@ class Weixin extends Common
                 $result['msg'] = 'Invalid token';
                 return json($result);
             }
+            $token = input('token');
             $openid = cache('weixin_openid_'.$token); //存储openid
         }else{
             $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
         }
-        $token = input('token');
+        
         $house_number = trim(input('house_number'));
         if(!$house_number){
             $result['code'] = 10007;
