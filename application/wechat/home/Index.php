@@ -4,6 +4,7 @@ namespace app\wechat\home;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -218,14 +219,15 @@ class Index extends Common
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
+        $out_trade_no = time();
         // 下面的参数注意要换成动态的
         $options = [
             'body'             => '测试商品',
-            'out_trade_no'     => time(),
+            'out_trade_no'     => $out_trade_no,
             'total_fee'        => $rent_order_info['rent_order_receive'] * 100,
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
-            'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/orderquery',
+            'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/payordernotify',
             'spbill_create_ip' => '127.0.0.1',
         ];
         if ($this->debug === true) {
@@ -245,7 +247,13 @@ class Index extends Common
         // var_export($result);
         // echo "\n\n--- JSAPI 及 H5 参数 ---\n";
         // var_export($options);
-       
+        
+        // 生成订单
+        $WeixinOrderModel = new WeixinOrderModel;
+        $WeixinOrderModel->perpay_id = $res['prepay_id'];
+        $WeixinOrderModel->out_trade_no = $out_trade_no;
+        $WeixinOrderModel->save();
+
         $result['code'] = 1;
         $result['msg'] = '获取成功';
         $result['data'] = $options;
@@ -356,6 +364,69 @@ class Index extends Common
         $QRcode::png($url);
     }
 
+    /**
+     * 功能描述：支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
+     * 创建时间: 2020-03-12 21:53:40
+     */
+    public function payOrderNotify()
+    {
+        // $data = [
+        //     'appid' => 'wx2421b1c4370ec43b',
+        //     'attach' => '支付测试',
+        //     'bank_type' => 'CFT',
+        //     'fee_type' => 'CNY',
+        //     'is_subscribe' => 'Y',
+        //     'mch_id' => '10000100',
+        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
+        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
+        //     'out_trade_no' => '1409811653',
+        //     'result_code' => 'SUCCESS',
+        //     'return_code' => 'SUCCESS',
+        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
+        //     'time_end' => '20140903131540',
+        //     'total_fee' => '1',
+        //     'coupon_fee' => '10',
+        //     'coupon_count' => '1',
+        //     'coupon_type' => 'CASH',
+        //     'coupon_id' => '10000',
+        //     'coupon_fee' => '100',
+        //     'trade_type' => 'JSAPI',
+        //     'transaction_id' => '1004400740201409030005092168',
+        // ];
+        include EXTEND_PATH.'wechat/include.php';
+        $wechat = \WeChat\Pay::instance($this->config);
+        // 获取通知参数
+        $data = $wechat->getNotify();
+        if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
+            // @todo 去更新下原订单的支付状态
+            $order_no = $data['out_trade_no'];
+
+            // 返回接收成功的回复
+            ob_clean();
+            echo $wechat->getNotifySuccessReply();
+        }
+    }
+
+    /**
+     * 功能描述：订单查询功能(支付页面轮询，后台查询并将查询结果告知前台)
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
+     * 创建时间: 2020-03-10 11:50:03
+     */
+    public function payOrderQuery()
+    {
+        include EXTEND_PATH.'wechat/include.php';
+        $wechat = \WeChat\Pay::instance($this->config);
+        $options = [
+            'transaction_id' => '1008450740201411110005820873',
+        //        'out_trade_no'   => '商户订单号',
+        ];
+        $result = $wechat->queryOrder($options);
+
+        var_export($result);
+    }
     
     /**
      * 功能描述：订单查询功能(支付页面轮询，后台查询并将查询结果告知前台)

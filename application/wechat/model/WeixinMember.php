@@ -31,6 +31,7 @@ class WeixinMember extends Model
     protected $type = [
         'create_time' => 'timestamp:Y-m-d H:i:s',
         'auth_time' => 'timestamp:Y-m-d H:i:s',
+        'app_cols' => 'json'
     ];
 
     public function tenant()

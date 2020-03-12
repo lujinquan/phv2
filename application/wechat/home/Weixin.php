@@ -296,6 +296,120 @@ class Weixin extends Common
     }
 
     /**
+     * 功能描述：获取业务图标（并标记当前用户已自定义的业务）
+     * @author  Lucas 
+     * 创建时间: 2020-03-12 15:48:43
+     */
+    public function column_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        // $appcols = array_values($member_info['app_cols']);
+        // halt($appcols);
+
+        // 获取所有业务列表
+        $WeixinColumnModel = new WeixinColumnModel;
+        $columns = $WeixinColumnModel->field('col_id,col_name,is_top,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        //halt($columns);
+        foreach ($columns as $k => &$v) {
+             $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
+             $v['file'] = 'https://procheck.ctnmit.com'.$file;
+             if(in_array($v['col_id'], $member_info['app_cols'])){ // 标记已选择的图标
+                $v['is_choose'] = 1;
+             }else{
+                $v['is_choose'] = 0;
+             }     
+        }
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+        $result['data'] = $columns;
+        return json($result);
+    }
+
+    /**
+     * 功能描述：修改用户自定义创建的快捷业务图标
+     * @author  Lucas 
+     * 创建时间: 2020-03-12 15:50:50
+     */
+    public function edit_my_column_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+        $cols = input('app_cols');
+        if(!$cols){
+            $result['code'] = 10040;
+            $result['msg'] = 'App cols is empty';
+            return json($result);
+        }
+        // 获取所有业务列表
+        $WeixinColumnModel = new WeixinColumnModel;
+        $columns = $WeixinColumnModel->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->column('col_id');
+        $colArr = explode(',',$cols);
+        // dump($columns);
+        // halt($colArr);
+        foreach ($colArr as  $v) {
+            if(!in_array($v,$columns)){
+                $result['code'] = 10041;
+                $result['msg'] = 'Col id is out of range';
+                return json($result);
+            }
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        $member_info->app_cols = $colArr;
+        $member_info->save();
+        //halt($res);
+        // $appcols = array_values($member_info['app_cols']);
+        // //halt($member_info);
+
+        // // 获取所有业务列表
+        // $WeixinColumnModel = new WeixinColumnModel;
+        // $columns = $WeixinColumnModel->field('col_id,col_name,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        // //halt($columns);
+        // foreach ($columns as $k => &$v) {
+        //      $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
+        //      $v['file'] = 'https://procheck.ctnmit.com'.$file;
+        //      if(in_array($v['col_id'], $appcols)){ // 标记已选择的图标
+        //         $v['is_choose'] = 1;
+        //      }else{
+        //         $v['is_choose'] = 0;
+        //      }     
+        // }
+        $result['code'] = 1;
+        $result['msg'] = '编辑成功！';
+        return json($result);
+    }
+
+    /**
      * 功能描述：获取主页的数据
      * @author  Lucas 
      * 创建时间: 2020-02-26 15:55:15
