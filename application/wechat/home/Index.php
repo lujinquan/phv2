@@ -403,4 +403,23 @@ class Index extends Common
         return $this->fetch();
     }
 
+    /**
+     * 功能描述： 验证用户token
+     * @author  Lucas 
+     * 创建时间: 2020-02-26 16:47:53
+     */
+    protected function check_token()
+    {
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token);
+
+        $expires_time = cache('weixin_expires_time_'.$token);
+        //halt($expires_time);  
+        if(!$openid){
+        //if(!$openid || $expires_time < time()){
+            return false;
+        }
+        return true;
+    }
+
 }
