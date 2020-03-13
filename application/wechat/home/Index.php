@@ -163,6 +163,20 @@ class Index extends Common
      */
     public function jsapi()
     {
+        //halt($_SERVER['HTTP_USER_AGENT']);
+        // 生成后台订单
+        // $WeixinOrderModel = new WeixinOrderModel;
+        // $WeixinOrderModel->perpay_id = 'perpay_id';
+        // $WeixinOrderModel->out_trade_no = 'out_trade_no';
+        // $WeixinOrderModel->member_id = 'member_id';
+        // $WeixinOrderModel->rent_order_id = 1;
+        // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
+        // $res = $WeixinOrderModel->save();
+        if($res){
+            $result['code'] = 1;
+            $result['msg'] = '添加成功';
+            return json($result);
+        }
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -219,7 +233,8 @@ class Index extends Common
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
-        $out_trade_no = time();
+        $out_trade_no = $rent_order_info['rent_order_number'];
+        $attach = md5($out_trade_no);
         // 下面的参数注意要换成动态的
         $options = [
             'body'             => '测试商品',
@@ -228,6 +243,7 @@ class Index extends Common
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/payordernotify',
+            'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
         if ($this->debug === true) {
@@ -248,10 +264,14 @@ class Index extends Common
         // echo "\n\n--- JSAPI 及 H5 参数 ---\n";
         // var_export($options);
         
-        // 生成订单
+        // 生成后台订单
         $WeixinOrderModel = new WeixinOrderModel;
         $WeixinOrderModel->perpay_id = $res['prepay_id'];
+        $WeixinOrderModel->attach = $attach;
         $WeixinOrderModel->out_trade_no = $out_trade_no;
+        $WeixinOrderModel->member_id = $member_info->member_id;
+        $WeixinOrderModel->rent_order_id = $rent_order_id;
+        $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
         $WeixinOrderModel->save();
 
         $result['code'] = 1;
@@ -259,6 +279,87 @@ class Index extends Common
         $result['data'] = $options;
         return json($result);
 
+    }
+
+    /**
+     * 功能描述：支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
+     * 创建时间: 2020-03-12 21:53:40
+     */
+    public function payOrderNotify()
+    {
+        if($this->debug === true){ 
+            $data = [
+                'appid' => 'wx2421b1c4370ec43b',
+                'attach' => '支付测试',
+                'bank_type' => 'CFT',
+                'fee_type' => 'CNY',
+                'is_subscribe' => 'Y',
+                'mch_id' => '10000100',
+                'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
+                'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
+                'out_trade_no' => '1409811653',
+                'result_code' => 'SUCCESS',
+                'return_code' => 'SUCCESS',
+                'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
+                'time_end' => '20140903131540',
+                'total_fee' => '1',
+                'coupon_fee' => '10',
+                'coupon_count' => '1',
+                'coupon_type' => 'CASH',
+                'coupon_id' => '10000',
+                'coupon_fee' => '100',
+                'trade_type' => 'JSAPI',
+                'transaction_id' => '1004400740201409030005092168',
+            ];
+        }
+
+
+        include EXTEND_PATH.'wechat/include.php';
+        $wechat = \WeChat\Pay::instance($this->config);
+        // 获取通知参数
+        $data = $wechat->getNotify();
+        if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
+            // @todo 去更新下原订单的支付状态
+            //$order_no = $data['out_trade_no'];
+
+            // 生成后台订单
+            $WeixinOrderModel = new WeixinOrderModel;
+            $row = $WeixinOrderModel->where([['out_trade_no','eq',$data['out_trade_no']]])->find();
+            if($row){
+                $row->transaction_id = $data['transaction_id'];
+                $row->ptime = strtotime($data['time_end']);
+                $row->pay_fee = $data['total_fee'];
+                $row->save();
+            }else{
+                $WeixinOrderModel->transaction_id = $data['transaction_id'];
+                $WeixinOrderModel->ptime = strtotime($data['time_end']);
+                $WeixinOrderModel->pay_fee = $data['total_fee'];
+                $WeixinOrderModel->save();
+            }
+
+            // 返回接收成功的回复
+            ob_clean();
+            echo $wechat->getNotifySuccessReply();
+        }
+    }
+
+    /**
+     * 功能描述：帐号下已存在的模板列表
+     * @author  Lucas 
+     * 创建时间:  2020-03-09 14:21:15
+     */
+    public function mini_template_list(){
+        include EXTEND_PATH.'wechat/include.php';
+        $mini = \WeMini\Template::instance($this->config);
+        print_r($mini->getTemplateList());
+        // try {
+        //     echo '<pre>';
+        //     print_r($mini->getTemplateList());
+        // } catch (Exception $e) {
+        //     var_dump($e->getMessage());
+        // }
     }
 
     /**
@@ -364,50 +465,7 @@ class Index extends Common
         $QRcode::png($url);
     }
 
-    /**
-     * 功能描述：支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
-     * @author  Lucas 
-     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
-     * 创建时间: 2020-03-12 21:53:40
-     */
-    public function payOrderNotify()
-    {
-        // $data = [
-        //     'appid' => 'wx2421b1c4370ec43b',
-        //     'attach' => '支付测试',
-        //     'bank_type' => 'CFT',
-        //     'fee_type' => 'CNY',
-        //     'is_subscribe' => 'Y',
-        //     'mch_id' => '10000100',
-        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
-        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
-        //     'out_trade_no' => '1409811653',
-        //     'result_code' => 'SUCCESS',
-        //     'return_code' => 'SUCCESS',
-        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
-        //     'time_end' => '20140903131540',
-        //     'total_fee' => '1',
-        //     'coupon_fee' => '10',
-        //     'coupon_count' => '1',
-        //     'coupon_type' => 'CASH',
-        //     'coupon_id' => '10000',
-        //     'coupon_fee' => '100',
-        //     'trade_type' => 'JSAPI',
-        //     'transaction_id' => '1004400740201409030005092168',
-        // ];
-        include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
-        // 获取通知参数
-        $data = $wechat->getNotify();
-        if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
-            // @todo 去更新下原订单的支付状态
-            $order_no = $data['out_trade_no'];
-
-            // 返回接收成功的回复
-            ob_clean();
-            echo $wechat->getNotifySuccessReply();
-        }
-    }
+    
 
     /**
      * 功能描述：订单查询功能(支付页面轮询，后台查询并将查询结果告知前台)
