@@ -32,15 +32,15 @@ class Wechat extends Admin
         $tabData = [];
         $tabData['menu'] = [
             [
-                'title' => '用户版',
+                'title' => '用户版小程序',
                 'url' => '?group=index',
             ],
             [
-                'title' => '房管版',
+                'title' => '房管版小程序',
                 'url' => '?group=base',
             ],
             [
-                'title' => '高管版',
+                'title' => '高管版小程序',
                 'url' => '?group=leader',
             ]
         ];

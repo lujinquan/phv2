@@ -101,16 +101,15 @@ class Weixin extends Admin
 	public function payRefund()
 	{
 		$id = input('id');
-		//halt($id);
+		// halt($id);
 		$WeixinOrderModel = new WeixinOrderModel;
 		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
-		//halt($order_info);
+		// halt($order_info);
 		$this->assign('data_info',$order_info);
-		//获取绑定的房屋数量
+		// 获取绑定的房屋数量
 		// $WeixinMemberHouseModel = new WeixinMemberHouseModel;
 		// $houselist = $WeixinMemberHouseModel->house_list($id);
 		// $this->assign('houselist',$houselist);
-		
 		return $this->fetch();
 	}
 
