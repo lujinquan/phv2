@@ -45,23 +45,15 @@
 </form>	
 {include file="system@block/layui" /}
 <script>
-	//var formData = {:json_encode($formData)};
-	layui.use(['form', 'func','jquery'], function() {
-		var $ = layui.jquery, form = layui.form;
-		// layui.func.assign(formData);
-		// 	var loadingIndex = layer.load(); // 加载中动画遮罩层（1）
+	// var formData = {:json_encode($formData)};
+	// layui.use(['form', 'func','jquery'], function() {
+	// 	var $ = layui.jquery, form = layui.form;
+	// 	layui.func.assign(formData);
+	// 		var loadingIndex = layer.load(); // 加载中动画遮罩层（1）
+
+	// 		return false;
 	
-		 form.on('submit(auto_get)', function(data){
-        $.get("/wechat/index/mini_template_list", {type:'index'}, function(res) {
-            console.log(res);
-            if (res.code == 1) {
-              console.log('长度：',res.data.length);
-              if(res.data.length == 0){
-                layer.msg('未设置任何订阅消息模板');
-              }
-            }
-        });
-        return false;
-     })
-	});
+	// 	 form.on('submit(auto_get)', function(data){
+ //        })
+	// });
 </script>

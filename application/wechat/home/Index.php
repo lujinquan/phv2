@@ -5,6 +5,7 @@ use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -31,6 +32,8 @@ class Index extends Common
     protected function initialize()
     {
         parent::initialize();
+        $configDatas = WeixinConfigModel::column('name,value');
+        //halt($configDatas);
         $this->config = [
             //调用mini_login方法的时候，用下面的配置
             // 'appid'     => 'wx2cb8b9b001e3b37b',
@@ -38,14 +41,14 @@ class Index extends Common
             // 令牌
             //'token'          => 'lucas',
             // 支付AppID
-            'appid'          => 'wxaac82b178a3ef1d2', //公房管理小程序
+            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
             // 公众号AppSecret
-            'appsecret'      => '2035d07676392ac121549f66384b04e4',
+            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
             // 公众号消息加解密密钥
             'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
             // 配置商户支付参数
-            'mch_id'         => "1244050802",
-            'mch_key'        => 'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            'mch_id'         => $configDatas['app_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_key.pem',
@@ -172,11 +175,11 @@ class Index extends Common
         // $WeixinOrderModel->rent_order_id = 1;
         // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
         // $res = $WeixinOrderModel->save();
-        if($res){
-            $result['code'] = 1;
-            $result['msg'] = '添加成功';
-            return json($result);
-        }
+        // if($res){
+        //     $result['code'] = 1;
+        //     $result['msg'] = '添加成功';
+        //     return json($result);
+        // }
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -289,37 +292,35 @@ class Index extends Common
      */
     public function payOrderNotify()
     {
-        if($this->debug === true){ 
-            $data = [
-                'appid' => 'wx2421b1c4370ec43b',
-                'attach' => '支付测试',
-                'bank_type' => 'CFT',
-                'fee_type' => 'CNY',
-                'is_subscribe' => 'Y',
-                'mch_id' => '10000100',
-                'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
-                'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
-                'out_trade_no' => '1409811653',
-                'result_code' => 'SUCCESS',
-                'return_code' => 'SUCCESS',
-                'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
-                'time_end' => '20140903131540',
-                'total_fee' => '1',
-                'coupon_fee' => '10',
-                'coupon_count' => '1',
-                'coupon_type' => 'CASH',
-                'coupon_id' => '10000',
-                'coupon_fee' => '100',
-                'trade_type' => 'JSAPI',
-                'transaction_id' => '1004400740201409030005092168',
-            ];
-        }
-
 
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
         // 获取通知参数
         $data = $wechat->getNotify();
+        // 下面是一个返回data的例子
+        // $data = [
+        //     'appid' => 'wx2421b1c4370ec43b',
+        //     'attach' => '支付测试',
+        //     'bank_type' => 'CFT',
+        //     'fee_type' => 'CNY',
+        //     'is_subscribe' => 'Y',
+        //     'mch_id' => '10000100',
+        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
+        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
+        //     'out_trade_no' => '1409811653',
+        //     'result_code' => 'SUCCESS',
+        //     'return_code' => 'SUCCESS',
+        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
+        //     'time_end' => '20140903131540',
+        //     'total_fee' => '1',
+        //     'coupon_fee' => '10',
+        //     'coupon_count' => '1',
+        //     'coupon_type' => 'CASH',
+        //     'coupon_id' => '10000',
+        //     'coupon_fee' => '100',
+        //     'trade_type' => 'JSAPI',
+        //     'transaction_id' => '1004400740201409030005092168',
+        // ];
         if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
             // @todo 去更新下原订单的支付状态
             //$order_no = $data['out_trade_no'];
@@ -327,16 +328,23 @@ class Index extends Common
             // 生成后台订单
             $WeixinOrderModel = new WeixinOrderModel;
             $row = $WeixinOrderModel->where([['out_trade_no','eq',$data['out_trade_no']]])->find();
+            // 更新预付订单
             if($row){
+                // 更新预付订单
                 $row->transaction_id = $data['transaction_id'];
-                $row->ptime = strtotime($data['time_end']);
-                $row->pay_fee = $data['total_fee'];
+                $row->ptime = strtotime($data['time_end']); //支付时间
+                $row->pay_money = $data['total_fee'] / 100; //支付金额，单位：分
+                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
                 $row->save();
+                // 更新租金订单表
+                $RentModel = new RentModel;
+                $rent_order_info = $RentModel->find($row->rent_order_id);
+                $rent_order_info->rent_order_paid = $data['total_fee'] / 100; 
+                $rent_order_info->ptime = strtotime($data['time_end']);
+                $rent_order_info->pay_way = 4; //4是微信支付
+            // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
-                $WeixinOrderModel->transaction_id = $data['transaction_id'];
-                $WeixinOrderModel->ptime = strtotime($data['time_end']);
-                $WeixinOrderModel->pay_fee = $data['total_fee'];
-                $WeixinOrderModel->save();
+                
             }
 
             // 返回接收成功的回复
@@ -353,7 +361,12 @@ class Index extends Common
     public function mini_template_list(){
         include EXTEND_PATH.'wechat/include.php';
         $mini = \WeMini\Template::instance($this->config);
-        print_r($mini->getTemplateList());
+        $res = $mini->getTemplateList();
+        $result = [];
+        $result['data'] = $res['list'];
+        $result['msg'] = '获取成功！';
+        $result['code'] = 1;
+        return json($result);
         // try {
         //     echo '<pre>';
         //     print_r($mini->getTemplateList());

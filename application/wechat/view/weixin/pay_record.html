@@ -3,29 +3,35 @@
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline j-input-margin j-width-100">
-				  <input type="text" name="pay_number" title="订单编号" placeholder="订单编号" class="layui-input">
+				  <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
 			  </div>
-			  <div class="layui-input-inline j-input-margin j-width-100">
+			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="pay_openid" title="OPENID" placeholder="OPENID" class="layui-input">
-			  </div>
-			  <div class="layui-input-inline j-input-margin j-width-100">
+			  </div> -->
+			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
-			  </div>
+			  </div> -->
 			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="user_tel" title="用户手机号" placeholder="用户手机号" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="ban_address" title="楼栋地址" placeholder="楼栋地址" class="layui-input">
 			  </div>
-			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="tel" title="手机号" placeholder="手机号" class="layui-input">
-			  </div>
+			  </div> -->
 			  <div class="layui-input-inline j-width-110">
-				  <select name="pay_state">
+			  		<select name="order_status">
+						<option value="">支付状态</option>
+						{volist name="params['order_status']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				  <!-- <select name="pay_state">
 					  <option value="">支付状态</option>
 					  <option value="1">已支付</option>
 					  <option value="2">已退款</option>
-				  </select>
+				  </select> -->
 			  </div>
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
@@ -44,8 +50,8 @@
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
-	<a href="{:url('noticeindex')}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+	<a href="{:url('payRefund')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
+	<a href="{:url('payDetail')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
 <script type="text/javascript">
@@ -58,7 +64,7 @@
 			// ,height: 330
             ,toolbar: true
 			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
-            ,url: '' //数据接口
+            ,url: '{:url()}' //数据接口
             ,page: true //开启分页
 			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
             ,limit: 10
@@ -66,38 +72,39 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'weixin_id', minWidth: 200, align:'center', title: '订单编号'}
-               ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
+                {field: 'out_trade_no', minWidth: 200, align:'center', title: '订单编号'}
+               // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
-               		return '<div class="j-user"><img src="'+d.weixin_url+'" alt="" width="28px" height="28px"></a>  ' + d.weixin_username + '</div>';
+               		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                }}
-                ,{field: 'weixin_openid',minWidth:200,align:'center', title: 'OPENID'}
-                ,{field: 'weixin_number', minWidth: 200, align:'center', title: '房屋编号'}
+                ,{field: 'openid',minWidth:260,align:'center', title: 'OPENID'}
+                ,{field: 'weixin_number', minWidth: 160, align:'center', title: '房屋编号'}
 				,{field: 'weixin_address', minWidth: 200, align:'center', title: '楼栋地址'}
-				,{field: 'transaction_number', minWidth: 200, align:'center', title: '交易编号'}
-				,{field: 'weixin_time', minWidth: 200, align:'center', title: '交易时间'}
-                ,{field: 'weixin_type', align:'center',minWidth:80, title: '支付状态', templet:function(d){
-                	if(parseInt(d.weixin_type) == 1){
-                    	return '<div class="layui-table-cell">已支付</div>';
-                    }else if(parseInt(d.weixin_type) == 2){
-                		return '<div class="layui-table-cell">已退款</div>';
-                    }
+				,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
+				,{field: 'ptime', width: 160, align:'center', title: '交易时间'}
+                ,{field: 'order_status', align:'center',width:120, title: '支付状态', templet:function(d){
+                	//if(parseInt(d.order_status) == 1){
+                    	return '<div class="layui-table-cell">'+params.order_status[d.order_status]+'</div>';
+                  //   }else if(parseInt(d.order_status) == 2){
+                		// return '<div class="layui-table-cell">已退款</div>';
+                  //   }
                     
                 }}
-                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
-            ]],
-			data: [{
-            'weixin_id': '10500335300299202002',
-            'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
-            'weixin_username': 'lsn',
-			'weixin_openid': 'oH4X25ZJjygxqcgzcI5x18KQvzCc',
-            'weixin_number': '10500335300299',
-            "weixin_address": '沙湖明珠',
-			"transaction_number": '4200000518202003030187224896',
-			"weixin_time": '2020-03-03 15:25:26',
-            "weixin_type": 2,
-          }
-        ]
+                ,{title: '操作', width: 140, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+   //          ,
+			// data: [{
+   //          'weixin_id': '10500335300299202002',
+   //          'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+   //          'weixin_username': 'lsn',
+			// 'weixin_openid': 'oH4X25ZJjygxqcgzcI5x18KQvzCc',
+   //          'weixin_number': '10500335300299',
+   //          "weixin_address": '沙湖明珠',
+			// "transaction_number": '4200000518202003030187224896',
+			// "weixin_time": '2020-03-03 15:25:26',
+   //          "weixin_type": 2,
+   //        }
+   //      ]
             ,done:function(res,curr,count){
 				
             }

@@ -15,6 +15,7 @@ namespace app\wechat\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\wechat\model\Weixin as WeixinModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -47,13 +48,69 @@ class Weixin extends Admin
 		return $this->fetch();
 	}
 
-	public function tempIndex()
-	{
+	// public function tempIndex()
+	// {
+	// 	return $this->fetch();
+	// }
+
+	public function payRecord()
+	{	
+		if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $WeixinOrderModel = new WeixinOrderModel;
+            $where = $WeixinOrderModel->checkWhere($getData);
+            // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
+            $data = [];
+            $data['data'] = WeixinOrderModel::with('weixinMember')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $data['count'] = WeixinOrderModel::where($where)->count();//halt($data['data']);
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
 		return $this->fetch();
 	}
 
-	public function payRecord()
+	/**
+	 * 功能描述：支付记录详情
+	 * @author  Lucas 
+	 * 创建时间: 2020-03-09 16:31:01
+	 */
+	public function payDetail()
 	{
+		$id = input('id');
+		//halt($id);
+		$WeixinOrderModel = new WeixinOrderModel;
+		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+		//halt($order_info);
+		$this->assign('data_info',$order_info);
+		//获取绑定的房屋数量
+		// $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+		// $houselist = $WeixinMemberHouseModel->house_list($id);
+		// $this->assign('houselist',$houselist);
+		
+		return $this->fetch();
+	}
+
+	/**
+	 * 功能描述：支付记录详情
+	 * @author  Lucas 
+	 * 创建时间: 2020-03-09 16:31:01
+	 */
+	public function payRefund()
+	{
+		$id = input('id');
+		//halt($id);
+		$WeixinOrderModel = new WeixinOrderModel;
+		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+		//halt($order_info);
+		$this->assign('data_info',$order_info);
+		//获取绑定的房屋数量
+		// $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+		// $houselist = $WeixinMemberHouseModel->house_list($id);
+		// $this->assign('houselist',$houselist);
+		
 		return $this->fetch();
 	}
 

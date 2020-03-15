@@ -25,11 +25,14 @@ class WeixinOrder extends Model
     protected $name = 'weixin_order';	
     // 设置主键
     protected $pk = 'order_id';
+    // 定义时间戳字段名
+    protected $createTime = 'ctime';
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'ptime' => 'timestamp:Y-m-d H:i:s',
     ];
 
     public function checkWhere($data)
@@ -69,5 +72,10 @@ class WeixinOrder extends Model
         //$where[] = ['tenant_inst_id','in',config('inst_ids')[$instid]];
 
         return $where;
+    }
+
+    public function weixinMember()
+    {
+        return $this->hasOne('weixinMember', 'member_id', 'member_id')->bind('member_name,tel,weixin_tel,avatar,openid,card');
     }
 }
