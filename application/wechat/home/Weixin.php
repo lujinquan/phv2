@@ -319,9 +319,10 @@ class Weixin extends Common
 
         // 绑定手机号
         $WeixinMemberModel = new WeixinMemberModel;
+
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         // $appcols = array_values($member_info['app_cols']);
-        // halt($appcols);
+        //halt($member_info);
 
         // 获取所有业务列表
         $WeixinColumnModel = new WeixinColumnModel;
@@ -330,11 +331,16 @@ class Weixin extends Common
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
-             if(in_array($v['col_id'], $member_info['app_cols'])){ // 标记已选择的图标
-                $v['is_choose'] = 1;
+             if($member_info['app_cols']){
+                if(in_array($v['col_id'], $member_info['app_cols'])){ // 标记已选择的图标
+                    $v['is_choose'] = 1;
+                 }else{
+                    $v['is_choose'] = 0;
+                 }  
              }else{
                 $v['is_choose'] = 0;
-             }     
+             }
+                
         }
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
@@ -425,7 +431,15 @@ class Weixin extends Common
                 $result['msg'] = 'Invalid token';
                 return json($result);
             }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
         }
+    
+        
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         
         $result['data']['app_user_index_banner'] = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
         // 获取公告列表
@@ -437,7 +451,12 @@ class Weixin extends Common
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
+             if(!in_array($v['col_id'],$member_info['app_cols'])){
+                unset($columns[$k]);
+             }
+             //halt($v);
         }
+//halt($member_info);
         $result['data']['column'] = $columns;
         // 基础配置
         $configs = WeixinConfigModel::column('name,value');
