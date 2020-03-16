@@ -28,9 +28,15 @@
  	<label class="layui-form-label">支付时间：</label>
  	<div class="layui-form-mid layui-word-aux">{$data_info['ptime']}</div>
  </div>
+ {if condition="isset($order_refund_info)"}
  <div class="layui-form-item">
  	<label class="layui-form-label">退款时间：</label>
- 	<div class="layui-form-mid layui-word-aux"></div>
+ 	<div class="layui-form-mid layui-word-aux">{$order_refund_info['ref_money']}元</div>
  </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">退款时间：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$order_refund_info['ctime']}</div>
+ </div>
+ {/if}
 </form>	
 {include file="system@block/layui" /}

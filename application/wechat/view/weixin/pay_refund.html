@@ -1,40 +1,40 @@
 <!-- 退款 -->
-<form class="layui-form j-definition" action="">
+<form class="layui-form j-definition" action="/wechat/index/refundCreate?id={$data_info['order_id']}">
   <div class="layui-form-item">
 	<label class="layui-form-label">订单编号：</label>
-	<div class="layui-form-mid layui-word-aux">1314595</div>
+	<div class="layui-form-mid layui-word-aux">{$data_info['out_trade_no']}</div>
  </div>
  <div class="layui-form-item">
 	<label class="layui-form-label">用户：</label>
-	<div class="layui-form-mid layui-word-aux">张三</div>
+	<div class="layui-form-mid layui-word-aux">{$data_info['member_name']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">OPENID：</label>
- 	<div class="layui-form-mid layui-word-aux">oH4X25ZJjygxqcgzcI5x18KQvzCc</div>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['openid']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">房屋编号：</label>
- 	<div class="layui-form-mid layui-word-aux">10500335300299</div>
+ 	<div class="layui-form-mid layui-word-aux"></div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">用户手机：</label>
- 	<div class="layui-form-mid layui-word-aux">13812345678</div>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['tel']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">交易编号：</label>
- 	<div class="layui-form-mid layui-word-aux">4200000518202003030187224896</div>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['transaction_id']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">支付时间：</label>
- 	<div class="layui-form-mid layui-word-aux">2020-03-02 15:25:26</div>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['ptime']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">退款时间：</label>
- 	<div class="layui-form-mid layui-word-aux">2020-03-02 15:25:26</div>
+ 	<div class="layui-form-mid layui-word-aux"></div>
  </div>
  <div class="pop-bottom-bar">
    <div class="layui-input-block">
-     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">退款</button>
+     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" hisi-data="{'pop': 1}" lay-filter="formSubmit">退款</button>
      <a href="{:url('payrecord')}" class="layui-btn layui-btn-primary j-cancel">取消</a>
    </div>
  </div>

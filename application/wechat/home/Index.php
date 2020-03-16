@@ -8,6 +8,7 @@ use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
+use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
 
 /**
  * 功能描述：H5完整支付
@@ -393,17 +394,61 @@ class Index extends Common
      */
     public function refundCreate()
     {
+
+        $id = input('id');
+       
+        $WeixinOrderModel = new WeixinOrderModel;
+        $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
         // 下面的参数注意要换成动态的
         $options = [
-            'transaction_id' => '4200000505202003108122210096', //微信订单号 transaction_id
-            'out_refund_no'  => '124405080220200310163324', //
-            'total_fee'      => '1',
-            'refund_fee'     => '1',
+            'transaction_id' => $order_info['transaction_id'], //微信订单号 transaction_id
+            'out_refund_no'  => $order_info['out_trade_no'], //
+            'total_fee'      => $order_info['pay_money'] * 100,
+            'refund_fee'     => 1,
         ];
+
+        //halt($options);
         $result = $wechat->createRefund($options);
-        halt($result);
+        if($result['result_code'] == 'FAIL'){
+            return  $this->error($result['err_code_des']);
+        }
+        //halt($result);
+        // $result = [
+        //     'return_code' => "SUCCESS",
+        //     'return_msg' => "OK",
+        //     'appid' => "wxaac82b178a3ef1d2",
+        //     'mch_id' => "1244050802",
+        //     'nonce_str' => "LqJP9iBVC9ESsNgM",
+        //     'sign' => "BAAE65616FE0AD3701AC2B199A3585DD0D9CD621E0D076E14797B4B66F91FC35",
+        //     'result_code' => "SUCCESS",
+        //     'transaction_id' => "4200000511202003139890551158",
+        //     'out_trade_no' => "10600316847101202001",
+        //     'out_refund_no' => "10600316847101202001",
+        //     'refund_id' => "50300603632020031615181917068",
+        //     'refund_channel' => [],
+        //     'refund_fee' => "2",
+        //     'coupon_refund_fee' => "0",
+        //     'total_fee' => "2",
+        //     'cash_fee' => "2",
+        //     'coupon_refund_count' => "0",
+        //     'cash_refund_fee' => "2",
+        // ];
+        $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+        $WeixinOrderRefundModel->order_id = $order_info['order_id'];
+        $WeixinOrderRefundModel->ref_money = $result['refund_fee'] / 100;
+        $WeixinOrderRefundModel->member_id = $order_info['member_id'];
+        $WeixinOrderRefundModel->refund_id = $result['refund_id'];
+        $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
+        $WeixinOrderRefundModel->save();
+
+        $order_info->order_status = 2;
+        $order_info->save();
+
+        
+        return  $this->success('退款成功，已退还至'.$order_info['member_name'].'，'. ($result['refund_fee']/100) .'元钱！');
     }
 
     /**

@@ -18,6 +18,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
+use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
 
 /**
  * 微信小程序用户版
@@ -82,7 +83,13 @@ class Weixin extends Admin
 		$id = input('id');
 		//halt($id);
 		$WeixinOrderModel = new WeixinOrderModel;
-		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+		$order_info = $WeixinOrderModel->with('weixinMember')->find($id)->toArray();
+		if($order_info['order_status'] == 2){ //如果状态是已退款
+			$WeixinOrderRefundModel = new WeixinOrderRefundModel;
+			$order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
+			$this->assign('order_refund_info',$order_refund_info);
+		}
+		
 		//halt($order_info);
 		$this->assign('data_info',$order_info);
 		//获取绑定的房屋数量
@@ -101,6 +108,7 @@ class Weixin extends Admin
 	public function payRefund()
 	{
 		$id = input('id');
+		
 		// halt($id);
 		$WeixinOrderModel = new WeixinOrderModel;
 		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);

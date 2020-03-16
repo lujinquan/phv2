@@ -50,7 +50,11 @@
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+{{#  if (d.order_status == 1) { }}
 	<a href="{:url('payRefund')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
+{{# }else{ }}
+	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+{{# } }}
 	<a href="{:url('payDetail')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
