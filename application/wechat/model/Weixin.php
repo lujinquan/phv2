@@ -14,6 +14,7 @@ namespace app\wechat\model;
 
 use think\Db;
 use think\Model;
+use app\wechat\model\WeixinConfig as WeixinConfigModel;
 
 
 /**

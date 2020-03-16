@@ -10,7 +10,7 @@
     <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 <script type="text/html" title="排序模板" id="sortTpl">
-    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_notice&id={{ d.id }}">
+    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=weixin_notice&id={{ d.id }}">
 </script>
 </div>
 <script type="text/javascript">
@@ -21,7 +21,7 @@
             elem: '#dataTable'
             //,toolbar: true
 			//,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
-            ,url: '{:url("system/Notice/index")}' //数据接口
+            ,url: '{:url()}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
@@ -30,8 +30,16 @@
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
                 ,{field: 'title' , minWidth: 200 , align:'center' , title: '标题'}
-                ,{field: 'create_time' , minWidth: 200 ,  align:'center' , title: '创建时间'}
-                ,{field: 'inst_id' , minWidth: 100 ,  align:'center' , title: '可见范围'}
+                ,{field: 'ctime' , minWidth: 200 ,  align:'center' , title: '创建时间'}
+                ,{field: 'type' , minWidth: 100 ,  align:'center' , title: '类型',templet: function(d) {
+                    return params.weixin_notice_type[d.type];
+                }}
+                ,{field: 'is_auth' , minWidth: 100 ,  align:'center' , title: '类型',templet: function(d) {
+                    // if(parseInt(d.is_auth){
+
+                    // }
+                    return params.weixin_notice_type[d.type];
+                }}
                 ,{field: 'sort' , minWidth: 80 ,align:'center',  title: '排序' , templet: '#sortTpl'}
                 ,{field: 'cuid',minWidth: 130 , align:'center', title: '发布人'}
                 ,{title: '操作', minWidth: 260,Width: 260, align:'center', templet: '#buttonTpl',fixed:'right'}

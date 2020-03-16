@@ -236,7 +236,10 @@ class Index extends Common
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         $wechat = \WeChat\Pay::instance($this->config);
-        $out_trade_no = $rent_order_info['rent_order_number'];
+        //商户订单号的规则，年月日时分秒+6数字随机码
+        $out_trade_no = date('YmdHis') . random(6);
+
+        //$out_trade_no = $rent_order_info['rent_order_number'];
         $attach = md5($out_trade_no);
         // 下面的参数注意要换成动态的
         $options = [
