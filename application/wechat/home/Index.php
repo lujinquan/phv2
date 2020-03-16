@@ -407,7 +407,7 @@ class Index extends Common
             'transaction_id' => $order_info['transaction_id'], //微信订单号 transaction_id
             'out_refund_no'  => $order_info['out_trade_no'], //
             'total_fee'      => $order_info['pay_money'] * 100,
-            'refund_fee'     => 1,
+            'refund_fee'     => $order_info['pay_money'] * 100,
         ];
 
         //halt($options);
