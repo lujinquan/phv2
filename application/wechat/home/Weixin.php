@@ -654,28 +654,17 @@ class Weixin extends Common
             // 从member_house关联表中查询会员绑定的房屋
             $WeixinMemberHouseModel = new WeixinMemberHouseModel;
             $member_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info->member_id]])->select()->toArray();
-            // 查询当前绑定的房屋
-            $systemHouseArr = [];
-            if($member_info['tenant_id']){
-                $houseArr = HouseModel::with(['ban','tenant'])->where([['tenant_id','eq',$member_info['tenant_id']]])->select()->toArray();
-                if($houseArr){
-                    foreach ($houseArr as $h) {
-                        $h['is_auth'] = 1;
-                        $systemHouseArr[$h['house_id']] = $h; 
-                    }
-                }
-            }
-//halt($member_houses);
+            // 如果有绑定的房屋
             if($member_houses){
                 $houses = [];
                 foreach ($member_houses as $k => $v) {
                     $HouseModel = new HouseModel;
                     $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
                     $row['is_auth'] = $v['is_auth'];
-                    unset($systemHouseArr[$v['house_id']]);
+                    // unset($systemHouseArr[$v['house_id']]);
                     $houses[] = $row;
                 }
-                $result['data'] = array_merge($houses,$systemHouseArr);
+                $result['data'] = $houses;
                 $result['code'] = 1;
                 $result['msg'] = '获取成功';
                 return json($result);
@@ -716,19 +705,22 @@ class Weixin extends Common
         
         $result['data']['member'] = $member_info;
 
-        if($member_info['tenant_id']){
-            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
-            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
-            foreach ($result['data']['house'] as $k => &$v) {
-                //halt($v);
-                $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+        // 查找绑定的房屋
+        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
 
-                $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
-                $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
-                //$value['id'] = $key + 1;
-            }
-            
+        $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
+        foreach ($result['data']['house'] as $k => &$v) {
+            //halt($v);
+            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+
+            $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
+            $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
+            //$value['id'] = $key + 1;
         }
+            
+   
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
         return json($result); 
@@ -758,66 +750,45 @@ class Weixin extends Common
 
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-
+//halt($member_info);
         $houseID = input('get.house_id');
         // 验证验证码
         $datasel = input('get.data_sel');
 
-        //如果当前用户已认证
-        //if($member_info['tenant_id']){
+        // 查找绑定的房屋
+        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
+        //halt($houses);
+        if(!$houses){
+            $result['code'] = 10050;
+            $result['msg'] = 'The current user is not bound to any house';
+            return json($result);
+        }
 
-            $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
-         
-            $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-            $where[] = ['a.tenant_id','eq',$member_info['tenant_id']];
-            if($houseID){
-                $where[] = ['a.house_id','eq',$houseID];
-            }
-            if($datasel){
-                $startDate = substr($datasel,0,4);
-                $endDate = substr($datasel,5,2);
-                $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
-            }
-            //halt($where);
-            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+        $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $where = [];
+        $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+        $where[] = ['a.house_id','in',$houses];
+        if($houseID){
+            $where[] = ['a.house_id','eq',$houseID];
+        }
+        if($datasel){
+            $startDate = substr($datasel,0,4);
+            $endDate = substr($datasel,5,2);
+            $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
+        }
+        //halt($where);
+        $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
 
-            // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
-            // foreach ($result['data']['rent'] as $key => &$value) {
-            //     $value['id'] = $key + 1;
-            // }
-            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
-            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
-            $result['code'] = 1;
-            $result['msg'] = '获取成功！';
-        //}
-        // else{
-        //     // 查找绑定的房屋
-        //     $WeixinMemberHouseModel = new WeixinMemberHouseModel;
-        //     $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
-        //     if(!$houses){
-        //         $result['code'] = 10050;
-        //         $result['msg'] = 'The current user is not bound to any house';
-        //         return json($result);
-        //     }
-        //     $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
-         
-        //     $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-        //     $where[] = ['a.house_id','in',$houses];
-        //     if($houseID){
-        //         $where[] = ['a.house_id','eq',$houseID];
-        //     }
-        //     if($datasel){
-        //         $startDate = substr($datasel,0,4);
-        //         $endDate = substr($datasel,5,2);
-        //         $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
-        //     }
-        //     //halt($where);
-        //     $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
-        //     $result['data']['tenant'] = [];
-        //     $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
-        //     $result['code'] = 1;
-        //     $result['msg'] = '获取成功！';
+        // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
+        // foreach ($result['data']['rent'] as $key => &$value) {
+        //     $value['id'] = $key + 1;
         // }
+        $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+      
         return json($result); 
     }
 
@@ -914,21 +885,16 @@ class Weixin extends Common
             $result['msg'] = 'House ID is empty';
             return json($result);
         }
-
-        //if($member_info['tenant_id']){
-            //dump($tenantInfo['tenant_id']);halt($houseID);
-            $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['tenant_id','eq',$member_info['tenant_id']]])->order('rent_order_id desc')->select();
-            foreach ($result['data']['rent'] as $key => &$value) {
-                $value['id'] = $key + 1;
-            }
-            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
-            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
-            $result['code'] = 1;
-            $result['msg'] = '获取成功！';
-        // }else{
-        //     $result['msg'] = '参数错误！';
-        // }
-
+ 
+        $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID]])->order('rent_order_id desc')->select();
+        foreach ($result['data']['rent'] as $key => &$value) {
+            $value['id'] = $key + 1;
+        }
+        $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+  
         return json($result); 
     }
 
@@ -989,9 +955,15 @@ class Weixin extends Common
         // 验证短信码是否正确
         if($res->code == '200'){
             $WeixinMemberModel = new WeixinMemberModel;
-            $openid = cache('weixin_openid_'.$token); //存储openid
+            $openid = cache('weixin_openid_'.$token);
             // 绑定手机号
             $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            if($member_info['tenant_id']){
+                $result['code'] = 10051;
+                $result['msg'] = 'Current user authenticated';
+                return json($result);
+            }
+
             $member_info->tenant_id = $tenant_id;
             $member_info->tel = $tel;
             $member_info->auth_time = time();

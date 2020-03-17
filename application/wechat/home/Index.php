@@ -7,8 +7,10 @@ use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
+
 
 /**
  * 功能描述：H5完整支付
@@ -205,34 +207,43 @@ class Index extends Common
 
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
 
         $RentModel = new RentModel;
-        $rent_order_info = $RentModel->find($rent_order_id);
-        // 检查订单是否存在
-        if(!$rent_order_info){
-            $result['code'] = 10031;
-            $result['msg'] = 'Order ID is error';
-            return json($result);
-        }
-        // 检查订单是否已经完成支付
-        if($rent_order_info['ptime']){
-            $result['code'] = 10032;
-            $result['msg'] = 'Order has been paid, please do not pay repeatedly';
-            return json($result);
-        }
-        $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
-        if($member_info->tenant_id){
-            $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
-            $member_houses = array_merge($member_houses,$houses);
+        $rentOrderIDS = explode(',',$rent_order_id);
+        $pay_money = 0;
+        foreach($rentOrderIDS as $rid){
+            $rent_order_info = $RentModel->find($rid);
+            // 检查订单是否存在
+            if(!$rent_order_info){
+                $result['code'] = 10031;
+                $result['msg'] = 'Order ID is error';
+                return json($result);
+            }
+            // 检查订单是否已经完成支付
+            if($rent_order_info['ptime']){
+                $result['code'] = 10032;
+                $result['msg'] = 'Order has been paid, please do not pay repeatedly';
+                return json($result);
+            }
+            // 检查订单绑定的房屋是否以被当前会员绑定
+            if(!in_array($rent_order_info['house_id'],$member_houses)){
+                $result['code'] = 10033;
+                $result['msg'] = 'The house is not bound by the current member';
+                return json($result);
+            }
+            $pay_money += $rent_order_info['rent_order_receive']*100;
         }
         
+        
+
+        // if($member_info->tenant_id){
+        //     $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
+        //     $member_houses = array_merge($member_houses,$houses);
+        // }
+        
         //halt($member_houses);
-        // 检查订单绑定的房屋是否以被当前会员绑定
-        if(!in_array($rent_order_info['house_id'],$member_houses)){
-            $result['code'] = 10033;
-            $result['msg'] = 'The house is not bound by the current member';
-            return json($result);
-        }
+        
         
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
@@ -246,7 +257,7 @@ class Index extends Common
         $options = [
             'body'             => '测试商品',
             'out_trade_no'     => $out_trade_no,
-            'total_fee'        => $rent_order_info['rent_order_receive'] * 100,
+            'total_fee'        => $pay_money,
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/payordernotify',
@@ -277,9 +288,20 @@ class Index extends Common
         $WeixinOrderModel->attach = $attach;
         $WeixinOrderModel->out_trade_no = $out_trade_no;
         $WeixinOrderModel->member_id = $member_info->member_id;
-        $WeixinOrderModel->rent_order_id = $rent_order_id;
+        //$WeixinOrderModel->rent_order_id = $rent_order_id;
         $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
         $WeixinOrderModel->save();
+
+        // 生成后台订单与out_trade_no关联数据
+        $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+
+        foreach($rentOrderIDS as $reid){
+            $rent_order_info = $RentModel->find($rid);
+            $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            $WeixinOrderTradeModel->rent_order_id = $reid;
+            $WeixinOrderTradeModel->pay_dan_money = $rent_order_info['rent_order_receive'];
+            $WeixinOrderTradeModel->save();
+        }
 
         $result['code'] = 1;
         $result['msg'] = '获取成功';
@@ -339,13 +361,24 @@ class Index extends Common
                 $row->ptime = strtotime($data['time_end']); //支付时间
                 $row->pay_money = $data['total_fee'] / 100; //支付金额，单位：分
                 $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
+                $row->order_status = 1; //支付状态1，支付完成
                 $row->save();
                 // 更新租金订单表
+                $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+                $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
+
+
                 $RentModel = new RentModel;
-                $rent_order_info = $RentModel->find($row->rent_order_id);
-                $rent_order_info->rent_order_paid = $data['total_fee'] / 100; 
-                $rent_order_info->ptime = strtotime($data['time_end']);
-                $rent_order_info->pay_way = 4; //4是微信支付
+                foreach ($rent_order_ids as $rid) {
+                    $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+                    $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
+                    $rent_order_info->ptime = strtotime($data['time_end']);
+                    $rent_order_info->pay_way = 4; //4是微信支付
+                    $rent_order_info->is_deal = 1; 
+                    $rent_order_info->save();
+                }
+
+                
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
                 
@@ -437,12 +470,26 @@ class Index extends Common
         //     'cash_refund_fee' => "2",
         // ];
         $WeixinOrderRefundModel = new WeixinOrderRefundModel;
-        $WeixinOrderRefundModel->order_id = $order_info['order_id'];
+        $WeixinOrderRefundModel->out_trade_no = $order_info['out_trade_no'];
         $WeixinOrderRefundModel->ref_money = $result['refund_fee'] / 100;
         $WeixinOrderRefundModel->member_id = $order_info['member_id'];
         $WeixinOrderRefundModel->refund_id = $result['refund_id'];
         $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
         $WeixinOrderRefundModel->save();
+
+        // 更新租金订单表,将缴费记录回退
+        $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+        $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id');
+
+        $RentModel = new RentModel;
+        foreach ($rent_order_ids as $rid) {
+            $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+            $rent_order_info->rent_order_paid = 0; 
+            $rent_order_info->ptime = 0;
+            $rent_order_info->pay_way = 0; 
+            $rent_order_info->is_deal = 0; 
+            $rent_order_info->save();
+        }
 
         $order_info->order_status = 2;
         $order_info->save();

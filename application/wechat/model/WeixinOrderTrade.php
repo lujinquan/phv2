@@ -17,14 +17,14 @@ use think\Model;
 
 
 /**
- * 微信小程序订单退款
+ * 微信小程序支付订单
  */
-class WeixinOrderRefund extends Model 
+class WeixinOrderTrade extends Model 
 {
 	// 设置模型名称
-    protected $name = 'weixin_order_refund';	
+    protected $name = 'weixin_order_trade';	
     // 设置主键
-    protected $pk = 'ref_id';
+    protected $pk = 'trade_id';
     // 定义时间戳字段名
     protected $createTime = 'ctime';
     // 自动写入时间戳
@@ -73,8 +73,5 @@ class WeixinOrderRefund extends Model
         return $where;
     }
 
-    public function weixinMember()
-    {
-        return $this->hasOne('weixinMember', 'member_id', 'member_id')->bind('member_name,tel,weixin_tel,avatar,openid,card');
-    }
+   
 }
