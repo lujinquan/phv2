@@ -760,8 +760,10 @@ class Weixin extends Common
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
 
         $houseID = input('get.house_id');
+        // 验证验证码
         $datasel = input('get.data_sel');
 
+        //如果当前用户已认证
         if($member_info['tenant_id']){
 
             $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
@@ -788,7 +790,32 @@ class Weixin extends Common
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
-            $result['msg'] = '参数错误！';
+            // 查找绑定的房屋
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
+            if(!$houses){
+                $result['code'] = 10050;
+                $result['msg'] = 'The current user is not bound to any house';
+                return json($result);
+            }
+            $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+         
+            $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+            $where[] = ['a.house_id','in',$houses];
+            if($houseID){
+                $where[] = ['a.house_id','eq',$houseID];
+            }
+            if($datasel){
+                $startDate = substr($datasel,0,4);
+                $endDate = substr($datasel,5,2);
+                $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
+            }
+            //halt($where);
+            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+            $result['data']['tenant'] = [];
+            $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
         }
         return json($result); 
     }
