@@ -764,7 +764,7 @@ class Weixin extends Common
         $datasel = input('get.data_sel');
 
         //如果当前用户已认证
-        if($member_info['tenant_id']){
+        //if($member_info['tenant_id']){
 
             $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
          
@@ -789,34 +789,35 @@ class Weixin extends Common
             $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$member_info['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
-        }else{
-            // 查找绑定的房屋
-            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
-            $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
-            if(!$houses){
-                $result['code'] = 10050;
-                $result['msg'] = 'The current user is not bound to any house';
-                return json($result);
-            }
-            $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        //}
+        // else{
+        //     // 查找绑定的房屋
+        //     $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        //     $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
+        //     if(!$houses){
+        //         $result['code'] = 10050;
+        //         $result['msg'] = 'The current user is not bound to any house';
+        //         return json($result);
+        //     }
+        //     $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
          
-            $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-            $where[] = ['a.house_id','in',$houses];
-            if($houseID){
-                $where[] = ['a.house_id','eq',$houseID];
-            }
-            if($datasel){
-                $startDate = substr($datasel,0,4);
-                $endDate = substr($datasel,5,2);
-                $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
-            }
-            //halt($where);
-            $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
-            $result['data']['tenant'] = [];
-            $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
-            $result['code'] = 1;
-            $result['msg'] = '获取成功！';
-        }
+        //     $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+        //     $where[] = ['a.house_id','in',$houses];
+        //     if($houseID){
+        //         $where[] = ['a.house_id','eq',$houseID];
+        //     }
+        //     if($datasel){
+        //         $startDate = substr($datasel,0,4);
+        //         $endDate = substr($datasel,5,2);
+        //         $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
+        //     }
+        //     //halt($where);
+        //     $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+        //     $result['data']['tenant'] = [];
+        //     $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        //     $result['code'] = 1;
+        //     $result['msg'] = '获取成功！';
+        // }
         return json($result); 
     }
 
@@ -995,6 +996,24 @@ class Weixin extends Common
             $member_info->tel = $tel;
             $member_info->auth_time = time();
             $member_info->save();
+            // 将认证的房屋加到member_house表中(去除掉暂停计租和注销的房子)
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $houses = HouseModel::where([['tenant_id','eq',$tenant_id],['house_is_pause','eq',0],['house_status','eq',1]])->column('house_id');
+            $houseSaveData = [];
+            foreach ($houses as $h) {
+                $row = $WeixinMemberHouseModel->where([['house_id','eq',$h],['member_id','eq',$member_info['member_id']]])->find();
+                // 如果已添加认证的房屋，直接修改认证状态
+                if($row){
+                    $row->is_auth = 1;
+                    $row->save();
+                // 没添加过，就直接添加进来并标识已认证
+                }else{
+                    $WeixinMemberHouseModel->house_id = $h;
+                    $WeixinMemberHouseModel->member_id = $member_info['member_id'];
+                    $WeixinMemberHouseModel->is_auth = 1;
+                    $WeixinMemberHouseModel->save();
+                }      
+            }
             $result['code'] = 1;
             $result['msg'] = '绑定成功！';
         }else if($res->code == '413'){
