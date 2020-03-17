@@ -644,7 +644,7 @@ class Weixin extends Common
             $token = input('token');
             $openid = cache('weixin_openid_'.$token); //存储openid
         }else{
-            $openid = 'oxgVt5SDdrmU5hfvrprxUVZVH4tY';
+            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
         }
         
         // 绑定手机号
@@ -665,7 +665,7 @@ class Weixin extends Common
                     }
                 }
             }
-
+//halt($member_houses);
             if($member_houses){
                 $houses = [];
                 foreach ($member_houses as $k => $v) {
@@ -707,7 +707,7 @@ class Weixin extends Common
             $token = input('token');
             $openid = cache('weixin_openid_'.$token);
         }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
         }
 
         // 绑定手机号
@@ -753,7 +753,7 @@ class Weixin extends Common
             $token = input('token');
             $openid = cache('weixin_openid_'.$token);
         }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
         }
 
         $WeixinMemberModel = new WeixinMemberModel;
