@@ -441,7 +441,12 @@ class Weixin extends Common
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         
-        $result['data']['app_user_index_banner'] = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
+        $banners = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
+        foreach ($banners as &$b) {
+            $banner = SystemAnnex::where([['id','eq',$b['banner_img']]])->value('file');
+            $b['banner_img'] = 'https://procheck.ctnmit.com'.$banner;
+        }
+        $result['data']['app_user_index_banner'] = $banners;
         // 获取公告列表
         $WeixinNoticeModel = new WeixinNoticeModel;
         $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort asc')->select()->toArray();
