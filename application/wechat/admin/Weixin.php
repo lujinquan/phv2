@@ -14,11 +14,13 @@ namespace app\wechat\admin;
 
 use think\Db;
 use app\system\admin\Admin;
+use app\rent\model\Rent as RentModel;
 use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 
 /**
  * 微信小程序用户版
@@ -64,7 +66,19 @@ class Weixin extends Admin
             $where = $WeixinOrderModel->checkWhere($getData);
             // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
-            $data['data'] = WeixinOrderModel::with('weixinMember')->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $temp = WeixinOrderModel::with('weixinMember')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+            foreach ($temp as $k => &$v) {
+            	$rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
+            	//halt($rent_order_id);
+				$info = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_number,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
+				if($info){
+					$v['house_number'] = $info['house_number'];
+					$v['ban_address'] = $info['ban_address'];
+				}
+				
+            }
+            //halt($temp);
+            $data['data'] = $temp;
             $data['count'] = WeixinOrderModel::where($where)->count();//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';

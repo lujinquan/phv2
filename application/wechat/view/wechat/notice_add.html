@@ -1,4 +1,4 @@
-<form class="layui-form" id="form1" action="{url('add')}" method="post">
+<form class="layui-form" id="form1" action="{url()}" method="post">
 	<!-- 新增公告 S -->
 	<div class="j-details-box floorWrap layui-form">
 		<div class="item">
@@ -15,14 +15,12 @@
 			</div>
 			<div class="layui-row layui-form-item layui-col-space90">
 				<div class="layui-col-md4">
-					<label class="j-form-label"><i class="red">*</i>可见</label>
+					<label class="j-form-label"><i class="red">*</i>是否启用</label>
 					<div class="j-input-inline">
-						<select name="inst_id" lay-search="">
+						<select name="is_show" lay-search="">
 							<option value="">请选择</option>
-							<option value="1">全部工作人员</option>
-							<option value="2">紫阳所</option>
-							<option value="3">粮道所</option>
-							<option value="4">全部（包含租户）</option>
+							<option value="1">启用</option>
+							<option value="0">禁用</option>
 						</select>
 					</div>
 				</div>
@@ -37,9 +35,21 @@
 					<div class="j-input-inline">
 						<select id="mechanism" name="type" lay-search="">
 							<option value="">请选择</option>
-							{volist name="params['notice_type']" id="vo"}
+							{volist name="params['weixin_notice_type']" id="vo"}
 							<option value="{$key}">{$vo}</option>
 							{/volist}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>授权查看</label>
+					<div class="j-input-inline">
+						<select name="is_auth" lay-search="">
+							<option value="">请选择</option>
+							<option value="1">是</option>
+							<option value="0">否</option>
 						</select>
 					</div>
 				</div>
@@ -56,7 +66,7 @@
 	{:token()}
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
 		</div>
 	</div>

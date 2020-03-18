@@ -1,6 +1,8 @@
 <?php
 
 namespace app\wechat\home;
+
+use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
@@ -211,6 +213,7 @@ class Index extends Common
 
         $RentModel = new RentModel;
         $rentOrderIDS = explode(',',$rent_order_id);
+        //halt($rentOrderIDS);
         $pay_money = 0;
         foreach($rentOrderIDS as $rid){
             $rent_order_info = $RentModel->find($rid);
@@ -234,7 +237,7 @@ class Index extends Common
             }
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
-        
+        //halt($pay_money);
         
 
         // if($member_info->tenant_id){
@@ -293,10 +296,11 @@ class Index extends Common
         $WeixinOrderModel->save();
 
         // 生成后台订单与out_trade_no关联数据
-        $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+         
 
         foreach($rentOrderIDS as $reid){
-            $rent_order_info = $RentModel->find($rid);
+            $rent_order_info = $RentModel->find($reid);
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel;
             $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
             $WeixinOrderTradeModel->rent_order_id = $reid;
             $WeixinOrderTradeModel->pay_dan_money = $rent_order_info['rent_order_receive'];
@@ -470,6 +474,7 @@ class Index extends Common
         //     'cash_refund_fee' => "2",
         // ];
         $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+        $WeixinOrderRefundModel->order_id = $order_info['order_id'];
         $WeixinOrderRefundModel->out_trade_no = $order_info['out_trade_no'];
         $WeixinOrderRefundModel->ref_money = $result['refund_fee'] / 100;
         $WeixinOrderRefundModel->member_id = $order_info['member_id'];

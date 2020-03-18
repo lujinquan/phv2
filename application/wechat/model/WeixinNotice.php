@@ -23,11 +23,54 @@ class WeixinNotice extends Model
 {
 	// 设置模型名称
     protected $name = 'weixin_notice';
-
-	// 自动写入时间戳
+	// 定义时间戳字段名
+    protected $createTime = 'ctime';
+    // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
     ];
+
+    public function getCuidAttr($value){
+        //halt(session('systemusers')[$value]);
+        return session('systemusers')?session('systemusers')[$value]['nick']:$value;
+    }
+
+    public function checkWhere($data)
+    {
+        if(!$data){
+            $data = request()->param();
+        }
+        $where = [];
+        // 检索公告标题
+        if(isset($data['title']) && $data['title']){
+            $where[] = ['title','like','%'.$data['title'].'%'];
+        }
+        // 检索认证状态
+        if(isset($data['type']) && $data['type']){
+            $where[] = ['type','eq',$data['type']];
+        }
+
+        // 检索是否启用
+        if(isset($data['is_show'])){
+            if($data['is_show'] === "1"){
+                $where[] = ['is_show','eq',1];
+            }
+            if($data['is_show'] === "0"){
+                $where[] = ['is_show','eq',0];
+            } 
+        }
+        // 检索是否需要授权才能查看
+        if(isset($data['is_auth'])){
+            if($data['is_auth'] === "1"){
+                $where[] = ['is_auth','eq',1];
+            }
+            if($data['is_auth'] === "0"){
+                $where[] = ['is_auth','eq',0];
+            } 
+        }
+
+        return $where;
+    }
 }

@@ -41,14 +41,14 @@ class WeixinOrder extends Model
             $data = request()->param();
         }
         $where = [];
-        // // 检索会员编号
-        // if(isset($data['member_id']) && $data['member_id']){
-        //     $where[] = ['member_id','eq',$data['member_id']];
-        // }
-        // // 检索会员昵称
-        // if(isset($data['member_name']) && $data['member_name']){
-        //     $where[] = ['member_name','like','%'.$data['member_name'].'%'];
-        // }
+        // 检索订单状态
+        if(isset($data['order_status']) && $data['order_status']){
+            $where[] = ['order_status','eq',$data['order_status']];
+        }
+        // 检索订单编号
+        if(isset($data['out_order_no']) && $data['out_order_no']){
+            $where[] = ['out_order_no','like','%'.$data['out_order_no'].'%'];
+        }
         // // 检索产别
         // if(isset($data['tel']) && $data['tel']){
         //     $where[] = ['tel','like','%'.$data['tel'].'%'];

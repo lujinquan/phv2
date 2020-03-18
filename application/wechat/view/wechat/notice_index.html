@@ -1,13 +1,59 @@
 <div class="j-table-content  j-no-searchs">
 <div class="layui-btn-container j-container-margin">
-    <a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>发布</button></a>
-    <button data-href="{:url('del')}" data-id="id" class="layui-btn layui-btn-gray j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
+    <a href="{:url('noticeAdd')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>发布</button></a>
+    <button data-href="{:url('noticeDel')}" data-id="id" class="layui-btn layui-btn-gray j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
 </div>
+<div class="page-toolbar j-page-toolbar clearfix">
+      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+        <div class="j-search-fl layui-col-md8  fl">
+              <div class="layui-input-inline j-input-margin j-width-100">
+                  <input type="text" name="title" title="公告标题" placeholder="标题" class="layui-input">
+              </div>
+              <div class="layui-input-inline j-width-150">
+                  <select name="type">
+                      <option value="">类型</option>
+                      {volist name="params['weixin_notice_type']" id="v"}
+                      <option value="{$key}">{$v}</option>
+                      {/volist}
+                  </select>
+              </div>
+              <div class="layui-input-inline j-width-110">
+                  <select name="is_show">
+                      <option value="">状态</option>
+                      <option value="1">启用</option>
+                      <option value="0">禁用</option>
+                  </select>
+              </div>
+              <div class="layui-input-inline j-width-110">
+                  <select name="is_auth">
+                      <option value="">授权查看</option>
+                      <option value="1">是</option>
+                      <option value="0">否</option>
+                  </select>
+              </div>
+        </div>
+        <div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+              <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+              <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+              
+          </div>
+        </div>
+      </form>
+  </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.id }}">
+</script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+	<a href="{:url('noticeEdit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    
+    <a href="{:url('noticeDetail')}?id={{ d.id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="公告详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 <script type="text/html" title="排序模板" id="sortTpl">
     <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=weixin_notice&id={{ d.id }}">
@@ -29,20 +75,23 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left'}
-                ,{field: 'title' , minWidth: 200 , align:'center' , title: '标题'}
-                ,{field: 'ctime' , minWidth: 200 ,  align:'center' , title: '创建时间'}
-                ,{field: 'type' , minWidth: 100 ,  align:'center' , title: '类型',templet: function(d) {
+                ,{field: 'title' , minWidth: 240 , align:'center' , title: '标题'}
+                ,{field: 'ctime' , width: 160 ,  align:'center' , title: '创建时间'}
+                ,{field: 'type' , width: 140 ,  align:'center' , title: '类型',templet: function(d) {
                     return params.weixin_notice_type[d.type];
                 }}
-                ,{field: 'is_auth' , minWidth: 100 ,  align:'center' , title: '类型',templet: function(d) {
-                    // if(parseInt(d.is_auth){
-
-                    // }
-                    return params.weixin_notice_type[d.type];
+                ,{field: 'is_auth' , width: 100 ,  align:'center' , title: '授权查看',templet: function(d) {
+                    if(parseInt(d.is_auth)){
+                        return '是';
+                    }else{
+                        return '否';
+                    }
+                    //return params.weixin_notice_type[d.type];
                 }}
-                ,{field: 'sort' , minWidth: 80 ,align:'center',  title: '排序' , templet: '#sortTpl'}
+                ,{field: 'sort' , width: 80 ,align:'center',  title: '排序' , templet: '#sortTpl'}
+                ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
                 ,{field: 'cuid',minWidth: 130 , align:'center', title: '发布人'}
-                ,{title: '操作', minWidth: 260,Width: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 120, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

@@ -3,7 +3,7 @@
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			  <div class="layui-input-inline j-input-margin j-width-100">
-				  <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
+				  <input type="text" name="out_trade_no" title="订单编号" placeholder="订单编号" class="layui-input">
 			  </div>
 			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="pay_openid" title="OPENID" placeholder="OPENID" class="layui-input">
@@ -11,12 +11,12 @@
 			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
 			  </div> -->
-			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="user_tel" title="用户手机号" placeholder="用户手机号" class="layui-input">
 			  </div>
 			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="ban_address" title="楼栋地址" placeholder="楼栋地址" class="layui-input">
-			  </div>
+			  </div> -->
 			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="tel" title="手机号" placeholder="手机号" class="layui-input">
 			  </div> -->
@@ -76,14 +76,15 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'out_trade_no', minWidth: 200, align:'center', title: '订单编号'}
+               {field: 'out_trade_no', minWidth: 200, align:'center', title: '订单编号'}
                // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                }}
                 ,{field: 'openid',minWidth:260,align:'center', title: 'OPENID'}
-                ,{field: 'weixin_number', minWidth: 160, align:'center', title: '房屋编号'}
-				,{field: 'weixin_address', minWidth: 200, align:'center', title: '楼栋地址'}
+                ,{field: 'pay_money', width:100, hide: false, align:'center', title: '交易金额'}
+                ,{field: 'house_number', minWidth: 160, align:'center', title: '房屋编号'}
+				,{field: 'ban_address', minWidth: 200, align:'center', title: '楼栋地址'}
 				,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
 				,{field: 'ptime', width: 160, align:'center', title: '交易时间'}
                 ,{field: 'order_status', align:'center',width:120, title: '支付状态', templet:function(d){
