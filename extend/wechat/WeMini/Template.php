@@ -80,6 +80,19 @@ class Template extends BasicWeChat
     }
 
     /**
+     * 获取帐号下已存在的【订阅消息】模板列表
+     * @return array
+     * @throws \WeChat\Exceptions\InvalidResponseException
+     * @throws \WeChat\Exceptions\LocalCacheException
+     */
+    public function getSubscribeTemplateList()
+    {
+        $url = 'https://api.weixin.qq.com/wxaapi/newtmpl/gettemplate?access_token=ACCESS_TOKEN';
+        $this->registerApi($url, __FUNCTION__, func_get_args());
+        return $this->callGetApi($url);
+    }
+
+    /**
      * 删除模板消息
      * @param string $template_id 要删除的模板id
      * @return array

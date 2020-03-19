@@ -31,6 +31,18 @@
   	</div>
   </div>
   <div class="layui-form-item">
+    <label class="layui-form-label">待支付提醒：</label>
+    <div class="layui-input-block">
+      <input type="text" name="waittingForPay"  autocomplete="off" value="" placeholder="请输入待支付提醒订阅消息模板ID" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">订单支付成功通知：</label>
+    <div class="layui-input-block">
+      <input type="text" name="aaa"  autocomplete="off" value="" placeholder="请输入订单支付成功通知订阅消息模板ID" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
   	<label class="layui-form-label"></label>
   	<div class="layui-input-block">
   	  如果一键获取失败，请前往小程序后台检查是否开通模板消息功能
@@ -52,12 +64,25 @@
 		// 	var loadingIndex = layer.load(); // 加载中动画遮罩层（1）
 	
 		 form.on('submit(auto_get)', function(data){
-        $.get("/wechat/index/mini_template_list", {type:'index'}, function(res) {
+        $.get("/wechat/index/mini_template_list", '', function(res) {
             console.log(res);
             if (res.code == 1) {
               console.log('长度：',res.data.length);
               if(res.data.length == 0){
                 layer.msg('未设置任何订阅消息模板');
+              }else{
+                for (var i = res.data.length - 1; i >= 0; i--) {
+                  if(res.data[i].title === '待支付提醒'){
+                    $("input[name='waittingForPay']").val(res.data[i].priTmplId);
+                  }
+                  if(res.data[i].title === '订单支付成功通知'){
+                    $("input[name='aaa']").val(res.data[i].priTmplId);
+                  }
+                  
+                  //$("input[name='aaa']").val(res.data[0].priTmplId);
+                  //res.data[i].title
+                }
+                layer.msg(res.msg);
               }
             }
         });

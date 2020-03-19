@@ -17,6 +17,7 @@ use app\system\admin\Admin;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\wechat\model\Weixin as WeixinModel;
+use app\wechat\model\WeixinGuide as WeixinGuideModel;
 use app\wechat\model\WeixinBanner as WeixinBannerModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -69,10 +70,18 @@ class Weconfig extends Admin
             		# code...
             		break;
             	case 'guide_conf':
-            		# code...
+            		$WeixinGuideModel = new WeixinGuideModel;
+                    $where = $WeixinGuideModel->checkWhere($getData);
+                    $data = [];
+                    $data['data'] = $WeixinGuideModel->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+                    $data['count'] = $WeixinGuideModel->where($where)->count();
+            
             		break;
             	case 'service_conf':
-            		# code...
+                    $is_show = input('is_show');
+                    $value = input('value');
+            		Db::name('weixin_service_config')->where([['id','eq',1]])->update(['is_show'=>$is_show,'value'=>$value]);
+                    $this->success('编辑成功');
             		break;
             	default:
             		# code...
@@ -84,12 +93,98 @@ class Weconfig extends Admin
             return json($data);
 
         }
+
+        switch ($group) {
+            case 'banner_conf':
+                
+                break;
+            case 'pageurl_conf':
+                # code...
+                break;
+            case 'guide_conf':
+                # code...
+                break;
+            case 'service_conf':
+                $row = Db::name('weixin_service_config')->find();
+                //halt($row);
+                $this->assign('data_info',$row);
+                break;
+            default:
+                # code...
+                break;
+        }
+
         $tabData['current'] = url('?group='.$group);
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
 		return $this->fetch($group);
 	}
+
+    public function guideAdd()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            // $result = $this->validate($data, 'WeixinNotice');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            $WeixinGuideModel = new WeixinGuideModel;
+            $data['cuid'] = ADMIN_ID;
+            $data['content'] = htmlspecialchars($data['content']);
+            // 入库
+            if (!$WeixinGuideModel->allowField(true)->create($data)) {
+                return $this->error('发布失败');
+            }
+            return $this->success('发布成功');
+        }
+        return $this->fetch();
+    }
+
+    public function guideEdit()
+    {
+        $WeixinGuideModel = new WeixinGuideModel;
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            // $result = $this->validate($data, 'WeixinNotice');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            // 入库
+            if (!$WeixinGuideModel->allowField(true)->update($data)) {
+                return $this->error('编辑失败');
+            }
+            return $this->success('编辑成功');
+        }
+        $id = input('param.id/d');
+        $row = $WeixinGuideModel->find($id);
+        //halt($row);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+    public function guideDetail()
+    {
+        $WeixinGuideModel = new WeixinGuideModel;
+        $id = input('param.id/d');
+        $row = $WeixinGuideModel->find($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+    public function guideDel()
+    {
+        $ids = $this->request->param('id/a'); 
+        $WeixinGuideModel = new WeixinGuideModel;       
+        $res = $WeixinGuideModel->where([['id','in',$ids]])->delete();
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
 
 	public function bannerAdd()
 	{
@@ -152,6 +247,31 @@ class Weconfig extends Admin
             $this->error('删除失败');
         }
 	}
+
+    /**
+     * 功能描述：启用禁用状态切换
+     * @author  Lucas 
+     * 创建时间: 2020-03-09 16:30:34
+     */
+    public function guideIsShow()
+    {
+        $id = input('id');
+        $WeixinGuideModel = new WeixinGuideModel;
+        $info = $WeixinGuideModel->find($id);
+        if($info->is_show == 1){
+            $info->is_show = 0;
+            $msg = '禁用成功！';
+        }else{
+            $info->is_show = 1;
+            $msg = '启用成功！';
+        }
+        $result = $info->save();
+        if ($result === false) {
+            return $this->error('状态设置失败');
+        }
+
+        return $this->success($msg);
+    }
 
     /**
      * 功能描述：启用禁用状态切换

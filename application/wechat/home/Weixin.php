@@ -100,6 +100,7 @@ class Weixin extends Common
             $result['code'] = 1;
             $result['data'] = [
                 'openid' => $resultOpenid['openid'],
+                'session_key' => $resultOpenid['session_key'],
                 'token' => $token,
             ];
             $result['msg'] = '获取成功！';

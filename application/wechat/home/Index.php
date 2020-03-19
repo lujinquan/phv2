@@ -7,6 +7,7 @@ use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
@@ -395,25 +396,76 @@ class Index extends Common
     }
 
     /**
-     * 功能描述：帐号下已存在的模板列表
+     * 功能描述：微信手机号授权
      * @author  Lucas 
+     * 创建时间: 2020-03-19 16:56:06
+     */
+    public function mini_login(){
+        if($this->request->isPost()){
+            $requestData = $this->request->post();
+            if($this->debug === false){ 
+                if(!$this->check_token()){
+                    $result['code'] = 10010;
+                    $result['msg'] = 'Invalid token';
+                    return json($result);
+                }
+                $token = $requestData['token'];
+                $openid = cache('weixin_openid_'.$token); //存储openid
+            }else{
+                $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            }
+            // $WeixinMemberModel = new WeixinMemberModel;
+            // $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            // 解码数据
+            //$iv = 'nzxhaKK93YdWH49nQGc78A==';
+            //$code = '013LyiTR0TwjC92QjJRR0mEsTR0LyiT3';
+            //$encryptedData = 'ArpF8jFz6/vBoFF1TNb0YdU7LCX5l7hLlZGX4TL8Y6hfHaKScC4F26XI7GjBUbL1xAp57ivXV9xFrV3XJuLyDqKI1UZ1nMa4Ru2wdWZ8ZyjzbU9YaXO+I/+5g4utOq5Ksvbvg8fgzdS20/HqaXMkdIO48xsYqvMlRY1+8pSi4TbrtV8R22wSTGI281QzntSw2oBXaG+oevvwmv1tivtNsuafmUlcBVHKP2BEYAcvI8M2vV8VHKF6XPxiLwv1g07cxhPaLtngEx+DKYg7Z1pdSScHsUfAmN5qyXQKtfB3zpmintEDu/SfLsZxEX2E3O3nUlzYCh/haH+IL6BgZP/gDKml5gUW6j3wz43+V/965JdG6JeLk7Qdo4I+Aly+FaVP1YxSqV9DxqA67CWgUchY7JBrCPgc0CvhtnV3vAVWLyReeiu3g4TX/8ZQk79++6Vf';
+            //$sessionKey = 'gOlNjSO0cTWquWOxSuvGSg==';
+            $iv = $requestData['iv'];
+            $encryptedData = $requestData['encryptedData'];
+         
+            include EXTEND_PATH.'wechat/include.php';
+            $sessionKey = WeixinTokenModel::where([['token','eq',$token]])->value('session_key');
+
+            $mini = \WeMini\Crypt::instance($this->config);
+
+            //print_r($mini->session($code));
+            $data = $mini->decode($iv, $sessionKey, $encryptedData);
+            if(!$data){
+                $result['code'] = 10060;
+                $result['msg'] = 'Wechat internal error';
+                return json($result);
+            }
+            $WeixinMemberModel = new WeixinMemberModel;
+            $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            $member_info->weixin_tel = $data['phoneNumber'];
+            $member_info->save();
+            $result['code'] = 1;
+            $result['data'] = $data;
+            return json($result);
+        }else{
+            $result['code'] = 10061;
+            $result['msg'] = 'Please request by post';
+            return json($result);
+        }
+        
+    }
+
+    /**
+     * 功能描述：帐号下已存在的订阅消息模板列表
+     * @author  Lucas 
+     * @link https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
      * 创建时间:  2020-03-09 14:21:15
      */
     public function mini_template_list(){
         include EXTEND_PATH.'wechat/include.php';
         $mini = \WeMini\Template::instance($this->config);
-        $res = $mini->getTemplateList();
+        $res = $mini->getSubscribeTemplateList();
         $result = [];
-        $result['data'] = $res['list'];
+        $result['data'] = $res['data'];
         $result['msg'] = '获取成功！';
         $result['code'] = 1;
         return json($result);
-        // try {
-        //     echo '<pre>';
-        //     print_r($mini->getTemplateList());
-        // } catch (Exception $e) {
-        //     var_dump($e->getMessage());
-        // }
     }
 
     /**
@@ -433,7 +485,11 @@ class Index extends Common
     {
 
         $id = input('id');
-       
+        $ref_description = input('ref_description');
+        if(!$ref_description){
+            return  $this->error('退款备注不能为空');
+        }
+        //exit;  
         $WeixinOrderModel = new WeixinOrderModel;
         $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
 
@@ -480,6 +536,7 @@ class Index extends Common
         $WeixinOrderRefundModel->member_id = $order_info['member_id'];
         $WeixinOrderRefundModel->refund_id = $result['refund_id'];
         $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
+        $WeixinOrderRefundModel->ref_description = $ref_description;
         $WeixinOrderRefundModel->save();
 
         // 更新租金订单表,将缴费记录回退

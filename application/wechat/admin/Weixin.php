@@ -16,6 +16,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
 use app\wechat\model\Weixin as WeixinModel;
+use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
@@ -46,15 +47,7 @@ class Weixin extends Admin
 		return $this->fetch();
 	}
 
-	public function noticeIndex()
-	{
-		return $this->fetch();
-	}
 
-	// public function tempIndex()
-	// {
-	// 	return $this->fetch();
-	// }
 
 	public function payRecord()
 	{	
@@ -139,7 +132,18 @@ class Weixin extends Admin
 	{
 		$id = input('id');
 		$WeixinMemberHouseModel = new WeixinMemberHouseModel;
-		$houselist = $WeixinMemberHouseModel->house_list($id);
+		$houselist = WeixinMemberHouseModel::where([['member_id','eq',$id]])->select()->toArray();
+		foreach($houselist as &$h){
+			//halt($h);
+			$house_info = HouseModel::with(['ban','tenant'])->where([['house_id','eq',$h['house_id']]])->find();
+			//halt($house_info);
+			$h['house_number'] = $house_info['house_number'];
+			$h['house_pre_rent'] = $house_info['house_pre_rent'];
+			$h['ban_address'] = $house_info['ban_address'];
+			$h['tenant_name'] = $house_info['tenant_name'];
+
+		}
+		//$houselist = $WeixinMemberHouseModel->house_list($id);
 		//halt($houselist);
 		$this->assign('houselist',$houselist);
 		return $this->fetch();
@@ -157,11 +161,16 @@ class Weixin extends Admin
 		$WeixinMemberModel = new WeixinMemberModel;
 		$member_info = $WeixinMemberModel->with('tenant')->find($id);
 		$this->assign('data_info',$member_info);
-		//获取绑定的房屋数量
+		// 获取绑定的房屋数量
 		$WeixinMemberHouseModel = new WeixinMemberHouseModel;
-		$houselist = $WeixinMemberHouseModel->house_list($id);
-		$this->assign('houselist',$houselist);
-		
+		$housePayCount = WeixinMemberHouseModel::where([['member_id','eq',$id]])->count();
+		$this->assign('housePayCount',$housePayCount);
+		// 获取支付的订单数
+		$order_info = WeixinOrderModel::where([['order_status','eq',1],['member_id','eq',$id]])->column('pay_money');
+		$orderMoneys = bcaddMerge($order_info);
+		//halt($order_info);
+		$this->assign('orderMoneys',$orderMoneys);
+		$this->assign('orderCount',count($order_info));
 		return $this->fetch();
 	}
 
