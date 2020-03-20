@@ -688,7 +688,7 @@ class Weixin extends Common
      * @author  Lucas 
      * 创建时间: 2020-02-28 15:06:57 
      */
-    public function tenant_info() 
+    public function member_info() 
     {
         // 验证令牌
         $result = [];
