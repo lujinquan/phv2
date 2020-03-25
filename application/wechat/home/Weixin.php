@@ -23,6 +23,7 @@ use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
+use app\wechat\model\WeixinGuide as WeixinGuideModel;
 use app\wechat\model\WeixinColumn as WeixinColumnModel;
 use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\wechat\model\WeixinBanner as WeixinBannerModel;
@@ -45,7 +46,7 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
  */
 class Weixin extends Common
 {
-    protected $debug = false;
+    protected $debug = true;
 
     public function index()
     {
@@ -450,7 +451,14 @@ class Weixin extends Common
         $result['data']['app_user_index_banner'] = $banners;
         // 获取公告列表
         $WeixinNoticeModel = new WeixinNoticeModel;
-        $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort asc')->select()->toArray();
+        $noticeWhere = [];
+        $noticeWhere[] = ['dtime','eq',0];
+        $noticeWhere[] = ['is_show','eq',1];
+        $noticeWhere[] = ['type','eq',1];
+        if(!$member_info['tenant_id']){ //如果没有关联租户id
+            $noticeWhere[] = ['is_auth','eq',0];
+        }
+        $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where($noticeWhere)->order('sort asc')->select()->toArray();
         // 获取业务列表
         $WeixinColumnModel = new WeixinColumnModel;
         $columns = $WeixinColumnModel->field('col_id,col_name,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
@@ -462,6 +470,8 @@ class Weixin extends Common
              }
              //halt($v);
         }
+        // 获取服务配置
+        $result['data']['service'] = Db::name('weixin_service_config')->find();
 //halt($member_info);
         $result['data']['column'] = $columns;
         // 基础配置
@@ -492,13 +502,59 @@ class Weixin extends Common
                 $result['msg'] = 'Invalid token';
                 return json($result);
             }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        
+        $page = input('page',1);
+        $limit = 5;
+        // 获取公告列表
+        $noticeWhere = [];
+        $noticeWhere[] = ['dtime','eq',0];
+        $noticeWhere[] = ['is_show','eq',1];
+        $noticeWhere[] = ['type','eq',1];
+        if(!$member_info['tenant_id']){ //如果没有关联租户id
+            $noticeWhere[] = ['is_auth','eq',0];
+        }
+        $result['data'] = WeixinNoticeModel::field('id,title,type,content,ctime')->where($noticeWhere)->order('sort desc')->page($page)->limit($limit)->select()->toArray(); 
+        $result['count'] = WeixinNoticeModel::where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->count('id');
+        $result['pages'] = ceil($result['count'] / $limit);
+        $result['curr_page'] = $page;
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！'; 
+        return json($result);    
+    }
+
+    /**
+     * 功能描述：获取办事指引列表
+     * @author  Lucas 
+     * 创建时间: 2020-03-25 14:00:09
+     */
+    public function guide_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
         }
         $page = input('page',1);
         $limit = 5;
         // 获取公告列表
  
-        $result['data'] = WeixinNoticeModel::field('id,title,type,content,ctime')->where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->order('sort desc')->page($page)->limit($limit)->select()->toArray(); 
-        $result['count'] = WeixinNoticeModel::where([['dtime','eq',0],['is_show','eq',1],['type','eq',1]])->count('id');
+        $result['data'] = WeixinGuideModel::field('id,title,remark,content,ctime')->where([['is_show','eq',1]])->order('sort asc')->page($page)->limit($limit)->select()->toArray(); 
+        $result['count'] = WeixinGuideModel::where([['is_show','eq',1]])->count('id');
         $result['pages'] = ceil($result['count'] / $limit);
         $result['curr_page'] = $page;
         $result['code'] = 1;
@@ -555,6 +611,45 @@ class Weixin extends Common
         }
         $WeixinNoticeModel = new WeixinNoticeModel;
         $result['data'] = $WeixinNoticeModel->get($id);
+        //halt($result['data']);
+        if(!$result['data']){
+            $result['code'] = 10006;
+            $result['msg'] = 'Key ID is error';
+            return json($result);
+        }
+        $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
+        // $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';     
+        return json($result);
+    }
+
+    /**
+     * 功能描述：获取办事指引的详情
+     * @author  Lucas 
+     * 创建时间: 2020-02-26 16:21:03
+     */
+    public function guide_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+        }
+        // 获取
+        $id = trim(input('id'));
+        if(!$id){
+            $result['code'] = 10005;
+            $result['msg'] = 'Key ID is empty';
+            return json($result);
+        }
+        $WeixinGuideModel = new WeixinGuideModel;
+        $result['data'] = $WeixinGuideModel->get($id);
         //halt($result['data']);
         if(!$result['data']){
             $result['code'] = 10006;

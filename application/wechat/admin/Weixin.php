@@ -48,14 +48,27 @@ class Weixin extends Admin
 	}
 
 
-
+	/**
+	 * 功能描述： 支付记录列表
+	 * =====================================
+	 * @author  Lucas 
+	 * email:   598936602@qq.com 
+	 * Website  address:  www.mylucas.com.cn
+	 * =====================================
+	 * 创建时间: 2020-03-25 14:59:38
+	 * @example 
+	 * @link    文档参考地址：
+	 * @return  返回值  
+	 * @version 版本  1.0
+	 */
 	public function payRecord()
 	{	
+		$WeixinOrderModel = new WeixinOrderModel;
 		if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $WeixinOrderModel = new WeixinOrderModel;
+            
             $where = $WeixinOrderModel->checkWhere($getData);
             // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
@@ -70,6 +83,7 @@ class Weixin extends Admin
 				}
 				
             }
+
             //halt($temp);
             $data['data'] = $temp;
             $data['count'] = WeixinOrderModel::where($where)->count();//halt($data['data']);
@@ -77,6 +91,7 @@ class Weixin extends Admin
             $data['msg'] = '';
             return json($data);
         }
+        $WeixinOrderModel::where([['order_status','eq',1]])->delete();
 		return $this->fetch();
 	}
 
