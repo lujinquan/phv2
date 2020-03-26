@@ -19,9 +19,9 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
-use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 
 /**
  * 微信小程序用户版
@@ -63,12 +63,12 @@ class Weixin extends Admin
 	 */
 	public function payRecord()
 	{	
-		$WeixinOrderModel = new WeixinOrderModel;
+		
 		if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            
+            $WeixinOrderModel = new WeixinOrderModel;
             $where = $WeixinOrderModel->checkWhere($getData);
             // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
@@ -91,7 +91,16 @@ class Weixin extends Admin
             $data['msg'] = '';
             return json($data);
         }
-        $WeixinOrderModel::where([['order_status','eq',1]])->delete();
+        $currExpirTime = time()-7200;
+        // 删除过期的预支付订单
+        // $prepay_orders = WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->field('out_trade_no')->select()->toArray();
+        // if($prepay_orders){
+        // 	foreach ($prepay_orders as $key => $val) {
+	       //  	WeixinOrderTradeModel::where([['out_trade_no','eq',$val['out_trade_no']]])->delete();
+	       //  }
+	       //  WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->delete();
+        // }
+        
 		return $this->fetch();
 	}
 
