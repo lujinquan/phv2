@@ -80,8 +80,11 @@ class Weconfig extends Admin
             	case 'service_conf':
                     $is_show = input('is_show');
                     $value = input('value');
+                    if(!$value){
+                        $this->error('内容不能为空');
+                    }
             		Db::name('weixin_service_config')->where([['id','eq',1]])->update(['is_show'=>$is_show,'value'=>$value]);
-                    $this->success('编辑成功');
+                    $this->success('修改成功');
             		break;
             	default:
             		# code...
@@ -126,10 +129,10 @@ class Weconfig extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            // $result = $this->validate($data, 'WeixinNotice');
-            // if($result !== true) {
-            //     return $this->error($result);
-            // }
+            $result = $this->validate($data, 'WeixinGuide');
+            if($result !== true) {
+                return $this->error($result);
+            }
             $WeixinGuideModel = new WeixinGuideModel;
             $data['cuid'] = ADMIN_ID;
             $data['content'] = htmlspecialchars($data['content']);
@@ -148,10 +151,10 @@ class Weconfig extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            // $result = $this->validate($data, 'WeixinNotice');
-            // if($result !== true) {
-            //     return $this->error($result);
-            // }
+            $result = $this->validate($data, 'WeixinGuide');
+            if($result !== true) {
+                return $this->error($result);
+            }
             // 入库
             if (!$WeixinGuideModel->allowField(true)->update($data)) {
                 return $this->error('编辑失败');

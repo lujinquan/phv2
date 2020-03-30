@@ -46,8 +46,8 @@ class WeixinOrder extends Model
             $where[] = ['order_status','eq',$data['order_status']];
         }
         // 检索订单编号
-        if(isset($data['out_order_no']) && $data['out_order_no']){
-            $where[] = ['out_order_no','like','%'.$data['out_order_no'].'%'];
+        if(isset($data['out_trade_no']) && $data['out_trade_no']){
+            $where[] = ['out_trade_no','like','%'.$data['out_trade_no'].'%'];
         }
         // // 检索产别
         // if(isset($data['tel']) && $data['tel']){

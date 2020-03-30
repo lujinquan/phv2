@@ -9,7 +9,7 @@
 				<div class="layui-col-md12">
 					<div class="j-form-label"><i class="red">*</i>标题</div>
 					<div class="j-input-inline">
-						<input type="text" id="title" name="title" autocomplete="off" class="layui-input">
+						<input type="text" id="title" name="title" lay-verify="required" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -18,8 +18,7 @@
 					<label class="j-form-label"><i class="red">*</i>是否启用</label>
 					<div class="j-input-inline">
 						<select name="is_show" lay-search="">
-							<option value="">请选择</option>
-							<option value="1">启用</option>
+							<option value="1" selected="selected">启用</option>
 							<option value="0">禁用</option>
 						</select>
 					</div>
@@ -27,14 +26,14 @@
 				<div class="layui-col-md4">
 					<div class="j-form-label"><i class="red">*</i>排序</div>
 					<div class="j-input-inline">
-						<input type="text" name="sort" autocomplete="off" class="layui-input" value="1000">
+						<input type="text" name="sort" autocomplete="off" lay-verify="required" class="layui-input" value="1000">
 					</div>
 				</div>
 				
 			</div>
 			<div class="layui-row layui-form-item layui-col-space90">
 				<div class="layui-col-md8">
-					<div class="j-form-label"><i class="red">*</i>简介</div>
+					<div class="j-form-label"><i class="red"></i>简介</div>
 					<div class="j-input-inline">
 						<input type="text" name="remark" autocomplete="off" class="layui-input" value="">
 					</div>
@@ -53,7 +52,7 @@
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
+			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 		</div>
 	</div>
 	</div>

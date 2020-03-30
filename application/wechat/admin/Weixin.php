@@ -70,6 +70,7 @@ class Weixin extends Admin
             $getData = $this->request->get();
             $WeixinOrderModel = new WeixinOrderModel;
             $where = $WeixinOrderModel->checkWhere($getData);
+            //halt($where);
             // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
             $temp = WeixinOrderModel::with('weixinMember')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
@@ -93,13 +94,13 @@ class Weixin extends Admin
         }
         $currExpirTime = time()-7200;
         // 删除过期的预支付订单
-        // $prepay_orders = WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->field('out_trade_no')->select()->toArray();
-        // if($prepay_orders){
-        // 	foreach ($prepay_orders as $key => $val) {
-	       //  	WeixinOrderTradeModel::where([['out_trade_no','eq',$val['out_trade_no']]])->delete();
-	       //  }
-	       //  WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->delete();
-        // }
+        $prepay_orders = WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->field('out_trade_no')->select()->toArray();
+        if($prepay_orders){
+        	foreach ($prepay_orders as $key => $val) {
+	        	WeixinOrderTradeModel::where([['out_trade_no','eq',$val['out_trade_no']]])->delete();
+	        }
+	        WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->delete();
+        }
         
 		return $this->fetch();
 	}
