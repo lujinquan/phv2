@@ -2,9 +2,9 @@
   <table class="layui-table">
     <colgroup>
       <col width="150">
+      <col width="500">
       <col width="150">
       <col width="150">
-      <col width="200">
       <col>
     </colgroup>
     <thead>
@@ -26,10 +26,12 @@
         <td>
         {if condition="$v['is_auth']"}
         	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-warm">已认证</a>
+          <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">删除</a>
         {else /}
         	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+          <a href="javascript:;" data-href="{:url('delbindhouse')}?id={$v['id']}" hisi-data="{refresh: 2}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
         {/if}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-danger">删除</a>
+        
         </td>
       </tr>
      {/volist}
@@ -37,6 +39,7 @@
     </tbody>
   </table>
 </div>
+{include file="system@block/layui" /}
  <!-- <div class="pop-bottom-bar">
    <div class="layui-input-block">
      <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>

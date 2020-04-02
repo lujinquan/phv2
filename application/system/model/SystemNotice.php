@@ -37,10 +37,10 @@ class SystemNotice extends Model
     	}
     }
 
-    public function getCuidAttr($value){
-        //halt(session('systemusers')[$value]);
-        return session('systemusers')?session('systemusers')[$value]['nick']:$value;
-    }
+    // public function getCuidAttr($value){
+    //     //halt(session('systemusers')[$value]);
+    //     return session('systemusers')?session('systemusers')[$value]['nick']:$value;
+    // }
 
     // public function getContentAttr($value){
     //     return htmlspecialchars_decode($value);

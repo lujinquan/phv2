@@ -29,6 +29,8 @@ use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\wechat\model\WeixinBanner as WeixinBannerModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
 /**
@@ -46,7 +48,7 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
  */
 class Weixin extends Common
 {
-    protected $debug = false;
+    protected $debug = true;
 
     public function index()
     {
@@ -592,6 +594,7 @@ class Weixin extends Common
      */
     public function notice_detail()
     {
+        //halt(session('systemusers'));
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -618,7 +621,7 @@ class Weixin extends Common
             return json($result);
         }
         $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
-        // $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
+        $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
         $result['code'] = 1;
         $result['msg'] = '获取成功！';     
         return json($result);
@@ -846,7 +849,7 @@ class Weixin extends Common
             $token = input('token');
             $openid = cache('weixin_openid_'.$token);
         }else{
-            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
         }
 
         $WeixinMemberModel = new WeixinMemberModel;
@@ -887,6 +890,52 @@ class Weixin extends Common
         // }
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+      
+        return json($result); 
+    }
+
+     /**
+     * 功能描述： 获取某个订单的历史详情
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function order_hisitory() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+        $rentOrderID = input('get.rent_order_id');
+        if(!$rentOrderID){
+            $result['code'] = 10051;
+            $result['msg'] = 'Rent Order Id is empty';
+            return json($result);
+        }
+        $params = ParamModel::getCparams();
+        //alias('a')->join('order b')
+        $trades = WeixinOrderTradeModel::where([['rent_order_id','eq',$rentOrderID]])->select()->toArray();
+        $data = [];
+        foreach ($trades as $k => $v) {
+            $orderInfo = WeixinOrderModel::where([['out_trade_no','eq',$v['out_trade_no']]])->find();
+            $data[] = [
+                'time' => $orderInfo['ptime'],
+                'msg' => $params['order_status'][$orderInfo['order_status']],
+            ];
+        }
+        
+        $result['data'] = $data;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
       

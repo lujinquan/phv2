@@ -153,6 +153,30 @@ class Weixin extends Admin
 		return $this->fetch();
 	}
 
+	public function payRecordlist()
+	{
+		$id = input('id');
+		$memberinfo = WeixinMemberModel::where([['member_id','eq',$id]])->find();
+		$orderlist = WeixinOrderModel::where([['member_id','eq',$id]])->select()->toArray();
+
+		foreach ($orderlist as $k => &$v) {
+        	$rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
+        	//halt($rent_order_id);
+			$info = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_number,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
+			if($info){
+				$v['house_number'] = $info['house_number'];
+				$v['ban_address'] = $info['ban_address'];
+			}
+			
+			$v['avatar'] = $memberinfo['avatar'];
+			$v['openid'] = $memberinfo['openid'];
+			$v['member_name'] = $memberinfo['member_name'];
+        }
+        //halt($orderlist);
+		$this->assign('orderlist',$orderlist);
+		return $this->fetch();
+	}
+
 	public function bindHouselist()
 	{
 		$id = input('id');
@@ -172,6 +196,36 @@ class Weixin extends Admin
 		//halt($houselist);
 		$this->assign('houselist',$houselist);
 		return $this->fetch();
+	}
+
+	/**
+	 * 解除会员与房屋的绑定
+	 * =====================================
+	 * @author  Lucas 
+	 * email:   598936602@qq.com 
+	 * Website  address:  www.mylucas.com.cn
+	 * =====================================
+	 * 创建时间: 2020-04-01 09:11:08
+	 * @return  返回值  
+	 * @version 版本  1.0
+	 */
+	
+	public function delbindhouse()
+	{
+		$id = input('id');
+		$WeixinMemberHouseModel = new WeixinMemberHouseModel;
+		$info = $WeixinMemberHouseModel->get($id);
+		if($info['is_auth']){
+			$this->error('当前房屋已认证无法解绑');
+		}
+		$info->dtime = time();
+		$info->save();
+		//$res = WeixinMemberHouseModel::where([['id','eq',$id]])->delete();
+		if($res){
+			$this->success('解绑成功');
+		}else{
+			$this->error('解绑失败');
+		}
 	}
 
 	/**

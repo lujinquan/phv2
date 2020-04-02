@@ -49,12 +49,12 @@
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 	<a href="{:url('memberdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
-	<a href="{:url('bindhouselist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
-    <a href="javasript:;" class="layui-btn layui-btn-xs layui-btn-normal">支付订单</a>
+	<a href="{:url('bindHouselist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
+    <a href="{:url('payRecordlist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="支付订单" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">支付订单</a>
     {{#  if (d.tenant_id > 0) { }}
 	<a href="{:url('authdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
 	{{#  } else { }}
-   	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-primary">未认证</a>
+   	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">未认证</a>
     {{#  }  }} 
 </script>
 </div>
@@ -81,11 +81,11 @@
                 ,{field: 'member_name', minWidth: 120, align:'center', title: '用户名',templet: function(d){
 					return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
             	}}
-                ,{field: 'real_name',width:100,align:'center', title: '真实姓名'}
+                ,{field: 'real_name',hide: true,width:100,align:'center', title: '真实姓名'}
                 ,{field: 'tel', minWidth: 120, align:'center', title: '手机号'}
-                ,{field: 'create_time',width: 160, align:'center', title: '注册时间'}
+                ,{field: 'create_time',width: 200, align:'center', title: '注册时间'}
                 ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', minWidth: 300, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 340, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
 				

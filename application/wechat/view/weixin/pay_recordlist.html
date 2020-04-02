@@ -1,0 +1,52 @@
+<div class="layui-form">
+  <table class="layui-table">
+    <colgroup>
+      <col width="150">
+      <col width="120">
+      <col width="100">
+      <col width="150">
+      <col width="150">
+      <col width="180">
+      <col width="100">
+      <col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th>订单编号</th>
+        <th>用户名</th>
+        
+        <th>交易金额</th>
+        <th>房屋编号</th>
+        <th>楼栋地址</th>
+        
+        <th>交易时间</th>
+        <th>支付状态</th>
+<!--         <th>操作</th> -->
+      </tr> 
+    </thead>
+    <tbody>
+    {volist name="orderlist" id="v"}
+      <tr>
+        <td>{$v['out_trade_no']}</td>
+        <td><div class="j-user"><img src="{$v['avatar']}" alt="" width="28px" height="28px"></a>  {$v['member_name']}</div></td>
+     
+        <td>{$v['pay_money']}</td>
+        <td>{$v['house_number']}</td>
+        <td>{$v['ban_address']}</td>
+      
+        <td>{$v['ptime']}</td>
+        <td><div class="layui-table-cell">{$params.order_status[$v['order_status']]}</div></td>
+        
+      </tr>
+     {/volist}
+      
+    </tbody>
+  </table>
+</div>
+{include file="system@block/layui" /}
+ <!-- <div class="pop-bottom-bar">
+   <div class="layui-input-block">
+     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>
+     <a href="javascript:;" class="layui-btn layui-btn-primary j-cancel">取消</a>
+   </div>
+ </div> -->
