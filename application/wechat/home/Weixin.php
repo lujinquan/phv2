@@ -136,7 +136,8 @@ class Weixin extends Common
             // 如果在系统中查不到微信会员信息
             }else{
                 $WeixinMemberModel->openid = $resultOpenid['openid'];
-                //$WeixinMemberModel->unionid = $resultOpenid['unionid'];
+                $WeixinMemberModel->app_cols = ["3","4","5"]; // 默认显示缴费、报修、办事指引图标
+                $WeixinMemberModel->member_name = '未授权的用户';
                 $WeixinMemberModel->last_login_time = time();
                 $WeixinMemberModel->last_login_ip = get_client_ip();
                 $WeixinMemberModel->save();
@@ -474,7 +475,17 @@ class Weixin extends Common
         }
         // 获取服务配置
         $result['data']['service'] = Db::name('weixin_service_config')->find();
-//halt($member_info);
+        if($result['data']['service']){
+            //halt($result['data']['service']['value']);
+            $service = htmlspecialchars_decode($result['data']['service']['value']);
+            //halt($service);
+            $curr_domin = input('server.http_host');
+            if(strpos($service, 'https') === false){
+                $service = str_replace('/static/js/editor/kindeditor/file/image', 'https://'.$curr_domin.'/static/js/editor/kindeditor/file/image', $service);
+            }
+            $result['data']['service']['value'] = $service;
+        }
+        
         $result['data']['column'] = $columns;
         // 基础配置
         $configs = WeixinConfigModel::column('name,value');
@@ -552,7 +563,7 @@ class Weixin extends Common
             }
         }
         $page = input('page',1);
-        $limit = 5;
+        $limit = 20;
         // 获取公告列表
  
         $result['data'] = WeixinGuideModel::field('id,title,remark,content,ctime')->where([['is_show','eq',1]])->order('sort asc')->page($page)->limit($limit)->select()->toArray(); 
@@ -620,7 +631,12 @@ class Weixin extends Common
             $result['msg'] = 'Key ID is error';
             return json($result);
         }
-        $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
+        $content = htmlspecialchars_decode($result['data']['content']);
+        $curr_domin = input('server.http_host');
+        if(strpos($content, 'https') === false){
+            $content = str_replace('/static/js/editor/kindeditor/file/image', 'https://'.$curr_domin.'/static/js/editor/kindeditor/file/image', $content);
+        }
+        $result['data']['content'] = $content;
         $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
         $result['code'] = 1;
         $result['msg'] = '获取成功！';     
@@ -659,8 +675,13 @@ class Weixin extends Common
             $result['msg'] = 'Key ID is error';
             return json($result);
         }
-        $result['data']['content'] = htmlspecialchars_decode($result['data']['content']);
-        // $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
+        $content = htmlspecialchars_decode($result['data']['content']);
+        $curr_domin = input('server.http_host');
+        if(strpos($content, 'https') === false){
+            $content = str_replace('/static/js/editor/kindeditor/file/image', 'https://'.$curr_domin.'/static/js/editor/kindeditor/file/image', $content);
+        }
+        $result['data']['content'] = $content;
+        $result['data']['cuid'] = Db::name('system_user')->where([['id','eq',$result['data']['cuid']]])->value('nick');
         $result['code'] = 1;
         $result['msg'] = '获取成功！';     
         return json($result);
@@ -811,20 +832,28 @@ class Weixin extends Common
 
         // 查找绑定的房屋
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        // 获取关联的所有房屋
         $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
+        // 获取关联的所有自己已认证的房屋
+        $is_auth_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['is_auth','eq',1]])->column('house_id');
 
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
-        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
+        $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
             //halt($v);
             $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
-
+            $v['is_auth'] = 0;
+            if(in_array($v['house_id'], $is_auth_houses)){
+                $yue += $v['house_balance'];
+                $v['is_auth'] = 1;
+            }
+            
             $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
             $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
             //$value['id'] = $key + 1;
         }
-            
-   
+        $result['data']['yue'] = $yue;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
         return json($result); 
@@ -832,6 +861,7 @@ class Weixin extends Common
 
     /**
      * 功能描述： 获取我的订单列表数据
+     * 小程序使用页面：【 我的 -> 历史账单 】
      * @author  Lucas 
      * 创建时间: 2020-02-28 10:13:33
      */
@@ -869,7 +899,7 @@ class Weixin extends Common
             return json($result);
         }
 
-        $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_way,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
         $where = [];
         $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
         $where[] = ['a.house_id','in',$houses];
@@ -883,11 +913,11 @@ class Weixin extends Common
         }
         //halt($where);
         $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
-
-        // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
-        // foreach ($result['data']['rent'] as $key => &$value) {
-        //     $value['id'] = $key + 1;
-        // }
+        $params = ParamModel::getCparams();
+        
+        foreach ($result['data']['rent'] as $key => &$value) {
+            $value['pay_way_name'] = $params['pay_way'][$value['pay_way']];
+        }
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
         $result['code'] = 1;

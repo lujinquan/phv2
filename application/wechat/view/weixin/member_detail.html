@@ -14,7 +14,9 @@
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">真实姓名：</label>
- 	<div class="layui-form-mid layui-word-aux">{$data_info['real_name']}</div>
+ 	<div class="layui-input-block">
+	  <input type="text" name="real_name" value="{$data_info['real_name']}" autocomplete="off" placeholder="请输入真实姓名" class="layui-input">
+	</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">认证手机号：</label>
@@ -30,7 +32,11 @@
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">用户状态：</label>
- 	<div class="layui-form-mid layui-word-aux">{if condition="$data_info['is_show']"}启用{else /}禁用{/if}</div>
+ 	<div class="j-input-inline j-input-radio">
+  		<input type="radio" name="is_show" value="1" title="启用" {if condition="$data_info['is_show'] == 1"}checked=""{/if}>
+  		<input type="radio" name="is_show" value="2" title="禁用" {if condition="$data_info['is_show'] == 2"}checked=""{/if}>
+  	</div>
+ 	<!-- <div class="layui-form-mid layui-word-aux">{if condition="$data_info['is_show']"}启用{else /}禁用{/if}</div> -->
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">注册时间：</label>
@@ -52,16 +58,22 @@
  	<label class="layui-form-label">成交金额：</label>
  	<div class="layui-form-mid layui-word-aux">{$orderMoneys}元</div>
  </div>
- <!-- <div class="layui-form-item">
+ <div class="layui-form-item">
  	<label class="layui-form-label">备注：</label>
- 	<div class="layui-form-mid layui-word-aux">占位</div>
- </div> -->
- <!-- <div class="pop-bottom-bar">
+ 	<div class="layui-form-mid layui-word-aux">
+ 	<textarea name="remark" style="width:300px;height:100px;">
+ 		{$data_info['remark']}
+ 	</textarea>
+ 	<!-- <input type="text" id="title" name="title" autocomplete="off" class="layui-input"> -->
+ 	</div>
+ </div>
+ <input type="hidden" name="member_id" value="{$data_info['member_id']}">
+ <div class="pop-bottom-bar">
    <div class="layui-input-block">
-     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>
+     <button type="submit" class="layui-btn layui-btn-normal" hisi-data="{pop: true, refresh: true}" lay-submit="" lay-filter="formSubmit">修改</button>
      <a href="javascript:;" class="layui-btn layui-btn-primary j-cancel">取消</a>
    </div>
- </div> -->
+ </div>
 </form>	
 {include file="system@block/layui" /}
 <script>
