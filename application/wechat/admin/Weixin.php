@@ -236,8 +236,21 @@ class Weixin extends Admin
 	public function memberDetail()
 	{
 		$id = input('id');
-		//halt($id);
 		$WeixinMemberModel = new WeixinMemberModel;
+		if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            // $result = $this->validate($data, 'WeixinNotice');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            // 入库
+            if (!$WeixinMemberModel->allowField(true)->update($data)) {
+                return $this->error('编辑失败');
+            }
+            return $this->success('编辑成功');
+        }
+		
 		$member_info = $WeixinMemberModel->with('tenant')->find($id);
 		$this->assign('data_info',$member_info);
 		// 获取绑定的房屋数量
