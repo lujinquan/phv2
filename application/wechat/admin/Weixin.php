@@ -121,8 +121,12 @@ class Weixin extends Admin
 			$order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
 			$this->assign('order_refund_info',$order_refund_info);
 		}
-		
-		//halt($order_info);
+		$WeixinOrderTradeModel = new WeixinOrderTradeModel;
+		$rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id');
+		$houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->column('b.house_number');
+
+		//halt($houses);
+		$this->assign('houses',$houses);
 		$this->assign('data_info',$order_info);
 		//获取绑定的房屋数量
 		// $WeixinMemberHouseModel = new WeixinMemberHouseModel;

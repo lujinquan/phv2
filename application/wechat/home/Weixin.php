@@ -65,6 +65,7 @@ class Weixin extends Common
     {
         $code = input('code'); //小程序传来的code值
         $result = [];
+        $result['action'] = 'wechat/weixin/applogin';
         if(!$code){
             $result['code'] = 1001;
             $result['msg'] = 'Code value cannot be empty';
@@ -184,6 +185,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/applogin_do';
         if(!$this->check_token()){
             $result['msg'] = '令牌已失效！';
             return json($result);
@@ -311,6 +313,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/column_list';
         if($this->debug === false){
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -386,6 +389,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/edit_my_column_list';
         if($this->debug === false){
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -453,6 +457,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
         if($this->debug === false){
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -532,6 +537,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/notice_list';
         if($this->debug === false){
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -578,6 +584,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/guide_list';
         if($this->debug === false){
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -633,6 +640,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/notice_detail';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -696,6 +704,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/guide_detail';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -740,6 +749,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/add_member_house';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -803,6 +813,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/my_house_list';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -855,6 +866,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/member_info';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -913,6 +925,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/my_order_list';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -934,36 +947,57 @@ class Weixin extends Common
 
         // 查找绑定的房屋
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
-        $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
-        //halt($houses);
-        if(!$houses){
+        
+        $houseArr = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id,is_auth');
+        //halt($houseArr);
+        if(!$houseArr){
             $result['code'] = 10050;
             $result['msg'] = 'The current user is not bound to any house';
             return json($result);
         }
+        //$WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id');
+        $houseIds = array_keys($houseArr);
 
-        $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_way,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
         $where = [];
         $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-        $where[] = ['a.house_id','in',$houses];
+        
         if($houseID){
+            $houseArr = $WeixinMemberHouseModel->where([['house_id','eq',$houseID]])->column('house_id,is_auth');
             $where[] = ['a.house_id','eq',$houseID];
+        }else{
+            
+            // halt($houseIds);
+            // $houseAuths = array_values($houseArr);
+            $where[] = ['a.house_id','in',$houseIds];
         }
         if($datasel){
             $startDate = substr($datasel,0,4);
             $endDate = substr($datasel,5,2);
             $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
         }
-        //halt($where);
-        $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+        $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_way,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $rents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
         $params = ParamModel::getCparams();
-        
-        foreach ($result['data']['rent'] as $key => &$value) {
+        $result['data']['rent'] = [];
+        foreach ($rents as $key => $value) {
+            // 如果当前房子不是自己认证的房屋，则只显示当前会员支付的订单
+            if($houseArr[$value['house_id']] == 0 && $value['pay_way'] == 4){
+                $find = WeixinOrderTradeModel::alias('a')->join('weixin_order b','a.out_trade_no = b.out_trade_no','inner')->where([['rent_order_id','eq',$value['rent_order_id']]])->field('b.member_id')->order('a.ctime desc')->find();
+                if(!$find){
+                    continue;
+                }
+                //halt($find);
+            }
+           
             $value['pay_way_name'] = $params['pay_way'][$value['pay_way']];
+            $result['data']['rent'][] = $value;
         }
+        //halt($result['data']['rent']);
+        //$result['data']['rent'] = $rents;
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
-        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houseIds]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
         $result['code'] = 1;
+        
         $result['msg'] = '获取成功！';
       
         return json($result); 
@@ -979,6 +1013,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/order_hisitory';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -1013,7 +1048,7 @@ class Weixin extends Common
         $result['data'] = $data;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
-      
+        
         return json($result); 
     }
 
@@ -1022,6 +1057,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/house_detail';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -1075,6 +1111,7 @@ class Weixin extends Common
         $result['data'] = $temp;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
+        
         return json($result);  
     }
 
@@ -1119,7 +1156,7 @@ class Weixin extends Common
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
-  
+        $result['action'] = 'wechat/weixin/rent_order_info';
         return json($result); 
     }
 

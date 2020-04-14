@@ -57,7 +57,7 @@ class Weconfig extends Admin
             		$WeixinBannerModel = new WeixinBannerModel;
 		            $where = $WeixinBannerModel->checkWhere($getData);
 		            $data = [];
-		            $temp = $WeixinBannerModel->where($where)->page($page)->order('sort asc')->limit($limit)->select()->toArray();
+		            $temp = $WeixinBannerModel->where($where)->page($page)->order('sort asc,id desc')->limit($limit)->select()->toArray();
 		            foreach ($temp as $k => &$v) {
 		            	$SystemAnnex = new SystemAnnex;
 		            	$v['file'] = $SystemAnnex->where([['id','eq',$v['banner_img']]])->value('file');
@@ -73,7 +73,7 @@ class Weconfig extends Admin
             		$WeixinGuideModel = new WeixinGuideModel;
                     $where = $WeixinGuideModel->checkWhere($getData);
                     $data = [];
-                    $data['data'] = $WeixinGuideModel->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+                    $data['data'] = $WeixinGuideModel->where($where)->page($page)->order('sort asc,id desc')->limit($limit)->select();
                     $data['count'] = $WeixinGuideModel->where($where)->count();
             
             		break;

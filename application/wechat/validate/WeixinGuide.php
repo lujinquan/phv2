@@ -23,14 +23,15 @@ class WeixinGuide extends Validate
     protected $rule = [
         'title|标题'       => 'require|length:4,30',
         'is_show|是否启用'       => 'require|number',
+        'sort|排序'       => 'require|number',
         'content|内容'      => 'require',
         //'__token__'      => 'require|token',
     ];
 
     //定义验证提示
     protected $message = [
-        'title.require' => '请输入标题',
-        'content.require'    => '内容不能为空',
+        // 'title.require' => '请输入标题',
+        // 'content.require'    => '内容不能为空',
     ];
 
 }

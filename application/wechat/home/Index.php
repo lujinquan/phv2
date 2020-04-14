@@ -113,6 +113,7 @@ class Index extends Common
         //$notify
         //halt($notify->appid);
         $url1 = $notify->GetPrePayUrl("123456789");
+        $curr_domin = input('server.http_host');
         //模式二
         /**
          * 流程：
@@ -131,7 +132,7 @@ class Index extends Common
         $input->SetTime_start(date("YmdHis"));
         $input->SetTime_expire(date("YmdHis", time() + 600)); //设置二维码过期时间10分钟
         $input->SetGoods_tag("goods_tag"); //设置商品标识
-        $input->SetNotify_url("https://procheck.ctnmit.com/wechat/index/orderquery"); //设置回调地址
+        $input->SetNotify_url("https://".$curr_domin."/wechat/index/orderquery"); //设置回调地址
         $input->SetTrade_type("NATIVE");
         $input->SetProduct_id("123456789");
         $result = $notify->GetPayUrl($input);
@@ -266,7 +267,7 @@ class Index extends Common
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
-            'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/payordernotify',
+            'notify_url'       => 'https://'.$curr_domin.'/wechat/index/payordernotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
@@ -435,7 +436,7 @@ class Index extends Common
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
-            'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/rechargenotify',
+            'notify_url'       => 'https://'.$curr_domin.'/wechat/index/rechargenotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
@@ -542,7 +543,7 @@ class Index extends Common
                 $row->recharge_status = 1; //充值状态，1充值成功
                 $row->save();
                 // 更新房屋余额
-                HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_banance', $row['pay_rent']);
+                HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_balance', $row['pay_rent']);
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
                 
