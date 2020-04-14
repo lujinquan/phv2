@@ -480,6 +480,8 @@ opacity: .8color: #333;}
 /* 报表管理 E */
 
 /* ----------小程序后台管理样式------------- */
+.j-definition{padding-bottom: 40px;}
+.j-definition .layui-form-item{margin-bottom: 5px!important;}
 /* .j-definition .layui-form-label{min-width: auto!important;} */
 .j-definition .layui-input-block{margin-left: 120px!important;}
 .j-definition .layui-form-mid img{width: 20px;height: 20px;border-radius: 50%;margin-right: 10px;}
