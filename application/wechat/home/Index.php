@@ -6,6 +6,7 @@ use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\rent\model\Recharge as RechargeModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
@@ -259,11 +260,12 @@ class Index extends Common
         $attach = md5($out_trade_no);
         // 下面的参数注意要换成动态的
         $options = [
-            'body'             => '测试商品',
+            'body'             => '租金账单',
             'out_trade_no'     => $out_trade_no,
             'total_fee'        => $pay_money,
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
+            'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
             'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/payordernotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
@@ -313,6 +315,243 @@ class Index extends Common
         $result['data'] = $options;
         return json($result);
 
+    }
+
+    public function recharge()
+    {
+        //halt($_SERVER['HTTP_USER_AGENT']);
+        // 生成后台订单
+        // $WeixinOrderModel = new WeixinOrderModel;
+        // $WeixinOrderModel->perpay_id = 'perpay_id';
+        // $WeixinOrderModel->out_trade_no = 'out_trade_no';
+        // $WeixinOrderModel->member_id = 'member_id';
+        // $WeixinOrderModel->rent_order_id = 1;
+        // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
+        // $res = $WeixinOrderModel->save();
+        // if($res){
+        //     $result['code'] = 1;
+        //     $result['msg'] = '添加成功';
+        //     return json($result);
+        // }
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+        // 检查房屋id是否为空
+        $house_id = input('house_id');
+        if(!$house_id){
+            $result['code'] = 10071;
+            $result['msg'] = 'House ID is empty';
+            return json($result);
+        }
+        $house_info = HouseModel::where([['house_id','eq',$house_id]])->find();
+        if(!$house_info){
+            $result['code'] = 10072;
+            $result['msg'] = 'House ID is error';
+            return json($result);
+        }
+        if($house_info['house_status'] != 1){
+            $result['code'] = 10073;
+            $result['msg'] = 'Housing status error';
+            return json($result);
+        }
+        // 检查支付金额是否为空
+        $money = input('money');
+        if(!$money){
+            $result['code'] = 10074;
+            $result['msg'] = 'Money is empty or zero';
+            return json($result);
+        }
+        // 检查是否允许充值（会员与房屋是否绑定，房屋是否未注销）
+        
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
+        if(!in_array($house_id, $member_houses)){
+            $result['code'] = 10075;
+            $result['msg'] = 'Member not bound to current house';
+            return json($result);
+        }
+        // $RentModel = new RentModel;
+        // $rentOrderIDS = explode(',',$rent_order_id);
+        // //halt($rentOrderIDS);
+        // $pay_money = 0;
+        // foreach($rentOrderIDS as $rid){
+        //     $rent_order_info = $RentModel->find($rid);
+        //     // 检查订单是否存在
+        //     if(!$rent_order_info){
+        //         $result['code'] = 10031;
+        //         $result['msg'] = 'Order ID is error';
+        //         return json($result);
+        //     }
+        //     // 检查订单是否已经完成支付
+        //     if($rent_order_info['ptime']){
+        //         $result['code'] = 10032;
+        //         $result['msg'] = 'Order has been paid, please do not pay repeatedly';
+        //         return json($result);
+        //     }
+        //     // 检查订单绑定的房屋是否以被当前会员绑定
+        //     if(!in_array($rent_order_info['house_id'],$member_houses)){
+        //         $result['code'] = 10033;
+        //         $result['msg'] = 'The house is not bound by the current member';
+        //         return json($result);
+        //     }
+        //     $pay_money += $rent_order_info['rent_order_receive']*100;
+        // }
+        //halt($pay_money);
+        
+
+        // if($member_info->tenant_id){
+        //     $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
+        //     $member_houses = array_merge($member_houses,$houses);
+        // }
+        
+        //halt($member_houses);
+        
+        
+        // 调起支付
+        include EXTEND_PATH.'wechat/include.php';
+        $wechat = \WeChat\Pay::instance($this->config);
+        //商户订单号的规则，年月日时分秒+6数字随机码
+        $out_trade_no = date('YmdHis') . random(6);
+
+        //$out_trade_no = $rent_order_info['rent_order_number'];
+        $attach = md5($out_trade_no);
+        // 下面的参数注意要换成动态的
+        $options = [
+            'body'             => '房屋余额充值',
+            'out_trade_no'     => $out_trade_no,
+            'total_fee'        => $money * 100,
+            'openid'           => $openid, //用世念的openid
+            'trade_type'       => 'JSAPI',
+            'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
+            'notify_url'       => 'https://procheck.ctnmit.com/wechat/index/rechargenotify',
+            'attach'           => $attach,
+            'spbill_create_ip' => '127.0.0.1',
+        ];
+        if ($this->debug === true) {
+            $result['code'] = 1;
+            $result['msg'] = '获取成功，这是测试数据';
+            $result['data'] = $options;
+            return json($result);
+        }
+        // 生成预支付码
+        $res = $wechat->createOrder($options);
+        //halt($result);
+        // 创建JSAPI参数签名
+        $options = $wechat->createParamsForJsApi($res['prepay_id']);
+        //dump($result );halt($options);
+        // echo '<pre>';
+        // echo "\n--- 创建预支付码 ---\n";
+        // var_export($result);
+        // echo "\n\n--- JSAPI 及 H5 参数 ---\n";
+        // var_export($options);
+        
+        // 生成后台订单
+        // $WeixinOrderModel = new WeixinOrderModel;
+        // $WeixinOrderModel->perpay_id = $res['prepay_id'];
+        // $WeixinOrderModel->attach = $attach;
+        // $WeixinOrderModel->out_trade_no = $out_trade_no;
+        // $WeixinOrderModel->member_id = $member_info->member_id;
+        // //$WeixinOrderModel->rent_order_id = $rent_order_id;
+        // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
+        // $WeixinOrderModel->save();
+
+
+        // 生成后台预充值订单
+        $RechargeModel = new RechargeModel;
+        $RechargeModel->pay_number = $out_trade_no;
+        $RechargeModel->house_id = $house_id;
+        $RechargeModel->tenant_id = $member_info['tenant_id'];
+        $RechargeModel->pay_rent = $money;
+        $RechargeModel->pay_way = 4; //微信支付
+        $RechargeModel->prepay_id = $res['prepay_id'];
+        $RechargeModel->out_trade_no = $out_trade_no;
+        //$RechargeModel->pay_remark = $rent_order_info['rent_order_receive'];
+        $RechargeModel->save();
+        
+
+        $result['code'] = 1;
+        $result['msg'] = '获取成功';
+        $result['data'] = $options;
+        return json($result);
+
+    }
+
+    /**
+     * 功能描述：充值支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
+     * 创建时间: 2020-03-12 21:53:40
+     */
+    public function rechargenotify()
+    {
+
+        include EXTEND_PATH.'wechat/include.php';
+        $wechat = \WeChat\Pay::instance($this->config);
+        // 获取通知参数
+        $data = $wechat->getNotify();
+        // 下面是一个返回data的例子
+        // $data = [
+        //     'appid' => 'wx2421b1c4370ec43b',
+        //     'attach' => '支付测试',
+        //     'bank_type' => 'CFT',
+        //     'fee_type' => 'CNY',
+        //     'is_subscribe' => 'Y',
+        //     'mch_id' => '10000100',
+        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
+        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
+        //     'out_trade_no' => '1409811653',
+        //     'result_code' => 'SUCCESS',
+        //     'return_code' => 'SUCCESS',
+        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
+        //     'time_end' => '20140903131540',
+        //     'total_fee' => '1',
+        //     'coupon_fee' => '10',
+        //     'coupon_count' => '1',
+        //     'coupon_type' => 'CASH',
+        //     'coupon_id' => '10000',
+        //     'coupon_fee' => '100',
+        //     'trade_type' => 'JSAPI',
+        //     'transaction_id' => '1004400740201409030005092168',
+        // ];
+        if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
+            // @todo 去更新下原订单的支付状态
+            //$order_no = $data['out_trade_no'];
+
+            // 生成后台订单
+            $RechargeModel = new RechargeModel;
+            $row = $RechargeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->find();
+            // 更新预付订单
+            if($row){
+                // 更新预付订单
+                $row->transaction_id = $data['transaction_id'];
+                $row->ptime = strtotime($data['time_end']); //支付时间
+                $row->pay_rent = $data['total_fee'] / 100; //支付金额，单位：分
+                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
+                $row->recharge_status = 1; //充值状态，1充值成功
+                $row->save();
+                // 更新房屋余额
+                HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_banance', $row['pay_rent']);
+            // 如果通过out_trae_no无法找到预付订单，则抛出错误
+            }else{
+                
+            }
+
+            // 返回接收成功的回复
+            ob_clean();
+            echo $wechat->getNotifySuccessReply();
+        }
     }
 
     /**

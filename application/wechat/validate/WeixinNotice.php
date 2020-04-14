@@ -22,16 +22,18 @@ class WeixinNotice extends Validate
 	//定义验证规则
     protected $rule = [
         'title|标题'       => 'require|length:4,30',
-        'type|公告类型'    => 'require|number',
+        'is_show|是否启用'      => 'require',
+        'sort|排序'      => 'require|number',
+        'type|类型'    => 'require|number',
         'content|内容'      => 'require',
+        'is_auth|授权查看'      => 'require',
+        
         //'__token__'      => 'require|token',
     ];
 
     //定义验证提示
     protected $message = [
-        'title.require' => '请输入标题',
-        'type.require'    => '请选择公告类型',
-        'content.require'    => '内容不能为空',
+        //'content.require'    => '内容不能为空',
     ];
 
 }

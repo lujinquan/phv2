@@ -24,7 +24,9 @@
 			  		<select name="order_status">
 						<option value="">支付状态</option>
 						{volist name="params['order_status']" id="v"}
+						{if condition="$key != 3"}
 						<option value="{$key}">{$v}</option>
+						{/if}
 						{/volist}
 					</select>
 				  <!-- <select name="pay_state">

@@ -6,7 +6,7 @@
 	</div>
 	<hr />
 	<!-- 详细内容 S -->
-	<div class="j-details-size" data-value={:htmlspecialchars_decode($data_info['content'])}</div>
+	<div class="j-details-size">{:htmlspecialchars_decode($data_info['content'])}</div>
 	<!-- 详细内容 E -->
 	<hr />
 	<!-- 浏览记录 S -->
@@ -18,13 +18,14 @@
 		</div>
 		<div class="j-record-name clearfix">
 			<ul class="layui-row layui-col-space30">
-				
-				<!-- <li class="layui-col-md4">
-					<span class="fr">2019/05/04 14:09:12</span>
+				<li class="layui-col-md4">
+					{volist name="records" id="v"}
+					<span class="fr">{$v['ctime']}</span>
 					<span class="j-size">
-						李某某
+						<img src="{$v['avatar']}" style="width:20px;border-radius:50%;overflow:hidden"> &nbsp; {$v['member_name']}
 					</span>
-				</li> -->
+					{/volist}
+				</li>
 			</ul>
 		</div>
 	</div>

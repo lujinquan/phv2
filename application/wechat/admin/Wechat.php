@@ -19,7 +19,9 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinReadRecord as WeixinReadRecordModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
+
 
 /**
  * 微信小程序用户版
@@ -121,10 +123,12 @@ class Wechat extends Admin
         $id = input('param.id/d');
         $row = $WeixinNoticeModel->find($id);
         //halt($row);
-        //$systemusers = session('systemusers');
-        //halt($systemusers[1]);
+        $WeixinReadRecordModel = new WeixinReadRecordModel;
+        $records = $WeixinReadRecordModel->where([['notice_id','eq',$id]])->order('ctime desc')->select()->toArray();
+        //halt(htmlspecialchars_decode($row['content']));
         // 更新已读记录 
         //$WeixinNoticeModel->updateReads($id);
+        $this->assign('records',$records);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
