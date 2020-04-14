@@ -48,11 +48,11 @@
     <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.member_id }}">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('memberdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
+	<a href="{:url('memberdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '600px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
 	<a href="{:url('bindHouselist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
     <a href="{:url('payRecordlist')}?id={{ d.member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="支付订单" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">支付订单</a>
     {{#  if (d.tenant_id > 0) { }}
-	<a href="{:url('authdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '400px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
+	<a href="{:url('authdetail')}?id={{ d.member_id }}" hisi-data="{width: '800px', height: '387px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
 	{{#  } else { }}
    	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">未认证</a>
     {{#  }  }} 
