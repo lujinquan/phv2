@@ -105,7 +105,7 @@ class Room extends Admin
                 return $this->error($filData);
             }
             // 入库room表
-            if (!$RoomModel->allowField(true)->update($filData)) {
+            if ($RoomModel->allowField(true)->update($filData) === false) {
                 return $this->error('修改失败');
             }
             // 补充房间计算租金，更新room表
