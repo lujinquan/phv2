@@ -788,13 +788,20 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
 	//判断是否有滚动条，显示图片查看关闭按钮
 	$(".j-viewer-img").on("click","img",function(){
 	 var obj=document.getElementById("switchBody");
-	 if(obj.scrollHeight>obj.clientHeight){
-	 	$(".layui-row").addClass("on");
-	 }
-	 else
-	 {
-		$(".layui-row").removeClass("on");
-	 }
+	 console.log("打印的值",obj)
+	  if(obj===null){
+		 
+	   }
+	   else{
+		 if(obj.scrollHeight>obj.clientHeight){
+		 	$(".layui-row").addClass("on");
+		 }
+		 else
+		 {
+		 	$(".layui-row").removeClass("on");
+		 }  
+	   }
+ 
 	});
 
     //添加编辑附件上传图片查看

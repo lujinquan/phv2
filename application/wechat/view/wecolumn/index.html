@@ -4,8 +4,8 @@
 	{include file="system@block/layui" /}
 	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		<a href="{:url('edit')}?id={{ d.col_id }}" hisi-data="{width: '800px', height: '420px',refresh: 2}" title="编辑业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
-		<a href="{:url('detail')}?id={{ d.col_id }}" hisi-data="{width: '800px', height: '420px',refresh: 2}" title="查看业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">查看</a>
+		<a href="{:url('edit')}?id={{ d.col_id }}" hisi-data="{width: '800px', height: '530px',refresh: 2}" title="编辑业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">编辑</a>
+		<a href="{:url('detail')}?id={{ d.col_id }}" hisi-data="{width: '800px', height: '530px',refresh: 2}" title="查看业务管理" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">查看</a>
 	</script>
 </div>
 <script type="text/javascript">
@@ -21,8 +21,8 @@
 			,defaultToolbar: false//设置右边筛选，导出，打印显示
             ,url: '{:url()}' //数据接口
             ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
-            ,limit: 10
+			,limits: [5,10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 5
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
