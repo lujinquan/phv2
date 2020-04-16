@@ -102,7 +102,7 @@ class Tenant extends Admin
             $TenantModel = new TenantModel();
             // 入库
             $oldRow = TenantModel::get($data['tenant_id']);
-            if (!$TenantModel->allowField(true)->update($data)) {
+            if ($TenantModel->allowField(true)->update($data) === false) {
                 return $this->error('修改失败');
             }
             if ($data['group'] == 'y') {

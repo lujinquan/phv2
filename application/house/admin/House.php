@@ -158,7 +158,7 @@ class House extends Admin
             }
             $HouseModel = new HouseModel();
             // 入库
-            if (!$HouseModel->allowField(true)->update($data)) {
+            if ($HouseModel->allowField(true)->update($data) === false) {
                 return $this->error('修改失败');
             }
             return $this->success('修改成功');

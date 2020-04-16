@@ -108,7 +108,7 @@ class Ban extends Admin
             $BanModel = new BanModel();
             //halt($data);
             // 入库
-            if (!$BanModel->allowField(true)->update($data)) {
+            if ($BanModel->allowField(true)->update($data) === false) {
                 return $this->error('修改失败');
             }
             return $this->success('修改成功');

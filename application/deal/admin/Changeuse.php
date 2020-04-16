@@ -87,7 +87,7 @@ class Changeuse extends Admin
             }
             // 入库使用权变更表
             $row = $ChangeModel->allowField(true)->update($filData);
-            if (!$row) {
+            if ($row === false) {
                 return $this->error('申请失败');
             }
             

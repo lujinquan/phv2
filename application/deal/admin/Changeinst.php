@@ -94,7 +94,7 @@ class Changeinst extends Admin
             }
             // 入库使用权变更表
             $useRow = $ChangeModel->allowField(true)->update($filData);
-            if (!$useRow) {
+            if ($useRow === false) {
                 return $this->error('申请失败');
             }
             //halt($useRow);
