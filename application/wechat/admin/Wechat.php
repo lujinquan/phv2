@@ -84,7 +84,7 @@ class Wechat extends Admin
             }
             $WeixinNoticeModel = new WeixinNoticeModel;
             $data['cuid'] = ADMIN_ID;
-            $data['content'] = htmlspecialchars($data['content']);
+            //$data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$WeixinNoticeModel->allowField(true)->create($data)) {
                 return $this->error('发布失败');
@@ -105,7 +105,7 @@ class Wechat extends Admin
                 return $this->error($result);
             }
             // 入库
-            if (!$WeixinNoticeModel->allowField(true)->update($data)) {
+            if ($WeixinNoticeModel->allowField(true)->update($data) === false) {
                 return $this->error('编辑失败');
             }
             return $this->success('编辑成功');

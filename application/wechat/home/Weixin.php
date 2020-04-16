@@ -602,7 +602,7 @@ class Weixin extends Common
             return json($result);
         }
         $page = input('page',1);
-        $limit = 5;
+        $limit = 20;
         // 获取公告列表
         $noticeWhere = [];
         $noticeWhere[] = ['dtime','eq',0];
@@ -1042,11 +1042,9 @@ class Weixin extends Common
         // 查找绑定的房屋
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
         // 获取关联的所有房屋
-        $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]
-])->column('house_id');
+        $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->column('house_id');
         // 获取关联的所有自己已认证的房屋
-        $is_auth_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['is_auth','eq',1],['dtime','eq',0]
-])->column('house_id');
+        $is_auth_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['is_auth','eq',1],['dtime','eq',0]])->column('house_id');
 
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         // 去掉暂停计租的房子+已注销的房子
@@ -1111,8 +1109,7 @@ class Weixin extends Common
         // 查找绑定的房屋
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
         
-        $houseArr = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]
-])->column('house_id,is_auth');
+        $houseArr = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->column('house_id,is_auth');
         //halt($houseArr);
         if(!$houseArr){
             $result['code'] = 10050;
@@ -1127,8 +1124,7 @@ class Weixin extends Common
         $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
         
         if($houseID){
-            $houseArr = $WeixinMemberHouseModel->where([['house_id','eq',$houseID],['dtime','eq',0]
-])->column('house_id,is_auth');
+            $houseArr = $WeixinMemberHouseModel->where([['house_id','eq',$houseID],['dtime','eq',0]])->column('house_id,is_auth');
             $where[] = ['a.house_id','eq',$houseID];
         }else{
             
@@ -1430,12 +1426,12 @@ class Weixin extends Common
             $member_info->auth_time = time();
             $member_info->save();
             // 将认证的房屋加到member_house表中(去除掉暂停计租和注销的房子)
-            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            
             $houses = HouseModel::where([['tenant_id','eq',$tenant_info['tenant_id']],['house_is_pause','eq',0],['house_status','eq',1]])->column('house_id');
             $houseSaveData = [];
             foreach ($houses as $h) {
-                $row = $WeixinMemberHouseModel->where([['house_id','eq',$h],['member_id','eq',$member_info['member_id']],['dtime','eq',0]
-])->find();
+                $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+                $row = $WeixinMemberHouseModel->where([['house_id','eq',$h],['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->find();
                 // 如果已添加认证的房屋，直接修改认证状态
                 if($row){
                     $row->is_auth = 1;
@@ -1466,18 +1462,15 @@ class Weixin extends Common
 
     /**
      * 功能描述： 验证用户token
-     * @author  Lucas 
-     * 创建时间: 2020-02-26 16:47:53
+     * @author   Lucas 
+     * 创建时间:  2020-02-26 16:47:53
      */
     protected function check_token()
     {
         $token = input('token');
         $openid = cache('weixin_openid_'.$token);
-
-        $expires_time = cache('weixin_expires_time_'.$token);
-        //halt($expires_time);  
+        $expires_time = cache('weixin_expires_time_'.$token); 
         if(!$openid){
-        //if(!$openid || $expires_time < time()){
             return false;
         }
         return true;

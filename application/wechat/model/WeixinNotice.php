@@ -66,8 +66,8 @@ class WeixinNotice extends Model
             if($data['is_auth'] === "1"){
                 $where[] = ['is_auth','eq',1];
             }
-            if($data['is_auth'] === "0"){
-                $where[] = ['is_auth','eq',0];
+            if($data['is_auth'] === "2"){
+                $where[] = ['is_auth','in',[1,2]];
             } 
         }
 

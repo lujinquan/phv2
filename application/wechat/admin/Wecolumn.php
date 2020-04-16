@@ -66,7 +66,7 @@ class Wecolumn extends Admin
             unset($data['file']);
             //halt($data);
             // 入库
-            if (!$WeixinColumnModel->allowField(true)->where([['col_id','eq',$id]])->update($data)) {
+            if ($WeixinColumnModel->allowField(true)->where([['col_id','eq',$id]])->update($data) === false) {
                 return $this->error('修改失败');
             }
             return $this->success('修改成功');

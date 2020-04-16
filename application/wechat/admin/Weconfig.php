@@ -135,7 +135,7 @@ class Weconfig extends Admin
             }
             $WeixinGuideModel = new WeixinGuideModel;
             $data['cuid'] = ADMIN_ID;
-            $data['content'] = htmlspecialchars($data['content']);
+            //$data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$WeixinGuideModel->allowField(true)->create($data)) {
                 return $this->error('发布失败');

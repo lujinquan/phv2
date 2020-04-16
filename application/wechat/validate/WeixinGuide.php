@@ -21,7 +21,8 @@ class WeixinGuide extends Validate
 {
 	//定义验证规则
     protected $rule = [
-        'title|标题'       => 'require|length:4,30',
+        'title|标题'       => 'require|max:12',
+        'remark|简介'       => 'max:30',
         'is_show|是否启用'       => 'require|number',
         'sort|排序'       => 'require|number',
         'content|内容'      => 'require',
@@ -30,8 +31,8 @@ class WeixinGuide extends Validate
 
     //定义验证提示
     protected $message = [
-        // 'title.require' => '请输入标题',
-        // 'content.require'    => '内容不能为空',
+        'title.max' => '标题的长度超出12个字符',
+        'remark.max' => '简介的长度超出30个字符',
     ];
 
 }
