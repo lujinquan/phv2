@@ -11,6 +11,8 @@ use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
 class ChangeUse extends SystemBase
 {
@@ -313,6 +315,28 @@ class ChangeUse extends SystemBase
         $qrcodeUrl = Db::name('change_lease')->where([['house_id','eq',$finalRow['house_id']],['tenant_id','eq',$finalRow['old_tenant_id']]])->value('qrcode');
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
+        }
+        // 5、检查微信会员是否绑定当前房屋
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['tenant_id','eq',$finalRow['old_tenant_id']]])->field('member_id')->find();
+        $new_member_info = $WeixinMemberModel->where([['tenant_id','eq',$finalRow['new_tenant_id']]])->field('member_id')->find();
+        if(!$new_member_info && $member_info){ // 如果原租户已进入微信系统，新租户未进入微信系统【将原租户会员绑定改房屋的认证状态改成0】
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $WeixinMemberHouseModel->where([['house_id','eq',$finalRow['house_id']],['member_id','eq',$member_info['member_id']]])->update(['is_auth'=>0]);
+        // 如果新租户已进入微信系统，原租户未进入微信系统【将原租户会员绑定改房屋的认证状态改成0】
+        }else if($new_member_info && !$member_info){ // 如果原租户、新租户已进入微信系统
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $find = $WeixinMemberHouseModel->where([['house_id','eq',$finalRow['house_id']],['member_id','eq',$new_member_info['member_id']]])->find();
+            if($find){
+                $find->is_auth = 1;
+                $find->save();
+            }else{
+                $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+                $WeixinMemberHouseModel->save(['house_id'=>$finalRow['house_id'],'member_id'=>$new_member_info['member_id'],'is_auth'=>1]);
+            }
+        }else if($new_member_info && $member_info){ // 如果原租户、新租户已进入微信系统
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $WeixinMemberHouseModel->where([['house_id','eq',$finalRow['house_id']],['member_id','eq',$member_info['member_id']]])->update(['member_id'=>$new_member_info['member_id']]);
         }
     }
 

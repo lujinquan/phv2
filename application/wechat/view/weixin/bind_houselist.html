@@ -39,10 +39,23 @@
     </tbody>
   </table>
 </div>
+<form class="layui-form j-top-height" action="{:url('addbindhouse')}" method="post">
+  <div class="j-details-box floorWrap layui-form">
+    <div class="layui-form-item">
+      <div class="j-form-label"><i class="red"></i>绑定房屋：</div>
+      <div class="layui-input-inline" style="margin-left: -2px;">
+        <input type="text" lay-verify="required" placeholder="请输入房屋编号" name="house_number" autocomplete="off" class="layui-input">
+      </div>
+      <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">添加</button>
+    </div>
+    <input type="hidden" name="member_id" value="{$member_info['member_id']}">
+  {:token()}
+  <!-- <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">添加</button>
+    </div>
+  </div> -->
+  </div>
+  <!-- 新增公告 E -->
+</form>
 {include file="system@block/layui" /}
- <!-- <div class="pop-bottom-bar">
-   <div class="layui-input-block">
-     <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">修改</button>
-     <a href="javascript:;" class="layui-btn layui-btn-primary j-cancel">取消</a>
-   </div>
- </div> -->

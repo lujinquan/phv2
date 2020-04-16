@@ -122,10 +122,13 @@ class Weixin extends Admin
 			$this->assign('order_refund_info',$order_refund_info);
 		}
 		$WeixinOrderTradeModel = new WeixinOrderTradeModel;
-		$rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id');
-		$houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->column('b.house_number');
-
-		//halt($houses);
+		$rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+		$rent_order_ids = array_keys($rent_orders);
+		$houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+        foreach ($houses as $k => &$v) {
+        	$v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+        	$v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
+     	}
 		$this->assign('houses',$houses);
 		$this->assign('data_info',$order_info);
 		//获取绑定的房屋数量
@@ -148,6 +151,20 @@ class Weixin extends Admin
 		// halt($id);
 		$WeixinOrderModel = new WeixinOrderModel;
 		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+		if($order_info['order_status'] == 2){ //如果状态是已退款
+			$WeixinOrderRefundModel = new WeixinOrderRefundModel;
+			$order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
+			$this->assign('order_refund_info',$order_refund_info);
+		}
+		$WeixinOrderTradeModel = new WeixinOrderTradeModel;
+		$rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+		$rent_order_ids = array_keys($rent_orders);
+		$houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+        foreach ($houses as $k => &$v) {
+        	$v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+        	$v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
+     	}
+		$this->assign('houses',$houses);
 		// halt($order_info);
 		$this->assign('data_info',$order_info);
 		// 获取绑定的房屋数量
@@ -161,7 +178,7 @@ class Weixin extends Admin
 	{
 		$id = input('id');
 		$memberinfo = WeixinMemberModel::where([['member_id','eq',$id]])->find();
-		$orderlist = WeixinOrderModel::where([['member_id','eq',$id]])->select()->toArray();
+		$orderlist = WeixinOrderModel::where([['member_id','eq',$id],['order_status','neq',3]])->select()->toArray();
 
 		foreach ($orderlist as $k => &$v) {
         	$rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
@@ -185,7 +202,7 @@ class Weixin extends Admin
 	{
 		$id = input('id');
 		$WeixinMemberHouseModel = new WeixinMemberHouseModel;
-		$houselist = WeixinMemberHouseModel::where([['member_id','eq',$id]])->select()->toArray();
+		$houselist = WeixinMemberHouseModel::where([['member_id','eq',$id],['dtime','eq',0]])->select()->toArray();
 		foreach($houselist as &$h){
 			//halt($h);
 			$house_info = HouseModel::with(['ban','tenant'])->where([['house_id','eq',$h['house_id']]])->find();
@@ -196,10 +213,90 @@ class Weixin extends Admin
 			$h['tenant_name'] = $house_info['tenant_name'];
 
 		}
+		$member_info = WeixinMemberModel::where([['member_id','eq',$id]])->find();
 		//$houselist = $WeixinMemberHouseModel->house_list($id);
-		//halt($houselist);
+		$this->assign('member_info',$member_info);
 		$this->assign('houselist',$houselist);
 		return $this->fetch();
+	}
+
+	/**
+	 * 添加会员与房屋的绑定
+	 * =====================================
+	 * @author  Lucas 
+	 * email:   598936602@qq.com 
+	 * Website  address:  www.mylucas.com.cn
+	 * =====================================
+	 * 创建时间: 2020-04-16 10:37:50
+	 * @return  返回值  
+	 * @version 版本  1.0
+	 */
+	
+	public function addbindhouse()
+	{
+		if ($this->request->isPost()) {
+            $data = $this->request->post();
+            //halt($data);
+            // 数据验证
+            // $result = $this->validate($data, 'WeixinGuide');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            // 
+            $WeixinMemberModel = new WeixinMemberModel;
+	        $member_info = $WeixinMemberModel->where([['member_id','eq',$data['member_id']]])->find();
+	        if($member_info['is_show'] == 2){
+	            return $this->error('用户已被禁止访问');
+	        }
+	        // 绑定手机号 
+	        $HouseModel = new HouseModel;
+	        $house_info = $HouseModel->where([['house_number','eq',$data['house_number']]])->find();
+	        if(!$house_info){
+	            return $this->error('房屋编号不存在');
+	        }
+	        if($house_info['house_status'] != 1){
+	        	return $this->error('房屋已注销或未发租');
+	        }
+	        if($house_info['house_is_pause'] == 1){
+	        	return $this->error('房屋已被暂停计租');
+	        }
+	        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+	        
+	        //halt($houses);
+	        $counts = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0],['is_auth','eq',0]])->count();
+	        if($counts > 9){ //会员绑定的房屋数量达到>9个，提示超出数量
+	            return $this->error('绑定房屋数量不能超过10个');
+	        }
+	        $find = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['house_id','eq',$house_info['house_id']],['dtime','eq',0]])->find();
+	        if($find){
+	            return $this->error('请勿重复绑定该房屋');
+	        }
+	        $WeixinMemberHouseModel->house_id = $house_info['house_id'];
+	        $WeixinMemberHouseModel->member_id = $member_info['member_id'];
+	        $res = $WeixinMemberHouseModel->save();
+	        // 如果当前会员已认证，则每次添加房屋的时候刷新认证房屋数据
+	        if($member_info['tenant_id']){
+	            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+	            // 调试
+	            $auth_house_ids = $HouseModel->where([['tenant_id','eq',$member_info['tenant_id']],['house_is_pause','eq',0],['house_status','eq',1]])->column('house_id');
+	            $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']]])->column('house_id,is_auth');
+	            foreach ($auth_house_ids as $a) {
+	                if(isset($houses[$a]) && $houses[$a] == 0){
+	                    $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['house_id','eq',$a]])->update(['is_auth'=>1]);
+	                }
+	                if(!isset($houses[$a])){
+	                    $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+	                    $WeixinMemberHouseModel->save(['member_id'=>$member_info['member_id'],'house_id'=>$a,'is_auth'=>1]);
+	                }
+	            }
+	        }          
+            // 入库
+            if (!$res) {
+                return $this->error('添加失败');
+            }
+            return $this->success('添加成功');
+        }
+
 	}
 
 	/**
@@ -223,7 +320,7 @@ class Weixin extends Admin
 			$this->error('当前房屋已认证无法解绑');
 		}
 		$info->dtime = time();
-		$info->save();
+		$res = $info->save();
 		//$res = WeixinMemberHouseModel::where([['id','eq',$id]])->delete();
 		if($res){
 			$this->success('解绑成功');
