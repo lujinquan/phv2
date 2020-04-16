@@ -1,5 +1,5 @@
 <!-- 新增后台导出按钮 -->
-<button id="button_print"><i class="layui-icon layui-icon-export"></i></button>
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content  j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
@@ -30,7 +30,7 @@
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
 					<div class="layui-input-inline" style="margin-left:10px;">
-						<!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+						<!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
 						    <i class="layui-icon layui-icon-print"></i>
 						    导出
 					  	</button> -->
@@ -136,7 +136,7 @@
 			}
 		},isShowInst)
 
-		$('#button_print').click(function(){
+		$('#button_prints').click(function(){
 			var queryWhere = new Object();
         	queryWhere.szno = $("input[name='szno']").val();  // 搜索租约编号
 			queryWhere.tenant_name = $("input[name='tenant_name']").val();  // 搜索租户名
@@ -144,7 +144,7 @@
 			queryWhere.ban_inst_id = $("select[name='ban_inst_id']").val(); // 搜索机构
 			queryWhere.tenant_card = $("select[name='tenant_card']").val(); // 搜索租户身份证号
 			//console.log(queryWhere);
-			$('#button_print').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式
 				url:"{:url('lease/export')}",
@@ -155,11 +155,11 @@
 				success:function(output){
 					layer.msg(output.msg);
 					if(output.code){ //成功则直接下载		
-						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');	
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');	
 						document.location.href = output.data;
 					}
 					else{
-						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
 					}
 					
 				}

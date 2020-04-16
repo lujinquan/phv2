@@ -1,5 +1,5 @@
 <!-- 新增后台导出按钮 -->
-<button id="button_print"><i class="layui-icon layui-icon-export"></i></button>
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content">
 <div class="layui-btn-container j-container-margin">
 	<div class="layui-btn-container">
@@ -56,7 +56,7 @@
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
-          	 <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+          	 <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
 				    <i class="layui-icon layui-icon-print"></i>
 				    导出
 			  </button> -->
@@ -153,14 +153,14 @@
 			})
 		}) */
 		//新建后台导出按钮
-// 		$("[lay-event='LAYTABLE_DATAPRINT']").prop('id','button_print');
+// 		$("[lay-event='LAYTABLE_DATAPRINT']").prop('id','button_prints');
 //         $("[lay-filter='formDemo']").click(function(){
-// 			$("[lay-event='LAYTABLE_DATAPRINT']").prop('id','button_print');
+// 			$("[lay-event='LAYTABLE_DATAPRINT']").prop('id','button_prints');
 // 		})
 		　　
 		
 		
-		$('#button_print').click(function(){
+		$('#button_prints').click(function(){
 			var queryWhere = new Object();
         	queryWhere.ban_inst_id = $("input[name='ban_inst_id']").val();  // 搜索楼栋编号
 			queryWhere.ban_address = $("input[name='ban_address']").val();  // 搜索地址
@@ -168,7 +168,7 @@
 			queryWhere.ban_stuct_id = $("select[name='ban_stuct_id']").val(); // 搜索结构类别
 			queryWhere.ban_damage_id = $("select[name='ban_damage_id']").val(); // 搜索完损等级
 			queryWhere.group = $("input[name='group']").val(); // 搜索楼栋状态
-			$('#button_print').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式
 				url:"{:url('ban/export')}",
@@ -179,11 +179,11 @@
 				success:function(output){
 					layer.msg(output.msg);
 					if(output.code){ //成功则直接下载		
-						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');			
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');			
 						document.location.href = output.data;
 					}
 					else{
-						$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
 					}
 				}
 			});

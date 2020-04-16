@@ -104,7 +104,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_PRINT"]{position: absolute;top:2px; right:10px;}
 /* 新建后台导出样式 S */
 /* .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_DATAPRINT"]{position: absolute;top:2px; right:44px;} */
-#button_print{position: absolute;top:12px; right:50px;margin: 0 0 0 10px;
+#button_prints{position: absolute;top:12px; right:50px;margin: 0 0 0 10px;
     padding: 3.5px;
     line-height: 16px;
     margin-right: 10px;
@@ -115,7 +115,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 	background: none;
     -webkit-transition: .5s all;
     transition: .5s all;}
-#button_print:hover{border: 1px solid #999;}
+#button_prints:hover{border: 1px solid #999;}
 /* .layui-table-tool .layui-inline.layui-bg-gray[lay-event]{width: auto;padding: 0 10px;white-space: nowrap;
     line-height: 26px;} */
 /* 新建后台导出样式 E */

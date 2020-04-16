@@ -2,7 +2,7 @@
 	.j-table-content.on .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:115px}/* 标题筛选定位 */
 </style>
 <!-- 新增后台导出按钮 -->
-<button id="button_print"><i class="layui-icon layui-icon-export"></i></button>
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
  <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">   
@@ -69,7 +69,7 @@
        <div class="j-search-fr layui-col-md4 fr">
        	<div class="layui-input-inline fr">
        		<div class="layui-input-inline" style="margin-left:10px;">
-            <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_print">
+            <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
                 <i class="layui-icon layui-icon-print"></i>
                 导出
             </button> -->
@@ -159,7 +159,7 @@
             }
         },isShowInst)
 
-        $('#button_print').click(function(){
+        $('#button_prints').click(function(){
             var queryWhere = new Object();
             queryWhere.house_number = $("input[name='house_number']").val();  // 搜索房屋编号
 
@@ -171,7 +171,7 @@
             queryWhere.rent_order_date = $("select[name='rent_order_date']").val(); // 搜索月份
             queryWhere.unpaid_date_type = $("select[name='unpaid_date_type']").val(); // 搜索以前月/以前年
             //console.log(queryWhere);
-            $('#button_print').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+            $('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
             $.ajax({
                 type:"post",// 请求方式
                 url:"{:url('unpaid/export')}",
@@ -182,11 +182,11 @@
                 success:function(output){
                     layer.msg(output.msg);
                     if(output.code){ //成功则直接下载      
-                        $('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                        $('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
                         document.location.href = output.data;
                     }
                     else{
-                    	$('#button_print').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                    	$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
                     }
                 }
             });
