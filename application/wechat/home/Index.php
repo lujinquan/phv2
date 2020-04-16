@@ -194,7 +194,8 @@ class Index extends Common
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
-                $result['msg'] = 'Invalid token';
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
                 return json($result);
             }
             $token = input('token');
@@ -206,7 +207,8 @@ class Index extends Common
         $rent_order_id = input('rent_order_id');
         if(!$rent_order_id){
             $result['code'] = 10030;
-            $result['msg'] = 'Order ID is empty';
+            $result['msg'] = '订单编号不能为空';
+            $result['en_msg'] = 'Order ID is empty';
             return json($result);
         }
 
@@ -223,19 +225,22 @@ class Index extends Common
             // 检查订单是否存在
             if(!$rent_order_info){
                 $result['code'] = 10031;
-                $result['msg'] = 'Order ID is error';
+                $result['msg'] = '订单编号错误';
+                $result['en_msg'] = 'Order ID is error';
                 return json($result);
             }
             // 检查订单是否已经完成支付
             if($rent_order_info['ptime']){
                 $result['code'] = 10032;
-                $result['msg'] = 'Order has been paid, please do not pay repeatedly';
+                $result['msg'] = '订单已支付，请勿重复支付';
+                $result['en_msg'] = 'Order has been paid, please do not pay repeatedly';
                 return json($result);
             }
             // 检查订单绑定的房屋是否以被当前会员绑定
             if(!in_array($rent_order_info['house_id'],$member_houses)){
                 $result['code'] = 10033;
-                $result['msg'] = 'The house is not bound by the current member';
+                $result['msg'] = '当前房屋未绑定';
+                $result['en_msg'] = 'The house is not bound by the current member';
                 return json($result);
             }
             $pay_money += $rent_order_info['rent_order_receive']*100;
@@ -259,6 +264,8 @@ class Index extends Common
 
         //$out_trade_no = $rent_order_info['rent_order_number'];
         $attach = md5($out_trade_no);
+
+        $curr_domin = input('server.http_host');
         // 下面的参数注意要换成动态的
         $options = [
             'body'             => '租金账单',
@@ -340,7 +347,8 @@ class Index extends Common
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
-                $result['msg'] = 'Invalid token';
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
                 return json($result);
             }
             $token = input('token');
@@ -352,25 +360,29 @@ class Index extends Common
         $house_id = input('house_id');
         if(!$house_id){
             $result['code'] = 10071;
-            $result['msg'] = 'House ID is empty';
+            $result['msg'] = '房屋编号不能为空';
+            $result['en_msg'] = 'House ID is empty';
             return json($result);
         }
         $house_info = HouseModel::where([['house_id','eq',$house_id]])->find();
         if(!$house_info){
             $result['code'] = 10072;
-            $result['msg'] = 'House ID is error';
+            $result['msg'] = '房屋编号错误';
+            $result['en_msg'] = 'House ID is error';
             return json($result);
         }
         if($house_info['house_status'] != 1){
             $result['code'] = 10073;
-            $result['msg'] = 'Housing status error';
+            $result['msg'] = '房屋已注销或未发租';
+            $result['en_msg'] = 'Housing status error';
             return json($result);
         }
         // 检查支付金额是否为空
         $money = input('money');
         if(!$money){
             $result['code'] = 10074;
-            $result['msg'] = 'Money is empty or zero';
+            $result['msg'] = '充值金额错误';
+            $result['en_msg'] = 'Money is empty or zero';
             return json($result);
         }
         // 检查是否允许充值（会员与房屋是否绑定，房屋是否未注销）
@@ -380,7 +392,8 @@ class Index extends Common
         $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
         if(!in_array($house_id, $member_houses)){
             $result['code'] = 10075;
-            $result['msg'] = 'Member not bound to current house';
+            $result['msg'] = '房屋未被绑定';
+            $result['en_msg'] = 'Member not bound to current house';
             return json($result);
         }
         // $RentModel = new RentModel;
@@ -426,6 +439,7 @@ class Index extends Common
         //商户订单号的规则，年月日时分秒+6数字随机码
         $out_trade_no = date('YmdHis') . random(6);
 
+        $curr_domin = input('server.http_host');
         //$out_trade_no = $rent_order_info['rent_order_number'];
         $attach = md5($out_trade_no);
         // 下面的参数注意要换成动态的
@@ -473,6 +487,7 @@ class Index extends Common
         $RechargeModel = new RechargeModel;
         $RechargeModel->pay_number = $out_trade_no;
         $RechargeModel->house_id = $house_id;
+        $RechargeModel->member_id = $member_info['member_id'];
         $RechargeModel->tenant_id = $member_info['tenant_id'];
         $RechargeModel->pay_rent = $money;
         $RechargeModel->pay_way = 4; //微信支付
@@ -646,7 +661,8 @@ class Index extends Common
             if($this->debug === false){ 
                 if(!$this->check_token()){
                     $result['code'] = 10010;
-                    $result['msg'] = 'Invalid token';
+                    $result['msg'] = '令牌失效';
+                    $result['en_msg'] = 'Invalid token';
                     return json($result);
                 }
                 $token = $requestData['token'];
@@ -673,7 +689,8 @@ class Index extends Common
             $data = $mini->decode($iv, $sessionKey, $encryptedData);
             if(!$data){
                 $result['code'] = 10060;
-                $result['msg'] = 'Wechat internal error';
+                $result['msg'] = '微信内部错误';
+                $result['en_msg'] = 'Wechat internal error';
                 return json($result);
             }
             $WeixinMemberModel = new WeixinMemberModel;
@@ -685,7 +702,8 @@ class Index extends Common
             return json($result);
         }else{
             $result['code'] = 10061;
-            $result['msg'] = 'Please request by post';
+            $result['msg'] = '请求方式错误';
+            $result['en_msg'] = 'Please request by post';
             return json($result);
         }
         

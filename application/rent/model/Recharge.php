@@ -37,7 +37,7 @@ class Recharge extends Model
         }
 
         $where = [];
-
+        $where[] = ['a.recharge_status','eq',1];
         // 检索【租户】姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
@@ -86,7 +86,7 @@ class Recharge extends Model
         $row = HouseModel::where([['house_number','eq',$data['house_number']]])->field('house_id,tenant_id')->find();
         $data['house_id'] = $row['house_id'];
         $data['tenant_id'] = $row['tenant_id'];
-        $data['pay_number'] = $data['house_number'].random();
+        $data['pay_number'] = date('YmdHis') . random(6);
         unset($data['id'],$data['house_number']);
         return $data;
     }

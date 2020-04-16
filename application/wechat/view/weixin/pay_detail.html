@@ -1,7 +1,7 @@
 <!-- 支付记录详情 -->
 <form class="layui-form j-definition" action="">
   <div class="layui-form-item">
-	<label class="layui-form-label">订单编号：</label>
+	<label class="layui-form-label">支付订单编号：</label>
 	<div class="layui-form-mid layui-word-aux">{$data_info['out_trade_no']}</div>
  </div>
  <div class="layui-form-item">
@@ -13,9 +13,35 @@
  	<div class="layui-form-mid layui-word-aux">{$data_info['openid']}</div>
  </div>
  <div class="layui-form-item">
- 	<label class="layui-form-label">房屋编号：</label>
- 	<div class="layui-form-mid layui-word-aux">{:implode(',',$houses)}</div>
+ 	<label class="layui-form-label">支付详情：</label>
+ 	<div class="layui-form-mid layui-word-aux">
+ 	<table class="layui-table">
+  <colgroup>
+    <col width="150">
+    <col width="200">
+  </colgroup>
+  <thead>
+    <tr>
+      <th>房屋编号</th>
+      <th>租金订单编号</th>
+      <th>租金订单日期</th>
+      <th>支付金额/元</th>
+    </tr> 
+  </thead>
+  <tbody>
+  	{volist name="houses" id="v"}
+    <tr>
+      <td>{$v['house_number']}</td>
+      <td>{$v['rent_order_number']}</td>
+      <td>{$v['rent_order_date']}</td>
+      <td>{$v['pay_dan_money']}</td>
+    </tr>
+    {/volist}
+  </tbody>
+</table>
+</div>
  </div>
+
  <div class="layui-form-item">
  	<label class="layui-form-label">用户手机：</label>
  	<div class="layui-form-mid layui-word-aux">{$data_info['tel']}</div>

@@ -26,9 +26,10 @@
               </div>
               <div class="layui-input-inline j-width-110">
                   <select name="is_auth">
-                      <option value="">授权查看</option>
-                      <option value="1">是</option>
-                      <option value="0">否</option>
+                      <option value="">可见</option>
+                      <option value="1">所有人</option>
+                      <option value="2">登录用户</option>
+                      <option value="3">认证用户</option>
                   </select>
               </div>
         </div>
@@ -81,10 +82,12 @@
                     return params.weixin_notice_type[d.type];
                 }}
                 ,{field: 'is_auth' , width: 100 ,  align:'center' , title: '授权查看',templet: function(d) {
-                    if(parseInt(d.is_auth)){
-                        return '是';
+                    if(parseInt(d.is_auth) == 1){
+                        return '所有人';
+                    }else if(parseInt(d.is_auth) == 2){
+                        return '登录用户';
                     }else{
-                        return '否';
+                        return '认证用户';
                     }
                     //return params.weixin_notice_type[d.type];
                 }}

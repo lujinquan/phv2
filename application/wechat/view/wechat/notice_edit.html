@@ -48,8 +48,9 @@
 					<div class="j-input-inline">
 						<select name="is_auth" lay-search="">
 							<option value="">请选择</option>
-							<option value="1" {if condition="$data_info['is_auth'] == 1"}selected{/if}>是</option>
-							<option value="0" {if condition="$data_info['is_auth'] == 0"}selected{/if}>否</option>
+							<option value="1" {if condition="$data_info['is_auth'] == 1"}selected{/if}>所有人</option>
+							<option value="2" {if condition="$data_info['is_auth'] == 2"}selected{/if}>登录用户</option>
+							<option value="3" {if condition="$data_info['is_auth'] == 3"}selected{/if}>认证用户</option>
 						</select>
 					</div>
 				</div>

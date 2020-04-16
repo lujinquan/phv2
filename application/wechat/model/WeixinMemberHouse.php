@@ -29,6 +29,7 @@ class WeixinMemberHouse extends Model
     protected $pk = 'id';
     // 定义时间戳字段名
     protected $createTime = 'ctime';
+    protected $updateTime = false;
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
