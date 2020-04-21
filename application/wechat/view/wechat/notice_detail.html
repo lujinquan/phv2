@@ -21,14 +21,14 @@
 		</div>
 		<div class="j-record-name clearfix">
 			<ul class="layui-row layui-col-space30">
+				{volist name="records" id="v"}
 				<li class="layui-col-md4">
-					{volist name="records" id="v"}
 					<span class="fr">{$v['ctime']}</span>
-					<span class="j-size">
+					<span class="j-size" style="display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
 						<img src="{$v['avatar']}" style="width:20px;border-radius:50%;overflow:hidden"> &nbsp; {$v['member_name']}
 					</span>
-					{/volist}
 				</li>
+				{/volist}
 			</ul>
 		</div>
 	</div>
