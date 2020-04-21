@@ -1,6 +1,6 @@
 /runtime/*
 /backup/*
-
+/file/*
 /public/upload/*
 /config/hs_auth.php
 /config/hs_cloud.php

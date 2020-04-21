@@ -1,4 +1,4 @@
-<?php
+
 
 /**
  * 1、同步楼栋表[ph_ban => ph_ban_back]
@@ -59,7 +59,7 @@ HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
 update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
-update ph_v2.ph_house_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
+update ph_v2.ph_house_back as a left join ph_v2.ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
 
 # 更新楼栋表的户数
 update ph_v2.ph_ban_back as a left join (select ban_id,count(house_id) as houseids from ph_v2.ph_house_back where house_status = 1 and house_use_id = 1 group by ban_id) as b on a.ban_id = b.ban_id set a.ban_civil_holds = b.houseids; 
@@ -129,13 +129,13 @@ from ph_v2.test1;
  */
 update ph_v2.ph_house_room_back a,ph_v2.ph_room_back b set a.room_id = b.room_id where a.room_number = b.room_number;
 update ph_v2.ph_house_room_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_number = b.house_number;
-update ph_v2.ph_room_back as a left join ph_ban_back as b on a.ban_id = b.ban_id set a.room_cuid = b.ban_cuid;
+update ph_v2.ph_room_back as a left join ph_v2.ph_ban_back as b on a.ban_id = b.ban_id set a.room_cuid = b.ban_cuid;
 
 
-update ph_house_back set house_status = 2 where house_status > 1;
-update ph_ban_back set ban_status = 2 where ban_status > 1;
-update ph_tenant_back set tenant_status = 2 where tenant_status > 1;
-update ph_room_back set room_status = 2 where room_status > 1;
+update ph_v2.ph_house_back set house_status = 2 where house_status > 1;
+update ph_v2.ph_ban_back set ban_status = 2 where ban_status > 1;
+update ph_v2.ph_tenant_back set tenant_status = 2 where tenant_status > 1;
+update ph_v2.ph_room_back set room_status = 2 where room_status > 1;
 /* 至此，档案数据全部同步完成 */
 
 
@@ -242,19 +242,19 @@ update ph_v2.ph_change_table_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id 
  */
 drop table if exists ph_v2.ph_ban_temp;
 create table ph_v2.ph_ban_temp like ph_v2.ph_ban;
-insert into ph_v2.ph_ban_temp select * from ph_ban;
+insert into ph_v2.ph_ban_temp select * from ph_v2.ph_ban;
 
 drop table if exists ph_v2.ph_house_temp;
 create table ph_v2.ph_house_temp like ph_v2.ph_house;
-insert into ph_v2.ph_house_temp select * from ph_house;
+insert into ph_v2.ph_house_temp select * from ph_v2.ph_house;
 
 drop table if exists ph_v2.ph_room_temp;
 create table ph_v2.ph_room_temp like ph_v2.ph_room;
-insert into ph_v2.ph_room_temp select * from ph_room;
+insert into ph_v2.ph_room_temp select * from ph_v2.ph_room;
 
 drop table if exists ph_v2.ph_house_room_temp;
 create table ph_v2.ph_house_room_temp like ph_v2.ph_house_room;
-insert into ph_v2.ph_house_room_temp select * from ph_house_room;
+insert into ph_v2.ph_house_room_temp select * from ph_v2.ph_house_room;
 
 
 /**
@@ -429,20 +429,20 @@ update ph_v2.ph_change_rentadd_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_i
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.tenant_id = b.tenant_id where a.house_id = b.house_id;
 
 
-update ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_cut_year set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_house_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_inst_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_lease_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_name_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_new_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_offset_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_pause_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_rentadd_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_change_use_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_ban set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_cancel_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_cut_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_cut_cancel set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_cut_year set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_house_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_inst_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_lease_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_name_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_v2.ph_change_new_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_offset_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_pause_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_rentadd_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_use_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 
 
 /**
@@ -458,88 +458,88 @@ select
 id,FileTitle,FileUrl,UploadUserID,UploadTime
 from ph_v1.ph_upload_file;
 update ph_v2.ph_system_annex_back as a left join ph_v2.ph_system_user as b on a.cuid = b.number set a.cuid = b.id;
-update ph_system_annex_back set file = replace(file,'/uploads/','/upload/');
-update ph_system_annex_back set file = replace(file,'/changeOrder/','/change/image/20181201/');
-update ph_system_annex_back set file = replace(file,'/usechange/','/change/image/20181201/');
-update ph_system_annex_back set file = replace(file,'/house/','/house/image/20181201/');
-update ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20181201/');
-update ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
-update ph_change_lease_back set change_remark = replace(change_remark,'&nbsp&nbsp',' ');
-update ph_change_lease_back set data_json = replace(data_json,'"}','","applyType":"2"}');
+update ph_v2.ph_system_annex_back set file = replace(file,'/uploads/','/upload/');
+update ph_v2.ph_system_annex_back set file = replace(file,'/changeOrder/','/change/image/20181201/');
+update ph_v2.ph_system_annex_back set file = replace(file,'/usechange/','/change/image/20181201/');
+update ph_v2.ph_system_annex_back set file = replace(file,'/house/','/house/image/20181201/');
+update ph_v2.ph_system_annex_back set file = replace(file,'/tenant/','/tenant/image/20181201/');
+update ph_v2.ph_change_lease_back set qrcode = replace(qrcode,'/uploads/','/upload/');
+update ph_v2.ph_change_lease_back set change_remark = replace(change_remark,'&nbsp&nbsp',' ');
+update ph_v2.ph_change_lease_back set data_json = replace(data_json,'"}','","applyType":"2"}');
 # 翻译附件名对应新的data_id
 #租金减免
-update ph_system_annex_back set name='Lowassurance' where remark = '低保证';
-update ph_system_annex_back set name='Residence' where remark = '户口本';
-update ph_system_annex_back set name='HouseApplicationForm' where remark = '房产证';
-update ph_system_annex_back set name='Housingsecurity' where remark = '住房保障申请表';
+update ph_v2.ph_system_annex_back set name='Lowassurance' where remark = '低保证';
+update ph_v2.ph_system_annex_back set name='Residence' where remark = '户口本';
+update ph_v2.ph_system_annex_back set name='HouseApplicationForm' where remark = '房产证';
+update ph_v2.ph_system_annex_back set name='Housingsecurity' where remark = '住房保障申请表';
 #暂停计租
-update ph_system_annex_back set name='ChangePauseUpload' where remark = '上传报告';
+update ph_v2.ph_system_annex_back set name='ChangePauseUpload' where remark = '上传报告';
 #陈欠核销
-update ph_system_annex_back set name='ChangeOffsetUpload' where remark = '陈欠核销情况说明报告';
+update ph_v2.ph_system_annex_back set name='ChangeOffsetUpload' where remark = '陈欠核销情况说明报告';
 #新发租
-update ph_system_annex_back set name='ChangeNewUpload' where remark = '新发租情况说明';
+update ph_v2.ph_system_annex_back set name='ChangeNewUpload' where remark = '新发租情况说明';
 #租金追加调整
-update ph_system_annex_back set name='RentAddPaper' where remark = '其他(票据)';
+update ph_v2.ph_system_annex_back set name='RentAddPaper' where remark = '其他(票据)';
 #注销
-update ph_system_annex_back set name='ChangeCancelOne' where remark = '武汉市直管公有住房出售收入专用票据';
-update ph_system_annex_back set name='ChangeCancelTwo' where remark = '武昌区房地局出售直管公有住房审批表';
+update ph_v2.ph_system_annex_back set name='ChangeCancelOne' where remark = '武汉市直管公有住房出售收入专用票据';
+update ph_v2.ph_system_annex_back set name='ChangeCancelTwo' where remark = '武昌区房地局出售直管公有住房审批表';
 #房屋调整
-#update ph_system_annex_back set name='' where remark = '调整附件报告';
+#update ph_v2.ph_system_annex_back set name='' where remark = '调整附件报告';
 #租约管理
-update ph_system_annex_back set name='TenantReIDCard' where remark = '身份证';
-update ph_system_annex_back set name='Houselease' where remark = '计租表';
-update ph_system_annex_back set name='HouseForm' where remark = '租约';
-update ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
-update ph_system_annex_back as a left join ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
+update ph_v2.ph_system_annex_back set name='TenantReIDCard' where remark = '身份证';
+update ph_v2.ph_system_annex_back set name='Houselease' where remark = '计租表';
+update ph_v2.ph_system_annex_back set name='HouseForm' where remark = '租约';
+update ph_v2.ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
+update ph_v2.ph_system_annex_back as a left join ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
 
 
 
 # 将back表同步到主表
 drop table if exists ph_ban;
-alter table ph_ban_back rename ph_ban;
-drop table if exists ph_change_cancel;
-alter table ph_change_cancel_back rename ph_change_cancel;
-#drop table if exists ph_change_child;
-#alter table ph_change_child_back rename ph_change_child;
-drop table if exists ph_change_cut;
-alter table ph_change_cut_back rename ph_change_cut;
-drop table if exists ph_change_house;
-alter table ph_change_house_back rename ph_change_house;
-drop table if exists ph_change_inst;
-alter table ph_change_inst_back rename ph_change_inst;
-drop table if exists ph_change_lease;
-alter table ph_change_lease_back rename ph_change_lease;
-drop table if exists ph_change_name;
-alter table ph_change_name_back rename ph_change_name;
-drop table if exists ph_change_new;
-alter table ph_change_new_back rename ph_change_new;
-drop table if exists ph_change_offset;
-alter table ph_change_offset_back rename ph_change_offset;
-drop table if exists ph_change_pause;
-alter table ph_change_pause_back rename ph_change_pause;
-drop table if exists ph_change_rentadd;
-alter table ph_change_rentadd_back rename ph_change_rentadd;
-drop table if exists ph_change_table;
-alter table ph_change_table_back rename ph_change_table;
-drop table if exists ph_change_use;
-alter table ph_change_use_back rename ph_change_use;
-drop table if exists ph_house;
-alter table ph_house_back rename ph_house;
-drop table if exists ph_house_room;
-alter table ph_house_room_back rename ph_house_room;
-drop table if exists ph_rent_order;
-alter table ph_rent_order_back rename ph_rent_order;
-drop table if exists ph_rent_recycle;
-alter table ph_rent_recycle_back rename ph_rent_recycle;
-drop table if exists ph_room;
-alter table ph_room_back rename ph_room;
-drop table if exists ph_tenant;
-alter table ph_tenant_back rename ph_tenant;
-drop table if exists ph_system_annex;
-alter table ph_system_annex_back rename ph_system_annex;
+alter table ph_v2.ph_ban_back rename ph_v2.ph_ban;
+drop table if exists ph_v2.ph_change_cancel;
+alter table ph_v2.ph_change_cancel_back rename ph_v2.ph_change_cancel;
+#drop table if exists ph_v2.ph_change_child;
+#alter table ph_v2.ph_change_child_back rename ph_v2.ph_change_child;
+drop table if exists ph_v2.ph_change_cut;
+alter table ph_v2.ph_change_cut_back rename ph_v2.ph_change_cut;
+drop table if exists ph_v2.ph_change_house;
+alter table ph_v2.ph_change_house_back rename ph_v2.ph_change_house;
+drop table if exists ph_v2.ph_change_inst;
+alter table ph_v2.ph_change_inst_back rename ph_v2.ph_change_inst;
+drop table if exists ph_v2.ph_change_lease;
+alter table ph_v2.ph_change_lease_back rename ph_v2.ph_change_lease;
+drop table if exists ph_v2.ph_change_name;
+alter table ph_v2.ph_change_name_back rename ph_v2.ph_change_name;
+drop table if exists ph_v2.ph_change_new;
+alter table ph_v2.ph_change_new_back rename ph_v2.ph_change_new;
+drop table if exists ph_v2.ph_change_offset;
+alter table ph_v2.ph_change_offset_back rename ph_v2.ph_change_offset;
+drop table if exists ph_v2.ph_change_pause;
+alter table ph_v2.ph_change_pause_back rename ph_v2.ph_change_pause;
+drop table if exists ph_v2.ph_change_rentadd;
+alter table ph_v2.ph_change_rentadd_back rename ph_v2.ph_change_rentadd;
+drop table if exists ph_v2.ph_change_table;
+alter table ph_v2.ph_change_table_back rename ph_v2.ph_change_table;
+drop table if exists ph_v2.ph_change_use;
+alter table ph_v2.ph_change_use_back rename ph_v2.ph_change_use;
+drop table if exists ph_v2.ph_house;
+alter table ph_v2.ph_house_back rename ph_v2.ph_house;
+drop table if exists ph_v2.ph_house_room;
+alter table ph_v2.ph_house_room_back rename ph_v2.ph_house_room;
+drop table if exists ph_v2.ph_rent_order;
+alter table ph_v2.ph_rent_order_back rename ph_v2.ph_rent_order;
+drop table if exists ph_v2.ph_rent_recycle;
+alter table ph_v2.ph_rent_recycle_back rename ph_v2.ph_rent_recycle;
+drop table if exists ph_v2.ph_room;
+alter table ph_v2.ph_room_back rename ph_v2.ph_room;
+drop table if exists ph_v2.ph_tenant;
+alter table ph_v2.ph_tenant_back rename ph_v2.ph_tenant;
+drop table if exists ph_v2.ph_system_annex;
+alter table ph_v2.ph_system_annex_back rename ph_v2.ph_system_annex;
 
 truncate ph_v2.ph_change_process;
 # 清空台账记录
-truncate ph_ban_tai;
-truncate ph_house_tai;
-truncate ph_tenant_tai;
+truncate ph_v2.ph_ban_tai;
+truncate ph_v2.ph_house_tai;
+truncate ph_v2.ph_tenant_tai;

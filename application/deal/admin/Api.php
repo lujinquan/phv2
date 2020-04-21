@@ -18,6 +18,7 @@ use app\common\controller\Common;
 use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
+use app\report\model\Report as ReportModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 
 /**
@@ -81,6 +82,30 @@ class Api extends Common
                 break;
             case 18:
                 $msg = $this->deal_change_lease($result);
+                break;
+            case 20: //月报表数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','RentReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/rent/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
+                break;
+            case 21: //房屋统计数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','HouseReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/house/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
+                break;
+            case 22: //产权统计数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','PropertyReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/property/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
                 break;
             default:
                 return $this->error('暂未开发！');
