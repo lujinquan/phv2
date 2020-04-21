@@ -21,7 +21,7 @@ class WeixinBanner extends Validate
 {
 	//定义验证规则
     protected $rule = [
-        'banner_title|幻灯片名称'       => 'require|length:4,30',
+        'banner_title|幻灯片名称'       => 'require|max:12',
         'sort|排序'    => 'number',
         'file|幻灯片图片'      => 'require',
         'banner_url_type|链接类型'      => 'require|checkType',

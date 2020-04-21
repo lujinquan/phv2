@@ -961,13 +961,23 @@ class Weixin extends Common
         }else{
             $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
         }
-        
+
         // 绑定手机号
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         $result['is_auth'] = 0;
         if($member_info){
-
+            $is_mine = input('is_mine');
+            if($is_mine == 1){ //如果是认证场景调用
+                $TenantModel = new TenantModel;
+                $tenant_info = $TenantModel->where([['tenant_tel','eq',$member_info['tel']]])->find();
+                $HouseModel = new HouseModel;
+                $result['data'] = $HouseModel->with(['ban','tenant'])->where([['tenant_id','eq',$tenant_info['tenant_id']],['house_status','eq',1],['house_is_pause','eq',0]])->select()->toArray();
+                $result['code'] = 1;
+                $result['msg'] = '获取成功';
+                //halt($result['data']);
+                return json($result);
+            }
             if($member_info['is_show'] == 2){
                 $result['code'] = 10011;
                 $result['msg'] = '用户已被禁止访问';
@@ -1506,7 +1516,8 @@ class Weixin extends Common
         $tenant_id = $TenantModel->where([['tenant_tel','eq',$tel]])->value('tenant_id');
         if(!$tenant_id){
             $result['code'] = 10021;
-            $result['msg'] = 'Phone number is not bound to tenant in the system';
+            $result['msg'] = '手机号未在系统中绑定租户';
+            $result['en_msg'] = 'Phone number is not bound to tenant in the system';
             return json($result);
         }
         // 发送短信

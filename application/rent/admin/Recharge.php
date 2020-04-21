@@ -18,6 +18,8 @@ use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\rent\model\Recharge as RechargeModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
 
 /**
  * 账户充值
@@ -77,6 +79,17 @@ class Recharge extends Admin
         $id = input('param.id/d');
         $RechargeModel = new RechargeModel;      
         $row = $RechargeModel->detail($id);
+        if($row['pay_way'] == 4){ //如果是微信支付，则显示充值的微信会员
+            $member_name = '测试账户，已被移除';
+            $weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$row['pay_number']]])->find();
+            if($weixin_order_info){
+                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$weixin_order_info['member_id']]])->find();
+                $member_name = $weixin_member_info['member_name'];
+            }
+            
+            $row['member_name'] = $member_name;
+            //halt($weixin_member_info);
+        }
         //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();

@@ -27,7 +27,7 @@
               <div class="layui-input-inline j-width-110">
                   <select name="is_auth">
                       <option value="">可见</option>
-                      <option value="1">所有人</option>
+                      <option value="1">游客</option>
                       <option value="2">登录用户</option>
                       <option value="3">认证用户</option>
                   </select>
@@ -81,13 +81,13 @@
                 ,{field: 'type' , width: 140 ,  align:'center' , title: '类型',templet: function(d) {
                     return params.weixin_notice_type[d.type];
                 }}
-                ,{field: 'is_auth' , width: 100 ,  align:'center' , title: '授权查看',templet: function(d) {
+                ,{field: 'is_auth' , width: 160 ,  align:'center' , title: '授权查看',templet: function(d) {
                     if(parseInt(d.is_auth) == 1){
-                        return '所有人';
+                        return '游客';
                     }else if(parseInt(d.is_auth) == 2){
-                        return '登录用户';
+                        return '游客、登录';
                     }else{
-                        return '认证用户';
+                        return '游客、登录、认证';
                     }
                     //return params.weixin_notice_type[d.type];
                 }}
