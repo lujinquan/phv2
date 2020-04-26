@@ -1,0 +1,97 @@
+<div class="j-table-content j-no-title">
+<div class="page-toolbar j-page-toolbar clearfix">
+      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+		<div class="j-search-fl layui-col-md8  fl">
+			  <div class="layui-input-inline j-input-margin j-width-100">
+				  <input type="text" name="member_id" title="用户编号" placeholder="用户编号" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="member_name" title="用户名" placeholder="用户名" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="real_name" title="真实姓名" placeholder="真实姓名" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  	<input type="text" name="tel" title="微信手机号" placeholder="微信手机号" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline j-width-110">
+				  <select name="is_show">
+					  <option value="">状态</option>
+					  <option value="1">启用</option>
+					  <option value="2">禁用</option>
+				  </select>
+			  </div>
+			  <div class="layui-input-inline j-width-110">
+				  <select name="tenant_id">
+					  <option value="">认证状态</option>
+					  <option value="1">已认证</option>
+					  <option value="2">未认证</option>
+				  </select>
+			  </div>
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+			  
+          </div>
+		</div>
+      </form>
+  </div>
+{include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="is_show" value="{{ d.is_show }}" lay-skin="switch" lay-filter="switchStatus" lay-text="启用|禁用" {{ d.is_show == 1 ? 'checked' : '' }} data-href="{:url('isShow')}?id={{ d.lead_member_id }}">
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	<a href="{:url('memberdetail')}?id={{ d.lead_member_id }}" hisi-data="{width: '800px', height: '600px',refresh: 2}" title="用户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">用户详情</a>
+	<a href="{:url('bindHouselist')}?id={{ d.lead_member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="绑定房屋" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">绑定房屋</a>
+    <a href="{:url('payRecordlist')}?id={{ d.lead_member_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="支付订单" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">支付订单</a>
+    {{#  if (d.tenant_id > 0) { }}
+	<a href="{:url('authdetail')}?id={{ d.lead_member_id }}" hisi-data="{width: '800px', height: '387px',refresh: 2}" title="认证详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">已认证</a>
+	{{#  } else { }}
+   	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">未认证</a>
+    {{#  }  }} 
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate;
+        table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
+            ,url: '{:url()}' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {field: 'lead_member_id', width: 100, align:'center', title: '用户编号'}
+				
+                ,{field: 'lead_member_name', minWidth: 120, align:'center', title: '用户名',templet: function(d){
+					return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+            	}}
+                ,{field: 'real_name',hide: true,width:100,align:'center', title: '真实姓名'}
+                ,{field: 'tel', minWidth: 120, align:'center', title: '手机号'}
+                ,{field: 'create_time',width: 200, align:'center', title: '注册时间'}
+                ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', width: 340, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+				
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+    });
+</script>

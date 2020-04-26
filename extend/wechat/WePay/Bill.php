@@ -39,11 +39,16 @@ class Bill extends BasicWePay
         $params = $this->params->merge($options);
         $params['sign'] = $this->getPaySign($params, 'MD5');
         $result = Tools::post('https://api.mch.weixin.qq.com/pay/downloadbill', Tools::arr2xml($params));
-        if (($jsonData = Tools::xml2arr($result))) {
-            if ($jsonData['return_code'] !== 'SUCCESS') {
-                throw new InvalidResponseException($jsonData['return_msg'], '0');
-            }
-        }
+        /**
+         * 功能描述：由于微信接口变化，原接口成功或失败会有xml信息，变化后的接口成功是一大段字符串，失败是一个空字符串，所以去掉下面的xml2arr转化过程
+         * @author  Lucas 
+         * 创建时间: 2020-03-10 18:00:28
+         */
+        // if (($jsonData = Tools::xml2arr($result))) {
+        //     if ($jsonData['return_code'] !== 'SUCCESS') {
+        //         throw new InvalidResponseException($jsonData['return_msg'], '0');
+        //     }
+        // }
         return is_null($outType) ? $result : $outType($result);
     }
 

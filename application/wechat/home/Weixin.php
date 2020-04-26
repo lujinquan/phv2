@@ -22,6 +22,7 @@ use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\wechat\model\Weixin as WeixinModel;
+use app\system\model\SystemUser as UserModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinGuide as WeixinGuideModel;
 use app\wechat\model\WeixinColumn as WeixinColumnModel;
@@ -32,6 +33,7 @@ use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinReadRecord as WeixinReadRecordModel;
 use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
+use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
 /**
@@ -969,10 +971,12 @@ class Weixin extends Common
         if($member_info){
             $is_mine = input('is_mine');
             if($is_mine == 1){ //如果是认证场景调用
+
                 $TenantModel = new TenantModel;
                 $tenant_info = $TenantModel->where([['tenant_tel','eq',$member_info['tel']]])->find();
                 $HouseModel = new HouseModel;
-                $result['data'] = $HouseModel->with(['ban','tenant'])->where([['tenant_id','eq',$tenant_info['tenant_id']],['house_status','eq',1],['house_is_pause','eq',0]])->select()->toArray();
+                //认证的时候，显示暂停计租和注销状态的房子,['house_status','eq',1],['house_is_pause','eq',0]
+                $result['data'] = $HouseModel->with(['ban','tenant'])->where([['tenant_id','eq',$tenant_info['tenant_id']]])->select()->toArray();
                 $result['code'] = 1;
                 $result['msg'] = '获取成功';
                 //halt($result['data']);
@@ -1061,8 +1065,10 @@ class Weixin extends Common
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
-            //halt($v);
-            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            //,['tenant_id','eq',$v['tenant_id']]
+            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            // dump($v);
+            // dump($row);
             $v['is_auth'] = 0;
             if(in_array($v['house_id'], $is_auth_houses)){
                 $yue += $v['house_balance'];
@@ -1217,12 +1223,33 @@ class Weixin extends Common
         //alias('a')->join('order b')
         $trades = WeixinOrderTradeModel::where([['rent_order_id','eq',$rentOrderID]])->order('ctime desc')->select()->toArray();
         $data = [];
-        foreach ($trades as $k => $v) {
-            $orderInfo = WeixinOrderModel::where([['out_trade_no','eq',$v['out_trade_no']]])->find();
-            if($orderInfo['order_status'] != 3){ //如果是预支付状态则跳过当前记录
+        foreach ($trades as $k => $v) { 
+            $orderInfo = WeixinOrderModel::with('weixin_member')->where([['out_trade_no','eq',$v['out_trade_no']]])->find();
+           
+            if($orderInfo['order_status'] == 3){ //如果是预支付状态则跳过当前记录
+                continue;
+            }
+            if($orderInfo['order_status'] == 2){ //如果是退款的，则先显示支付的，再显示退款的
+                $refundInfo = WeixinOrderRefundModel::where([['order_id','eq',$orderInfo['order_id']]])->find();
+                $data[] = [
+                    'time' => $refundInfo['ctime'],
+                    'member_name' => $orderInfo['member_name'],
+                    'msg' => '已退款（'.$orderInfo['member_name'].'）',
+                    //'msg' => $params['order_status'][$orderInfo['order_status']],
+                ];
+                $data[] = [
+                    'time' => $refundInfo['ptime'],
+                    'member_name' => $orderInfo['member_name'],
+                    'msg' => '支付成功（'.$orderInfo['member_name'].'）',
+                    //'msg' => $params['order_status'][1],
+                ];
+            }
+            if($orderInfo['order_status'] == 1){ //如果是支付成功
                 $data[] = [
                     'time' => $orderInfo['ptime'],
-                    'msg' => $params['order_status'][$orderInfo['order_status']],
+                    'member_name' => $orderInfo['member_name'],
+                    'msg' => '支付成功（'.$orderInfo['member_name'].'）',
+                    //'msg' => $params['order_status'][$orderInfo['order_status']],
                 ];
             } 
         }
@@ -1301,6 +1328,96 @@ class Weixin extends Common
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
         
+        return json($result);  
+    }
+
+    public function sendSubscribeTemplate()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+
+        $template_id = input('template_id','2kL0FTh48uEpTgBcLAwp2siR7eTrKOgNiHZSdXA_r_k'); //接收template_id
+        $order_id = input('order_id',39); //接收openid
+
+        // 绑定手机号
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+
+        $WeixinOrderModel = new WeixinOrderModel;
+        $order_info = $WeixinOrderModel->where([['order_id','eq',$order_id]])->find();
+        //$openid = input('openid','oxgVt5RZHUzam9oAHlJRGRlpDwFY'); //接收openid
+        
+        // $action = input('action'); //接收action
+        // $scene = input('scene'); //接收scene
+       //halt($openid);
+        $data = [
+            'touser' => $openid, //要发送给用户的openId
+            //改成自己的模板id，在微信接口权限里一次性订阅消息的查看模板id
+            'template_id' => $template_id,
+            //'url' => "自己网站链接url ", //自己网站链接url 
+            //'scene'=>"$scene",
+            //'title'=>"title", //标题
+            //下面的data格式必须与小程序后台设置的模板详情参数一致！
+            // 'data'=>array(
+            //     'character_string1'=>array(
+            //         'value'=>"202002200000",
+            //     ),
+            //     'amount2'=>array(
+            //         'value'=>"￥".$order_info['pay_money'],
+            //     ),
+            //     'date3'=>array(
+            //         'value'=>"2020-02-21",
+            //     ),
+            //     'phrase6'=>array(
+            //         'value'=>"微信",
+            //     ),
+            //     'phrase9'=>array(
+            //         'value'=>"支付成功",
+            //     ),
+            // )
+            'data'=>array(
+                'character_string1'=>array(
+                    'value'=>$order_info['out_trade_no'],
+                ),
+                'amount4'=>array(
+                    'value'=>"￥".$order_info['pay_money'],
+                ),
+                'phrase2'=>array(
+                    'value'=>"支付成功",
+                ),
+            )
+        ];
+        //halt($data);
+        $WeixinModel = new WeixinModel;
+        $res = $WeixinModel->sendSubscribeTemplate($data);
+        $result = [];
+        if(is_array($res)){
+            if($res['errcode'] == 0){
+                $result['code'] = 1;
+                $result['msg'] = '发送成功！';
+            }else{
+                $result['code'] = 0;
+                $result['msg'] = '发送失败！';
+            }
+        }else{
+            $result['code'] = 0;
+            $result['msg'] = $res;
+        }
+        
+        //halt($res);
         return json($result);  
     }
 
@@ -1435,9 +1552,9 @@ class Weixin extends Common
             $member_info->tel = $tel;
             $member_info->auth_time = time();
             $member_info->save();
-            // 将认证的房屋加到member_house表中(去除掉暂停计租和注销的房子)
+            // 将认证的房屋加到member_house表中(不去除掉暂停计租和注销的房子,['house_is_pause','eq',0],['house_status','eq',1])
             
-            $houses = HouseModel::where([['tenant_id','eq',$tenant_info['tenant_id']],['house_is_pause','eq',0],['house_status','eq',1]])->column('house_id');
+            $houses = HouseModel::where([['tenant_id','eq',$tenant_info['tenant_id']]])->column('house_id');
             $houseSaveData = [];
             foreach ($houses as $h) {
                 $WeixinMemberHouseModel = new WeixinMemberHouseModel;

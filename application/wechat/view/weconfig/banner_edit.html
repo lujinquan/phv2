@@ -46,7 +46,7 @@
     </div>
     <div class="layui-form-mid layui-word-aux">外链或者本程序外链查看小程序基本设置</div>
   </div>
-  <div class="layui-form-item j-chain-box hide">
+  <div class="layui-form-item j-chain-box {if condition="$data_info['banner_url_type'] == 3"}show{else /}hide{/if}">
   	<div class="j-form-label">外链appid：</div>
     <div class="layui-input-inline" style="margin-left: -2px;">
       <input type="text" name="ext_appid" value="{$data_info['ext_appid']}" lay-verify="" placeholder="请输入外链小程序appid"  class="layui-input">
@@ -76,6 +76,7 @@
  </div>
 </form>	
 {include file="system@block/layui" /}
+<script type="text/javascript" src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script>
 	var upurl2 = "{:url('system/Api/upload')}?input=WeixinBanner&group=wechat&water=no"; //幻灯片图片

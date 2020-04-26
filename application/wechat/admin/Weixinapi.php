@@ -103,60 +103,6 @@ class Weixinapi extends Controller
         return json($result);  
 	}
 
-    public function sendSubscribeTemplate()
-    {
-        $openid = input('openid','oxgVt5RZHUzam9oAHlJRGRlpDwFY'); //接收openid
-        $template_id = input('template_id','2kL0FTh48uEpTgBcLAwp2siR7eTrKOgNiHZSdXA_r_k'); //接收template_id
-        // $action = input('action'); //接收action
-        // $scene = input('scene'); //接收scene
-       //halt($openid);
-        $data = [
-            'touser' => $openid, //要发送给用户的openId
-            //改成自己的模板id，在微信接口权限里一次性订阅消息的查看模板id
-            'template_id' => $template_id,
-            //'url' => "自己网站链接url ", //自己网站链接url 
-            //'scene'=>"$scene",
-            //'title'=>"title", //标题
-            //下面的data格式必须与小程序后台设置的模板详情参数一致！
-            'data'=>array(
-                'character_string1'=>array(
-                    'value'=>"202002200000",
-                ),
-                'amount2'=>array(
-                    'value'=>"￥100",
-                ),
-                'date3'=>array(
-                    'value'=>"2020-02-21",
-                ),
-                'phrase6'=>array(
-                    'value'=>"微信",
-                ),
-                'phrase9'=>array(
-                    'value'=>"支付成功",
-                ),
-            )
-        ];
-        //halt($data);
-        $WeixinModel = new WeixinModel;
-        $res = $WeixinModel->sendSubscribeTemplate($data);
-        $result = [];
-        if(is_array($res)){
-            if($res['errcode'] == 0){
-                $result['code'] = 1;
-                $result['msg'] = '发送成功！';
-            }else{
-                $result['code'] = 0;
-                $result['msg'] = '发送失败！';
-            }
-        }else{
-            $result['code'] = 0;
-            $result['msg'] = $res;
-        }
-        
-        //halt($res);
-        return json($result);  
-    }
-
 
     public function getAccessToken()
     {

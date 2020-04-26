@@ -19,6 +19,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinLeadMember as WeixinLeadMemberModel;
 use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
@@ -40,6 +41,25 @@ class Weixin extends Admin
             $data = [];
             $data['data'] = WeixinMemberModel::field($fields)->where($where)->page($page)->order('create_time desc')->limit($limit)->select();
             $data['count'] = WeixinMemberModel::where($where)->count('member_id');//halt($data['data']);
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+		return $this->fetch();
+	}
+
+	public function leaderIndex()
+	{
+		if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $WeixinLeadMemberModel = new WeixinLeadMemberModel;
+            $where = $WeixinLeadMemberModel->checkWhere($getData);
+            $fields = 'lead_member_id,tenant_id,lead_member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
+            $data = [];
+            $data['data'] = WeixinLeadMemberModel::field($fields)->where($where)->page($page)->order('create_time desc')->limit($limit)->select();
+            $data['count'] = WeixinLeadMemberModel::where($where)->count('member_id');//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

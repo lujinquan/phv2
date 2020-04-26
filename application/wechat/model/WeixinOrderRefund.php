@@ -32,6 +32,7 @@ class WeixinOrderRefund extends Model
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'ptime' => 'timestamp:Y-m-d H:i:s',
     ];
 
     public function checkWhere($data)

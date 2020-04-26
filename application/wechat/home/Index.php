@@ -11,6 +11,7 @@ use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinTemplate as WeixinTemplateModel;
 use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
@@ -307,8 +308,6 @@ class Index extends Common
         $WeixinOrderModel->save();
 
         // 生成后台订单与out_trade_no关联数据
-         
-
         foreach($rentOrderIDS as $reid){
             $rent_order_info = $RentModel->find($reid);
             $WeixinOrderTradeModel = new WeixinOrderTradeModel;
@@ -318,6 +317,10 @@ class Index extends Common
             $WeixinOrderTradeModel->save();
         }
 
+        $options['order_id'] = $WeixinOrderModel->order_id; //需要支付的支付订单号
+        $WeixinTemplateModel = new WeixinTemplateModel;
+        $template_info = $WeixinTemplateModel->where([['name','eq','app_user_payment_remind']])->find();
+        $options['template_id'] = $template_info['value']; // 模板id
         $result['code'] = 1;
         $result['msg'] = '获取成功';
         $result['data'] = $options;
@@ -795,6 +798,7 @@ class Index extends Common
         $WeixinOrderRefundModel->refund_id = $result['refund_id'];
         $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
         $WeixinOrderRefundModel->ref_description = $ref_description;
+        $WeixinOrderRefundModel->ptime = $order_info->getData('ptime');
         $WeixinOrderRefundModel->save();
 
         // 更新租金订单表,将缴费记录回退
