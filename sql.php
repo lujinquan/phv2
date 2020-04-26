@@ -438,7 +438,7 @@ update ph_v2.ph_change_house_back set entry_date = from_unixtime(ftime, '%Y-%m')
 update ph_v2.ph_change_inst_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_v2.ph_change_lease_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_v2.ph_change_name_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
-update ph_v2.ph_v2.ph_change_new_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
+update ph_v2.ph_change_new_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_v2.ph_change_offset_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_v2.ph_change_pause_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
 update ph_v2.ph_change_rentadd_back set entry_date = from_unixtime(ftime, '%Y-%m') where ftime > 0;
@@ -490,12 +490,12 @@ update ph_v2.ph_system_annex_back set name='TenantReIDCard' where remark = '身�
 update ph_v2.ph_system_annex_back set name='Houselease' where remark = '计租表';
 update ph_v2.ph_system_annex_back set name='HouseForm' where remark = '租约';
 update ph_v2.ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
-update ph_v2.ph_system_annex_back as a left join ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
+update ph_v2.ph_system_annex_back as a left join ph_v2.ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
 
 
 
 # 将back表同步到主表
-drop table if exists ph_ban;
+drop table if exists ph_v2.ph_ban;
 alter table ph_v2.ph_ban_back rename ph_v2.ph_ban;
 drop table if exists ph_v2.ph_change_cancel;
 alter table ph_v2.ph_change_cancel_back rename ph_v2.ph_change_cancel;
