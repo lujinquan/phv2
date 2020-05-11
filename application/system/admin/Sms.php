@@ -29,22 +29,18 @@ class Sms extends Admin
      */
     public function index()
     {
-        // if ($this->request->isAjax()) {
-        //     $data = $param    = [];
-        //     $param['page']    = $this->request->param('page/d', 1);
-        //     $param['cat_id']  = $this->request->param('cat_id/d', 0);
-        //     $param['type']    = $this->request->param('type/d', 1);
-        //     $param['limit']   = $this->request->param('limit/d', 10);
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
   
-           
-            
+            $SmsModel = new SmsModel;
 
-        //     return json($data);
-        // }
-
-  //       $SmsModel = new SmsModel;
-        
-
+            $data['data'] = $SmsModel->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $data['count'] = $SmsModel->where($where)->count('id');//halt($data['data']);
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
         return $this->fetch();
     }
 

@@ -41,18 +41,21 @@ class Sms extends Model
     protected $autoWriteTimestamp = true;
 
     // 小程序传来的code值
-    protected $SecretId = 'AKIDUmOlsizgla9bn1TrOeeOv1qOiZ0EprMb';
-    protected $SecretKey = '6zjCaiDZeVgfOq2yjESY2OfmfT4QYPAf';
-    protected $SmsSdkAppid = '1400353521';
-    protected $Sign = '武房网信息服务有限公司';
-    protected $TemplateID = '580690';
+    protected $SecretId ;
+    protected $SecretKey ;
+    protected $SmsSdkAppid ;
+    protected $Sign ;
+    protected $TemplateID ;
 
 	protected function initialize()
     {
         parent::initialize();
         $configDatas = WeixinConfigModel::column('name,value');
-    	// $this->SecretId = $configDatas['tencent_seret_id'];
-    	// $this->SecretKey = $configDatas['tencent_seret_key'];
+    	$this->SecretId = $configDatas['tencent_secret_id'];
+    	$this->SecretKey = str_coding($configDatas['tencent_secret_key'],'DECODE');
+    	$this->SmsSdkAppid = $configDatas['tencent_sms_sdk_appid'];
+    	$this->Sign = $configDatas['tencent_sms_sign'];
+    	$this->TemplateID = $configDatas['tencent_sms_template_id'];
     }
 
     /**
