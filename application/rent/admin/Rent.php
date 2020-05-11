@@ -32,10 +32,10 @@ class Rent extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
-            $res = $RentModel->configRentOrder(); //生成本月份订单
-            if(!$res){
-                $this->error('本月份订单生成失败！');
-            }
+            // $res = $RentModel->configRentOrder(); //生成本月份订单
+            // if(!$res){
+            //     $this->error('本月份订单生成失败！');
+            // }
             //halt($limit);
             $where = $RentModel->checkWhere($getData,'rent');
             
