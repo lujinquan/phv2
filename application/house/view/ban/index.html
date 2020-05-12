@@ -88,6 +88,15 @@
 		    ,$ = layui.$
 			,laydate = layui.laydate;
         var isHide = ('{$group}' == 'x')?false:true;
+        var group = '{$group}';
+        var templet_width;
+        if(group == 'x'){
+			templet_width = 200;
+        }else if(group == 'y'){
+        	templet_width = 300;
+        }else if(group == 'z'){
+        	templet_width = 400;
+        }
 		//var exportData = " ";//定义全局变量
        table.render({
             elem: '#dataTable'

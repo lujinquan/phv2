@@ -93,7 +93,7 @@ class House extends Admin
             // }
             
             $data = [];
-            $data['msg'] = $date.'月报，保存成功！';
+            $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
             $data['code'] = 1;
             return json($data);
         //}
@@ -191,7 +191,7 @@ class House extends Admin
             // }
             
             $data = [];
-            $data['msg'] = $date.'月报，保存成功！';
+            $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
             $data['code'] = 1;
             return json($data);
         }

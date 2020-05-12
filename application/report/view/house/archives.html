@@ -14,7 +14,7 @@
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
 	              <select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
 	                  {volist name="owerLst" id="v"}
-	                  <option value="{$key}" {if condition="$key == 1"}selected{/if}>{$v}</option>
+	                  <option value="{$key}" {if condition="$key == 12"}selected{/if}>{$v}</option>
 	                  {/volist}
 	              </select>
 	          </div>
@@ -422,15 +422,16 @@
 
 		$('#button_create').click(function(){
 			var that = $(this);
-that.prop('disabled', true);
-that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
+			that.prop('disabled', true);
+			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
 
 			$.post('{:url('house/makeArchivesReport')}', function(res) {
-                layer.msg(res.msg);
-                location.reload();
+                layer.msg(res.msg, {time:5000},function(){
+                	location.reload();
+                });
             });
-// that.prop('disabled', false);
-// that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
+			// that.prop('disabled', false);
+			// that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
 
 		})
 

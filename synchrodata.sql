@@ -417,9 +417,9 @@ drop table if exists ph_v2.ph_change_rentadd_back;
 create table ph_v2.ph_change_rentadd_back like ph_v2.ph_change_rentadd;
 # 同步数据
 insert into ph_v2.ph_change_rentadd_back 
-(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status,is_take_back) 
 select 
-ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status,IfTakeBack
 from ph_v1.ph_change_order where ChangeType = 11 and Status < 2;
 
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
