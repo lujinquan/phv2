@@ -34,7 +34,15 @@ class Sms extends Admin
             $limit = input('param.limit/d', 10);
   
             $SmsModel = new SmsModel;
-
+            $where = [];
+            $phone = trim(input('phone'));
+            if($phone){
+                $where[] = ['phone','like','%'.$phone.'%'];
+            }
+            $content = trim(input('content'));
+            if($content){
+                $where[] = ['content','like','%'.$content.'%'];
+            }
             $data['data'] = $SmsModel->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
             $data['count'] = $SmsModel->where($where)->count('id');//halt($data['data']);
             $data['code'] = 0;
