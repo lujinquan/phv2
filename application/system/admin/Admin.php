@@ -57,7 +57,10 @@ class Admin extends Common
         if (!$login['uid']) {
             return $this->error('请登录之后再操作！', ROOT_DIR.config('sys.admin_path'));
         }
-
+        $password = $model::where([['id','eq',$login['uid']]])->value('password');
+        $password_is_init = $password == '$2y$10$gtfqCIJN.pJVsRge/ePxguwy0WwBN6VkjY4NClDTzqAXSI2Zp12l6' ? true : false;
+        $this->assign('password_is_init', $password_is_init); //检测密码是否是默认密码
+        //halt($password);
         define('INST',session('admin_user.inst_id'));
         define('INST_LEVEL',session('admin_user.inst_level'));
         if (!defined('ADMIN_ID')) {

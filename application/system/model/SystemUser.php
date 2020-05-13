@@ -269,7 +269,7 @@ class SystemUser extends Model
         /*关联1.0登录代码     开始 》》》*/
         $user_id = input('user_id');
         $secret = input('secret');
-        if($user_id && $secret){
+        if($user_id && $secret){halt(1);
             if(!$secret == md5(md5($user_id))){
                 return false;
             }
@@ -292,6 +292,7 @@ class SystemUser extends Model
             // 缓存登录信息
             session('admin_user', $login);
             session('admin_user_sign', $this->dataSign($login));
+
             // 缓存用户表基础数据
             $users = $this->with('role')->where([['status','eq','1']])->select();
             $usersArr = [];

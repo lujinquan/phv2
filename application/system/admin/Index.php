@@ -51,7 +51,7 @@ class Index extends Admin
             $data['msg'] = '';
             return json($data);
         }else{
-           if (cookie('hisi_iframe')) {  //单页面模式
+            if (cookie('hisi_iframe')) {  //单页面模式
                 $this->view->engine->layout(false);
                 return $this->fetch('iframe');
             } else { //ifram模式

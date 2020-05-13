@@ -4,6 +4,16 @@
 	<script type="text/javascript" src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
 	<script type="text/javascript" src="__PUBLIC_JS__/echarts.min.js?v={:config('hisiphp.version')}"></script>
 	<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+	{if condition="$password_is_init"}
+	<div class="layui-collapse page-tips">
+	  <div class="layui-colla-item">
+	    <h2 class="layui-colla-title">重要提示</h2>
+	    <div class="layui-colla-content layui-show">
+	      <p class="red">您当前使用的密码为初始密码，请及时修改！！！<a href="{:url('system/user/info')}">【点此修改】</a></p>
+	    </div>
+	  </div>
+	</div>
+	{/if}
 	<!-- 累计租金收租情况 待办事项 -->
 	<div class="layui-row layui-col-space15">
 	  <div class="layui-col-md6 j-title-size">
