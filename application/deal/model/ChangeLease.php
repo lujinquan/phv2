@@ -84,11 +84,11 @@ class ChangeLease extends SystemBase
         }
         // 检索租户手机号
         if(isset($data['tenant_tel']) && $data['tenant_tel']){
-            $where[] = ['a.tenant_tel','like','%'.$data['tenant_tel'].'%'];
+            $where[] = ['c.tenant_tel','like','%'.$data['tenant_tel'].'%'];
         }
         // 检索租户身份证号
         if(isset($data['tenant_card']) && $data['tenant_card']){
-            $where[] = ['a.tenant_card','like','%'.$data['tenant_card'].'%'];
+            $where[] = ['c.tenant_card','like','%'.$data['tenant_card'].'%'];
         }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){

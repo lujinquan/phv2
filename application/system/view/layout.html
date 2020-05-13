@@ -1,4 +1,3 @@
-
 {include file="block/header" /}
 {switch name="$hisiTabType"}
     {case value="1"}
@@ -10,7 +9,7 @@
                         <a href="javascript:;" id="curTitle">{$hisiCurMenu['title']|raw}</a>
                     </li>
                 </ul>
-                <div class="layui-tab-content page-tab-content">
+                <div class="layui-tab-content page-tab-content content_1_1">
                     <div class="layui-tab-item layui-show">
                         {__CONTENT__}
                     </div>
@@ -33,7 +32,7 @@
                         </li>
                     {/volist}
                 </ul>
-                <div class="layui-tab-content page-tab-content">
+                <div class="layui-tab-content page-tab-content content_1_2">
                     {__CONTENT__}
                 </div>
             </div>
@@ -62,7 +61,7 @@
                     {/volist}
                 </ul>
                 <div class="layui-tab-content page-tab-content">
-                    <div class="layui-tab-item layui-show">
+                    <div class="layui-tab-item layui-show content_1_3">
                         {__CONTENT__}
                     </div>
                 </div>
@@ -71,7 +70,7 @@
     {/case}
     {default /}
         {/* 无需分组切换 */}
-        <div class="page-tab-content">
+        <div class="page-tab-content content_1_4">
             {__CONTENT__}
         </div>
 {/switch}
