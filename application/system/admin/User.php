@@ -140,6 +140,10 @@ class User extends Admin
             if(!$data['password']){
                 return $this->error('密码不能为空');
             }
+            // 效验弱口令
+            if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
+                return $this->error('密码必须为6-15位的数字和字母的组合');
+            }
             $data['password'] = md5($data['password']);
             $data['password_confirm'] = md5($data['password_confirm']);
             // 验证
@@ -271,6 +275,10 @@ class User extends Admin
             unset($data['role_id'], $data['status']);
 
             if ($data['password']) {
+                // 效验弱口令
+                if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
+                    return $this->error('密码必须为6-15位的数字和字母的组合');
+                }
                 $data['password'] = md5($data['password']);
                 $data['password_confirm'] = md5($data['password_confirm']);
             } else {
