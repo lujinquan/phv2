@@ -51,20 +51,6 @@ class Cvm extends Admin
 		halt($data);
     }
 
-    
-    /**
-     * 应用列表
-     * @author Lucas <598936602@qq.com>
-     * @return mixed
-     */
-    public function test()
-    {
-    	$data = curl_get('https://cfs.tencentcloudapi.com/?Action=DescribeCfsServiceStatus&Version=2019-07-19');
-    	$result = json_decode($data,true);
-    	halt($result);
-        return $this->fetch();
-    }
-
     /**
      * 查询cfs文件服务状态
      * @author Lucas <598936602@qq.com>
@@ -82,16 +68,34 @@ class Cvm extends Admin
     /**
      * 查询cfs文件系统挂载点
      * @author Lucas <598936602@qq.com>
+     * @param  $FileSystemId String 必填 需要查询的文件系统ID
      * @return mixed
      */
     public function describe_mount_targets()
     {
-    	// halt(str_coding('a4c80Q2kbNcf0S9tEWHLb3guFOBRMCcgPkZTPC7zN7vJZ27hVJU7yGKzHy8kcgYvogrT1+TmKs9fIuxf0w','DECODE'));
-    	// halt(str_coding('6zjCaiDZeVgfOq2yjESY2OfmfT4QYPAf','ENCODE'));
+        $FileSystemId = 'cfs-1s3s9yyh';
     	$CvmModel = new CvmModel;
-		$data = $CvmModel->describeMountTargets();
+		$data = $CvmModel->describeMountTargets($FileSystemId);
     	$result = json_decode($data,true);
     	halt($result);
+        return $this->fetch();
+    }
+
+    /**
+     * 修改cfs文件系统挂载点【腾讯云平台暂不支持，已废弃】
+     * @author Lucas <598936602@qq.com>
+     * @param  $FsLimit Integer 必填 文件系统容量限制大小，输入范围0-1073741824, 单位为GB；其中输入值为0时，表示不限制文件系统容量
+     * @param  $FileSystemId String 必填 文件系统ID
+     * @return mixed
+     */
+    public function update_cfs_file_system_size_limit_request()
+    {
+        $FsLimit = 100; //Gb
+        $FileSystemId = 'cfs-1s3s9yyh'; //文件系统ID
+        $CvmModel = new CvmModel;
+        $data = $CvmModel->updateCfsFileSystemSizeLimitRequest($FsLimit , $FileSystemId);
+        $result = json_decode($data,true);
+        halt($result);
         return $this->fetch();
     }
     

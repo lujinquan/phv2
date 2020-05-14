@@ -89,13 +89,13 @@
 			,laydate = layui.laydate;
         var isHide = ('{$group}' == 'x')?false:true;
         var group = '{$group}';
-        var templet_width;
+        var templet_width; //模板长度
         if(group == 'x'){
-			templet_width = 200;
+			templet_width = 240;
         }else if(group == 'y'){
-        	templet_width = 300;
+        	templet_width = 180;
         }else if(group == 'z'){
-        	templet_width = 400;
+        	templet_width = 180;
         }
 		//var exportData = " ";//定义全局变量
        table.render({
@@ -106,7 +106,7 @@
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,totalRow: true
             ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
@@ -137,7 +137,7 @@
                 ,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
                 ,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
                 ,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
-                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作',minWidth: templet_width, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
 				//导出转换后台数据
@@ -149,7 +149,7 @@
 					exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
 				};
             }
-        },isShowInst,isHide);
+        },isShowInst,isHide,templet_width);
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){
 			 table.exportFile(exports.config.id,exportData,'xls');

@@ -31,6 +31,7 @@ use TencentCloud\Common\Profile\HttpProfile;
 use TencentCloud\Cfs\V20190719\CfsClient;
 use TencentCloud\Cfs\V20190719\Models\DescribeAvailableZoneInfoRequest;
 use TencentCloud\Cfs\V20190719\Models\DescribeMountTargetsRequest;
+use TencentCloud\Cfs\V20190719\Models\UpdateCfsFileSystemSizeLimitRequest;
 
 /**
  * 腾讯文件系统模型
@@ -67,10 +68,11 @@ class Cvm extends Model
      * Website  address:  www.mylucas.com.cn
      * =====================================
      * 创建时间: 2020-05-11 16:46:32 
+     * @param  $FileSystemId String 文件系统ID
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function describeMountTargets()
+    public function describeMountTargets($FileSystemId = 'cfs-1s3s9yyh')
     {
     	$cred = new Credential($this->SecretId, $this->SecretKey);
 	    $httpProfile = new HttpProfile();
@@ -83,7 +85,7 @@ class Cvm extends Model
 	    $req = new DescribeMountTargetsRequest();
 	    
 	    //必须传参数FileSystemId，文件服务器的id
-	    $params = '{"FileSystemId":"cfs-1s3s9yyh"}';
+	    $params = '{"FileSystemId":"'.$FileSystemId.'"}';
 	    $req->fromJsonString($params);
 
 
@@ -125,6 +127,39 @@ class Cvm extends Model
     }
 
     /**
+     * 
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-05-14 14:35:52
+     * @param  $FsLimit Integer 必填 文件系统容量限制大小，输入范围0-1073741824, 单位为GB；其中输入值为0时，表示不限制文件系统容量
+     * @param  $FileSystemId String 必填 文件系统ID
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function updateCfsFileSystemSizeLimitRequest($FsLimit = 100 , $FileSystemId = 'cfs-1s3s9yyh')
+    {
+    	$cred = new Credential($this->SecretId, $this->SecretKey);
+	    $httpProfile = new HttpProfile();
+	    $httpProfile->setEndpoint("cfs.tencentcloudapi.com");
+	      
+	    $clientProfile = new ClientProfile();
+	    $clientProfile->setHttpProfile($httpProfile);
+	    $client = new CfsClient($cred, "", $clientProfile);
+
+	    $req = new UpdateCfsFileSystemSizeLimitRequest();
+	    
+	    $params = '{"Region":"ap-shanghai","FsLimit":'.$FsLimit.',"FileSystemId":"'.$FileSystemId.'"}';
+	    $req->fromJsonString($params);
+
+	    $resp = $client->UpdateCfsFileSystemSizeLimit($req);
+
+	    return $resp->toJsonString();
+    }
+
+    /**
      * 实例信息查询请求对象
      * =====================================
      * @author  Lucas 
@@ -135,7 +170,6 @@ class Cvm extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    
     public function describeInstances()
     {
     	// 实例化一个证书对象，入参需要传入腾讯云账户secretId，secretKey

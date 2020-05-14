@@ -281,6 +281,19 @@ class House extends Admin
             $data['msg'] = '';
             return json($data);
         }
+
+        //-------------- by lucas 【计租表】 Start ------------------------
+        $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+        $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        $row['ban_struct_point'] = Db::name('ban_struct_type')->where([['id','eq',$row['ban_struct_id']]])->value('new_point');
+        //获取当前房屋的房间
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_id');
+        //定义计租表房间数组
+        $HouseModel = new HouseModel;
+        $roomTables = $HouseModel->get_house_renttable($id);
+        $this->assign('room_tables',$roomTables);
+        //-------------- by lucas 【计租表】 End --------------------------
+
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);

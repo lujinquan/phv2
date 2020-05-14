@@ -97,8 +97,8 @@
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 	{if condition="$group == 'x'"}
     <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    {/if}
 	<a href="{:url('renttable')}?id={{ d.house_id }}&group={$group}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
+	{/if}
     <a href="{:url('detail')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('tenant/detail')}?id={{ d.tenant_id }}&jump=house" hisi-data="{width: '1000px', height: '600px',refresh: 2}" title="租户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">租户</a>
 </script>
@@ -108,6 +108,15 @@
 		var table = layui.table;
 		var isHide = ('{$group}' == 'x')?false:true;
 		var isHideXin = ('{$group}' == 'x')?true:false;
+		var group = '{$group}';
+		var templet_width; //模板长度
+        if(group == 'x'){
+			templet_width = 240;
+        }else if(group == 'y'){
+        	templet_width = 140;
+        }else if(group == 'z'){
+        	templet_width = 140;
+        }
 		table.render({
 			elem: '#dataTable',
 			toolbar: true,
@@ -165,7 +174,7 @@
 						return d.house_floor_id + '/' + d.ban_floors;
 					}}
 					, {field: 'house_door',hide: true,width: 100,align:'center',title: '门牌号',totalRow: true}
-					, {title: '操作',Width: 260,minWidth: 260,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					, {title: '操作',minWidth: templet_width,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
 			done: function(res, curr, count) {
@@ -191,7 +200,7 @@
 				}
               }
 			}
-		}, isShowInst,isHide);
+		}, isShowInst,isHide,templet_width);
 		$('#button_prints').click(function(){
 			var queryWhere = new Object();
         	queryWhere.house_number = $("input[name='house_number']").val();  // 搜索房屋编号
