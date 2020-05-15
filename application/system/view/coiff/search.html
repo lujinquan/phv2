@@ -1,0 +1,41 @@
+<form class="layui-form page-form" action="{:url()}" method="post" id="editForm">
+	<blockquote class="layui-elem-quote">以下是自定义的列表搜索配置，每种搜索选项至少保留一项！！！</blockquote>
+    <div class="layui-form-item">
+        <label class="layui-form-label">楼栋信息：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="ban_info_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['ban_info_search'])"}checked{/if}>
+			<input type="checkbox" name="ban_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_struct_id" title="结构类别" lay-skin="primary" {if condition="in_array('ban_struct_id',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_damage_id" title="完损等级" lay-skin="primary" {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_build_year" title="建成年份" lay-skin="primary" {if condition="in_array('ban_build_year',$config['ban_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="ban_info_search[]" value="ban_door" title="栋号" lay-skin="primary" if condition="in_array('ban_door',$config['ban_info_search'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">房屋信息：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="house_info_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['house_info_search'])"}checked{/if}>
+            <input type="checkbox" name="house_info_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['house_info_search'])"}checked{/if}>
+			<input type="checkbox" name="house_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['house_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="house_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['house_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="house_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['house_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="house_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['house_info_search'])"}checked{/if}> 
+			<input type="checkbox" name="house_info_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['house_info_search'])"}checked{/if}> 
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> </label>
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
+            <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+<script>
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+});
+</script>

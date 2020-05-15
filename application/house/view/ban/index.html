@@ -12,12 +12,17 @@
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
+			  {if condition="in_array('ban_number',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-input-margin j-width-100">
 				  <input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_address',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-input-margin j-width-100">
 				  <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_inst_id',$config['ban_info_search'])"}
 			  {if condition="INST_LEVEL != 3"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_inst_id">
@@ -28,6 +33,8 @@
 					</select>
 			  </div>
 			  {/if}
+			  {/if}
+			  {if condition="in_array('ban_owner_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-90">
 				  <select name="ban_owner_id">
 					  <option value="">产别</option>
@@ -36,6 +43,8 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_struct_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_struct_id">
 					  <option value="">结构类别</option>
@@ -44,6 +53,8 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_damage_id">
 					  <option value="">完损等级</option>
@@ -52,6 +63,7 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">

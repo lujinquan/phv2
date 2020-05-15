@@ -11,6 +11,7 @@
 
 namespace app\system\admin;
 
+use think\Db;
 use app\common\model\Cparam as CparamModel;
 use app\system\model\SystemConfig as ConfigModel;
 
@@ -53,6 +54,29 @@ class Coiff extends Admin
 
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
+        return $this->fetch();
+    }
+
+    public function search()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            $flag = 0;
+            foreach ($data as $k => $v) {
+                if(count($v) > 0){
+                    Db::name('config')->where([['title','eq',$k]])->update(['value'=>implode(',',$v)]);
+                }else{
+                    $flag = 1;  
+                }
+            }
+            if($flag){
+                return $this->error('请至少选一个搜索选项'); 
+            }else{
+                return $this->success('编辑成功');
+            }
+           
+            
+        }
         return $this->fetch();
     }
 

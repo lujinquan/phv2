@@ -52,14 +52,26 @@ class Admin extends Common
         parent::initialize();
         $model = new UserModel();
 
+        // 开启白名单验证
+        if(config('sys.admin_whitelist_verify') && !in_array(get_client_ip(), parse_attr(config('sys.admin_whitelist')))){
+            return $this->success('您的IP已被限制登录……','admin.php/system/publics/index','',5);
+        }
+
         // 判断登录
         $login = $model->isLogin();
         if (!$login['uid']) {
             return $this->error('请登录之后再操作！', ROOT_DIR.config('sys.admin_path'));
         }
-        $password = $model::where([['id','eq',$login['uid']]])->value('password');
-        $password_is_init = $password == '$2y$10$gtfqCIJN.pJVsRge/ePxguwy0WwBN6VkjY4NClDTzqAXSI2Zp12l6' ? true : false;
+        $userInfo = $model::where([['id','eq',$login['uid']]])->field('password,last_login_time')->find();
+        $password_is_init = $userInfo['password'] == '$2y$10$gtfqCIJN.pJVsRge/ePxguwy0WwBN6VkjY4NClDTzqAXSI2Zp12l6' ? true : false;
         $this->assign('password_is_init', $password_is_init); //检测密码是否是默认密码
+
+        //同一个账号第二次登录会挤掉第一次的登录
+        if(config('sys.login_is_only_one') && (strtotime(session('admin_user.last_login_time')) < $userInfo->getData('last_login_time'))){ 
+            $model->logout();
+            return $this->success('您的账号于'.date('Y年m月d日 H时i分s秒',$userInfo->getData('last_login_time')).'在另一个地方登录……','admin.php/system/publics/index','',5);
+        }
+        
         //halt($password);
         define('INST',session('admin_user.inst_id'));
         define('INST_LEVEL',session('admin_user.inst_level'));
@@ -76,11 +88,12 @@ class Admin extends Common
                     return $this->error('['.$curMenu['title'].'] 访问权限不足');
                 }
                 
-            } else if (config('sys.admin_whitelist_verify')) {
+            }// else if (config('sys.admin_whitelist_verify')) {
+            //     //开启了白名单
+            //     return $this->error('节点不存在或者已禁用！');
 
-                return $this->error('节点不存在或者已禁用！');
-
-            } else {
+            // }
+            else {
 
                 $curMenu = ['title' => '', 'url' => '', 'id' => 0];
 
@@ -134,11 +147,13 @@ class Admin extends Common
                 $this->assign('hisiTabType', 0);
                 // 获取所有参数
                 $params = ParamModel::getCparams();
-                //$users = session('systemusers');
-                //halt($users[47]);
                 $this->assign('inst_level',INST_LEVEL);
                 $this->assign('params',$params);
                 $this->assign('systemusers',session('systemusers'));
+                $config = Db::name('config')->column('title,value');
+                foreach($config as &$c){$c = explode(',',$c);}
+                //halt($config);
+                $this->assign('config', $config);
                 // 当前用户的权限
                 $this->assign('auths',$auths);
                 $this->assign('paramsJson',json_encode($params));

@@ -191,6 +191,7 @@ class SystemUser extends Model
             $login['inst_level'] = $user->inst_level;
             $login['inst_ids'] = $user->inst_ids;
             $login['role_name'] = $role['name'];
+            $login['last_login_time'] = $user->last_login_time;
             $login['nick'] = $user->nick;
             cookie('hisi_iframe', (int)$user->iframe);
             // 主题设置
@@ -281,6 +282,7 @@ class SystemUser extends Model
             $login['inst_id'] = $user->inst_id;
             $login['inst_level'] = $user->inst_level;
             $login['inst_ids'] = $user->inst_ids;
+            $login['last_login_time'] = $user->last_login_time;
             $login['role_name'] = $role['name'];
             $login['nick'] = $user->nick;
             cookie('hisi_iframe', (int)$user->iframe);

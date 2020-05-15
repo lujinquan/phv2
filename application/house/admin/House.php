@@ -42,10 +42,14 @@ class House extends Admin
 
             foreach ($data['data'] as $k => &$v) {
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
-                    $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                    $leaseInfo = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->field("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time,id as change_lease_id")->find();
+                    $v['last_print_time'] = $leaseInfo['last_print_time'];
+                    $v['change_lease_id'] = $leaseInfo['change_lease_id'];
                 }else{
+                    $v['change_lease_id'] = '';
                     $v['last_print_time'] = '';
                 }  
+                //halt($v);
             }
             
             
