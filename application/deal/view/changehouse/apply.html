@@ -59,10 +59,10 @@
 		    <td rowspan="4" colspan="2" class="HABanID"><input type="text" readonly value="" class="layui-input"></td>
 		    <td rowspan="4" colspan="2" class="HAAddress"><input type="text" readonly value="" class="layui-input"></td>
 		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="text" readonly value="" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HARent layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" value="0.00" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" class="HARent layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforeLeasedArea"><input type="text" readonly value="" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HALeasedArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" value="0.00" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" class="HALeasedArea layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterLeasedArea layui-input" /></td>
 		  </tr>
 		  <tr>
@@ -79,10 +79,10 @@
 		  </tr>
 		  <tr>
 		    <td rowspan="1" colspan="1" class="HABeforeBanArea"><input type="text" readonly value="" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HABanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" value="0.00" class="HABanArea layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterBanArea layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforePrice"><input type="text" readonly value="" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" value="0.00" class="HAPrice layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" value="0.00" class="HAPrice layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterPrice layui-input" /></td>
 		  </tr>
 		  

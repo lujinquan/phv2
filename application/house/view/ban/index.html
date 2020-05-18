@@ -131,6 +131,7 @@
                 ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
+				console.log("数据",res);
 				//导出转换后台数据
 				var exportData=res.data;
 				for(i in exportData){
