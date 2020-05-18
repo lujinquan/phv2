@@ -6,6 +6,7 @@ use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
@@ -639,6 +640,18 @@ class Index extends Common
                     $rent_order_info->pay_way = 4; //4是微信支付
                     $rent_order_info->is_deal = 1; 
                     $rent_order_info->save();
+
+                    // 添加房屋台账，记录缴费状况
+                    $HouseTaiModel = new HouseTaiModel;
+                    $HouseTaiModel->house_id = $rent_order_info['house_id'];
+                    $HouseTaiModel->tenant_id = $rent_order_info['tenant_id'];
+                    $HouseTaiModel->cuid = 0;
+                    $HouseTaiModel->house_tai_type = 2;
+                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$rent_order_info['rent_order_receive'].'元';
+                    $HouseTaiModel->data_json = [];
+                    $HouseTaiModel->change_type = '';
+                    $HouseTaiModel->change_id = '';
+                    $HouseTaiModel->save();
                 }
 
                 

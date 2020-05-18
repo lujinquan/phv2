@@ -294,12 +294,13 @@ class Rent extends Model
 
             $ji += $res;
 
+            // 添加房屋台账，记录缴费状况
             $HouseTaiModel = new HouseTaiModel;
             $HouseTaiModel->house_id = $row['house_id'];
             $HouseTaiModel->tenant_id = $row['tenant_id'];
             $HouseTaiModel->cuid = ADMIN_ID;
             $HouseTaiModel->house_tai_type = 2;
-            $HouseTaiModel->house_tai_remark = '缴费：'.$row['rent_order_receive'].'元';
+            $HouseTaiModel->house_tai_remark = '现金缴费：'.$row['rent_order_receive'].'元';
             $HouseTaiModel->data_json = [];
             $HouseTaiModel->change_type = '';
             $HouseTaiModel->change_id = '';

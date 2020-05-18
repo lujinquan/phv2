@@ -174,8 +174,11 @@
 		    		content: "{:url('turnForm')}?hisi_iframe=yes",
 		    		yes: function(index, layero){
 		    			var data = $('.layui-form').serialize();
+		    			// 待优化
 		    			var transferDom = document.getElementById('layui-layer-iframe1').contentWindow.document.getElementsByClassName('layui-this'); //获取弹出iframe下的选中状态元素 
+						console.log('transferDom:',transferDom);
 						var transfer_to = $(transferDom).attr('lay-value'); 
+						//var transfer_to = $('.layui-this').attr('lay-value'); 
 		    			var dataNew = $.param({transfer_to:transfer_to})+'&'+data;
 	
 						if(!$('.layui-layer-btn0').hasClass('disabled')){

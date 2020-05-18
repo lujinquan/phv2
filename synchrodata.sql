@@ -51,9 +51,9 @@ drop table if exists ph_v2.ph_house_back;
 create table ph_v2.ph_house_back like ph_v2.ph_house;
 # 同步数据
 insert into ph_v2.ph_house_back 
-(house_number,ban_id,tenant_id,house_pre_rent,house_cou_rent,house_unit_id,house_floor_id,house_door,house_use_id,house_use_area,house_area,house_lease_area,house_oprice,house_pump_rent,house_diff_rent,house_protocol_rent,house_is_pause,house_status) 
+(house_number,house_szno,ban_id,tenant_id,house_pre_rent,house_cou_rent,house_unit_id,house_floor_id,house_door,house_use_id,house_use_area,house_area,house_lease_area,house_oprice,house_pump_rent,house_diff_rent,house_protocol_rent,house_is_pause,house_status) 
 select 
-HouseID,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,IfSuspend,Status
+HouseID,Szno,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,IfSuspend,Status
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
 update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;

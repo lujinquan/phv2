@@ -17,11 +17,6 @@
 						<option value="57" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
 					</optgroup>
 					{/if}
-					{if condition="ADMIN_ROLE != 12"}
-					<optgroup label="产品部">
-						<option value="58" {if condition="session('admin_user.nick') == '王高丽'"}disabled{/if}>王高丽</option>
-					</optgroup>
-					{/if}
 					{if condition="ADMIN_ROLE != 9"}
 					<optgroup label="经管科">
 						<option value="97" {if condition="session('admin_user.nick') == '叶惠丽' || $data_info['nick'] == '叶惠丽'"}disabled{/if}>叶惠丽</option>
