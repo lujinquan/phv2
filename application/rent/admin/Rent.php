@@ -16,6 +16,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
+use app\house\model\HouseTai as HouseTaiModel;
 
 /**
  * 租金应缴
@@ -122,10 +123,12 @@ class Rent extends Admin
      */
     public function payList()
     {
+        // ini_get('max_input_vars'); 最大表单变量提交数量，一般是1000
         $ids = $this->request->param('id/a'); 
         $RentModel = new RentModel;      
         $res = $RentModel->payList($ids);
         if($res){
+
             $this->success('缴费成功，本次缴费'.$res.'条账单！');
         }else{
             $this->error('缴费失败');

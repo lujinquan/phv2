@@ -141,7 +141,11 @@
 </div>
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+	{{# if (d.change_type > 0){ }}
   	<a href="{:url('house/taiDetail')}?id={{ d.house_tai_id }}" id="checktable" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '1400px', height: '700px',refresh: 2}" title="台账明细">详情</a>  
+	{{#  } else { }}
+	<a href="javascript:;" id="checktable" class="layui-btn layui-btn-xs layui-btn-disabled" hisi-data="{width: '1400px', height: '700px',refresh: 2}" title="台账明细">详情</a>
+	{{# } }}
 </script>
 </div>
 <script type="text/javascript">

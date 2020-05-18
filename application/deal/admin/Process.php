@@ -205,6 +205,22 @@ class Process extends Admin
     }
 
     /**
+     * 打回或不通过的弹出框
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-05-18 14:49:42 
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function pop_part_one()
+    {
+        return $this->fetch();
+    }
+
+    /**
      * 租约打印
      * @return [type] [description]
      */

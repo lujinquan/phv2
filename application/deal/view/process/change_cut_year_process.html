@@ -356,6 +356,7 @@
 				</div>
 		</div>
   </div>
+{include file="deal@process/pop_part_one" /}
 </form>
 {include file="system@block/layui" /}
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
@@ -393,19 +394,33 @@
 	    		btn: ["确定","取消"],
 	    		title: ['审批不通过原因'],
 	    		scrollbar: false,
-	    		area: ['400px','200px'],
+	    		area: ['400px','300px'],
 	    		offset: 'auto',
-	    		content: "<div class='j-open-reason'><input type='text'name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''></div>",
+	    		content: $("#j-notpass-box"),
+	    		success:function(layero){
+				     var mask = $(".layui-layer-shade");
+				     mask.appendTo(layero.parent());
+				     //其中：layero是弹层的DOM对象
+				},
 	    		yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&change_reason='+$('#change_reason').val()+'&change_type=16';
-					if($('#change_reason').val()==''){
+					var data = formData+'&change_type=16&flag=change';
+					var changeReasonType = $('#change_reason_type').val(); //打回类型
+					var changeReason = $('#change_reason').val(); //打回原因
+					if(changeReasonType == ''){
+						layer.tips('请选择异动不通过类型！', '#change_reason_type', {
+						  tips: 1
+						});
+						return false;
+					}
+					if(changeReasonType == 7 && changeReason == ''){
 						layer.tips('原因不能为空！', '#change_reason', {
 						  tips: 1
 						});
+						return false;
 					}
-					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
@@ -413,7 +428,15 @@
 				}
 			});
 	    })
-
+	    //监听不通过
+		form.on('select(notpass)', function(data){
+		   if(data.elem[data.elem.selectedIndex].text==='其他'){
+			  $(".j-open-notpass").show();
+		   }
+		   else{
+			  $(".j-open-notpass").hide();
+		   }
+		});
 	    //打回
 	    $("#backover").on("click",function(){
 	    	layer.open({
@@ -421,27 +444,50 @@
 	    		btn: ["确定","取消"],
 	    		title: ['打回原因'],
 	    		scrollbar: false,
-	    		area: ['400px','200px'],
+	    		area: ['400px','300px'],
 	    		offset: 'auto',
-	    		content: "<div class='j-open-reason'><input type='text'name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''></div>",
-	    		yes: function(index, layero){
+	    		content: $('#j-repulse-box'),
+	    		success:function(layero){
+				     var mask = $(".layui-layer-shade");
+				     mask.appendTo(layero.parent());
+				     //其中：layero是弹层的DOM对象
+                },
+				yes: function(index, layero){
 					
 					var formData = $('.layui-form').serialize();
-					var data = formData+'&back_reason='+$('#back_reason').val()+'&change_type=16';
-					if($('#back_reason').val()==''){
+					var data = formData+'&change_type=16&flag=back';
+					var backReasonType = $('#back_reason_type').val(); //打回类型
+					var backReason = $('#back_reason').val(); //打回原因
+					
+					if(backReasonType == ''){
+						layer.tips('请选择异动打回类型！', '#back_reason_type', {
+						  tips: 1
+						});
+						return false;
+					}
+					if(backReasonType == 7 && backReason == ''){
 						layer.tips('原因不能为空！', '#back_reason', {
 						  tips: 1
 						});
+						return false;
 					}
-					else if(!$('.layui-layer-btn0').hasClass('disabled')){
+					if(!$('.layui-layer-btn0').hasClass('disabled')){
 						$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 						formSubmit('post',"{:url()}",data,index);
 					}
-
+		
 				}
 			});
 	    })
-
+	    //监听打回
+		form.on('select(repulse)', function(data){
+		   if(data.elem[data.elem.selectedIndex].text==='其他'){
+			  $(".j-open-repulse").show();
+		   }
+		   else{
+			  $(".j-open-repulse").hide();
+		   }
+		});
 		 $('.j-viewer-img').viewer({
 		   	url: 'data-original',
 		 });
