@@ -56,6 +56,20 @@ $ca = strtolower(request()->controller().'/'.request()->action());
             {/volist}
             <li><a href="{:url('system/menu/quick?id='.$hisiCurMenu['id'])}" title="添加到首页快捷菜单" class="j-ajax">[+]</a></li>
         </ul>
-        <div style="padding:0 10px;" class="mcolor">{:runhook('system_admin_tips')}</div>
+        <div style="padding:0 10px;" class="mcolor"><br>
+            <!-- 所有页面的顶部提示信息 S -->
+            {if condition="$password_is_init"}
+            <div class="layui-collapse page-tips">
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">重要提示</h2>
+                <div class="layui-colla-content layui-show">
+                  <p class="red">您当前使用的密码为初始密码，请及时修改！！！<a href="{:url('system/user/info')}">【点此修改】</a></p>
+                </div>
+              </div>
+            </div>
+            {/if}
+            <!-- 所有页面的顶部提示信息 E -->
+            {:runhook('system_admin_tips')}
+        </div>
             <div class="page-body">
 {/if}

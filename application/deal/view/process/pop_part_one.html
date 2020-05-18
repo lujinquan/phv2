@@ -1,0 +1,26 @@
+<!-- 打回弹框内容 S -->
+  <div class="layui-form-item" id="j-repulse-box" hidden='hidden'>
+   <select name="back_reason_type" id='back_reason_type' lay-filter="repulse">
+   		<option value="">请选择打回类型</option>
+   		{volist name="params['back_reason_type']" id="vo"}
+		<option value="{$key}">{$vo}</option>
+		{/volist}
+    </select>
+    <div class='j-open-reason j-open-repulse hide'>
+		<input type='text' name='back_reason' class='layui-input' id='back_reason' placeholder='请输入打回原因！' value=''>
+    </div>
+  </div>
+  <!-- 打回弹框内容 E -->
+  <!-- 不通过弹框内容 S -->
+  <div class="layui-form-item" id="j-notpass-box" hidden='hidden'>
+   <select name="change_reason_type" id='change_reason_type' lay-filter="notpass">
+  		<option value="">请选择不通过类型</option>
+   		{volist name="params['change_reason_type']" id="vo"}
+		<option value="{$key}">{$vo}</option>
+		{/volist}
+    </select>
+    <div class='j-open-reason j-open-notpass hide'>
+		<input type='text' name='change_reason' class='layui-input' id='change_reason' placeholder='请输入不通过原因！' value=''>
+	</div>
+  </div>
+  <!-- 不通过弹框内容 E -->

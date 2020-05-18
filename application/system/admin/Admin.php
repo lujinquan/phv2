@@ -99,6 +99,8 @@ class Admin extends Common
 
             }
 
+//halt(runhook('system_admin_tips'));
+
             $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
 
             // 更新工单中心的待受理工单(每个用户在刷新页面的时候，会对待受理工单节点更新)

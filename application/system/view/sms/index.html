@@ -32,13 +32,6 @@
   </div>
 {include file="block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
-<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-    <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
-</script>
-<script type="text/html" title="排序模板" id="sortTpl">
-    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_help&id={{ d.id }}">
-</script>
 </div>
 <script type="text/javascript">
     layui.use(['table','jquery'], function() {
@@ -47,7 +40,7 @@
         table.render({
             elem: '#dataTable'
             //,toolbar: true
-			//,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
+			       //,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
             ,url: '{:url()}' //数据接口
             ,page: true //开启分页
             ,limit: 10
@@ -55,12 +48,12 @@
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                ,{field: 'phone' , minWidth: 160 , align:'center' , title: '手机号'}
-                ,{field: 'content' , minWidth: 200 , align:'center' , title: '内容'}
+                ,{field: 'phone' , width: 160 , align:'center' , title: '手机号'}
+                ,{field: 'content' , width: 300 , align:'center' , title: '内容'}
                 
-                ,{field: 'request_id' , minWidth: 300 , align:'center' , title: '请求唯一ID'} 
-                ,{field: 'ctime' , minWidth: 160 ,  align:'center' , title: '发送时间'}
-                ,{title: '操作', minWidth: 120, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'request_id' , width: 300 , align:'center' , title: '请求唯一ID'} 
+                ,{field: 'ctime' , width: 160 ,  align:'center' , title: '发送时间'}
+                //,{title: '操作', minWidth: 120, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

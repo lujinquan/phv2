@@ -4,6 +4,7 @@ namespace app\rent\model;
 use think\Db;
 use think\Model;
 use app\house\model\House;
+use app\house\model\HouseTai as HouseTaiModel;
 
 class Rent extends Model
 {
@@ -281,15 +282,52 @@ class Rent extends Model
      */
     public function payList($ids)
     {     
-        $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
-        return $res;
+        $ji = 0;
+        foreach($ids as $id){
+
+            $row = $this->find($id);
+            $row->is_deal = 1;
+            $row->ptime = time();
+            $row->pay_way = 1;
+            $row->rent_order_paid = Db::raw('rent_order_receive');
+            $res = $row->save();
+
+            $ji += $res;
+
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->house_id = $row['house_id'];
+            $HouseTaiModel->tenant_id = $row['tenant_id'];
+            $HouseTaiModel->cuid = ADMIN_ID;
+            $HouseTaiModel->house_tai_type = 2;
+            $HouseTaiModel->house_tai_remark = '缴费：'.$row['rent_order_receive'].'元';
+            $HouseTaiModel->data_json = [];
+            $HouseTaiModel->change_type = '';
+            $HouseTaiModel->change_id = '';
+            $HouseTaiModel->save();
+            //halt($row);
+            //self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        }
+        //$res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        //halt($res);
+        // 缴费台账
+        // $HouseTaiModel = new HouseTaiModel;   
+        // $HouseTaiModel->house_id = $v['house_id'];
+        // $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
+        // $taiHouseData[$k]['cuid'] = $finalRow['cuid'];
+        // $taiHouseData[$k]['house_tai_type'] = 4;
+        // $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
+        // $taiHouseData[$k]['data_json'] = [];
+        // $taiHouseData[$k]['change_type'] = 8;
+        // $taiHouseData[$k]['change_id'] = $finalRow['id']; 
+        // $HouseTaiModel->save();
+        return $ji;
     }
 
     /**
      *  批量欠缴
      */
     public function unpayList($ids)
-    {     
+    {  
         $res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1]);
         return $res;
     }
