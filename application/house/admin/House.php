@@ -42,10 +42,14 @@ class House extends Admin
 
             foreach ($data['data'] as $k => &$v) {
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
-                    $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                    $leaseInfo = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->field("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time,id as change_lease_id")->find();
+                    $v['last_print_time'] = $leaseInfo['last_print_time'];
+                    $v['change_lease_id'] = $leaseInfo['change_lease_id'];
                 }else{
+                    $v['change_lease_id'] = '';
                     $v['last_print_time'] = '';
                 }  
+                //halt($v);
             }
             
             
@@ -281,6 +285,19 @@ class House extends Admin
             $data['msg'] = '';
             return json($data);
         }
+
+        //-------------- by lucas 【计租表】 Start ------------------------
+        $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+        $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        $row['ban_struct_point'] = Db::name('ban_struct_type')->where([['id','eq',$row['ban_struct_id']]])->value('new_point');
+        //获取当前房屋的房间
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_id');
+        //定义计租表房间数组
+        $HouseModel = new HouseModel;
+        $roomTables = $HouseModel->get_house_renttable($id);
+        $this->assign('room_tables',$roomTables);
+        //-------------- by lucas 【计租表】 End --------------------------
+
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);

@@ -18,6 +18,7 @@ use app\common\controller\Common;
 use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
+use app\report\model\Report as ReportModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 
 /**
@@ -82,6 +83,33 @@ class Api extends Common
             case 18:
                 $msg = $this->deal_change_lease($result);
                 break;
+            case 20: //月报表数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','RentReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/rent/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
+                break;
+            case 21: //房屋统计数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','HouseReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/house/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
+                break;
+            case 22: //产权统计数据同步
+                $ReportModel = new ReportModel;
+                $tempData = $ReportModel->where([['type','eq','PropertyReport']])->column('date,data');
+                foreach ($tempData as $k => $v) {
+                    file_put_contents(ROOT_PATH.'file/report/property/'.$k.'.txt', $v);
+                }
+                $msg = '同步成功';
+                break;
+            case 1000:
+                $msg = $this->deal_data($result);
+                break;
             default:
                 return $this->error('暂未开发！');
                 break;
@@ -89,6 +117,143 @@ class Api extends Common
         debug('end');
         $time = floor(debug('begin','end')).'s';
         return $this->success($msg.'，耗时：'.$time);
+    }
+
+    /**
+     * 租金减免，预计耗时s
+     */
+    public function deal_data($result)
+    {
+
+        $curDate = date('Ym');
+        // 1、租金减免
+        $allCutData = Db::name('change_cut')->where(1)->column('change_order_number');
+
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        Db::name('change_cut')->where([['change_status','eq',1],['end_date','>',$curDate]])->update(['is_valid'=>1]);
+        // 2、别字更正
+        $allCutData = Db::name('change_name')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_name')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        // 3、使用权变更
+        $allCutData = Db::name('change_use')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_use')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        // 4、房屋调整
+        $allCutData = Db::name('change_house')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_house')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        // 5、陈欠核销
+        $allCutData = Db::name('change_offset')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_offset')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        // 6、新发租
+        $allCutData = Db::name('change_new')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_new')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        // 7、注销
+        $allCancelData = Db::name('change_cancel')->where(1)->column('change_order_number'); 
+        foreach($allCancelData as $a){
+            if(isset($result[$a])){
+                Db::name('change_cancel')->where([['change_order_number','eq',$a]])->update(['process_id'=>1,'child_json'=>json_encode($result[$a])]);
+            }
+        }
+        $jsonData = Db::name('json_data')->field('change_order_number,house_id,house_use_id,house_number,tenant_id,tenant_name,house_oprice,house_area,house_pre_rent,house_use_area,house_lease_area,house_diff_rent,house_pump_rent')->where([['changetype','eq','注销']])->select(); 
+        $jsonArr = []; 
+        foreach($jsonData as $d){
+            $jsonArr[$d['change_order_number']][] = $d;
+        }
+        foreach ($jsonArr as $k => $v) {
+            $res = Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['process_id'=>1,'data_json'=>json_encode($v)]);
+        }
+        // 8、暂停计租
+        $allPauseData = Db::name('change_pause')->where(1)->column('change_order_number');
+        foreach($allPauseData as $a){
+            if(isset($result[$a])){
+                Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+        $users = Db::name('system_user')->column('number,id');
+        $houses = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->column('a.house_number,a.house_id,a.tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent,b.tenant_name,b.tenant_number,b.tenant_card,b.tenant_tel');
+        $housesss = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','left')->column('a.house_id,a.house_number,a.tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent,b.tenant_name,b.tenant_number,b.tenant_card,b.tenant_tel');
+        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
+        $data = Db::name('change_pause')->where([['house_id','neq','']])->field('id,house_id,child_json')->select();
+        foreach($data as $d){
+            $housearr = explode(',', $d['house_id']);
+            $datajson = [];
+            if(count($housearr) == 1){
+                $datajson[0] = $housesss[$housearr[0]];
+                $implodeHouses = $housearr[0];
+            }else{
+                $h = [];
+                foreach ($housearr as $v) {
+                    if(strlen($v) == 14){
+                        $h[] = $houses[$v]['house_id'];
+                        if(isset($houses[$v])){
+                            $datajson[] = $houses[$v];
+                        }
+                    }else{
+                        $h[] = $v;
+                        if(isset($housesss[$v])){
+                            $datajson[] = $housesss[$v];
+                        }
+                    }
+                }
+                $implodeHouses = implode(',', $h);
+            }
+            Db::name('change_pause')->where([['id','eq',$d['id']]])->update(['process_id'=>1,'house_id'=>$implodeHouses,'data_json'=>json_encode($datajson)]);
+        }
+        // 8、租约管理
+        Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
+        $users = Db::name('system_user')->column('number,id');
+        $steps = [1=>'提交申请',2=>'审批',3=>'审批',4=>'终审',5=>'发证',6=>'提交签字'];
+        $leaseJsonChild = Db::name('change_lease')->where([['process_id','neq',1]])->field('id,child_json')->select();
+        foreach ($leaseJsonChild as $lease) {
+            $child = json_decode($lease['child_json'],true);
+            $a = [];
+            foreach ($child as $k => $v) {
+                $temp = [
+                    'reason' => $v['Reson'],
+                    'success' => $v['IfValid'],
+                    'step' => $v['Step'],
+                    'action' => $steps[$v['Step']],
+                    'time' => date('Y-m-d H:i:s',$v['CreateTime']),
+                    'uid' => isset($users[$v['UserNumber']])?$users[$v['UserNumber']]:1,
+                ];
+                array_unshift($a, $temp);
+            }
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'child_json'=>json_encode($a)]);
+        }
+        Db::name('change_cut')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
+        // 9、管段调整
+        $allCutData = Db::name('change_inst')->where(1)->column('change_order_number');
+        foreach($allCutData as $a){
+            if(isset($result[$a])){
+                Db::name('change_inst')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
+            }
+        }
+
+
+        return '同步完成！';
     }
 
     /**
@@ -102,6 +267,7 @@ class Api extends Common
             if(isset($result[$a])){
                 Db::name('change_cut')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
+
         }
         $curDate = date('Ym');
         // 2、标记仍然生效的减免异动
@@ -427,18 +593,18 @@ class Api extends Common
     public function getChangeCutRow() 
     {
         if ($this->request->isAjax()) {
-        	$house_id = $this->request->param('house_id');
-        	$data = [];
+            $house_id = $this->request->param('house_id');
+            $data = [];
             $ChangeCutModel = new ChangeCutModel;
             if($house_id){
-            	$changecutid = ChangeCutModel::where([['house_id','eq',$house_id]])->order('ctime desc')->value('id');
+                $changecutid = ChangeCutModel::where([['house_id','eq',$house_id]])->order('ctime desc')->value('id');
                 $row = $ChangeCutModel->detail($changecutid);
                 $data['data'] = $row->toArray();
-    	        $data['msg'] = '获取成功';
-    	        $data['code'] = 1;
+                $data['msg'] = '获取成功';
+                $data['code'] = 1;
             }else{
-            	$data['msg'] = '参数错误';
-    	        $data['code'] = 0;
+                $data['msg'] = '参数错误';
+                $data['code'] = 0;
             }
             return json($data);
         }

@@ -82,7 +82,11 @@ class House extends SystemBase
         }
         // 检索【房屋】使用性质
         if(isset($data['house_use_id']) && $data['house_use_id']){
-            $where[] = ['a.house_use_id','eq',$data['house_use_id']];
+            if(is_array($data['house_use_id'])){
+                $where[] = ['a.house_use_id','in',$data['house_use_id']];
+            }else{
+                $where[] = ['a.house_use_id','eq',$data['house_use_id']];
+            }
         }
         // 检索【楼栋】编号
         if(isset($data['ban_number']) && $data['ban_number']){
@@ -112,7 +116,11 @@ class House extends SystemBase
         }
         // 检索【楼栋】产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+            if(is_array($data['ban_owner_id'])){
+                $where[] = ['d.ban_owner_id','in',$data['ban_owner_id']];
+            }else{
+                $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+            }
         }
         //检索管段
         $insts = config('inst_ids');
@@ -121,61 +129,6 @@ class House extends SystemBase
 
         return $where;
     }
-
-    // public function checkWhere($data)
-    // {
-    //     if(!$data){
-    //         $data = request()->param();
-    //     }
-    //     $group = isset($data['group'])?$data['group']:'y';
-    //     $where = [];
-    //     $where['ban'] = $where['house'] = $where['tenant'] = $where['lease'] = [];
-
-    //     switch ($group) {
-    //         case 'y':
-    //             $where['house'][] = [['house_status','eq',1]];
-    //             break;
-    //         case 'x':
-    //             $where['house'][] = [['house_status','eq',0]];
-    //             break;
-    //         case 'z':
-    //             $where['house'][] = [['house_status','>',1]];
-    //             break;
-    //         default:
-    //             $where['house'][] = [['house_status','eq',1]];
-    //             break;
-    //     }
-    //     // 检索【租户】姓名
-    //     if(isset($data['tenant_name']) && $data['tenant_name']){
-    //         $where['tenant'][] = ['tenant_name','like','%'.$data['tenant_name'].'%'];
-    //     }
-    //     // 检索【房屋】编号
-    //     if(isset($data['house_number']) && $data['house_number']){
-    //         $where['house'][] = ['house_number','like','%'.$data['house_number'].'%'];
-    //     }
-    //     // 检索【房屋】使用性质
-    //     if(isset($data['house_use_id']) && $data['house_use_id']){
-    //         $where['house'][] = ['house_use_id','eq',$data['house_use_id']];
-    //     }
-    //     // 检索【楼栋】编号
-    //     if(isset($data['ban_number']) && $data['ban_number']){
-    //         $where['ban'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
-    //     }
-    //     // 检索【楼栋】地址
-    //     if(isset($data['ban_address']) && $data['ban_address']){
-    //         $where['ban'][] = ['ban_address','like','%'.$data['ban_address'].'%'];
-    //     }
-    //     // 检索【楼栋】产别
-    //     if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-    //         $where['ban'][] = ['ban_owner_id','eq',$data['ban_owner_id']];
-    //     }
-    //     //检索管段
-    //     $insts = config('inst_ids');
-    //     $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-    //     $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];
-
-    //     return $where;
-    // }
 
     /**
      * 数据过滤

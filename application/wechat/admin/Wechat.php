@@ -19,6 +19,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinNotice as WeixinNoticeModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\wechat\model\WeixinTemplate as WeixinTemplateModel;
 use app\wechat\model\WeixinReadRecord as WeixinReadRecordModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -31,6 +32,30 @@ class Wechat extends Admin
 	public function index()
 	{
 		$group = input('group','index');
+
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            // $result = $this->validate($data, 'WeixinNotice');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            
+            foreach ($data as $k => $v) {
+                if($v){
+                    $WeixinTemplateModel = new WeixinTemplateModel;
+                    $WeixinTemplateModel->where([['name','eq',$k]])->update(['value'=>$v]);
+                }
+            }
+            //$data['cuid'] = ADMIN_ID;
+            //$data['content'] = htmlspecialchars($data['content']);
+            // 入库
+            // if (!$WeixinTemplateModel->save($data)) {
+            //     return $this->error('发布失败');
+            // }
+            return $this->success('提交成功');
+        }
+
         $tabData = [];
         $tabData['menu'] = [
             [

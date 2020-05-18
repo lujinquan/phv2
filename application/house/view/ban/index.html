@@ -12,12 +12,17 @@
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
+			  {if condition="in_array('ban_number',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-input-margin j-width-100">
 				  <input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_address',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-input-margin j-width-100">
 				  <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_inst_id',$config['ban_info_search'])"}
 			  {if condition="INST_LEVEL != 3"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_inst_id">
@@ -28,6 +33,8 @@
 					</select>
 			  </div>
 			  {/if}
+			  {/if}
+			  {if condition="in_array('ban_owner_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-90">
 				  <select name="ban_owner_id">
 					  <option value="">产别</option>
@@ -36,6 +43,8 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_struct_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_struct_id">
 					  <option value="">结构类别</option>
@@ -44,6 +53,8 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
+			  {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110">
 				  <select name="ban_damage_id">
 					  <option value="">完损等级</option>
@@ -52,6 +63,7 @@
 					  {/volist}
 					</select>
 			  </div>
+			  {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
@@ -88,6 +100,15 @@
 		    ,$ = layui.$
 			,laydate = layui.laydate;
         var isHide = ('{$group}' == 'x')?false:true;
+        var group = '{$group}';
+        var templet_width; //模板长度
+        if(group == 'x'){
+			templet_width = 240;
+        }else if(group == 'y'){
+        	templet_width = 180;
+        }else if(group == 'z'){
+        	templet_width = 180;
+        }
 		//var exportData = " ";//定义全局变量
        table.render({
             elem: '#dataTable'
@@ -97,7 +118,7 @@
             ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
             ,totalRow: true
             ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
@@ -128,7 +149,7 @@
                 ,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
                 ,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
                 ,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
-                ,{title: '操作', Width: 260,minWidth: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作',minWidth: templet_width, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
 				console.log("数据",res);
@@ -141,7 +162,7 @@
 					exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
 				};
             }
-        },isShowInst,isHide);
+        },isShowInst,isHide,templet_width);
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){
 			 table.exportFile(exports.config.id,exportData,'xls');

@@ -29,7 +29,7 @@ class Report extends Admin
     	$operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick')->select();
     	$opTypeModel = new OpType;
         $opTypeArr = $opTypeModel->where([['status','eq',1],['pid','eq',0]])->column('id,title');
-        //halt($opTypeArr);
+        //dump($data);halt($operateAdmins);
         $this->assign('data',$data);
     	$this->assign('opTypeArr',$opTypeArr);
     	$this->assign('operateAdmins',$operateAdmins);

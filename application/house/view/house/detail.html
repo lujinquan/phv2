@@ -1,6 +1,7 @@
 {include file="system@block/layui" /}
 {if condition="$group == 'y'"}
-  <div class="j-details-box j-no-border floorWrap layui-form">
+	{include file="house/renttable" /}
+  <!-- <div class="j-details-box j-no-border floorWrap layui-form">
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -83,7 +84,7 @@
 				<input type="text" name="ban_address" value="{$params['owners'][$data_info['ban_owner_id']]}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>地址信息</legend>
 	</fieldset>
@@ -100,11 +101,11 @@
 			<div class="j-map-height" id="allmap"></div>
 		</div>
 	</div> -->
-	<div class="layui-row layui-form-item layui-col-space90">
+	<!-- <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
 			<a href="{:url('index')}?group={$group}" class="layui-btn">返回</a>
 		</div>
-	</div>
+	</div> -->
   </div>
 {else /}
 <div class="j-table-content">

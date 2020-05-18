@@ -11,6 +11,7 @@ class Rent extends Admin
 
     public function index()
     {
+
     	if ($this->request->isAjax()) {
             
         }
@@ -23,16 +24,25 @@ class Rent extends Admin
      */
     public function months()
     {
+        // //把所有月租金报表数据同步写入到文件中去
+        // $ReportModel = new ReportModel;
+        // $tempData = $ReportModel->where([['type','eq','RentReport']])->column('date,data');
+        // foreach ($tempData as $k => $v) {
+        //     file_put_contents(ROOT_PATH.'file/report/rent/'.$k.'.txt', $v);
+        // }
     	if ($this->request->isAjax()) {
             $ReportModel = new ReportModel;
             $where = [['type','eq','RentReport']];
             $getData = $this->request->post();
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
-            $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:1;
-            $where[] = (isset($getData['query_month']) && $getData['query_month'])?['date','eq',str_replace('-','',$getData['query_month'])]:['date','eq',date('Ym')];
+            $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:12;
+            $query_month = (isset($getData['query_month']) && $getData['query_month'])?str_replace('-','',$getData['query_month']):date('Ym');
 
-            
-            $tempData = $ReportModel->where($where)->value('data');
+            $where[] = [['date','eq',$query_month]];
+
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
+            //halt($res);
+            //$tempData = $ReportModel->where($where)->value('data');
 
             if($tempData){
                 $temps = json_decode($tempData,true);
@@ -64,9 +74,11 @@ class Rent extends Admin
             $MonthReportModel = new MonthReportModel;
             $HouseReportdata = $MonthReportModel->makeMonthReport($date);
             //Debug::remark('end');
-            $where = [['type','eq','RentReport'],['date','eq',$date]];
+            //$where = [['type','eq','RentReport'],['date','eq',$date]];
 
-            $ReportModel = new ReportModel;
+            file_put_contents(ROOT_PATH.'file/report/rent/'.$date.'.txt', json_encode($HouseReportdata));
+
+            /*$ReportModel = new ReportModel;
             $res = $ReportModel->where($where)->find();
 
             if($res){
@@ -77,10 +89,10 @@ class Rent extends Admin
                     'type'=>'RentReport',
                     'date'=>$date,
                 ]);
-            }
+            }*/
             
             $data = [];
-            $data['msg'] = $date.'月报，保存成功！';
+            $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
             $data['code'] = 1;
             return json($data);
         }

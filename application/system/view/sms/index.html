@@ -1,0 +1,78 @@
+<!-- <div class="layui-btn-container j-container-margin">
+	<button data-href="{:url('send_sign_sms')}" class="layui-btn j-ajax">测试给18674012767用户发一条短信验证码</button>
+</div> -->
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
+<div class="j-table-content">
+<div class="page-toolbar j-page-toolbar clearfix">
+ <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+        <div class="j-search-fl layui-col-md8  fl">
+              <div class="layui-input-inline j-input-margin j-width-100">
+                  <input type="text" name="phone" title="手机号" placeholder="手机号" class="layui-input">
+              </div>
+              <div class="layui-input-inline j-input-margin j-width-100">
+                  <input type="text" name="content" title="内容" placeholder="内容" class="layui-input">
+              </div>       
+        </div>
+        <div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+             <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
+                    <i class="layui-icon layui-icon-print"></i>
+                    导出
+              </button> -->
+              <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+              <!-- <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button> -->
+              
+          </div>
+        </div>
+      </form>
+  </div>
+{include file="block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+</script>
+<script type="text/html" title="排序模板" id="sortTpl">
+    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_help&id={{ d.id }}">
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery'], function() {
+        var table = layui.table
+		    ,$ = layui.$;
+        table.render({
+            elem: '#dataTable'
+            //,toolbar: true
+			//,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
+            ,url: '{:url()}' //数据接口
+            ,page: true //开启分页
+            ,limit: 10
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,cols: [[ //表头
+                ,{field: 'phone' , minWidth: 160 , align:'center' , title: '手机号'}
+                ,{field: 'content' , minWidth: 200 , align:'center' , title: '内容'}
+                
+                ,{field: 'request_id' , minWidth: 300 , align:'center' , title: '请求唯一ID'} 
+                ,{field: 'ctime' , minWidth: 160 ,  align:'center' , title: '发送时间'}
+                ,{title: '操作', minWidth: 120, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+               
+            }
+        });
+		
+		// $(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+		// //显示搜索框title属性值
+		// $(".layui-input.layui-unselect").mouseover(function(){
+		//   var titles = $(this).val();
+		//   $(this).attr("title",titles)
+		// });
+    });
+</script>

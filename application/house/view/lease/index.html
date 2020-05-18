@@ -8,8 +8,8 @@
 					<input type="text" name="szno" placeholder="租约编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-90">
-					<select name="tenant_inst_id">
+				<div class="layui-input-inline layui-col-md2 j-width-150">
+					<select name="ban_inst_id">
 						<option value="">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>

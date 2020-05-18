@@ -34,13 +34,28 @@ class Api extends Common
             $getData = $this->request->get();
             // 检索月份时间
             if(isset($getData['ctime']) && $getData['ctime']){
-                $startTime = str_replace('/', '', $getData['ctime']);
-                $where[] = ['date','eq',$startTime];
+                //$startTime = str_replace('/', '', $getData['ctime']);
+                //$where[] = ['date','eq',$startTime];
+                $query_month = str_replace('/', '', $getData['ctime']);
             }else{
-                $where[] = ['date','eq',date('Ym')];
+                //$where[] = ['date','eq',date('Ym')];
+                $query_month = date('Ym');
             }
-            $tempData = Db::name('report')->where($where)->value('data');
+            //$tempData = Db::name('report')->where($where)->value('data');
+            //halt($tempData);
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
+            //halt($res);
+            //$tempData = $ReportModel->where($where)->value('data');
+
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $ownerid = 12; //查询所有产别
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
+            }else{
+                $data['data'] = [];
+            }
+            
             $data = $result = [];
             $owners = [2,5,10,12];
             if($tempData){
@@ -134,14 +149,32 @@ class Api extends Common
             $getData = $this->request->get();
             // 检索月份时间
             if(isset($getData['ctime']) && $getData['ctime']){
-                $startTime = str_replace('/', '', $getData['ctime']);
-                $where[] = ['date','eq',$startTime];
+                //$startTime = str_replace('/', '', $getData['ctime']);
+                //$where[] = ['date','eq',$startTime];
                 //$where[] = ['order_date','eq',201911];
+                $query_month = str_replace('/', '', $getData['ctime']);
             }else{
-                $where[] = ['date','eq',date('Ym')];
+                //$where[] = ['date','eq',date('Ym')];
+                $query_month = date('Ym');
             }
-            $tempData = Db::name('report')->where($where)->value('data');
+
+            //halt($where);
+            // $tempData = Db::name('report')->where($where)->value('data');
+            // $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
+            //halt($res);
+            //$tempData = $ReportModel->where($where)->value('data');
+
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $ownerid = 12; //查询所有产别
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
+            }else{
+                $data['data'] = [];
+            }
+
             $data = $result = [];   
             $owners = [2,5,10,12];
             if($tempData){
@@ -181,11 +214,27 @@ class Api extends Common
                 $startTime = str_replace('/', '', $getData['ctime']);
                 $where[] = ['date','eq',$startTime];
                 //$where[] = ['order_date','eq',201911];
+                $query_month = str_replace('/', '', $getData['ctime']);
             }else{
                 $where[] = ['date','eq',date('Ym')];
+                $query_month = date('Ym');
             }
-            $tempData = Db::name('report')->where($where)->value('data');
+            // $tempData = Db::name('report')->where($where)->value('data');
+            // $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
+            //halt($res);
+            //$tempData = $ReportModel->where($where)->value('data');
+
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
+            $ownerid = 12; //查询所有产别
+            if($tempData){
+                $temps = json_decode($tempData,true);
+                $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
+            }else{
+                $data['data'] = [];
+            }
+
             $data = $result = [];  
             $owners = [2,5,10,12];
             if($tempData){
