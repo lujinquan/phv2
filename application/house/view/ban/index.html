@@ -78,7 +78,6 @@
                   搜索
               </button>
 			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
-			  
           </div>
 		</div>
       </form>
@@ -110,59 +109,75 @@
         	templet_width = 180;
         }
 		//var exportData = " ";//定义全局变量
-       table.render({
-            elem: '#dataTable'
-			// ,height: 330
-            ,toolbar: true
-			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
-            ,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
-            ,totalRow: true
-            ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
-            ,limit: 10
-            ,text: {
-                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
-            }
-            ,cols: [[ //表头
-                // {type: 'checkbox', hide: isHide ,fixed: 'left'}
-                {field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
-                ,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
-                    return params.insts[d.ban_inst_id];
-                }}
-                ,{field: 'ban_address',minWidth:200,align:'center', title: '地址'}
-                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
-                    return params.owners[d.ban_owner_id];
-                }}
-                ,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
-                    return params.structs[d.ban_struct_id];
-                }}
-                ,{field: 'ban_area', minWidth: 80, align:'center', title: '合建面',totalRow: true}
-                ,{field: 'ban_use_area', minWidth: 100, align:'center', title: '使用面积',totalRow: true}
-                ,{field: 'ban_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true}
-                ,{field: 'ban_oprice', minWidth: 100, align:'center', title: '合原价',totalRow: true}
-                ,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
-                ,{field: 'ban_build_year', hide: true, minWidth: 100, align:'center', title: '建成年份'}
-                ,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
-                    return params.damages[d.ban_damage_id];
-                }}
-                ,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数',totalRow: true}
-                ,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
-                ,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
-                ,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
-                ,{title: '操作',minWidth: templet_width, align:'center', templet: '#buttonTpl',fixed:'right'}
-            ]]
-            ,done:function(res,curr,count){
-				console.log("数据",res);
-				//导出转换后台数据
-				var exportData=res.data;
-				for(i in exportData){
-					exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
-					exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
-					exportData[i].ban_struct_id = params.structs[exportData[i].ban_struct_id];//转化结构类别
-					exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
-				};
-            }
-        },isShowInst,isHide,templet_width);
+		$.ajax({
+			 type: "GET",
+			 url: '{:url("house/Ban/index")}?group={$group}', //数据接口
+			 dataType: "json",
+			 success: function(data){
+				console.log("只是",data);		 
+		        var total_ban_area =data.total_ban_area;
+				var total_ban_use_area =data.total_ban_use_area;
+				var total_ban_rent =data.total_ban_rent;
+				var total_ban_oprice =data.total_ban_oprice;
+				table.render({
+					elem: '#dataTable'
+					// ,height: 330
+					,toolbar: true
+					,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
+					,url: '{:url("house/Ban/index")}?group={$group}' //数据接口
+					,totalRow: true
+					,page: true //开启分页
+					,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
+					,limit: 10
+					,text: {
+						none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+					},
+					cols: [[ //表头
+						// {type: 'checkbox', hide: isHide ,fixed: 'left'}
+						{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
+						,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
+							return params.insts[d.ban_inst_id];
+						}}
+						,{field: 'ban_address',minWidth:200,align:'center', title: '地址'}
+						,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
+							return params.owners[d.ban_owner_id];
+						}}
+						,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
+							return params.structs[d.ban_struct_id];
+						}}
+						,{field: 'ban_area', minWidth: 80, align:'center', title:'<label title="合建面'+total_ban_area+'">合建面('+total_ban_area+')</label>',totalRow: true
+					   }
+						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'<label title="使用面积'+total_ban_use_area+'">使用面积('+total_ban_use_area+')</label>',totalRow: true}
+						,{field: 'ban_rent', minWidth: 80, align:'center',title:'<label title="合规租'+total_ban_rent+'">合规租('+total_ban_rent+')</label>',totalRow: true}
+						,{field: 'ban_oprice', minWidth: 100, align:'center', title: '<label title="合原价'+total_ban_oprice+'">合原价('+total_ban_oprice+')</label>',totalRow: true}
+						,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
+						,{field: 'ban_build_year', hide: true, minWidth: 100, align:'center', title: '建成年份'}
+						,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
+							return params.damages[d.ban_damage_id];
+						}}
+						,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数',totalRow: true}
+						,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
+						,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
+						,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
+						,{title: '操作',minWidth: templet_width, align:'center', templet: '#buttonTpl',fixed:'right'}
+					]]
+					,done:function(res,curr,count){
+						console.log("数据",res);
+						console.log("统计数据",total_ban_area);
+						//导出转换后台数据
+						var exportData=res.data;
+						for(i in exportData){
+							exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+							exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+							exportData[i].ban_struct_id = params.structs[exportData[i].ban_struct_id];//转化结构类别
+							exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
+						};
+						
+					}
+					
+				},isShowInst,isHide,templet_width);
+	    }
+	  });
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){
 			 table.exportFile(exports.config.id,exportData,'xls');
