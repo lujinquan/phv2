@@ -58,7 +58,7 @@ class Room extends SystemBase
         }
         // 检索房间类型
         if(isset($data['room_type']) && $data['room_type']){
-            $where['room'][] = ['room_type','eq',$data['room_type']];
+            $where['room'][] = ['room_type','in',explode(',',$data['room_type'])];
         }
         
         // 检索房间共用状态

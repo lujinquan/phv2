@@ -83,11 +83,7 @@ class House extends SystemBase
         }
         // 检索【房屋】使用性质
         if(isset($data['house_use_id']) && $data['house_use_id']){
-            if(is_array($data['house_use_id'])){
-                $where[] = ['a.house_use_id','in',$data['house_use_id']];
-            }else{
-                $where[] = ['a.house_use_id','eq',$data['house_use_id']];
-            }
+            $where[] = ['a.house_use_id','in',explode(',',$data['house_use_id'])];
         }
         // 检索【楼栋】编号
         if(isset($data['ban_number']) && $data['ban_number']){
@@ -117,11 +113,7 @@ class House extends SystemBase
         }
         // 检索【楼栋】产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            if(is_array($data['ban_owner_id'])){
-                $where[] = ['d.ban_owner_id','in',$data['ban_owner_id']];
-            }else{
-                $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
-            }
+            $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
         //检索管段
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;

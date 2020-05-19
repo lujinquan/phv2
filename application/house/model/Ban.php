@@ -57,27 +57,15 @@ class Ban extends SystemBase
         }
         // 检索产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            if(is_array($data['ban_owner_id'])){
-                $where[] = ['ban_owner_id','in',$data['ban_owner_id']];
-            }else{
-                $where[] = ['ban_owner_id','eq',$data['ban_owner_id']];
-            }  
+            $where[] = ['ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
         // 检索结构类别
         if(isset($data['ban_struct_id']) && $data['ban_struct_id']){
-            if(is_array($data['ban_struct_id'])){
-                $where[] = ['ban_struct_id','in',$data['ban_struct_id']];
-            }else{
-                $where[] = ['ban_struct_id','eq',$data['ban_struct_id']]; 
-            }
+            $where[] = ['ban_struct_id','in',explode(',',$data['ban_struct_id'])];
         }
         // 检索完损等级
         if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
-            if(is_array($data['ban_damage_id'])){
-                $where[] = ['ban_damage_id','in',$data['ban_damage_id']];
-            }else{
-                $where[] = ['ban_damage_id','eq',$data['ban_damage_id']];
-            } 
+            $where[] = ['ban_damage_id','in',explode(',',$data['ban_damage_id'])];
         }
         
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
