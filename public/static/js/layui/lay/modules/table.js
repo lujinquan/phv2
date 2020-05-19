@@ -338,9 +338,12 @@ function(e) {
                 dataType: "json",
                 headers: a.headers || {},
                 success: function(t) {
+					console.log("t的数据",t);
                     "function" == typeof a.parseData && (t = a.parseData(t) || t),
                     t[n.statusName] != n.statusCode ? (i.renderForm(), i.layMain.html('<div class="' + f + '">' + (t[n.msgName] || "返回的数据不符合规范，正确的成功状态码 (" + n.statusName + ") 应为：" + n.statusCode) + "</div>")) : (i.renderData(t, e, t[n.countName]), o(), a.time = (new Date).getTime() - i.startTime + " ms"),
                     i.setColsWidth(),
+					// console.log("当前页e的数据",e);
+					// console.log("a的数据",a);
                     "function" == typeof a.done && a.done(t, e, t[n.countName])
                 },
                 error: function(e, t) {
@@ -361,9 +364,13 @@ function(e) {
         }
     },
     F.prototype.eachCols = function(e) {
+		// console.log("e处理后的数据",e);
         var t = this;
+		// console.log("t.config.cols的数据",t.config.cols);
+		// console.log("t处理后的数据",t);
         return d.eachCols(null, e, t.config.cols),
         t
+		
     },
     F.prototype.renderData = function(e, n, o, r) {
         var c = this,

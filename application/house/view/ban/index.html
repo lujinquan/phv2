@@ -36,11 +36,17 @@
 			  {/if}
 			  {if condition="in_array('ban_owner_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-90">
-				  <select name="ban_owner_id">
+				  <!-- <select name="ban_owner_id">
 					  <option value="">产别</option>
 					  {volist name="params['owners']" id="v"}
 					  <option value="{$key}">{$v}</option>
 					  {/volist}
+					</select> -->
+					<select name="ban_owner_id" multiple="multiple" lay-filter="test">
+						<option value="0">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
 					</select>
 			  </div>
 			  {/if}
@@ -94,9 +100,11 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery','layer','laydate'], function() {
+    layui.use(['table','jquery','layer','laydate','multiSelect'], function() {
         var table = layui.table
 		    ,$ = layui.$
+			,multiSelect = layui.multiSelect
+			,form = layui.form
 			,laydate = layui.laydate;
         var isHide = ('{$group}' == 'x')?false:true;
         var group = '{$group}';
@@ -109,18 +117,9 @@
         	templet_width = 180;
         }
 		//var exportData = " ";//定义全局变量
-		$.ajax({
-			 type: "GET",
-			 url: '{:url("house/Ban/index")}?group={$group}', //数据接口
-			 dataType: "json",
-			 success: function(data){
-				console.log("只是",data);		 
-		        var total_ban_area =data.total_ban_area;
-				var total_ban_use_area =data.total_ban_use_area;
-				var total_ban_rent =data.total_ban_rent;
-				var total_ban_oprice =data.total_ban_oprice;
 				table.render({
 					elem: '#dataTable'
+					,id: 'dataTable'
 					// ,height: 330
 					,toolbar: true
 					,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
@@ -145,11 +144,13 @@
 						,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
 							return params.structs[d.ban_struct_id];
 						}}
-						,{field: 'ban_area', minWidth: 80, align:'center', title:'<label title="合建面'+total_ban_area+'">合建面('+total_ban_area+')</label>',totalRow: true
+						,{field: 'ban_area', minWidth: 80, align:'center', title:'合建面'
+
+
 					   }
-						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'<label title="使用面积'+total_ban_use_area+'">使用面积('+total_ban_use_area+')</label>',totalRow: true}
-						,{field: 'ban_rent', minWidth: 80, align:'center',title:'<label title="合规租'+total_ban_rent+'">合规租('+total_ban_rent+')</label>',totalRow: true}
-						,{field: 'ban_oprice', minWidth: 100, align:'center', title: '<label title="合原价'+total_ban_oprice+'">合原价('+total_ban_oprice+')</label>',totalRow: true}
+						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'使用面积'}
+						,{field: 'ban_rent', minWidth: 80, align:'center',title:'合规租'}
+						,{field: 'ban_oprice', minWidth: 100, align:'center', title: '合原价'}
 						,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
 						,{field: 'ban_build_year', hide: true, minWidth: 100, align:'center', title: '建成年份'}
 						,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
@@ -162,8 +163,10 @@
 						,{title: '操作',minWidth: templet_width, align:'center', templet: '#buttonTpl',fixed:'right'}
 					]]
 					,done:function(res,curr,count){
-						console.log("数据",res);
-						console.log("统计数据",total_ban_area);
+						$(".layui-table-total td[data-field='ban_area']").find("div").text(res.total_ban_area);
+						$(".layui-table-total td[data-field='ban_use_area']").find("div").text(res.total_ban_use_area);
+						$(".layui-table-total td[data-field='ban_rent']").find("div").text(res.total_ban_rent);
+						$(".layui-table-total td[data-field='ban_oprice']").find("div").text(res.total_ban_oprice);
 						//导出转换后台数据
 						var exportData=res.data;
 						for(i in exportData){
@@ -173,11 +176,11 @@
 							exportData[i].ban_damage_id = params.damages[exportData[i].ban_damage_id];//转化完损等级
 						};
 						
+						
 					}
 					
+					
 				},isShowInst,isHide,templet_width);
-	    }
-	  });
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){
 			 table.exportFile(exports.config.id,exportData,'xls');
@@ -225,5 +228,8 @@
 				}
 			});
         })
+		form.on('select(test)',function(data){
+			console.log('所有',data);
+		})
     });
 </script>
