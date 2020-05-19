@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <!-- 新增后台导出按钮 -->
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content  j-no-title">
@@ -8,9 +9,9 @@
 					<input type="text" name="szno" placeholder="租约编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-150">
-					<select name="ban_inst_id">
-						<option value="">机构</option>
+				<div class="layui-input-inline layui-col-md2 j-width-120 j-margin-10">
+					<select name="ban_inst_id"  xm-select="ban_inst_id">
+						<option value=""  disabled="disabled">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -55,8 +56,9 @@
 </script>
 </div>
 <script type="text/javascript">
-	layui.use(['table', 'jquery'], function() {
-		var $ = layui.$;
+	layui.use(['table', 'jquery','formSelects'], function() {
+		var $ = layui.$
+		   ,formSelects = layui.formSelects ;
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table;

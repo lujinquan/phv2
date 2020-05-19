@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 {include file="system@block/layui" /}
 {if condition="$group == 'y'"}
 <!-- 详情 S -->
@@ -487,9 +488,9 @@
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['ban_id']}&group={$group}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
-        <div class="layui-input-inline" style="width:160px;">
-            <select name="ban_tai_type">
-                <option value="">业务类型</option>
+        <div class="layui-input-inline j-margin-10 j-select-width160" style="width:160px;">
+            <select name="ban_tai_type" xm-select="ban_tai_type">
+                <option value="" disabled="disabled">业务类型</option>
                 {volist name="params['ban_tai_type']" id="v"}
                 <option value="{$key}">{$v}</option>
                 {/volist}
@@ -521,8 +522,9 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery'], function() {
+    layui.use(['table','jquery','formSelects'], function() {
         var table = layui.table
+		    ,formSelects = layui.formSelect
 		   ,$ = layui.$;
         table.render({
             elem: '#dataTable'

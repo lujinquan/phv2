@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <style>
     .j-table-content.on .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:115px}/* 标题筛选定位 */
 </style>
@@ -21,26 +22,26 @@
     	    <input type="text" name="rent_order_date" value="" title="月份" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
     	</div>
     	{if condition="INST_LEVEL != 3"}
-    	<div class="layui-input-inline" style="width:120px;">
-    	    <select name="ban_inst_id">
-    	        <option value="">机构</option>
+    	<div class="layui-input-inline j-width-130 j-margin-10">
+    	    <select name="ban_inst_id"  xm-select="ban_inst_id">
+    	        <option value="" disabled="disabled">机构</option>
     	        {volist name=":config('inst_check_names')[INST]" id="v"}
     	        <option value="{$key}">{$v}</option>
     	        {/volist}
     	      </select>
     	</div>
     	{/if}
-    	<div class="layui-input-inline" style="width:120px;">
-    	    <select name="ban_owner_id">
-    	        <option value="">产别</option>
+    	<div class="layui-input-inline j-width-120 j-margin-10">
+    	    <select name="ban_owner_id" xm-select="ban_owner_id">
+    	        <option value="" disabled="disabled">产别</option>
     	        {volist name="params['owners']" id="v"}
     	        <option value="{$key}">{$v}</option>
     	        {/volist}
     	      </select>
     	</div>
-    	<div class="layui-input-inline" style="width:120px;">
-    	    <select name="house_use_id">
-    	        <option value="">使用性质</option>
+    	<div class="layui-input-inline j-width-120 j-margin-10">
+    	    <select name="house_use_id" xm-select="house_use_id">
+    	        <option value="" disabled="disabled">使用性质</option>
     	        {volist name="params['uses']" id="v"}
     	        <option value="{$key}">{$v}</option>
     	        {/volist}
@@ -88,10 +89,11 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['jquery', 'laydate', 'element','table','jquery'], function() {
+    layui.use(['jquery', 'laydate', 'element','table','jquery','formSelects'], function() {
         var laydate = layui.laydate,
         $ = layui.$
-        ,element = layui.element;
+        ,element = layui.element
+		,formSelects = layui.formSelects;
 
         //年选择器
         laydate.render({

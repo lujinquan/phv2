@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <!-- 新增后台导出按钮 -->
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content">
@@ -16,9 +17,9 @@
 					<input type="text" name="tenant_number" title="租户编号" placeholder="租户编号" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-90">
-					<select name="tenant_inst_id">
-						<option value="">机构</option>
+				<div class="layui-input-inline layui-col-md2 j-width-120 j-margin-10">
+					<select name="tenant_inst_id" xm-select="tenant_inst_id">
+						<option value=""  disabled="disabled">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -67,9 +68,10 @@
 </script>
 </div>
 <script type="text/javascript">
-	layui.use(['table', 'jquery'], function() {
+	layui.use(['table', 'jquery','formSelects'], function() {
 		var $ = layui.$;
-		var table = layui.table;
+		var table = layui.table
+		,formSelects = layui.formSelects;
 		var isHide = ('{$group}' == 'x')?false:true;
 		
 		table.render({

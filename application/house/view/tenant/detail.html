@@ -1,4 +1,5 @@
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 {if condition="$group == 'y'"}
 <!-- <style>
 	.layui-nav-tree .layui-nav-child dd.layui-this,.layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover{
@@ -153,9 +154,9 @@
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['tenant_id']}&group={$group}"  method="get" id="hisi-table-search">
     <div class="j-search-fl layui-col-md8  fl">
-        <div class="layui-input-inline" style="width:160px;">
-            <select name="tenant_tai_type">
-                <option value="">业务类型</option>
+        <div class="layui-input-inline j-select-width160 j-margin-10" style="width:160px;">
+            <select name="tenant_tai_type"  xm-select="tenant_tai_type">
+                <option value="" disabled="disabled">业务类型</option>
                 {volist name="params['tenant_tai_type']" id="v"}
                 <option value="{$key}">{$v}</option>
                 {/volist}
@@ -187,9 +188,10 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery'], function() {
+    layui.use(['table','jquery','formSelects'], function() {
         var table = layui.table
-       ,$ = layui.$;
+		,formSelects = layui.formSelects 
+        ,$ = layui.$;
         table.render({
             elem: '#dataTable'
             //,skin: 'line' //行边框风格

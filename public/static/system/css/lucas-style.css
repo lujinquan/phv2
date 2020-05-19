@@ -43,6 +43,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-width-130{width: 130px;}
 .j-width-150{width: 150px;}
 .j-width-180{width: 180px;}
+.j-margin-10{margin-right: 10px;}
 /*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}

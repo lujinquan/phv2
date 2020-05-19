@@ -1,4 +1,5 @@
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 {if condition="$group == 'y'"}
 	{include file="house/renttable" /}
   <!-- <div class="j-details-box j-no-border floorWrap layui-form">
@@ -112,9 +113,9 @@
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url()}?id={$data_info['house_id']}&group={$group}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
-        <div class="layui-input-inline" style="width:160px;">
-            <select name="house_tai_type">
-                <option value="">业务类型</option>
+        <div class="layui-input-inline j-margin-10 j-select-width160" style="width:160px;">
+            <select name="house_tai_type" xm-select="house_tai_type">
+                <option value="" disabled="disabled">业务类型</option>
                 {volist name="params['house_tai_type']" id="v"}
                 <option value="{$key}">{$v}</option>
                 {/volist}
@@ -149,8 +150,9 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery'], function() {
+    layui.use(['table','jquery','formSelects'], function() {
         var table = layui.table
+		   ,formSelects = layui.formSelects 
 		   ,$ = layui.$;
         table.render({
             elem: '#dataTable'

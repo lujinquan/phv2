@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <!-- 新增后台导出按钮 -->
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content">
@@ -24,8 +25,8 @@
 			  {/if}
 			  {if condition="in_array('ban_inst_id',$config['ban_info_search'])"}
 			  {if condition="INST_LEVEL != 3"}
-			  <div class="layui-input-inline j-width-110">
-				  <select name="ban_inst_id">
+			  <div class="layui-input-inline j-width-120 j-margin-10">
+				  <select name="ban_inst_id" xm-select="ban_inst_id">
 					  <option value="">机构</option>
 					  {volist name=":config('inst_check_names')[INST]" id="v"}
 					  <option value="{$key}">{$v}</option>
@@ -35,15 +36,9 @@
 			  {/if}
 			  {/if}
 			  {if condition="in_array('ban_owner_id',$config['ban_info_search'])"}
-			  <div class="layui-input-inline j-width-90">
-				  <!-- <select name="ban_owner_id">
-					  <option value="">产别</option>
-					  {volist name="params['owners']" id="v"}
-					  <option value="{$key}">{$v}</option>
-					  {/volist}
-					</select> -->
-					<select name="ban_owner_id" multiple="multiple" lay-filter="test">
-						<option value="0">产别</option>
+			  <div class="layui-input-inline j-width-90 j-margin-10">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option disabled="disabled" value="">产别</option>
 						{volist name="params['owners']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -51,18 +46,18 @@
 			  </div>
 			  {/if}
 			  {if condition="in_array('ban_struct_id',$config['ban_info_search'])"}
-			  <div class="layui-input-inline j-width-110">
-				  <select name="ban_struct_id">
-					  <option value="">结构类别</option>
-					  {volist name="params['structs']" id="v"}
-					  <option value="{$key}">{$v}</option>
-					  {/volist}
+			  <div class="layui-input-inline j-width-110 j-margin-10">
+					<select name="ban_struct_id" xm-select="ban_struct_id">
+						<option disabled="disabled" value="">结构类别</option>
+						 {volist name="params['structs']" id="v"}
+						 <option value="{$key}">{$v}</option>
+						 {/volist}
 					</select>
 			  </div>
 			  {/if}
 			  {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
-			  <div class="layui-input-inline j-width-110">
-				  <select name="ban_damage_id">
+			  <div class="layui-input-inline j-width-110 j-margin-10">
+				  <select name="ban_damage_id" xm-select="ban_damage_id">
 					  <option value="">完损等级</option>
 					  {volist name="params['damages']" id="v"}
 					  <option value="{$key}">{$v}</option>
@@ -100,10 +95,10 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery','layer','laydate','multiSelect'], function() {
+    layui.use(['table','jquery','layer','laydate','formSelects'], function() {
         var table = layui.table
 		    ,$ = layui.$
-			,multiSelect = layui.multiSelect
+			,formSelects = layui.formSelects
 			,form = layui.form
 			,laydate = layui.laydate;
         var isHide = ('{$group}' == 'x')?false:true;
@@ -228,8 +223,5 @@
 				}
 			});
         })
-		form.on('select(test)',function(data){
-			console.log('所有',data);
-		})
     });
 </script>

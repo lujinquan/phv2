@@ -21,6 +21,7 @@
     }
 </style> -->
 <!-- 新增后台导出按钮 -->
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content">
 	<div class="layui-btn-container j-container-margin">
@@ -56,9 +57,9 @@
 				{/if}
 				{if condition="in_array('ban_inst_id',$config['house_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline  j-width-110">
-					<select name="ban_inst_id">
-						<option value="">机构</option>
+				<div class="layui-input-inline  j-width-120 j-margin-10">
+					<select name="ban_inst_id" xm-select="ban_inst_id">
+						<option value="" disabled="disabled">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -67,9 +68,9 @@
 				{/if}
 				{/if}
 				{if condition="in_array('ban_owner_id',$config['house_info_search'])"}
-				<div class="layui-input-inline  j-width-90">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
+				<div class="layui-input-inline  j-width-90 j-margin-10">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option value="" disabled="disabled">产别</option>
 						{volist name="params['owners']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -77,9 +78,9 @@
 				</div>
 				{/if}
 				{if condition="in_array('house_use_id',$config['house_info_search'])"}
-				<div class="layui-input-inline  j-width-115">
-					<select name="house_use_id">
-						<option value="">使用性质</option>
+				<div class="layui-input-inline  j-width-115 j-margin-10">
+					<select name="house_use_id" xm-select="house_use_id">
+						<option value="" disabled="disabled">使用性质</option>
 						{volist name="params['uses']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -125,8 +126,9 @@
 </script>
 </div>
 <script type="text/javascript">
-	layui.use(['table', 'jquery'], function() {
-		var table = layui.table;
+	layui.use(['table', 'jquery','formSelects'], function() {
+		var table = layui.table
+		   ,formSelects = layui.formSelects;
 		var isHide = ('{$group}' == 'x')?false:true;
 		var isHideXin = ('{$group}' == 'x')?true:false;
 		var group = '{$group}';
