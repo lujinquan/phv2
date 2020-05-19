@@ -141,15 +141,22 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
-                ,{field: 'rent_order_diff', minWidth: 80, align:'center', title: '租差',totalRow: true}
-                ,{field: 'rent_order_pump', minWidth: 80, align:'center', title: '泵费',totalRow: true}
-                ,{field: 'rent_order_cut', minWidth: 80, align:'center', title: '减免',totalRow: true}
-                ,{field: 'house_pre_rent', minWidth: 100, align:'center', title: '规定租金',totalRow: true}
-                ,{field: 'house_cou_rent', minWidth: 100, align:'center', title: '计算租金',totalRow: true}
-                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金',totalRow: true}                
+                ,{field: 'rent_order_diff', minWidth: 100, align:'center', title: '租差',totalRow: true}
+                ,{field: 'rent_order_pump', minWidth: 100, align:'center', title: '泵费',totalRow: true}
+                ,{field: 'rent_order_cut', minWidth: 100, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent', minWidth: 120, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金',totalRow: true}                
                 ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
+                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_rent_order_paid);
+                $(".layui-table-total td[data-field='rent_order_diff']").find("div").text(res.total_rent_order_diff);
+                $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);
+                $(".layui-table-total td[data-field='rent_order_cut']").find("div").text(res.total_rent_order_cut);
+                $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
+                $(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
                 //导出转换后台数据
                 var exportData=res.data;
                 for(i in exportData){

@@ -39,6 +39,15 @@ class Room extends Admin
             $data['count'] = $RoomModel->withJoin(['ban'=> function($query)use($where){ //注意闭包传参的方式
                      $query->where($where['ban']);
                  },])->where($where['room'])->count('room_id');
+
+            // 统计房间使面、计租面积
+            $totalRow = $RoomModel->withJoin(['ban'=> function($query)use($where){ //注意闭包传参的方式
+                     $query->where($where['ban']);
+                 },])->where($where['room'])->field('sum(room_use_area) as total_room_use_area, sum(room_lease_area) as total_room_lease_area')->find();
+            if($totalRow){
+                $data['total_room_use_area'] = $totalRow['total_room_use_area'];
+                $data['total_room_lease_area'] = $totalRow['total_room_lease_area'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             //halt($data);

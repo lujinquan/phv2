@@ -27,6 +27,13 @@ class Changenew extends Admin
             $data['data'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(house_pre_rent) as total_house_pre_rent, sum(house_oprice) as total_house_oprice, sum(house_area) as total_house_area, sum(house_lease_area) as total_house_lease_area')->find();
+            if($totalRow){
+                $data['total_house_pre_rent'] = $totalRow['total_house_pre_rent'];
+                $data['total_house_oprice'] = $totalRow['total_house_oprice'];
+                $data['total_house_area'] = $totalRow['total_house_area'];
+                $data['total_house_lease_area'] = $totalRow['total_house_lease_area'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -144,6 +151,13 @@ class Changenew extends Admin
             $data['data'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('change_table e','a.change_order_number = e.change_order_number','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(house_pre_rent) as total_house_pre_rent, sum(house_oprice) as total_house_oprice, sum(house_area) as total_house_area, sum(house_lease_area) as total_house_lease_area')->find();
+            if($totalRow){
+                $data['total_house_pre_rent'] = $totalRow['total_house_pre_rent'];
+                $data['total_house_oprice'] = $totalRow['total_house_oprice'];
+                $data['total_house_area'] = $totalRow['total_house_area'];
+                $data['total_house_lease_area'] = $totalRow['total_house_lease_area'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

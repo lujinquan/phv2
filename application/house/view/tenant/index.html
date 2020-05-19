@@ -140,6 +140,7 @@
 				]
 			],
 			done: function(res, curr, count) {
+				$(".layui-table-total td[data-field='tenant_balance']").find("div").text(res.total_tenant_balance);
 				var exportData=res.data;
 				for(i in exportData){
 				  exportData[i].tenant_inst_id = params.insts[exportData[i].tenant_inst_id];//转化管段

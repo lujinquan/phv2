@@ -40,7 +40,11 @@ class Recharge extends Admin
             $data = [];
             $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
-
+            // 统计
+            $totalRow = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
+            if($totalRow){
+                $data['total_pay_rent'] = $totalRow['total_pay_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

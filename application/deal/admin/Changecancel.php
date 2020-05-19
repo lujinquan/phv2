@@ -25,6 +25,13 @@ class Changecancel extends Admin
             $data = [];
             $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(cancel_rent) as total_cancel_rent, sum(cancel_area) as total_cancel_area, sum(cancel_use_area) as total_cancel_use_area, sum(cancel_oprice) as total_cancel_oprice')->find();
+            if($totalRow){
+                $data['total_cancel_rent'] = $totalRow['total_cancel_rent'];
+                $data['total_cancel_area'] = $totalRow['total_cancel_area'];
+                $data['total_cancel_use_area'] = $totalRow['total_cancel_use_area'];
+                $data['total_cancel_oprice'] = $totalRow['total_cancel_oprice'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -142,6 +149,13 @@ class Changecancel extends Admin
             $data = [];
             $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(cancel_rent) as total_cancel_rent, sum(cancel_area) as total_cancel_area, sum(cancel_use_area) as total_cancel_use_area, sum(cancel_oprice) as total_cancel_oprice')->find();
+            if($totalRow){
+                $data['total_cancel_rent'] = $totalRow['total_cancel_rent'];
+                $data['total_cancel_area'] = $totalRow['total_cancel_area'];
+                $data['total_cancel_use_area'] = $totalRow['total_cancel_use_area'];
+                $data['total_cancel_oprice'] = $totalRow['total_cancel_oprice'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

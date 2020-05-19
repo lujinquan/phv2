@@ -26,6 +26,13 @@ class Changeinst extends Admin
             $data = [];
             $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->field('sum(change_ban_rent) as total_change_ban_rent, sum(change_ban_area) as total_change_ban_area, sum(change_ban_use_area) as total_change_ban_use_area, sum(change_ban_oprice) as total_change_ban_oprice')->find();
+            if($totalRow){
+                $data['total_change_ban_rent'] = $totalRow['total_change_ban_rent'];
+                $data['total_change_ban_area'] = $totalRow['total_change_ban_area'];
+                $data['total_change_ban_use_area'] = $totalRow['total_change_ban_use_area'];
+                $data['total_change_ban_oprice'] = $totalRow['total_change_ban_oprice'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -152,6 +159,14 @@ class Changeinst extends Admin
             $data = [];
             $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->field('sum(change_ban_num) as total_change_ban_num, sum(change_ban_rent) as total_change_ban_rent, sum(change_ban_area) as total_change_ban_area, sum(change_ban_use_area) as total_change_ban_use_area, sum(change_ban_oprice) as total_change_ban_oprice')->find();
+            if($totalRow){
+                $data['total_change_ban_num'] = $totalRow['total_change_ban_num'];
+                $data['total_change_ban_rent'] = $totalRow['total_change_ban_rent'];
+                $data['total_change_ban_area'] = $totalRow['total_change_ban_area'];
+                $data['total_change_ban_use_area'] = $totalRow['total_change_ban_use_area'];
+                $data['total_change_ban_oprice'] = $totalRow['total_change_ban_oprice'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             //halt($data);

@@ -168,6 +168,7 @@
 				]
 			],
 			done: function(res, curr, count) {
+				$(".layui-table-total td[data-field='cut_rent']").find("div").text(res.total_cut_rent);
                //导出转换后台数据
                  var exportData=res.data;
                  for(i in exportData){

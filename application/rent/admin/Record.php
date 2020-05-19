@@ -35,6 +35,12 @@ class Record extends Admin
             $data = [];
             $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
             $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
+            // 统计
+            $totalRow = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.rent_order_receive) as total_rent_order_receive,  sum(b.house_pre_rent) as total_house_pre_rent')->find();
+            if($totalRow){
+                $data['total_rent_order_receive'] = $totalRow['total_rent_order_receive'];
+                $data['total_house_pre_rent'] = $totalRow['total_house_pre_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

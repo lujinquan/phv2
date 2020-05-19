@@ -30,6 +30,10 @@ class Changecut extends Admin
                 $data = [];
                 $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
                 $data['count'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+                $totalRow = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(cut_rent) as total_cut_rent')->find();
+                if($totalRow){
+                    $data['total_cut_rent'] = $totalRow['total_cut_rent'];
+                }
             }else{
                 $ChangeCutYearModel = new ChangeCutYearModel;
                 $where = $ChangeCutYearModel->checkWhere($getData,'apply');
@@ -38,9 +42,11 @@ class Changecut extends Admin
                 $data = [];
                 $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
                 $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
-                //halt($data['data']);
+                $totalRow = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(cut_rent) as total_cut_rent')->find();
+                if($totalRow){
+                    $data['total_cut_rent'] = $totalRow['total_cut_rent'];
+                }
             }
-            
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);       
@@ -335,6 +341,10 @@ class Changecut extends Admin
                 $data['data'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('change_cut_cancel e','a.id = e.change_cut_id','left')->field($fields)->where($where)->order('a.change_status desc,ftime desc')->page($page)->limit($limit)->select();
                 //halt($data['data']);
                 $data['count'] = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+                $totalRow = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(cut_rent) as total_cut_rent')->find();
+                if($totalRow){
+                    $data['total_cut_rent'] = $totalRow['total_cut_rent'];
+                }
             }else{
                 $ChangeCutModel = new ChangeCutModel;
                 $where = $ChangeCutModel->checkWhere($getData,'record');
@@ -343,7 +353,10 @@ class Changecut extends Admin
                 $data = [];
                 $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
                 $data['count'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
-
+                $totalRow = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(cut_rent) as total_cut_rent')->find();
+                if($totalRow){
+                    $data['total_cut_rent'] = $totalRow['total_cut_rent'];
+                }
                 // $fields = "a.id,a.change_order_number,a.cut_type,a.cut_rent,a.cut_rent_number,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.change_status,a.is_back,b.house_use_id,d.ban_address,c.tenant_name,d.ban_owner_id,d.ban_inst_id";
                 // $data = [];
                 // $data['data'] = Db::name('change_cut_year')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();

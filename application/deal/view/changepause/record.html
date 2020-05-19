@@ -177,7 +177,8 @@
 					{title: '操作',minWidth: 100,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
-               //导出转换后台数据
+				$(".layui-table-total td[data-field='change_pause_rent']").find("div").text(res.total_change_pause_rent);
+               	//导出转换后台数据
                  var exportData=res.data;
                  for(i in exportData){
                	 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化申请机构

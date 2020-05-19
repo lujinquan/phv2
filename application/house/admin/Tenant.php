@@ -38,6 +38,11 @@ class Tenant extends Admin
             $data = [];
             $data['data'] = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
             $data['count'] = TenantModel::where($where)->count('tenant_id');//halt($data['data']);
+            // 统计租户租金
+            $totalRow = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->field('sum(house_balance) as total_tenant_balance')->find();
+            if($totalRow){
+                $data['total_tenant_balance'] = $totalRow['total_tenant_balance'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

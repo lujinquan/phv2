@@ -166,8 +166,8 @@
 					, {field: 'house_use_id',width: 100,align:'center',title: '使用性质',templet: function(d) {
 						return params.uses[d.house_use_id];
 					}}
-					, {field: 'house_pre_rent',width: 100,align:'center',title: '规定租金',totalRow: true}
-					, {field: 'house_cou_rent',width: 100,align:'center',title: '计算租金',totalRow: true, templet: function(d) {
+					, {field: 'house_pre_rent',width: 120,align:'center',title: '规定租金',totalRow: true}
+					, {field: 'house_cou_rent',width: 120,align:'center',title: '计算租金',totalRow: true, templet: function(d) {
 						if(parseFloat(d.house_pre_rent) != parseFloat(d.house_cou_rent)){
 							return "<font color='red'>"+d.house_cou_rent+"</font>";
 						}else{
@@ -175,7 +175,7 @@
 						}
 	                    
 	                }}
-					, {field: 'house_lease_area',width: 100,align:'center',title: '计租面积',totalRow: true}
+					, {field: 'house_lease_area',width: 120,align:'center',title: '计租面积',totalRow: true}
 					, {field: 'last_print_time',hide: isHideXin,width: 200,align:'center',title: '出证时间'}
 					, {field: 'house_area',hide: true,width: 80,align:'center',title: '房屋建面',totalRow: true}
 					, {field: 'house_oprice',hide: true,width: 80,align:'center',title: '房屋原价',totalRow: true}
@@ -199,7 +199,9 @@
 				]
 			],
 			done: function(res, curr, count) {
-				console.log(res);
+				$(".layui-table-total td[data-field='house_lease_area']").find("div").text(res.total_house_lease_area);
+				$(".layui-table-total td[data-field='house_area']").find("div").text(res.total_house_area);
+				$(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
               //导出转换后台数据
               var exportData=res.data;
               for(i in exportData){

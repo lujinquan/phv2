@@ -149,6 +149,14 @@
                 ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
+                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_rent_order_paid);
+                $(".layui-table-total td[data-field='rent_order_unpaid']").find("div").text(res.total_rent_order_unpaid);
+                $(".layui-table-total td[data-field='rent_order_diff']").find("div").text(res.total_rent_order_diff);
+                $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);
+                $(".layui-table-total td[data-field='rent_order_cut']").find("div").text(res.total_rent_order_cut);
+                $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
+                $(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
                //导出转换后台数据
                var exportData=res.data;
                for(i in exportData){

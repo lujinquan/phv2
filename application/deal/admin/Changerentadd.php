@@ -27,6 +27,11 @@ class Changerentadd extends Admin
             $data = [];
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(before_month_rent) as total_before_month_rent,sum(before_year_rent) as total_before_year_rent')->find();
+            if($totalRow){
+                $data['total_before_month_rent'] = $totalRow['total_before_month_rent'];
+                $data['total_before_year_rent'] = $totalRow['total_before_year_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -168,6 +173,11 @@ class Changerentadd extends Admin
             $data['data'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(before_month_rent) as total_before_month_rent,sum(before_year_rent) as total_before_year_rent')->find();
+            if($totalRow){
+                $data['total_before_month_rent'] = $totalRow['total_before_month_rent'];
+                $data['total_before_year_rent'] = $totalRow['total_before_year_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

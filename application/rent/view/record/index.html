@@ -153,6 +153,8 @@
                 ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
+                $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
                //导出转换后台数据
                var exportData=res.data;
                for(i in exportData){

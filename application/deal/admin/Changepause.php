@@ -28,6 +28,10 @@ class Changepause extends Admin
             $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(change_pause_rent) as total_change_pause_rent')->find();
+            if($totalRow){
+                $data['total_change_pause_rent'] = $totalRow['total_change_pause_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
@@ -145,6 +149,10 @@ class Changepause extends Admin
             $data = [];
             $data['data'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+            $totalRow = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->field('sum(change_pause_rent) as total_change_pause_rent')->find();
+            if($totalRow){
+                $data['total_change_pause_rent'] = $totalRow['total_change_pause_rent'];
+            }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

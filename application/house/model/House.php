@@ -125,7 +125,7 @@ class House extends SystemBase
         }
         //检索管段
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+        $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
 
         return $where;
     }

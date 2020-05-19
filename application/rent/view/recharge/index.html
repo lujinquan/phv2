@@ -127,6 +127,7 @@
                 ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='pay_rent']").find("div").text(res.total_pay_rent);
                 //导出转换后台数据
 				  var exportData=res.data;
 				  for(i in exportData){

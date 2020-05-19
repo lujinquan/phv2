@@ -133,6 +133,10 @@
 					{title: '操作',minWidth: 180,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
+				$(".layui-table-total td[data-field='cancel_rent']").find("div").text(res.total_cancel_rent);
+				$(".layui-table-total td[data-field='cancel_area']").find("div").text(res.total_cancel_area);
+				$(".layui-table-total td[data-field='cancel_use_area']").find("div").text(res.total_cancel_use_area);
+				$(".layui-table-total td[data-field='cancel_oprice']").find("div").text(res.total_cancel_oprice);
                //导出转换后台数据
                  var exportData=res.data;
                  for(i in exportData){
