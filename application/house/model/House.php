@@ -6,6 +6,7 @@ use app\house\model\Ban as BanModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
+use app\common\model\Cparam as ParamModel;
 use app\house\model\HouseRoom as HouseRoomModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
@@ -123,7 +124,6 @@ class House extends SystemBase
             }
         }
         //检索管段
-        $insts = config('inst_ids');
         $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         $where[] = ['d.ban_inst_id','in',$insts[$instid]];
 
@@ -144,6 +144,12 @@ class House extends SystemBase
         } else {
             $data['house_number'] = $maxHouseNumber + 1;
         }
+        $banInfo = BanModel::where([['ban_id', 'eq', $data['ban_id']]])->field('ban_owner_id,ban_inst_pid')->find();
+                $params = ParamModel::getCparams();
+        $owner = $params['owners'][$banInfo['ban_owner_id']];
+        //halt($owner);
+        $data['house_szno'] = '租直昌'.mb_substr($owner,0,1).'0'.$banInfo['ban_inst_pid'].'-';
+        //$data['house_cuid'] = 
         return $data; 
     }
 

@@ -49,7 +49,6 @@ class Changenew extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-//halt($filData);
             // 入库使用权变更表
             unset($filData['id']);
             $row = $ChangeModel->allowField(true)->create($filData);

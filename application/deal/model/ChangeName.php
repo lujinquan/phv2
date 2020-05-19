@@ -7,6 +7,7 @@ use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\house\model\House as HouseModel;
+use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 use app\house\model\TenantTai as TenantTaiModel;
@@ -179,17 +180,22 @@ class ChangeName extends SystemBase
         $processActions = $this->processAction;
         // 获取审批描述
         $processDescs = $this->processDesc;
-
+        $params = ParamModel::getCparams();
         $changeUpdateData = $processUpdateData = [];
 
         /*  如果是打回  */
-        if(isset($data['back_reason'])){
+        if($data['flag'] === 'back'){
+            if($data['back_reason']){
+                $backReason = $data['back_reason'];
+            }else{
+                $backReason = $params['back_reason_type'][$data['back_reason_type']];
+            }
             $changeUpdateData['change_status'] = 2;
             $changeUpdateData['is_back'] = 1;
             $changeUpdateData['child_json'] = $changeRow['child_json'];
             $changeUpdateData['child_json'][] = [
                 'success' => 1,
-                'action' => $processActions[2].'，原因：'.$data['back_reason'],
+                'action' => $processActions[2].'，原因：'.$backReason,
                 'time' => date('Y-m-d H:i:s'),
                 'uid' => ADMIN_ID,
                 'img' => '',
@@ -202,7 +208,8 @@ class ChangeName extends SystemBase
             $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
         }else{
             /* 如果审批通过，且非终审：更新使用权变更表的child_json、change_status，更新审批表change_desc、curr_role */
-            if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+            //if(!isset($data['change_reason']) && ($changeRow['change_status'] < $finalStep)){
+            if(($data['flag'] === 'passed') && ($changeRow['change_status'] < $finalStep)){
                 $changeUpdateData['change_status'] = $changeRow['change_status'] + 1;
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
@@ -220,8 +227,8 @@ class ChangeName extends SystemBase
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
 
             /* 如果审批通过，且为终审：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role、ftime、status，同时更新异动统计表 */
-            }else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
-
+            //}else if(!isset($data['change_reason']) && ($changeRow['change_status'] == $finalStep)){
+            }else if(($data['flag'] === 'passed') && ($changeRow['change_status'] == $finalStep)){
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['entry_date'] = date('Y-m');
@@ -244,13 +251,19 @@ class ChangeName extends SystemBase
                 $processUpdateData['status'] = 0;
 
             /* 如果审批不通过：更新使用权表的child_json、change_status，更新审批表change_desc、curr_role */
-            }else if(isset($data['change_reason'])){
+            //}else if(isset($data['change_reason'])){
+            }else if ($data['flag'] === 'change'){
+                if($data['change_reason']){
+                    $changeReason = $data['change_reason'];
+                }else{
+                    $changeReason = $params['change_reason_type'][$data['change_reason_type']];
+                }
                 $changeUpdateData['change_status'] = 0;
                 $changeUpdateData['ftime'] = time();
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 0,
-                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$data['change_reason'],
+                    'action' => $processActions[$changeUpdateData['change_status']].'，原因：'.$changeReason,
                     'time' => date('Y-m-d H:i:s'),
                     'uid' => ADMIN_ID,
                     'img' => '',
