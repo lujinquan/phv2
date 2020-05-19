@@ -26,6 +26,80 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">房间信息：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="room_info_search[]" value="room_number" title="房间编号" lay-skin="primary" {if condition="in_array('room_number',$config['room_info_search'])"}checked{/if}>
+            <input type="checkbox" name="room_info_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['room_info_search'])"}checked{/if}>
+            <input type="checkbox" name="room_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['room_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="room_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['room_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="room_info_search[]" value="room_type" title="房间类型" lay-skin="primary" {if condition="in_array('room_type',$config['room_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="room_info_search[]" value="room_pub_num" title="租用状态" lay-skin="primary" {if condition="in_array('room_pub_num',$config['room_info_search'])"}checked{/if}> 
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租户信息：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="tenant_info_search[]" value="tenant_number" title="租户编号" lay-skin="primary" {if condition="in_array('tenant_number',$config['tenant_info_search'])"}checked{/if}>
+            <input type="checkbox" name="tenant_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['tenant_info_search'])"}checked{/if}>
+            <input type="checkbox" name="tenant_info_search[]" value="tenant_tel" title="手机号" lay-skin="primary" {if condition="in_array('tenant_tel',$config['tenant_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="tenant_info_search[]" value="tenant_inst_id" title="机构" lay-skin="primary" {if condition="in_array('tenant_inst_id',$config['tenant_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="tenant_info_search[]" value="tenant_card" title="身份证号" lay-skin="primary" {if condition="in_array('tenant_card',$config['tenant_info_search'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租约信息：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="szno_info_search[]" value="szno" title="租约编号" lay-skin="primary" {if condition="in_array('szno',$config['szno_info_search'])"}checked{/if}>
+            <input type="checkbox" name="szno_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['szno_info_search'])"}checked{/if}>
+            <input type="checkbox" name="szno_info_search[]" value="tenant_tel" title="手机号" lay-skin="primary" {if condition="in_array('tenant_tel',$config['szno_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="szno_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['szno_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="szno_info_search[]" value="tenant_card" title="身份证号" lay-skin="primary" {if condition="in_array('tenant_card',$config['szno_info_search'])"}checked{/if}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">租金应缴：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="rent_rent_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['rent_rent_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_rent_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['rent_rent_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_rent_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="rent_order_diff" title="租差" lay-skin="primary" {if condition="in_array('rent_order_diff',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="rent_order_pump" title="泵费" lay-skin="primary" {if condition="in_array('rent_order_pump',$config['rent_rent_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_rent_info_search[]" value="rent_order_cut" title="减免" lay-skin="primary" {if condition="in_array('rent_order_cut',$config['rent_rent_info_search'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租金欠缴：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['rent_unpaid_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['rent_unpaid_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['rent_unpaid_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['rent_unpaid_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['rent_unpaid_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['rent_unpaid_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="rent_order_date" title="月份" lay-skin="primary" {if condition="in_array('rent_order_date',$config['rent_unpaid_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_unpaid_info_search[]" value="unpaid_date_type" title="以前月/年" lay-skin="primary" {if condition="in_array('unpaid_date_type',$config['rent_unpaid_info_search'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租金记录：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="rent_record_info_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['rent_record_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_record_info_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['rent_record_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_record_info_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['rent_record_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_record_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['rent_record_info_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_record_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['rent_record_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_record_info_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['rent_record_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_record_info_search[]" value="rent_order_date" title="月份" lay-skin="primary" {if condition="in_array('rent_order_date',$config['rent_record_info_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_record_info_search[]" value="pay_way" title="支付方式" lay-skin="primary" {if condition="in_array('pay_way',$config['rent_record_info_search'])"}checked{/if}>
+          
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label"> </label>
         <div class="layui-input-block">
             <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
