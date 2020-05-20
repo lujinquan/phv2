@@ -67,9 +67,19 @@ class Ban extends SystemBase
         if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
             $where[] = ['ban_damage_id','in',explode(',',$data['ban_damage_id'])];
         }
-        
-        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
+        // 检索机构
+        if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+            $insts = explode(',',$data['ban_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['ban_inst_id','in',array_unique($instid_arr)];
+        }else{
+            $where[] = ['ban_inst_id','in',config('inst_ids')[INST]];
+        }
 
         return $where;
     }

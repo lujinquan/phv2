@@ -52,11 +52,11 @@ class Recharge extends Model
         }
         // 检索【楼栋】产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+            $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
         // 检索【房屋】使用性质
         if(isset($data['house_use_id']) && $data['house_use_id']){
-            $where[] = ['b.house_use_id','eq',$data['house_use_id']];
+            $where[] = ['b.house_use_id','in',explode(',',$data['house_use_id'])];
         }
         // 检索【房屋】支付金额
         if(isset($data['pay_rent']) && $data['pay_rent']){
@@ -72,10 +72,22 @@ class Recharge extends Model
             $endTime = strtotime(substr($data['ctime'],-10));
             $where[] = ['a.ctime','between',[$startTime,$endTime]];
         }
-        
+        // 检索机构
+        if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+            $insts = explode(',',$data['ban_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['ban_inst_id','in',array_unique($instid_arr)];
+        }else{
+            $where[] = ['ban_inst_id','in',config('inst_ids')[INST]];
+        }
         // 检索【楼栋】机构
-        $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-        $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
+        // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        // $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
         //$where[] = ['rent_order_date','eq',date('Ym')];
         //halt($where);
         return $where;

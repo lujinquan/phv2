@@ -88,16 +88,28 @@ class Rent extends Model
                 }
                 // 检索【楼栋】产别
                 if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-                    $where[] = ['ban_owner_id','eq',$data['ban_owner_id']];
+                    $where[] = ['ban_owner_id','in',explode(',',$data['ban_owner_id'])];
                 }
                 // 检索【房屋】使用性质
                 if(isset($data['house_use_id']) && $data['house_use_id']){
-                    $where[] = ['house_use_id','eq',$data['house_use_id']];
+                    $where[] = ['house_use_id','in',explode(',',$data['house_use_id'])];
                 }
-                
+                // 检索机构
+                if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+                    $insts = explode(',',$data['ban_inst_id']);
+                    $instid_arr = [];
+                    foreach ($insts as $inst) {
+                        foreach (config('inst_ids')[$inst] as $instid) {
+                            $instid_arr[] = $instid;
+                        }
+                    }
+                    $where[] = ['ban_inst_id','in',array_unique($instid_arr)];
+                }else{
+                    $where[] = ['ban_inst_id','in',config('inst_ids')[INST]];
+                }
                 // 检索【楼栋】机构
-                $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-                $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
+                // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+                // $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
                 //$where[] = ['rent_order_date','eq',date('Ym')];
                 $where[] = ['is_deal','eq',0];
                 break;
@@ -124,11 +136,11 @@ class Rent extends Model
                 }
                 // 检索【楼栋】产别
                 if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-                    $where[] = ['ban_owner_id','eq',$data['ban_owner_id']];
+                    $where[] = ['ban_owner_id','in',explode(',',$data['ban_owner_id'])];
                 }
                 // 检索【房屋】使用性质
                 if(isset($data['house_use_id']) && $data['house_use_id']){
-                    $where[] = ['house_use_id','eq',$data['house_use_id']];
+                    $where[] = ['house_use_id','in',explode(',',$data['house_use_id'])];
                 }
                 // 检索以前年或以前月
                 if(isset($data['unpaid_date_type']) && $data['unpaid_date_type']){
@@ -146,9 +158,22 @@ class Rent extends Model
                     $tempDate = str_replace('-', '', $data['rent_order_date']);
                     $where[] = ['rent_order_date','eq',$tempDate];
                 }
+                // 检索机构
+                if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+                    $insts = explode(',',$data['ban_inst_id']);
+                    $instid_arr = [];
+                    foreach ($insts as $inst) {
+                        foreach (config('inst_ids')[$inst] as $instid) {
+                            $instid_arr[] = $instid;
+                        }
+                    }
+                    $where[] = ['ban_inst_id','in',array_unique($instid_arr)];
+                }else{
+                    $where[] = ['ban_inst_id','in',config('inst_ids')[INST]];
+                }
                 // 检索【楼栋】机构
-                $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-                $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
+                // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+                // $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
                 break;
 
             //租金欠缴的查询
@@ -171,21 +196,33 @@ class Rent extends Model
                 }
                 // 检索【楼栋】产别
                 if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-                    $where[] = ['ban_owner_id','eq',$data['ban_owner_id']];
+                    $where[] = ['ban_owner_id','in',explode(',',$data['ban_owner_id'])];
                 }
                 // 检索【房屋】使用性质
                 if(isset($data['house_use_id']) && $data['house_use_id']){
-                    $where[] = ['house_use_id','eq',$data['house_use_id']];
+                    $where[] = ['house_use_id','in',explode(',',$data['house_use_id'])];
                 }
                 // 检索订单月份
                 if(isset($data['rent_order_date']) && $data['rent_order_date']){
                     $queryMonth = substr($data['rent_order_date'],0,4).substr($data['rent_order_date'],-2);
                     $where[] = ['rent_order_date','eq',$queryMonth];
                 }
-                
+                // 检索机构
+                if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+                    $insts = explode(',',$data['ban_inst_id']);
+                    $instid_arr = [];
+                    foreach ($insts as $inst) {
+                        foreach (config('inst_ids')[$inst] as $instid) {
+                            $instid_arr[] = $instid;
+                        }
+                    }
+                    $where[] = ['ban_inst_id','in',array_unique($instid_arr)];
+                }else{
+                    $where[] = ['ban_inst_id','in',config('inst_ids')[INST]];
+                }
                 // 检索【楼栋】机构
-                $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-                $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
+                // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+                // $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
 
                 $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
                 $where[] = ['is_deal','eq',1];
