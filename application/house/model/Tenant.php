@@ -52,9 +52,22 @@ class Tenant extends SystemBase
         if(isset($data['tenant_card']) && $data['tenant_card']){
             $where[] = ['tenant_card','like','%'.$data['tenant_card'].'%'];
         }
+        // 检索机构
+        if(isset($data['tenant_inst_id']) && $data['tenant_inst_id']){
+            $insts = explode(',',$data['tenant_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['tenant_inst_id','in',array_unique($instid_arr)];
+        }else{
+            $where[] = ['tenant_inst_id','in',config('inst_ids')[INST]];
+        }
         // 检索管段
-        $instid = (isset($data['tenant_inst_id']) && $data['tenant_inst_id'])?$data['tenant_inst_id']:INST;
-        $where[] = ['tenant_inst_id','in',config('inst_ids')[$instid]];
+        // $instid = (isset($data['tenant_inst_id']) && $data['tenant_inst_id'])?$data['tenant_inst_id']:INST;
+        // $where[] = ['tenant_inst_id','in',config('inst_ids')[$instid]];
 
         return $where;
     }
