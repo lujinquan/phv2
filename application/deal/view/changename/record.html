@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
@@ -6,18 +7,18 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-110">
-					<select name="ban_inst_id">
-						<option value="">机构名称</option>
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
+					<select name="ban_inst_id"  xm-select="ban_inst_id">
+						<option value="" disabled="disabled">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
 				{/if}
-				<div class="layui-input-inline j-width-80">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
+				<div class="layui-input-inline j-width-90 j-margin-10">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option value="" disabled="disabled">产别</option>
 						{volist name="params['owners']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -69,12 +70,13 @@
 </div>
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功'};
-	layui.use(['table', 'jquery','laydate'], function() {
+	layui.use(['table', 'jquery','laydate','formSelects'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table
-		   ,laydate = layui.laydate;
+		   ,laydate = layui.laydate
+		   ,formSelects = layui.formSelects;
 		
 		//日期
 		  laydate.render({

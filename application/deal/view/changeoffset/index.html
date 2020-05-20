@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-{if condition='in_array(291,$auths)'}tab{else /}title{/if}">
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container"> 
@@ -21,9 +22,9 @@
 				{/if}
 				{if condition="in_array('ban_inst_id',$config['deal_changeoffset_index_search'])"}
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-110">
-					<select name="ban_inst_id">
-						<option value="">机构名称</option>
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_inst_id" xm-select="ban_inst_id">
+						<option value=""  disabled="disabled">机构名称</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -32,9 +33,9 @@
 				{/if}
 				{/if}
 				{if condition="in_array('ban_owner_id',$config['deal_changeoffset_index_search'])"}
-				<div class="layui-input-inline j-width-90">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
+				<div class="layui-input-inline j-width-90 j-margin-10">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option value="" disabled="disabled">产别</option>
 						{volist name="params['owners']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -86,11 +87,12 @@
 </div>
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待经租会计初审','4':'待经管所长审批','5':'待行政所长审批','6':'待经管科终审'};
-	layui.use(['table', 'jquery','laydate'], function() {
+	layui.use(['table', 'jquery','laydate','formSelects'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table
+		   ,formSelects = layui.formSelects  
 		   ,laydate = layui.laydate;
 		
 		//日期
