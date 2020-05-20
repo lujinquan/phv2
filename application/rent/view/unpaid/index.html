@@ -18,18 +18,25 @@
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
-      <div class="layui-input-inline j-input-margin" style="width:120px;">
+        {if condition="in_array('house_number',$config['rent_unpaid_info_search'])"}
+        <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
         </div>
+        {/if}
+        {if condition="in_array('tenant_name',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
         </div>
+        {/if}
         <!-- <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="rent_order_number" placeholder="订单编号" class="layui-input">
         </div> -->
+        {if condition="in_array('ban_address',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:140px;">
             <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
         </div>
+        {/if}
+        {if condition="in_array('ban_inst_id',$config['rent_unpaid_info_search'])"}
         {if condition="INST_LEVEL != 3"}
         <div class="layui-input-inline j-width-130 j-margin-10">
             <select name="ban_inst_id"  xm-select="ban_inst_id">
@@ -40,6 +47,8 @@
               </select>
         </div>
         {/if}
+        {/if}
+        {if condition="in_array('ban_owner_id',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-width-120 j-margin-10">
             <select name="ban_owner_id" xm-select="ban_owner_id">
                 <option value="" disabled="disabled">产别</option>
@@ -48,6 +57,8 @@
                 {/volist}
               </select>
         </div>
+        {/if}
+        {if condition="in_array('house_use_id',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-width-120 j-margin-10">
             <select name="house_use_id" xm-select="house_use_id">
                 <option value="" disabled="disabled">使用性质</option>
@@ -56,9 +67,13 @@
                 {/volist}
               </select>
         </div>
+        {/if}
+        {if condition="in_array('rent_order_date',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:120px">
             <input type="text" name="rent_order_date" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
         </div>
+        {/if}
+        {if condition="in_array('unpaid_date_type',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <select name="unpaid_date_type">
                 <option value="">以前月/年</option>
@@ -66,6 +81,7 @@
                 <option value="2">以前年</option>
             </select>
         </div>
+        {/if}
 	   </div>
        <div class="j-search-fr layui-col-md4 fr">
        	<div class="layui-input-inline fr">

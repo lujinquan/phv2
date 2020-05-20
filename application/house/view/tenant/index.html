@@ -13,9 +13,12 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('tenant_number',$config['tenant_info_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="tenant_number" title="租户编号" placeholder="租户编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('tenant_inst_id',$config['tenant_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2 j-width-120 j-margin-10">
 					<select name="tenant_inst_id" xm-select="tenant_inst_id">
@@ -26,15 +29,22 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('tenant_name',$config['tenant_info_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('tenant_tel',$config['tenant_info_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="tenant_tel" title="手机号" placeholder="手机号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('tenant_card',$config['tenant_info_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-150">
 					<input type="text" name="tenant_card" title="身份证号" placeholder="身份证号" class="layui-input">
 				</div>
+				{/if}
 				<input type="hidden" name="group" value="{$group}" class="layui-input">
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">

@@ -44,8 +44,8 @@ class Api extends Common
             unset($v['change_order_number']);
             $result[$number][] = $v;
         }
-
-        switch (input('type')) {
+//halt(input('type'));
+        switch ((int)input('type')) {
             
             case 1:
                 $msg = $this->deal_change_cut($result);
@@ -231,6 +231,10 @@ class Api extends Common
             $child = json_decode($lease['child_json'],true);
             $a = [];
             foreach ($child as $k => $v) {
+                $ftime = 0;
+                if($k == 0){
+                    $ftime = $v['CreateTime'];
+                }
                 $temp = [
                     'reason' => $v['Reson'],
                     'success' => $v['IfValid'],
@@ -241,7 +245,7 @@ class Api extends Common
                 ];
                 array_unshift($a, $temp);
             }
-            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'child_json'=>json_encode($a)]);
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'ftime'=>$ftime,'entry_date'=>date('Y-m',$ftime),'child_json'=>json_encode($a)]);
         }
         Db::name('change_cut')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
         // 9、管段调整
@@ -376,6 +380,7 @@ class Api extends Common
      */
     public function deal_change_lease()
     {
+        
         // 1、同步house_id，和tenant_id
         Db::execute('update ph_json_data as a left join ph_house as b on a.house_number = b.house_number left join ph_tenant as c on a.tenant_number = c.tenant_number set a.house_id = b.house_id,a.tenant_id = c.tenant_id');
         // 2、处理change_lease的child_json,data_json数据
@@ -386,6 +391,10 @@ class Api extends Common
             $child = json_decode($lease['child_json'],true);
             $a = [];
             foreach ($child as $k => $v) {
+                $ftime = 0;
+                if($k == 0){
+                    $ftime = $v['CreateTime'];
+                }
                 $temp = [
                     'reason' => $v['Reson'],
                     'success' => $v['IfValid'],
@@ -396,7 +405,7 @@ class Api extends Common
                 ];
                 array_unshift($a, $temp);
             }
-            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'child_json'=>json_encode($a)]);
+            Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'ftime'=>$ftime,'entry_date'=>date('Y-m',$ftime),'child_json'=>json_encode($a)]);
         }
 
         // 2、标记仍然生效的新发租异动

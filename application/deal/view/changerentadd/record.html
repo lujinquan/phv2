@@ -2,12 +2,17 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('house_number',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_address',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_inst_id',$config['deal_changerentadd_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2 j-width-110">
 					<select name="ban_inst_id">
@@ -18,6 +23,8 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-width-100">
 					<select name="ban_owner_id">
 						<option value="">产别</option>
@@ -26,24 +33,38 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('tenant_name',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-80">
 					<input type="text" name="tenant_name"   placeholder="租户" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('before_year_rent',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-80">
 					<input type="text" name="before_year_rent"  placeholder="以前年" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('before_month_rent',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-80">
 					<input type="text" name="before_month_rent"  placeholder="以前月" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ctime',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ftime',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ftime" id="date1"  placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('effective',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="effective" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('change_status',$config['deal_changerentadd_record_search'])"}
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -51,6 +72,7 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">

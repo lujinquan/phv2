@@ -3,15 +3,22 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('room_number',$config['room_info_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="room_number" title="房间编号" placeholder="房间编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_number',$config['room_info_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_address',$config['room_info_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_inst_id',$config['room_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-width-120 j-margin-10">
 					<select name="ban_inst_id"  xm-select="ban_inst_id">
@@ -22,6 +29,8 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('room_type',$config['room_info_search'])"}
 				<div class="layui-input-inline j-width-115 j-margin-10">
 					<select name="room_type" xm-select="room_type">
 						<option value="" disabled="disabled">房间类型</option>
@@ -30,6 +39,8 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('room_pub_num',$config['room_info_search'])"}
 				<div class="layui-input-inline j-width-115 j-margin-10">
 					<select name="room_pub_num" xm-select="room_pub_num">
 						<option value="" disabled="disabled">租用状态</option>
@@ -39,6 +50,7 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
