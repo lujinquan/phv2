@@ -43,7 +43,7 @@ class Room extends SystemBase
         }
         $where = [];
         $where['ban'] = [];
-        $where['room'] = [['room_status','eq',1]];
+        $where['room'] = [];
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
             $where['room'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
@@ -67,6 +67,22 @@ class Room extends SystemBase
                 $where['room'][] = ['room_pub_num','eq',$data['room_pub_num']];
             }else{
                 $where['room'][] = ['room_pub_num','>=',$data['room_pub_num']];      
+            }
+        }
+        if(isset($data['room_status'])){
+            switch ($data['room_status']) {
+                case 0:
+                    $where['room'][] = [['room_status','eq',0]];
+                    break;
+                case 1:
+                    $where['room'][] = [['room_status','eq',1]];
+                    break;
+                case 2:
+                    $where['room'][] = [['room_status','eq',2]];
+                    break;
+                default:
+
+                    break;
             }
         }
         // 检索机构

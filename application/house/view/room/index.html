@@ -51,6 +51,17 @@
 					</select>
 				</div>
 				{/if}
+				{if condition="in_array('room_status',$config['room_info_search'])"}
+				<div class="layui-input-inline j-width-115 j-margin-10">
+					<select name="room_status" xm-select="room_status">
+						<option value="" disabled="disabled">状态</option>
+						<option value="1">正常</option>
+						<option value="0">新发</option>
+						<option value="2">注销</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
