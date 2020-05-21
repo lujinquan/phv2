@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-{if condition='in_array(332,$auths)'}tab{else /}title{/if}">
 	 <div class="layui-btn-container j-container-margin">
 	     <div class="layui-btn-container">
@@ -10,26 +11,26 @@
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 			    {if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline j-input-margin" style="width:140px;">
-					<select name="old_inst_id">
-						<option value="">原管段</option>
+				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
+					<select name="old_inst_id" xm-select="old_inst_id">
+						<option value="" disabled="disabled">原管段</option>
 						{volist name=":config('inst_data_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
-				<div class="layui-input-inline j-input-margin" style="width:140px;">
-					<select name="new_inst_id">
-						<option value="">新管段</option>
+				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
+					<select name="new_inst_id" xm-select="new_inst_id">
+						<option value="" disabled="disabled">新管段</option>
 						{volist name=":config('inst_data_names')[$Think.INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
 				</div>
 				{else /}
-				<div class="layui-input-inline j-input-margin" style="width:140px;">
-					<select name="new_inst_id">
-						<option value="">新管段</option>
+				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
+					<select name="new_inst_id" xm-select="new_inst_id">
+						<option value="" disabled="disabled">新管段</option>
 						{volist name="$insts" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -75,12 +76,13 @@
 </div>
 <script type="text/javascript">
 	var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'待资料员初审','4':'待经租会计初审','5':'待经管所长审批','6':'待经管科终审'};
-	layui.use(['table', 'jquery','laydate'], function() {
+	layui.use(['table', 'jquery','laydate','formSelects'], function() {
 		var $ = layui.$;
 		// var s = $('#dataTable').attr('params');
 		// var params = JSON.parse(s);
 		var table = layui.table
-		   ,laydate = layui.laydate;
+		   ,laydate = layui.laydate
+		   ,formSelects = layui.formSelects;
 		
 		//日期
 		  laydate.render({

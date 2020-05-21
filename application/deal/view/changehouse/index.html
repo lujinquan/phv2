@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-{if condition='in_array(297,$auths)'}tab{else /}title{/if}">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
@@ -18,26 +19,26 @@
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
-				<div class="layui-input-inline  j-width-120">
-					  <select name="ban_inst_id">
-						  <option value="">机构</option>
+				<div class="layui-input-inline  j-width-130 j-select-width130 j-margin-10">
+					  <select name="ban_inst_id" xm-select="ban_inst_id">
+						  <option value="" disabled="disabled">机构</option>
 						  {volist name=":config('inst_check_names')[INST]" id="v"}
 						  <option value="{$key}">{$v}</option>
 						  {/volist}
 						</select>
 				</div>
-				<div class="layui-input-inline j-width-100">
-					  <select name="ban_owner_id">
-						  <option value="">产别</option>
+				<div class="layui-input-inline j-width-90 j-margin-10">
+					  <select name="ban_owner_id" xm-select="ban_owner_id">
+						  <option value="" disabled="disabled">产别</option>
 						  {volist name="params['owners']" id="v"}
 						  <option value="{$key}">{$v}</option>
 						  {/volist}
 						</select>
 				</div>
 				
-				<div class="layui-input-inline layui-col-md2 j-width-120">
-					<select name="house_use_id">
-						<option value="">使用性质</option>
+				<div class="layui-input-inline layui-col-md2 j-width-120 j-margin-10">
+					<select name="house_use_id" xm-select="house_use_id">
+						<option value="" disabled="disabled">使用性质</option>
 						{volist name="params['uses']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -81,12 +82,13 @@
 <script type="text/javascript">
 	var process_config = {'2':'待房管员处理','3':'待资料员初审','4':'待经管所长审批','5':'待经管科终审'};
 	console.log(params);
-	layui.use(['table', 'jquery','laydate'], function() {
+	layui.use(['table', 'jquery','laydate','formSelects'], function() {
 		var $ = layui.$;
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table
-		   ,laydate = layui.laydate;
+		   ,laydate = layui.laydate
+		   ,formSelects = layui.formSelects;
 		
 		//日期
 		  laydate.render({
