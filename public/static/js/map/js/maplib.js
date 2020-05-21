@@ -456,8 +456,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
 		this._isReal = false; //真的是个聚合
         this._styles = markerClusterer.getStyles();
         this._labels = [];
-        this._clusterMarker = new BMapLib.TextIconOverlay(this._center, {name:'七零一社区',value : this._markers.length+'栋', household : '12'+'户'}, {"styles":this._markerClusterer.getStyles()});
-        //this._map.addOverlay(this._clusterMarker);
+		
+        this._clusterMarker = new BMapLib.TextIconOverlay(this._center, {name:'社区',value : this._markers.length+'栋', household : '12'+'户'}, {"styles":this._markerClusterer.getStyles()});
+        this._map.addOverlay(this._clusterMarker);
     }
     
 
@@ -586,8 +587,8 @@ var BMapLib = window.BMapLib = BMapLib || {};
         }
 
         this._clusterMarker.setPosition(this._center);
-
-        this._clusterMarker.setText({name : '七零一社区' , value : this._markers.length+'栋', household : '12'+'户'});
+        console.log("数据是:",this._center)
+        this._clusterMarker.setText({name : '社区', value : this._markers.length+'栋', household : '12'+'户'});
 
         var thatMap = this._map;
         var thatBounds = this.getBounds();

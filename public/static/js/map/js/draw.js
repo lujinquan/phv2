@@ -42,6 +42,7 @@ function initMapMarkers(map){
 	// 	{'x':114.093363,'y':30.712504,'z':'武汉市5'},
 	// 	{'x':114.577442,'y':30.263371,'z':'武汉市6'}
 	// ];
+
 	var markers = [];
 	var pt = null;
 	for (var i in xy) {

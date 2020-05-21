@@ -91,7 +91,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label">减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" lay-verify="required" id="reduction_waiver_amount" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+  			<input type="number" lay-verify="required" id="reduction_waiver_amount" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" value="" placeholder="" readonly autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">

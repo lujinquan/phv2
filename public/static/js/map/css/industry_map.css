@@ -43,7 +43,7 @@
 .j-building-info{ font-size: 12px;}
 .j-tenant-info .layui-table td,.j-tenant-info .layui-table th{font-size: 12px;}
 .j-building-info h1,.j-tenant-info h1{ font: 14px/35px '';color: #007AFF;}
-.j-search-box{ position: absolute;top:60px;left: 25px; z-index: 1;}
+.j-search-box{ position: absolute;top:60px;right: 10px; z-index: 1;}
 .j-search-box li{ width: 100px; margin-right: 10px; float: left; box-shadow: 0px 2px 4px 0px rgba(155,155,155,0.62);}
 /* 显示画圈内房屋个数 */
 .j-map-sum{ position: absolute; bottom: 20px;left: 50%; text-align: center;color: #fff;padding: 0 18px;font:bold 12px/26px '';border-radius: 2px; background: rgba(0,0,0,0.6);    transform: translate(-50%, 0);}
