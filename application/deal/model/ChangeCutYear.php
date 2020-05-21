@@ -108,6 +108,10 @@ class ChangeCutYear extends SystemBase
             //$where[] = ['a.ctime','BETWEEN TIME',['2019-09-01','2019-09-21']];
             $where[] = ['a.ftime','between time',[$data['ftime'],$endFtime]];
         }
+        // 检索生效时间(按月搜索)
+        if(isset($data['effecttime']) && $data['effecttime']){ 
+            $where[] = ['a.entry_date','eq',$data['effecttime']];
+        }
         // 检索楼栋机构
         $insts = config('inst_ids');
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){

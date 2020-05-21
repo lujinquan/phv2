@@ -52,11 +52,12 @@ class House extends Admin
                 //halt($v);
             }
             // 统计房屋建面、计租面积、规租
-            $totalRow =  Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(house_lease_area) as total_house_lease_area, sum(house_area) as total_house_area, sum(house_pre_rent) as total_house_pre_rent')->find();
+            $totalRow =  Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(house_lease_area) as total_house_lease_area, sum(house_area) as total_house_area, sum(house_pre_rent) as total_house_pre_rent , sum(house_cou_rent) as total_house_cou_rent')->find();
             if($totalRow){
                 $data['total_house_lease_area'] = $totalRow['total_house_lease_area'];
                 $data['total_house_area'] = $totalRow['total_house_area'];
                 $data['total_house_pre_rent'] = $totalRow['total_house_pre_rent'];
+                $data['total_house_cou_rent'] = $totalRow['total_house_cou_rent'];
             }
 
             $data['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.house_id');
