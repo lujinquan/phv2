@@ -3,12 +3,17 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md6  fl">
+				{if condition="in_array('ban_number',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
 					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_address',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_inst_id',$config['deal_changeban_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-width-120 j-margin-10">
 					<select name="ban_inst_id" xm-select="ban_inst_id">
@@ -19,6 +24,8 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline j-width-90 j-margin-10">
 					  <select name="ban_owner_id" xm-select="ban_owner_id">
 						  <option value="" disabled="disabled">产别</option>
@@ -27,6 +34,8 @@
 						  {/volist}
 						</select>
 				</div>
+				{/if}
+				{if condition="in_array('ban_change_id',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline j-width-120 j-margin-10">
 					  <select name="ban_change_id" xm-select="ban_change_id">
 						  <option value="" disabled="disabled">调整类型</option>
@@ -35,9 +44,13 @@
 						  {/volist}
 						</select>
 				</div>
+				{/if}
+				{if condition="in_array('effecttime',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="effecttime" id="date3"  placeholder="生效时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('change_status',$config['deal_changeban_record_search'])"}
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -45,6 +58,7 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md6 fr">
 				<div class="layui-input-inline fr">

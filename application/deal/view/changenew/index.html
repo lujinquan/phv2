@@ -10,12 +10,17 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('house_number',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_address',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-width-90 j-margin-10">
 					<select name="ban_owner_id" xm-select="ban_owner_id">
 						<option value="" disabled="disabled">产别</option>
@@ -24,9 +29,13 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('tenant_name',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-90">
 					<input type="text" name="tenant_name"   placeholder="租户" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_inst_id',$config['deal_changenew_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-width-130 j-select-width130 j-margin-10">
 					<select name="ban_inst_id" xm-select="ban_inst_id">
@@ -37,12 +46,17 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('house_pre_rent',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="house_pre_rent" placeholder="规定租金" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('house_lease_area',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="house_lease_area" placeholder="计租面积" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">

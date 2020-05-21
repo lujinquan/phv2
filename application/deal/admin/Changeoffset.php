@@ -24,7 +24,7 @@ class Changeoffset extends Admin
             $ChangeModel = new ChangeOffsetModel;
             $where = $ChangeModel->checkWhere($getData,'apply');
             //halt($where);
-            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,a.this_month_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.is_back,a.before_year_rent,a.before_month_rent,a.this_month_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
             //halt($data['data']);

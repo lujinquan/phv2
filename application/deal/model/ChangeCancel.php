@@ -69,7 +69,7 @@ class ChangeCancel extends SystemBase
         }
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            $where[] = ['d.ban_owner_id','eq',$data['ban_owner_id']];
+            $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
         // 检索注销类别
         if(isset($data['cancel_type']) && $data['cancel_type']){
@@ -95,14 +95,27 @@ class ChangeCancel extends SystemBase
         if(isset($data['effecttime']) && $data['effecttime']){ 
             $where[] = ['a.entry_date','eq',$data['effecttime']];
         }
-        // 检索楼栋机构
-        $insts = config('inst_ids');
+        // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
-            $where[] = ['d.ban_inst_id','in',$insts[$data['ban_inst_id']]];
+            $insts = explode(',',$data['ban_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['d.ban_inst_id','in',array_unique($instid_arr)];
         }else{
-            $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
-            $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+            $where[] = ['d.ban_inst_id','in',config('inst_ids')[INST]];
         }
+        // // 检索楼栋机构
+        // $insts = config('inst_ids');
+        // if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+        //     $where[] = ['d.ban_inst_id','in',$insts[$data['ban_inst_id']]];
+        // }else{
+        //     $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
+        //     $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+        // }
         
         return $where;
     }

@@ -69,7 +69,15 @@ class ChangeInst extends SystemBase
         }
         // 检索新管段
         if(isset($data['new_inst_id']) && $data['new_inst_id']){
-            $where[] = ['a.new_inst_id','eq',$data['new_inst_id']];
+            //$where[] = ['a.new_inst_id','eq',$data['new_inst_id']];
+            $insts = explode(',',$data['new_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['a.new_inst_id','in',array_unique($instid_arr)];
         }
         // 检索审核状态
         if(isset($data['change_status']) && $data['change_status'] !== ''){
@@ -91,14 +99,27 @@ class ChangeInst extends SystemBase
         if(isset($data['effecttime']) && $data['effecttime']){ 
             $where[] = ['a.entry_date','eq',$data['effecttime']];
         }
-        // 检索楼栋机构
-        $insts = config('inst_ids');
+        // 检索机构
         if(isset($data['old_inst_id']) && $data['old_inst_id']){
-            $where[] = ['a.old_inst_id','in',$insts[$data['old_inst_id']]];
+            $insts = explode(',',$data['old_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['a.old_inst_id','in',array_unique($instid_arr)];
         }else{
-            $instid = (isset($data['old_inst_id']) && $data['old_inst_id'])?$data['old_inst_id']:INST;
-            $where[] = ['a.old_inst_id','in',$insts[$instid]];
+            $where[] = ['a.old_inst_id','in',config('inst_ids')[INST]];
         }
+        // // 检索楼栋机构
+        // $insts = config('inst_ids');
+        // if(isset($data['old_inst_id']) && $data['old_inst_id']){
+        //     $where[] = ['a.old_inst_id','in',$insts[$data['old_inst_id']]];
+        // }else{
+        //     $instid = (isset($data['old_inst_id']) && $data['old_inst_id'])?$data['old_inst_id']:INST;
+        //     $where[] = ['a.old_inst_id','in',$insts[$instid]];
+        // }
         
         return $where;
     }

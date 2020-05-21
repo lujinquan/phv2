@@ -3,6 +3,7 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('old_inst_id',$config['deal_changeinst_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
 					<select name="old_inst_id"  xm-select="old_inst_id">
@@ -30,15 +31,23 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('ctime',$config['deal_changeinst_record_search'])"}
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ctime" id="date" title="申请时间" placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ftime',$config['deal_changeinst_record_search'])"}
 				<div class="layui-input-inline j-input-margin" style="width:120px;">
 					<input type="text" name="ftime" id="date1" title="完成时间" placeholder="完成时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('effecttime',$config['deal_changeinst_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="effecttime" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('change_status',$config['deal_changeinst_record_search'])"}
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -46,6 +55,7 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">

@@ -4,9 +4,12 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}?group=x" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('ban_address',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('house_use_id',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-width-110 j-margin-10">
 					<select name="house_use_id"  xm-select="house_use_id">
 						<option value="" disabled="disabled">使用性质</option>
@@ -15,6 +18,8 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-width-90 j-margin-10">
 					<select name="ban_owner_id"  xm-select="ban_owner_id">
 						<option value="" disabled="disabled">产别</option>
@@ -23,9 +28,13 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('tenant_name',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="tenant_name" placeholder="租户名称" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('cut_type',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-width-120 j-margin-10">
 					<select name="cut_type" xm-select="cut_type">
 						<option value="" disabled="disabled">减免类型</option>
@@ -34,12 +43,18 @@
 						{/volist}
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('ctime',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="ctime" id="date"  placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('effecttime',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="effecttime" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('change_status',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-width-110">
 					<select name="change_status">
 						<option value="">审核状态</option>
@@ -47,6 +62,8 @@
 						<option value="0">失败</option>
 					</select>
 				</div>
+				{/if}
+				{if condition="in_array('is_valid',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline j-width-110">
 					<select name="is_valid">
 						<option value="">是否有效</option>
@@ -54,6 +71,7 @@
 						<option value="0">无效</option>
 					</select>
 				</div>
+				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
