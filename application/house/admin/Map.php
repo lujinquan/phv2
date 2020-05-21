@@ -33,7 +33,7 @@ class Map extends Admin
             $data = [];
             //$points = Db::name('ban')->alias('a')->join('area b','a.AreaThree = b.id','left')->field('BanID ,BanGpsX ,BanGpsY,a.AreaFour,a.AreaThree,b.GpsX,b.GpsY,b.AreaTitle')->where($where)->select();
             $houses = HouseModel::group('ban_id')->column('ban_id, count(house_id) as house_ids');
-            $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->select()->toArray();
+            $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->limit(50)->select()->toArray();
             $data['data'] = $points;
            
  
