@@ -116,7 +116,7 @@ class Rent extends Model
 
             //租金欠缴的查询
             case 'unpaid': 
-                //$where[] = ['is_deal','eq',1];
+                $where[] = ['is_deal','eq',1];
                 $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
                 // 检索月【租金】订单编号
                 if(isset($data['rent_order_number']) && $data['rent_order_number']){

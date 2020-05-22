@@ -77,7 +77,7 @@ class Map extends Admin
        */
       public function statistics()
       {
-            //if ($this->request->isAjax()) {
+            if ($this->request->isAjax()) {
                   $ban_area_three = input('ban_area_three'); //搜索某社区
                   $ban_number = input('ban_number'); //搜索某社区
                   $where = $data = [];
@@ -102,7 +102,7 @@ class Map extends Admin
                   $data['code'] = 0;
                   $data['msg'] = '';
                   return json($data);
-            //}
+            }
       }
 
 }
