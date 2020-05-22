@@ -42,13 +42,17 @@ class Map extends Admin
                   $data['point'][$value['ban_area_three']]['name'] = $value['area_title'];
                   $data['point'][$value['ban_area_three']]['x'] = $value['x'];
                   $data['point'][$value['ban_area_three']]['y'] = $value['y'];
-                  $data['point'][$value['ban_area_three']]['detail'][] = $value;
+                  //$data['point'][$value['ban_area_three']]['detail'][] = $value;
                   if(!isset($data['point'][$value['ban_area_three']]['total_house'])){
                       $data['point'][$value['ban_area_three']]['total_house'] = 0;
+                  }
+                  if(!isset($data['point'][$value['ban_area_three']]['total_ban'])){
+                      $data['point'][$value['ban_area_three']]['total_ban'] = 0;
                   }
                   if(isset($houses[$value['ban_id']])){
                         $data['point'][$value['ban_area_three']]['total_house'] += $houses[$value['ban_id']];
                   }
+                  $data['point'][$value['ban_area_three']]['total_ban'] ++;
 
             }
             $data['count'] = count($data['data']);
