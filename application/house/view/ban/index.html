@@ -65,7 +65,18 @@
 					</select>
 			  </div>
 			  {/if}
+			  {if condition="in_array('ban_door',$config['ban_info_search'])"}
+			  <div class="layui-input-inline j-input-margin j-width-100">
+				  <input type="text" name="ban_door" title="栋号" placeholder="栋号" class="layui-input">
+			  </div>
+			  {/if}
+			  {if condition="in_array('ban_build_year',$config['ban_info_search'])"}
+			  <div class="layui-input-inline" style="width:120px;padding-left:5px">
+                <input type="text" name="ban_build_year" value="" readonly title="建成年份" placeholder="建成年份" id="timeYear" autocomplete="off" class="layui-input">
+            </div>
+            {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
+            
 		</div>
 		<div class="j-search-fr layui-col-md4 fr">
           <div class="layui-input-inline fr">
@@ -193,7 +204,19 @@
 // 			$("[lay-event='LAYTABLE_DATAPRINT']").prop('id','button_prints');
 // 		})
 		　　
-		
+		//年选择器
+        laydate.render({
+            elem: '#timeYear'
+            ,type: 'year'
+            ,btns: ['now', 'confirm']
+			//,value: new Date() 
+            ,isInitValue: true,
+			ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+        });
 		
 		$('#button_prints').click(function(){
 			var queryWhere = new Object();

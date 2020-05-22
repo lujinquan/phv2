@@ -51,9 +51,17 @@ class Ban extends SystemBase
         if(isset($data['ban_number']) && $data['ban_number']){
             $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];
         }
+        // 检索楼栋栋号
+        if(isset($data['ban_door']) && $data['ban_door']){
+            $where[] = ['ban_door','eq',$data['ban_door']];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['ban_address','like','%'.$data['ban_address'].'%'];
+        }
+        // 检索楼栋建成年份
+        if(isset($data['ban_build_year']) && $data['ban_build_year']){
+            $where[] = ['ban_build_year','eq',$data['ban_build_year']];
         }
         // 检索产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){

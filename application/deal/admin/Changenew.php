@@ -24,7 +24,7 @@ class Changenew extends Admin
             //halt($where);
             $fields = "a.id,a.change_order_number,a.new_type,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,d.ban_address,b.house_number,b.house_pre_rent,b.house_oprice,b.house_area,b.house_use_area,b.house_lease_area,b.house_use_id,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_struct_id,d.ban_damage_id";
             $data = [];
-            $data['data'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('etime desc')->order('etime desc')->page($page)->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $totalRow = Db::name('change_new')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(house_pre_rent) as total_house_pre_rent, sum(house_oprice) as total_house_oprice, sum(house_area) as total_house_area, sum(house_lease_area) as total_house_lease_area')->find();

@@ -24,7 +24,7 @@ class Changehouse extends Admin
             $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,b.house_use_id,b.house_number,b.house_floor_id,b.house_unit_id,b.house_door,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('etime desc')->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_house')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
             $data['msg'] = '';

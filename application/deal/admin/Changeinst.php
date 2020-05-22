@@ -24,7 +24,7 @@ class Changeinst extends Admin
             //halt($where);
             $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.change_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,a.is_back,c.nick";
             $data = [];
-            $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->order('etime desc')->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
             $totalRow = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->field('sum(change_ban_rent) as total_change_ban_rent, sum(change_ban_area) as total_change_ban_area, sum(change_ban_use_area) as total_change_ban_use_area, sum(change_ban_oprice) as total_change_ban_oprice')->find();
             if($totalRow){

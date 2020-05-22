@@ -25,7 +25,7 @@ class Changepause extends Admin
             $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.is_back,a.change_order_number,a.change_pause_rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,d.ban_address,c.nick,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('etime desc')->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_pause')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $totalRow = Db::name('change_pause')->alias('a')->join('system_user c','a.cuid = c.id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(change_pause_rent) as total_change_pause_rent')->find();

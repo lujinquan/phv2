@@ -68,6 +68,7 @@ class Recharge extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+            $filData['recharge_status'] = 1;
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
                 return $this->error('充值失败');

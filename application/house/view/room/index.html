@@ -180,6 +180,20 @@
 						title: '计租面积',
 						totalRow: true
 					}, {
+						field: 'room_status',
+						width: 110,
+						title: '房间状态',
+						templet: function(d) {
+							if(parseInt(d.room_status) == 0){
+								return '新发';
+							}else if(parseInt(d.room_status) == 1){
+								return '正常';
+							}else{
+								return '注销';
+							}
+							//return params.roomtypes[d.room_type];
+						}
+					}, {
 						title: '操作',
 						width: 100,
 						align:'center',

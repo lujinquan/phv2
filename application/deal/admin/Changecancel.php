@@ -23,7 +23,7 @@ class Changecancel extends Admin
             $where = $ChangeModel->checkWhere($getData,'apply');
             $fields = "a.id,a.is_back,a.change_order_number,a.cancel_type,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('etime desc')->page($page)->limit($limit)->select();
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $totalRow = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(cancel_rent) as total_cancel_rent, sum(cancel_area) as total_cancel_area, sum(cancel_use_area) as total_cancel_use_area, sum(cancel_oprice) as total_cancel_oprice')->find();
             if($totalRow){

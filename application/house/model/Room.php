@@ -70,20 +70,7 @@ class Room extends SystemBase
             }
         }
         if(isset($data['room_status'])){
-            switch ($data['room_status']) {
-                case 0:
-                    $where['room'][] = [['room_status','eq',0]];
-                    break;
-                case 1:
-                    $where['room'][] = [['room_status','eq',1]];
-                    break;
-                case 2:
-                    $where['room'][] = [['room_status','eq',2]];
-                    break;
-                default:
-
-                    break;
-            }
+            $where['room'][] = [['room_status','in',explode(',',$data['room_status'])]];
         }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
