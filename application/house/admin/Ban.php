@@ -30,6 +30,9 @@ class Ban extends Admin
 
     public function index()
     {   
+        $areas = Db::name('base_area')->where([['level','eq',3]])->column('id,area_title');
+        $this->assign('areas',$areas);
+        //halt($areas);
         //error_reporting(0);
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
@@ -37,12 +40,14 @@ class Ban extends Admin
             $getData = $this->request->get();
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
-            $fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+            $fields = 'ban_id,ban_number,ban_area_three,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
             $data = [];
             $data['data'] = $banModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
             $data['count'] = $banModel->where($where)->count('ban_id');
-            $totalRow = $banModel->where($where)->field('sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area, sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent, sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice, sum(ban_use_area) as total_ban_use_area')->find();
+            $totalRow = $banModel->where($where)->field('sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area, sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent, sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds,sum(ban_civil_num+ban_party_num+ban_career_num) as total_ban_num, sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice, sum(ban_use_area) as total_ban_use_area')->find();
             if($totalRow){
+                $data['total_ban_num'] = $totalRow['total_ban_num'];
+                $data['total_ban_holds'] = $totalRow['total_ban_holds'];
                 $data['total_ban_area'] = $totalRow['total_ban_area'];
                 $data['total_ban_rent'] = $totalRow['total_ban_rent'];
                 $data['total_ban_oprice'] = $totalRow['total_ban_oprice'];

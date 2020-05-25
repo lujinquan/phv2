@@ -49,7 +49,11 @@ class Ban extends SystemBase
         }
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
-            $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];
+            if(strpos($data['ban_number'], ',') !== false){
+                $where[] = ['ban_number','in',explode(',',$data['ban_number'])];
+            }else{
+                $where[] = ['ban_number','like','%'.$data['ban_number'].'%'];
+            }           
         }
         // 检索楼栋栋号
         if(isset($data['ban_door']) && $data['ban_door']){
@@ -74,6 +78,10 @@ class Ban extends SystemBase
         // 检索完损等级
         if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
             $where[] = ['ban_damage_id','in',explode(',',$data['ban_damage_id'])];
+        }
+        // 检索楼栋社区
+        if(isset($data['ban_area_three']) && $data['ban_area_three']){
+            $where[] = ['ban_area_three','in',explode(',',$data['ban_area_three'])];
         }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){

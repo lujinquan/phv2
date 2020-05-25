@@ -56,6 +56,16 @@
 			  </div>
 			  {/if}
 			  {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
+			  <div class="layui-input-inline j-width-130 j-margin-10">
+				  <select name="ban_area_three" xm-select="ban_area_three">
+					  <option value="">社区</option>
+					  {volist name="areas" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  {/if}
+			  {if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110 j-margin-10">
 				  <select name="ban_damage_id" xm-select="ban_damage_id">
 					  <option value="">完损等级</option>
@@ -106,6 +116,7 @@
 </script>
 </div>
 <script type="text/javascript">
+	var areas = JSON.parse('{:json_encode($areas)}');
     layui.use(['table','jquery','layer','laydate','formSelects'], function() {
         var table = layui.table
 		    ,$ = layui.$
@@ -155,6 +166,7 @@
 
 					   }
 						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'使用面积'}
+						,{field: 'ban_num', hide: true,minWidth: 80, align:'center',title:'合栋数'}
 						,{field: 'ban_rent', minWidth: 80, align:'center',title:'合规租'}
 						,{field: 'ban_oprice', minWidth: 100, align:'center', title: '合原价'}
 						,{field: 'ban_property_id', hide: true, minWidth: 100, align:'center', title: '产权证号'}
@@ -162,7 +174,10 @@
 						,{field: 'ban_damage_id', hide: true, minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
 							return params.damages[d.ban_damage_id];
 						}}
-						,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数',totalRow: true}
+						,{field: 'ban_holds', hide: true, minWidth: 100, align:'center', title: '户数'}
+						,{field: 'ban_area_three', hide: true, minWidth: 100, align:'center', title: '所属社区', templet: function(d) {
+							return areas[d.ban_area_three];
+						}}
 						,{field: 'ban_property_source', hide: true, minWidth: 100, align:'center', title: '产权来源'}
 						,{field: 'ban_units', hide: true, minWidth: 100, align:'center', title: '单元数'}
 						,{field: 'ban_floors', hide: true, minWidth: 100, align:'center', title: '楼层数'}
@@ -170,9 +185,11 @@
 					]]
 					,done:function(res,curr,count){
 						$(".layui-table-total td[data-field='ban_area']").find("div").text(res.total_ban_area);
+						$(".layui-table-total td[data-field='ban_holds']").find("div").text(res.total_ban_holds);
 						$(".layui-table-total td[data-field='ban_use_area']").find("div").text(res.total_ban_use_area);
 						$(".layui-table-total td[data-field='ban_rent']").find("div").text(res.total_ban_rent);
 						$(".layui-table-total td[data-field='ban_oprice']").find("div").text(res.total_ban_oprice);
+						$(".layui-table-total td[data-field='ban_num']").find("div").text(res.total_ban_num);
 						//导出转换后台数据
 						var exportData=res.data;
 						for(i in exportData){
@@ -186,7 +203,7 @@
 					}
 					
 					
-				},isShowInst,isHide,templet_width);
+				},isShowInst,isHide,templet_width,areas);
 		//导出执行点击事件
 		/* $(".j-btn-reset").click(function(){
 			 table.exportFile(exports.config.id,exportData,'xls');
