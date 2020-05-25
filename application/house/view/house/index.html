@@ -87,6 +87,15 @@
 					</select>
 				</div>
 				{/if}
+				{if condition="in_array('house_is_pause',$config['rent_rent_info_search'])"}
+		        <div class="layui-input-inline" style="width:120px;">
+		            <select name="house_is_pause">
+		                <option value="">是否暂停计租</option>
+		                <option value="1">是</option>
+		                <option value="0">否</option>
+		              </select>
+		        </div>
+		        {/if}
 				<input type="hidden" name="group" value="{$group}" class="layui-input">
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
