@@ -1,4 +1,4 @@
-<!-- <link rel="stylesheet" href="__PUBLIC_JS__/map/css/industry_map.css?v={:config('hisiphp.version')}"> -->
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <script type="text/javascript" src="{$http_type}api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <style>
 	.layui-body{overflow-y: hidden!important;}
@@ -105,7 +105,7 @@
 			<li>
 				<div class="layui-input-inline">
 					<select name="ban_struct_id">
-						<option value="">结构类别</option>
+						<option  value="">结构类别</option>
 						{volist name="params['structs']" id="v"}
 							<option value="{$key}">{$v}</option>
 							{/volist}
@@ -229,6 +229,7 @@ layui.use(['table', 'jquery'], function(){
 		    $ = layui.$;
 	function data_json(){
 		var ban_struct_id = $("select[name='ban_struct_id']").val();
+		var house_use_id = $("select[name='house_use_id']").val();
 		var ban_inst_id = $("select[name='ban_inst_id']").val();
 		var ban_damage_id = $("select[name='ban_damage_id']").val();
 		var ban_owner_id = $("select[name='ban_owner_id']").val();
@@ -237,6 +238,7 @@ layui.use(['table', 'jquery'], function(){
 			url:"{:url('map/index')}",
 			data :{
 				'ban_struct_id':ban_struct_id
+				,'house_use_id':house_use_id
 				,'ban_inst_id':ban_inst_id
 				,'ban_damage_id':ban_damage_id
 				,'ban_owner_id':ban_owner_id
@@ -245,15 +247,24 @@ layui.use(['table', 'jquery'], function(){
 			dataType:"json",
 		   //回调函数
 			success:function(result){
-				firstData = result.point;//一级社区数据
-				thirdlyData = result.data;//三级楼栋数据
-				initMap();
-				//初始化一级数据
-				addMarker(firstData, true);
+				if(result.data.length>0){
+					firstData = result.point;//一级社区数据
+					thirdlyData = result.data;//三级楼栋数据
+					initMap();
+					//初始化一级数据
+					addMarker(firstData, true);
+					console.log("搜索所有：",result);
+					console.log("搜索一级：",firstData);
+					console.log("搜索三级：",thirdlyData);
+				}
+				else{
+					
+					initMap();
+					//初始化一级数据
+					addMarker(firstData, true);
+					console.log("暂无数据！");
+				}
 				
-				console.log("搜索所有：",result);
-				console.log("搜索一级：",firstData);
-				console.log("搜索三级：",thirdlyData);
 			}
 		})
 	};	
@@ -302,7 +313,7 @@ layui.use(['table', 'jquery'], function(){
   // //搜索二级数据坐标  --此处搜索只是为了方便，如果项目实际用那就提前将坐标爬取下来
   // searchCoord(secondData)
   //搜索三级数据坐标
-  // searchCoord(thirdlyData)
+   thirdlyData
   console.log("三级坐标",thirdlyData)
   
   //初始化画圈找房
@@ -388,6 +399,8 @@ layui.use(['table', 'jquery'], function(){
   		
   		//设置标志位退出画圈状态
   		isInDrawing = false;
+		//根据视野动态加载
+		addViewLabel(thirdlyMkr)
   	})
   	
   	//为地图绑定鼠标按下事件(开始画圈)
@@ -894,7 +907,4 @@ layui.use(['table', 'jquery'], function(){
   
 });
 </script>
-<!-- <script type="text/javascript" src="__PUBLIC_JS__/map/js/draw.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/map/js/maplib.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript" src="__PUBLIC_JS__/map/js/textIconOverlay.js?v={:config('hisiphp.version')}"></script> -->
 
