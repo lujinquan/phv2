@@ -7,9 +7,9 @@ drop table if exists ph_v2.ph_ban_back;
 create table ph_v2.ph_ban_back like ph_v2.ph_ban;
 # 同步数据
 insert into ph_v2.ph_ban_back 
-(ban_number,ban_door,ban_units,ban_floors,ban_area_two,ban_area_three,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_ctime,ban_gpsx,ban_gpsy,ban_status) 
+(ban_number,ban_door,old_ban_number,ban_units,ban_floors,ban_area_two,ban_area_three,ban_address,ban_inst_id,ban_inst_pid,ban_owner_id,ban_property_id,ban_property_source,ban_build_year,ban_ratio,ban_damage_id,ban_struct_id,ban_civil_holds,ban_party_holds,ban_career_holds,ban_civil_area,ban_party_area,ban_career_area,ban_civil_num,ban_party_num,ban_career_num,ban_civil_rent,ban_party_rent,ban_career_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,ban_use_area,ban_ctime,ban_gpsx,ban_gpsy,ban_status) 
 select 
-BanID,BanNumber,BanUnitNum,BanFloorNum,AreaTwo,AreaThree,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,BanGpsX,BanGpsY,Status
+BanID,BanNumber,OldBanID,BanUnitNum,BanFloorNum,AreaTwo,AreaThree,AreaFour,TubulationID,InstitutionID,OwnerType,BanPropertyID,PropertySource,BanYear,BanRatio,DamageGrade,StructureType,CivilHolds,PartyHolds,EnterpriseHolds,CivilArea,PartyArea,EnterpriseArea,CivilNum,PartyNum,EnterpriseNum,CivilRent,PartyRent,EnterpriseRent,CivilOprice,PartyOprice,EnterpriseOprice,BanUsearea,CreateTime,BanGpsX,BanGpsY,Status
 from ph_v1.ph_ban;
 # 更新楼栋的创建人信息 
 update ph_v2.ph_ban_back as a left join ph_v2.ph_system_user as b on a.ban_inst_id = b.inst_id set a.ban_cuid = b.id;
