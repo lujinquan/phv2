@@ -47,16 +47,18 @@ class Lease extends Admin
     	if ($this->request->isAjax()) {
     		$id = input('param.id/d');
     		$data = [];
-        	$data['data'] = ChangeLeaseModel::with(['house','tenant'])->get($id);
+            $ChangeLeaseModel = new ChangeLeaseModel;
+            $data['data'] = $ChangeLeaseModel->detail($id);
+        	//$data['data'] = ChangeLeaseModel::with(['house','tenant'])->get($id);
         	$data['code'] = 0;
             $data['msg'] = '';
             return json($data);
     	}
         $id = input('param.id/d');
-        $ChangeLeaseModel = new ChangeLeaseModel;
-        $row = $ChangeLeaseModel->detail($id);
+        // $ChangeLeaseModel = new ChangeLeaseModel;
+        // $row = $ChangeLeaseModel->detail($id);
         $this->assign('id',$id);
-        $this->assign('data_info',$row);
+        // $this->assign('data_info',$row);
     	return $this->fetch();
     }
 

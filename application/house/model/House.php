@@ -81,6 +81,22 @@ class House extends SystemBase
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['a.house_number','like','%'.$data['house_number'].'%'];
         }
+        // 检索【房屋】暂停计租
+        if(isset($data['house_is_pause']) && $data['house_is_pause'] != ''){
+            $where[] = ['a.house_is_pause','eq',$data['house_is_pause']];
+        }
+        // 检索【房屋】规定租金
+        if(isset($data['house_pre_rent']) && $data['house_pre_rent']){
+            $where[] = ['a.house_pre_rent','eq',$data['house_pre_rent']];
+        }
+        // 检索【房屋】计算租金
+        if(isset($data['house_cou_rent']) && $data['house_cou_rent']){
+            $where[] = ['a.house_cou_rent','eq',$data['house_cou_rent']];
+        }
+        // 检索【房屋】计租面积
+        if(isset($data['house_lease_area']) && $data['house_lease_area']){
+            $where[] = ['a.house_lease_area','eq',$data['house_lease_area']];
+        }
         // 检索【房屋】使用性质
         if(isset($data['house_use_id']) && $data['house_use_id']){
             $where[] = ['a.house_use_id','in',explode(',',$data['house_use_id'])];
@@ -114,6 +130,14 @@ class House extends SystemBase
         // 检索【楼栋】产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
+        }
+        // 检索【楼栋】结构类别
+        if(isset($data['ban_struct_id']) && $data['ban_struct_id']){
+            $where[] = ['d.ban_struct_id','in',explode(',',$data['ban_struct_id'])];
+        }
+        // 检索【楼栋】完损等级
+        if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
+            $where[] = ['d.ban_damage_id','in',explode(',',$data['ban_damage_id'])];
         }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
@@ -269,7 +293,8 @@ class House extends SystemBase
         }
 
         if($row['ban_number'] == '1050053295'){
-            return bcaddMerge([$row['house_pre_rent'],$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']]);
+            return bcaddMerge([$row['house_pre_rent'],$row['house_protocol_rent']]);
+            //return bcaddMerge([$row['house_pre_rent'],$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']]);
         }else{
 
             //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
@@ -277,7 +302,8 @@ class House extends SystemBase
             // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
             $p = ($row['house_use_id'] == 1)?1:2; //保留1位数
 
-            return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']],$p); 
+            return bcaddMerge([$sumrent,$row['house_protocol_rent']],$p); 
+            //return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']],$p); 
         }
 
     }

@@ -7,12 +7,12 @@
   .page-tab-content{padding: 20px;}
   #leaseprint_1_{margin: 0 auto;}
 </style>
-<div  class="clearfix">
+<!-- <div  class="clearfix">
 	<button type="button" class="layui-btn layui-btn-warm on fr" onclick="click_print()" id="button_print">
 		<i class="layui-icon layui-icon-print"></i>
 		打印
 	</button>
-</div>
+</div> -->
 <div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1080px;">
         <form id="Myprint_1_" width="1091px">
             <!--startprint2-->
@@ -626,17 +626,19 @@
 		   ,$ = layui.$;
 		var id = {$id};
 		$.get('/admin.php/house/lease/detail', {'id':id}, function(res) {
-			var table = JSON.parse(res.data.change_data_line);
+            //console.log(res.data.data_json);
+            var table = res.data.data_json;
+			//var table = JSON.parse(res.data.change_data_line);
 			$('#print_1_picCode').show().prop('src',res.data.qrcode);
 			$('#print_1_NO').text(res.data.szno);
-			$('#print_1_Address').text('房屋坐落：武昌区');
-			$('#print_1_Struct').text('钢混');
-			$('#print_1_HouseFloor').text('5');
-			$('#print_1_LiveFloor').text('2');
+			$('#print_1_Address').text(table.applyAddress);
+			$('#print_1_Struct').text(table.applyStruct);
+			$('#print_1_HouseFloor').text(table.applyHouseFloor);
+			$('#print_1_LiveFloor').text(table.applyLiveFloor);
 			$('#print_1_RentName').text(res.data.tenant_name);
 			$('#print_1_RentNumber').text(res.data.tenant_card);
-			$('#print_1_RentName1').text('监护人 姓名:张三');
-			$('#print_1_RentNumber1').text('监护人身份证号:4203...');
+			$('#print_1_RentName1').text(table.applyRentName);
+			$('#print_1_RentNumber1').text(table.applyRentNumber);
 			$('#print_1_Year').text(res.data.ctime.substring(0,4));
 			$('#print_1_Month').text(res.data.ctime.substring(5,7));
 			$('#print_1_Day').text(res.data.ctime.substring(8,10));

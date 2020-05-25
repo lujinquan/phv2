@@ -36,7 +36,7 @@ class Recharge extends Admin
             $RechargeModel = new RechargeModel;
             $where = $RechargeModel->checkWhere($getData);
 
-            $fields = "a.id,a.house_id,a.tenant_id,a.pay_rent,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.house_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
@@ -69,11 +69,26 @@ class Recharge extends Admin
                 return $this->error($filData);
             }
             $filData['recharge_status'] = 1;
+
+            $house_info = HouseModel::where([['house_id','eq',$filData['house_id']]])->find();
+            $filData['yue'] = bcaddMerge([$house_info['house_balance'],$filData['pay_rent']]);
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
                 return $this->error('充值失败');
             }
-            HouseModel::where([['house_id','eq',$filData['house_id']]])->setInc('house_balance',$filData['pay_rent']);
+            $house_info->house_balance = $filData['yue'];
+            //增加房屋台账记录
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->house_id = $house_info['house_id'];
+            $HouseTaiModel->tenant_id = $house_info['tenant_id'];
+            $HouseTaiModel->cuid = ADMIN_ID;
+            $HouseTaiModel->house_tai_type = 2;
+            $HouseTaiModel->house_tai_remark = '平台充值：'.$filData['pay_rent'].'元，剩余余额：'.$filData['yue'].'元。';
+            $HouseTaiModel->data_json = [];
+            $HouseTaiModel->change_type = '';
+            $HouseTaiModel->change_id = '';
+            $HouseTaiModel->save();
+            //HouseModel::where([['house_id','eq',$filData['house_id']]])->setInc('house_balance',$filData['pay_rent']);
             return $this->success('充值成功');
         }
         return $this->fetch();
