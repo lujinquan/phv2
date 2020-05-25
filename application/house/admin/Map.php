@@ -29,11 +29,13 @@ class Map extends Admin
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
             //$fields = 'ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
-            $fields = 'ban_id,ban_number,ban_area_two,ban_area_three,ban_address as z,ban_gpsx as x,ban_gpsy as y,b.area_title';
+            $fields = 'ban_id,ban_number,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_area_two,ban_area_three,ban_address as z,ban_gpsx as x,ban_gpsy as y,b.area_title';
             $data = [];
             //$points = Db::name('ban')->alias('a')->join('area b','a.AreaThree = b.id','left')->field('BanID ,BanGpsX ,BanGpsY,a.AreaFour,a.AreaThree,b.GpsX,b.GpsY,b.AreaTitle')->where($where)->select();
+
             $houses = HouseModel::group('ban_id')->column('ban_id, count(house_id) as house_ids');
             $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->select()->toArray();
+
             $data['data'] = $points;
            
  
@@ -49,9 +51,10 @@ class Map extends Admin
                   if(!isset($data['point'][$value['ban_area_three']]['total_ban'])){
                       $data['point'][$value['ban_area_three']]['total_ban'] = 0;
                   }
-                  if(isset($houses[$value['ban_id']])){
-                        $data['point'][$value['ban_area_three']]['total_house'] += $houses[$value['ban_id']];
-                  }
+                  $data['point'][$value['ban_area_three']]['total_house'] = $value['ban_holds'];
+                  // if(isset($houses[$value['ban_id']])){
+                  //       $data['point'][$value['ban_area_three']]['total_house'] += $houses[$value['ban_id']];
+                  // }
                   $data['point'][$value['ban_area_three']]['total_ban'] ++;
 
             }
