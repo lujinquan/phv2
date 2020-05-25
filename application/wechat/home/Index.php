@@ -554,15 +554,31 @@ class Index extends Common
             $row = $RechargeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->find();
             // 更新预付订单
             if($row){
+                $pay_rent = $data['total_fee'] / 100;
                 // 更新预付订单
                 $row->transaction_id = $data['transaction_id'];
                 $row->ptime = strtotime($data['time_end']); //支付时间
-                $row->pay_rent = $data['total_fee'] / 100; //支付金额，单位：分
+                $row->pay_rent = $pay_rent; //支付金额，单位：分
                 $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
                 $row->recharge_status = 1; //充值状态，1充值成功
                 $row->save();
                 // 更新房屋余额
-                HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_balance', $row['pay_rent']);
+                $house_info = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
+                $yue = bcaddMerge([$house_info['house_balance'],$pay_rent]);
+                $house_info->house_balance = $yue;
+                $house_info->save();
+                
+                // 添加房屋台账【待测】
+                $HouseTaiModel = new HouseTaiModel;
+                $HouseTaiModel->house_id = $house_info['house_id'];
+                $HouseTaiModel->tenant_id = $house_info['tenant_id'];
+                $HouseTaiModel->cuid = ADMIN_ID;
+                $HouseTaiModel->house_tai_type = 2;
+                $HouseTaiModel->house_tai_remark = '微信充值：'. $pay_rent .'元，剩余余额：'.$yue.'元。';
+                $HouseTaiModel->data_json = [];
+                $HouseTaiModel->change_type = '';
+                $HouseTaiModel->change_id = '';
+                $HouseTaiModel->save();
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
                 

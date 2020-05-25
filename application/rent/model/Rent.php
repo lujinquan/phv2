@@ -3,8 +3,9 @@ namespace app\rent\model;
 
 use think\Db;
 use think\Model;
-use app\house\model\House;
+use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\rent\model\Recharge as RechargeModel;
 
 class Rent extends Model
 {
@@ -269,6 +270,7 @@ class Rent extends Model
             $where[] = ['a.house_status','eq',1];
             //$where[] = ['f.change_status','eq',1];
             $where[] = ['a.house_is_pause','eq',1];
+            $where[] = ['a.house_pre_rent','>',1];
             //$where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid';
@@ -312,6 +314,96 @@ class Rent extends Model
             return ['code'=>0,'msg'=>'生成失败，本月份账单已存在！'];
         }
         
+    }
+
+    /**
+     *  批量扣缴
+     */
+    public function autopayList($ids = '')
+    {   
+        // 如果选择了多个房屋，就按照房屋处理租金订单
+        if($ids){
+            
+        // 如果没有，直接处理当前月的所有is_deal = 0 的租金订单
+        }else{
+            $date = date('Ym');
+            
+            $where = [];
+            $where[] = ['is_deal','eq',0];
+            $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_paid')->select()->toArray();
+
+            $HouseModel = new HouseModel;
+            $houses = $HouseModel->where([['house_balance','>',0]])->column('house_id,house_balance');
+
+            //halt($houses);
+            foreach ($rent_orders as $k => $v) {
+                if(isset($houses[$v['house_id']])){
+                    $unpaid_rent = bcsub($v['rent_order_receive'],$v['rent_order_paid']);
+                    $yue = bcsub($houses[$v['house_id']],$unpaid_rent);
+                    //halt($unpaid_rent);
+                    if($yue >= 0){ //如果余额充足
+                        // 扣缴
+                        self::where([['rent_order_id','eq',$v['rent_order_id']]])->update([
+                            'is_deal'=>1,
+                            'ptime'=>time(),
+                            'pay_way'=>2,
+                            'rent_order_paid' => $unpaid_rent,
+                        ]);
+
+                        HouseModel::where([['house_id','eq',$v['house_id']]])->update(['house_balance'=>$unpaid_rent]);
+                        // 台账
+                        $HouseTaiModel = new HouseTaiModel;
+                        $HouseTaiModel->house_id = $v['house_id'];
+                        $HouseTaiModel->tenant_id = $v['tenant_id'];
+                        $HouseTaiModel->cuid = ADMIN_ID;
+                        $HouseTaiModel->house_tai_type = 2;
+                        $HouseTaiModel->house_tai_remark = '扣缴：'.$unpaid_rent.'元，剩余余额：'.$yue.'元。';
+                        $HouseTaiModel->data_json = [];
+                        $HouseTaiModel->change_type = '';
+                        $HouseTaiModel->change_id = '';
+                        $HouseTaiModel->save();
+
+                        // 扣缴记录
+                        $RechargeModel = new RechargeModel;
+                        $RechargeModel->pay_number = $v['rent_order_number'];
+                        $RechargeModel->house_id = $v['house_id'];
+                        $RechargeModel->tenant_id = $v['tenant_id'];
+                        $RechargeModel->pay_rent = -$unpaid_rent;
+                        $RechargeModel->yue = $yue;
+                        $RechargeModel->pay_way = 2;
+                        $RechargeModel->recharge_status = 1;
+                        $RechargeModel->save();
+                        exit;
+                    }
+                }
+            }
+        } 
+       /* $ji = 0;
+        foreach($ids as $id){
+
+            $row = $this->find($id);
+            $row->is_deal = 1;
+            $row->ptime = time();
+            $row->pay_way = 1;
+            $row->rent_order_paid = Db::raw('rent_order_receive');
+            $res = $row->save();
+
+            $ji += $res;
+
+            // 添加房屋台账，记录缴费状况
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->house_id = $row['house_id'];
+            $HouseTaiModel->tenant_id = $row['tenant_id'];
+            $HouseTaiModel->cuid = ADMIN_ID;
+            $HouseTaiModel->house_tai_type = 2;
+            $HouseTaiModel->house_tai_remark = '现金缴费：'.$row['rent_order_receive'].'元';
+            $HouseTaiModel->data_json = [];
+            $HouseTaiModel->change_type = '';
+            $HouseTaiModel->change_id = '';
+            $HouseTaiModel->save();
+            //halt($row);
+            //self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
+        }*/
     }
 
     /**

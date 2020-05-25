@@ -147,6 +147,21 @@ class Rent extends Admin
     }
 
     /**
+     *  批量扣缴
+     */
+    public function autopayList()
+    {
+        $ids = $this->request->param('id/a'); 
+        $RentModel = new RentModel;      
+        $res = $RentModel->autopayList($ids);
+        if($res){
+            $this->success('扣缴成功，本次扣缴'.$res.'条账单！');
+        }else{
+            $this->error('扣缴失败');
+        }
+    }
+
+    /**
      *  批量欠缴
      */
     public function unpayList()
