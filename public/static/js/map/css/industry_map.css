@@ -9,8 +9,8 @@
 .wrapper{
 	width: 100%;
      /* min-height:947px; */
-	position: relative;
-	overflow-y: hidden;
+	/* position: relative;
+	overflow-y: hidden; */
 }
 .map-container{
     /* min-height:947px; */
