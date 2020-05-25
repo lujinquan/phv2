@@ -220,7 +220,7 @@
 		<!-- <div class="j-map-sum hide">视野内有<span></span>个房源,拖动地图查看更多</div> -->
 </div>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="#" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+    <a href="{:url('ban/detail')}?id={{ d.ban_id }}" hisi-data="{width: '80%', height: '760px',refresh: 2}" title="楼栋详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">明细</a>
 </script>
 {include file="system@block/layui" /}
 <script>
@@ -250,15 +250,18 @@ layui.use(['table', 'jquery'], function(){
 				if(result.data.length>0){
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
-					initMap();
+					//initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
+					//addLable(thirdlyData);
 					console.log("搜索所有：",result);
 					console.log("搜索一级：",firstData);
 					console.log("搜索三级：",thirdlyData);
 				}
 				else{
-					
+					firstData = result.point;//一级社区数据
+					thirdlyData = result.data;//三级楼栋数据
+					//addLable(thirdlyData);
 					initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
@@ -270,7 +273,7 @@ layui.use(['table', 'jquery'], function(){
 	};	
 	data_json();//初始数据
 	// 搜索后数据
-	$("#button_search").click(function(ban_struct_id,ban_inst_id,ban_damage_id,ban_owner_id){
+	$("#button_search").click(function(ban_struct_id,house_use_id,ban_inst_id,ban_damage_id,ban_owner_id){
 		data_json();
 	});
   /**
@@ -313,7 +316,7 @@ layui.use(['table', 'jquery'], function(){
   // //搜索二级数据坐标  --此处搜索只是为了方便，如果项目实际用那就提前将坐标爬取下来
   // searchCoord(secondData)
   //搜索三级数据坐标
-   thirdlyData
+  // searchCoord(thirdlyData)
   console.log("三级坐标",thirdlyData)
   
   //初始化画圈找房
@@ -405,6 +408,7 @@ layui.use(['table', 'jquery'], function(){
   	
   	//为地图绑定鼠标按下事件(开始画圈)
   	map.addEventListener('mousedown',function(e){
+		console.log("是否开始画圈了！")
   		//如果处于画圈状态下,清空上次画圈的数据结构,设置isMouseDown进入画圈鼠标按下状态
   		if(isInDrawing){
 			console.log("开始画圈了！")
@@ -797,8 +801,8 @@ layui.use(['table', 'jquery'], function(){
   	$(this).addClass("on").siblings().removeClass("on");
   		if($(this).hasClass("on"))
   		{
-  			$(".BMapLabel").css({"background-color":"#46ACFF","color":"#fff"});
-  			$(this).css({"background-color":"#f60","color":"#f60"});
+  			$(".BMapLabel").css({"background-color":"#46ACFF","color":"#fff","z-index":"1"});
+  			$(this).css({"background-color":"#f60","color":"#f60","z-index":"5"});
   		}
   })
   $('.close_list').click(function() {
