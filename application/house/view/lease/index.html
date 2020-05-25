@@ -12,7 +12,7 @@
 				{/if}
 				{if condition="in_array('ban_inst_id',$config['szno_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-120 j-margin-10">
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
 					<select name="ban_inst_id"  xm-select="ban_inst_id">
 						<option value=""  disabled="disabled">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
