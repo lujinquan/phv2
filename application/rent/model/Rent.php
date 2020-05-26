@@ -321,6 +321,7 @@ class Rent extends Model
      */
     public function autopayList($ids = '')
     {   
+        $ji = 0;
         // 如果选择了多个房屋，就按照房屋处理租金订单
         if($ids){
             
@@ -335,7 +336,7 @@ class Rent extends Model
             $HouseModel = new HouseModel;
             $houses = $HouseModel->where([['house_balance','>',0]])->column('house_id,house_balance');
 
-            //halt($houses);
+           
             foreach ($rent_orders as $k => $v) {
                 if(isset($houses[$v['house_id']])){
                     $unpaid_rent = bcsub($v['rent_order_receive'],$v['rent_order_paid']);
@@ -373,11 +374,13 @@ class Rent extends Model
                         $RechargeModel->pay_way = 2;
                         $RechargeModel->recharge_status = 1;
                         $RechargeModel->save();
-                        exit;
+
+                        $ji++;
                     }
                 }
             }
         } 
+        return $ji;
        /* $ji = 0;
         foreach($ids as $id){
 
