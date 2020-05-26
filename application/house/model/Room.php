@@ -63,14 +63,10 @@ class Room extends SystemBase
         
         // 检索房间共用状态
         if(isset($data['room_pub_num']) && $data['room_pub_num']){
-            if($data['room_pub_num'] < 3){
-                $where['room'][] = ['room_pub_num','eq',$data['room_pub_num']];
-            }else{
-                $where['room'][] = ['room_pub_num','>=',$data['room_pub_num']];      
-            }
+            $where['room'][] = ['room_pub_num','in',explode(',',$data['room_pub_num'])];
         }
-        if(isset($data['room_status'])){
-            $where['room'][] = [['room_status','in',explode(',',$data['room_status'])]];
+        if(isset($data['room_status']) && $data['room_status'] != ''){
+            $where['room'][] = ['room_status','in',explode(',',$data['room_status'])];
         }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
@@ -89,7 +85,7 @@ class Room extends SystemBase
         // $insts = config('inst_ids');
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];
-
+//halt($where);
         return $where;
     }
 
