@@ -204,6 +204,9 @@ class SystemExport extends Model
 			if(isset($d['change_status'])){
 				$d['change_status'] = $params['op_order_status'][$d['change_status']];
 			}
+			if(isset($d['ban_use_id'])){
+				$d['ban_use_id'] = $params['uses'][$d['ban_use_id']];
+			}
 			if(isset($d['house_use_id'])){
 				$d['house_use_id'] = $params['uses'][$d['house_use_id']];
 			}
