@@ -262,7 +262,7 @@ layui.use(['table', 'jquery'], function(){
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
 					//addLable(thirdlyData);
-					initMap();
+					//initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
 					console.log("暂无数据！");
@@ -273,7 +273,7 @@ layui.use(['table', 'jquery'], function(){
 	};	
 	data_json();//初始数据
 	// 搜索后数据
-	$("#button_search").click(function(ban_struct_id,house_use_id,ban_inst_id,ban_damage_id,ban_owner_id){
+	$(document).on('click','#button_search',function (ban_struct_id,house_use_id,ban_inst_id,ban_damage_id,ban_owner_id) {
 		data_json();
 	});
   /**
