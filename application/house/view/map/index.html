@@ -328,7 +328,7 @@ layui.use(['table', 'jquery'], function(){
   	map = new BMap.Map("allMap", {
   		enableMapClick: false,
   		minZoom: 15,
-		maxZoom: 18
+		maxZoom: 20
   	}); // 创建Map实例
   	map.centerAndZoom(new BMap.Point(114.326061,30.533878), 15); // 初始化地图,设置中心点坐标和地图级别
   	map.enableScrollWheelZoom(true);
@@ -512,7 +512,38 @@ layui.use(['table', 'jquery'], function(){
 			$(".close_list i").removeClass("j-icon-youkuohao");
 			$(".close_list i").addClass("j-icon-zuokuohao");
 			if(result.msg=="参数错误"){
-				layer.msg(result.msg);
+				layer.msg("暂无数据！");
+				$("#total_bans").text("");//栋数
+				$("#ban_holds").text("");//户数
+				$("#total_ban_rent").text("");//规定租金
+				$("#total_ban_use_area").text("");//使用面积
+				$("#total_ban_area").text("");//建筑面积
+				$("#total_ban_oprice").text("");//原价
+				
+				//楼栋信息
+				table.render({
+				  elem: '#tenant'
+				  ,id: 'tenant'
+				  ,height: 330
+				  ,url: '{:url("house/Ban/index")}?ban_number=123456'//数据接口
+				  ,page: true //开启分页
+					,skin:'nob'
+					,limit: 10
+					,text: {
+						none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+					}
+				  ,cols: [[ //表头
+				    {field: 'ban_number', title: '楼栋编号', width:80}
+				    ,{field: 'ban_owner_id', title: '产别', width:80, templet: function(d) {
+						return params.owners[d.ban_owner_id];
+					}}
+				    ,{field: 'ban_struct_id', title: '结构类型', width:80, templet: function(d) {
+						return params.structs[d.ban_struct_id];
+					}} 
+				    ,{field: 'ban_rent', title: '规定租金', width:80}
+				    ,{field: 'wealth', title: '操作',templet: '#buttonTpl', width:80}
+				  ]]
+				});
 			}
 			else{
 				$("#total_bans").text(result.data.total_bans);//栋数
@@ -521,33 +552,34 @@ layui.use(['table', 'jquery'], function(){
 				$("#total_ban_use_area").text(result.data.total_ban_use_area);//使用面积
 				$("#total_ban_area").text(result.data.total_ban_area);//建筑面积
 				$("#total_ban_oprice").text(result.data.total_ban_oprice);//原价
+				
+				//楼栋信息
+				table.render({
+				  elem: '#tenant'
+				  ,id: 'tenant'
+				  ,height: 330
+				  ,url: '{:url("house/Ban/index")}?ban_number='+ban_number //数据接口
+				  ,page: true //开启分页
+					,skin:'nob'
+					,limit: 10
+					,text: {
+						none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+					}
+				  ,cols: [[ //表头
+				    {field: 'ban_number', title: '楼栋编号', width:80}
+				    ,{field: 'ban_owner_id', title: '产别', width:80, templet: function(d) {
+						return params.owners[d.ban_owner_id];
+					}}
+				    ,{field: 'ban_struct_id', title: '结构类型', width:80, templet: function(d) {
+						return params.structs[d.ban_struct_id];
+					}} 
+				    ,{field: 'ban_rent', title: '规定租金', width:80}
+				    ,{field: 'wealth', title: '操作',templet: '#buttonTpl', width:80}
+				  ]]
+				});
 			}
 		}
 	})
-	//楼栋信息
-	table.render({
-	  elem: '#tenant'
-	  ,id: 'tenant'
-	  ,height: 330
-	  ,url: '{:url("house/Ban/index")}?ban_number='+ban_number //数据接口
-	  ,page: true //开启分页
-		,skin:'nob'
-		,limit: 10
-		,text: {
-			none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
-		}
-	  ,cols: [[ //表头
-	    {field: 'ban_number', title: '楼栋编号', width:80}
-	    ,{field: 'ban_owner_id', title: '产别', width:80, templet: function(d) {
-			return params.owners[d.ban_owner_id];
-		}}
-	    ,{field: 'ban_struct_id', title: '结构类型', width:80, templet: function(d) {
-			return params.structs[d.ban_struct_id];
-		}} 
-	    ,{field: 'ban_rent', title: '规定租金', width:80}
-	    ,{field: 'wealth', title: '操作',templet: '#buttonTpl', width:80}
-	  ]]
-	});
   	// var estateListAfterDrawing = pointInPolygonArray.map(function(item){
   	// 	return item.getLabel().getContent()
   	// })
@@ -740,7 +772,37 @@ layui.use(['table', 'jquery'], function(){
 					success:function(result){
 						console.log("点击数据：",result);
 						if(result.msg=="参数错误"){
-							layer.msg(result.msg);
+							layer.msg("暂无数据！");
+							$("#total_bans").text("");//栋数
+							$("#ban_holds").text("");//户数
+							$("#total_ban_rent").text("");//规定租金
+							$("#total_ban_use_area").text("");//使用面积
+							$("#total_ban_area").text("");//建筑面积
+							$("#total_ban_oprice").text("");//原价
+							//楼栋信息
+							table.render({
+							  elem: '#tenant'
+							  ,id: 'tenant'
+							  ,height: 330
+							  ,url: '{:url("house/Ban/index")}?ban_number=123456'//数据接口
+							  ,page: true //开启分页
+								,skin:'nob'
+								,limit: 10
+								,text: {
+									none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+								}
+							  ,cols: [[ //表头
+							    {field: 'ban_number', title: '楼栋编号', width:80}
+							    ,{field: 'ban_owner_id', title: '产别', width:80, templet: function(d) {
+									return params.owners[d.ban_owner_id];
+								}}
+							    ,{field: 'ban_struct_id', title: '结构类型', width:80, templet: function(d) {
+									return params.structs[d.ban_struct_id];
+								}} 
+							    ,{field: 'ban_rent', title: '规定租金', width:80}
+							    ,{field: 'wealth', title: '操作',templet: '#buttonTpl', width:80}
+							  ]]
+							});
 						}
 						else{
 							$("#total_bans").text(result.data.total_bans);//栋数
@@ -749,6 +811,30 @@ layui.use(['table', 'jquery'], function(){
 							$("#total_ban_use_area").text(result.data.total_ban_use_area);//使用面积
 							$("#total_ban_area").text(result.data.total_ban_area);//建筑面积
 							$("#total_ban_oprice").text(result.data.total_ban_oprice);//原价
+							//楼栋信息
+							table.render({
+							  elem: '#tenant'
+							  ,id: 'tenant'
+							  ,height: 330
+							  ,url: '{:url("house/Ban/index")}?ban_number='+ban_number//数据接口
+							  ,page: true //开启分页
+								,skin:'nob'
+								,limit: 10
+								,text: {
+									none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+								}
+							  ,cols: [[ //表头
+							    {field: 'ban_number', title: '楼栋编号', width:80}
+							    ,{field: 'ban_owner_id', title: '产别', width:80, templet: function(d) {
+									return params.owners[d.ban_owner_id];
+								}}
+							    ,{field: 'ban_struct_id', title: '结构类型', width:80, templet: function(d) {
+									return params.structs[d.ban_struct_id];
+								}} 
+							    ,{field: 'ban_rent', title: '规定租金', width:80}
+							    ,{field: 'wealth', title: '操作',templet: '#buttonTpl', width:80}
+							  ]]
+							});
 						}
 					}
 				})
