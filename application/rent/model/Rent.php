@@ -265,12 +265,12 @@ class Rent extends Model
         //halt($currMonthOrder);
         
         if(!$currMonthOrder){
-            $houseModel = new House;
+            //$houseModel = new HouseModel;
             $where = [];
             $where[] = ['a.house_status','eq',1];
             //$where[] = ['f.change_status','eq',1];
-            $where[] = ['a.house_is_pause','eq',1];
-            $where[] = ['a.house_pre_rent','>',1];
+            $where[] = ['a.house_is_pause','eq',0];
+            $where[] = ['a.house_pre_rent','>',0];
             //$where[] = ['f.end_date','>',date('Ym')];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid';

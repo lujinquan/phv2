@@ -4,6 +4,7 @@ namespace app\rent\model;
 use think\Db;
 use think\Model;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 
 class Recharge extends Model
 {

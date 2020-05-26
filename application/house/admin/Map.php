@@ -30,7 +30,7 @@ class Map extends Admin
       $fields = 'ban_id,ban_number,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_area_two,ban_area_three,ban_address as z,ban_gpsx as x,ban_gpsy as y,b.area_title';
       $data = [];
       $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->select()->toArray();
-      $areas_holds = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->group('ban_area_three')->column('ban_area_three,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds');
+      $areas_holds = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0],['ban_area_three','>',0]])->order('ban_ctime desc')->group('ban_area_three')->column('ban_area_three,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds');
       $data['data'] = $points;
       foreach($points as $key => $value){
 
@@ -59,46 +59,46 @@ class Map extends Admin
     return $this->fetch();
   }
 
-      /**
-       * 统计多栋楼数据或者某社区下的楼数据
-       * =====================================
-       * @author  Lucas 
-       * email:   598936602@qq.com 
-       * Website  address:  www.mylucas.com.cn
-       * =====================================
-       * @param   ban_area_three
-       * 创建时间: 2020-05-22 16:33:30
-       * @return  返回值  
-       * @version 版本  1.0
-       */
-      public function statistics()
-      {
-        if ($this->request->isAjax()) {
-                  $ban_area_three = input('ban_area_three'); //搜索某社区
-                  $ban_number = input('ban_number'); //搜索某社区
-                  $where = $data = [];
-                  $where[] = ['ban_gpsx','>',0];
-                  $where[] = ['ban_gpsy','>',0];
-                  if(!$ban_area_three && !$ban_number){
-                    $data['data'] = [];
-                    $data['code'] = 0;
-                    $data['msg'] = '参数错误';
-                    return json($data); 
-                  }
-                  if($ban_area_three){
-                    $where[] = ['ban_area_three','eq',$ban_area_three];
-                  }
-                  if($ban_number){
-                    $where[] = ['ban_number','in',explode(',',$ban_number)];
-                  }
-                  $banModel = new BanModel;
-                  $fields = 'count(ban_id) as total_bans,sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent,sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area,sum(ban_use_area) as total_ban_use_area,sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
-                  
-                  $data['data'] = $banModel->field($fields)->where($where)->find()->toArray();
-                  $data['code'] = 0;
-                  $data['msg'] = '';
-                  return json($data);
-                }
-              }
+  /**
+   * 统计多栋楼数据或者某社区下的楼数据
+   * =====================================
+   * @author  Lucas 
+   * email:   598936602@qq.com 
+   * Website  address:  www.mylucas.com.cn
+   * =====================================
+   * @param   ban_area_three
+   * 创建时间: 2020-05-22 16:33:30
+   * @return  返回值  
+   * @version 版本  1.0
+   */
+  public function statistics()
+  {
+    if ($this->request->isAjax()) {
+      $ban_area_three = input('ban_area_three'); //搜索某社区
+      $ban_number = input('ban_number'); //搜索某社区
+      $where = $data = [];
+      $where[] = ['ban_gpsx','>',0];
+      $where[] = ['ban_gpsy','>',0];
+      if(!$ban_area_three && !$ban_number){
+        $data['data'] = [];
+        $data['code'] = 0;
+        $data['msg'] = '暂无数据！';
+        return json($data); 
+      }
+      if($ban_area_three){
+        $where[] = ['ban_area_three','eq',$ban_area_three];
+      }
+      if($ban_number){
+        $where[] = ['ban_number','in',explode(',',$ban_number)];
+      }
+      $banModel = new BanModel;
+      $fields = 'count(ban_id) as total_bans,sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent,sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area,sum(ban_use_area) as total_ban_use_area,sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+      
+      $data['data'] = $banModel->field($fields)->where($where)->find()->toArray();
+      $data['code'] = 0;
+      $data['msg'] = '';
+      return json($data);
+    }
+  }
 
-            }
+}

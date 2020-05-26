@@ -56,7 +56,7 @@ select
 HouseID,Szno,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,IfSuspend,Status
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
-update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_diff_rent + house_pump_rent + house_protocol_rent;
+update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_protocol_rent;
 update ph_v2.ph_house_back as a left join ph_v2.ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
 
 # 更新楼栋表的户数
@@ -284,15 +284,19 @@ update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house
  */
 
 # 同步子异动表
-# drop table if exists ph_v2.ph_change_child_back;
-# create table ph_v2.ph_change_child_back like ph_v2.ph_change_child;
-# insert into ph_v2.ph_change_child_back 
-# (change_order_number,inst_id,child_step,child_remark,child_status,is_valid,child_cuid,child_ctime) 
-# select 
-# FatherOrderID,InstitutionID,Step,Reson,Status,IfValid,UserNumber,CreateTime
-# from ph_v1.ph_use_child_order;
-# update ph_v2.ph_json_data as a left join ph_v2.ph_system_user as b on a.child_cuid = b.number set a.child_cuid = b.id;
-#update ph_v2.ph_json_child as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
+drop table if exists ph_v2.ph_json_child_back;
+create table ph_v2.ph_json_child_back like ph_v2.ph_json_child;
+insert into ph_v2.ph_json_child_back 
+(change_order_number,step,remark,status,success,uid,time) 
+select 
+FatherOrderID,Step,Reson,Status,IfValid,UserNumber,CreateTime
+from ph_v1.ph_use_child_order;
+#update ph_v2.ph_json_data as a left join ph_v2.ph_system_user as b on a.child_cuid = b.number set a.child_cuid = b.id;
+update ph_v2.ph_json_child_back set step = step -1;
+update ph_v2.ph_json_child_back set action = '提交申请' where step = 1;
+update ph_v2.ph_json_child_back set action = '审批' where step > 1;update ph_v2.ph_json_child_back as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
+
+
 
 # 同步暂停计租
 drop table if exists ph_v2.ph_change_pause_back;
@@ -497,8 +501,8 @@ drop table if exists ph_v2.ph_ban;
 alter table ph_v2.ph_ban_back rename ph_v2.ph_ban;
 drop table if exists ph_v2.ph_change_cancel;
 alter table ph_v2.ph_change_cancel_back rename ph_v2.ph_change_cancel;
-#drop table if exists ph_v2.ph_change_child;
-#alter table ph_v2.ph_change_child_back rename ph_v2.ph_change_child;
+drop table if exists ph_v2.ph_json_child;
+alter table ph_v2.ph_json_child_back rename ph_v2.ph_json_child;
 drop table if exists ph_v2.ph_change_cut;
 alter table ph_v2.ph_change_cut_back rename ph_v2.ph_change_cut;
 drop table if exists ph_v2.ph_change_house;
@@ -541,3 +545,9 @@ truncate ph_v2.ph_change_process;
 truncate ph_v2.ph_ban_tai;
 truncate ph_v2.ph_house_tai;
 truncate ph_v2.ph_tenant_tai;
+
+update ph_v2.ph_ban set ban_use_id = 1 where ban_civil_area > 0 or ban_civil_rent > 0;
+update ph_v2.ph_ban set ban_use_id = 2 where ban_career_area > 0 or ban_career_rent > 0;
+update ph_v2.ph_ban set ban_use_id = 3 where ban_party_area > 0 or ban_party_rent > 0;
+update ph_v2.ph_ban as a inner join ph_v2.ph_house as b on a.ban_id = b.ban_id set ban_use_id = b.house_use_id where a.ban_use_id = 0;
+update ph_v2.ph_ban set ban_use_id = 1 where ban_use_id = 0;

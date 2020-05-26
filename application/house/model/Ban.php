@@ -71,6 +71,10 @@ class Ban extends SystemBase
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
+        // 检索产别
+        if(isset($data['ban_use_id']) && $data['ban_use_id']){
+            $where[] = ['ban_use_id','in',explode(',',$data['ban_use_id'])];
+        }
         // 检索结构类别
         if(isset($data['ban_struct_id']) && $data['ban_struct_id']){
             $where[] = ['ban_struct_id','in',explode(',',$data['ban_struct_id'])];
