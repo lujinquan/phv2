@@ -94,6 +94,7 @@
 	
 </style>
 <div class="wrapper">
+	<div class="layui-layer layui-layer-loading" id="layui-layer1" type="loading" times="1" showtime="0" contype="string" style="z-index: 19891015; top: 293.5px; left: 1036.5px;"><div id="" class="layui-layer-content layui-layer-loading0"></div><span class="layui-layer-setwin"></span></div>
 <!-- 	<div class="j-draw-btn">
 		<span class="btn" id="draw">画圈找房</span>
 		<span class="btn hide" id="exit">退出画图找房</span>
@@ -227,6 +228,7 @@
 layui.use(['table', 'jquery'], function(){
   	var table = layui.table,
 		    $ = layui.$;
+			//layui.layer.load();//加载中动画
 	function data_json(){
 		var ban_struct_id = $("select[name='ban_struct_id']").val();
 		var house_use_id = $("select[name='house_use_id']").val();
@@ -250,6 +252,7 @@ layui.use(['table', 'jquery'], function(){
 				if(result.data.length>0){
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
+					layui.layer.closeAll();//结束加载中
 					//initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
@@ -311,9 +314,9 @@ layui.use(['table', 'jquery'], function(){
   var markerList = [];
   
   //初始化地图
-  initMap()
+  initMap();
   //初始化一级数据
-  addMarker(firstData, true)
+  addMarker(firstData, true);
   
   // //搜索二级数据坐标  --此处搜索只是为了方便，如果项目实际用那就提前将坐标爬取下来
   // searchCoord(secondData)
@@ -332,7 +335,7 @@ layui.use(['table', 'jquery'], function(){
   	}); // 创建Map实例
   	map.centerAndZoom(new BMap.Point(114.326061,30.533878), 15); // 初始化地图,设置中心点坐标和地图级别
   	map.enableScrollWheelZoom(true);
-  	//监听地图级别缩放事件，当级别为9时默认加载集合点，扩大级别时显示详细点位数据
+  	//监听地图级别缩放事件，当级别为15时默认加载集合点，扩大级别时显示详细点位数据
   	map.addEventListener("zoomend", function() {
   		var zoomLevel = map.getZoom(); //获取地图缩放级别
   		if(zoomLevel <= 15) {
@@ -377,7 +380,7 @@ layui.use(['table', 'jquery'], function(){
   	//开始画圈绑定事件
   	drawBtn.addEventListener('click', function(e) {
   		var zoomLevel = map.getZoom();
-  		if(zoomLevel<=15){
+  		if(zoomLevel<=17){
 			layer.msg("请放大地图后使用画图找房！");
   			return;
   		}
@@ -410,7 +413,6 @@ layui.use(['table', 'jquery'], function(){
   	
   	//为地图绑定鼠标按下事件(开始画圈)
   	map.addEventListener('mousedown',function(e){
-		console.log("是否开始画圈了！")
   		//如果处于画圈状态下,清空上次画圈的数据结构,设置isMouseDown进入画圈鼠标按下状态
   		if(isInDrawing){
 			console.log("开始画圈了！")
@@ -427,6 +429,7 @@ layui.use(['table', 'jquery'], function(){
   		//如果处于画圈状态下 且 鼠标是按下状态
   		if(isInDrawing && isMouseDown) {
   			//退出画线状态
+			
   			isMouseDown = false;
   			//添加多边形覆盖物,设置为禁止点击
 			//console.log("画圈",polyPointArray)
@@ -441,10 +444,23 @@ layui.use(['table', 'jquery'], function(){
   			map.addOverlay(polygon);
   			//保存多边形,用于后续删除该多边形
   			polygonAfterDraw = polygon
+			/*
+			  *画圈完成解除鼠标限制
+			*/
   			//包含情况
   			show(polygon);
+			//恢复地图移动点击等操作
+			map.enableDragging();
+			map.enableScrollWheelZoom();
+			map.enableDoubleClickZoom();
+			map.enableKeyboard();
+			map.setDefaultCursor('default');
+			
+			//设置标志位退出画圈状态
+			isInDrawing = false;
+			
      //        alert("画圈完成");
-  			// map.setZoom(15);
+  			//map.setZoom(18);
   		}
   	});
   	//为地图绑定鼠标移动事件(触发画图)
@@ -494,6 +510,7 @@ layui.use(['table', 'jquery'], function(){
   		}
   	}
 	console.log("画圈数据完成：",pointInPolygonArray.join(","));
+	
 	let ban_number = pointInPolygonArray.join(",");//社区代号
 	$.ajax({
 		type:"post",// 请求方式
