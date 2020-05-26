@@ -45,6 +45,16 @@
 					</select>
 			  </div>
 			  {/if}
+			  {if condition="in_array('ban_use_id',$config['ban_info_search'])"}
+				<div class="layui-input-inline  j-width-115 j-margin-10">
+					<select name="ban_use_id" xm-select="ban_use_id">
+						<option value="" disabled="disabled">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
 			  {if condition="in_array('ban_struct_id',$config['ban_info_search'])"}
 			  <div class="layui-input-inline j-width-110 j-margin-10">
 					<select name="ban_struct_id" xm-select="ban_struct_id">
@@ -157,6 +167,9 @@
 						,{field: 'ban_address',minWidth:200,align:'center', title: '地址'}
 						,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
 							return params.owners[d.ban_owner_id];
+						}}
+						,{field: 'ban_use_id', minWidth: 80, align:'center', title: '使用性质', templet: function(d) {
+							return params.uses[d.ban_use_id];
 						}}
 						,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
 							return params.structs[d.ban_struct_id];

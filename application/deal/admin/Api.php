@@ -37,14 +37,14 @@ class Api extends Common
         debug('begin');
         
         // 1、处理 child_json 数据
-        $allChildData = Db::name('json_child')->field("change_order_number,success,step,uid,from_unixtime(time,'%Y-%m-%d %H:%i:%s') as time,action,img")->select();
+        $allChildData = Db::name('json_child')->field("change_order_number,success,step,uid,from_unixtime(time,'%Y-%m-%d %H:%i:%s') as time,CONCAT(action,remark) as action,img")->select();
         $result = [];
         foreach($allChildData as $k => $v){
             $number = $v['change_order_number'];
             unset($v['change_order_number']);
             $result[$number][] = $v;
         }
-//halt(input('type'));
+//halt($allChildData);
         switch ((int)input('type')) {
             
             case 1:
