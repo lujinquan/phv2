@@ -92,6 +92,7 @@ class HouseReport extends Model
             $where[] = ['ban_owner_id','in',[1,2,3,5,6,7]];
         }
         $where[] = ['ban_inst_id','in',config('inst_ids')[$ins]];
+        $where[] = ['ban_status','eq',1];
 
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($belowWhere)->where([['house_status','eq',1]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
 
@@ -200,6 +201,7 @@ class HouseReport extends Model
             $where[] = ['ban_owner_id','in',[1,2,3,5,6,7]];
         }
         $where[] = ['ban_inst_id','in',config('inst_ids')[$ins]];
+        $where[] = ['ban_status','eq',1];
 
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($belowWhere)->where([['house_status','eq',1]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
 
@@ -326,6 +328,7 @@ class HouseReport extends Model
         }elseif($owner == 12){
             $where[] = ['ban_owner_id','in',[1,2,3,5,6,7]];
         }
+        $where[] = ['ban_status','eq',1];
 
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($where)->where([['house_status','eq',1],['ban_inst_id','in',config('inst_ids')[$ins]]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
         $institutions = config('inst_check_names')[$ins];
@@ -501,6 +504,7 @@ class HouseReport extends Model
         }elseif($owner == 12){
             $where[] = ['ban_owner_id','in',[1,2,3,5,6,7]];
         }
+        $where[] = ['ban_status','eq',1];
 
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($belowWhere)->where([['house_status','eq',1],['ban_inst_id','in',config('inst_ids')[$ins]]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
 
@@ -662,6 +666,7 @@ class HouseReport extends Model
             $where[] = ['ban_owner_id','in',[1,2,3,5,6,7]];
         }
         $where[] = [['ban_inst_id','in',config('inst_ids')[$ins]]];
+        $where[] = ['ban_status','eq',1];
 
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($belowWhere)->where([['house_status','eq',1]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
 
