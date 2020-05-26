@@ -17,6 +17,7 @@ use app\system\admin\Admin;
 use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
@@ -77,6 +78,7 @@ class Recharge extends Admin
                 return $this->error('充值失败');
             }
             $house_info->house_balance = $filData['yue'];
+            $house_info->save();
             //增加房屋台账记录
             $HouseTaiModel = new HouseTaiModel;
             $HouseTaiModel->house_id = $house_info['house_id'];
