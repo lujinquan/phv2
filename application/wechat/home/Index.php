@@ -563,7 +563,8 @@ class Index extends Common
                 $row->recharge_status = 1; //充值状态，1充值成功
                 $row->save();
                 // 更新房屋余额
-                $house_info = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
+                $HouseModel = new HouseModel;
+                $house_info = $HouseModel->where([['house_id','eq',$row['house_id']]])->find();
                 $yue = bcaddMerge([$house_info['house_balance'],$pay_rent]);
                 $house_info->house_balance = $yue;
                 $house_info->save();
