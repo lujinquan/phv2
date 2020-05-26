@@ -555,18 +555,22 @@ class Index extends Common
             // 更新预付订单
             if($row){
                 $pay_rent = $data['total_fee'] / 100;
-                // 更新预付订单
-                $row->transaction_id = $data['transaction_id'];
-                $row->ptime = strtotime($data['time_end']); //支付时间
-                $row->pay_rent = $pay_rent; //支付金额，单位：分
-                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
-                $row->recharge_status = 1; //充值状态，1充值成功
-                $row->save();
+
                 // 更新房屋余额
                 $house_info = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
                 $yue = bcaddMerge([$house_info['house_balance'],$pay_rent]);
                 $house_info->house_balance = $yue;
                 $house_info->save();
+
+                // 更新预付订单
+                $row->transaction_id = $data['transaction_id'];
+                $row->ptime = strtotime($data['time_end']); //支付时间
+                $row->pay_rent = $pay_rent; //支付金额，单位：分
+                $row->yue = $yue; //支付金额，单位：分
+                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
+                $row->recharge_status = 1; //充值状态，1充值成功
+                $row->save();
+                
                 
                 // 添加房屋台账【待测】
                 $HouseTaiModel = new HouseTaiModel;
