@@ -76,12 +76,14 @@
   	  	<input type="text" name="register_bodies" value="{$params['pay_way'][$data_info['pay_way']]}" disabled="disabled"  autocomplete="off" class="layui-input">
   	  </div>
   	</div>
+    {if condition="$data_info['pay_way'] == 4"}
     <div class="layui-col-md4">
       <label class="j-form-label">充值会员</label> 
       <div class="j-input-inline">
         <input type="text" name="register_bodies" value="{$data_info['member_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
+    {/if}
   	<div class="layui-col-md4">
   	  <label class="j-form-label">订单状态</label> 
   	  <div class="j-input-inline">

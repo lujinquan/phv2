@@ -15,6 +15,7 @@ namespace app\rent\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
+use app\house\model\House as HouseModel;
 use app\rent\model\Rent as RentModel;
 use app\house\model\HouseTai as HouseTaiModel;
 
