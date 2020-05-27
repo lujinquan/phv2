@@ -36,11 +36,13 @@ class House extends Admin
             $data['data'] = [];
 
             //$dataJson = Db::name('report')->where([['type','eq','HouseReport'],['date','eq',str_replace('-','',$date)]])->value('data');
+            // 先取缓存的数据
             $dataJson = @file_get_contents(ROOT_PATH.'file/report/house/'.str_replace('-','',$date).'.txt');
             if($dataJson){
                 $datas = json_decode($dataJson,true);
                 $data['data'] = $datas[$type][$owner][$inst];
             }
+            // 找不到本月数据就直接获取实时数据（仅限本月份）
             if(!$dataJson && $date == date('Y-m')){
                 $HouseReportModel = new HouseReportModel;
                 //dump($type);dump($owner);halt($inst);

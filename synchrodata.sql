@@ -286,16 +286,23 @@ update ph_v2.ph_change_use_back a,ph_v2.ph_house_back b set a.house_id = b.house
 # 同步子异动表
 drop table if exists ph_v2.ph_json_child_back;
 create table ph_v2.ph_json_child_back like ph_v2.ph_json_child;
+insert into ph_v2.ph_json_child_back
+(change_order_number,step,success,uid,time) 
+select 
+ChangeOrderID,Status,Status,UserNumber,CreateTime
+from ph_v1.ph_change_order where ph_v1.ph_change_order.Status in (0,1);
 insert into ph_v2.ph_json_child_back 
 (change_order_number,step,remark,status,success,uid,time) 
 select 
 FatherOrderID,Step,Reson,Status,IfValid,UserNumber,CreateTime
 from ph_v1.ph_use_child_order;
 #update ph_v2.ph_json_data as a left join ph_v2.ph_system_user as b on a.child_cuid = b.number set a.child_cuid = b.id;
-update ph_v2.ph_json_child_back set step = step -1;
+update ph_v2.ph_json_child_back set step = 1 where step = 0;
 update ph_v2.ph_json_child_back set action = '提交申请' where step = 1;
 update ph_v2.ph_json_child_back set action = '审批' where step > 1;update ph_v2.ph_json_child_back as a left join ph_v2.ph_system_user as b on a.uid = b.number set a.uid = b.id;
 
+#drop table if exists ph_v2.ph_json_child;
+#alter table ph_v2.ph_json_child_back rename ph_v2.ph_json_child;
 
 
 # 同步暂停计租

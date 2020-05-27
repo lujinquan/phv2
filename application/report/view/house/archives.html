@@ -1,3 +1,4 @@
+<!-- 房屋统计报表 -->
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
 	      <form class="layui-form layui-form-pane" >
@@ -423,8 +424,8 @@
 		$('#button_create').click(function(){
 			var that = $(this);
 			that.prop('disabled', true);
-			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
-
+			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中，大约需要6分钟……');
+			//return false;
 			$.post('{:url('house/makeArchivesReport')}', function(res) {
                 layer.msg(res.msg, {time:5000},function(){
                 	location.reload();
