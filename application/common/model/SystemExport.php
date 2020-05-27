@@ -87,7 +87,7 @@ class SystemExport extends Model
 
         	//主体数据的数据过滤
 	        $tableData = $this->dataFormat($tableData);
-			
+			//halt($tableData);
 			//dump(memory_get_usage() / 1024 / 1024); //46M
 			
         	$objPHPExcel->setActiveSheetIndex(0);

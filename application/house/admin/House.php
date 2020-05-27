@@ -446,7 +446,7 @@ class House extends Admin
                     'FileName' => '房屋数据',
                     'Title' => '房屋数据',
                 ];
-                
+                //halt($tableData);
                 return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
             }else{
                 $result = [];
