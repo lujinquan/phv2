@@ -26,7 +26,6 @@ class House extends Admin
 
     public function index()
     {
-
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
