@@ -239,16 +239,17 @@ layui.use(['table', 'jquery'], function(){
 			type:"post",// 请求方式
 			url:"{:url('map/index')}",
 			data :{
-				'ban_struct_id':ban_struct_id
-				,'house_use_id':house_use_id
-				,'ban_inst_id':ban_inst_id
-				,'ban_damage_id':ban_damage_id
-				,'ban_owner_id':ban_owner_id
+				'ban_struct_id':ban_struct_id,
+				'house_use_id':house_use_id,
+				'ban_inst_id':ban_inst_id,
+				'ban_damage_id':ban_damage_id,
+				'ban_owner_id':ban_owner_id
 			},//这里是前台传到后台的数据
 			async:false,// 同步异步
 			dataType:"json",
 		   //回调函数
 			success:function(result){
+				console.log("所有数据:",result)
 				if(result.data.length>0){
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
@@ -380,7 +381,7 @@ layui.use(['table', 'jquery'], function(){
   	//开始画圈绑定事件
   	drawBtn.addEventListener('click', function(e) {
   		var zoomLevel = map.getZoom();
-  		if(zoomLevel<=17){
+  		if(zoomLevel<=16){
 			layer.msg("请放大地图后使用画图找房！");
   			return;
   		}
@@ -528,7 +529,7 @@ layui.use(['table', 'jquery'], function(){
 			$(".j-houseList .close_list").css("display","");
 			$(".close_list i").removeClass("j-icon-youkuohao");
 			$(".close_list i").addClass("j-icon-zuokuohao");
-			if(result.msg=="参数错误"){
+			if(result.code!="0"){
 				layer.msg("暂无数据！");
 				$("#total_bans").text("");//栋数
 				$("#ban_holds").text("");//户数
@@ -542,7 +543,7 @@ layui.use(['table', 'jquery'], function(){
 				  elem: '#tenant'
 				  ,id: 'tenant'
 				  ,height: 330
-				  ,url: '{:url("house/Ban/index")}?ban_number=123456'//数据接口
+				  ,url: '{:url("house/Ban/index")}?ban_number=123456789'//数据接口
 				  ,page: true //开启分页
 					,skin:'nob'
 					,limit: 10
