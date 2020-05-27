@@ -249,13 +249,8 @@
         });
 		
 		$('#button_prints').click(function(){
-			var queryWhere = new Object();
-        	queryWhere.ban_inst_id = $("input[name='ban_inst_id']").val();  // 搜索楼栋编号
-			queryWhere.ban_address = $("input[name='ban_address']").val();  // 搜索地址
-			queryWhere.ban_owner_id = $("select[name='ban_owner_id']").val(); // 搜索产别
-			queryWhere.ban_stuct_id = $("select[name='ban_stuct_id']").val(); // 搜索结构类别
-			queryWhere.ban_damage_id = $("select[name='ban_damage_id']").val(); // 搜索完损等级
-			queryWhere.group = $("input[name='group']").val(); // 搜索楼栋状态
+			var queryWhere = $('#hisi-table-search').serialize();
+			console.log('导出的条件：',queryWhere);
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式
