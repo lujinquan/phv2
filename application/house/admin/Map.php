@@ -84,9 +84,10 @@ class Map extends Admin
       // $where[] = ['ban_gpsy','>',0];
       if(!$ban_area_three && !$ban_number){
         $data['data'] = [];
-        $data['code'] = 0;
+        $data['code'] = 1;
         $data['msg'] = '暂无数据！';
         return json($data); 
+        //return $this->error('暂无数据！');
       }
       // if($ban_area_three){
       //   $where[] = ['ban_area_three','eq',$ban_area_three];
