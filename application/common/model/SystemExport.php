@@ -39,6 +39,9 @@ class SystemExport extends Model
     public function exportExcel($tableData = array() , $titleArr = array() , $sheetType = 1 , $tableInfo = array() , $downloadType = 1)
 	{
 		//ob_clean();
+
+		set_time_limit(0);
+
 		if(empty($tableData)){
 			return $this->error('暂无数据导出！');
 		}
@@ -82,6 +85,11 @@ class SystemExport extends Model
         //如果只有一个工作组
         if($sheetType == 1){ 
 
+        	//主体数据的数据过滤
+	        $tableData = $this->dataFormat($tableData);
+			
+			//dump(memory_get_usage() / 1024 / 1024); //46M
+			
         	$objPHPExcel->setActiveSheetIndex(0);
 	        //设置当前活动sheet的名称
 	        $objPHPExcel->getActiveSheet()->setTitle($tableInfo['Title']);
@@ -103,9 +111,8 @@ class SystemExport extends Model
 	            $i++;
 	        }
 
-	        //主体数据的数据过滤
-	        $tableData = $this->dataFormat($tableData);
-			
+	        //dump(memory_get_usage() / 1024 / 1024); //47M
+
 			//从第2行开始向Excel中写数据
 	        $j = 2; 
 	        foreach ($tableData as $rowIndex => $row) {
@@ -120,16 +127,18 @@ class SystemExport extends Model
 	        		//$objPHPExcel->getActiveSheet()->setCellValueExplicit($letter[$keyIndexArr[$rIndex]]. $j ,$r,\PHPExcel_Cell_DataType::TYPE_STRING);
 		            //$objPHPExcel->getActiveSheet()->setCellValue($letter[$keyIndexArr[$rIndex]]. $j , $r . "\t" );  // $r . "\t"
 		            //$i++;
+		            unset($r);
 		        }
 		        $j++;
 		        unset($row); //主动销毁变量，否则当数据量过大会报错内存溢出：Allowed memory size ……
 	        }
-
+	        //dump(memory_get_usage() / 1024 / 1024); // 118M
 	    //如果有多个工作组
         }else{
 
         }
 
+        //halt(memory_get_usage() / 1024 / 1024);
 
         //生成excel表格，自定义名
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
