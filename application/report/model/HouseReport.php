@@ -333,10 +333,18 @@ class HouseReport extends Model
         $below = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where($where)->where([['house_status','eq',1],['ban_inst_id','in',config('inst_ids')[$ins]]])->group('house_use_id')->column('house_use_id ,count(house_id) as house_ids');; //底部的户数统计
         $institutions = config('inst_check_names')[$ins];
 
-        if(count($institutions) > 1){
-            unset($institutions[$ins]);
+        if(count($institutions) > 1){ //不直接显示区公司和所
+            if(isset($institutions[1])){
+                unset($institutions[1]);
+            }
+            if(isset($institutions[2])){
+                unset($institutions[2]);
+            }
+            if(isset($institutions[3])){
+                unset($institutions[3]);
+            }
         }
-        
+ //dump(config('inst_ids')[$ins]);halt($institutions);       
         //$k = 1 ,2 ,3 ,4 ,5 ,6 ,7 分别表示结构等级为 钢混 ，砖木三等 ，砖木二等 ，砖混一等 ，砖混二等 ，砖木一等 ，简易
         foreach($institutions as $k1 => $v1){
 

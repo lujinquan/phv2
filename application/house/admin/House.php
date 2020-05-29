@@ -26,7 +26,6 @@ class House extends Admin
 
     public function index()
     {
-
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -446,7 +445,7 @@ class House extends Admin
                     'FileName' => '房屋数据',
                     'Title' => '房屋数据',
                 ];
-                
+                //halt($tableData);
                 return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
             }else{
                 $result = [];

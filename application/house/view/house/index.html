@@ -272,16 +272,9 @@
 			}
 		}, isShowInst,isHide,templet_width);
 		$('#button_prints').click(function(){
-			var queryWhere = new Object();
-        	queryWhere.house_number = $("input[name='house_number']").val();  // 搜索房屋编号
-        	queryWhere.ban_number = $("input[name='ban_number']").val();  // 搜索楼栋编号
-			queryWhere.tenant_name = $("input[name='tenant_name']").val();  // 搜索租户名
-			queryWhere.ban_address = $("input[name='ban_address']").val(); // 搜索地址
-			queryWhere.ban_inst_id = $("select[name='ban_inst_id']").val(); // 搜索机构
-			queryWhere.ban_owner_id = $("select[name='ban_owner_id']").val(); // 搜索产别
-			queryWhere.house_use_id = $("select[name='house_use_id']").val(); // 搜索使用性质
-			queryWhere.group = $("input[name='group']").val(); // 搜索房屋状态
-			//console.log(queryWhere);
+			var queryWhere = $('#hisi-table-search').serialize();
+			console.log('导出的条件：',queryWhere);
+			//return false;
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式

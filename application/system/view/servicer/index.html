@@ -1,4 +1,12 @@
-
+    <br>
+    <div class="layui-collapse page-tips">
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">重要提示</h2>
+        <div class="layui-colla-content layui-show">
+          <p class="red">以下为当前服务器配置，若有红色标识的部分，请联系超级管理员调整配置信息！！！</p>
+        </div>
+      </div>
+    </div>
 
   <div class="layui-row">
     <div class="layui-col-md6">
@@ -54,15 +62,15 @@
         <tbody>
             <tr>
                 <td>允许单文件上传最大</td>
-                <td>{:ini_get('upload_max_filesize')}</td>
+                <td>{$upload_max_filesize}&nbsp;&nbsp;{if(substr($upload_max_filesize,0,-1) < 2)}<span style="color:red">（推荐设置2M）</span>{/if}</td>
             </tr>
             <tr>
                 <td>post能传递的最大数据</td>
-                <td>{:ini_get('post_max_size')}</td>
+                <td>{$post_max_size}</td>
             </tr>
             <tr>
                 <td>是否已开启安全模式</td>
-                <td>{if condition="ini_get('save_mode')"}是{else /}否{/if}</td>
+                <td>{if condition="$save_mode"}是{else /}否{/if}</td>
             </tr>
             <tr>
                 <td>单个脚本最大执行时间</td>
@@ -70,18 +78,22 @@
             </tr>
             <tr>
                 <td>是否报告内存泄漏</td>
-                <td>{if condition="ini_get('report_memleaks')"}是{else /}否{/if}</td>
+                <td>{if condition="$report_memleaks"}是{else /}否{/if}</td>
             <tr>
                 <td>是否允许使用dl函数</td>
-                <td>{if condition="ini_get('enable_dl')"}是{else /}否{/if}</td>
+                <td>{if condition="$enable_dl"}是{else /}否{/if}</td>
             </tr>
             <tr>
                 <td>socket接口的超时时间</td>
-                <td>{:ini_get('default_socket_timeout')}s</td>
+                <td>{$default_socket_timeout}s</td>
             </tr>
             <tr>
                 <td>最大表单提交变量数</td>
-                <td>{:ini_get('max_input_vars')}</td>
+                <td>{$max_input_vars}</td>
+            </tr>
+            <tr>
+                <td>PHP内存限制</td>
+                <td>{$memory_limit}&nbsp;&nbsp;{if(substr($memory_limit,0,-1) < 256)}<span style="color:red">（推荐设置256M）</span>{/if}</td>
             </tr>
         </tbody>
     </table>

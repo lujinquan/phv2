@@ -437,6 +437,9 @@ class Api extends Common
             $housearr = explode(',', $d['house_id']);
             $datajson = [];
             if(count($housearr) == 1){
+                if(!isset($housesss[$housearr[0]])){
+                    continue;
+                }
                 $datajson[0] = $housesss[$housearr[0]];
                 $implodeHouses = $housearr[0];
             }else{

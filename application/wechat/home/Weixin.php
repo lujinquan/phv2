@@ -1062,7 +1062,7 @@ class Weixin extends Common
 
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         // 去掉暂停计租的房子+已注销的房子
-        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
+        $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
             //,['tenant_id','eq',$v['tenant_id']]

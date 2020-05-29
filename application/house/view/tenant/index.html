@@ -161,13 +161,8 @@
 		}, isShowInst,isHide)
 
 		$('#button_prints').click(function(){
-			var queryWhere = new Object();
-        	queryWhere.tenant_number = $("input[name='tenant_number']").val();  // 搜索租户编号
-			queryWhere.tenant_name = $("input[name='tenant_name']").val();  // 搜索租户名
-			queryWhere.tenant_tel = $("input[name='tenant_tel']").val(); // 搜索租户手机号
-			queryWhere.ban_inst_id = $("select[name='ban_inst_id']").val(); // 搜索机构
-			queryWhere.tenant_card = $("select[name='tenant_card']").val(); // 搜索租户身份证号
-			queryWhere.group = $("input[name='group']").val(); // 搜索房屋状态
+			var queryWhere = $('#hisi-table-search').serialize();
+			console.log('导出的条件：',queryWhere);
 			//console.log(queryWhere);
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({

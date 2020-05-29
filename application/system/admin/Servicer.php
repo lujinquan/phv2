@@ -47,7 +47,26 @@ class Servicer extends Admin
      */
     public function index($q = '')
     {
-    	//halt(ini_get('save_mode'));
+        $memory_limit = ini_get('memory_limit');
+        $max_input_vars = ini_get('max_input_vars');
+        $default_socket_timeout = ini_get('default_socket_timeout');
+        $enable_dl = ini_get('enable_dl');
+        $report_memleaks = ini_get('report_memleaks');
+        $max_execution_time = ini_get('max_execution_time');
+        $save_mode = ini_get('save_mode');
+        $post_max_size = ini_get('post_max_size');
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $this->assign([
+            'memory_limit' => $memory_limit,
+            'max_input_vars' => $max_input_vars,
+            'default_socket_timeout' => $default_socket_timeout,
+            'enable_dl' => $enable_dl,
+            'report_memleaks' => $report_memleaks,
+            'max_execution_time' => $max_execution_time,
+            'save_mode' => $save_mode,
+            'post_max_size' => $post_max_size,
+            'upload_max_filesize' => $upload_max_filesize,
+        ]);
     	return $this->fetch();
     }
 
