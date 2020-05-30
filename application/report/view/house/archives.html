@@ -1,7 +1,7 @@
 <!-- 房屋统计报表 -->
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
-	      <form class="layui-form layui-form-pane" >
+	      <form class="layui-form layui-form-pane" id="report-form">
 			<div class="j-search-fl layui-col-md6  fl">
 		        {if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:140px;">
@@ -427,12 +427,13 @@
 			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中，大约需要6分钟……');
 			//return false;
 			$.post('{:url('house/makeArchivesReport')}', function(res) {
+				that.prop('disabled', false);
+				that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成本月报表');
                 layer.msg(res.msg, {time:5000},function(){
-                	location.reload();
+                	archives_data();
+                	//location.reload();
                 });
             });
-			// that.prop('disabled', false);
-			// that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成报表');
 
 		})
 

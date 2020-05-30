@@ -174,13 +174,25 @@
 		    		content: "{:url('turnForm')}?hisi_iframe=yes",
 		    		yes: function(index, layero){
 		    			var data = $('.layui-form').serialize();
-		    			// 待优化
-		    			var transferDom = document.getElementById('layui-layer-iframe1').contentWindow.document.getElementsByClassName('layui-this'); //获取弹出iframe下的选中状态元素 
-						console.log('transferDom:',transferDom);
-						var transfer_to = $(transferDom).attr('lay-value'); 
+		    			console.log('data的数据：',data);
+		    			
+		    			// 一、取出表单内的单个元素值
+		    			// var layerFormInput = $('.layui-layer-iframe iframe[scrolling="auto"]')[0].contentDocument.getElementsByClassName('layui-this');
+		    			// var transfer_to = $(layerFormInput).attr('lay-value');
+		    			
+		    			// 二、取出个表单内的所有元素值
+		    			var layerForm = $('.layui-layer-iframe iframe[scrolling="auto"]')[0].contentDocument.getElementsByClassName('layui-form');
+		    			var layerFormData = $(layerForm).serialize();
+		    			//getElementsByClassName('layui-this');
+						//console.log($(layerForm).serialize());
+		    			//console.log($(na).attr('lay-value'));
+		    			//return false;
+		    			//var transferDom = document..contentWindow.document.getElementsByClassName('layui-this'); //获取弹出iframe下的选中状态元素 
+						// console.log('transferDom:',transferDom);
+						// var transfer_to = $(transferDom).attr('lay-value'); 
 						//var transfer_to = $('.layui-this').attr('lay-value'); 
-		    			var dataNew = $.param({transfer_to:transfer_to})+'&'+data;
-	
+						var dataNew = layerFormData +'&'+ data;
+						console.log('新的data的数据：',dataNew);
 						if(!$('.layui-layer-btn0').hasClass('disabled')){
 							$('.layui-layer-btn0').addClass('disabled').text('提交中...');
 							formSubmit('post',"{:url('transfer')}",dataNew,index);

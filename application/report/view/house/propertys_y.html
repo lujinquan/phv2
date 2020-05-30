@@ -5,7 +5,7 @@
 {else /}
 <div class="j-table-content j-no-title j-reportform">
   <div class="page-toolbar j-page-toolbar clearfix">
-        <form class="layui-form layui-form-pane">
+        <form class="layui-form layui-form-pane" id="report-form">
   		<div class="j-search-fl layui-col-md4  fl">
   			{if condition="$Think.INST_LEVEL == 1"}
   			<div class="layui-input-inline" style="width:140px;">
@@ -202,10 +202,21 @@
 			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
 
 			$.post('{:url('house/makeYearPropertysReport')}', function(res) {
-                layer.msg(res.msg, {time:5000}, function(){
-                    if (res.code != 0) {
-                        location.reload();
-                    } 
+                layer.msg(res.msg, {time:3000}, function(){
+                	that.prop('disabled', false);
+					that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成本年报表');
+					var queryWhere = $('#report-form').serialize();
+					console.log('生成报表后查询的条件：',queryWhere);
+                    $.get("{:url()}?group=m", queryWhere ,function(res){
+						console.log('生成报表后查询成功！');
+						if(res.code == 1){
+							$('.j-report-table').html(_html);
+							insert_data(res);
+						}else{
+							//layer.msg(res.msg);
+							$('.j-report-table').html('<div class="j-no-contents"><i class="layui-icon iconfont j-icon-wushuju"></i>'+res.msg+'</div>');
+						}
+					}); 
                 });
             });
 // that.prop('disabled', false);
