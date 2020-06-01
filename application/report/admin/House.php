@@ -73,27 +73,10 @@ class House extends Admin
         //if ($this->request->isAjax()) {
             set_time_limit(0);
             $date = date('Ym');
-            //$date = 201909;
-            //Debug::remark('begin');
+
             $HouseReportModel = new HouseReportModel;
             $HouseReportdata = $HouseReportModel->makeHouseReport($date);
-            //Debug::remark('end');
-            //$where = [['type','eq','HouseReport'],['date','eq',$date]];
-
-            //$ReportModel = new ReportModel;
-            //$res = $ReportModel->where($where)->find();
             file_put_contents(ROOT_PATH.'file/report/house/'.$date.'.txt', json_encode($HouseReportdata));
-            // if($res){
-            //     $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
-
-            // }else{
-            //     $re = $ReportModel->create([
-            //         'data'=>json_encode($HouseReportdata),
-            //         'type'=>'HouseReport',
-            //         'date'=>$date,
-            //     ]);
-            // }
-            
             $data = [];
             $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
             $data['code'] = 1;
@@ -124,8 +107,12 @@ class House extends Admin
 
             $data = [];
             // $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
-            $dataJson = file_get_contents(ROOT_PATH.'file/report/property/'.str_replace('-','',$date).'.txt');
-
+            $dataJson = @file_get_contents(ROOT_PATH.'file/report/property/'.str_replace('-','',$date).'.txt');
+            if(!$dataJson){
+                $data['code'] = 0;
+                $data['msg'] = '暂无数据！';
+                return json($data);
+            }
             $datas = json_decode($dataJson,true);
             $data['data'] = $datas?$datas[$owner][$inst]:array();
             $data['msg'] = '';

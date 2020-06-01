@@ -101,8 +101,7 @@ class SystemExport extends Model
 	        
 	        foreach($titleArr as $titleIndex => $titleRow){ 
 	        	$keyIndexArr[$titleRow['field']] = $titleIndex; //将键名与索引对应
-	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$i].'1' , $titleRow['title'] ); 
-	            
+	            $objPHPExcel->getActiveSheet()->setCellValue($letter[$i].'1' , $titleRow['title'] );
 	            $objPHPExcel->getActiveSheet()->getStyle($letter[$i].'1')->getFont()->setBold(true);
 	            //$objPHPExcel->getActiveSheet()->getColumnDimension($letter[$i])->setAutoSize(true);
 				$objPHPExcel->getActiveSheet()->getColumnDimension($letter[$i])->setWidth($titleRow['width']); 

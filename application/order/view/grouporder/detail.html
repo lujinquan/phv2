@@ -168,9 +168,12 @@
             yes: function(index, layero){
               
               var data = $('.layui-form').serialize();
-              var transferDom = document.getElementById('layui-layer-iframe1').contentWindow.document.getElementsByClassName('layui-this'); //获取弹出iframe下的选中状态元素 
-              var transfer_to = $(transferDom).attr('lay-value'); 
-              var dataNew = $.param({transfer_to:transfer_to})+'&'+data;
+
+              var layerForm = $('.layui-layer-iframe iframe[scrolling="auto"]')[0].contentDocument.getElementsByClassName('layui-form');
+              var layerFormData = $(layerForm).serialize();
+
+              var dataNew = layerFormData +'&'+ data;
+              console.log('新的data的数据：',dataNew);
       
               if(!$('.layui-layer-btn0').hasClass('disabled')){
                 $('.layui-layer-btn0').addClass('disabled').text('提交中...');

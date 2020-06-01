@@ -1,4 +1,12 @@
 <script src="__PUBLIC_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
+{if condition="isset($hisi_iframe) && $hisi_iframe"}
+<!-- 弹出层加载的内容 -->
+<script type="text/javascript" src="__PUBLIC_JS__/jquery.2.1.4.min.js?v={:config('hisiphp.version')}"></script>
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+{else /}
+<!-- 非弹出层（正常页面）加载的内容 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+{/if}
 <div params="{if condition='isset($paramsJson)'}{$paramsJson}{/if}" isShowInst="{if condition='isset($inst_level)'}{$inst_level}{/if}" id="paramsJson"></div>
 <script>
     var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 50;

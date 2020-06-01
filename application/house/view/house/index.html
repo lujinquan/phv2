@@ -165,7 +165,8 @@
 	<button class="layui-btn layui-btn-xs layui-btn-disabled">租约</button>
 	{{#  } }}
 	{/if}
-    <a href="{:url('detail')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+	<a href="{:url('detail')}?id={{ d.house_id }}" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+    
     <a href="{:url('tenant/detail')}?id={{ d.tenant_id }}&jump=house" hisi-data="{width: '1000px', height: '600px',refresh: 2}" title="租户详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">租户</a>
 </script>
 </div>

@@ -44,6 +44,21 @@ class Room extends SystemBase
         $where = [];
         $where['ban'] = [];
         $where['room'] = [];
+        $group = isset($data['group'])?$data['group']:'y';
+        switch ($group) {
+            case 'y':
+                $where['room'][] = ['room_status','eq',1];
+                break;
+            case 'x':
+                $where['room'][] = ['room_status','eq',0];
+                break;
+            case 'z':
+                $where['room'][] = ['room_status','>',1];
+                break;
+            default:
+                $where['room'][] = ['room_status','eq',1];
+                break;
+        }
         // 检索楼栋编号
         if(isset($data['ban_number']) && $data['ban_number']){
             $where['room'][] = ['ban_number','like','%'.$data['ban_number'].'%'];
@@ -65,9 +80,9 @@ class Room extends SystemBase
         if(isset($data['room_pub_num']) && $data['room_pub_num']){
             $where['room'][] = ['room_pub_num','in',explode(',',$data['room_pub_num'])];
         }
-        if(isset($data['room_status']) && $data['room_status'] != ''){
-            $where['room'][] = ['room_status','in',explode(',',$data['room_status'])];
-        }
+        // if(isset($data['room_status']) && $data['room_status'] != ''){
+        //     $where['room'][] = ['room_status','in',explode(',',$data['room_status'])];
+        // }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);

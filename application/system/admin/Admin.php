@@ -173,7 +173,7 @@ class Admin extends Common
                 // ];
                 // current 可不传
                 // $this->assign('hisiTabData', ['menu' => $hisiTabData, 'current' => 'system/index/index']);
-                
+                $this->assign('hisi_iframe', input('hisi_iframe',''));
                 $this->assign('hisiTabData', '');
                 $this->assign('http_type', $http_type);
                 // 表单数据默认变量名
