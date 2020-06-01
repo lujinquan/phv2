@@ -54,13 +54,15 @@
 		    <th>核销类型</th>
 		    <th>以前年</th>
 		    <th>以前月</th>
+			<th>总金额</th>
 		  </tr>
 	  </thead>
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input type="number" value="{$data_info['before_year_rent']}" readonly class="layui-input"></td>
-		  <td id="before_month"><input type="number" value="{$data_info['before_month_rent']}" readonly class="layui-input"></td>
+		  <td id="before_year"><input type="number" id="before_year_rent" value="{$data_info['before_year_rent']}" readonly class="layui-input"></td>
+		  <td id="before_month"><input type="number" id="before_month_rent" value="{$data_info['before_month_rent']}" readonly class="layui-input"></td>
+		  <td id="total_sum">0</td>
 	   </tr>
 	 </tbody>
 	</table>
@@ -182,6 +184,12 @@
 				}
 			});
 		})
+		//计算总金额
+		var sums=0;
+		summoney();
+		function summoney(){
+			$("#total_sum").text((parseFloat($("#before_year_rent").val()).toFixed(2)*100+parseFloat($("#before_month_rent").val()).toFixed(2)*100).toFixed(2) / 100);
+		}
 	});
 	//图片查看
 	$('.j-viewer-img').viewer({

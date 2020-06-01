@@ -82,9 +82,9 @@
 	.j-building-info{ font-size: 12px;}
 	.j-tenant-info .layui-table td,.j-tenant-info .layui-table th{font-size: 12px;}
 	.j-building-info h1,.j-tenant-info h1{ font: 14px/35px '';color: #007AFF;}
-	.j-search-box{ position: absolute;top:60px;right: 20px; z-index: 1;}
-	.j-search-box li{ width: 100px; margin-right: 10px; float: left; box-shadow: 0px 2px 4px 0px rgba(155,155,155,0.62);}
-	.j-search-box li.no{width: auto;box-shadow: none;}
+	.j-search-box{ position: absolute;top:60px;right: 10px; z-index: 1;}
+	.j-search-box li{ /*width: 100px; margin-right: 10px;*/ float: left; box-shadow: 0px 2px 4px 0px rgba(155,155,155,0.62);}
+	.j-search-box li.no{width: auto;box-shadow: none;margin-right: 10px;}
 	.j-search-box li.no button{box-shadow: 0px 2px 4px 0px rgba(155,155,155,0.62);}
 	/* 显示画圈内房屋个数 */
 	.j-map-sum{ position: absolute; bottom: 20px;left: 50%; text-align: center;color: #fff;padding: 0 18px;font:bold 12px/26px '';border-radius: 2px; background: rgba(0,0,0,0.6);    transform: translate(-50%, 0);}
@@ -104,9 +104,9 @@
      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search" >
 		<ul>
 			<li>
-				<div class="layui-input-inline">
-					<select name="ban_struct_id">
-						<option  value="">结构类别</option>
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_struct_id" xm-select="ban_struct_id">
+						<option value="" disabled="disabled">结构类别</option>
 						{volist name="params['structs']" id="v"}
 							<option value="{$key}">{$v}</option>
 							{/volist}
@@ -114,9 +114,9 @@
 				</div>
 			</li>
 			<li>
-				<div class="layui-input-inline">
-					<select name="ban_inst_id">
-						<option value="">机构名称</option>
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_inst_id" xm-select="ban_inst_id">
+						<option value="" disabled="disabled">机构名称</option>
 						{volist name=":config('inst_data_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -124,9 +124,9 @@
 				</div>
 			</li>
 			<li>
-				<div class="layui-input-inline">
-					<select name="house_use_id">
-						<option value="">使用性质</option>
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="house_use_id" xm-select="house_use_id">
+						<option value="" disabled="disabled">使用性质</option>
 						{volist name="params['uses']" id="v"}
 					    <option value="{$key}">{$v}</option>
 					    {/volist}
@@ -134,9 +134,9 @@
 				</div>
 			</li>
 			<li>
-				<div class="layui-input-inline">
-					<select name="ban_damage_id">
-						<option value="">完损等级</option>
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_damage_id" xm-select="ban_damage_id">
+						<option value="" disabled="disabled">完损等级</option>
 						{volist name="params['damages']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -144,9 +144,9 @@
 				</div>
 			</li>
 			<li>
-				<div class="layui-input-inline">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option value="" disabled="disabled">产别</option>
 						{volist name="params['owners']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
@@ -225,26 +225,63 @@
 </script>
 {include file="system@block/layui" /}
 <script>
-layui.use(['table', 'jquery'], function(){
-  	var table = layui.table,
-		    $ = layui.$;
+layui.use(['table', 'jquery','formSelects'], function(){
+  	var table = layui.table
+		    ,$ = layui.$
+			,formSelects = layui.formSelects;
 			//layui.layer.load();//加载中动画
+	var map = null;
+	//所有行政边界
+	// var plyAll = {};
+	//第三级小区数据marker数组
+	var thirdlyMkr = [];
+	// var area = {
+	// 	"武昌区": "1|12725273.29,3558757.28;12725273.29,3558757.28|12725273.29,3558757.28"
+	// }
+	
+	//画圈按钮
+	var drawBtn = document.getElementById('draw')
+	//退出画圈按钮
+	var exitBtn = document.getElementById('exit')
+	/*** 画圈有关的数据结构 ***/
+	//是否处于画圈状态下
+	var isInDrawing = false;
+	//是否处于鼠标左键按下状态下
+	var isMouseDown = false;
+	//存储画出折线点的数组
+	var polyPointArray = [];
+	//上次操作画出的折线
+	var lastPolyLine = null;
+	//画圈完成后生成的多边形
+	var polygonAfterDraw = null;
+	//存储地图上marker的数组
+	var markerList = [];
+	
+	//初始化地图
+	initMap();
+	data_json();//初始数据
+	//初始化一级数据
+	addMarker(firstData, true);
+	
+	// //搜索二级数据坐标  --此处搜索只是为了方便，如果项目实际用那就提前将坐标爬取下来
+	// searchCoord(secondData)
+	//搜索三级数据坐标
+	// searchCoord(thirdlyData)
+	console.log("三级坐标",thirdlyData)
+	
+	//初始化画圈找房
+	drawing();
 	function data_json(){
-		var ban_struct_id = $("select[name='ban_struct_id']").val();
-		var house_use_id = $("select[name='house_use_id']").val();
-		var ban_inst_id = $("select[name='ban_inst_id']").val();
-		var ban_damage_id = $("select[name='ban_damage_id']").val();
-		var ban_owner_id = $("select[name='ban_owner_id']").val();
+		// var ban_struct_id = $("select[name='ban_struct_id']").val();
+		// var house_use_id = $("select[name='house_use_id']").val();
+		// var ban_inst_id = $("select[name='ban_inst_id']").val();
+		// var ban_damage_id = $("select[name='ban_damage_id']").val();
+		// var ban_owner_id = $("select[name='ban_owner_id']").val();
+		var queryWhere = $('#hisi-table-search').serialize();
 		$.ajax({
 			type:"post",// 请求方式
 			url:"{:url('map/index')}",
-			data :{
-				'ban_struct_id':ban_struct_id,
-				'house_use_id':house_use_id,
-				'ban_inst_id':ban_inst_id,
-				'ban_damage_id':ban_damage_id,
-				'ban_owner_id':ban_owner_id
-			},//这里是前台传到后台的数据
+			data :queryWhere,//这里是前台传到后台的数据
 			async:false,// 同步异步
 			dataType:"json",
 		   //回调函数
@@ -254,10 +291,9 @@ layui.use(['table', 'jquery'], function(){
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
 					layui.layer.closeAll();//结束加载中
-					//initMap();
+					// initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
-					//addLable(thirdlyData);
 					map.setZoom(15);//搜索跳转地图初级
 					console.log("搜索所有：",result);
 					console.log("搜索一级：",firstData);
@@ -266,8 +302,7 @@ layui.use(['table', 'jquery'], function(){
 				else{
 					firstData = result.point;//一级社区数据
 					thirdlyData = result.data;//三级楼栋数据
-					//addLable(thirdlyData);
-					//initMap();
+					// initMap();
 					//初始化一级数据
 					addMarker(firstData, true);
 					map.setZoom(15);//搜索跳转地图初级
@@ -277,57 +312,33 @@ layui.use(['table', 'jquery'], function(){
 			}
 		})
 	};	
-	data_json();//初始数据
-	// 搜索后数据
-	$(document).on('click','#button_search',function (ban_struct_id,house_use_id,ban_inst_id,ban_damage_id,ban_owner_id) {
+  // 搜索后数据
+	$(document).on('click','#button_search',function () {
 		data_json();
 	});
-  /**
-   * 说明:数据量较少，所以不是每一个区下面都有数据，只模拟造了少量数据
-   */
-  
-  
-  var map = null;
-  //所有行政边界
-  var plyAll = {};
-  //第三级小区数据marker数组
-  var thirdlyMkr = [];
-  // var area = {
-  // 	"武昌区": "1|12725273.29,3558757.28;12725273.29,3558757.28|12725273.29,3558757.28"
-  // }
-  
-  //画圈按钮
-  var drawBtn = document.getElementById('draw')
-  //退出画圈按钮
-  var exitBtn = document.getElementById('exit')
-  /*** 画圈有关的数据结构 ***/
-  //是否处于画圈状态下
-  var isInDrawing = false;
-  //是否处于鼠标左键按下状态下
-  var isMouseDown = false;
-  //存储画出折线点的数组
-  var polyPointArray = [];
-  //上次操作画出的折线
-  var lastPolyLine = null;
-  //画圈完成后生成的多边形
-  var polygonAfterDraw = null;
-  //存储地图上marker的数组
-  var markerList = [];
-  
-  //初始化地图
-  initMap();
-  //初始化一级数据
-  addMarker(firstData, true);
-  
-  // //搜索二级数据坐标  --此处搜索只是为了方便，如果项目实际用那就提前将坐标爬取下来
-  // searchCoord(secondData)
-  //搜索三级数据坐标
-  // searchCoord(thirdlyData)
-  console.log("三级坐标",thirdlyData)
-  
-  //初始化画圈找房
-  drawing();
-  
+  //画圈按钮点击
+  $(".panel .layui-btn-normal").click(function(){
+	  var zoomLevel = map.getZoom(); //获取地图缩放级别
+	  if(zoomLevel >= 17) {
+		 $(this).addClass("on").siblings().removeClass("on");   
+	  }
+  });
+  // 显示画圈多边形
+  function keptpolygon(){
+	  <!--保存画圈多边形S-->
+		var polygon = new window.BMap.Polygon(polyPointArray, {
+			strokeColor: '#46ACFF',
+			strokeOpacity: 1,
+			fillColor: '#46ACFF',
+			fillOpacity: 0.3,
+			enableClicking: false
+		});
+		//console.log("画圈",polyPointArray)
+		map.addOverlay(polygon);
+		//保存多边形,用于后续删除该多边形
+		polygonAfterDraw = polygon
+		<!--保存画圈多边形N-->
+  };
   function initMap() {
   	map = new BMap.Map("allMap", {
   		enableMapClick: false,
@@ -344,9 +355,14 @@ layui.use(['table', 'jquery'], function(){
   		} 
 		// else if(zoomLevel > 13 && zoomLevel <= 14) {
   // 			addMarker(secondData, false);
-  // 		} 
+  // 		}
 		else{
-  			addLable(thirdlyData)
+  			addLable(thirdlyData);	
+			if($(".drawing").hasClass("on")){
+				keptpolygon()//显示画圈后的多边形
+			}
+			
+			
   		}
   	});
   	
@@ -354,7 +370,10 @@ layui.use(['table', 'jquery'], function(){
   	map.addEventListener("moveend", function() {
   		var zoomLevel = map.getZoom(); //获取地图缩放级别
   		if(zoomLevel > 15) {
-  			addLable(thirdlyData)
+  			addLable(thirdlyData);
+			if($(".drawing").hasClass("on")){
+				keptpolygon()//显示画圈后的多边形
+			}
   		}
   	});
   }
@@ -380,21 +399,22 @@ layui.use(['table', 'jquery'], function(){
   function drawing() {
   	//开始画圈绑定事件
   	drawBtn.addEventListener('click', function(e) {
+		$(".layui-btn-normal").removeClass("on");
   		var zoomLevel = map.getZoom();
   		if(zoomLevel<=16){
 			layer.msg("请放大地图后使用画图找房！");
-  			return;
+			return
   		}
-  		//禁止地图移动点击等操作
-  		map.clearOverlays()
-  		map.disableDragging();
-  		map.disableScrollWheelZoom();
-  		map.disableDoubleClickZoom();
-  		map.disableKeyboard();
-  		//设置鼠标样式
-  		map.setDefaultCursor('crosshair');
-  		//设置标志位进入画圈状态
-  		isInDrawing = true;
+		 //禁止地图移动点击等操作
+		 map.clearOverlays();
+		 map.disableDragging();
+		 map.disableScrollWheelZoom();
+		 map.disableDoubleClickZoom();
+		 map.disableKeyboard();
+		 //设置鼠标样式
+		 map.setDefaultCursor('crosshair');
+		 //设置标志位进入画圈状态
+		 isInDrawing = true;
   	});
   	
   	//退出画圈按钮绑定事件
@@ -408,8 +428,12 @@ layui.use(['table', 'jquery'], function(){
   		
   		//设置标志位退出画圈状态
   		isInDrawing = false;
+		//除去上次的画线
+		if(lastPolyLine) {
+			map.removeOverlay(lastPolyLine)
+		}
 		//根据视野动态加载
-		addViewLabel(thirdlyMkr)
+		addViewLabel(thirdlyMkr);
   	})
   	
   	//为地图绑定鼠标按下事件(开始画圈)
@@ -511,7 +535,6 @@ layui.use(['table', 'jquery'], function(){
   		}
   	}
 	console.log("画圈数据完成：",pointInPolygonArray.join(","));
-	
 	let ban_number = pointInPolygonArray.join(",");//社区代号
 	$.ajax({
 		type:"post",// 请求方式

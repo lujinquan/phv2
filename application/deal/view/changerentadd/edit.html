@@ -56,13 +56,15 @@
 		    <th>追加类型</th>
 		    <th>以前年</th>
 		    <th>以前月</th>
+			<th>总金额</th>
 		  </tr>
 	  </thead>
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input type="number" name="before_year_rent" lay-verify="required" value="{$data_info['before_year_rent']}"  placeholder="请输入追加以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input type="number" name="before_month_rent" lay-verify="required" value="{$data_info['before_month_rent']}" placeholder="请输入追加以前月金额" class="layui-input"></td>
+		  <td id="before_year"><input type="number" name="before_year_rent" id="before_year_rent" lay-verify="required" value="{$data_info['before_year_rent']}"  placeholder="请输入追加以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input type="number" name="before_month_rent" id="before_month_rent" lay-verify="required" value="{$data_info['before_month_rent']}" placeholder="请输入追加以前月金额" class="layui-input"></td>
+		  <td id="total_sum">0</td>
 	   </tr>
 	 </tbody>
 	</table>
@@ -119,6 +121,22 @@
 			,$ = layui.jquery
 			,upload = layui.upload
 			,layer = layui.layer;	
+			//限制input输入框字符
+			$("input[type=number]").keypress(function(e) {
+			　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+			　　　　return false;
+			　　}
+			});
+			function initialvalue(){
+				$(".j-house-box tbody tr").each( function(){
+					if($(this).find("#before_year_rent").val()==""){
+						$(this).find("#before_year_rent").val(0);
+					}
+					if($(this).find("#before_month_rent").val()==""){
+						$(this).find("#before_month_rent").val(0);
+					}
+				})	
+			}
 		//身份证信息
 		upload.render({
 			elem: '#upload_img1',
@@ -154,5 +172,19 @@
 		$(document).on("click", ".upload_img_list dd i", function() {
 			$(this).parents("dd").remove();
 		})
+		//计算总金额
+		var sums=0;
+		summoney();
+		function summoney(){
+			$("#total_sum").text((parseFloat($("#before_year_rent").val()).toFixed(2)*100+parseFloat($("#before_month_rent").val()).toFixed(2)*100).toFixed(2) / 100);
+		}
+		$("#before_year_rent").bind("input propertychange",function(){
+			initialvalue();
+			summoney();
+		});
+		$("#before_month_rent").bind("input propertychange",function(){
+			initialvalue();
+			summoney();
+		});
 	});
 </script>

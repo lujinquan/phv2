@@ -230,7 +230,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .j-enclosure-label.j-uplode-icon i img{ width: 16px; height: 17px;position: relative;top:-3px; margin-right: 5px;}
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
-.j-details-box .layui-form-item .j-input-inline{padding-left: 122px; position: relative;left: -2px;/* font-weight: bold; */color: #666;}
+.j-details-box .layui-form-item .j-input-inline{padding-left: 123px; position: relative;left: -2px;/* font-weight: bold; */color: #666;}
 .j-details-box .layui-form-item .j-input-inline.j-tips{ padding-left: initial; float: left;width: 22%;}/* 表单后面带提示 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show i{color: #FF8700;margin: 0 5px 0 10px;}/* 提示信息 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show a,.j-details-box .layui-form-item .j-input-inline.j-tips-show{color: #FF8700; font-size: 12px; font-weight: bold;}
