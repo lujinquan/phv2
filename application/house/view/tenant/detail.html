@@ -22,7 +22,7 @@
 	}
 	
 </style> -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+
 <div class="j-details-box j-no-border floorWrap layui-form">
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
     <legend>基本信息</legend>
@@ -141,14 +141,6 @@
 </div>
 <!-- 图片查看 -->
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
-<script type="text/javascript">
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
-	 // //处理租户左边栏目高亮显示问题
-	 // $(".layui-side-scroll ul:eq(1) .layui-nav-child dd:eq(2)").addClass("j-layui-this");
-</script>
 {else /}
 <div class="j-table-content">
 <div class="page-toolbar j-page-toolbar clearfix">

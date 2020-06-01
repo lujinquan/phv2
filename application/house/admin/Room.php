@@ -53,6 +53,26 @@ class Room extends Admin
             //halt($data);
             return json($data);
         }
+        $group = input('group','y');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '正常',
+                'url' => '?group=y',
+            ],
+            [
+                'title' => '新发',
+                'url' => '?group=x',
+            ],
+            [
+                'title' => '注销',
+                'url' => '?group=z',
+            ]
+        ];
+        $tabData['current'] = url('?group='.$group);
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
         return $this->fetch();
     }
 

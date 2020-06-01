@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{url('index')}?group={$group}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				{if condition="in_array('room_number',$config['room_info_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
@@ -51,17 +51,6 @@
 					</select>
 				</div>
 				{/if}
-				{if condition="in_array('room_status',$config['room_info_search'])"}
-				<div class="layui-input-inline j-width-115 j-margin-10">
-					<select name="room_status" xm-select="room_status">
-						<option value="" disabled="disabled">状态</option>
-						<option value="1">正常</option>
-						<option value="0">新发</option>
-						<option value="2">注销</option>
-						{/volist}
-					</select>
-				</div>
-				{/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">
@@ -83,7 +72,8 @@
 		
     </script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-		<a href="{:url('detail')}?id={{ d.room_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+		<a href="{:url('detail')}?id={{ d.room_id }}" hisi-data="{width: '1000px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+		
 </script>
 </div>
 <script type="text/javascript">
@@ -96,7 +86,7 @@
 				/* ,height: 550 */
 				,toolbar: '#toolbar'
 				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
-				,url: '{:url("house/Room/index")}'
+				,url: '{:url("house/Room/index")}?group={$group}'
 				,totalRow: true
 				,page: true
 				,limit: 10
