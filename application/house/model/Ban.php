@@ -87,6 +87,12 @@ class Ban extends SystemBase
         if(isset($data['ban_area_three']) && $data['ban_area_three']){
             $where[] = ['ban_area_three','in',explode(',',$data['ban_area_three'])];
         }
+        // 检索楼栋注销时间
+        if(isset($data['ban_dtime']) && $data['ban_dtime']){
+            $start = strtotime(substr($data['ban_dtime'],0,10));
+            $end = strtotime(substr($data['ban_dtime'],-10));
+            $where[] = ['ban_dtime','between',[$start,$end]];
+        }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);

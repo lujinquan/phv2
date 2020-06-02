@@ -121,8 +121,11 @@
                 {/volist}
               </select>
         </div>
-        <div class="layui-input-inline" style="width:160px;">
+        <div class="layui-input-inline j-margin-10" style="width:160px;">
             <input type="text" name="house_tai_remark" placeholder="描述内容" class="layui-input">
+        </div>
+        <div class="layui-input-inline j-margin-10" style="width:120px">
+            <input type="text" name="ctime" value="" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
         </div>
         <input type="hidden" name="group" value="{$group}" class="layui-input">
         <input type="hidden" name="house_id" value="{$data_info['house_id']}" class="layui-input">
@@ -150,10 +153,22 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery','formSelects'], function() {
+    layui.use(['table','laydate','jquery','formSelects'], function() {
         var table = layui.table
 		   ,formSelects = layui.formSelects 
 		   ,$ = layui.$;
+		var laydate = layui.laydate;
+		//年选择器
+        laydate.render({
+            elem: '#query_month'
+            ,type: 'month'
+            ,isInitValue: true,
+            ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
+        });
         table.render({
             elem: '#dataTable'
             //,skin: 'line' //行边框风格

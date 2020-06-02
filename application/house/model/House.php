@@ -139,6 +139,12 @@ class House extends SystemBase
         if(isset($data['ban_damage_id']) && $data['ban_damage_id']){
             $where[] = ['d.ban_damage_id','in',explode(',',$data['ban_damage_id'])];
         }
+        // 检索房屋注销时间
+        if(isset($data['house_dtime']) && $data['house_dtime']){
+            $start = strtotime(substr($data['house_dtime'],0,10));
+            $end = strtotime(substr($data['house_dtime'],-10));
+            $where[] = ['a.house_dtime','between',[$start,$end]];
+        }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);

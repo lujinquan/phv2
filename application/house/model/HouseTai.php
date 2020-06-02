@@ -49,6 +49,12 @@ class HouseTai extends SystemBase
         if(isset($data['house_tai_remark']) && $data['house_tai_remark']){
             $where[] = ['house_tai_remark','like','%'.$data['house_tai_remark'].'%'];
         }
+        // 检索台账时间
+        if(isset($data['ctime']) && $data['ctime']){
+            $start = strtotime($data['ctime']);
+            $end = strtotime('+ 1 month',$start);
+            $where[] = ['ctime','between',[$start,$end]];
+        }
         return $where;
     }
 

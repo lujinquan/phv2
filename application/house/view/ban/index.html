@@ -91,10 +91,17 @@
 			  </div>
 			  {/if}
 			  {if condition="in_array('ban_build_year',$config['ban_info_search'])"}
-			  <div class="layui-input-inline" style="width:120px;">
+			  <div class="layui-input-inline j-input-margin j-width-120">
                 <input type="text" name="ban_build_year" value="" readonly title="建成年份" placeholder="建成年份" id="timeYear" autocomplete="off" class="layui-input">
             </div>
             {/if}
+              {if condition="$group == 'z'"}
+              {if condition="in_array('ban_dtime',$config['ban_info_search'])"}
+		      <div class="layui-input-inline j-input-margin j-width-120">
+		        <input type="text" name="ban_dtime" class="layui-input" id="test6" placeholder="注销日期范围">
+		      </div>
+		      {/if}
+		      {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
             
 		</div>
@@ -120,7 +127,7 @@
     {if condition="$group == 'x'"}
 	<a href="{:url('edit')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
     {/if}
-    <a href="{:url('detail')}?id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
+    <a href="{:url('detail')}?id={{ d.ban_id }}" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('struct')}?group={$group}&id={{ d.ban_id }}" hisi-data="{width: '1000px', height: '760px',refresh: 2}" title="楼栋结构" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">结构表</a>
     <a target="_blank" href="{:url('house/index')}?group={$group}&ban_number={{ d.ban_number }}" class="layui-btn layui-btn-xs layui-btn-normal">房屋</a>
 </script>
@@ -247,6 +254,11 @@
 			    });
 			}
         });
+        //日期范围
+		  laydate.render({
+		    elem: '#test6'
+		    ,range: true
+		  });
 		
 		$('#button_prints').click(function(){
 			var queryWhere = $('#hisi-table-search').serialize();
