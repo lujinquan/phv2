@@ -323,6 +323,9 @@ layui.use(['table', 'jquery','formSelects'], function(){
 		 $(this).addClass("on").siblings().removeClass("on");   
 	  }
   });
+  $(".panel .exit").click(function(){
+  	  $(".drawing").removeClass("on");   
+  });
   // 显示画圈多边形
   function keptpolygon(){
 	  <!--保存画圈多边形S-->
