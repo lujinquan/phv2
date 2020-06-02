@@ -831,12 +831,12 @@ class Weixin extends Common
         return json($result);
     }
 
-    /**
+        /**
      * 功能描述： 给会员添加房屋（添加member_house关联记录）
      * @author  Lucas 
      * 创建时间: 2020-02-26 17:36:54
      */
-    public function add_member_house()
+    public function add_member_house_check()
     {
         // 验证令牌
         $result = [];
@@ -863,61 +863,115 @@ class Weixin extends Common
             $result['en_msg'] = 'The user has been denied access';
             return json($result);
         }
-        
-        $house_number = trim(input('house_number'));
-        if(!$house_number){
+        $type = trim(input('type',''));  //查询的类型，1，手机号 2，身份证号 3，房屋编号
+        $keywords = trim(input('keywords'));
+        if(!$keywords){
             $result['code'] = 10007;
-            $result['msg'] = '房屋编号不能为空';
-            $result['en_msg'] = 'House No. is empty';
+            $result['msg'] = '关键词不能为空';
+            $result['en_msg'] = 'keywords is empty';
             return json($result);
         }
-        
-        // 绑定手机号 
-        $HouseModel = new HouseModel;
-        $house_info = $HouseModel->where([['house_number','eq',$house_number]])->find();
-        if(!$house_info){
-            $result['code'] = 10008;
-            $result['msg'] = '房屋编号不存在';
-            $result['en_msg'] = 'House No. is error';
+        if(!in_array($type,[1,2,3])){
+            $result['code'] = 100022;
+            $result['msg'] = '查询类型错误';
+            $result['en_msg'] = 'query type error';
             return json($result);
         }
-        if($house_info['house_status'] != 1){
-            $result['code'] = 10009;
-            $result['msg'] = '房屋已注销或未发租';
-            $result['en_msg'] = 'Abnormal house status';
+        $houseArr = [];
+        if($type == 1){ //1，手机号
+            $TenantModel = new TenantModel;
+            $tenant_ids = $TenantModel->where([['tenant_tel','eq', $keywords]])->column('tenant_id');
+            if(!$tenant_ids){
+                $result['code'] = 10020;
+                $result['msg'] = '查询为空';
+                $result['en_msg'] = 'The result is empty';
+                return json($result);
+            }
+            $HouseModel = new HouseModel;
+            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+
+        }else if($type == 2){ //2，身份证号
+            $TenantModel = new TenantModel;
+            $tenant_ids = $TenantModel->where([['tenant_card','eq', $keywords]])->column('tenant_id');
+            if(!$tenant_ids){
+                $result['code'] = 10020;
+                $result['msg'] = '查询为空';
+                $result['en_msg'] = 'The result is empty';
+                return json($result);
+            }
+            $HouseModel = new HouseModel;
+            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+        }else{ //3，房屋编号
+            $HouseModel = new HouseModel;
+            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
+        }
+        if(!$houseArr){
+            $result['code'] = 10021;
+            $result['msg'] = '查询为空';
+            $result['en_msg'] = 'The result is empty';
             return json($result);
         }
-        if($house_info['house_is_pause'] == 1){
-            $result['code'] = 10011;
-            $result['msg'] = '房屋已被暂停计租';
-            $result['en_msg'] = 'The house has been suspended';
-            return json($result);
+        $ar = [];
+        foreach ($houseArr as $k => $v) {
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $find = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['house_id','eq',$v['house_id']],['dtime','eq',0]])->find();
+            if(!$find){
+                $ar[] = $v;
+            }
         }
-        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
-        
-        //halt($houses);
-        $counts = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0],['is_auth','eq',0]])->count();
-        if($counts > 9){ //会员绑定的房屋数量达到>9个，提示超出数量
-            $result['code'] = 10012;
-            $result['msg'] = '绑定房屋数量不能超过10个';
-            $result['en_msg'] = 'The number of bound houses exceeds the limit';
-            return json($result);
-        }
-        $find = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['house_id','eq',$house_info['house_id']],['dtime','eq',0]])->find();
-        if($find){
+        if(!$ar){
             $result['code'] = 10013;
             $result['msg'] = '请勿重复绑定该房屋';
             $result['en_msg'] = 'The house has been bound';
             return json($result);
         }
-        // $member_house_find = $WeixinMemberHouseModel->where([['house_id','eq',$house_info['house_id']]])->find();
-        // if($member_house_find){
-        //     $result['msg'] = '当前房屋编号已被占用！';
-        //     return json($result);
-        // }
-        $WeixinMemberHouseModel->house_id = $house_info['house_id'];
-        $WeixinMemberHouseModel->member_id = $member_info['member_id'];
-        $WeixinMemberHouseModel->save();
+        
+        $result['code'] = 1;
+        $result['data'] = $ar;
+        $result['msg'] = '查询成功';
+        return json($result);
+    }
+
+    /**
+     * 功能描述： 给会员添加房屋（添加member_house关联记录）
+     * @author  Lucas 
+     * 创建时间: 2020-02-26 17:36:54
+     */
+    public function add_member_house()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/add_member_house';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token); //存储openid
+        }else{
+            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        }
+        $house_ids = trim(input('house_ids'));
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+ 
+        $HouseModel = new HouseModel;
+        $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['house_id','in',explode(',',$house_ids)]])->select()->toArray();
+
+        foreach ($houseArr as $k => $v) {
+            $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+            $find = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['house_id','eq',$v['house_id']],['dtime','eq',0]])->find();
+            if(!$find){
+                $WeixinMemberHouseModel->house_id = $v['house_id'];
+                $WeixinMemberHouseModel->member_id = $member_info['member_id'];
+                $WeixinMemberHouseModel->save();
+            }
+                 
+        } 
         // 如果当前会员已认证，则每次添加房屋的时候刷新认证房屋数据
         if($member_info['tenant_id']){
             $WeixinMemberHouseModel = new WeixinMemberHouseModel;
