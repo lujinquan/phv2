@@ -1,11 +1,9 @@
 {include file="system@block/layui" /}
 <style type="text/css">
-   #leaseprint_1_{font-family:"SimSun";font-size: 12px!important;}
-  /* .print_1_ table{border-collapse:collapse;border: 1px solid #000000;}
-  .print_1_ td,.print_1_ th{border-collapse:collapse;border: 1px solid #000000;padding:3px 2px;}
-   #jbydtable td{padding:3px 2px;}
-   */
-  .print_1_ td,.print_1_ th{padding: 3px;}
+    #leaseprint_1_{font-family:"SimSun"}
+  .print_1_ table{border-spacing:0;border-top: 1px solid #000;border-right: 1px solid #000;}
+  .print_1_ td,.print_1_ th{height:24px;border-left: 1px solid #000;border-bottom: 1px solid #000;font-size:13px;font-weight:400;padding:2px 1px;}
+  #jbydtable td{padding:3px 2px;}
   .page-tab-content{padding: 20px;}
   #leaseprint_1_{margin: 0 auto;}
 </style>
@@ -15,16 +13,16 @@
 		打印
 	</button>
 </div>
-<div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1180px;font-size: 12px;">
+<div id="leaseprint_1_" class="print_1_ j-report-con" style="width:1080px;">
         <form id="Myprint_1_" width="1091px">
             <!--startprint2-->
             
             <!-- 基本信息 -->
             <div style="">
-                <div style="margin-top:37px;margin-left:2%;float: left; width: 48%;height:611px;">
+                <div style="margin-top:38px;margin-left:2%;float: left; width: 46%;height:630px;">
                     <!-- 约定事项 -->
                     <div class="textContent">
-                        <table id="jbydtable"border="1" cellspacing="1" cellpadding="0" style="height:611px;box-sizing:padding: 5px; display: inline-block;border-collapse:collapse;border: 1px solid #000000;line-height:22px;">
+                        <table id="jbydtable"border="1" style="height:630px;box-sizing:border-box;border:1px solid #000;padding: 5px; display: inline-block;">
                             <tbody>
                             <tr>
                                 <td style="border:0px;"><p style="margin: 10px 0 10px 0; text-align: center;"><span style="font-size: 24px; width: 100px; border-bottom: 3px double #333333;">约定事项</span></p></td>
@@ -86,11 +84,11 @@
                     </div>
                 </div>
 
-               <div style="float: left; width: 46%; margin-left: 4%;height:611px;">
+               <div style="float: left; width: 44%; margin-left: 4%;height:630px;">
                     <p class="topHeader" style="text-align: right;font-size:14px;margin:10px 0;">
                         租直NO:&nbsp;&nbsp;<span id="print_1_NO"></span>
                     </p>
-                    <table id="table1" border="1" cellspacing="1" cellpadding="0"  style="height:611px;box-sizing:border-box;border-collapse:collapse;border: 1px solid #000000;table-layout:fixed">
+                    <table id="table1" border="1" cellspacing="1" cellpadding="0"  style="height:630px;box-sizing:border-box;border-collapse:collapse;border: 1px solid #000000;table-layout:fixed">
                         <tbody><tr>
                             <td rowspan="2" style="width: 80px;">房屋坐落</td>
                             <td id="print_1_Address" rowspan="2" colspan="2" style="width: 130px;"></td>
@@ -172,26 +170,38 @@
             </div>
             
             <!--startprint1-->
-            <div style="clear: both; padding-top:25px;">
-               <div style="float: left; width: 48%;margin-left:2%;">
+            <div style="clear: both; padding-top: 45px;">
+               <div style="float: left; width: 46%;margin-top:10px;margin-left:2%;">
                     <!-- 评 租 情 况 记 载 -->
-                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px; padding-bottom: 10px;">评 租 情 况 记 载</p>
-                    <table class="pzqk" border="1" cellspacing="1" cellpadding="0"  style="margin-top: 5px;height:538px;border-collapse:collapse;border: 1px solid #000000;">
+                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px; padding-bottom: 20px;">评 租 情 况 记 载</p>
+                    <table class="pzqk" border=1  style="margin-top: 2px;height:538px;">
                         <tbody><tr>
                             <th colspan="2" width="85">部位</th>
                             <th width="30">间号</th>
-                            <th width="55">实有面积(m²)
-							</th>
-                            <th width="55">计租面积(m²)
-							</th>
-                            <th width="40">租金(元)
-							</th>
-                            <th colspan="2" width="150">项目</th>
-                            <th width="95">单价(元)</th>
-                            <th width="95">数量(m²)(件、个)
-							</th>
-                            <th width="75">租金(元)
-							</th>
+                            <th width="55">
+                            	实有面
+                            	积(m²)
+                            </th>
+                            <th width="55">
+                            	计租面
+                            	积(m²)
+                            </th>
+                            <th width="40">
+                            	租金
+                            	(元)
+                            </th>
+                            <th colspan="2">项目</th>
+                            <th width="60">单价(元)</th>
+                            <th width="70">
+                            	数量
+                            	（m²）
+                            	（件、
+                            	个）
+                            </th>
+                            <th width="40">
+                            	租金
+                            	(元)
+                            </th>
                         </tr>
                         <tr>
                             <td width="85" rowspan="4" colspan="2">卧室</td>
@@ -207,7 +217,7 @@
                             <td id="print_1_Room1_data4">
                                 
                             </td>
-                            <td rowspan="4" width="70">三户以上共用</td>
+                            <td rowspan="4" width="75">三户以上共用</td>
                             <td width="78">厅(堂)</td>
                             <td width="75">0.50/个</td>
                             <td width="75" id="print_1_Room1_data5"></td>
@@ -498,7 +508,7 @@
                             {/volist}    
 
                             </span>
-                                &nbsp;  &nbsp;  &nbsp;
+                                &nbsp;  &nbsp;
                         经管所长：<span id="print_1_Room21_data2">
                             <?php $b = 1; ?>
                             {volist name="$data_info['child_json']" id="v"}
@@ -511,7 +521,7 @@
                             {/volist}   
 
                         </span>
-                                &nbsp;  &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3">
+                               &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3">
                         <?php $c = 1; ?>
                         {volist name="$data_info['child_json']" id="v"}
                             {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
@@ -528,10 +538,10 @@
                     </tbody></table>
                 </div>
 
-                <div style="float: left; width: 46%; margin-left: 4%;">
+                <div style="float: left; width: 44%; margin-left: 4%;margin-top:10px;">
                     <!-- 房屋构件设备点交记载 -->
-                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px;padding-bottom: 10px;">房屋构件设备点交记载</p>
-                    <table class="fwClass" border="1" cellspacing="1" cellpadding="0"  style="width:100%;height: 538px;box-sizing:border-box;border-collapse:collapse;border: 1px solid #000000;">
+                    <p class="titleStyle" style="text-align: center;font-size: 24px;margin-top: 0px;padding-bottom: 30px;">房屋构件设备点交记载</p>
+                    <table class="fwClass" border=1  style="width:100%;height: 538px;box-sizing:border-box;">
                         <tbody><tr>
                             <td>名称</td>
                             <td>数量</td>
