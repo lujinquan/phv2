@@ -408,8 +408,8 @@ class Api extends Common
             Db::name('change_lease')->where([['id','eq',$lease['id']]])->update(['process_id'=> 1,'ftime'=>$ftime,'entry_date'=>date('Y-m',$ftime),'child_json'=>json_encode($a)]);
         }
 
-        // 2、标记仍然生效的新发租异动
-        Db::name('change_cut')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
+        // 2、标记仍然生效的租约管理异动
+        Db::name('change_lease')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
 
         return '租约管理同步完成！';
     }
@@ -419,12 +419,14 @@ class Api extends Common
      */
     public function deal_change_pause($result)
     {
+        //['process_id'=>0]
         // 1、处理 child_json 数据
-        $allPauseData = Db::name('change_pause')->where(1)->column('change_order_number');
+        $allPauseData = Db::name('change_pause')->where(['process_id'=>0])->column('change_order_number');
         foreach($allPauseData as $a){
             if(isset($result[$a])){
                 Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
+
         }
 
         // 2、处理 json_data 数据
@@ -462,6 +464,22 @@ class Api extends Common
             Db::name('change_pause')->where([['id','eq',$d['id']]])->update(['process_id'=>1,'house_id'=>$implodeHouses,'data_json'=>json_encode($datajson)]);
         }
 
+        // 2、标记仍然生效的暂停计租异动
+        Db::name('change_pause')->where([['change_status','eq',1]])->update(['is_valid'=>1]);
+        $houseArr = Db::name('house')->column('house_id,house_status');
+        $changepauses = Db::name('change_pause')->field('id,house_id')->select();
+        foreach($changepauses as $ro){
+            $flags = false;
+            $temp_houses = explode(',',$ro['house_id']);
+            foreach ($temp_houses as $temp_h) {
+                if(isset($houseArr[$temp_h]) && $houseArr[$temp_h] == 1){
+                    $flags = true;
+                }
+            }
+            if(!$flags){
+                Db::name('change_pause')->where([['id','eq',$ro['id']]])->update(['is_valid'=>0]);
+            }
+        }
         return '暂停计租同步完成！';
     }
 
@@ -503,8 +521,7 @@ class Api extends Common
         foreach ($jsonArr as $k => $v) {
             $res = Db::name('change_cancel')->where([['change_order_number','eq',$k]])->update(['process_id'=>1,'data_json'=>json_encode($v)]);
         }
-
-        return '注销异动同步完成！'; 
+        return '注销同步完成！'; 
     }
 
     /**
@@ -519,7 +536,6 @@ class Api extends Common
                 Db::name('change_inst')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);
             }
         }
-
         return '管段调整同步完成！';
     }
 

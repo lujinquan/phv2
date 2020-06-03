@@ -75,7 +75,12 @@ class Room extends SystemBase
         if(isset($data['room_type']) && $data['room_type']){
             $where['room'][] = ['room_type','in',explode(',',$data['room_type'])];
         }
-        
+        // 检索房间注销时间
+        if(isset($data['room_dtime']) && $data['room_dtime']){
+            $start = strtotime(substr($data['room_dtime'],0,10));
+            $end = strtotime(substr($data['room_dtime'],-10));
+            $where['room'][] = ['room_dtime','between',[$start,$end]];
+        }
         // 检索房间共用状态
         if(isset($data['room_pub_num']) && $data['room_pub_num']){
             $where['room'][] = ['room_pub_num','in',explode(',',$data['room_pub_num'])];

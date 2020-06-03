@@ -216,18 +216,19 @@
 				</ul>
 			</div>
 		</div>
-		<input type="hidden" name="id" value="{$data_info['id']}">
-		<span class="j-tip-danger">不通过：异动失效，申请人需要重新填写申请；</span><span class="j-tip-warm">打回：打回到申请人，申请人可修改资料重新提交申请；</span>
-		<div class="layui-row layui-form-item layui-col-space90">
+		<!-- <input type="hidden" name="id" value="{$data_info['id']}">
+		<span class="j-tip-danger">不通过：异动失效，申请人需要重新填写申请；</span><span class="j-tip-warm">打回：打回到申请人，申请人可修改资料重新提交申请；</span> -->
+		{include file="deal@common/process_submit" /}
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 				<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
 				<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
 				<button type="submit" class="layui-btn" j-data="{'flag':'passed'}" lay-submit lay-filter="formSubmit">通过</button>
 			</div>
-		</div>
+		</div> -->
   </div>
-    {include file="deal@process/pop_part_one" /}
+    {include file="deal@common/pop_part_one" /}
 </form>
 {include file="system@block/layui" /}
 <!-- 图片查看 -->

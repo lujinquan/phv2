@@ -347,6 +347,7 @@ from ph_v1.ph_change_order where ChangeType = 1 and Status < 2;
 update ph_v2.ph_change_cut_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
 update ph_v2.ph_change_cut_back a,ph_v2.ph_ban_back b set a.ban_id = b.ban_id,a.cuid = b.ban_cuid where a.ban_id = b.ban_number;
 update ph_v2.ph_change_cut_back a,ph_v2.ph_tenant_back b set a.tenant_id = b.tenant_id where a.tenant_id = b.tenant_number;
+update ph_v2.ph_change_cut_back a inner join ph_v1.ph_rent_cut_order b on a.change_order_number = b.ChangeOrderID set a.cut_rent_number = b.IDnumber;
 
 
 # 同步注销+房改异动
@@ -501,6 +502,26 @@ update ph_v2.ph_system_annex_back set name='HouseForm' where remark = '租约';
 update ph_v2.ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
 update ph_v2.ph_system_annex_back as a left join ph_v2.ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
 
+
+#完善所有的异动完成时间，找不到的就等于创建时间
+update ph_v2.ph_change_ban set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_cancel_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_cut_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_house_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_inst_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_lease_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_name_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_new_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_offset_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_pause_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_rentadd_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+update ph_v2.ph_change_use_back set ftime = ctime where change_status in (0,1) and ftime = 0;
+# 把楼栋注销的时间同步过来
+update ph_v2.ph_ban_back as a inner join ph_v2.ph_change_cancel_back as b on a.ban_id = b.ban_id set a.ban_dtime = b.ftime where b.change_status = 1 and a.ban_status = 2;
+# 把房屋注销的时间同步过来
+update ph_v2.ph_house_back as a inner join ph_v2.ph_change_cancel_back as b on a.house_id = b.house_id set a.house_dtime = b.ftime where b.change_status = 1 and a.house_status = 2;
+# 把房间注销的时间同步过来
+update ph_v2.ph_room_back as d inner join (select a.room_id,b.house_dtime from ph_v2.ph_house_room_back as a inner join ph_v2.ph_house_back as b on a.house_id = b.house_id where b.house_dtime > 0) as c on d.room_id = c.room_id set d.room_dtime = c.house_dtime;
 
 
 # 将back表同步到主表

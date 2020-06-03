@@ -76,13 +76,7 @@
 	  </thead>
 	  <tbody><tr><td colspan="8"><div class="j-no-content"><i class="layui-icon iconfont j-icon-wushuju"></i>暂无数据！</div></td></tr></tbody>
 	</table>
-  <div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
-			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
-		</div>
-	</div>
+	{include file="common/submit"} 
 	<input type="hidden" id="j_house_id" value="">
   </div>
 </form>

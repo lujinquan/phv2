@@ -131,6 +131,13 @@
 					</select>
 			  </div>
 		      {/if}
+		      {if condition="$group == 'z'"}
+		      {if condition="in_array('house_dtime',$config['house_info_search'])"}
+		      <div class="layui-input-inline j-input-margin j-width-120">
+		        <input type="text" name="house_dtime" class="layui-input" id="test6" placeholder="注销日期范围">
+		      </div>
+		      {/if}
+		      {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">

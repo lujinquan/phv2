@@ -51,6 +51,14 @@
 					</select>
 				</div>
 				{/if}
+
+				{if condition="$group == 'z'"}
+				{if condition="in_array('room_dtime',$config['room_info_search'])"}
+			    <div class="layui-input-inline j-input-margin j-width-120">
+			        <input type="text" name="room_dtime" class="layui-input" id="test6" placeholder="注销日期范围">
+			    </div>
+			    {/if}
+			    {/if}
 			</div>
 			<div class="j-search-fr layui-col-md4 fr">
 				<div class="layui-input-inline fr">

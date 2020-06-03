@@ -159,14 +159,15 @@ class Tenant extends Admin
             $tabData['menu'] = [
                 [
                     'title' => '详情',
-                    'url' => '?id='.$id.'&group=y&hisi_iframe=yes',
+                    'url' => '?id='.$id.'&group=y',
+                    //'url' => '?id='.$id.'&group=y&hisi_iframe=yes',
                 ],
                 [
                     'title' => '台账',
-                    'url' => '?id='.$id.'&group=t&hisi_iframe=yes',
+                    'url' => '?id='.$id.'&group=t',
                 ]
             ];
-            $tabData['current'] = url("detail?id=$id&group=$group&hisi_iframe=yes");  
+            $tabData['current'] = url("detail?id=$id&group=$group");  
             $this->assign('hisiTabData', $tabData);
             $this->assign('hisiTabType', 3); 
         }
