@@ -421,7 +421,7 @@ class Api extends Common
     {
         //['process_id'=>0]
         // 1、处理 child_json 数据
-        $allPauseData = Db::name('change_pause')->where(1)->column('change_order_number');
+        $allPauseData = Db::name('change_pause')->where(['process_id'=>0])->column('change_order_number');
         foreach($allPauseData as $a){
             if(isset($result[$a])){
                 Db::name('change_pause')->where([['change_order_number','eq',$a]])->update(['child_json'=>json_encode($result[$a])]);

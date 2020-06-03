@@ -333,6 +333,7 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
             }
         }
         that.prop('disabled', true).text('提交中...');
+        $('.j-submit').prop('disabled', true); //异动里面单独加的
         $.ajax({
             type: "POST",
             url: _form.attr('action'),
@@ -343,6 +344,7 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                     that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
                     setTimeout(function(){
                         that.prop('disabled', false);
+                        $('.j-submit').prop('disabled', false); //异动里面单独加的
                         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
                     }, 3000);
                 } else { //如果提价成功
