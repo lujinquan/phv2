@@ -270,6 +270,15 @@
 				   	exportData[i].last_print_time='';
 				}
               }
+			  
+			  // 根据类型标注颜色
+			  console.log("数据",res)
+			  var	result = res.data;
+			  for (var i = 0; i < result.length; i++) {
+			  	if(parseInt(result[i].house_is_pause) == 1){
+					$("[lay-id='dataTable'] tr[data-index="+i+"]").css('background','#e3e3e3');
+			  	}
+			  }
 			}
 		}, isShowInst,isHide,templet_width);
 		$('#button_prints').click(function(){
