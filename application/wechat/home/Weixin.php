@@ -888,7 +888,7 @@ class Weixin extends Common
                 return json($result);
             }
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
 
         }else if($type == 2){ //2，身份证号
             $TenantModel = new TenantModel;
@@ -900,10 +900,10 @@ class Weixin extends Common
                 return json($result);
             }
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
         }else{ //3，房屋编号
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
         }
         if(!$houseArr){
             $result['code'] = 10021;
