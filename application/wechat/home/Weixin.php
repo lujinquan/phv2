@@ -1059,7 +1059,7 @@ class Weixin extends Common
                     
                     $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
 
-                    $v['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
+                    $row['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
                     
                     $houses[] = $row;
                     
