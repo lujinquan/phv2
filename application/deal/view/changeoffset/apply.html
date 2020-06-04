@@ -241,6 +241,7 @@
 		  table.on('checkbox(dataTable)', function(obj){
                 var checkStatus = table.checkStatus('dataTable');
                 var data = checkStatus.data;
+                console.log("选中的是:",data);
                 var previousmonths = 0; //以前年
 				var previousmonths1 = 0;//以前月
 				var previousmonths2 = 0;//本月
@@ -249,6 +250,9 @@
 				var years = myDate.getFullYear(),//获取当前年
 				    months = ("0" + (myDate.getMonth() + 1)).slice(-2),//获取当前月
 					jdates = years+''+months;
+				var monthdatas = [];//选中的以前月
+				var yeardatas = [];//选中的以前年
+				var thismonth = [];//选中本月
 			    // console.log(jdates);
                 //console.log(data);
                 //console.log(obj.data.rent_order_receive);
@@ -265,25 +269,39 @@
 				for(var i=0;i<data.length;i++) {
 					//判断本月
 					if(data[i].rent_order_date==jdates){
+						thismonth.push(data[i].rent_order_unpaid);
 						previousmonths2 += parseFloat(data[i].rent_order_unpaid) * 100;
 						$("#this_month").text(previousmonths2.toFixed(2) / 100);
 					}
 					//判断以前月
 					else if(data[i].rent_order_date<jdates && data[i].rent_order_date.substr(0,data[i].rent_order_date.length-2)==years){
+						monthdatas.push(data[i].rent_order_unpaid);
 						previousmonths1 += parseFloat(data[i].rent_order_unpaid) * 100;
 						$("#before_month").text(previousmonths1.toFixed(2) / 100);
 					}
 					//判断以前年
 					else if(data[i].rent_order_date.substr(0,data[i].rent_order_date.length-2)<years){
-						previousmonths += parseFloat(data[i].rent_order_unpaid) * 100;
-						$("#before_year").text(previousmonths.toFixed(2) / 100);
+						  yeardatas.push(data[i].rent_order_unpaid);
+						  previousmonths += parseFloat(data[i].rent_order_unpaid) * 100;
+						  $("#before_year").text(previousmonths.toFixed(2) / 100);
 					}
-
 					rent_order_date += ',' + data[i].rent_order_date;
-
+				}
+				monthdatas = monthdatas.join(',');
+				yeardatas = yeardatas.join(',');
+				thismonth = thismonth.join(',');
+				if(monthdatas==""){
+					$("#before_month").text(0);
+				}
+				if(yeardatas==""){
+					$("#before_year").text(0);
+				}
+				if(thismonth==""){
+					$("#this_month").text(0);
 				}
 				rent_order_date = rent_order_date.replace(/^(\s|,)+|(\s|,)+$/g, '');
 				$("input[name='rent_order_date']").val(rent_order_date); //获取被选中的订单
+				console.log("选中的订单:",$("input[name='rent_order_date']").val(rent_order_date));
 				//总额
 				var  before_year =  parseFloat($("#before_year").text()).toFixed(2)*100,
 				     before_month = parseFloat($("#before_month").text()).toFixed(2)*100,

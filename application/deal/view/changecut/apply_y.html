@@ -299,6 +299,12 @@
 	var upurl3 = "{:url('system/Api/upload')}?input=Lowassurance&group=change&water=no"; //低保证
 	var upurl4 = "{:url('system/Api/upload')}?input=Housingsecurity&group=change&water=no"; //租房保障申请表
 	var duotu = true; //是否为多图上传true false
+	//限制input输入框字符
+	$("input[type=number]").keypress(function(e) {
+	　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+	　　　　return false;
+	　　}
+	});
 	console.log(params);
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,

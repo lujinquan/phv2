@@ -101,7 +101,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" name="cut_rent" lay-verify="required" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number" name="cut_rent" lay-verify="required"  value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
@@ -227,6 +227,12 @@
 	var upurl4 = "{:url('system/Api/upload')}?input=Housingsecurity&group=change&water=no"; //租房保障申请表
 	var duotu = true; //是否为多图上传true false
 	console.log(params);
+	//限制input输入框字符
+	$("input[type=number]").keypress(function(e) {
+	　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+	　　　　return false;
+	　　}
+	});
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,
 			$ = layui.$,
