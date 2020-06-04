@@ -888,7 +888,7 @@ class Weixin extends Common
                 return json($result);
             }
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
 
         }else if($type == 2){ //2，身份证号
             $TenantModel = new TenantModel;
@@ -900,10 +900,10 @@ class Weixin extends Common
                 return json($result);
             }
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['tenant_id','in',$tenant_ids]])->select()->toArray();
         }else{ //3，房屋编号
             $HouseModel = new HouseModel;
-            $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
+            $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
         }
         if(!$houseArr){
             $result['code'] = 10021;
@@ -1056,7 +1056,13 @@ class Weixin extends Common
                     $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
                     $row['is_auth'] = $v['is_auth'];
                     // unset($systemHouseArr[$v['house_id']]);
+                    
+                    $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
+
+                    $row['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
+                    
                     $houses[] = $row;
+                    
                 }
                 $result['data'] = $houses;
                 $result['code'] = 1;
