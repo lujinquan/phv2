@@ -299,7 +299,9 @@ class House extends SystemBase
         }
 
         if($row['ban_number'] == '1050053295'){
-            return bcaddMerge([$row['house_pre_rent'],$row['house_protocol_rent']]);
+            // 不用加协议租金
+            // return bcaddMerge([$row['house_pre_rent'],$row['house_protocol_rent']]);
+            return $row['house_pre_rent'];
             //return bcaddMerge([$row['house_pre_rent'],$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']]);
         }else{
 
@@ -308,7 +310,8 @@ class House extends SystemBase
             // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
             $p = ($row['house_use_id'] == 1)?1:2; //保留1位数
 
-            return bcaddMerge([$sumrent,$row['house_protocol_rent']],$p); 
+            return round($sumrent,$p); 
+            //return bcaddMerge([$sumrent,$row['house_protocol_rent']],$p); 
             //return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']],$p); 
         }
 
