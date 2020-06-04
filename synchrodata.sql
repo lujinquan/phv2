@@ -56,7 +56,7 @@ select
 HouseID,Szno,BanID,TenantID,HousePrerent,ApprovedRent,UnitID,FloorID,DoorID,UseNature,HouseUsearea,HouseArea,LeasedArea,OldOprice,PumpCost,DiffRent,ProtocolRent,IfSuspend,Status
 from ph_v1.ph_house;
 # 将规租更新成包含租差泵费和协议租金
-update ph_v2.ph_house_back set house_pre_rent = house_pre_rent + house_protocol_rent;
+#update ph_v2.ph_house_back set house_pre_rent = house_pre_rent;
 update ph_v2.ph_house_back as a left join ph_v2.ph_ban_back as b on a.ban_id = b.ban_id set a.house_cuid = b.ban_cuid;
 
 # 更新楼栋表的户数
