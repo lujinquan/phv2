@@ -117,6 +117,7 @@
 		　　　　return false;
 		　　}
 		});
+		
 		function initialvalue(){
 			$(".j-house-box tbody tr").each( function(){
 				if($(this).find("#before_year_rent").val()==""){
@@ -175,30 +176,17 @@
 			initialvalue();
 			summoney();
 		});
-		// // 判断必填
-		// form.verify({
-		// 	"digital": function() {
-		// 		if ($("#upload_img_list1").html().length == 0) {
-		// 		layer.msg("票据必须上传！");
-		// 	  }
-		//  }
-		// });
-		// form.on("submit(formSubmit)", function (data) {
-		//    if ($("#upload_img_list1").html("")) {
-		//     layer.msg("票据必须上传！");
-		//     console.log("票据必须上传！");
-		// 	return false
-		//    }
-		// });
 		// $(".j-submit").click(function(){
 		// 	if ($("#upload_img_list1 .item_img").length) {
-		// 	   form.on("submit(formSubmit)", function(data){
-		// 	       return true;                                               
-		// 	   });
+		// 	   // form.on("submit(formSubmit)", function(data){
+		// 	   //     return true;                                               
+		// 	   // });
+
+		// 	   // $(this).siblings().prop('disabled', true); //异动里面单独加的
+		// 	   //j_submit();
 		// 	}
 		// 	else{
 		// 		layer.msg("票据必须上传！");
-		// 		console.log("票据必须上传！");
 		// 		form.on("submit(formSubmit)", function(data){
 		// 		    return false;                                               
 		// 		});
@@ -240,5 +228,6 @@
 		$(document).on("click", ".upload_img_list dd i", function() {
 			$(this).parents("dd").remove();
 		})
+		
 	});
 </script>

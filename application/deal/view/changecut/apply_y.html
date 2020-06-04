@@ -179,7 +179,7 @@
   	<div class="layui-col-md4">
   		<label class="j-form-label"><i class="red">*</i>减免金额</label>
   		<div class="j-input-inline">
-  			<input type="number" lay-verify="required" id="cut_rent_year" readonly name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+  			<input type="number"  min="0.01" onkeyup="onlyNumber(this)" lay-verify="required" id="cut_rent_year" readonly name="cut_rent" value="" placeholder="" autocomplete="off" class="layui-input">
   		</div>
   	</div>
   	<div class="layui-col-md4">
@@ -299,12 +299,31 @@
 	var upurl3 = "{:url('system/Api/upload')}?input=Lowassurance&group=change&water=no"; //低保证
 	var upurl4 = "{:url('system/Api/upload')}?input=Housingsecurity&group=change&water=no"; //租房保障申请表
 	var duotu = true; //是否为多图上传true false
-	//限制input输入框字符
-	$("input[type=number]").keypress(function(e) {
-	　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
-	　　　　return false;
-	　　}
-	});
+	// //限制input输入框字符
+	// $("input[type=number]").keypress(function(e) {
+	// 　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+	// 　　　　return false;
+	// 　　}
+	// });
+	// 限制input输入负数
+	function onlyNumber(obj){
+		//得到第一个字符是否为负号
+		var t = obj.value.charAt(0);
+		//先把非数字的都替换掉，除了数字和.
+		obj.value = obj.value.replace(/[^\d\.]/g,'');
+		//必须保证第一个为数字而不是.
+		obj.value = obj.value.replace(/^\./g,'');
+		//保证只有出现一个.而没有多个.
+		obj.value = obj.value.replace(/\.{2,}/g,'.');
+		//保证.只出现一次，而不能出现两次以上
+		obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+		//只能输入两位小数
+		obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+		//如果第一位是负号，则允许添加
+		if(t == '-'){
+		return;
+		}
+	};
 	console.log(params);
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,
