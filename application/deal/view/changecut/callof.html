@@ -91,7 +91,12 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
-
+           //限制input输入框字符
+           $("input[type=number]").keypress(function(e) {
+           　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+           　　　　return false;
+           　　}
+           });
         //身份证
         upload.render({
         	elem: '#upload_img1',

@@ -406,6 +406,12 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
+			//限制input输入框字符
+			$("input[type=number]").keypress(function(e) {
+			　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+			　　　　return false;
+			　　}
+			});
 		$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+{$data_info['house_id']});//获取房屋编号
 		//获取楼栋查询器
 		 $(".layui-form").on('click','.j-ban_number',function(){
