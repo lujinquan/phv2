@@ -62,8 +62,8 @@
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input min="0" type="number" name="before_year_rent" id="before_year_rent" lay-verify="required" value="0"  placeholder="请输入追加以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input min="0" type="number" name="before_month_rent" id="before_month_rent" lay-verify="required" value="0" placeholder="请输入追加以前月金额" class="layui-input"></td>
+		  <td id="before_year"><input min="0" step="0.01" type="number" name="before_year_rent" id="before_year_rent" lay-verify="required" value="0"  placeholder="请输入追加以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input min="0" step="0.01" type="number" name="before_month_rent" id="before_month_rent" lay-verify="required" value="0" placeholder="请输入追加以前月金额" class="layui-input"></td>
 		  <td id="total_sum">0</td>
 	   </tr>
 	 </tbody>
@@ -191,20 +191,20 @@
 		//    }
 		// });
 		// $(".j-submit").click(function(){
-		// 	console.log("点击！")
-		// 	if ($("#upload_img_list1").html()=="") {
-		// 	 layer.msg("票据必须上传！");
-		// 	 console.log("票据必须上传！");
-		// 	 form.on("submit(formSubmit)", function(data){
-		// 	     return false;                                                //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-		// 	 });
+		// 	if ($("#upload_img_list1 .item_img").length) {
+		// 	   form.on("submit(formSubmit)", function(data){
+		// 	       return true;                                               
+		// 	   });
 		// 	}
 		// 	else{
+		// 		layer.msg("票据必须上传！");
+		// 		console.log("票据必须上传！");
 		// 		form.on("submit(formSubmit)", function(data){
-		// 		    return true;                                                //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+		// 		    return false;                                               
 		// 		});
 		// 	}
 		// })
+		
 		//身份证信息
 		upload.render({
 			elem: '#upload_img1',
