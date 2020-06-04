@@ -1056,7 +1056,13 @@ class Weixin extends Common
                     $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
                     $row['is_auth'] = $v['is_auth'];
                     // unset($systemHouseArr[$v['house_id']]);
+                    
+                    $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
+
+                    $v['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
+                    
                     $houses[] = $row;
+                    
                 }
                 $result['data'] = $houses;
                 $result['code'] = 1;
