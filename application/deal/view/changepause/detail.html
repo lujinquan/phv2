@@ -81,29 +81,61 @@
 			{/volist}
 	 	</tbody>
 	</table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		 <legend>上传报告</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-imgs clearfix">
-				<div id="upload_img_list1" class="upload_img_list j-viewer-img"> </div>
-				<div class="j-enclosure-img j-viewer-img clearfix">
-					<ul>
-						{volist name="$data_info['change_imgs']" id="v"}
-						{if condition="$v['file_type'] == 'ChangePauseUpload'"}
-						<li>
-							<img src="{$v['file']}">
-						</li>
-						{/if}
-						{/volist}
-					</ul>
-			    </div>
-			</div>
-		</div>
-		<div class="layui-upload">
-		</div>
-	</div>
+	
+	
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>资料</legend>
+  </fieldset>
+
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">拆迁或征收红线图</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangepauseRedline'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">拆迁或征收范围明细</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangepauseRange'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">上传资料</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangePauseUpload'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  
    <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>审批状态</legend>
    </fieldset>
@@ -140,9 +172,10 @@
   
   </div>
 </form>
+
 {include file="system@block/layui" /}
 <!-- 图片查看 -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	/*上传参数设定*/
@@ -153,7 +186,7 @@
 				,layer = layui.layer; 
 	});
 	//图片查看
-		$('.j-viewer-img').viewer({
-			url: 'data-original',
-		 });
+		// $('.j-viewer-img').viewer({
+		// 	url: 'data-original',
+		//  });
 </script>

@@ -64,7 +64,30 @@ class Coiff extends Admin
             $flag = 0;
             foreach ($data as $k => $v) {
                 if(count($v) > 0){
-                    Db::name('config')->where([['title','eq',$k]])->update(['value'=>implode(',',$v)]);
+                    Db::name('config')->where([['title','eq',$k]])->update(['value'=>implode(',',$v),'type'=>1]);
+                }else{
+                    $flag = 1;  
+                }
+            }
+            if($flag){
+                return $this->error('请至少选一个搜索选项'); 
+            }else{
+                return $this->success('编辑成功');
+            }
+           
+            
+        }
+        return $this->fetch();
+    }
+
+    public function fileup()
+    {
+        if ($this->request->isAjax()) {
+            $data = $this->request->post();
+            $flag = 0;
+            foreach ($data as $k => $v) {
+                if(count($v) > 0){
+                    Db::name('config')->where([['title','eq',$k]])->update(['value'=>implode(',',$v),'type'=>2]);
                 }else{
                     $flag = 1;  
                 }

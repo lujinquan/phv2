@@ -112,11 +112,12 @@ class Process extends Admin
                 $model = new ProcessModel;
                 $change_type = input('param.change_type/d');
                 $data = $this->request->post();
-                $model->process($change_type,$data); //$data必须包含子表的id
+                $result = $model->process($change_type,$data); //$data必须包含子表的id
+                if(isset($result['error_msg'])){
+                    return $this->error($result['error_msg']);
+                }
+                
             });
-            // if (!$res) {
-            //     return $this->error('审批失败');
-            // }
             return $this->success('审批成功',url('index'));
         }
 

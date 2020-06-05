@@ -254,8 +254,13 @@ class ChangeOffset extends SystemBase
                 //     $changeUpdateData['change_imgs'] = implode(',',$data['file']);
                 // }
                 if($changeRow['change_status'] == 3){ 
-                    if(isset($data['file']) && $data['file']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    if(isset($data['ChangeOffsetUpload']) && $data['ChangeOffsetUpload']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeOffsetUpload']));
+                    }else{
+                        $fileUploadConfig = Db::name('config')->where([['title','eq','changeoffset_file_upload']])->value('value');
+                        if(strpos($fileUploadConfig, 'ChangeOffsetUpload') !== false){
+                            return ['error_msg' => '请上传报告'];
+                        }
                     }
                 }
                 // 更新使用权变更表

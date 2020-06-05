@@ -50,6 +50,20 @@ class Changeoffset extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeoffset_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 其他  
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传附件其他');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeOffsetModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -88,6 +102,20 @@ class Changeoffset extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeoffset_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 其他  
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传附件其他');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeOffsetModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

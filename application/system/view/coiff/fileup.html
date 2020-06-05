@@ -1,0 +1,36 @@
+<form class="layui-form page-form" action="{:url()}" method="post" id="editForm">
+	<blockquote class="layui-elem-quote">以下是附件必传配置，每种附件选项至少保留一项！！！</blockquote>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>业务管理</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <label class="layui-form-label">暂停计租：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changepause_file_upload[]" value="ChangepauseRedline" title="拆迁或征收红线图" lay-skin="primary" {if condition="in_array('ChangepauseRedline',$config['changepause_file_upload'])"}checked{/if}>
+			<input type="checkbox" name="changepause_file_upload[]" value="ChangepauseRange" title="拆迁或征收范围明细" lay-skin="primary" {if condition="in_array('ChangepauseRange',$config['changepause_file_upload'])"}checked{/if}> 
+			<input type="checkbox" name="changepause_file_upload[]" value="ChangePauseUpload" title="资料上传（经租会计）" lay-skin="primary" {if condition="in_array('ChangePauseUpload',$config['changepause_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">陈欠核销：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changeoffset_file_upload[]" value="HouseForm" title="其他" lay-skin="primary" {if condition="in_array('HouseForm',$config['changeoffset_file_upload'])"}checked{/if}>
+			<input type="checkbox" name="changeoffset_file_upload[]" value="ChangeOffsetUpload" title="报告（经租会计）" lay-skin="primary" {if condition="in_array('ChangeOffsetUpload',$config['changeoffset_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label"> </label>
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
+            <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+<script>
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+});
+</script>

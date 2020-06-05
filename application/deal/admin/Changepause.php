@@ -48,12 +48,32 @@ class Changepause extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changepause_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['ChangepauseRedline']) && $data['ChangepauseRedline']){ // 拆迁或征收红线图  
+                $file = array_merge($file,$data['ChangepauseRedline']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangepauseRedline') !== false){
+                    return $this->error('请上传附件拆迁或征收红线图');
+                }
+            }
+            if(isset($data['ChangepauseRange']) && $data['ChangepauseRange']){ // 如果有传附件
+                $file = array_merge($file,$data['ChangepauseRange']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangepauseRange') !== false){
+                    return $this->error('请上传附件拆迁或征收范围明细');
+                }
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangePauseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+
             // 入库
             unset($filData['id']);
             $pauseRow = $ChangeModel->allowField(true)->create($filData);
@@ -85,6 +105,24 @@ class Changepause extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changepause_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['ChangepauseRedline']) && $data['ChangepauseRedline']){ // 拆迁或征收红线图  
+                $file = array_merge($file,$data['ChangepauseRedline']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangepauseRedline') !== false){
+                    return $this->error('请上传附件拆迁或征收红线图');
+                }
+            }
+            if(isset($data['ChangepauseRange']) && $data['ChangepauseRange']){ // 如果有传附件
+                $file = array_merge($file,$data['ChangepauseRange']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangepauseRange') !== false){
+                    return $this->error('请上传附件拆迁或征收范围明细');
+                }
+            }
+            $data['file'] = $file;
+            
             $ChangeModel = new ChangePauseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');
@@ -122,7 +160,7 @@ class Changepause extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangePauseModel;
         $row = $ChangeModel->detail($id);
-        $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
+
         $this->assign('data_info',$row);
         return $this->fetch();
     }

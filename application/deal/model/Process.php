@@ -177,7 +177,7 @@ class Process extends SystemBase
                     break;
             }
 
-            if(is_array($result) && $result){
+            if(is_array($result) && $result && !isset($result['error_msg'])){
                 $process->change_desc = $result['change_desc'];
                 if(isset($result['curr_role'])){
                     $process->curr_role = $result['curr_role'];
@@ -191,9 +191,11 @@ class Process extends SystemBase
                
                 $res = $process->save(); 
                 return $res;
+            }else{
+                return $result;
             }
 
-            return false;
+            //return false;
             
     }
 
