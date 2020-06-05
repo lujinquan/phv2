@@ -549,7 +549,7 @@ class HouseReport extends Model
             for($i = 1; $i<6; $i++){
 
                 $datas[$k1][$i] = Db::name('ban')       //根据使用性质和结构类型分类
-                    ->field('(sum(ban_civil_num)+sum(ban_party_num)+sum(ban_career_num)) as ban_nums ,sum(ban_holds) as house_holds_arr, (sum(ban_civil_area)+sum(ban_party_area)+sum(ban_career_area)) as ban_areas')
+                    ->field('(sum(ban_civil_num)+sum(ban_party_num)+sum(ban_career_num)) as ban_nums ,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as house_holds_arr, (sum(ban_civil_area)+sum(ban_party_area)+sum(ban_career_area)) as ban_areas')
                     ->where($where)
                     ->where($wheres)
                     ->where([['ban_damage_id','eq',$i],['ban_inst_id','in',config('inst_ids')[$ins]]])
