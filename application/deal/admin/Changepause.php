@@ -49,6 +49,7 @@ class Changepause extends Admin
                 return $this->error($result);
             }
 
+            // 附件上传验证 S
             $fileUploadConfig = Db::name('config')->where([['title','eq','changepause_file_upload']])->value('value');
             $file = [];
             if(isset($data['ChangepauseRedline']) && $data['ChangepauseRedline']){ // 拆迁或征收红线图  
@@ -66,7 +67,8 @@ class Changepause extends Admin
                 }
             }
             $data['file'] = $file;
-
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangePauseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');

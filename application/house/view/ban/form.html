@@ -138,7 +138,17 @@
 					<input type="text" name="ban_property_source" value="{$data_info['ban_property_source']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>使用性质</label>
+				<div class="j-input-inline">
+					<select name="ban_use_id" lay-verify="required" class="field-cid" type="select">
+					    <option value="">请选择</option>
+					    {volist name="params['uses']" id="v"}
+					    <option value="{$key}" {if condition="$key == $data_info['ban_use_id']"}selected{/if}>{$v}</option>
+					    {/volist}
+					</select>
+				</div>
+			</div>
 	</div>
    </div>
    <div id="item2" class="item">

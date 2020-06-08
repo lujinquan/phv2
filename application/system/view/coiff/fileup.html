@@ -18,6 +18,39 @@
 			<input type="checkbox" name="changeoffset_file_upload[]" value="ChangeOffsetUpload" title="报告（经租会计）" lay-skin="primary" {if condition="in_array('ChangeOffsetUpload',$config['changeoffset_file_upload'])"}checked{/if}>
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租约管理：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changelease_file_upload[]" value="Houselease" title="计租表" lay-skin="primary" {if condition="in_array('Houselease',$config['changelease_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changelease_file_upload[]" value="HouseForm" title="旧租约" lay-skin="primary" {if condition="in_array('HouseForm',$config['changelease_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changelease_file_upload[]" value="TenantReIDCard" title="身份证" lay-skin="primary" {if condition="in_array('TenantReIDCard',$config['changelease_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租金追加调整：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changerentadd_file_upload[]" value="RentAddPaper" title="票据" lay-skin="primary" {if condition="in_array('RentAddPaper',$config['changerentadd_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">租金减免：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changecut_file_upload[]" value="TenantReIDCard" title="身份证" lay-skin="primary" {if condition="in_array('TenantReIDCard',$config['changecut_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecut_file_upload[]" value="Residence" title="户口本" lay-skin="primary" {if condition="in_array('Residence',$config['changecut_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecut_file_upload[]" value="HouseForm" title="租约" lay-skin="primary" {if condition="in_array('HouseForm',$config['changecut_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecut_file_upload[]" value="Lowassurance" title="低保证" lay-skin="primary" {if condition="in_array('Lowassurance',$config['changecut_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecut_file_upload[]" value="Housingsecurity" title="租房保障申请表" lay-skin="primary" {if condition="in_array('Housingsecurity',$config['changecut_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecut_file_upload[]" value="ChangeCutForm" title="会审单（经租会计）" lay-skin="primary" {if condition="in_array('ChangeCutForm',$config['changecut_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">使用权变更：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changeuse_file_upload[]" value="UseChangeApplication" title="书面申请报告" lay-skin="primary" {if condition="in_array('UseChangeApplication',$config['changeuse_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changeuse_file_upload[]" value="UseChangeApproval" title="审批表" lay-skin="primary" {if condition="in_array('UseChangeApproval',$config['changeuse_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changeuse_file_upload[]" value="UseChangeOther" title="其他" lay-skin="primary" {if condition="in_array('UseChangeOther',$config['changeuse_file_upload'])"}checked{/if}>
+        </div>
+    </div>
 
     
     <div class="layui-form-item">

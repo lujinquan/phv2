@@ -41,6 +41,34 @@ class Changeuse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeuse_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['UseChangeApplication']) && $data['UseChangeApplication']){ // 书面申请报告  
+                $file = array_merge($file,$data['UseChangeApplication']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeApplication') !== false){
+                    return $this->error('请上传书面申请报告');
+                }
+            }
+            if(isset($data['UseChangeApproval']) && $data['UseChangeApproval']){ // 审批表
+                $file = array_merge($file,$data['UseChangeApproval']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeApproval') !== false){
+                    return $this->error('请上传审批表');
+                }
+            }
+            if(isset($data['UseChangeOther']) && $data['UseChangeOther']){ // 其他
+                $file = array_merge($file,$data['UseChangeOther']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeOther') !== false){
+                    return $this->error('请上传其他');
+                }
+            } 
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeUseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -79,6 +107,34 @@ class Changeuse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeuse_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['UseChangeApplication']) && $data['UseChangeApplication']){ // 书面申请报告  
+                $file = array_merge($file,$data['UseChangeApplication']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeApplication') !== false){
+                    return $this->error('请上传书面申请报告');
+                }
+            }
+            if(isset($data['UseChangeApproval']) && $data['UseChangeApproval']){ // 审批表
+                $file = array_merge($file,$data['UseChangeApproval']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeApproval') !== false){
+                    return $this->error('请上传审批表');
+                }
+            }
+            if(isset($data['UseChangeOther']) && $data['UseChangeOther']){ // 其他
+                $file = array_merge($file,$data['UseChangeOther']);
+            }else{
+                if(strpos($fileUploadConfig, 'UseChangeOther') !== false){
+                    return $this->error('请上传其他');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeUseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

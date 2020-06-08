@@ -111,25 +111,10 @@
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>填报信息</legend>
 	</fieldset>
-    <div class="layui-row layui-form-item layui-col-space90 hide">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-label clearfix">身份证信息</div>
-			<div class="j-enclosure-img j-viewer-img clearfix">
-				<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'TenantReIDCard'"}
-					<li>
-						<img src="{$v['file']}">
-					</li>
-					{/if}
-					{/volist}
-				</ul>
-		    </div>
-		</div>
-	</div>
+    
 <div class="layui-row layui-form-item layui-col-space90">
 	<div class="layui-col-md12">
-		<div class="j-enclosure-label clearfix">其他</div>
+		<div class="j-enclosure-label clearfix">{if condition="in_array('ChangeOffsetUpload',$config['changeoffset_file_upload'])"}<i class="red">*</i>{/if} 其他</div>
 		<div class="j-enclosure-img j-viewer-img clearfix">
 			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
@@ -147,7 +132,7 @@
 <div class="layui-row layui-form-item layui-col-space90">
 	<div class="layui-col-md12">
 		<div class="j-enclosure-upload clearfix">
-			<div class="j-enclosure-label">报告</div>
+			<div class="j-enclosure-label">{if condition="in_array('ChangeOffsetUpload',$config['changeoffset_file_upload'])"}<i class="red">*</i>{/if} 报告</div>
 			<div class="j-enclosure-label j-uplode-icon">
 				<i><img src="/static/system/image/Group8.png"></i>点击上传
 				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>

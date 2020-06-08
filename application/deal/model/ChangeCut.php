@@ -246,8 +246,17 @@ class ChangeCut extends SystemBase
             if(($data['flag'] === 'passed') && ($changeRow['change_status'] < $finalStep)){
                 //如果是第二步经租会计（则可以修改附件）
                 if($changeRow['change_status'] == 3){ 
-                    if(isset($data['file']) && $data['file']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // if(isset($data['file']) && $data['file']){
+                    //     $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // }
+                    if(isset($data['ChangeCutForm']) && $data['ChangeCutForm']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeCutForm']),',');
+                    }else{
+                        $fileUploadConfig = Db::name('config')->where([['title','eq','changecut_file_upload']])->value('value');
+                        if(strpos($fileUploadConfig, 'ChangeCutForm') !== false){
+                            return ['error_msg' => '请上传会审单'];
+                        }
+                        
                     }
                 }
 

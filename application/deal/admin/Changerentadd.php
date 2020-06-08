@@ -48,6 +48,20 @@ class Changerentadd extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changerentadd_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['RentAddPaper']) && $data['RentAddPaper']){ // 票据 
+                $file = array_merge($file,$data['RentAddPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'RentAddPaper') !== false){
+                    return $this->error('请上传票据');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -86,6 +100,20 @@ class Changerentadd extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changerentadd_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['RentAddPaper']) && $data['RentAddPaper']){ // 票据 
+                $file = array_merge($file,$data['RentAddPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'RentAddPaper') !== false){
+                    return $this->error('请上传票据');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeRentAddModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

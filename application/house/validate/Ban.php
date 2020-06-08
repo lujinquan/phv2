@@ -29,6 +29,7 @@ class Ban extends Validate
         'ban_damage_id|完损等级' => 'require|number',   
         'ban_ratio|栋系数' => 'float',
         'ban_build_year|建成年份' => 'require|date',
+        'ban_use_id|使用性质' => 'require|number',
         'ban_door|栋号' => 'require|number',
         'ban_units|单元数' => 'require|number|gt:0',
         'ban_floors|楼层数' => 'require|number|gt:0',
@@ -63,13 +64,13 @@ class Ban extends Validate
     // 添加
     public function sceneForm()
     {
-        return $this->only(['ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
+        return $this->only(['ban_address','ban_inst_id','ban_owner_id','ban_use_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['ban_id','ban_address','ban_inst_id','ban_owner_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
+        return $this->only(['ban_id','ban_address','ban_inst_id','ban_owner_id','ban_use_id','ban_struct_id','ban_damage_id','ban_units','ban_floors','ban_ratio','ban_build_year','ban_door','ban_career_num','ban_party_num','ban_civil_num','ban_gpsx','ban_gpsy','ban_property_id']);
     }
 
     // 编辑

@@ -133,6 +133,17 @@
 						<input type="text" id="ban_property_source" name="ban_property_source" autocomplete="off" class="layui-input">
 					</div>
 				</div>
+				<div class="layui-col-md4">
+					<label class="j-form-label"><i class="red">*</i>使用性质</label>
+					<div class="j-input-inline">
+						<select id="ban_damage_id" name="ban_use_id" lay-verify="required" class="field-cid" type="select">
+							<option value="">请选择</option>
+							{volist name="params['uses']" id="v"}
+							<option value="{$key}">{$v}</option>
+							{/volist}
+						</select>
+					</div>
+				</div>
 			</div>
 			
 	</div>

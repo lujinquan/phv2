@@ -105,7 +105,7 @@
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md12">
 			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">其他</div>
+				<div class="j-enclosure-label">{if condition="in_array('HouseForm',$config['changeoffset_file_upload'])"}<i class="red">*</i>{/if} 其他</div>
 				<div class="j-enclosure-label j-uplode-icon">
 					<i><img src="/static/system/image/Group8.png"></i>点击上传
 					<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
@@ -134,9 +134,9 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证信息
+
 	var upurl1 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //租约
-	var upurl2 = "{:url('system/Api/upload')}?input=ChangeOffsetUpload&group=change&water=no"; //报告
+
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		var table = layui.table
@@ -298,35 +298,7 @@
 				previousmonths3 = before_year+before_month+this_month;
 				$("#total_sum").text(previousmonths3.toFixed(2) / 100);
           });
-		//身份证信息
-		upload.render({
-			elem: '#upload_img1',
-			url: upurl,
-			size: 1024*3,
-			multiple: duotu,
-			field: 'TenantReIDCard',
-			before: function(obj) {
-				layer.msg('图片上传中...', {
-					icon: 16,
-					shade: 0.01,
-					time: 0
-				})
-			},
-			done: function(res) {
-				layer.close(layer.msg()); //关闭上传提示窗口
-				if (duotu == true) {
-					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
-						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
-				} else {
-					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
-						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
-				}
-			}
-		})
+
 		//租约
 		upload.render({
 			elem: '#upload_img2',
@@ -356,35 +328,7 @@
 				}
 			}
 		})
-		//报告
-		upload.render({
-			elem: '#upload_img3',
-			url: upurl2,
-			size: 1024*3,
-			multiple: duotu,
-			field: 'ChangeOffsetUpload',
-			before: function(obj) {
-				layer.msg('图片上传中...', {
-					icon: 16,
-					shade: 0.01,
-					time: 0
-				})
-			},
-			done: function(res) {
-				layer.close(layer.msg()); //关闭上传提示窗口
-				if (duotu == true) {
-					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
-						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
-				} else {
-					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
-					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
-						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
-				}
-			}
-		})
+		
 		
 		/*
 		删除上传图片

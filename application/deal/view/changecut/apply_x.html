@@ -125,7 +125,7 @@
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">身份证</div>
+  			<div class="j-enclosure-label">{if condition="in_array('TenantReIDCard',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 身份证</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
@@ -142,7 +142,7 @@
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">户口本</div>
+  			<div class="j-enclosure-label">{if condition="in_array('Residence',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 户口本</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
@@ -159,7 +159,7 @@
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">租约</div>
+  			<div class="j-enclosure-label">{if condition="in_array('HouseForm',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 租约</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
@@ -176,7 +176,7 @@
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">低保证</div>
+  			<div class="j-enclosure-label">{if condition="in_array('Lowassurance',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 低保证</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img4">上传图片</button>
@@ -193,7 +193,7 @@
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">租房保障申请表</div>
+  			<div class="j-enclosure-label">{if condition="in_array('Housingsecurity',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 租房保障申请表</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img5">上传图片</button>
@@ -208,13 +208,6 @@
   	</div>
   </div>
   {include file="common/submit"}
-  <!-- <div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-				<button type="submit" j-data="{'save_type':'save'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
-				<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
-		</div>
-	</div> -->
   </div>
 </form>
 {include file="system@block/layui" /}
@@ -226,7 +219,7 @@
 	var upurl3 = "{:url('system/Api/upload')}?input=Lowassurance&group=change&water=no"; //低保证
 	var upurl4 = "{:url('system/Api/upload')}?input=Housingsecurity&group=change&water=no"; //租房保障申请表
 	var duotu = true; //是否为多图上传true false
-	console.log(params);
+	//console.log(params);
 	// //限制input输入框字符
 	// $("input[type=number]").keypress(function(e) {
 	// 　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
@@ -335,12 +328,12 @@
         			//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
         			$('#upload_img_list1').append('<dd class="item_img" id="' + res.data.name +
         				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        				'" class="img" ><input type="hidden" name="TenantReIDCard[]" value="' + res.data.id + '" /></dd>');
         		} else {
         			//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
         			$('#upload_img_list1').html('<dd class="item_img" id="' + res.data.name +
         				'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-        				'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+        				'" class="img" ><input type="hidden" name="TenantReIDCard[]" value="' + res.data.id + '" /></dd>');
         		}
         	}
         })
@@ -364,12 +357,12 @@
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Residence[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Residence[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -393,12 +386,12 @@
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list3').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="HouseForm[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list3').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="HouseForm[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -422,12 +415,12 @@
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list4').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Lowassurance[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list4').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Lowassurance[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})
@@ -451,12 +444,12 @@
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list5').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Housingsecurity[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list5').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="Housingsecurity[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})

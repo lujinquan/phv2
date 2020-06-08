@@ -82,6 +82,48 @@ class Changecut extends Admin
                 if($result !== true) {
                     return $this->error($result);
                 }
+
+                // 附件上传验证 S
+                $fileUploadConfig = Db::name('config')->where([['title','eq','changecut_file_upload']])->value('value');
+                $file = [];
+                if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 身份证  
+                    $file = array_merge($file,$data['TenantReIDCard']);
+                }else{
+                    if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                        return $this->error('请上传身份证');
+                    }
+                }
+                if(isset($data['Residence']) && $data['Residence']){ // 户口本
+                    $file = array_merge($file,$data['Residence']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Residence') !== false){
+                        return $this->error('请上传户口本');
+                    }
+                }
+                if(isset($data['HouseForm']) && $data['HouseForm']){ // 租约
+                    $file = array_merge($file,$data['HouseForm']);
+                }else{
+                    if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                        return $this->error('请上传租约');
+                    }
+                }
+                if(isset($data['Lowassurance']) && $data['Lowassurance']){ // 低保证
+                    $file = array_merge($file,$data['Lowassurance']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Lowassurance') !== false){
+                        return $this->error('请上传低保证');
+                    }
+                }
+                if(isset($data['Housingsecurity']) && $data['Housingsecurity']){ // 租房保障申请表
+                    $file = array_merge($file,$data['Housingsecurity']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Housingsecurity') !== false){
+                        return $this->error('请上传租房保障申请表');
+                    }
+                }
+                $data['file'] = $file;
+                // 附件上传验证 E
+                
                 $ChangeCutModel = new ChangeCutModel;
                 // 数据过滤
                 $filData = $ChangeCutModel->dataFilter($data,'add');
@@ -158,12 +200,55 @@ class Changecut extends Admin
                 if($result !== true) {
                     return $this->error($result);
                 }
+                
+                // 附件上传验证 S
+                $fileUploadConfig = Db::name('config')->where([['title','eq','changecut_file_upload']])->value('value');
+                $file = [];
+                if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 身份证  
+                    $file = array_merge($file,$data['TenantReIDCard']);
+                }else{
+                    if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                        return $this->error('请上传身份证');
+                    }
+                }
+                if(isset($data['Residence']) && $data['Residence']){ // 户口本
+                    $file = array_merge($file,$data['Residence']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Residence') !== false){
+                        return $this->error('请上传户口本');
+                    }
+                }
+                if(isset($data['HouseForm']) && $data['HouseForm']){ // 租约
+                    $file = array_merge($file,$data['HouseForm']);
+                }else{
+                    if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                        return $this->error('请上传租约');
+                    }
+                }
+                if(isset($data['Lowassurance']) && $data['Lowassurance']){ // 低保证
+                    $file = array_merge($file,$data['Lowassurance']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Lowassurance') !== false){
+                        return $this->error('请上传低保证');
+                    }
+                }
+                if(isset($data['Housingsecurity']) && $data['Housingsecurity']){ // 租房保障申请表
+                    $file = array_merge($file,$data['Housingsecurity']);
+                }else{
+                    if(strpos($fileUploadConfig, 'Housingsecurity') !== false){
+                        return $this->error('请上传租房保障申请表');
+                    }
+                }
+                $data['file'] = $file;
+                // 附件上传验证 E
+                
                 $ChangeCutModel = new ChangeCutModel;
                 // 数据过滤
                 $filData = $ChangeCutModel->dataFilter($data,'edit');
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
+
                 // 入库使用权变更表
                 $useRow = $ChangeCutModel->allowField(true)->update($filData);
                 if ($useRow === false) {

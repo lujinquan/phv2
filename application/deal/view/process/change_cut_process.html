@@ -187,7 +187,7 @@
   	<div class="layui-col-md12">
   		{if condition="$data_info['change_status'] == 3"}
   		<div class="j-enclosure-upload clearfix">
-  			<div class="j-enclosure-label">会审单</div>
+  			<div class="j-enclosure-label">{if condition="in_array('ChangeCutForm',$config['changecut_file_upload'])"}<i class="red">*</i>{/if} 会审单</div>
   			<div class="j-enclosure-label j-uplode-icon">
   				<i><img src="/static/system/image/Group8.png"></i>点击上传
   				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
@@ -202,7 +202,7 @@
 				<div class="operate">
 					<i  class="layui-icon-close-fill layui-icon"></i>
 				</div>
-				<img src="{$v['file']}" class="img" ><input type="hidden" name="file[]" value="{$v['id']}" />
+				<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCutForm[]" value="{$v['id']}" />
 			</dd>
 			{/if}
 			{/volist}
@@ -258,17 +258,7 @@
   				</ul>
   			</div>
   	</div>
-  	<!-- <input type="hidden" name="id" value="{$data_info['id']}">	
-	<span class="j-tip-danger">不通过：异动失效，申请人需要重新填写申请；</span><span class="j-tip-warm">打回：打回到申请人，申请人可修改资料重新提交申请；</span> -->
 	{include file="deal@common/process_submit" /}
-  <!-- <div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-			<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
-			<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
-			<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
-			<button type="submit" class="layui-btn" j-data="{'flag':'passed'}" lay-submit lay-filter="formSubmit">通过</button>
-		</div>
-	</div> -->
   </div>
 {include file="deal@common/pop_part_one" /}
 </form>
@@ -427,12 +417,12 @@
 					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list2').append('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="ChangeCutForm[]" value="' + res.data.id + '" /></dd>');
 				} else {
 					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
 					$('#upload_img_list2').html('<dd class="item_img" id="' + res.data.name +
 						'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
-						'" class="img" ><input type="hidden" name="file[]" value="' + res.data.id + '" /></dd>');
+						'" class="img" ><input type="hidden" name="ChangeCutForm[]" value="' + res.data.id + '" /></dd>');
 				}
 			}
 		})

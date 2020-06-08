@@ -26,7 +26,7 @@ class Changelease extends Admin
             //halt($where);
             $fields = "a.id,a.change_order_number,a.tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_status,b.house_number,a.is_back,b.house_use_id,d.ban_address,d.ban_struct_id,d.ban_damage_id,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+            $data['data'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('etime desc')->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = Db::name('change_lease')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             $data['code'] = 0;
@@ -45,6 +45,34 @@ class Changelease extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changelease_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['Houselease']) && $data['Houselease']){ // 拆迁或征收红线图  
+                $file = array_merge($file,$data['Houselease']);
+            }else{
+                if(strpos($fileUploadConfig, 'Houselease') !== false){
+                    return $this->error('请上传计租表');
+                }
+            }
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 如果有传附件
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传旧租约');
+                }
+            }
+            if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 如果有传附件
+                $file = array_merge($file,$data['TenantReIDCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                    return $this->error('请上传身份证');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeLeaseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -83,12 +111,41 @@ class Changelease extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changelease_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['Houselease']) && $data['Houselease']){ // 拆迁或征收红线图  
+                $file = array_merge($file,$data['Houselease']);
+            }else{
+                if(strpos($fileUploadConfig, 'Houselease') !== false){
+                    return $this->error('请上传计租表');
+                }
+            }
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 如果有传附件
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传旧租约');
+                }
+            }
+            if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 如果有传附件
+                $file = array_merge($file,$data['TenantReIDCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                    return $this->error('请上传身份证');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+
             $ChangeModel = new ChangeLeaseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+
             // 入库使用权变更表
             $row = $ChangeModel->allowField(true)->update($filData);
             //$row = $ChangeModel->allowField(true)->update($filData);
