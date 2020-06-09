@@ -104,7 +104,7 @@
 			  <td>异动</td>
 			  <td><input type="text" id="cancel_before_0edit" name="floor_before_0edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_1edit" name="floor_before_1edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
-			  <td><input type="text" id="cancel_before_2edit" name="floor_before_2edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" id="cancel_before_2edit" name="floor_before_2edit"  readonly  value="0" placeholder="" autocomplete="off" class="layui-input"><label id="j-sums" class="hide"></label></label></td>
 			  <td><input type="text" id="cancel_before_3edit" name="floor_before_3edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_4edit" name="floor_before_4edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_5edit" name="floor_before_5edit" readonly  value="" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -408,7 +408,7 @@
 								if(	$('.j-house-box tbody').html()==''){
 									$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
 								}
-								$("input[name='floor_before_2edit']").val(0);//获取异动规定租金 
+								//$("input[name='floor_before_2edit']").val(0);//获取异动规定租金 
 								$("input[name='floor_household']").val(0);//获取异动前户数
 								$("input[name='floor_changes_household']").val(0);//获取异动后户数
 
@@ -416,11 +416,11 @@
 								$(".j-house-boxs").bind("input propertychange",function(){
 									var ban_id = $("input[name='ban_id']").val();//获取楼栋编号
 									var new_floors = $("input[name='new_floors']").val();//获取异动后楼层
-									var loading = layer.load(0, {
-									                    shade: false,
-									                    time: 2*1000
-									                });//楼栋调整明细信息加载中
 								    if($("input[name='new_floors']").val()!=""){
+										var loading = layer.load(0, {
+										                    shade: false,
+										                    time: 2*1000
+										                });//楼栋调整明细信息加载中
 										$.ajax({
 												  type: "post",
 												  url: "{:url('deal/Api/getChangeBan')}",
@@ -455,6 +455,40 @@
 													  $("#j_extra_hidden").val($diffRent.toFixed(2)/100);
 													  $("input[name='floor_household']").val(resData.length);//获取异动前户数
 													  $("input[name='floor_changes_household']").val(resData.length);//获取异动后户数
+													  
+													  
+													  
+													  //计算建筑面积
+													   var rents_old = 0//规定租金异动前金额
+													   var rents = 0;//规定租金异动金额
+													   var rents_sum = 0;//规定租金异动后金额
+													  //租赁异动楼层调整异动前数据
+													  
+													  $("input[name='floor_prescribed']").val(row.ban_area);//获取异动前建筑面积
+													  $("input[name='floor_areaofuse']").val(row.ban_rent);//获取异动前规定租金
+													  $("input[name='floor_builtuparea']").val(row.ban_use_area);//获取异动前使用面积
+													  $("input[name='floor_original']").val(row.ban_oprice);//获取异动前原价
+													  $("input[name='floor_tung']").val(row.ban_num);//获取异动前栋数
+													  //租赁异动楼层调整异动数据
+													  $("input[name='floor_before_0edit']").val(0);//获取异动户数
+													  $("input[name='floor_before_1edit']").val(0);//获取异动建筑面积
+													  
+													  $("input[name='floor_before_3edit']").val(0);//获取异动使用面积
+													  $("input[name='floor_before_4edit']").val(0);//获取异动原价
+													  $("input[name='floor_before_5edit']").val(0);//获取异动栋数
+													  //租赁异动楼层调整异动后数据
+													  rents_old =parseFloat(row.ban_rent) * 100;
+													  var s = $("#j-sums").text($diffRent.toFixed(2)/100);
+													  console.log('异动的规租：', s[0].innerText);
+													  rents = parseFloat(s[0].innerText) * 100;
+													  rents_sum = rents + rents_old;
+													  
+													  $("input[name='floor_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
+													  $("input[name='floor_changes_areaofuse']").val(rents_sum.toFixed(2) / 100);//获取异动后规定租金
+													  $("input[name='floor_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
+													  $("input[name='floor_changes_original']").val(row.ban_oprice);//获取异动后原价
+													  $("input[name='floor_changes_tung']").val(row.ban_num);//获取异动后栋数
+													  
 													}
 													   
 												  },
@@ -463,34 +497,9 @@
 													  console.log("msg值:",msg);
 												  }
 										}); 
+										
 									}
 								   
-								  //租赁异动楼层调整异动前数据
-								  
-								  $("input[name='floor_prescribed']").val(row.ban_area);//获取异动前建筑面积
-								  $("input[name='floor_areaofuse']").val(row.ban_rent);//获取异动前规定租金
-								  $("input[name='floor_builtuparea']").val(row.ban_use_area);//获取异动前使用面积
-								  $("input[name='floor_original']").val(row.ban_oprice);//获取异动前原价
-								  $("input[name='floor_tung']").val(row.ban_num);//获取异动前栋数
-								  //租赁异动楼层调整异动数据
-								  $("input[name='floor_before_0edit']").val(0);//获取异动户数
-								  $("input[name='floor_before_1edit']").val(0);//获取异动建筑面积
-								  
-								  $("input[name='floor_before_3edit']").val(0);//获取异动使用面积
-								  $("input[name='floor_before_4edit']").val(0);//获取异动原价
-								  $("input[name='floor_before_5edit']").val(0);//获取异动栋数
-								  //租赁异动楼层调整异动后数据
-								  rents_old =parseFloat(row.ban_rent) * 100;
-								  var s = $("#j_extra_hidden").val();
-								  console.log('异动的规租：', s);
-								  rents = parseFloat(s) * 100;
-								  rents_sum = rents + rents_old;
-								  
-								  $("input[name='floor_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积
-								  $("input[name='floor_changes_areaofuse']").val(rents_sum.toFixed(2) / 100);//获取异动后规定租金
-								  $("input[name='floor_changes_builtuparea']").val(row.ban_use_area);//获取异动后使用面积
-								  $("input[name='floor_changes_original']").val(row.ban_oprice);//获取异动后原价
-								  $("input[name='floor_changes_tung']").val(row.ban_num);//获取异动后栋数
 								})
 
 								//房屋信息	
@@ -516,10 +525,7 @@
 										// $("#j_nature_hidden").val(params.uses[rows[0].house_use_id]);//使用性质原信息
 										// $("#j_yield_hidden").val(params.owners[rows[0].ban.ban_owner_id]);//产别原信息
 								   //}
-									//计算建筑面积
-									var rents_old = 0//规定租金异动前金额
-									var rents = 0;//规定租金异动金额
-									var rents_sum = 0;//规定租金异动后金额
+									
 
 									//完损等级异动监听selected改变
 									form.on('select(lossgrade)', function (data) {
