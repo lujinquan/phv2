@@ -116,8 +116,8 @@
 					,toolbar: true
 					//,defaultToolbar: false //设置右边筛选，导出，打印显示
 					,url: '{:url("system/Index/house")}?change_type={$changeType}&ban_number='+data.ban_number//数据接口
-					,page: true //开启分页
-					,limit: 5
+					,page: false //开启分页
+					,limit: 1000000
             		,limits: [5,10,20,30,40,50,100,300]
 					,text: {
 						none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
