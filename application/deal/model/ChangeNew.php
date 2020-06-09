@@ -252,8 +252,18 @@ class ChangeNew extends SystemBase
 
                 //如果是第二步经租会计（则可以修改附件）
                 if($changeRow['change_status'] == 3){ 
-                    if(isset($data['file']) && $data['file']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // if(isset($data['file']) && $data['file']){
+                    //     $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // }
+
+                    if(isset($data['ChangeNewUpload']) && $data['ChangeNewUpload']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeNewUpload']),',');
+                    }else{
+                        $fileUploadConfig = Db::name('config')->where([['title','eq','changenew_file_upload']])->value('value');
+                        if(strpos($fileUploadConfig, 'ChangeNewUpload') !== false){
+                            return ['error_msg' => '请上传资料'];
+                        }
+                        
                     }
                 }
                 // if(isset($data['file']) && $data['file']){

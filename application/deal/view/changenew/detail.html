@@ -153,7 +153,103 @@
 
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		 <legend>上传报告</legend>
-	</fieldset>
+	</fieldset>\
+	<div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">计租表</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'Houselease'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">租约</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'HouseForm'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">身份证</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'TenantReIDCard'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">收欠票据</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangenewPaper'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">图卡</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'BanCard'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+	  	<div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">情况说明</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangenewOther'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+	  </div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md12">
 				<div class="j-enclosure-label clearfix">资料上传</div>

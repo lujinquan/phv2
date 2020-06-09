@@ -51,7 +51,18 @@
             <input type="checkbox" name="changeuse_file_upload[]" value="UseChangeOther" title="其他" lay-skin="primary" {if condition="in_array('UseChangeOther',$config['changeuse_file_upload'])"}checked{/if}>
         </div>
     </div>
-
+    <div class="layui-form-item">
+        <label class="layui-form-label">新发租：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changenew_file_upload[]" value="Houselease" title="计租表" lay-skin="primary" {if condition="in_array('Houselease',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="HouseForm" title="租约" lay-skin="primary" {if condition="in_array('HouseForm',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="TenantReIDCard" title="身份证" lay-skin="primary" {if condition="in_array('TenantReIDCard',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangenewPaper" title="收欠票据" lay-skin="primary" {if condition="in_array('ChangenewPaper',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="BanCard" title="图卡" lay-skin="primary" {if condition="in_array('BanCard',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangenewOther" title="情况说明" lay-skin="primary" {if condition="in_array('ChangenewOther',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangeNewUpload" title="资料上传（资料员）" lay-skin="primary" {if condition="in_array('ChangeNewUpload',$config['changenew_file_upload'])"}checked{/if}>
+        </div>
+    </div>
     
     <div class="layui-form-item">
         <label class="layui-form-label"> </label>

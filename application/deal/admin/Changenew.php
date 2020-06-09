@@ -50,6 +50,55 @@ class Changenew extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changenew_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['Houselease']) && $data['Houselease']){ // 计租表 
+                $file = array_merge($file,$data['Houselease']);
+            }else{
+                if(strpos($fileUploadConfig, 'Houselease') !== false){
+                    return $this->error('请上传计租表');
+                }
+            }
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 租约
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传租约');
+                }
+            }
+            if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 身份证 
+                $file = array_merge($file,$data['TenantReIDCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                    return $this->error('请上传身份证');
+                }
+            }
+            if(isset($data['ChangenewPaper']) && $data['ChangenewPaper']){ // 收欠票据 
+                $file = array_merge($file,$data['ChangenewPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangenewPaper') !== false){
+                    return $this->error('请上传收欠票据');
+                }
+            }
+            if(isset($data['BanCard']) && $data['BanCard']){ // 图卡 
+                $file = array_merge($file,$data['BanCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanCard') !== false){
+                    return $this->error('请上传图卡');
+                }
+            }
+            if(isset($data['ChangenewOther']) && $data['ChangenewOther']){ // 情况说明 
+                $file = array_merge($file,$data['ChangenewOther']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangenewOther') !== false){
+                    return $this->error('请上传情况说明');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+
             $ChangeModel = new ChangeNewModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -87,6 +136,55 @@ class Changenew extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changenew_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['Houselease']) && $data['Houselease']){ // 计租表 
+                $file = array_merge($file,$data['Houselease']);
+            }else{
+                if(strpos($fileUploadConfig, 'Houselease') !== false){
+                    return $this->error('请上传计租表');
+                }
+            }
+            if(isset($data['HouseForm']) && $data['HouseForm']){ // 租约
+                $file = array_merge($file,$data['HouseForm']);
+            }else{
+                if(strpos($fileUploadConfig, 'HouseForm') !== false){
+                    return $this->error('请上传租约');
+                }
+            }
+            if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 身份证 
+                $file = array_merge($file,$data['TenantReIDCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
+                    return $this->error('请上传身份证');
+                }
+            }
+            if(isset($data['ChangenewPaper']) && $data['ChangenewPaper']){ // 收欠票据 
+                $file = array_merge($file,$data['ChangenewPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangenewPaper') !== false){
+                    return $this->error('请上传收欠票据');
+                }
+            }
+            if(isset($data['BanCard']) && $data['BanCard']){ // 图卡 
+                $file = array_merge($file,$data['BanCard']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanCard') !== false){
+                    return $this->error('请上传图卡');
+                }
+            }
+            if(isset($data['ChangenewOther']) && $data['ChangenewOther']){ // 情况说明 
+                $file = array_merge($file,$data['ChangenewOther']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangenewOther') !== false){
+                    return $this->error('请上传情况说明');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+
             $ChangeModel = new ChangeNewModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');
@@ -133,6 +231,7 @@ class Changenew extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangeNewModel;
         $row = $ChangeModel->detail($id);
+        //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
