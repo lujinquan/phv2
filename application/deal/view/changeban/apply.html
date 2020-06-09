@@ -418,46 +418,50 @@
 									                    shade: false,
 									                    time: 2*1000
 									                });//楼栋调整明细信息加载中
-								   $.ajax({
-									  type: "post",
-									  url: "{:url('deal/Api/getChangeBan')}",
-									  data: { 'ban_id': ban_id,'ban_floors': new_floors}, 
-									  dataType: "json", 
-									  success: function(res) {
-                                      layer.close(loading);//获取成功关闭加载中
-									  	if(res.code == 0){
-									  		layer.msg(res.msg);
-									  		$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
-									  		$(".j-floor-box input").val();
-									  	}else{
-									  		$('.j-house-box tbody').html("");
-									  		var resData = res.data;
-									  		$diffRent = 0;
-									  		for(var k=0;k<resData.length;k++) {
-											$diffRent += parseFloat(resData[k].diff_cou_rent)*100;
-											 var trData ='<tr>\
-															<td class="house_number"><input type="hidden" name="detail_house_number['+k+']" value="'+resData[k].house_number +'">'+resData[k].house_number+'</td>\
-															<td class="house_lessee"><input type="hidden" name="detail_tenant_name['+k+']" value="'+resData[k].tenant_name +'">'+resData[k].tenant_name+'</td>\
-															<td class="old_floor"><input type="hidden" name="detail_old_floor['+k+']" value="'+resData[k].old_floor +'">'+resData[k].old_floor+'</td>\
-															<td class="new_floor"><input type="hidden" name="detail_new_floor['+k+']" value="'+resData[k].new_floor +'">'+resData[k].new_floor+'</td>\
-															<td class="house_regulation_old_rent"><input type="hidden" name="detail_house_rent['+k+']" value="'+resData[k].house_pre_rent +'">'+resData[k].house_pre_rent+'</td>\
-															<td class="house_regulation_rent"><input type="hidden" name="detail_house_old_cou_rent['+k+']" value="'+resData[k].house_old_cou_rent +'">'+resData[k].house_old_cou_rent+'</td>\
-															<td class="house_change_rent"><input type="hidden" name="detail_diff_cou_rent['+k+']" value="'+resData[k].diff_cou_rent +'">'+resData[k].diff_cou_rent+'</td>\
-															<td class="house_calculation_rent"><input type="hidden" name="detail_house_new_cou_rent['+k+']" value="'+resData[k].house_new_cou_rent +'">'+resData[k].house_new_cou_rent+'</td>\
-														</tr>';
-											 $('.j-house-box tbody').append(trData);
-										  }
-
-										  $("input[name='floor_before_2edit']").val($diffRent.toFixed(2)/100);
-										  $("input[name='floor_household']").val(resData.length);//获取异动前户数
-										  $("input[name='floor_changes_household']").val(resData.length);//获取异动后户数
-									  	}
-										   
-									  },
-									  error: function(msg) {
-										  layer.msg(msg);
-									  }
-								  }); 
+								    if($("input[name='new_floors']").val()!=""){
+										$.ajax({
+												  type: "post",
+												  url: "{:url('deal/Api/getChangeBan')}",
+												  data: { 'ban_id': ban_id,'ban_floors': new_floors}, 
+												  dataType: "json", 
+												  success: function(res) {
+				                                  layer.close(loading);//获取成功关闭加载中
+													if(res.code == 0){
+														layer.msg(res.msg);
+														$('.j-house-box tbody').html("<tr><td colspan='8'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>");
+														$(".j-floor-box input").val();
+													}else{
+														$('.j-house-box tbody').html("");
+														var resData = res.data;
+														$diffRent = 0;
+														for(var k=0;k<resData.length;k++) {
+														$diffRent += parseFloat(resData[k].diff_cou_rent)*100;
+														 var trData ='<tr>\
+																		<td class="house_number"><input type="hidden" name="detail_house_number['+k+']" value="'+resData[k].house_number +'">'+resData[k].house_number+'</td>\
+																		<td class="house_lessee"><input type="hidden" name="detail_tenant_name['+k+']" value="'+resData[k].tenant_name +'">'+resData[k].tenant_name+'</td>\
+																		<td class="old_floor"><input type="hidden" name="detail_old_floor['+k+']" value="'+resData[k].old_floor +'">'+resData[k].old_floor+'</td>\
+																		<td class="new_floor"><input type="hidden" name="detail_new_floor['+k+']" value="'+resData[k].new_floor +'">'+resData[k].new_floor+'</td>\
+																		<td class="house_regulation_old_rent"><input type="hidden" name="detail_house_rent['+k+']" value="'+resData[k].house_pre_rent +'">'+resData[k].house_pre_rent+'</td>\
+																		<td class="house_regulation_rent"><input type="hidden" name="detail_house_old_cou_rent['+k+']" value="'+resData[k].house_old_cou_rent +'">'+resData[k].house_old_cou_rent+'</td>\
+																		<td class="house_change_rent"><input type="hidden" name="detail_diff_cou_rent['+k+']" value="'+resData[k].diff_cou_rent +'">'+resData[k].diff_cou_rent+'</td>\
+																		<td class="house_calculation_rent"><input type="hidden" name="detail_house_new_cou_rent['+k+']" value="'+resData[k].house_new_cou_rent +'">'+resData[k].house_new_cou_rent+'</td>\
+																	</tr>';
+														 $('.j-house-box tbody').append(trData);
+													  }
+			
+													  $("input[name='floor_before_2edit']").val($diffRent.toFixed(2)/100);
+													  $("input[name='floor_household']").val(resData.length);//获取异动前户数
+													  $("input[name='floor_changes_household']").val(resData.length);//获取异动后户数
+													}
+													   
+												  },
+												  error: function(msg) {
+													  layer.msg(msg);
+													  console.log("msg值:",msg);
+												  }
+										}); 
+									}
+								   
 								  //租赁异动楼层调整异动前数据
 								  
 								  $("input[name='floor_prescribed']").val(row.ban_area);//获取异动前建筑面积
