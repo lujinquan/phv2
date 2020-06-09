@@ -74,7 +74,7 @@ class Changenew extends Validate
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['id','new_type','tenant_id']);
+        return $this->only(['id','new_type']);
     }
 
     
