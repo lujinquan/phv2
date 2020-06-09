@@ -5,6 +5,14 @@
 		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
+				<label class="j-form-label">房屋编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_number" name="house_number"value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
 					<input type="text" id="ban_number" name="ban_number" lay-verify="required" value="" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
@@ -67,13 +75,13 @@
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md4">
+			<!-- <div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>规定租金</label>
 				<div class="j-input-inline">
 					<input type="number" id="house_pre_rent" name="house_pre_rent" value="" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
 					<b class="j-explain-name">元</b>
 				</div>
-			</div>
+			</div> -->
 			<div class="layui-col-md4">
 				<label class="j-form-label">房屋原价</label>
 				<div class="j-input-inline">
@@ -88,16 +96,96 @@
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>门牌号</label>
 				<div class="j-input-inline">
 					<input type="text" name="house_door" value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>规定租金</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_pre_rent" value="" autocomplete="off" readonly class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>租差</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_diff_rent" value="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>泵费</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_pump_rent" value="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<a href="" class="layui-btn layui-btn-primary">取消</a>
+				<button type="submit" class="layui-btn" hisi-data="{'jump':false}" lay-submit lay-filter="formSubmit">确定</button>
+			</div>
+		</div>
+	</div>
+</form>
+<form class="layui-form" action="{url('renttable')}" method="post">
+	<div class="j-details-box floorWrap">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>房间信息</legend>
+		</fieldset>
+		<div class="layui-row">
+			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
+		
+			  <a href="{:url('room/add')}?id=16423" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{jump: false,refresh: false,width: '60%', height: '600px'}" title="新增房间">新增房间</a>
 			
 		</div>
+		<!-- 房间信息 -->
+		<table class="layui-table ">
+		<thead class="j-table-center">
+			<tr>
+				<th>房屋类型</th>
+				<th>房间编号</th>
+				<th>间号</th>
+				<th>绑定楼栋</th>
+				<th>绑定房屋编号</th>
+				<th>绑定租户</th>
+				<th>产别</th>
+				<th>单元号</th>
+				<th>层次</th>
+				<th>实有面积</th>
+				<th>基价折减</th>
+				<th>计租面积</th>
+				<th>层次调解率</th>
+				<th>规定租金</th>
+				<th>计算租金</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr> 
+		</thead>
+		<tbody  class="j-table-center">
+<!-- 			<tr>
+				<td>卧室</td>
+				<td>65181</td>
+				<td>1</td>
+				<td>100210215</td>
+				<td>1002102154544</td>
+				<td>市属</td>
+				<td>4</td>
+				<td>5</td>
+				<td>14.85</td>
+				<td>0%</td>
+				<td>14.85</td>
+				<td>105%</td>
+				<td>23.39</td>
+				<td>正常</td>
+				<td></td>
+			</tr> -->
+			
+		</tbody>
+	</table>
 		<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>补充信息</legend>
 		</fieldset>
@@ -140,9 +228,10 @@
 <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script> -->
 <script type="text/javascript">
-	layui.use(['table','layer'], function() {
+	layui.use(['table','form','layer'], function() {
 			var table = layui.table
 				,$ = layui.jquery
+				,form = layui.form
 				,layer = layui.layer;
       
 	      //双击获取楼栋查询器
@@ -192,6 +281,6 @@
 		 			}
 		  });
 		 })
-		 
+
 	});
 </script>

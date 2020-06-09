@@ -147,12 +147,29 @@ class House extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+            $row = $HouseModel->allowField(true)->create($filData);
+            //halt($house_id);
             // 入库
-            if (!$HouseModel->allowField(true)->create($filData)) {
+            if (!$row) {
                 return $this->error('新增失败');
             }
-            return $this->success('新增成功');
+            return $this->success('新增成功',$row);
         }
+
+        // $group = input('param.group');
+        // $row = HouseModel::with(['ban','tenant'])->find($id);
+        // $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+        // $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        // //halt($row);
+        // $row['ban_struct_point'] = Db::name('ban_struct_type')->where([['id','eq',$row['ban_struct_id']]])->value('new_point');
+        // //halt($row);
+        // //获取当前房屋的房间
+        // $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_id'); 
+        // //halt($rooms);
+        // //定义计租表房间数组
+        // $HouseModel = new HouseModel;
+        // $roomTables = $HouseModel->get_house_renttable($id);
+
         return $this->fetch();
     }
 
