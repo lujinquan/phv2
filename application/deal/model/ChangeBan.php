@@ -401,11 +401,17 @@ class ChangeBan extends SystemBase
 
             // 1、修改楼栋层高,楼的规租
             $BanModel = new BanModel;
-            $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->update([
-                'ban_floors'=>$finalRow['new_floors'],
-                'ban_civil_rent'=>$finalRow['data_json']['changeDetail']['floor_changes_areaofuse']
-            ]);
-            
+            $banRow = $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->field('ban_use_id')->find();
+            $banSaveData = [];
+            $banSaveData['ban_floors'] = $finalRow['new_floors'];
+            if($banRow['ban_use_id'] == 1){
+                $banSaveData['ban_civil_rent'] = $finalRow['data_json']['changeDetail']['floor_changes_areaofuse'];
+            }else if($banRow['ban_use_id'] == 2){
+                $banSaveData['ban_career_rent'] = $finalRow['data_json']['changeDetail']['floor_changes_areaofuse'];
+            }else{
+                $banSaveData['ban_party_rent'] = $finalRow['data_json']['changeDetail']['floor_changes_areaofuse'];
+            }
+            $banRow->save($banSaveData);
 
             // 2、添加楼栋台账
             $taiBanData = [];
