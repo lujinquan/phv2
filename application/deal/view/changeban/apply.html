@@ -274,6 +274,8 @@
   <input type="hidden" id="j_structure_hidden" value="" />
   <input type="hidden" id="j_nature_hidden" value="" />
   <input type="hidden" id="j_yield_hidden" value="" />
+
+  <input type="hidden" id="j_extra_hidden" value="" />
   {include file="common/submit"}
   <!-- <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
@@ -291,7 +293,7 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
-			console.log(params);
+			//console.log(params);
 		//监听selected下拉框事件
 		form.on('select(adjustment)', function (data) {
 		    	   var message=data.value;
@@ -450,6 +452,7 @@
 													  }
 			
 													  $("input[name='floor_before_2edit']").val($diffRent.toFixed(2)/100);
+													  $("#j_extra_hidden").val($diffRent.toFixed(2)/100);
 													  $("input[name='floor_household']").val(resData.length);//获取异动前户数
 													  $("input[name='floor_changes_household']").val(resData.length);//获取异动后户数
 													}
@@ -478,7 +481,9 @@
 								  $("input[name='floor_before_5edit']").val(0);//获取异动栋数
 								  //租赁异动楼层调整异动后数据
 								  rents_old =parseFloat(row.ban_rent) * 100;
-								  rents = parseFloat($("#cancel_before_2edit").val()) * 100;
+								  var s = $("#j_extra_hidden").val();
+								  console.log('异动的规租：', s);
+								  rents = parseFloat(s) * 100;
 								  rents_sum = rents + rents_old;
 								  
 								  $("input[name='floor_changes_prescribed']").val(row.ban_area);//获取异动后建筑面积

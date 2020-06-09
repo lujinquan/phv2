@@ -27,7 +27,7 @@ class House extends SystemBase
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_inst_pid,ban_address,ban_units,ban_floors,ban_struct_id,ban_damage_id,ban_is_levator');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_inst_pid,ban_address,ban_units,ban_floors,ban_temp_floors,ban_struct_id,ban_damage_id,ban_is_levator');
     }
 
     public function tenant()
@@ -277,18 +277,21 @@ class House extends SystemBase
     /**
      * [计算房屋计算租金]
      * @param  [type] $houseid [房屋编号]
-     * @return [type]        
+     * @return [type] $type ['normal',或者,'temp']  类型   
      */
-    public function count_house_rent($houseid){
+    public function count_house_rent($houseid,$type = 'normal'){
         // 特殊的房屋计算租金
         if(in_array($houseid,array(666,888,999))){
             return 0;
         }
         $row = self::with('ban')->find($houseid);
         $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_id');
-
-        //halt($row->house_room()->column('room_id'));
-        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','<=',1]])->column('room_id,room_cou_rent'); 
+        if($type == 'normal'){
+            $fields = 'room_id,room_cou_rent';
+        }else if($type == 'temp'){ //例如：楼栋调整里面，调整了楼层，统一都算一遍
+            $fields = 'room_id,room_temp_cou_rent';         
+        }
+        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','<=',1]])->column($fields); 
         $sumrent = 0;
         if($roomRents){
             $rent = [];
@@ -297,23 +300,18 @@ class House extends SystemBase
             }
             $sumrent = array_sum($rent);
         }
-
         if($row['ban_number'] == '1050053295'){
             // 不用加协议租金
-            // return bcaddMerge([$row['house_pre_rent'],$row['house_protocol_rent']]);
             return $row['house_pre_rent'];
-            //return bcaddMerge([$row['house_pre_rent'],$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']]);
         }else{
-
             //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
-            
             // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
             $p = ($row['house_use_id'] == 1)?1:2; //保留1位数
-
             return round($sumrent,$p); 
             //return bcaddMerge([$sumrent,$row['house_protocol_rent']],$p); 
             //return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent'],$row['house_protocol_rent']],$p); 
         }
-
     }
+
+
 }

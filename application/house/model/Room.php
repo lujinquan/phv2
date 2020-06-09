@@ -27,7 +27,7 @@ class Room extends SystemBase
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_address,ban_units,ban_floors,ban_struct_id,ban_is_first');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_address,ban_units,ban_floors,ban_temp_floors,ban_struct_id,ban_is_first');
     }
 
     // 待优化
@@ -168,9 +168,9 @@ class Room extends SystemBase
     /**
      * [count_room_rent 房间计算租金]
      * @param  [type] $roomid  [房间编号]
-     * @return [type]          [房间计算租金]
+     * @return [type] $type ['normal',或者,'temp'] 类型
      */
-    public function count_room_rent($roomid){
+    public function count_room_rent($roomid , $type = 'normal'){
 
         //初始数据
         $roomRow = self::with(['ban'])->find($roomid);
@@ -182,8 +182,13 @@ class Room extends SystemBase
         if($roomRow['ban_number'] == '1050053295'){ //如果是新华村5栋的楼，则单独处理
             return $roomRow['room_pre_rent'];
         }else{
+            if($type == 'normal'){
+                $floors = $roomRow['ban_floors'];
+            }else if($type == 'temp'){ //例如：楼栋调整里面，调整了楼层，统一都算一遍
+                $floors = $roomRow['ban_temp_floors'];        
+            }
             // 层次调解率，与居住层，有无电梯，楼栋总层数有关
-            $floorPoint = (new FloorPointModel)->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
+            $floorPoint = (new FloorPointModel)->get_floor_point($roomRow['room_floor_id'], $floors);
             // 结构基价
             $structureTypePoint = BanStructTypeModel::where([['id','eq',$roomRow['ban_struct_id']]])->value('new_point');
             // 房间的架空率，与楼栋是否一层为架空层有关
