@@ -63,7 +63,7 @@
 	    	  <td class="cancel_before_2" id="floor_areaofuse"><input type="hidden" name="floor_areaofuse" value=""><label></label></td>
 	    	  <td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value=""><label></label></td>
 	    	  <td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value=""><label></label></td>
-			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
+			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest"  lay-text="ON|OFF"></td>
 		    </tr>
 			<tr>
 			  <td></td>
@@ -404,8 +404,13 @@
 						$(".house_original").bind("input propertychange",function(){
 							computation();
 						});
-						
-					
+						//判断规定租金、使用面积异动后数据是否为0，开启switch
+					    if($("#changes_floor_prescribed label").text()==0 && $("#changes_floor_areaofuse label").text()==0){
+					    	$("input[name='cancel_ban']").removeAttr("disabled");
+					    }
+					    else{
+					    	$("input[name='cancel_ban']").attr("disabled","disabled");
+					    }
 					},btn2: function(index, layero){
 						layer.close(index);
 					}
@@ -573,7 +578,7 @@
 				$("#cancel_area").val($("#floor_builtuparea").text());
 				$('#changes_floor_areaofuse').text(0);
 			}
-		}); */
+		}); */ 
 		//附件1
 		upload.render({
 			elem: '#upload_img1',
