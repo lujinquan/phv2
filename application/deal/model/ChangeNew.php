@@ -406,7 +406,7 @@ class ChangeNew extends SystemBase
         $tableData['cuid'] = $finalRow['cuid'];
         $tableData['order_date'] = date('Ym'); 
         $ChangeTableModel = new ChangeTableModel;
-        halt($tableData);
+        //halt($tableData);
         $ChangeTableModel->save($tableData);
         
         // 1、将新发的房屋基础数据加到所在的楼栋

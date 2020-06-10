@@ -456,7 +456,11 @@ class ChangeCancel extends SystemBase
                 $tableData[$k]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
                 $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
                 $tableData[$k]['use_id'] = $v['house_use_id'];
-                $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                $tableData[$k]['change_rent'] = $v['house_pre_rent']; //规租变化
+                $tableData[$k]['change_oprice'] = $v['house_oprice']; //原价变化
+                $tableData[$k]['change_use_area'] = $v['house_use_id'] == 1 ? $v['house_lease_area'] :  0 ; //使面变化，住宅就取计租面积，非住宅就是0
+                $tableData[$k]['change_area'] = $v['house_area']; //建面变化
+                $tableData[$k]['change_house_num'] = -1; //户数变化
                 $tableData[$k]['tenant_id'] = $v['tenant_id'];
                 $tableData[$k]['cuid'] = $finalRow['cuid']; 
                 $tableData[$k]['order_date'] = date('Ym');  
