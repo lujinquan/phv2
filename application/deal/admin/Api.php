@@ -663,12 +663,12 @@ class Api extends Common
 
             // 获取该楼栋下所有房间
             $RoomModel = new RoomModel;
-            $roomids = $RoomModel->where([['ban_id','eq',$ban_id]])->column('room_id');
+            //$roomids = $RoomModel->where([['ban_id','eq',$ban_id]])->column('room_id');
             // 更新所有房间的计算租金
-            foreach($roomids as $roomid){
-                $room_rent = $RoomModel->count_room_rent($roomid,'temp');
-                RoomModel::where([['room_id','eq',$roomid]])->update(['room_temp_cou_rent'=>$room_rent]);
-            }
+            // foreach($roomids as $roomid){
+            //     $room_rent = $RoomModel->count_room_rent($roomid,'temp');
+            //     RoomModel::where([['room_id','eq',$roomid]])->update(['room_temp_cou_rent'=>$room_rent]);
+            // }
             // 获取该楼栋下所有房屋
             $houseOldArr = HouseModel::with('tenant')->where([['house_status','eq',1],['ban_id','eq',$ban_id],['tenant_id','>',0]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
             $HouseModel = new HouseModel;
@@ -677,8 +677,16 @@ class Api extends Common
             // 更新所有房屋的计算租金
             if($houseOldArr){
                 foreach($houseOldArr as $h){
+                    // 更新所有房间的计算租金
+                    $roomids = Db::name('house_room')->where([['house_id','eq',$h['house_id']]])->column('room_id');
+                    foreach($roomids as $roomid){
+                        $room_rent = $RoomModel->count_room_rent($roomid,'temp');
+                        RoomModel::where([['room_id','eq',$roomid]])->update(['room_temp_cou_rent'=>$room_rent]);
+                    }
+                    
                     $house_rent = $HouseModel->count_house_rent($h['house_id'],'temp');
                     HouseModel::where([['house_id','eq',$h['house_id']]])->update(['house_temp_cou_rent'=>$house_rent]);
+                    //halt('房屋编号：'.$h['house_number'].',临时计算租金是'.$house_rent);
                 }
                 $houseNewArr = HouseModel::where([['ban_id','eq',$ban_id]])->column('house_id,house_temp_cou_rent');
                 
