@@ -5,6 +5,14 @@
 		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
+				<label class="j-form-label">房屋编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_number" name="house_number" value="{$data_info['house_number']}" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
 					<input type="text" id="ban_number" name="ban_number" lay-verify="required" value="{$data_info['ban_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
@@ -68,13 +76,6 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>规定租金</label>
-				<div class="j-input-inline">
-					<input type="number" id="house_pre_rent" name="house_pre_rent" value="{$data_info['house_pre_rent']}" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
-					<b class="j-explain-name">元</b>
-				</div>
-			</div>
-			<div class="layui-col-md4">
 				<label class="j-form-label">房屋原价</label>
 				<div class="j-input-inline">
 					<input type="number" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
@@ -88,15 +89,33 @@
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>门牌号</label>
 				<div class="j-input-inline">
 					<input type="text" name="house_door" value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>规定租金</label>
+				<div class="j-input-inline">
+					<input type="number" id="house_pre_rent" readonly name="house_pre_rent" value="{$data_info['house_pre_rent']}" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>租差</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_diff_rent" value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>泵费</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_pump_rent" value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
 		</div>
 		<input type="hidden" name="house_id" value="{$data_info['house_id']}">
 		<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">

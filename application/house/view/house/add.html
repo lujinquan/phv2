@@ -1,4 +1,4 @@
-<form class="layui-form" action="{url('add')}" method="post">
+<form id="formdata" class="layui-form" onsubmit="return false" action="#" method="post">
 	<div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
@@ -7,7 +7,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">房屋编号</label>
 				<div class="j-input-inline">
-					<input type="text" id="house_number" name="house_number"value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
+					<input type="text" id="house_number" name="house_number" value="" placeholder="" readonly autocomplete="off" class="layui-input j-search-input">
 				</div>
 			</div>
 		</div>
@@ -126,12 +126,13 @@
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="" class="layui-btn layui-btn-primary">取消</a>
-				<button type="submit" class="layui-btn" hisi-data="{'jump':false}" lay-submit lay-filter="formSubmit">确定</button>
+				<a  class="layui-btn" id="clickData">确定</a>
 			</div>
 		</div>
 	</div>
 </form>
-<form class="layui-form" action="{url('renttable')}" method="post">
+<input type="hidden" id="houseid" value="" />
+<form class="layui-form j-room-info hide" action="{url('renttable')}" method="post" >
 	<div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>房间信息</legend>
@@ -139,7 +140,7 @@
 		<div class="layui-row">
 			<!-- <i class="layui-icon layui-icon-add-1 table-add" style="color:#1E9FFF;">新增房间</i> -->
 		
-			  <a href="{:url('room/add')}?id=16423" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pop" style="color:#0084FF;" hisi-data="{jump: false,refresh: false,width: '60%', height: '600px'}" title="新增房间">新增房间</a>
+			  <div   id="addroom" class="layui-btn layui-btn-primary layui-icon layui-icon-add-1 j-iframe-pops" style="color:#0084FF;" title="新增房间">新增房间</div>
 			
 		</div>
 		<!-- 房间信息 -->
@@ -165,7 +166,7 @@
 				<th>操作</th>
 			</tr> 
 		</thead>
-		<tbody  class="j-table-center">
+		<tbody  class="j-table-center" id="j-table-data">
 <!-- 			<tr>
 				<td>卧室</td>
 				<td>65181</td>
@@ -216,12 +217,12 @@
 				<div class="j-map-height" style="width:100%;height:300px;" id="allmap"></div>
 			</div>
 		</div> -->
-		<div class="layui-row layui-form-item layui-col-space90">
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 			</div>
-		</div>
+		</div> -->
   </div>
 </form>
 {include file="system@block/layui" /}
@@ -281,6 +282,394 @@
 		 			}
 		  });
 		 })
-
+		 //基本信息
+		 $("#clickData").click(function(){
+				 $.ajax({
+					 type: "POST",//方法类型
+					 dataType: "json",//预期服务器返回的数据类型
+					 url: "{url('add')}" ,//url
+					 data: $('#formdata').serialize(),
+					 success: function (result) {
+						 console.log("数据：",result);//打印服务端返回的数据(调试用)
+						 if (result.code == 1) {
+							 layer.msg(result.msg);
+							 $(".j-room-info").show();//房间信息显示
+							 $(".j-ban_number").hide();//楼栋编号查询隐藏
+							 $("#house_number").val(result.data.house_number);
+							 $("#houseid").val(result.data.house_id);
+							 var  houseid = result.data.house_id;
+							 //$("#addroom").attr("href","{:url('room/add')}?id=" + houseid);
+							 
+						 }
+						 if(result.code == 0){
+						  layer.msg(result.msg);
+						 }
+					 },
+					 error : function() {
+						 layer.msg("获取数据异常！");
+					 }
+				 });
+		})
+		//新增房屋
+		$(".j-iframe-pops").click(function(){
+			var house_id = $("#houseid").val();
+			layer.open({
+						title: '新增房间'
+						,type: 2
+						,offset: 'auto'
+						,area: ['60%', '600px']
+						,btn:false
+						,pageTabs: false
+						,content: "{:url('room/add')}?hisi_iframe=yes&id=" + house_id
+						,btn: ['确定','关闭']
+						,success: function(layero, index){
+							layero.find('.layui-layer-btn .layui-layer-btn0,.layui-layer-btn .layui-layer-btn1').addClass('layui-hide');
+						}
+						,yes: function(index, layero){
+						},btn2: function(index, layero){
+							
+							
+						},
+						cancel: function(){
+							$.ajax({
+								 type: "GET",//方法类型
+								 dataType: "json",//预期服务器返回的数据类型
+								 url: "{:url('renttable')}?id=" + house_id ,//url
+								 success: function (result) {
+									 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+									 $('#j-table-data').html('');
+									 if (result.code == 1) {
+										 var str = ``;
+										 //var strfirst = ``;
+										 for(var i in result.data) {
+												 //if(result.data[i].baseinfo.room_pub_num >= 2){
+												  for( var j = 0; j < result.data[i].houseinfo.length; j++){
+													  if(j == 0){
+														 str +=  "<tr>\
+														 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_number + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_door + "</td>\
+														 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
+														 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+														 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+														 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+																<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+																</td>\
+														 	</tr>";  
+													  }else{
+														 str +=  "<tr>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 	</tr>"; 
+													  }
+													 
+													 
+												   //}
+												 }
+										 	//     else{
+												//   for( var j = 0; j < result.data[i].houseinfo.length; j++){
+												// 	str +=  "<tr>\
+												// 			<td>" + result.data[i].baseinfo.room_type + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_number + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_door + "</td>\
+												// 			<td>" + result.data[i].baseinfo.ban_number + "</td>\
+												// 			<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+												// 			<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+												// 			<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+												// 			<td>" + result.data[i].baseinfo.floor_point + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_status + "</td>\
+												// 			<td>删除</td>\
+												// 		</tr>";
+												// 	}
+												// }
+										    
+										 }
+										 $('#j-table-data').append(str);
+										 
+									 }
+									 if(result.code == 0){
+									  layer.msg(result.msg);
+									 }
+								 },
+								 error : function() {
+									 layer.msg("获取数据异常！");
+								 }
+							});
+						}
+			 });
+		})
+		// 编辑
+         $(document).on('click', '.j-iframe-edit', function() {			
+			var house_id = $("#houseid").val();
+			var urls = $(this).attr("data-href");
+			console.log("编辑数据：",urls);
+			layer.open({
+						title: '新增房间'
+						,type: 2
+						,offset: 'auto'
+						,area: ['60%', '600px']
+						,btn:false
+						,pageTabs: false
+						,content: urls+'&hisi_iframe=yes'
+						,btn: ['确定','关闭']
+						,success: function(layero, index){
+							layero.find('.layui-layer-btn .layui-layer-btn0,.layui-layer-btn .layui-layer-btn1').addClass('layui-hide');
+						}
+						,yes: function(index, layero){
+						},btn2: function(index, layero){
+							
+							
+						},
+						cancel: function(){
+							$.ajax({
+								 type: "GET",//方法类型
+								 dataType: "json",//预期服务器返回的数据类型
+								 url: "{:url('renttable')}?id=" + house_id ,//url
+								 success: function (result) {
+									 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+									 $('#j-table-data').html('');
+									 if (result.code == 1) {
+										 var str = ``;
+										 //var strfirst = ``;
+										 for(var i in result.data) {
+												 //if(result.data[i].baseinfo.room_pub_num >= 2){
+												  for( var j = 0; j < result.data[i].houseinfo.length; j++){
+													  if(j == 0){
+														 str +=  "<tr>\
+														 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_number + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_door + "</td>\
+														 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
+														 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+														 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+														 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+														 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-pops' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+																<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+																</td>\
+														 	</tr>";  
+													  }else{
+														 str +=  "<tr>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+														 		<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 		<td></td>\
+														 	</tr>"; 
+													  }
+													 
+													 
+												   //}
+												 }
+										 	//     else{
+												//   for( var j = 0; j < result.data[i].houseinfo.length; j++){
+												// 	str +=  "<tr>\
+												// 			<td>" + result.data[i].baseinfo.room_type + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_number + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_door + "</td>\
+												// 			<td>" + result.data[i].baseinfo.ban_number + "</td>\
+												// 			<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+												// 			<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+												// 			<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+												// 			<td>" + result.data[i].baseinfo.floor_point + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+												// 			<td>" + result.data[i].baseinfo.room_status + "</td>\
+												// 			<td>删除</td>\
+												// 		</tr>";
+												// 	}
+												// }
+										    
+										 }
+										 $('#j-table-data').append(str);
+										 
+									 }
+									 if(result.code == 0){
+									  layer.msg(result.msg);
+									 }
+								 },
+								 error : function() {
+									 layer.msg("获取数据异常！");
+								 }
+							});
+						}
+			 });
+		})
+		//删除
+		$(document).on('click', '.j-deal-tr', function() {	
+			var urls = $(this).attr("data-href");
+			var house_id = $("#houseid").val();
+			$.ajax({
+				 type: "GET",//方法类型
+				 dataType: "json",//预期服务器返回的数据类型
+				 url: urls,//url
+				 success: function (result) {
+					 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+					 $('#j-table-data').html('');
+					 if (result.code == 1) {
+						 
+						$.ajax({
+							 type: "GET",//方法类型
+							 dataType: "json",//预期服务器返回的数据类型
+							 url: "{:url('renttable')}?id=" + house_id ,//url
+							 success: function (result) {
+								 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+								 $('#j-table-data').html('');
+								 if (result.code == 1) {
+									 var str = ``;
+									 //var strfirst = ``;
+									 for(var i in result.data) {
+											 //if(result.data[i].baseinfo.room_pub_num >= 2){
+											  for( var j = 0; j < result.data[i].houseinfo.length; j++){
+												  if(j == 0){
+													 str +=  "<tr>\
+													 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_number + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_door + "</td>\
+													 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
+													 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
+													 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
+													 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+													 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+													 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+													 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+													 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+															<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+															</td>\
+													 	</tr>";  
+												  }else{
+													 str +=  "<tr>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+													 		<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 		<td></td>\
+													 	</tr>"; 
+												  }
+												 
+												 
+											   //}
+											 }
+									 	//     else{
+											//   for( var j = 0; j < result.data[i].houseinfo.length; j++){
+											// 	str +=  "<tr>\
+											// 			<td>" + result.data[i].baseinfo.room_type + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_number + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_door + "</td>\
+											// 			<td>" + result.data[i].baseinfo.ban_number + "</td>\
+											// 			<td>" + result.data[i].houseinfo[j].house_number + "</td>\
+											// 			<td>" + result.data[i].houseinfo[j].tenant_name + "</td>\
+											// 			<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_use_area + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_rent_point + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_lease_area + "</td>\
+											// 			<td>" + result.data[i].baseinfo.floor_point + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
+											// 			<td>" + result.data[i].baseinfo.room_status + "</td>\
+											// 			<td>删除</td>\
+											// 		</tr>";
+											// 	}
+											// }
+									    
+									 }
+									 $('#j-table-data').append(str);
+									 
+								 }
+								 if(result.code == 0){
+								  layer.msg(result.msg);
+								 }
+							 },
+							 error : function() {
+								 layer.msg("获取数据异常！");
+							 }
+						}); 
+					 }
+					 if(result.code == 0){
+					  layer.msg(result.msg);
+					 }
+				 },
+				 error : function() {
+					 layer.msg("获取数据异常！");
+				 }
+			});
+	   })
 	});
 </script>
