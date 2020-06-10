@@ -153,7 +153,7 @@ class House extends Admin
             if (!$row) {
                 return $this->error('新增失败');
             }
-            return $this->success('新增成功',$row);
+            return $this->success('新增成功','',$row);
         }
 
         // $group = input('param.group');
