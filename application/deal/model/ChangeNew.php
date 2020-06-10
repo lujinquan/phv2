@@ -192,7 +192,7 @@ class ChangeNew extends SystemBase
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -338,7 +338,6 @@ class ChangeNew extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
         Db::name('tenant')->where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_status'=>1]);
@@ -356,7 +355,6 @@ class ChangeNew extends SystemBase
         $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
-
 
         $taiBanData['ban_id'] = $finalRow['ban_id'];
         $taiBanData['ban_tai_type'] = 1;
@@ -418,6 +416,7 @@ class ChangeNew extends SystemBase
                 'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$houseInfo['house_oprice']),
                 'ban_use_area'=>Db::raw('ban_use_area+'.$houseInfo['house_lease_area']),
                 'ban_civil_holds'=>Db::raw('ban_civil_holds+1'),
+                'ctime'=>$finalRow['ftime'],
             ]);
         }elseif($houseInfo['house_use_id'] == 2){
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
@@ -426,6 +425,7 @@ class ChangeNew extends SystemBase
                 'ban_career_area'=>Db::raw('ban_career_area+'.$houseInfo['house_area']),
                 'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$houseInfo['house_oprice']),
                 'ban_career_holds'=>Db::raw('ban_career_holds+1'),
+                'ctime'=>$finalRow['ftime'],
             ]);
         }else{
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
@@ -434,6 +434,7 @@ class ChangeNew extends SystemBase
                 'ban_party_area'=>Db::raw('ban_party_area+'.$houseInfo['house_area']),
                 'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$houseInfo['house_oprice']),
                 'ban_party_holds'=>Db::raw('ban_party_holds+1'),
+                'ctime'=>$finalRow['ftime'],
             ]);
         }
 

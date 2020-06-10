@@ -176,7 +176,7 @@ class Changeoffset extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeOffsetModel;
             $where = $ChangeModel->checkWhere($getData,'record');
-            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,a.this_month_Rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.entry_date,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.before_year_rent,a.before_month_rent,a.this_month_Rent,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as fdate,a.ftime,a.change_status,a.entry_date,b.house_number,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_offset')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             //halt($data['data']);

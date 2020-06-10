@@ -195,7 +195,7 @@ class Changeuse extends Admin
             $getData = $this->request->get();
             $ChangeModel = new ChangeUseModel;
             $where = $ChangeModel->checkWhere($getData,'record');
-            $fields = "a.id,a.change_order_number,a.change_use_type,a.transfer_rent,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.entry_date,a.change_status,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.change_order_number,a.change_use_type,a.transfer_rent,a.old_tenant_name,a.new_tenant_name,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as fdate,a.ftime,a.entry_date,a.change_status,b.house_use_id,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             $data['count'] = Db::name('change_use')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');

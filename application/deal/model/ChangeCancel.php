@@ -340,6 +340,8 @@ class ChangeCancel extends SystemBase
 
     /**
      * 终审审核成功后的数据处理 【完成，可优化】
+     * 问题一、整栋注销是否意味着六元素全部为0
+     * 问题二、参数值超出可注销最大值，需自动生成某个异动
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
