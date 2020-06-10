@@ -342,7 +342,7 @@ class ChangeNew extends SystemBase
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
         Db::name('tenant')->where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_status'=>1]);
-        Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
+        //Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
         
         // 2、添加台账记录
         $taiHouseData = $taiBanData = [];
@@ -378,11 +378,37 @@ class ChangeNew extends SystemBase
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
 
+
+        $tableData = [];
         // 1、将新发的房屋所在的楼栋变成正常状态
         if(!$banInfo['ban_status']){
-           $tableData['change_num'] = $banInfo['ban_civil_num']+$banInfo['ban_career_num']+$banInfo['ban_party_num']; 
-        }
-
+           $tableData['change_ban_num'] = $banInfo['ban_civil_num']+$banInfo['ban_career_num']+$banInfo['ban_party_num'];
+        }    
+        $tableData['change_type'] = 7;
+        $tableData['change_order_number'] = $finalRow['change_order_number'];
+        $tableData['house_id'] = $finalRow['house_id'];
+        $tableData['ban_id'] = $finalRow['ban_id'];
+        $tableData['inst_id'] = $banInfo['ban_inst_id'];
+        $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
+        $tableData['owner_id'] = $banInfo['ban_owner_id'];
+        $tableData['use_id'] = $houseInfo['house_use_id'];
+        $tableData['change_rent'] = $houseInfo['house_pre_rent']; 
+        $tableData['change_area'] = $houseInfo['house_area']; 
+        $tableData['change_oprice'] = $houseInfo['house_oprice'];
+        $tableData['change_house_num'] = 1;
+        if($houseInfo['house_use_id'] == 1){
+            $tableData['change_use_area'] = $houseInfo['house_lease_area']; 
+        }else{
+            $tableData['change_use_area'] = $houseInfo['house_use_area'];     
+        } 
+        $tableData['change_send_type'] = $finalRow['new_type'];
+        $tableData['tenant_id'] = $finalRow['tenant_id']; 
+        $tableData['cuid'] = $finalRow['cuid'];
+        $tableData['order_date'] = date('Ym'); 
+        $ChangeTableModel = new ChangeTableModel;
+        //halt($tableData);
+        $ChangeTableModel->save($tableData);
+        
         // 1、将新发的房屋基础数据加到所在的楼栋
         if($houseInfo['house_use_id'] == 1){
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
@@ -411,31 +437,6 @@ class ChangeNew extends SystemBase
             ]);
         }
 
-        $tableData = [];       
-        $tableData['change_type'] = 7;
-        $tableData['change_order_number'] = $finalRow['change_order_number'];
-        $tableData['house_id'] = $finalRow['house_id'];
-        $tableData['ban_id'] = $finalRow['ban_id'];
-        $tableData['inst_id'] = $banInfo['ban_inst_id'];
-        $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
-        $tableData['owner_id'] = $banInfo['ban_owner_id'];
-        $tableData['use_id'] = $houseInfo['house_use_id'];
-        $tableData['change_rent'] = $houseInfo['house_pre_rent']; 
-        $tableData['change_area'] = $houseInfo['house_area']; 
-        $tableData['change_oprice'] = $houseInfo['house_oprice'];
-        
-        if($houseInfo['house_use_id'] == 1){
-            $tableData['change_use_area'] = $houseInfo['house_lease_area']; 
-        }else{
-            $tableData['change_use_area'] = $houseInfo['house_use_area'];     
-        } 
-        $tableData['change_send_type'] = $finalRow['new_type'];
-        $tableData['tenant_id'] = $finalRow['tenant_id']; 
-        $tableData['cuid'] = $finalRow['cuid'];
-        $tableData['order_date'] = date('Ym'); 
-        $ChangeTableModel = new ChangeTableModel;
-        $ChangeTableModel->save($tableData);
-        
     }
 
 }

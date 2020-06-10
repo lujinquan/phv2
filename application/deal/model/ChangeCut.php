@@ -359,7 +359,7 @@ class ChangeCut extends SystemBase
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
         $tableData = [];       
-        $tableData['change_type'] = 1;
+        $tableData['change_type'] = 1; 
         $tableData['change_order_number'] = $finalRow['change_order_number'];
         $tableData['house_id'] = $finalRow['house_id'];
         $tableData['ban_id'] = $finalRow['ban_id'];

@@ -79,9 +79,9 @@ drop table if exists ph_v2.ph_room_back;
 create table ph_v2.ph_room_back like ph_v2.ph_room;
 # 同步数据
 insert into ph_v2.ph_room_back 
-(room_number,ban_id,room_type,room_pre_rent,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area,room_pub_num,room_status) 
+(room_number,ban_id,room_type,room_pre_rent,room_rent_point,room_rent_pointids,room_cou_rent,room_door,room_unit_id,room_floor_id,room_use_area,room_area,room_lease_area,room_pub_num,room_status) 
 select 
-RoomID,BanID,RoomType,RoomPrerent,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea,RoomPublicStatus,Status
+RoomID,BanID,RoomType,RoomPrerent,RoomPoint,RoomPointIDS,RoomRentMonth,RoomNumber,UnitID,FloorID,UseArea,RoomArea,LeasedArea,RoomPublicStatus,Status
 from ph_v1.ph_room;
 
 
