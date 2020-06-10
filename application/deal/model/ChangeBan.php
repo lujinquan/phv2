@@ -271,7 +271,7 @@ class ChangeBan extends SystemBase
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
