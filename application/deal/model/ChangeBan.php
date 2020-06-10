@@ -10,8 +10,9 @@ use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\BanTai as BanTaiModel;
-use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\Process as ProcessModel;
+use app\house\model\HouseTai as HouseTaiModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 
 class ChangeBan extends SystemBase
 {
@@ -270,7 +271,7 @@ class ChangeBan extends SystemBase
         $row = self::get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -399,9 +400,9 @@ class ChangeBan extends SystemBase
         // 判断改变的类型
         if($finalRow['ban_change_id'] == 1){ // 如果是调整层高
 
-            // 1、修改楼栋层高,楼的规租
+            // 1、修改楼栋层高，规租
             $BanModel = new BanModel;
-            $banRow = $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->field('ban_use_id')->find();
+            $banRow = $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->field('ban_use_id,ban_inst_id,ban_number,ban_inst_pid,ban_owner_id')->find();
             $banSaveData = [];
             $banSaveData['ban_floors'] = $finalRow['new_floors'];
             if($banRow['ban_use_id'] == 1){
@@ -429,9 +430,9 @@ class ChangeBan extends SystemBase
             $BanTaiModel->allowField(true)->create($taiBanData);
 
             // 3、批量处理房屋计算租金变化
-            foreach ($finalRow['data_json']['houseDetail'] as $v) { 
+            foreach ($finalRow['data_json']['houseDetail'] as $v) {
                 $HouseModel = new HouseModel;
-                $houseRow = $HouseModel->where([['house_number','eq',$v['detail_house_number']]])->field('house_id,tenant_id')->find(); 
+                $houseRow = $HouseModel->where([['house_number','eq',$v['detail_house_number']]])->field('house_id,ban_id,house_use_id,tenant_id')->find(); 
                 $houseRow->save([
                     'house_cou_rent'=>$v['detail_house_new_cou_rent'],
                     'house_pre_rent'=>$v['detail_house_new_cou_rent']
@@ -450,6 +451,28 @@ class ChangeBan extends SystemBase
                 $taiHouseData['change_id'] = $finalRow['id'];
                 $HouseTaiModel = new HouseTaiModel;
                 $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+                // 5、将数据写入到异动统计表
+                if($v['detail_diff_cou_rent'] != 0){ //如果租金有变化
+
+                    $tableData = [];       
+                    $tableData['change_type'] = 12; //都放到调整里面，显示在租金月报表的调整那一栏
+                    $tableData['change_order_number'] = $finalRow['change_order_number'];
+                    $tableData['house_id'] = $houseRow['house_id'];
+                    $tableData['ban_id'] = $houseRow['ban_id'];
+                    $tableData['inst_id'] = $banRow['ban_inst_id'];
+                    $tableData['inst_pid'] = $banRow['ban_inst_pid'];
+                    $tableData['owner_id'] = $banRow['ban_owner_id'];
+                    $tableData['use_id'] = $houseRow['house_use_id'];
+                    $tableData['change_rent'] = $v['detail_diff_cou_rent']; //异动的规租
+                    $tableData['tenant_id'] = $houseRow['tenant_id']; 
+                    $tableData['change_remark'] = '楼栋调整，调整了楼栋总层数造成房屋规租变化'; 
+                    $tableData['cuid'] = $finalRow['cuid'];
+                    $tableData['order_date'] = date('Ym'); 
+                    $ChangeTableModel = new ChangeTableModel;
+                    $ChangeTableModel->save($tableData);
+                }
+                
             }
 
         }elseif($finalRow['ban_change_id'] == 2){ // 如果是调整完损等级
