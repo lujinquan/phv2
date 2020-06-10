@@ -396,6 +396,7 @@ class ChangeCancel extends SystemBase
                     $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
                     $tableData[$k]['use_id'] = $v['house_use_id'];
                     $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                    
                     $tableData[$k]['tenant_id'] = $v['tenant_id'];
                     $tableData[$k]['cuid'] = $finalRow['cuid']; 
                     $tableData[$k]['order_date'] = date('Ym',$finalRow['ftime']);  
