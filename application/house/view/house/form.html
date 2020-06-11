@@ -16,7 +16,7 @@
 				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
 				<div class="j-input-inline">
 					<input type="text" id="ban_number" name="ban_number" lay-verify="required" value="{$data_info['ban_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
-					<b class="j-explain-search j-ban_number">查询</b>
+					<b class="j-explain-search j-ban_number hide">查询</b>
 				</div>
 			</div>
 			<input type="hidden" id="ban_id" name="ban_id" value="{$data_info['ban_id']}">
@@ -151,7 +151,7 @@
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
-				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
+				<a  class="layui-btn" id="clickData">确定</a>
 			</div>
 		</div>
   </div>
@@ -354,7 +354,7 @@
 									 layer.msg(result.msg);
 									 $(".j-room-info").show();//房间信息显示
 									 $(".j-ban_number").hide();//楼栋编号查询隐藏
-									 $("#house_number").val(result.data.house_number);
+									 //$("#house_number").val(result.data.house_number);
 									 $("#houseid").val(result.data.house_id);
 									 var  houseid = result.data.house_id;
 									 //$("#addroom").attr("href","{:url('room/add')}?id=" + houseid);
