@@ -161,7 +161,6 @@ class House extends SystemBase
         //检索管段
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-
         return $where;
     }
 
@@ -179,10 +178,10 @@ class House extends SystemBase
         } else {
             $data['house_number'] = $maxHouseNumber + 1;
         }
-        $banInfo = BanModel::where([['ban_id', 'eq', $data['ban_id']]])->field('ban_owner_id,ban_inst_pid')->find();
+        $banInfo = BanModel::where([['ban_id', 'eq', $data['ban_id']]])->field('ban_owner_id,ban_inst_pid,ban_use_id')->find();
                 $params = ParamModel::getCparams();
         $owner = $params['owners'][$banInfo['ban_owner_id']];
-        //halt($owner);
+        $data['house_use_id'] = $banInfo['ban_use_id'];
         $data['house_szno'] = '租直昌'.mb_substr($owner,0,1).'0'.$banInfo['ban_inst_pid'].'-';
         //$data['house_cuid'] = 
         return $data; 
