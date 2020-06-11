@@ -1,5 +1,5 @@
 <form id="formdata" class="layui-form" onsubmit="return false" action="#" method="post">
-	<div class="j-details-box floorWrap">
+	<div class="j-details-box no-min floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
 		</fieldset>
@@ -358,6 +358,7 @@
 									 $(".j-ban_number").hide();//楼栋编号查询隐藏
 									 //$("#house_number").val(result.data.house_number);
 									 $("#houseid").val(result.data.house_id);
+									 $("input[name$='house_pre_rent']") .val(result.data.house_pre_rent); 
 									 var  houseid = result.data.house_id;
 									 //$("#addroom").attr("href","{:url('room/add')}?id=" + houseid);
 									 
