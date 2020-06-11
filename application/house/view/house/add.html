@@ -53,13 +53,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')"  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id" min="1" name="house_unit_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_floor_id"  name="house_floor_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id" min="1"  name="house_floor_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -126,7 +126,7 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
-				<a href="javascript:history.go(-1)"  class="layui-btn layui-btn-primary">取消</a>
+				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 				<a  class="layui-btn" id="clickData">确定</a>
 			</div>
 		</div>
@@ -259,6 +259,7 @@
 				$("#house_floor_id").attr("max",row.ban_floors);
 				$("#house_unit_id").attr("placeholder",'总单元号：'+row.ban_units);
 				$("#house_unit_id").attr("oninput",'if(value>'+ row.ban_units + ')' + 'value=' + row.ban_units);
+				$("#house_unit_id").attr("max",row.ban_units);
 				$("#house_use_id").val(params.uses[row.ban_use_id]);
 				
 			},btn2: function(index, layero){
