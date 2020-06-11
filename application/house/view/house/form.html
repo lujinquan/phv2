@@ -53,13 +53,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id"  name="house_unit_id" placeholder="总单元号：{$data_info['ban_units']}"  lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id" min="1" max="{$data_info['ban_units']}" oninput="if(value>{$data_info['ban_units']})value={$data_info['ban_units']}"  name="house_unit_id" placeholder="总单元号：{$data_info['ban_units']}"  lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_floor_id" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id" min="1" max="{$data_info['ban_floors']}" oninput="if(value>{$data_info['ban_floors']})value={$data_info['ban_floors']}" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -227,7 +227,7 @@
 		  	 dataType: "json",//预期服务器返回的数据类型
 		  	 url: "{:url('renttable')}?id=" + house_id ,//url
 		  	 success: function (result) {
-		  		 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+		  		 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)	
 		  		 $('#j-table-data').html('');
 		  		 if (result.code == 1) {
 					 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
