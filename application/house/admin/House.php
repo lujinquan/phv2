@@ -15,6 +15,7 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
+use app\rent\model\Rent as RentModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\deal\model\Process as ProcessModel;
@@ -136,24 +137,39 @@ class House extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            // 数据验证
-            $result = $this->validate($data, 'House.form');
-            if($result !== true) {
-                return $this->error($result);
+            
+            if(isset($filData['house_id']) && $filData['house_id']){
+                // 数据验证
+                $result = $this->validate($data, 'House.edit');
+                if($result !== true) {
+                    return $this->error($result);
+                }
+                $HouseModel = new HouseModel();
+                // 入库
+                if ($HouseModel->allowField(true)->update($data) === false) {
+                    return $this->error('修改失败');
+                }
+                return $this->success('修改成功');
+            }else{
+                // 数据验证
+                $result = $this->validate($data, 'House.form');
+                if($result !== true) {
+                    return $this->error($result);
+                }
+                $HouseModel = new HouseModel();
+                // 数据过滤
+                $filData = $HouseModel->dataFilter($data);
+                if(!is_array($filData)){
+                    return $this->error($filData);
+                }
+                $row = $HouseModel->allowField(true)->create($filData);
+                // 入库
+                if (!$row) {
+                    return $this->error('新增失败');
+                }
+                return $this->success('新增成功','',$row);
             }
-            $HouseModel = new HouseModel();
-            // 数据过滤
-            $filData = $HouseModel->dataFilter($data);
-            if(!is_array($filData)){
-                return $this->error($filData);
-            }
-            $row = $HouseModel->allowField(true)->create($filData);
-            //halt($house_id);
-            // 入库
-            if (!$row) {
-                return $this->error('新增失败');
-            }
-            return $this->success('新增成功','',$row);
+            
         }
 
         // $group = input('param.group');
@@ -308,6 +324,12 @@ class House extends Admin
             $data['msg'] = '';
             return json($data);
         }
+
+        // 统计当前租户的欠租情况
+        $RentModel = new RentModel;
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
+        //halt($total_rent_order_unpaid);
 
         //-------------- by lucas 【计租表】 Start ------------------------
         $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
