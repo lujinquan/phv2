@@ -1,5 +1,4 @@
 <!-- 注销审批 -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -164,7 +163,7 @@
 		<legend>补充附件</legend>
 	</fieldset>
 	  
-  	  <div class="layui-row layui-form-item layui-col-space90">
+  <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
   		<div class="j-enclosure-label clearfix">售房专用票据</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
@@ -340,7 +339,6 @@
   	    </div>
   	</div>
   </div>
-  </div>
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>审批状态</legend>
   </fieldset>
@@ -388,17 +386,13 @@
   {include file="deal@common/pop_part_one" /}
 </form>
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__ADMIN_VIEWJS__/deal_cancel_apply.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl2 = "{:url('system/Api/upload')}?input=ChangeCancelOne&group=change&water=no"; //附件1
-	var upurl3 = "{:url('system/Api/upload')}?input=ChangeCancelTwo&group=change&water=no"; //附件2
-	//var upurl4 = "{:url('system/Api/upload')}?input=factsheets&group=ban&water=no"; //情况说明
-	var duotu = true; //是否为多图上传true false
-	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+	layui.use(['jquery','laydate','form'], function() {
 		var laydate = layui.laydate,
 			$ = layui.$,
-			upload = layui.upload,
 			form = layui.form;
 		
 
@@ -506,12 +500,5 @@
 		});
 		     
 
-		
-		/*
-		删除上传图片
-		*/
-		$(document).on("click", ".upload_img_list dd i", function() {
-			$(this).parents("dd").remove();
-		})
 	});
 </script>
