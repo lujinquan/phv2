@@ -295,6 +295,7 @@
 							 layer.msg(result.msg);
 							 $(".j-room-info").show();//房间信息显示
 							 $(".j-ban_number").hide();//楼栋编号查询隐藏
+							  $(".j-tenant_number").hide();//租户编号查询隐藏
 							 $("#house_number").val(result.data.house_number);
 							 $("#houseid").val(result.data.house_id);
 							 var  houseid = result.data.house_id;
@@ -339,6 +340,7 @@
 									 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 									 $('#j-table-data').html('');
 									 if (result.code == 1) {
+										 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 										 var str = ``;
 										 //var strfirst = ``;
 										 for(var i in result.data) {
@@ -461,6 +463,7 @@
 									 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 									 $('#j-table-data').html('');
 									 if (result.code == 1) {
+										$("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 										 var str = ``;
 										 //var strfirst = ``;
 										 for(var i in result.data) {
@@ -573,6 +576,7 @@
 								 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 								 $('#j-table-data').html('');
 								 if (result.code == 1) {
+									 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 									 var str = ``;
 									 //var strfirst = ``;
 									 for(var i in result.data) {

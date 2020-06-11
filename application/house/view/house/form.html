@@ -32,7 +32,7 @@
 				<label class="j-form-label"><i class="red">*</i>租户编号</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_number" name="tenant_number" lay-verify="required" value="{$data_info['tenant_number']}" placeholder="点击查询" readonly autocomplete="off" class="layui-input j-search-input">
-					<b class="j-explain-search j-tenant_number">查询</b>
+					<b class="j-explain-search j-tenant_number hide">查询</b>
 				</div>
 			</div>
 			<input type="hidden" id="tenant_id" name="tenant_id" value="{$data_info['tenant_id']}">
@@ -229,6 +229,7 @@
 		  		 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 		  		 $('#j-table-data').html('');
 		  		 if (result.code == 1) {
+					 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 		  			 var str = ``;
 		  			 //var strfirst = ``;
 		  			 for(var i in result.data) {
@@ -398,6 +399,7 @@
 											 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
+												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 												 var str = ``;
 												 //var strfirst = ``;
 												 for(var i in result.data) {
@@ -520,6 +522,7 @@
 											 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
+												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 												 var str = ``;
 												 //var strfirst = ``;
 												 for(var i in result.data) {
@@ -632,6 +635,7 @@
 										 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
 										 $('#j-table-data').html('');
 										 if (result.code == 1) {
+											 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
 											 var str = ``;
 											 //var strfirst = ``;
 											 for(var i in result.data) {
