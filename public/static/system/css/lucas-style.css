@@ -216,6 +216,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 
 /*----------房屋档案详情 S----------*/
 .j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden; min-height: 550px;}
+.j-details-box.no-min{min-height: auto;}
 /* .j-details-box.floorWrap{ padding-top: 50px;} */
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
 .layui-elem-field.j-field-box.j-field-boxs{margin: 30px 0 0;}

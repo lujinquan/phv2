@@ -1,5 +1,5 @@
 <form id="formdata" class="layui-form" onsubmit="return false" action="#" method="post">
-	<div class="j-details-box floorWrap">
+	<div class="j-details-box no-min floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
 		</fieldset>
@@ -126,7 +126,7 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
-				<a href="" class="layui-btn layui-btn-primary">取消</a>
+				<a href="javascript:history.go(-1)"  class="layui-btn layui-btn-primary">取消</a>
 				<a  class="layui-btn" id="clickData">确定</a>
 			</div>
 		</div>
@@ -134,7 +134,7 @@
 	<input type="hidden" name="house_id" id="houseid" value="" />
 </form>
 <form class="layui-form j-room-info hide" action="{url('renttable')}" method="post" >
-	<div class="j-details-box floorWrap">
+	<div class="j-details-box no-min floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>房间信息</legend>
 		</fieldset>
@@ -446,7 +446,7 @@
 			var urls = $(this).attr("data-href");
 			console.log("编辑数据：",urls);
 			layer.open({
-						title: '新增房间'
+						title: '编辑房间'
 						,type: 2
 						,offset: 'auto'
 						,area: ['60%', '600px']
@@ -495,7 +495,7 @@
 														 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
 														 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
-														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-pops' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 																<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																</td>\
 														 	</tr>";  
