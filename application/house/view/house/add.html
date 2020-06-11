@@ -131,8 +131,8 @@
 			</div>
 		</div>
 	</div>
+	<input type="hidden" name="house_id" id="houseid" value="" />
 </form>
-<input type="hidden" name="house_id" id="houseid" value="" />
 <form class="layui-form j-room-info hide" action="{url('renttable')}" method="post" >
 	<div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
@@ -255,9 +255,12 @@
 				$("#ban_address").val(row.ban_address);
 		 		$("#ban_id").val(row.ban_id);
 				$("#house_floor_id").attr("placeholder",'总楼层：'+row.ban_floors);
+				$("#house_floor_id").attr("oninput",'if(value>'+ row.ban_floors + ')' + 'value=' + row.ban_floors);
 				$("#house_floor_id").attr("max",row.ban_floors);
-				$("#house_unit_id").attr("placeholder",'单元号：'+row.ban_units);
+				$("#house_unit_id").attr("placeholder",'总单元号：'+row.ban_units);
+				$("#house_unit_id").attr("oninput",'if(value>'+ row.ban_units + ')' + 'value=' + row.ban_units);
 				$("#house_use_id").val(params.uses[row.ban_use_id]);
+				
 			},btn2: function(index, layero){
 				layer.close(index);
 			}
@@ -353,13 +356,13 @@
 												  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 													  if(j == 0){
 														 str +=  "<tr>\
-														 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+														 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 														 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 														 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 														 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-														 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+														 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 														 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -368,7 +371,7 @@
 														 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-														 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+														 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 																<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																</td>\
@@ -476,13 +479,13 @@
 												  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 													  if(j == 0){
 														 str +=  "<tr>\
-														 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+														 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 														 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 														 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 														 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-														 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+														 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 														 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -491,7 +494,7 @@
 														 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 														 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-														 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+														 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 														 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-pops' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 																<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																</td>\
@@ -589,13 +592,13 @@
 											  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 												  if(j == 0){
 													 str +=  "<tr>\
-													 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+													 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 													 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 													 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 													 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-													 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+													 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 													 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -604,7 +607,7 @@
 													 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 													 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-													 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+													 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 													 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 															<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 															</td>\

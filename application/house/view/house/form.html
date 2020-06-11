@@ -53,13 +53,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id"  name="house_unit_id" lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id"  name="house_unit_id" placeholder="总单元号：{$data_info['ban_units']}"  lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_floor_id" name="house_floor_id" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -71,7 +71,7 @@
 					    <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
 					    {/volist}
 					</select> -->
-					<input type="text"  id="house_use_id" value="{$data_info['house_use_id']}" autocomplete="off" readonly class="layui-input">
+					<input type="text"  id="house_use_id" value="{$params['uses'][$data_info['house_use_id']]}" autocomplete="off" readonly class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -238,13 +238,13 @@
 		  					  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 		  						  if(j == 0){
 		  							 str +=  "<tr>\
-		  							 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+		  							 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 		  							 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 		  							 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-		  							 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+		  							 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -253,7 +253,7 @@
 		  							 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-		  							 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+		  							 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 		  							 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 		  									<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 		  									</td>\
@@ -408,13 +408,13 @@
 														  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 															  if(j == 0){
 																 str +=  "<tr>\
-																 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+																 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 																 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 																 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 																 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-																 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+																 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 																 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -423,7 +423,7 @@
 																 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-																 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+																 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 																 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 																		<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																		</td>\
@@ -531,13 +531,13 @@
 														  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 															  if(j == 0){
 																 str +=  "<tr>\
-																 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+																 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 																 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 																 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 																 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-																 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+																 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id]+ "</td>\
 																 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -546,7 +546,7 @@
 																 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-																 		<td>" + result.data[i].baseinfo.room_status + "</td>\
+																 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
 																 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-pops' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
 																		<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																		</td>\
