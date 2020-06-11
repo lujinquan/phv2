@@ -60,13 +60,13 @@ class House extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id','house_oprice','house_area']);
+        return $this->only(['ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id','house_oprice']);
     }
 
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['house_id','ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id','house_oprice','house_area']);
+        return $this->only(['house_id','ban_id','tenant_id','house_unit_id','house_floor_id','house_use_id']);
     }
 
     // 编辑
