@@ -138,18 +138,24 @@ class House extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             
-            if(isset($filData['house_id']) && $filData['house_id']){
+            if(isset($data['house_id']) && $data['house_id']){
                 // 数据验证
                 $result = $this->validate($data, 'House.edit');
                 if($result !== true) {
                     return $this->error($result);
                 }
                 $HouseModel = new HouseModel();
-                // 入库
+                // 修改
                 if ($HouseModel->allowField(true)->update($data) === false) {
                     return $this->error('修改失败');
                 }
-                return $this->success('修改成功');
+                //$HouseModel = new HouseModel();
+                $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+                
+                $HouseModel->where([['house_id','eq',$data['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent]);
+
+                $row = $HouseModel->get($data['house_id']);
+                return $this->success('修改成功','',$row);
             }else{
                 // 数据验证
                 $result = $this->validate($data, 'House.form');
