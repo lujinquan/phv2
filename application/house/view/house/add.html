@@ -304,9 +304,10 @@
 							 layer.msg(result.msg);
 							 $(".j-room-info").show();//房间信息显示
 							 $(".j-ban_number").hide();//楼栋编号查询隐藏
-							  $(".j-tenant_number").hide();//租户编号查询隐藏
+							 $(".j-tenant_number").hide();//租户编号查询隐藏
 							 $("#house_number").val(result.data.house_number);
 							 $("#houseid").val(result.data.house_id);
+							 $("input[name$='house_pre_rent']") .val(result.data.house_pre_rent); 
 							 var  houseid = result.data.house_id;
 							 //$("#addroom").attr("href","{:url('room/add')}?id=" + houseid);
 							 
