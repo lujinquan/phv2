@@ -260,11 +260,12 @@ class House extends SystemBase
         foreach ($houseidArr as $f) {
             // 获取计算租金
             $house_cou_rent = $HouseModel->count_house_rent($f); 
+            //$house_pre_rent = $HouseModel->count_house_pre_rent($f); 
             $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
             // 获取房屋下使面合计、计租面积合计
             $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
             // 更新房屋的计算租金
-            $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
         }
         $diff = count($houseidArr) - $res;
         if($diff){
@@ -288,6 +289,48 @@ class House extends SystemBase
         $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_id');
         if($type == 'normal'){
             $fields = 'room_id,room_cou_rent';
+        }else if($type == 'temp'){ //例如：楼栋调整里面，调整了楼层，统一都算一遍
+            $fields = 'room_id,room_temp_cou_rent';         
+        }
+        $roomRents = RoomModel::where([['room_id','in',$rooms],['room_status','<=',1]])->column($fields); 
+        $sumrent = 0;
+        if($roomRents){
+            $rent = [];
+            foreach ($roomRents as $k=>$v) {
+                $rent[$k] = $v;         
+            }
+            $sumrent = array_sum($rent);
+        }
+        if($row['ban_number'] == '1050053295'){
+            // 不用加协议租金
+            return $row['house_pre_rent'];
+        }else{
+            //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
+            
+            // 这是1.0的写法虽然有点问题，但是为了避免问题，就这么算！
+            $houseRent = $sumrent + $row['house_diff_rent'] + $row['house_pump_rent'];
+            return ($row['house_use_id'] == 1)?round($houseRent,1):round($houseRent,2); 
+            
+            // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
+            // $p = ($row['house_use_id'] == 1)?1:2; //保留1位数
+            // return bcaddMerge([$sumrent,$row['house_diff_rent'],$row['house_pump_rent']],$p); 
+        }
+    }
+
+    /**
+     * [计算房屋规定租金]
+     * @param  [type] $houseid [房屋编号]
+     * @return [type] $type ['normal',或者,'temp']  类型   
+     */
+    public function count_house_pre_rent($houseid,$type = 'normal'){
+        // 特殊的房屋计算租金
+        if(in_array($houseid,array(666,888,999))){
+            return 0;
+        }
+        $row = self::with('ban')->find($houseid);
+        $rooms = $row->house_room()->where([['house_room_status','<=',1]])->column('room_id');
+        if($type == 'normal'){
+            $fields = 'room_id,room_pre_rent';
         }else if($type == 'temp'){ //例如：楼栋调整里面，调整了楼层，统一都算一遍
             $fields = 'room_id,room_temp_cou_rent';         
         }

@@ -163,7 +163,7 @@
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 	{if condition="$group == 'x'"}
     <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
-	<a href="{:url('renttable')}?id={{ d.house_id }}&group={$group}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a>
+	<!-- <a href="{:url('renttable')}?id={{ d.house_id }}&group={$group}" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a> -->
 	{/if}
 	{if condition="$group != 'x'"}
 	{{#  if (d.change_lease_id) { }}

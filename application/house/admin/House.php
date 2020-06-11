@@ -173,29 +173,29 @@ class House extends Admin
         return $this->fetch();
     }
 
-    // public function edit()
-    // {
-    //     if ($this->request->isPost()) {
-    //         $data = $this->request->post();
-    //         // 数据验证
-    //         $result = $this->validate($data, 'House.edit');
-    //         if($result !== true) {
-    //             return $this->error($result);
-    //         }
-    //         $HouseModel = new HouseModel();
-    //         // 入库
-    //         if ($HouseModel->allowField(true)->update($data) === false) {
-    //             return $this->error('修改失败');
-    //         }
-    //         return $this->success('修改成功');
-    //     }
-    //     $id = input('param.id/d');
-    //     $row = HouseModel::with(['ban','tenant'])->get($id);
-    //     $group = input('param.group');
-    //     $this->assign('group',$group);
-    //     $this->assign('data_info',$row);
-    //     return $this->fetch('form');
-    // }
+    public function edit()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'House.edit');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $HouseModel = new HouseModel();
+            // 入库
+            if ($HouseModel->allowField(true)->update($data) === false) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+        $id = input('param.id/d');
+        $row = HouseModel::with(['ban','tenant'])->get($id);
+        $group = input('param.group');
+        $this->assign('group',$group);
+        $this->assign('data_info',$row);
+        return $this->fetch('form');
+    }
 
     public function renttable()
     {
