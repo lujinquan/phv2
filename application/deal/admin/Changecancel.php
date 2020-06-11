@@ -48,6 +48,83 @@ class Changecancel extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changecancel_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['ChangeCancelOne']) && $data['ChangeCancelOne']){ // 售房专用票据  
+                $file = array_merge($file,$data['ChangeCancelOne']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelOne') !== false){
+                    return $this->error('请上传附件拆售房专用票据');
+                }
+            }
+            if(isset($data['ChangeCancelTwo']) && $data['ChangeCancelTwo']){ // 审批表
+                $file = array_merge($file,$data['ChangeCancelTwo']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelTwo') !== false){
+                    return $this->error('请上传附件审批表');
+                }
+            }
+            if(isset($data['ChangeCancelThree']) && $data['ChangeCancelThree']){ // 危改批文
+                $file = array_merge($file,$data['ChangeCancelThree']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelThree') !== false){
+                    return $this->error('请上传附件危改批文');
+                }
+            }
+            if(isset($data['ChangeCancelRetread']) && $data['ChangeCancelRetread']){ // 翻新计划
+                $file = array_merge($file,$data['ChangeCancelRetread']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelRetread') !== false){
+                    return $this->error('请上传附件翻新计划');
+                }
+            }
+            if(isset($data['ChangeCancelApproval']) && $data['ChangeCancelApproval']){ // 发还批文
+                $file = array_merge($file,$data['ChangeCancelApproval']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelApproval') !== false){
+                    return $this->error('请上传附件发还批文');
+                }
+            }
+            if(isset($data['ChangeCancelReport']) && $data['ChangeCancelReport']){ // 注销报告
+                $file = array_merge($file,$data['ChangeCancelReport']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelReport') !== false){
+                    return $this->error('请上传附件注销报告');
+                }
+            }
+            if(isset($data['ChangeCancelPaper']) && $data['ChangeCancelPaper']){ // 政府文件
+                $file = array_merge($file,$data['ChangeCancelPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelPaper') !== false){
+                    return $this->error('请上传附件政府文件');
+                }
+            }
+            if(isset($data['ChangeCancelInvoice']) && $data['ChangeCancelInvoice']){ // 发票（拆迁回款单）
+                $file = array_merge($file,$data['ChangeCancelInvoice']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelInvoice') !== false){
+                    return $this->error('请上传附件发票');
+                }
+            }
+            if(isset($data['ChangeCancelDetail']) && $data['ChangeCancelDetail']){ // 征收明细表
+                $file = array_merge($file,$data['ChangeCancelDetail']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelDetail') !== false){
+                    return $this->error('请上传附件征收明细表');
+                }
+            }
+            if(isset($data['ChangeCancelOfficial']) && $data['ChangeCancelOfficial']){ // 划转公文
+                $file = array_merge($file,$data['ChangeCancelOfficial']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelOfficial') !== false){
+                    return $this->error('请上传附件划转公文');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+
             $ChangeModel = new ChangeCancelModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -86,6 +163,83 @@ class Changecancel extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changecancel_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['ChangeCancelOne']) && $data['ChangeCancelOne']){ // 售房专用票据  
+                $file = array_merge($file,$data['ChangeCancelOne']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelOne') !== false){
+                    return $this->error('请上传附件拆售房专用票据');
+                }
+            }
+            if(isset($data['ChangeCancelTwo']) && $data['ChangeCancelTwo']){ // 审批表
+                $file = array_merge($file,$data['ChangeCancelTwo']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelTwo') !== false){
+                    return $this->error('请上传附件审批表');
+                }
+            }
+            if(isset($data['ChangeCancelThree']) && $data['ChangeCancelThree']){ // 危改批文
+                $file = array_merge($file,$data['ChangeCancelThree']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelThree') !== false){
+                    return $this->error('请上传附件危改批文');
+                }
+            }
+            if(isset($data['ChangeCancelRetread']) && $data['ChangeCancelRetread']){ // 翻新计划
+                $file = array_merge($file,$data['ChangeCancelRetread']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelRetread') !== false){
+                    return $this->error('请上传附件翻新计划');
+                }
+            }
+            if(isset($data['ChangeCancelApproval']) && $data['ChangeCancelApproval']){ // 发还批文
+                $file = array_merge($file,$data['ChangeCancelApproval']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelApproval') !== false){
+                    return $this->error('请上传附件发还批文');
+                }
+            }
+            if(isset($data['ChangeCancelReport']) && $data['ChangeCancelReport']){ // 注销报告
+                $file = array_merge($file,$data['ChangeCancelReport']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelReport') !== false){
+                    return $this->error('请上传附件注销报告');
+                }
+            }
+            if(isset($data['ChangeCancelPaper']) && $data['ChangeCancelPaper']){ // 政府文件
+                $file = array_merge($file,$data['ChangeCancelPaper']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelPaper') !== false){
+                    return $this->error('请上传附件政府文件');
+                }
+            }
+            if(isset($data['ChangeCancelInvoice']) && $data['ChangeCancelInvoice']){ // 发票（拆迁回款单）
+                $file = array_merge($file,$data['ChangeCancelInvoice']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelInvoice') !== false){
+                    return $this->error('请上传附件发票');
+                }
+            }
+            if(isset($data['ChangeCancelDetail']) && $data['ChangeCancelDetail']){ // 征收明细表
+                $file = array_merge($file,$data['ChangeCancelDetail']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelDetail') !== false){
+                    return $this->error('请上传附件征收明细表');
+                }
+            }
+            if(isset($data['ChangeCancelOfficial']) && $data['ChangeCancelOfficial']){ // 划转公文
+                $file = array_merge($file,$data['ChangeCancelOfficial']);
+            }else{
+                if(strpos($fileUploadConfig, 'ChangeCancelOfficial') !== false){
+                    return $this->error('请上传附件划转公文');
+                }
+            }
+            $data['file'] = $file;
+            // 附件上传验证 E
+            
             $ChangeModel = new ChangeCancelModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');
