@@ -168,11 +168,15 @@ class House extends Admin
                 if(!is_array($filData)){
                     return $this->error($filData);
                 }
+
                 $row = $HouseModel->allowField(true)->create($filData);
                 // 入库
                 if (!$row) {
                     return $this->error('新增失败');
                 }
+                $house_cou_rent = $HouseModel->count_house_rent($row['house_id']);
+                $HouseModel->where([['house_id','eq',$row['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent]);
+                $row = $HouseModel->get($row['house_id']);
                 return $this->success('新增成功','',$row);
             }
             
