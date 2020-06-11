@@ -53,24 +53,25 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value=""  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_floor_id" name="house_floor_id" lay-verify="required" value="" autocomplete="off" class="layui-input">
+					<input type="number" id="house_floor_id"  name="house_floor_id" lay-verify="required" value="" onkeyup="this.value=this.value.replace(/\D/g,'')" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用性质</label>
 				<div class="j-input-inline">
-					<select name="house_use_id" lay-verify="required" class="field-cid" type="select">
+					<!-- <select name="house_use_id" lay-verify="required" class="field-cid" type="select">
 					    <option value="">请选择</option>
 					    {volist name="params['uses']" id="v"}
 					    <option value="{$key}">{$v}</option>
 					    {/volist}
-					</select>
+					</select> -->
+					<input type="text"  id="house_use_id" value="" autocomplete="off" readonly class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -253,6 +254,10 @@
 				$("#ban_number").val(row.ban_number);//获取楼栋编号
 				$("#ban_address").val(row.ban_address);
 		 		$("#ban_id").val(row.ban_id);
+				$("#house_floor_id").attr("placeholder",'总楼层：'+row.ban_floors);
+				$("#house_floor_id").attr("max",row.ban_floors);
+				$("#house_unit_id").attr("placeholder",'单元号：'+row.ban_units);
+				$("#house_use_id").val(params.uses[row.ban_use_id]);
 			},btn2: function(index, layero){
 				layer.close(index);
 			}

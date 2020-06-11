@@ -53,7 +53,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id" name="house_unit_id" lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
+					<input type="number" id="house_unit_id"  name="house_unit_id" lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -65,12 +65,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用性质</label>
 				<div class="j-input-inline">
-					<select name="house_use_id" lay-verify="required" class="field-cid" type="select">
+					<!-- <select name="house_use_id" lay-verify="required" class="field-cid" type="select">
 					    <option value="">请选择</option>
 					    {volist name="params['uses']" id="v"}
 					    <option value="{$key}" {if condition="$key == $data_info['house_use_id']"}selected{/if}>{$v}</option>
 					    {/volist}
-					</select>
+					</select> -->
+					<input type="text"  id="house_use_id" value="{$data_info['house_use_id']}" autocomplete="off" readonly class="layui-input">
 				</div>
 			</div>
 		</div>
