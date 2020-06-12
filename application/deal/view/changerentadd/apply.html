@@ -62,8 +62,8 @@
 	 <tbody>
 	   <tr>
 	 	  <td id="write_type">金额</td>
-		  <td id="before_year"><input min="0" step="0.01" type="number" name="before_year_rent" id="before_year_rent" lay-verify="required" value="0"  placeholder="请输入追加以前年金额" class="layui-input"></td>
-		  <td id="before_month"><input min="0" step="0.01" type="number" name="before_month_rent" id="before_month_rent" lay-verify="required" value="0" placeholder="请输入追加以前月金额" class="layui-input"></td>
+		  <td id="before_year"><input min="0" step="0.01" type="number" name="before_year_rent" id="before_year_rent" lay-verify="required" value=""  placeholder="请输入追加以前年金额" class="layui-input"></td>
+		  <td id="before_month"><input min="0" step="0.01" type="number" name="before_month_rent" id="before_month_rent" lay-verify="required" value="" placeholder="请输入追加以前月金额" class="layui-input"></td>
 		  <td id="total_sum">0</td>
 	   </tr>
 	 </tbody>
@@ -117,17 +117,6 @@
 		　　　　return false;
 		　　}
 		});
-		
-		function initialvalue(){
-			$(".j-house-box tbody tr").each( function(){
-				if($(this).find("#before_year_rent").val()==""){
-					$(this).find("#before_year_rent").val(0);
-				}
-				if($(this).find("#before_month_rent").val()==""){
-					$(this).find("#before_month_rent").val(0);
-				}
-			})	
-		}
 		//获取房屋查询器
 		 $(".layui-form").on('click','.j-house_number',function(){
 			layer.open({
@@ -164,17 +153,20 @@
 			 });
 		})	
 		//计算总金额
-		var sums=0;
-		function summoney(){
-			$("#total_sum").text((parseFloat($("#before_year_rent").val()).toFixed(2)*100+parseFloat($("#before_month_rent").val()).toFixed(2)*100).toFixed(2) / 100);
+		function initialvalue(){
+			var i = 0;
+			if($("#before_year_rent").val() != ''){
+				i = parseFloat($("#before_year_rent").val()).toFixed(2)*100;
+			}
+			var j = 0;
+			if($("#before_month_rent").val() != ''){
+				j = parseFloat($("#before_month_rent").val()).toFixed(2)*100;
+			}
+
+			$("#total_sum").text((i+j).toFixed(2)/100);
 		}
-		$("#before_year_rent").bind("input propertychange",function(){
+		$("#before_year_rent,#before_month_rent").bind("input propertychange",function(){
 			initialvalue();
-			summoney();
-		});
-		$("#before_month_rent").bind("input propertychange",function(){
-			initialvalue();
-			summoney();
 		});
 		// $(".j-submit").click(function(){
 		// 	if ($("#upload_img_list1 .item_img").length) {

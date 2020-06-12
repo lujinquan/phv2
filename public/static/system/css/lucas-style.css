@@ -4,6 +4,7 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;/* 去谷歌默认背景色 */
 }
 .j-visibility{visibility:hidden;}
+.j-visibilitys{display: none;}
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
@@ -44,6 +45,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-width-150{width: 150px;}
 .j-width-180{width: 180px;}
 .j-margin-10{margin-right: 10px;}
+.layui-table-click{background: #ccc!important;}
 /*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}

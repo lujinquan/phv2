@@ -119,6 +119,7 @@
 					,page: false //开启分页
 					,limit: 1000000
             		,limits: [5,10,20,30,40,50,100,300]
+					,totalRow: true //开启合计行
 					,text: {
 						none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 					},
@@ -131,7 +132,8 @@
 								field: 'house_number',
 								minWidth: 140,
 								align:'center',
-								title: '房屋编号'
+								title: '房屋编号',
+								totalRowText: '合计：'
 							}, {
 								field: 'ban_number',
 								minWidth: 110,
@@ -176,11 +178,13 @@
 								field: 'house_area',
 								minWidth: 80,
 								align:'center',
-								title: '建面'
+								title: '建面',
+								totalRow: true
 							}, {
 								field: 'house_lease_area',
 								minWidth: 100,
-								title: '计租面积'
+								title: '计租面积',
+								totalRow: true
 							}, {
 								field: '',
 								minWidth: 80,
