@@ -73,6 +73,10 @@ class ChangeName extends SystemBase
         if(isset($data['new_tenant_name']) && $data['new_tenant_name']){
             $where[] = ['a.new_tenant_name','like','%'.$data['new_tenant_name'].'%'];
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
@@ -172,9 +176,13 @@ class ChangeName extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number)
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
         $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();

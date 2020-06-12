@@ -15,6 +15,11 @@
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('ban_number',$config['deal_changepause_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
+					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('ban_inst_id',$config['deal_changepause_index_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2 j-width-130 j-margin-10">
@@ -111,6 +116,7 @@
 			  }
 			  ,cols: [[ 
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
+					{field: 'ban_number',hide:true,align:'center',minWidth: 210,title: '楼栋编号'},
 					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 140,align:'center',title: '申请机构', 
 						templet: function(d) {

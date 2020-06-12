@@ -1,0 +1,148 @@
+<div class="j-table-content j-no-title">
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('record')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md6  fl">
+				{if condition="in_array('ban_address',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:160px;">
+					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
+				</div>
+				{/if}		
+				{if condition="in_array('ban_owner_id',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('change_type',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="change_type">
+						<option value="">异动类型</option>
+						{volist name="params['changes']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('ctime',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="ctime" id="date" placeholder="申请时间" autocomplete="off" class="layui-input">
+				</div>
+				{/if}
+				{if condition="in_array('ftime',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline j-input-margin j-width-100">
+					<input type="text" name="ftime" id="date1"  placeholder="完成时间" autocomplete="off" class="layui-input">
+				</div>
+				{/if}
+				{if condition="in_array('effecttime',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline j-input-margin j-width-100">
+					<input type="text" name="effecttime" id="date2"  placeholder="生效时间" autocomplete="off" class="layui-input">
+				</div>
+				{/if}
+				{if condition="in_array('change_status',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline j-width-120">
+					<select name="change_status">
+						<option value="">审核状态</option>
+						<option value="1">成功</option>
+						<option value="0">失败</option>
+					</select>
+				</div>
+				{/if}
+			</div>
+			<div class="j-search-fr layui-col-md6 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+	<script type="text/html" id="toolbar">
+	</script>
+	<script type="text/html" title="操作按钮模板" id="buttonTpl">
+      <a target="_blank" href="{:url('detail')}?change_type={{ d.change_type }}&change_order_number={{ d.change_order_number }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
+    </script>
+</div>
+<script type="text/javascript">
+	
+	layui.use(['table', 'jquery','laydate'], function() {
+		var $ = layui.$;
+		var table = layui.table
+		   ,laydate = layui.laydate;
+		
+	  	//日期
+	  	laydate.render({
+	    	elem: '#date'
+	    	,type: 'month'
+	    	,ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+	  	});
+	  	//日期
+	  	laydate.render({
+	    	elem: '#date1'
+	    	,type: 'month'
+	    	,ready: function(date){
+			    $('.layui-laydate li').click(function () {
+			       $('.laydate-btns-confirm').trigger('click');
+			    });
+			}
+	  	});
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,defaultToolbar: ['filter','exports','print'] //设置右边筛选，导出，打印显示
+			    ,url: '{:url()}' //数据接口
+				,page: true //开启分页
+				,limit: 10
+			   	,limits: [10,20,30,40,50,100,300,500]
+				  ,text: {
+						none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+				  }
+			  ,cols: [
+				[
+					{field: 'change_order_number',hide:false,align:'center',width: 210,title: '异动单号'}
+					,{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'}
+					
+					,{field: 'ban_inst_id',hide: isShowInst,width: 120,align:'center',title: '申请机构',templet: function(d) {
+		                return params.insts[d.ban_inst_id];
+		            }}
+		            ,{field: 'ban_owner_id',width: 80,align:'center',title: '产别',templet: function(d) {
+	                    return params.owners[d.ban_owner_id];
+		            }}
+		            ,{field: 'change_type',width: 130,align:'center',title: '异动类型',templet: function(d) {
+	                    return params.changes[d.change_type];
+	                }}
+	                ,{field: 'cdate',align:'center',width: 200,title: '申请时间'}
+	                ,{field: 'fdate',align:'center',width: 200,title: '完成时间'}
+	                ,{field: 'change_status',align:'center',width: 150,title: '审核状态',templet: function(d) {
+	                	if(parseInt(d.change_status) == 1){
+	                		return '成功';
+	                	}else{
+	                		return '失败';
+	                	}
+		            }}
+	                ,{title: '操作',width: 80,align:'center',templet: '#buttonTpl',fixed: 'right'}
+				]
+			],
+			done: function(res, curr, count) {
+
+			}
+		},isShowInst)
+	});
+</script>

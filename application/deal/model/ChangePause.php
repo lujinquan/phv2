@@ -77,6 +77,10 @@ class ChangePause extends SystemBase
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
         }
+        // 检索楼栋编号
+        if(isset($data['ban_number']) && $data['ban_number']){
+            $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
+        }
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
@@ -172,9 +176,13 @@ class ChangePause extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number)
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         //$this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
