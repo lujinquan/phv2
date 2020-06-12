@@ -42,7 +42,7 @@ class Process extends SystemBase
         return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent');
     }
 
-    public function checkWhere($data)
+    public function checkWhere($data , $type = 'index')
     {
         if(!$data){
             $data = request()->param();
@@ -199,7 +199,7 @@ class Process extends SystemBase
             
     }
 
-    public function detail($change_type,$id)
+    public function detail($change_type,$id,$change_order_number)
     {
         switch ($change_type) {
             case '1': // 租金减免
@@ -270,7 +270,7 @@ class Process extends SystemBase
                 # code...
                 break;
         }
-        $row = $ChangeModel->detail($id);
+        $row = $ChangeModel->detail($id,$change_order_number);
         $result = [];
         if($change_type == 16){
             $ChangeCutModel = new ChangeCutModel;

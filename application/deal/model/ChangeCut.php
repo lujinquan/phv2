@@ -191,9 +191,14 @@ class ChangeCut extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number)
     {
-        $row = self::with(['house','tenant'])->get($id);
+        if($id){
+            $row = self::with(['house','tenant'])->find($id);
+        }else{
+            $row = self::with(['house','tenant'])->where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
+        // $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         //$this->finalDeal($row);
