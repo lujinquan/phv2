@@ -374,8 +374,8 @@
 						var row = window["layui-layer-iframe" + index].callbackdata();
 						var rows = window["layui-layer-iframe" + index].callbackdatas();
 						var trData = '';
-						//console.log(row);
-						//console.log(rows);
+						console.log("楼栋:",row);
+						console.log("房屋",rows);
 						if(!row){
 							layer.msg("请选择楼栋!");
 						}
@@ -490,7 +490,7 @@
 									$('.cancel_after_3 label').text(sumbuildingsold.toFixed(2) / 100);
 									$('.cancel_after_3 input').val(sumbuildingsold.toFixed(2) / 100);//获取隐藏域的值
 									//房屋原价改变重新计算
-									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;
+									sumoriginal += parseFloat(tdArr.eq(2).find("input").val()).toFixed(2)*100;//输入框改变原价
 									$(".cancel_change_4 label").text(sumoriginal.toFixed(2) / 100);
 									$(".cancel_change_4 input").val(sumoriginal.toFixed(2) / 100);//获取隐藏域的值
 									sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
