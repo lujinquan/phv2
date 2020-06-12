@@ -9,6 +9,11 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('house_number',$config['deal_changecut_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('house_use_id',$config['deal_changecut_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-width-110 j-margin-10">
 					<select name="house_use_id"  xm-select="house_use_id">
@@ -155,6 +160,7 @@
 		                return params.owners[d.ban_owner_id];
 		           }},
 				   {field: 'tenant_name',align:'center',minWidth: 100,title: '租户'},
+				   {field: 'house_number',align:'center',minWidth: 100,title: '房屋编号'},
 					{field: 'cut_type',align:'center',minWidth: 100,title: '减免类型',templet:function(d) {
 		                    return params.cuttypes[d.cut_type];
 		            }},

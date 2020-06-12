@@ -96,6 +96,10 @@ class ChangeCut extends SystemBase
         if(isset($data['house_use_id']) && $data['house_use_id']){
             $where[] = ['b.house_use_id','in',explode(',',$data['house_use_id'])];
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
         // 检索减免类型
         if(isset($data['cut_type']) && $data['cut_type']){
             $where[] = ['a.cut_type','eq',$data['cut_type']];
@@ -191,7 +195,7 @@ class ChangeCut extends SystemBase
         return $data; 
     }
 
-    public function detail($id,$change_order_number)
+    public function detail($id,$change_order_number = '')
     {
         if($id){
             $row = self::with(['house','tenant'])->find($id);

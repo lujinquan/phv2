@@ -274,6 +274,7 @@
         <label class="layui-form-label">租金减免记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecut_record_search'])"}checked{/if}>  
+            <input type="checkbox" name="deal_changecut_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changecut_record_search'])"}checked{/if}>

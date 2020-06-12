@@ -176,7 +176,7 @@ class ChangePause extends SystemBase
         return $data; 
     }
 
-    public function detail($id,$change_order_number)
+    public function detail($id,$change_order_number = '')
     {
         if($id){
             $row = self::get($id);
