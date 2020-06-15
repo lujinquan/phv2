@@ -225,6 +225,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
 }
+.j-details-box .j-enclosure-label.j-enclosure-long-label{width: 150px;}
 .j-details-box .j-enclosure-label{float: initial;}
 /* .j-enclosure-upload{ margin-top: 15px;} */
 .j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}
