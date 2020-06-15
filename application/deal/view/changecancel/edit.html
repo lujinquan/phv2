@@ -134,7 +134,7 @@
 	  		<td class="house_prescribed"><input type="hidden" name="house_prescribed[{$key}]" value="{$v['house_pre_rent']}">{$v['house_pre_rent']}</td>
 	  		<td class="house_rentalarea"><input type="hidden" name="house_rentalarea[{$key}]" value="{$v['house_lease_area']}">{$v['house_lease_area']}</td>
 	  		<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
-	  		<td class="house_original"><input type="number" class="layui-input" name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
+	  		<td class="house_original"><input type="number" class="layui-input" readonly name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
 	  		<td class="house_delete"><label class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>
 	  	</tr>
 	  	{/volist}
@@ -514,7 +514,10 @@
 					  //建筑面积改变重新计算
 					  sumbuildings += parseFloat(tdArr.eq(4).find("input").val()).toFixed(2)*100;//输入框改变建筑面积
 					  //房屋原价改变重新计算
-					  sumoriginal += parseFloat(tdArr.eq(5).find("input").val()).toFixed(2)*100;//输入框改变原价	
+					  var summoney = (parseFloat($("#floor_original input").val())/ parseFloat($("#floor_builtuparea input").val()) * parseFloat(tdArr.eq(4).find("input").val())).toFixed(2)*100;
+					  sumoriginal += summoney;//输入框改变原价	
+					  $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney.toFixed(2) / 100);//注销明细房屋原价
+					  //console.log("计算结果:", $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney))
 				}
 				//户数计算
 				$(".cancel_change_0 label").text(sumhouseholds);
