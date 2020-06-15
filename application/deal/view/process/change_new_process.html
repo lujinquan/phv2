@@ -6,6 +6,12 @@
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
+			<label class="j-form-label">异动编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['change_order_number']}" readonly class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_seach" value="{$data_info['house_info']['house_number']}" placeholder="点击查询"  lay-verify="required" readonly autocomplete="off" class="layui-input">

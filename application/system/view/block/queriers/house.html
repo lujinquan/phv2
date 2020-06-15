@@ -149,7 +149,13 @@
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#ff8700').attr('color-status',4);
 					}else if(parseInt(result[i].color_status) == 5){
 						// 如果是暂停计租
-						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#FFCC00').attr('color-status',5);
+						if(changeType == 18){ //这是一个特例，暂停计租的房子也要可以申请发租约异动
+							result[i].color_status = 1;
+							$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#0000ff').attr('color-status',1);
+						}else{ 
+							$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#FFCC00').attr('color-status',5);
+						}
+						
 					}
 					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").prop('disabled',true);
 					$("[lay-id='dataTable'] tr[color-status='3'] input[type='checkbox'],[lay-id='dataTable'] tr[color-status='2'] input[type='checkbox']").next().addClass('layui-btn-disabled');

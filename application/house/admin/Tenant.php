@@ -67,7 +67,8 @@ class Tenant extends Admin
     }
 
     public function add()
-    {
+    {   
+        $group = input('group','x');
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
@@ -87,6 +88,7 @@ class Tenant extends Admin
             }
             return $this->success('新增成功');
         }
+        $this->assign('group',$group);
         return $this->fetch();
     }
 
