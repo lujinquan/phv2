@@ -240,6 +240,11 @@ class House extends Admin
         $HouseModel = new HouseModel;
         $roomTables = $HouseModel->get_house_renttable($id);
 
+         // 统计当前租户的欠租情况
+        $RentModel = new RentModel;
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
+        
         // $roomTables = [];
         // if($rooms){
         //     $FloorPointModel =new FloorPointModel;

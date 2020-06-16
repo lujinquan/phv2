@@ -70,7 +70,7 @@ class Changehouse extends Validate
     //添加
     public function sceneForm()
     {
-        return $this->only(['ban_id','house_id']);
+        return $this->only(['ban_id','house_id','change_house_pump_rent','change_house_diff_rent']);
     }
 
     // 编辑

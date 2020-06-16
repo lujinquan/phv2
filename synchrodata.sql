@@ -198,9 +198,9 @@ drop table if exists ph_v2.ph_change_lease_back;
 create table ph_v2.ph_change_lease_back like ph_v2.ph_change_lease;
 # 同步数据
 insert into ph_v2.ph_change_lease_back 
-(change_order_number,process_id,house_id,change_remark,tenant_id,tenant_name,child_json,data_json,last_print_time,print_times,qrcode,szno,reason,change_imgs,change_status,ctime) 
+(change_order_number,process_id,house_id,change_remark,tenant_id,tenant_name,child_json,data_json,last_print_time,print_times,qrcode,szno,reason,change_imgs,change_status,ctime,etime) 
 select 
-ChangeOrderID,ProcessConfigType,HouseID,Recorde,TenantID,TenantName,Child,Deadline,PrintTime,PrintTimes,QrcodeUrl,Szno,Reason,ChangeImageIDS,Status,CreateTime
+ChangeOrderID,ProcessConfigType,HouseID,Recorde,TenantID,TenantName,Child,Deadline,PrintTime,PrintTimes,QrcodeUrl,Szno,Reason,ChangeImageIDS,Status,CreateTime,CreateTime
 from ph_v1.ph_lease_change_order;
 
 
@@ -266,9 +266,9 @@ create table ph_v2.ph_change_use_back like ph_v2.ph_change_use;
 # 同步数据
 update ph_v1.ph_use_change_order as a left join (select FatherOrderID,CreateTime from ph_v1.ph_use_child_order Order by id desc) as b on a.ChangeOrderID = b.FatherOrderID set a.FinishTime = b.CreateTime ;
 insert into ph_v2.ph_change_use_back 
-(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,ftime,cuid,change_status) 
+(change_order_number,change_use_type,transfer_rent,house_id,old_tenant_id,old_tenant_name,new_tenant_id,new_tenant_name,change_remark,change_reason,change_imgs,ctime,etime,ftime,cuid,change_status) 
 select 
-ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,UserNumber,Status
+ChangeOrderID,ChangeType,TransferRent,HouseID,OldTenantID,OldTenantName,NewTenantID,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,FinishTime,UserNumber,Status
 from ph_v1.ph_use_change_order;
 
 /**
@@ -312,9 +312,9 @@ drop table if exists ph_v2.ph_change_pause_back;
 create table ph_v2.ph_change_pause_back like ph_v2.ph_change_pause;
 # 同步数据
 insert into ph_v2.ph_change_pause_back 
-(change_order_number,house_id,ban_id,change_pause_rent,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,change_pause_rent,change_imgs,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,InflRent,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,InflRent,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 3 and Status < 2;
 
 update ph_v2.ph_change_pause_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -326,9 +326,9 @@ drop table if exists ph_v2.ph_change_new_back;
 create table ph_v2.ph_change_new_back like ph_v2.ph_change_new;
 # 同步数据
 insert into ph_v2.ph_change_new_back 
-(change_order_number,house_id,ban_id,tenant_id,new_type,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,tenant_id,new_type,change_imgs,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,TenantID,NewLeaseType,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,TenantID,NewLeaseType,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 7 and Status < 2;
 
 update ph_v2.ph_change_new_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -341,9 +341,9 @@ drop table if exists ph_v2.ph_change_cut_back;
 create table ph_v2.ph_change_cut_back like ph_v2.ph_change_cut;
 # 同步数据
 insert into ph_v2.ph_change_cut_back 
-(change_order_number,house_id,ban_id,tenant_id,cut_type,cut_rent,change_imgs,ctime,ftime,end_date,change_status)
+(change_order_number,house_id,ban_id,tenant_id,cut_type,cut_rent,change_imgs,ctime,etime,ftime,end_date,change_status)
 select 
-ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,FinishTime,DateEnd,Status
+ChangeOrderID,HouseID,BanID,TenantID,CutType,InflRent,ChangeImageIDS,CreateTime,FinishTime,FinishTime,DateEnd,Status
 from ph_v1.ph_change_order where ChangeType = 1 and Status < 2;
 
 update ph_v2.ph_change_cut_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -357,9 +357,9 @@ drop table if exists ph_v2.ph_change_cancel_back;
 create table ph_v2.ph_change_cancel_back like ph_v2.ph_change_cancel;
 # 同步数据
 insert into ph_v2.ph_change_cancel_back 
-(change_order_number,house_id,ban_id,cancel_type,change_imgs,ctime,ftime,change_remark,change_status) 
+(change_order_number,house_id,ban_id,cancel_type,change_imgs,ctime,etime,ftime,change_remark,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,Remark,Status
+ChangeOrderID,HouseID,BanID,CancelType,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Remark,Status
 from ph_v1.ph_change_order where ChangeType in (5,8) and Status < 2;
 
 update ph_v2.ph_change_cancel_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -373,9 +373,9 @@ drop table if exists ph_v2.ph_change_house_back;
 create table ph_v2.ph_change_house_back like ph_v2.ph_change_house;
 # 同步数据
 insert into ph_v2.ph_change_house_back 
-(change_order_number,house_id,ban_id,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,change_imgs,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 9 and Status < 2;
 
 update ph_v2.ph_change_house_back a,ph_v2.ph_house_back b set a.house_id = b.house_id,a.tenant_id = b.tenant_id where a.house_id = b.house_number;
@@ -387,9 +387,9 @@ drop table if exists ph_v2.ph_change_inst_back;
 create table ph_v2.ph_change_inst_back like ph_v2.ph_change_inst;
 # 同步数据
 insert into ph_v2.ph_change_inst_back 
-(change_order_number,ban_ids,old_inst_id,new_inst_id,change_imgs,change_ban_rent,ctime,ftime,change_status) 
+(change_order_number,ban_ids,old_inst_id,new_inst_id,change_imgs,change_ban_rent,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,InflRent,CreateTime,FinishTime,Status
+ChangeOrderID,BanID,InstitutionID,NewInstitutionID,ChangeImageIDS,InflRent,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 10 and Status < 2;
 
 update ph_v2.ph_change_inst_back a,ph_v2.ph_ban_back b set a.ban_ids = b.ban_id,a.cuid = b.ban_cuid where a.ban_ids = b.ban_number;
@@ -400,9 +400,9 @@ drop table if exists ph_v2.ph_change_offset_back;
 create table ph_v2.ph_change_offset_back like ph_v2.ph_change_offset;
 # 同步数据
 insert into ph_v2.ph_change_offset_back 
-(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_change_order where ChangeType = 4 and Status < 2;
 
 update ph_v2.ph_change_offset_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;
@@ -416,9 +416,9 @@ create table ph_v2.ph_change_name_back like ph_v2.ph_change_name;
 # 同步数据
 update ph_v1.ph_cor_change_order as a left join (select FatherOrderID,CreateTime from ph_v1.ph_cor_child_order Order by id desc) as b on a.ChangeOrderID = b.FatherOrderID set a.FinishTime = b.CreateTime ;
 insert into ph_v2.ph_change_name_back 
-(change_order_number,house_id,tenant_id,old_tenant_name,new_tenant_name,change_remark,change_reason,change_imgs,ctime,ftime,change_status) 
+(change_order_number,house_id,tenant_id,old_tenant_name,new_tenant_name,change_remark,change_reason,change_imgs,ctime,etime,ftime,change_status) 
 select 
-ChangeOrderID,HouseID,OldTenantID,OldTenantName,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,Status
+ChangeOrderID,HouseID,OldTenantID,OldTenantName,NewTenantName,ChangeReason,Reson,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status
 from ph_v1.ph_cor_change_order;
 
 
@@ -431,9 +431,9 @@ drop table if exists ph_v2.ph_change_rentadd_back;
 create table ph_v2.ph_change_rentadd_back like ph_v2.ph_change_rentadd;
 # 同步数据
 insert into ph_v2.ph_change_rentadd_back 
-(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,ftime,change_status,is_take_back) 
+(change_order_number,house_id,ban_id,tenant_id,before_month_rent,before_year_rent,change_imgs,ctime,etime,ftime,change_status,is_take_back) 
 select 
-ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,Status,IfTakeBack
+ChangeOrderID,HouseID,BanID,TenantID,OldMonthRent,OldYearRent,ChangeImageIDS,CreateTime,FinishTime,FinishTime,Status,IfTakeBack
 from ph_v1.ph_change_order where ChangeType = 11 and Status < 2;
 
 update ph_v2.ph_change_rentadd_back a,ph_v2.ph_house_back b set a.house_id = b.house_id where a.house_id = b.house_number;

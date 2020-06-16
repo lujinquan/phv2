@@ -11,6 +11,7 @@ use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 use app\house\model\TenantTai as TenantTaiModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeName extends SystemBase
 {
@@ -22,10 +23,11 @@ class ChangeName extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
     ];
 
@@ -313,6 +315,17 @@ class ChangeName extends SystemBase
      */
     private function finalDeal($finalRow)
     {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 17,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         // 1、别字更正
         TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_name'=>$finalRow['new_tenant_name']]);
 

@@ -291,6 +291,7 @@ class Process extends Admin
         
         $PorcessModel = new ProcessModel;
         $result = $PorcessModel->detail($change_type,$id,$change_order_number);
+        //halt($result);
         if(isset($result['old_data_info'])){
             $this->assign('old_data_info',$result['old_data_info']);
         }

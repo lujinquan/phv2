@@ -14,6 +14,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\HouseTemp as HouseTempModel;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeHouse extends SystemBase
 {
@@ -25,10 +26,11 @@ class ChangeHouse extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
     ];
@@ -413,7 +415,18 @@ class ChangeHouse extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {//halt($finalRow);
+    {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 9,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();
 
         foreach ($finalRow['data_json']['ban'] as $k => $v) {

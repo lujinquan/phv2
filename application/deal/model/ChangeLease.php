@@ -12,6 +12,7 @@ use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\TenantTai as TenantTaiModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 include EXTEND_PATH.'phpqrcode/phpqrcode.php';
 
 class ChangeLease extends SystemBase
@@ -24,11 +25,12 @@ class ChangeLease extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'last_print_time' => 'timestamp:Y-m-d H:i:s',
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
     ];
@@ -368,6 +370,17 @@ class ChangeLease extends SystemBase
      */
     private function finalDeal($finalRow)
     {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 18,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         // 1、添加房屋台账
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];

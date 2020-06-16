@@ -1,147 +1,147 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box floorWrap">
-	<fieldset class="layui-elem-field layui-field-title j-field-box">
-		<legend>基本信息</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>注销类别</label>
-			<div class="j-input-inline">
-				<select name="cancel_type" lay-verify="required" class="field-cid">
-					<option value="">请选择</option>
-					{volist name="params['cancels']" id="v"}
-					<option value="{$key}" {if condition="$data_info['cancel_type'] == $key"}selected{/if}>{$v}</option>
-					{/volist}
-				</select>
+	<div class="j-details-box floorWrap">
+		<fieldset class="layui-elem-field layui-field-title j-field-box">
+			<legend>基本信息</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>注销类别</label>
+				<div class="j-input-inline">
+					<select name="cancel_type" lay-verify="required" class="field-cid">
+						<option value="">请选择</option>
+						{volist name="params['cancels']" id="v"}
+						<option value="{$key}" {if condition="$data_info['cancel_type'] == $key"}selected{/if}>{$v}</option>
+						{/volist}
+					</select>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
+				<div class="j-input-inline">
+					<input type="text" name="ban_number" lay-verify="required" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
+					<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
+					<input type="hidden" name="house_id" value="">
+					<b class="j-explain-search j-ban_number">查询</b>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">楼栋地址</label>
+				<div class="j-input-inline">
+					<input type="text" id="ban_address" value="{$data_info['ban_info']['ban_address']}" autocomplete="off" class="layui-input" readonly>
+				</div>
 			</div>
 		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>楼栋编号</label>
-			<div class="j-input-inline">
-				<input type="text" name="ban_number" lay-verify="required" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
-				<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
-				<input type="hidden" name="house_id" value="">
-				<b class="j-explain-search j-ban_number">查询</b>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label">异动原因</label>
+				<div class="j-input-inline">
+					<input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
+				</div>
 			</div>
 		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label">楼栋地址</label>
-			<div class="j-input-inline">
-				<input type="text" id="ban_address" value="{$data_info['ban_info']['ban_address']}" autocomplete="off" class="layui-input" readonly>
-			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md8">
-			<label class="j-form-label">异动原因</label>
-			<div class="j-input-inline">
-				<input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-	</div>
-	<fieldset  class="layui-elem-field layui-field-title j-field-box">
-		<legend>基数异动</legend>
-	</fieldset>
+		<fieldset  class="layui-elem-field layui-field-title j-field-box">
+			<legend>基数异动</legend>
+		</fieldset>
 		<table  class="layui-table">
-		  <thead>
-			 <tr>
-			   <th>楼栋编号</th>
-			   <th>异动状态</th>
-			   <th class="cancel">户数</th>
-			   <th class="cancel">规定租金</th>
-			   <th class="cancel">使用面积</th>
-			   <th class="cancel">建筑面积</th>
-			   <th class="cancel">房屋原价</th>
-			   <th class="cancel">栋数</th>
-			   <th>是否注销楼栋</th>
-			 </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		    	<td id="floor_number">{$data_info['ban_info']['ban_number']}</td>
-			  <td>异动前</td>
-			  <td class="cancel_before_0" id="floor_households"><input type="hidden" name="floor_households" value="户数"><label>户数</label></td>
-		      <td class="cancel_before_1" id="floor_prescribed"><input type="hidden" name="floor_prescribed" value="{$data_info['change_json']['before']['ban_total_rent']}"><label>{$data_info['change_json']['before']['ban_total_rent']}</label></td>
-	    	  <td class="cancel_before_2" id="floor_areaofuse"><input type="hidden" name="floor_areaofuse" value="{$data_info['change_json']['before']['ban_total_use_area']}"><label>{$data_info['change_json']['before']['ban_total_use_area']}</label></td>
-	    	  <td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value="{$data_info['change_json']['before']['ban_total_area']}"><label>{$data_info['change_json']['before']['ban_total_area']}</label></td>
-	    	  <td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value="{$data_info['change_json']['before']['ban_total_oprice']}"><label>{$data_info['change_json']['before']['ban_total_oprice']}</label></td>
-			  <td class="cancel_before_5" id="floor_bannumber"><input type="hidden" name="floor_bannumber" value="栋数"><label>栋数</label></td>
-			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" {if condition="$data_info['cancel_ban']"}checked{/if} value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
-		    </tr>
-			<tr>
-			  <td></td>
-			  <td>异动</td>
-			  <td class="cancel_change_0"><input type="hidden" name="cancel_change_0" value="户数"><label>户数</label></td>
-			  <td class="cancel_change_1"><input type="hidden" name="cancel_change_1" value="{$data_info['cancel_rent']}"><label>{$data_info['cancel_rent']}</label></td>
-			  <td class="cancel_change_2"><input type="hidden" name="cancel_change_2" value="{$data_info['cancel_use_area']}"><label>{$data_info['cancel_use_area']}</label></td>
-			  <td class="cancel_change_3"><input type="hidden" name="cancel_change_3" value="{$data_info['cancel_area']}"><label>{$data_info['cancel_area']}</label></td>
-			  <td class="cancel_change_4"><input type="hidden" name="cancel_change_4" value="{$data_info['cancel_oprice']}"><label>{$data_info['cancel_oprice']}</label></td>
-			  <td class="cancel_change_5"><input type="hidden" name="cancel_change_5" value="栋数"><label>栋数</label></td>
-			</tr>
-			<tr>
-			  <td></td>
-			  <td>异动后</td>
-			  <td class="cancel_after_0" id="changes_floor_households"><input type="hidden" name="changes_floor_households" value="户数"><label>户数</label></td>
-			  <td class="cancel_after_1" id="changes_floor_prescribed"><input type="hidden" name="changes_floor_prescribed" value="{$data_info['change_json']['after']['ban_total_rent']}"><label>{$data_info['change_json']['after']['ban_total_rent']}</label></td>
-			  <td class="cancel_after_2" id="changes_floor_areaofuse"><input type="hidden" name="changes_floor_areaofuse" value="{$data_info['change_json']['after']['ban_total_use_area']}"><label>{$data_info['change_json']['after']['ban_total_use_area']}</label></td>
-			  <td class="cancel_after_3" id="changes_floor_builtuparea"><input type="hidden" name="changes_floor_builtuparea" value="{$data_info['change_json']['after']['ban_total_area']}"><label>{$data_info['change_json']['after']['ban_total_area']}</label></td>
-			  <td class="cancel_after_4" id="changes_floor_original"><input type="hidden" name="changes_floor_original" value="{$data_info['change_json']['after']['ban_total_oprice']}"><label>{$data_info['change_json']['after']['ban_total_oprice']}</label></td>
-			  <td class="cancel_after_5" id="changes_floor_bannumber"><input type="hidden" name="changes_floor_bannumber" value="栋数"><label>栋数</label></td>
-			</tr>
-		  </tbody>
+			<thead>
+				<tr>
+					<th>楼栋编号</th>
+					<th>异动状态</th>
+					<th class="cancel">户数</th>
+					<th class="cancel">规定租金</th>
+					<th class="cancel">使用面积</th>
+					<th class="cancel">建筑面积</th>
+					<th class="cancel">房屋原价</th>
+					<th class="cancel">栋数</th>
+					<th>是否注销楼栋</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="floor_number">{$data_info['ban_info']['ban_number']}</td>
+					<td>异动前</td>
+					<td class="cancel_before_0" id="floor_households"><input type="hidden" name="floor_households" value="{$data_info['change_json']['before']['ban_total_holds']}"><label>{$data_info['change_json']['before']['ban_total_holds']}</label></td>
+					<td class="cancel_before_1" id="floor_prescribed"><input type="hidden" name="floor_prescribed" value="{$data_info['change_json']['before']['ban_total_rent']}"><label>{$data_info['change_json']['before']['ban_total_rent']}</label></td>
+					<td class="cancel_before_2" id="floor_areaofuse"><input type="hidden" name="floor_areaofuse" value="{$data_info['change_json']['before']['ban_total_use_area']}"><label>{$data_info['change_json']['before']['ban_total_use_area']}</label></td>
+					<td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value="{$data_info['change_json']['before']['ban_total_area']}"><label>{$data_info['change_json']['before']['ban_total_area']}</label></td>
+					<td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value="{$data_info['change_json']['before']['ban_total_oprice']}"><label>{$data_info['change_json']['before']['ban_total_oprice']}</label></td>
+					<td class="cancel_before_5" id="floor_bannumber"><input type="hidden" name="floor_bannumber" value="{$data_info['change_json']['before']['ban_total_num']}"><label>{$data_info['change_json']['before']['ban_total_num']}</label></td>
+					<td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" {if condition="$data_info['cancel_ban']"}checked{/if} value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>异动</td>
+					<td class="cancel_change_0"><input type="hidden" name="cancel_change_0" value="{$data_info['cancel_holds']}"><label>{$data_info['cancel_holds']}</label></td>
+					<td class="cancel_change_1"><input type="hidden" name="cancel_change_1" value="{$data_info['cancel_rent']}"><label>{$data_info['cancel_rent']}</label></td>
+					<td class="cancel_change_2"><input type="hidden" name="cancel_change_2" value="{$data_info['cancel_use_area']}"><label>{$data_info['cancel_use_area']}</label></td>
+					<td class="cancel_change_3"><input type="hidden" name="cancel_change_3" value="{$data_info['cancel_area']}"><label>{$data_info['cancel_area']}</label></td>
+					<td class="cancel_change_4"><input type="hidden" name="cancel_change_4" value="{$data_info['cancel_oprice']}"><label>{$data_info['cancel_oprice']}</label></td>
+					<td class="cancel_change_5"><input type="hidden" name="cancel_change_5" value="{$data_info['cancel_num']}"><label>{$data_info['cancel_num']}</label></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>异动后</td>
+					<td class="cancel_after_0" id="changes_floor_households"><input type="hidden" name="changes_floor_households" value="{$data_info['change_json']['after']['ban_total_holds']}"><label>{$data_info['change_json']['after']['ban_total_holds']}</label></td>
+					<td class="cancel_after_1" id="changes_floor_prescribed"><input type="hidden" name="changes_floor_prescribed" value="{$data_info['change_json']['after']['ban_total_rent']}"><label>{$data_info['change_json']['after']['ban_total_rent']}</label></td>
+					<td class="cancel_after_2" id="changes_floor_areaofuse"><input type="hidden" name="changes_floor_areaofuse" value="{$data_info['change_json']['after']['ban_total_use_area']}"><label>{$data_info['change_json']['after']['ban_total_use_area']}</label></td>
+					<td class="cancel_after_3" id="changes_floor_builtuparea"><input type="hidden" name="changes_floor_builtuparea" value="{$data_info['change_json']['after']['ban_total_area']}"><label>{$data_info['change_json']['after']['ban_total_area']}</label></td>
+					<td class="cancel_after_4" id="changes_floor_original"><input type="hidden" name="changes_floor_original" value="{$data_info['change_json']['after']['ban_total_oprice']}"><label>{$data_info['change_json']['after']['ban_total_oprice']}</label></td>
+					<td class="cancel_after_5" id="changes_floor_bannumber"><input type="hidden" name="changes_floor_bannumber" value="{$data_info['change_json']['after']['ban_total_num']}"><label>{$data_info['change_json']['after']['ban_total_num']}</label></td>
+				</tr>
+			</tbody>
 		</table>
-	    <table  class="layui-table hide">
-	      <thead>
-	    	  <tr>
-	    	    <th>楼栋编号</th>
-	    	    <th>规定租金</th>
-	    	    <th>使用面积</th>
-	    	    <th>建筑面积</th>
-	    	    <th>房屋原价</th>
-	    	  </tr>
-	      </thead>
-	      <tbody>
-	        <tr>
-	      	  <td id="floor_number"></td>
-	    	  <td id="floor_prescribed"></td>
-	    	  <td id="floor_areaofuse"></td>
-	    	  <td id="floor_builtuparea"></td>
-	    	  <td id="floor_original"></td>
-	        </tr>
-	      </tbody>
-	    </table>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-house-title">
-		<legend>注销明细</legend>
-	</fieldset>
-	<table  class="layui-table j-house-box">
-	  <thead>
-		  <tr>
-		    <th>房屋编号</th>
-		    <th>承租人</th>
-		  	<th>规定租金</th>
-		  	<th>计租面积</th>
-		  	<th>建筑面积</th>
-		    <th>房屋原价</th>
-		  	<th>操作</th>
-		  </tr>
-	  </thead>
-	  <tbody>
-	  	{volist name="$data_info['data_json']" id="v"}
-	  	<tr>
-	  		<td class="house_number"><input type="hidden" name="house_id[{$key}]" value="{$v['house_id']}"><input type="hidden" name="house_use_id[{$key}]" value="{$v['house_use_id']}"><input type="hidden" name="house_number[{$key}]" value="{$v['house_number']}">{$v['house_number']}</td>
-	  		<td class="house_lessee"><input type="hidden" name="tenant_id[{$key}]" value="{$v['tenant_id']}"><input type="hidden" name="house_lessee[{$key}]" value="{$v['tenant_name']}">{$v['tenant_name']}</td>
-	  		<td class="house_prescribed"><input type="hidden" name="house_prescribed[{$key}]" value="{$v['house_pre_rent']}">{$v['house_pre_rent']}</td>
-	  		<td class="house_rentalarea"><input type="hidden" name="house_rentalarea[{$key}]" value="{$v['house_lease_area']}">{$v['house_lease_area']}</td>
-	  		<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
-	  		<td class="house_original"><input type="number" class="layui-input" readonly name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
-	  		<td class="house_delete"><label class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>
-	  	</tr>
-	  	{/volist}
-	    <!-- <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr> -->
-	 </tbody>
-	</table>
-	<div class="j-cancel-show hide">
+		<table  class="layui-table hide">
+			<thead>
+				<tr>
+					<th>楼栋编号</th>
+					<th>规定租金</th>
+					<th>使用面积</th>
+					<th>建筑面积</th>
+					<th>房屋原价</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="floor_number"></td>
+					<td id="floor_prescribed"></td>
+					<td id="floor_areaofuse"></td>
+					<td id="floor_builtuparea"></td>
+					<td id="floor_original"></td>
+				</tr>
+			</tbody>
+		</table>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box j-house-title">
+			<legend>注销明细</legend>
+		</fieldset>
+		<table  class="layui-table j-house-box">
+			<thead>
+				<tr>
+					<th>房屋编号</th>
+					<th>承租人</th>
+					<th>规定租金</th>
+					<th>计租面积</th>
+					<th>建筑面积</th>
+					<th>房屋原价</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name="$data_info['data_json']" id="v"}
+				<tr>
+					<td class="house_number"><input type="hidden" name="house_id[{$key}]" value="{$v['house_id']}"><input type="hidden" name="house_use_id[{$key}]" value="{$v['house_use_id']}"><input type="hidden" name="house_number[{$key}]" value="{$v['house_number']}">{$v['house_number']}</td>
+					<td class="house_lessee"><input type="hidden" name="tenant_id[{$key}]" value="{$v['tenant_id']}"><input type="hidden" name="house_lessee[{$key}]" value="{$v['tenant_name']}">{$v['tenant_name']}</td>
+					<td class="house_prescribed"><input type="hidden" name="house_prescribed[{$key}]" value="{$v['house_pre_rent']}">{$v['house_pre_rent']}</td>
+					<td class="house_rentalarea"><input type="hidden" name="house_rentalarea[{$key}]" value="{$v['house_lease_area']}">{$v['house_lease_area']}</td>
+					<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
+					<td class="house_original"><input type="number" class="layui-input" readonly name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
+					<td class="house_delete"><label class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>
+				</tr>
+				{/volist}
+				<!-- <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr> -->
+			</tbody>
+		</table>
+		<div class="j-cancel-show hide">
 	<!-- <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>注销楼栋</legend>
 	</fieldset>
@@ -174,270 +174,270 @@
 			</div>
 		</div>
 	</div> -->
-	</div>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>补充附件</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelOne',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 售房专用票据</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+	<legend>补充附件</legend>
+</fieldset>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelOne',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 售房专用票据</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelOne'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelOne[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list1" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelOne'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelOne[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelTwo',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 审批表</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelTwo',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 审批表</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img2">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list2" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelTwo'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelTwo[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list2" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelTwo'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelTwo[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelThree',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 危改批文</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelThree',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 危改批文</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img3">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list3" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelThree'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelThree[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list3" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelThree'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelThree[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelRetread',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 翻新计划</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img4">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelRetread',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 翻新计划</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img4">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list4" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelRetread'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelRetread[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list4" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelRetread'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelRetread[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelApproval',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 发还批文</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img5">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelApproval',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 发还批文</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img5">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list5" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelApproval'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelApproval[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list5" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelApproval'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelApproval[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelReport',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 注销报告</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img6">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelReport',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 注销报告</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img6">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list6" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelReport'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelReport[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list6" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelReport'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelReport[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelPaper',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 政府文件</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img7">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelPaper',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 政府文件</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img7">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list7" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelPaper'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelPaper[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list7" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelPaper'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelPaper[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelInvoice',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 发票</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img8">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelInvoice',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 发票</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img8">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list8" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelInvoice'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelInvoice[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list8" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelInvoice'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelInvoice[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelDetail',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 征收明细表</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img9">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelDetail',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 征收明细表</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img9">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list9" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelDetail'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelDetail[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list9" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelDetail'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelDetail[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md12">
-			<div class="j-enclosure-upload clearfix">
-				<div class="j-enclosure-label">{if condition="in_array('ChangeCancelOfficial',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 划转公文</div>
-				<div class="j-enclosure-label j-uplode-icon">
-					<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
-					<button type="button" class="layui-btn layui-btn-primary" id="upload_img10">上传图片</button>
-				</div>
-				<div class="layui-form-mid layui-word-aux">限制3M</div>
+</div>
+<div class="layui-row layui-form-item layui-col-space90">
+	<div class="layui-col-md12">
+		<div class="j-enclosure-upload clearfix">
+			<div class="j-enclosure-label">{if condition="in_array('ChangeCancelOfficial',$config['changecancel_file_upload'])"}<i class="red">*</i>{/if} 划转公文</div>
+			<div class="j-enclosure-label j-uplode-icon">
+				<i><img src="__ADMIN_IMG__/Group8.png" /></i>点击上传
+				<button type="button" class="layui-btn layui-btn-primary" id="upload_img10">上传图片</button>
 			</div>
-			<div class="j-enclosure-imgs clearfix">
-   				<div id="upload_img_list10" class="upload_img_list j-viewer-img">
-   					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangeCancelOfficial'"}
-					<dd class="item_img" id="">
-						<div class="operate">
-							<i  class="layui-icon-close-fill layui-icon"></i>
-						</div>
-						<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelOfficial[]" value="{$v['id']}" />
-					</dd>
-					{/if}
-					{/volist}
-   				</div>
-   			</div>
+			<div class="layui-form-mid layui-word-aux">限制3M</div>
+		</div>
+		<div class="j-enclosure-imgs clearfix">
+			<div id="upload_img_list10" class="upload_img_list j-viewer-img">
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelOfficial'"}
+				<dd class="item_img" id="">
+					<div class="operate">
+						<i  class="layui-icon-close-fill layui-icon"></i>
+					</div>
+					<img src="{$v['file']}" class="img" ><input type="hidden" name="ChangeCancelOfficial[]" value="{$v['id']}" />
+				</dd>
+				{/if}
+				{/volist}
+			</div>
 		</div>
 	</div>
+</div>
 <input type="hidden" name="id" value="{$data_info['id']}">
 {include file="common/submit"}
   <!-- <div class="layui-row layui-form-item layui-col-space90">
@@ -447,7 +447,7 @@
 			<button type="submit" j-data="{'save_type':'submit'}" class="layui-btn" lay-submit lay-filter="formSubmit">保存并提交</button>
 		</div>
 	</div> -->
-  </div>
+</div>
 </form>
 {include file="system@block/layui" /}
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
@@ -466,14 +466,14 @@
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
 		var laydate = layui.laydate,
-			$ = layui.$,
-			upload = layui.upload,
-			form = layui.form;
+		$ = layui.$,
+		upload = layui.upload,
+		form = layui.form;
             //限制input输入框字符
             $("input[type=number]").keypress(function(e) {
-            　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
-            　　　　return false;
-            　　}
+            	　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+            		　　　　return false;
+            	　　}
             });
             function initialvalue(){
             	$(".j-house-box tbody tr").each( function(){
@@ -501,9 +501,9 @@
 					sumoriginalold =0;//房屋原价异动后面积
 				var sumbannumber =0,//栋数初始值
 					sumbannumberold =0;//栋数异动后值
-				var trList = $(".j-house-box tbody").children("tr");
-				console.log("tr值",trList);
-				for (var j=0;j<trList.length;j++) {
+					var trList = $(".j-house-box tbody").children("tr");
+					console.log("tr值",trList);
+					for (var j=0;j<trList.length;j++) {
 					var tdArr = trList.eq(j).find("td"); //遍历td  
 					  //户数计算
 					  sumhouseholds = trList.length;//户数
@@ -518,7 +518,7 @@
 					  sumoriginal += summoney;//输入框改变原价	
 					  $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney.toFixed(2) / 100);//注销明细房屋原价
 					  //console.log("计算结果:", $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney))
-				}
+					}
 				//户数计算
 				$(".cancel_change_0 label").text(sumhouseholds);
 				$(".cancel_change_0 input").val(sumhouseholds)//获取隐藏域的值
@@ -549,8 +549,14 @@
 				sumoriginalold = parseFloat($('.cancel_before_4 label').text()).toFixed(2)*100 -sumoriginal ;
 				$('.cancel_after_4 label').text(sumoriginalold.toFixed(2) / 100);
 				$('.cancel_after_4 input').val(sumoriginalold.toFixed(2) / 100);//获取隐藏域的值
+				
 				//栋数计算cancel_before_5
-				sumbannumber = 0;//栋数
+				if($('.layui-form-switch').hasClass('layui-form-onswitch')){
+					sumbannumber = $("#floor_bannumber input").val();//栋数
+				}else{
+					sumbannumber = 0;//栋数
+				}
+				
 				$(".cancel_change_5 label").text(sumbannumber);
 				$(".cancel_change_5 input").val(sumbannumber)//获取隐藏域的值
 				sumbannumberold = $('.cancel_before_5 label').text() -sumbannumber ;
@@ -564,16 +570,16 @@
 					$("input[name='cancel_ban']").attr("disabled","disabled");
 				}
 			}	
-		  function defaultcarried(){
+			function defaultcarried(){
 				computation();
 				//删除
 				$(".house_delete").click(function(){
 					var that=$(this);
-				   layer.confirm('确定要删除吗？', function(index){
-					 that.parents("tr").remove();
-					 computation();
-					 layer.close(index);
-				   });  
+					layer.confirm('确定要删除吗？', function(index){
+						that.parents("tr").remove();
+						computation();
+						layer.close(index);
+					});  
 				})
 				//输入框建筑面积改变重新计算
 				$(".house_builtuparea").bind("input propertychange",function(){
@@ -608,29 +614,29 @@
 			}	
 			
 		//获取楼栋查询器
-		 $(".layui-form").on('click','.j-ban_number',function(){
-		layer.open({
-					title: '楼栋查询器'
-					,type: 2
-					,offset: 'auto'
-					,area: ['70%', '70%']
-					,btn:false
-					,pageTabs: false
-					,content: '{:url('system/index/cancellation')}?change_type=8&hisi_iframe=yes'
-					,btn: ['确定','关闭']
-					,yes: function(index, layero){
-						var row = window["layui-layer-iframe" + index].callbackdata();
-						var rows = window["layui-layer-iframe" + index].callbackdatas();
-						var trData = '';
-						console.log("楼栋:",row);
-						console.log("房屋",rows);
-						if(!row){
-							layer.msg("请选择楼栋!");
-						}
-						else if(!rows){
-							layer.msg("请选择房屋!");
-						}
-						else if(!rows.length==0){
+		$(".layui-form").on('click','.j-ban_number',function(){
+			layer.open({
+				title: '楼栋查询器'
+				,type: 2
+				,offset: 'auto'
+				,area: ['70%', '70%']
+				,btn:false
+				,pageTabs: false
+				,content: '{:url('system/index/cancellation')}?change_type=8&hisi_iframe=yes'
+				,btn: ['确定','关闭']
+				,yes: function(index, layero){
+					var row = window["layui-layer-iframe" + index].callbackdata();
+					var rows = window["layui-layer-iframe" + index].callbackdatas();
+					var trData = '';
+					console.log("楼栋:",row);
+					console.log("房屋",rows);
+					if(!row){
+						layer.msg("请选择楼栋!");
+					}
+					else if(!rows){
+						layer.msg("请选择房屋!");
+					}
+					else if(!rows.length==0){
 						$('.j-house-box tbody').html("");
 						$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 						$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
@@ -660,39 +666,39 @@
 							for(var i=0;i<rows.length;i++) {
 								//houseidData += ','+rows[i].house_id;
 								var trData ='<tr>\
-											<td class="house_number"><input type="hidden" name="house_id['+i+']" value="'+rows[i].house_id+'"><input type="hidden" name="house_use_id['+i+']" value="'+rows[i].house_use_id+'"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
-											<td class="house_lessee"><input type="hidden" name="tenant_id['+i+']" value="'+rows[i].tenant_id+'"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
-											<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
-											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
-											<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
-											<td class="house_original"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
-											<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
-										</tr>';
-						    initialvalue();
-							$('.j-house-box tbody').append(trData);
-							computation();
-						  }
+								<td class="house_number"><input type="hidden" name="house_id['+i+']" value="'+rows[i].house_id+'"><input type="hidden" name="house_use_id['+i+']" value="'+rows[i].house_use_id+'"><input type="hidden" name="house_number['+i+']" value="'+rows[i].house_number+'">'+rows[i].house_number+'</td>\
+								<td class="house_lessee"><input type="hidden" name="tenant_id['+i+']" value="'+rows[i].tenant_id+'"><input type="hidden" name="house_lessee['+i+']" value="'+rows[i].tenant_name+'">'+rows[i].tenant_name+'</td>\
+								<td class="house_prescribed"><input type="hidden" name="house_prescribed['+i+']" value="'+rows[i].house_pre_rent+'">'+rows[i].house_pre_rent+'</td>\
+								<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
+								<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
+								<td class="house_original"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_original['+i+']" value="'+rows[i].house_oprice+'"></td>\
+								<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
+								</tr>';
+								initialvalue();
+								$('.j-house-box tbody').append(trData);
+								computation();
+							}
 						 //  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
 							// $("input[name='house_id']").val(houseidData);//获取房屋编号
 							layer.close(index);
 						}
 					}
-						else{
-							layer.msg("房屋没选择!");
-							return false;
-						}
-						if(	$('.j-house-box tbody').html()==''){
-							$(".j-house-box,.j-house-title").hide();
-						}
-						else{
-							$(".j-house-box,.j-house-title").show();
-						}
-						defaultcarried();
-					},btn2: function(index, layero){
-						layer.close(index);
+					else{
+						layer.msg("房屋没选择!");
+						return false;
 					}
-		 });
-		})
+					if(	$('.j-house-box tbody').html()==''){
+						$(".j-house-box,.j-house-title").hide();
+					}
+					else{
+						$(".j-house-box,.j-house-title").show();
+					}
+					defaultcarried();
+				},btn2: function(index, layero){
+					layer.close(index);
+				}
+			});
+})
 		//售房专用票据
 		upload.render({
 			elem: '#upload_img1',
