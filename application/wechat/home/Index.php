@@ -239,12 +239,12 @@ class Index extends Common
                 return json($result);
             }
             // 检查订单绑定的房屋是否以被当前会员绑定
-            if(!in_array($rent_order_info['house_id'],$member_houses)){
-                $result['code'] = 10033;
-                $result['msg'] = '当前房屋未绑定';
-                $result['en_msg'] = 'The house is not bound by the current member';
-                return json($result);
-            }
+            // if(!in_array($rent_order_info['house_id'],$member_houses)){
+            //     $result['code'] = 10033;
+            //     $result['msg'] = '当前房屋未绑定';
+            //     $result['en_msg'] = 'The house is not bound by the current member';
+            //     return json($result);
+            // }
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
         //halt($pay_money);
