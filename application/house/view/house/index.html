@@ -152,7 +152,11 @@
 							<i class="layui-icon">&#xe615;</i>
 							搜索
 						</button>
+						{if condition="$group == 'y' && $login['uid'] == 1"}
+						<a data-href="{:url('createqrcode')}" refresh="false" confirm="确认批量生成吗？" class="layui-btn layui-btn-warm j-ajax">生成微信二维码</a>
+						{/if}
 						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+						
 					</div>
 				</div>
 			</div>

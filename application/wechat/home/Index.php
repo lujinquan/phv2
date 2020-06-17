@@ -355,6 +355,7 @@ class Index extends Common
         //    echo $mini->createMiniScene('432432', 'pages/index/index');
             $result = $mini->createMiniPath('pages/payment/payment?houseid=22');
             $res = file_put_contents('./qrcode2.png',$result);
+            
             halt($res);
         // } catch (Exception $e) {
         //     var_dump($e->getMessage());

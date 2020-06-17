@@ -38,6 +38,31 @@ class Weixin extends Model
         $configDatas = WeixinConfigModel::column('name,value');
     	$this->appid = $configDatas['app_user_appid'];
     	$this->appSecret = $configDatas['app_user_appsecret'];
+
+        //halt($configDatas);
+        $this->config = [
+            //调用mini_login方法的时候，用下面的配置
+            // 'appid'     => 'wx2cb8b9b001e3b37b',
+            // 'appsecret' => '7813490da6f1265e4901ffb80afaa36f',
+            // 令牌
+            //'token'          => 'lucas',
+            // 支付AppID
+            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
+            // 公众号AppSecret
+            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
+            // 公众号消息加解密密钥
+            'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
+            // 配置商户支付参数
+            'mch_id'         => $configDatas['app_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
+            //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
+            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            // 配置缓存目录，需要拥有写权限
+            //'cache_path'     => '',
+        ];
+
     }
 
     /**
@@ -154,6 +179,29 @@ class Weixin extends Model
 	    }
 
 	}
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * 选用的二维码生成c方案
+     * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+	public function createqrcode( $path = '' ,$width = 430)
+    {
+        include EXTEND_PATH.'wechat/include.php';
+        $mini = \WeMini\Qrcode::instance($this->config);
+        header('Content-type:image/jpeg'); //输出的类型
+        $result = $mini->createMiniPath($path , $width);
+        return $result;
+    }
 
 	/**
 	 * 功能描述：会员分享给后台发送模板

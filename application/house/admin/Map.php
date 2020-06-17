@@ -23,7 +23,6 @@ class Map extends Admin
 	public function index()
 	{
 		if ($this->request->isAjax()) {
-
       $getData = $this->request->get();
       $banModel = new BanModel;
       $where = $banModel->checkWhere($getData);
@@ -80,7 +79,7 @@ class Map extends Admin
   public function statistics()
   {
     if ($this->request->isAjax()) {
-      $getData = $this->request->get();
+      $getData = $this->request->param();
       $banModel = new BanModel;
       $where = $banModel->checkWhere($getData);
       $ban_area_three = input('ban_area_three'); //搜索某社区

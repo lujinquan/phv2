@@ -18,6 +18,7 @@ use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
+use app\wechat\model\Weixin as WeixinModel;
 use app\deal\model\Process as ProcessModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\FloorPoint as FloorPointModel;
@@ -443,6 +444,46 @@ class House extends Admin
             } 
             return json($data);
         }
+    }
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * 选用的二维码生成c方案
+     * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function createqrcode()
+    {
+        $houseModel = new HouseModel;
+        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(2)->select();
+
+        //halt($houseNumberArr);
+        $WeixinModel = new WeixinModel;
+        $i = 0;
+        $width = 300;
+        foreach($houseNumberArr as $h){
+            $path = 'pages/payment/payment?houseid='.$h['house_id'];
+            $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
+            $result = $WeixinModel->createqrcode($path,$width);
+            file_put_contents('.'.$filename,$result);
+            $houseModel = new HouseModel;
+            $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
+            //$h->house_share_img = 'https://procheck.ctnmit.com'.$filename;
+            if($res){
+               $i++; 
+            }
+            //exit;
+        } 
+        return $this->success('生成成功，一共生成'.$i.'张二维码！');
+
     }
 
     public function export()
