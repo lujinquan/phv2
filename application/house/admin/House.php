@@ -462,8 +462,11 @@ class House extends Admin
      */
     public function createqrcode()
     {
+
+        set_time_limit(0);
+
         $houseModel = new HouseModel;
-        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(2)->select();
+        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(1000)->select();
 
         //halt($houseNumberArr);
         $WeixinModel = new WeixinModel;
@@ -472,7 +475,9 @@ class House extends Admin
         foreach($houseNumberArr as $h){
             $path = 'pages/payment/payment?houseid='.$h['house_id'];
             $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
-            $result = $WeixinModel->createqrcode($path,$width);
+            //halt($path);
+            $result = $WeixinModel->createqrcode($path,$width); //C方案生成二维码，有数量限制100000张
+            //$result = $WeixinModel->createMiniScene('house_id=22' , $path,$width); //B方案生成二维码，无数量限制，但是每分钟最多生成5000张
             file_put_contents('.'.$filename,$result);
             $houseModel = new HouseModel;
             $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);

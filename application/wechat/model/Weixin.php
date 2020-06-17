@@ -182,7 +182,7 @@ class Weixin extends Model
 
     /**
      * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
-     * 选用的二维码生成c方案
+     * 选用的二维码生成C方案
      * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
      * =====================================
      * @author  Lucas 
@@ -200,6 +200,29 @@ class Weixin extends Model
         $mini = \WeMini\Qrcode::instance($this->config);
         header('Content-type:image/jpeg'); //输出的类型
         $result = $mini->createMiniPath($path , $width);
+        return $result;
+    }
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * 选用的二维码生成B方案
+     * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+	public function createMiniScene( $scene, $page, $width = 430, $auto_color = false, $line_color = ["r" => "0", "g" => "0", "b" => "0"], $is_hyaline = true, $outType = null )
+    {
+        include EXTEND_PATH.'wechat/include.php';
+        $mini = \WeMini\Qrcode::instance($this->config);
+        header('Content-type:image/jpeg'); //输出的类型
+        $result = $mini->createMiniScene($scene, $page , $width, $auto_color ,$line_color,$is_hyaline,$outType);
         return $result;
     }
 
