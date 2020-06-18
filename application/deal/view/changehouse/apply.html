@@ -215,7 +215,7 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	// });
 	
 	// 限制input输入负数
-	function onlyNumber(obj){
+	function onlynumber(obj){
 		//得到第一个字符是否为负号
 		var t = obj.value.charAt(0);
 		//先把非数字的都替换掉，除了数字和.
@@ -229,9 +229,9 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 		//只能输入两位小数
 		obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
 		// //如果第一位是负号，则允许添加
-		// if(t == '-'){
-		// return;
-		// }
+		if(t == '-'){
+		return;
+		}
 	};
 	var ban_length = 0;
 	$('.table_data_2').hide();
