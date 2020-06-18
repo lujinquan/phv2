@@ -118,12 +118,18 @@ class Weixin extends Model
 	 */
 	public function getAccessToken()
 	{
+		$access_token = cache(($this->appid).'_access_token');
+		//cache(($this->appid).'_access_token',null);
+		if(!empty($access_token)){
+			return ['access_token'=>$access_token,'expires_in'=>7000];
+		}
 	    $wxUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
 	    //把appid，appsecret，code拼接到url里
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret);
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
 	    $wxResult = json_decode($result, true);
+	    //$wxResult = ['access_token'=>'34_p9IMMq6SSBu5n8iyBlN8BceqC0XwJYqjmk6mG77FS03AuP55o58rUTP2umKNHfF9uzKiAYVhGxX_HntSL2LBnBWZ6GGiewNfOg1Tbh-YJTDhemJNRlSnvCBlrKmhY09VbhKPCSbwrQYnjWOZULIeAIAEVS','expires_in'=>7200];
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
 	    } else {
@@ -133,6 +139,8 @@ class Weixin extends Model
 	            return '请求失败，错误码：' . $wxResult['errcode'];
 	        //请求成功
 	        } else {
+	        	Db::name('weixin_access_token')->insert(['appid'=>$this->appid,'access_token'=>$wxResult['access_token'],'ctime'=>time(),'expires_in'=>$wxResult['expires_in']]);
+	        	cache(($this->appid).'_access_token',$wxResult['access_token'],7000);
 	        	return $wxResult;
 	        }
 	    }
@@ -182,7 +190,7 @@ class Weixin extends Model
 
     /**
      * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
-     * 选用的二维码生成c方案
+     * 选用的二维码生成C方案
      * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
      * =====================================
      * @author  Lucas 
@@ -200,6 +208,29 @@ class Weixin extends Model
         $mini = \WeMini\Qrcode::instance($this->config);
         header('Content-type:image/jpeg'); //输出的类型
         $result = $mini->createMiniPath($path , $width);
+        return $result;
+    }
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * 选用的二维码生成B方案
+     * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+	public function createMiniScene( $scene, $page, $width = 430, $auto_color = false, $line_color = ["r" => "0", "g" => "0", "b" => "0"], $is_hyaline = true, $outType = null )
+    {
+        include EXTEND_PATH.'wechat/include.php';
+        $mini = \WeMini\Qrcode::instance($this->config);
+        header('Content-type:image/jpeg'); //输出的类型
+        $result = $mini->createMiniScene($scene, $page , $width, $auto_color ,$line_color,$is_hyaline,$outType);
         return $result;
     }
 

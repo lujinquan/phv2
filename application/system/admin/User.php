@@ -15,6 +15,7 @@ use think\Db;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemMenu as MenuModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
 
 /**
  * 后台用户、角色控制器
@@ -72,7 +73,7 @@ class User extends Admin
             if (isset($queryData['role_id']) && $queryData['role_id']) {
                 $where[] = ['a.role_id', 'eq', $queryData['role_id']];
             }
-            $fields = "a.id,a.username,a.mobile,a.nick,a.last_login_time,a.ctime,a.inst_id,a.last_login_ip,a.intro,a.status,b.name";
+            $fields = "a.id,a.username,a.weixin_openid,a.mobile,a.nick,a.last_login_time,a.ctime,a.inst_id,a.last_login_ip,a.intro,a.status,b.name";
             $data['data'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('inst_id asc,a.ctime desc')->select();
             //halt($data['data']);
             $data['count'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->count('a.id');
@@ -177,6 +178,39 @@ class User extends Admin
         $this->assign('roleOptions', RoleModel::getOption());
 
         return $this->fetch('userform');
+    }
+
+    /**
+     * 绑定微信
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间:  <-- 这里输入 ctrl + shift + . 自动生成当前时间戳
+     * @return  返回值  
+     * @version 版本  1.0
+     */    
+    public function bindWeixin()
+    {
+        $id = input('id');
+        $row = UserModel::where('id', $id)->field('mobile,nick')->find();
+        if($row['mobile']){
+            $WeixinMemberModel = new WeixinMemberModel;
+            $find = $WeixinMemberModel->where([['weixin_tel','eq',$row['mobile']]])->find();
+            if($find){
+                $row->weixin_openid = $find['openid'];
+                if($row->save()){
+                    return $this->success('授权成功！');
+                }else{
+                    return $this->error('未知错误');
+                }
+            }else{
+                return $this->error('请用户“'.$row['nick'].'”先登录小程序并授权手机号，或检查手机号是否与系统一致');
+            }
+        }else{
+            return $this->error('请先补充当前用户“'.$row['nick'].'”的手机号');
+        }
     }
 
     /**
