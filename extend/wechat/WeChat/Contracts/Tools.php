@@ -270,6 +270,7 @@ class Tools
     }
 
     /**
+     * @author Lucas
      * 以post访问模拟访问
      * @param string $url 访问URL
      * @param array $data POST数据
