@@ -87,6 +87,11 @@ class User extends Admin
         $this->assign('hisiTabType', 3);
         return $this->fetch();
     }
+	
+	public function tableSelect()
+	{
+		return $this->fetch();
+	}
 
     /**
      * 布局切换
