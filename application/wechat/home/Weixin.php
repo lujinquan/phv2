@@ -1489,31 +1489,37 @@ class Weixin extends Common
      */
     public function rent_order_info() 
     {
-        // 验证令牌
-        $result = [];
-        $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
+        $type = input('type','');
+        if($type != 'share'){
+            // 验证令牌
+            $result = [];
+            $result['code'] = 0;
+            if($this->debug === false){ 
+                if(!$this->check_token()){
+                    $result['code'] = 10010;
+                    $result['msg'] = '令牌失效';
+                    $result['en_msg'] = 'Invalid token';
+                    return json($result);
+                }
+                $token = input('token');
+                $openid = cache('weixin_openid_'.$token);
+            }else{
+                $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            }
+            // 绑定手机号
+            $WeixinMemberModel = new WeixinMemberModel;
+            $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            if($member_info['is_show'] == 2){
+                $result['code'] = 10011;
+                $result['msg'] = '用户已被禁止访问';
+                $result['en_msg'] = 'The user has been denied access';
                 return json($result);
             }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         }
         
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        if($member_info['is_show'] == 2){
-            $result['code'] = 10011;
-            $result['msg'] = '用户已被禁止访问';
-            $result['en_msg'] = 'The user has been denied access';
-            return json($result);
-        }
+        
+        
         $houseID = trim(input('house_id')); //获取房屋id
         if(!$houseID){
             $result['code'] = 10018;
@@ -1526,7 +1532,7 @@ class Weixin extends Common
         foreach ($result['data']['rent'] as $key => &$value) {
             $value['id'] = $key + 1;
         }
-        $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
