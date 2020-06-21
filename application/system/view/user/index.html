@@ -58,11 +58,12 @@
 </script>
 
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {{# if(d.weixin_openid){ }}
+    {{# if(d.weixin_member_id){ }}
     <button class="layui-btn layui-btn-xs layui-btn-disabled">已经授权</button>
     {{# }else{ }}
     <!-- <a data-href="{:url('bindWeixin')}?id={{ d.id }}" refresh="false" confirm="系统将根据小程序微信授权绑定的手机号来匹配当前账号的手机号{{ d.mobile }}，是否确认开始绑定？" class="layui-btn layui-btn-xs layui-bg-green j-ajax">微信授权</a> -->
-	<a  href="javascript:;" class="layui-btn layui-btn-xs layui-bg-green j-gave">微信授权</a>
+    <a href="{:url('wechatAuth')}?id={{ d.id }}" hisi-data="{width: '900px', height: '600px',refresh: 1}" class="layui-btn layui-btn-xs layui-bg-green j-iframe-pop">微信授权</a>
+	<!-- <a  href="javascript:;" class="layui-btn layui-btn-xs layui-bg-green j-gave">微信授权</a> -->
     {{# } }}
     <a href="{:url('editUser')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
     <a href="{:url('delUser')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
@@ -90,6 +91,7 @@
                     return params.insts[d.inst_id];
                 }}
                 ,{field: 'nick', width: 90,title: '昵称'}
+                ,{field: 'weixin_member_name', width: 120,title: '微信昵称'}
                 ,{field: 'role_id', width: 120,align:'center',title: '角色', templet:function(d){
                     return d.name;
                 }}

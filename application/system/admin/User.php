@@ -73,8 +73,13 @@ class User extends Admin
             if (isset($queryData['role_id']) && $queryData['role_id']) {
                 $where[] = ['a.role_id', 'eq', $queryData['role_id']];
             }
-            $fields = "a.id,a.username,a.weixin_openid,a.mobile,a.nick,a.last_login_time,a.ctime,a.inst_id,a.last_login_ip,a.intro,a.status,b.name";
+            $fields = "a.id,a.username,a.weixin_member_id,a.mobile,a.nick,a.last_login_time,a.ctime,a.inst_id,a.last_login_ip,a.intro,a.status,b.name";
             $data['data'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('inst_id asc,a.ctime desc')->select();
+            foreach($data['data'] as &$t){
+                $weixin_member_id = explode(',',$t['weixin_member_id']);
+                $WeixinMemberModel = new WeixinMemberModel;
+                $t['weixin_member_name'] = $WeixinMemberModel->where([['member_id','in',$weixin_member_id]])->value('GROUP_CONCAT(member_name)');
+            }
             //halt($data['data']);
             $data['count'] = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->where($where)->count('a.id');
             $data['code'] = 0;
@@ -88,8 +93,22 @@ class User extends Admin
         return $this->fetch();
     }
 	
-	public function tableSelect()
+	public function wechatAuth()
 	{
+        $id = input('id');
+        if ($this->request->isPost()) {
+            $weixin_member_id = input('weixin_member_id');
+            if(empty($weixin_member_id)){
+                return $this->error('参数错误');
+            }else{
+                if (!UserModel::where([['id','eq',$id]])->update(['weixin_member_id'=>$weixin_member_id])) {
+                    return $this->error('绑定失败');
+                }
+                return $this->success('绑定成功');
+            }
+        }
+        
+        $this->assign('id', $id);
 		return $this->fetch();
 	}
 

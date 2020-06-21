@@ -6,13 +6,20 @@
 </style>
 <div class="j-table-content">
     <div class="page-toolbar j-page-toolbar clearfix">
-        <form class="layui-form layui-form-pane" action="" method="post" >
+        <form class="layui-form layui-form-pane" action="{:url()}" method="post" >
             <div class="layui-form-item">
             	<label class="layui-form-label">授权用户</label>
             	<div class="layui-input-inline">
             		<input type="text" name="" placeholder="请选择" readonly autocomplete="off" class="layui-input" id="demo" value="" ts-selected="">
             	</div>
             </div>
+            <input type="hidden" name="weixin_member_id" id="weixin_member_id" value="">
+            <input type="hidden" name="id" value="{$id}">
+            <div class="pop-bottom-bar">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交保存</button>
+                <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10">取消</a>
+            </div>
+        </div>
         </form>
     </div>
 <table id="dataTable"></table>
@@ -43,10 +50,13 @@
         	},
         	done: function (elem, data) {
         		var NEWJSON = []
+                var NEWIDJSON = [];
         		layui.each(data.data, function (index, item) {
         			NEWJSON.push(item.member_name)
+                    NEWIDJSON.push(item.member_id);
         		})
         		elem.val(NEWJSON.join(","))
+                $('#weixin_member_id').val(NEWIDJSON.join(","));
 				console.log("数据是：",data)
         	}
         })
