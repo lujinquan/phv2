@@ -79,7 +79,12 @@
                 {field: 'member_id', width: 100, align:'center', title: '用户编号'}
 				
                 ,{field: 'member_name', minWidth: 120, align:'center', title: '用户名',templet: function(d){
-					return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+                	if(d.member_name){
+                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+                	}else{
+                		return '游客【未授权小程序】';
+                	}
+					//return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
             	}}
                 ,{field: 'real_name',hide: false,width:100,align:'center', title: '真实姓名'}
                 ,{field: 'tel', minWidth: 120, align:'center', title: '手机号'}
