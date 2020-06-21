@@ -775,6 +775,7 @@
 							    myyear = mydate.getFullYear(),
 							    mymonth = mydate.getMonth()+1,
 								myday = mydate.getDate();
+							console.log('row.color_status：',row.color_status);
 							if(row.color_status != 1){ //正常状态下的才可以执行
 							    layer.msg("当前数据不可选！");
 								return false;

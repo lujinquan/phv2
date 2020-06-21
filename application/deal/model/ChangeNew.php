@@ -14,6 +14,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeNew extends SystemBase
 {
@@ -25,10 +26,11 @@ class ChangeNew extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
     ];
@@ -185,9 +187,13 @@ class ChangeNew extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
@@ -252,8 +258,18 @@ class ChangeNew extends SystemBase
 
                 //如果是第二步经租会计（则可以修改附件）
                 if($changeRow['change_status'] == 3){ 
-                    if(isset($data['file']) && $data['file']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // if(isset($data['file']) && $data['file']){
+                    //     $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // }
+
+                    if(isset($data['ChangeNewUpload']) && $data['ChangeNewUpload']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeNewUpload']),',');
+                    }else{
+                        $fileUploadConfig = Db::name('config')->where([['title','eq','changenew_file_upload']])->value('value');
+                        if(strpos($fileUploadConfig, 'ChangeNewUpload') !== false){
+                            return ['error_msg' => '请上传资料'];
+                        }
+                        
                     }
                 }
                 // if(isset($data['file']) && $data['file']){
@@ -328,11 +344,21 @@ class ChangeNew extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-        //halt($finalRow);
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 7,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         // 1、将新发的房屋变成正常状态
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['house_status'=>1]);
         Db::name('tenant')->where([['tenant_id','eq',$finalRow['tenant_id']]])->update(['tenant_status'=>1]);
-        Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
+        //Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>1]);
         
         // 2、添加台账记录
         $taiHouseData = $taiBanData = [];
@@ -346,7 +372,6 @@ class ChangeNew extends SystemBase
         $taiHouseData['change_id'] = $finalRow['id'];
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiHouseData);
-
 
         $taiBanData['ban_id'] = $finalRow['ban_id'];
         $taiBanData['ban_tai_type'] = 1;
@@ -368,40 +393,12 @@ class ChangeNew extends SystemBase
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
 
+
+        $tableData = [];
         // 1、将新发的房屋所在的楼栋变成正常状态
         if(!$banInfo['ban_status']){
-           $tableData['change_num'] = $banInfo['ban_civil_num']+$banInfo['ban_career_num']+$banInfo['ban_party_num']; 
-        }
-
-        // 1、将新发的房屋基础数据加到所在的楼栋
-        if($houseInfo['house_use_id'] == 1){
-            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
-                'ban_status'=>1,
-                'ban_civil_rent'=>Db::raw('ban_civil_rent+'.$houseInfo['house_pre_rent']),
-                'ban_civil_area'=>Db::raw('ban_civil_area+'.$houseInfo['house_area']),
-                'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$houseInfo['house_oprice']),
-                'ban_use_area'=>Db::raw('ban_use_area+'.$houseInfo['house_lease_area']),
-                'ban_civil_holds'=>Db::raw('ban_civil_holds+1'),
-            ]);
-        }elseif($houseInfo['house_use_id'] == 2){
-            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
-                'ban_status'=>1,
-                'ban_career_rent'=>Db::raw('ban_career_rent+'.$houseInfo['house_pre_rent']),
-                'ban_career_area'=>Db::raw('ban_career_area+'.$houseInfo['house_area']),
-                'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$houseInfo['house_oprice']),
-                'ban_career_holds'=>Db::raw('ban_career_holds+1'),
-            ]);
-        }else{
-            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
-                'ban_status'=>1,
-                'ban_party_rent'=>Db::raw('ban_party_rent+'.$houseInfo['house_pre_rent']),
-                'ban_party_area'=>Db::raw('ban_party_area+'.$houseInfo['house_area']),
-                'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$houseInfo['house_oprice']),
-                'ban_party_holds'=>Db::raw('ban_party_holds+1'),
-            ]);
-        }
-
-        $tableData = [];       
+           $tableData['change_ban_num'] = $banInfo['ban_civil_num']+$banInfo['ban_career_num']+$banInfo['ban_party_num'];
+        }    
         $tableData['change_type'] = 7;
         $tableData['change_order_number'] = $finalRow['change_order_number'];
         $tableData['house_id'] = $finalRow['house_id'];
@@ -413,7 +410,7 @@ class ChangeNew extends SystemBase
         $tableData['change_rent'] = $houseInfo['house_pre_rent']; 
         $tableData['change_area'] = $houseInfo['house_area']; 
         $tableData['change_oprice'] = $houseInfo['house_oprice'];
-        
+        $tableData['change_house_num'] = 1;
         if($houseInfo['house_use_id'] == 1){
             $tableData['change_use_area'] = $houseInfo['house_lease_area']; 
         }else{
@@ -424,8 +421,40 @@ class ChangeNew extends SystemBase
         $tableData['cuid'] = $finalRow['cuid'];
         $tableData['order_date'] = date('Ym'); 
         $ChangeTableModel = new ChangeTableModel;
+        //halt($tableData);
         $ChangeTableModel->save($tableData);
         
+        // 1、将新发的房屋基础数据加到所在的楼栋
+        if($houseInfo['house_use_id'] == 1){
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_civil_rent'=>Db::raw('ban_civil_rent+'.$houseInfo['house_pre_rent']),
+                'ban_civil_area'=>Db::raw('ban_civil_area+'.$houseInfo['house_area']),
+                'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$houseInfo['house_oprice']),
+                'ban_use_area'=>Db::raw('ban_use_area+'.$houseInfo['house_lease_area']),
+                'ban_civil_holds'=>Db::raw('ban_civil_holds+1'),
+                'ban_ctime'=>$finalRow['ftime'],
+            ]);
+        }elseif($houseInfo['house_use_id'] == 2){
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_career_rent'=>Db::raw('ban_career_rent+'.$houseInfo['house_pre_rent']),
+                'ban_career_area'=>Db::raw('ban_career_area+'.$houseInfo['house_area']),
+                'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$houseInfo['house_oprice']),
+                'ban_career_holds'=>Db::raw('ban_career_holds+1'),
+                'ban_ctime'=>$finalRow['ftime'],
+            ]);
+        }else{
+            BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                'ban_status'=>1,
+                'ban_party_rent'=>Db::raw('ban_party_rent+'.$houseInfo['house_pre_rent']),
+                'ban_party_area'=>Db::raw('ban_party_area+'.$houseInfo['house_area']),
+                'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$houseInfo['house_oprice']),
+                'ban_party_holds'=>Db::raw('ban_party_holds+1'),
+                'ban_ctime'=>$finalRow['ftime'],
+            ]);
+        }
+
     }
 
 }

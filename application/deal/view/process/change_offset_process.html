@@ -1,10 +1,17 @@
 <!-- 陈欠核销审批 -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">异动编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['change_order_number']}" readonly class="layui-input">
+			</div>
+		</div>
+	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md12">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
@@ -20,7 +27,6 @@
 			</div>
 			<div class="layui-form-mid layui-word-aux j-size-class"><i class="layui-icon layui-icon-tips"></i>可以核销当月订单</div>
 		</div>
-
 	</div>
 		<table  class="layui-table">
 		  <thead>
@@ -362,8 +368,8 @@ var upurl2 = "{:url('system/Api/upload')}?input=ChangeOffsetUpload&group=change&
 		
 
 	});
-	//图片查看
-	$('.j-viewer-img').viewer({
-	   	url: 'data-original',
-	 });
+	// //图片查看
+	// $('.j-viewer-img').viewer({
+	//    	url: 'data-original',
+	//  });
 </script>

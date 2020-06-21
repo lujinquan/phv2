@@ -1,4 +1,4 @@
-<form class="layui-form" {if condition="$flag === 'temp'"}action="{:url('RoomTemp/add')}"{else /}action="{:url('Room/add')}"{/if} method="post">
+<form id="formdata" class="layui-form" onsubmit="return false" action="#" method="post">
     <div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
@@ -112,7 +112,7 @@
 
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">提交</button>
+			<a class="layui-btn" id="clickData">提交</a>
 		</div>
 	</div>
   </div>
@@ -189,6 +189,30 @@ layui.use(['form', 'func'], function() {
 						layer.close(index);
 					}
 		 });
+	})
+	
+	//新增房间
+	 $("#clickData").click(function(){
+			 $.ajax({
+			 //几个参数需要注意一下
+				 type: "POST",//方法类型
+				 dataType: "json",//预期服务器返回的数据类型
+				 url: "{:url('Room/add')}" ,//url
+				 data: $('#formdata').serialize(),
+				 success: function (result) {
+					 console.log("提交数据：",result);//打印服务端返回的数据(调试用)
+					 if (result.code == 1) {
+						 layer.msg(result.msg);
+                         
+					 }
+					 if(result.code == 0){
+					  layer.msg(result.msg);
+					 }
+				 },
+				 error : function() {
+					 layer.msg("获取数据异常！");
+				 }
+			 });
 	})
 });
 </script>

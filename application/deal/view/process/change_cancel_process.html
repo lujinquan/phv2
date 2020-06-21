@@ -1,5 +1,4 @@
 <!-- 注销审批 -->
-<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <form class="layui-form" action="" method="post" >
   <div class="j-details-box floorWrap">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
@@ -28,6 +27,12 @@
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">异动编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['change_order_number']}" readonly class="layui-input">
+			</div>
+		</div>
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
@@ -43,10 +48,12 @@
 			  <tr>
 			    <th>楼栋编号</th>
 			    <th>异动状态</th>
+			    <th class="cancel">户数</th>
 			    <th class="cancel">规定租金</th>
 			    <th class="cancel">使用面积</th>
 			    <th class="cancel">建筑面积</th>
 			    <th class="cancel">房屋原价</th>
+			    <th class="cancel">栋数</th>
 			    <th>是否注销</th>
 			  </tr>
 		  </thead>
@@ -54,27 +61,33 @@
 		    <tr>
 		  	  <td id="floor_number">{$data_info['ban_info']['ban_number']}</td>
 			  <td>异动前</td>
+			  <td class="cancel_before_0" id="floor_households">{$data_info['change_json']['before']['ban_total_holds']}</td>
 			  <td class="cancel_before_1" id="floor_prescribed">{$data_info['change_json']['before']['ban_total_rent']}</td>
 	    	  <td class="cancel_before_2" id="floor_areaofuse">{$data_info['change_json']['before']['ban_total_use_area']}</td>
 	    	  <td class="cancel_before_3" id="floor_builtuparea">{$data_info['change_json']['before']['ban_total_area']}</td>
 	    	  <td class="cancel_before_4" id="floor_original">{$data_info['change_json']['before']['ban_total_oprice']}</td>
+			  <td class="cancel_before_5" id="floor_bannumber">{$data_info['change_json']['before']['ban_total_num']}</td>
 			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" {if condition="$data_info['cancel_ban']"}checked{/if} value="1" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF" disabled></td>
 		    </tr>
 			<tr>
 			  <td></td>
 			  <td>异动</td>
+			  <td>{$data_info['cancel_holds']}</td>
 			  <td>{$data_info['cancel_rent']}</td>
 			  <td>{$data_info['cancel_use_area']}</td>
 			  <td>{$data_info['cancel_area']}</td>
 			  <td>{$data_info['cancel_oprice']}</td>
+			  <td>{$data_info['cancel_num']}</td>
 			</tr>
 			<tr>
 			  <td></td>
 			  <td>异动后</td>
+			  <td class="cancel_after_0" id="changes_floor_households">{$data_info['change_json']['after']['ban_total_holds']}</td>
 			  <td class="cancel_after_1" id="changes_floor_prescribed">{$data_info['change_json']['after']['ban_total_rent']}</td>
 			  <td class="cancel_after_2" id="changes_floor_areaofuse">{$data_info['change_json']['after']['ban_total_use_area']}</td>
 			  <td class="cancel_after_3" id="changes_floor_builtuparea">{$data_info['change_json']['after']['ban_total_area']}</td>
 			  <td class="cancel_after_4" id="changes_floor_original">{$data_info['change_json']['after']['ban_total_oprice']}</td>
+			  <td class="cancel_after_5" id="changes_floor_bannumber">{$data_info['change_json']['after']['ban_total_num']}</td>
 			</tr>
 		  </tbody>
 		</table>
@@ -163,9 +176,10 @@
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>补充附件</legend>
 	</fieldset>
-	  <div class="layui-row layui-form-item layui-col-space90">
+	  
+  <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">附件一</div>
+  		<div class="j-enclosure-label clearfix">售房专用票据</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
   			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
@@ -181,7 +195,7 @@
   </div>
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">附件二</div>
+  		<div class="j-enclosure-label clearfix">审批表</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
   			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
@@ -197,7 +211,7 @@
   </div>
   <div class="layui-row layui-form-item layui-col-space90">
   	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">其他</div>
+  		<div class="j-enclosure-label clearfix">危改批文</div>
   		<div class="j-enclosure-img j-viewer-img clearfix">
   			<ul>
 				{volist name="$data_info['change_imgs']" id="v"}
@@ -211,6 +225,133 @@
   	    </div>
   	</div>
   </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">翻新计划</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelRetread'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">发还批文</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelApproval'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">注销报告</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelReport'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">危改批文</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelThree'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">政府文件</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelPaper'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">发票</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelInvoice'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">征收明细表</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelDetail'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">划转公文</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'ChangeCancelOfficial'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
   </div>
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>审批状态</legend>
@@ -259,17 +400,13 @@
   {include file="deal@common/pop_part_one" /}
 </form>
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__ADMIN_VIEWJS__/deal_cancel_apply.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
-	var upurl2 = "{:url('system/Api/upload')}?input=ChangeCancelOne&group=change&water=no"; //附件1
-	var upurl3 = "{:url('system/Api/upload')}?input=ChangeCancelTwo&group=change&water=no"; //附件2
-	//var upurl4 = "{:url('system/Api/upload')}?input=factsheets&group=ban&water=no"; //情况说明
-	var duotu = true; //是否为多图上传true false
-	layui.use(['jquery', 'laydate', 'upload', 'form'], function() {
+	layui.use(['jquery','laydate','form'], function() {
 		var laydate = layui.laydate,
 			$ = layui.$,
-			upload = layui.upload,
 			form = layui.form;
 		
 
@@ -377,12 +514,5 @@
 		});
 		     
 
-		
-		/*
-		删除上传图片
-		*/
-		$(document).on("click", ".upload_img_list dd i", function() {
-			$(this).parents("dd").remove();
-		})
 	});
 </script>

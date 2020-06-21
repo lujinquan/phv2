@@ -80,6 +80,9 @@ class Tenant extends SystemBase
         if(isset($data['file']) && $data['file']){
             $data['tenant_imgs'] = implode(',',$data['file']);
         }
+        if(isset($data['group']) && $data['group'] == 'y'){
+            $data['tenant_status'] = 1;
+        }
         $data['tenant_cuid'] = ADMIN_ID;
         $data['tenant_number'] = (self::max('tenant_number') + 1);
         return $data;  

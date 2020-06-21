@@ -26,7 +26,7 @@ class FloorPoint extends SystemBase
         //dump($liveFloor);dump($BanFloorNum);dump($ifElevator);
         if($ifElevator == 0){ //无电梯
             if($BanFloorNum>3){
-                $floorPoint = self::where([['floor_total','eq',$liveFloor],['floor_live','eq',$BanFloorNum]])->value('floor_point');
+                $floorPoint = self::where([['floor_total','eq',$BanFloorNum],['floor_live','eq',$liveFloor]])->value('floor_point');
                 //$floorPoint = Db::name('floor_point')->where(['TotalFloor'=> $BanFloorNum ,'LiveFloor'=> $liveFloor])->value('FloorPoint');
                 if ($liveFloor >= 9) $floorPoint = 0.85; //9楼以上层次调解率为0.85
             }else{
@@ -36,7 +36,7 @@ class FloorPoint extends SystemBase
         }elseif($ifElevator == 1){  //有电梯，免费用
             if($liveFloor<4){
                 if($BanFloorNum>3){
-                    $floorPoint = self::where([['floor_total','eq',$liveFloor],['floor_live','eq',$BanFloorNum]])->value('floor_point');
+                    $floorPoint = self::where([['floor_total','eq',$BanFloorNum],['floor_live','eq',$liveFloor]])->value('floor_point');
                     //$floorPoint = Db::name('floor_point')->where(['TotalFloor'=> $BanFloorNum ,'LiveFloor'=> $liveFloor])->value('FloorPoint');
                     if ($liveFloor >= 9) $floorPoint = 0.85; //9楼以上层次调解率为0.85
                 }else{
@@ -51,7 +51,7 @@ class FloorPoint extends SystemBase
         }elseif($ifElevator == 2){ //有电梯，需交费
             if($liveFloor<3){
                if($BanFloorNum>3){
-                    $floorPoint = self::where([['floor_total','eq',$liveFloor],['floor_live','eq',$BanFloorNum]])->value('floor_point');
+                    $floorPoint = self::where([['floor_total','eq',$BanFloorNum],['floor_live','eq',$liveFloor]])->value('floor_point');
                     //$floorPoint = Db::name('floor_point')->where(['TotalFloor'=> $BanFloorNum ,'LiveFloor'=> $liveFloor])->value('FloorPoint');
                     if ($liveFloor >= 9) $floorPoint = 0.85; //9楼以上层次调解率为0.85
                 }else{

@@ -47,6 +47,7 @@ class Index extends Admin
             $systemNotice = new SystemNotice;
             $where = $systemNotice->checkWhere($getData);
             $data['data'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+            $data['count'] = $systemNotice->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

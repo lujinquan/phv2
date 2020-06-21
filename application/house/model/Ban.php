@@ -93,6 +93,13 @@ class Ban extends SystemBase
             $end = strtotime(substr($data['ban_dtime'],-10));
             $where[] = ['ban_dtime','between',[$start,$end]];
         }
+        // 检索楼栋创建日期
+        if(isset($data['ban_ctime']) && $data['ban_ctime']){
+            $start = strtotime($data['ban_ctime']);
+            $end = strtotime('+ 1 month',$start);
+            //dump($start);halt($end);
+            $where[] = ['ban_ctime','between',[$start,$end]];
+        }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);

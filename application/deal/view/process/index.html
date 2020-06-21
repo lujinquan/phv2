@@ -77,11 +77,13 @@
 	  {{# if(d.change_type == 18 && d.curr_role == 6 && d.is_process){ }}
 	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
 	  {{# } }}
+	  {if condition="$inst_level < 3"}
 	  {{# if((!d.is_process) || (d.is_process && d.change_type == 18 && d.curr_role == 6 && d.print_times == 0)){ }}
 	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
 	  {{#  } else { }}
 	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
 	  {{# } }}
+	  {/if}
       <a href="{:url('detail')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>

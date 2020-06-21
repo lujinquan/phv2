@@ -1533,7 +1533,15 @@ class Weixin extends Common
             $value['id'] = $key + 1;
         }
         
-        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
+
+        $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
+        //$result['data']['house']['house_share_img'] = 'https://procheck.ctnmit.com/static/wechat/image/share/20200616180247.jpg';
+         // 统计当前租户的欠租情况
+        $RentModel = new RentModel;
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$houseID]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $result['data']['house']['rent_order_unpaids'] = $rentOrderInfo['total_rent_order_unpaid'];
+
+
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
         $result['action'] = 'wechat/weixin/rent_order_info';

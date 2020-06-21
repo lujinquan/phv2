@@ -83,6 +83,10 @@
                 ,{field: 'ban_owner_id', minWidth: 80,align:'center', title: '产别', templet: function(d) {
                     return params.owners[d.ban_owner_id];
                 }}
+                ,{field: 'ban_use_id', minWidth: 100,align:'center', title: '使用性质', templet: function(d) {
+                    return params.uses[d.ban_use_id];
+                }}
+                ,{field: 'ban_floors', minWidth: 80, align:'center', title: '总楼层',totalRow: true}
                 ,{field: 'ban_rent', minWidth: 80, align:'center', title: '合规租',totalRow: true}
                 ,{field: 'ban_area', minWidth: 80, align:'center', title: '合建面',totalRow: true}
                 

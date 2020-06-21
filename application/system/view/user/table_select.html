@@ -1,0 +1,54 @@
+<style>
+	.j-table-content{height: 475px;}
+	.layui-form-checked i, .layui-form-checked:hover i {
+	    color: #fff !important;
+	}
+</style>
+<div class="j-table-content">
+    <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane" action="" method="post" >
+            <div class="layui-form-item">
+            	<label class="layui-form-label">授权用户</label>
+            	<div class="layui-input-inline">
+            		<input type="text" name="" placeholder="请选择" readonly autocomplete="off" class="layui-input" id="demo" value="" ts-selected="">
+            	</div>
+            </div>
+        </form>
+    </div>
+<table id="dataTable"></table>
+{include file="block/layui" /}
+</div>
+<script type="text/javascript">
+    layui.use(['table','tableSelect','form'], function() {
+        var table = layui.table,
+		    form = layui.form,
+		    tableSelect = layui.tableSelect;
+			form.render();
+        tableSelect.render({
+        	elem: '#demo',
+        	searchKey: 'member_name',
+        	checkedKey: 'member_id',
+        	searchPlaceholder: '输入用户名查找',
+        	table: {
+        		url: '{:url('wechat/weixin/userIndex')}',
+				page: false, //是否开启分页
+				limit: 1000000000,
+        		cols: [[
+        			{ type: 'checkbox' }
+					,{field: 'member_id', align:'center',width: 100, title: '用户编号'}
+					,{field: 'member_name',align:'center', title: '用户名',templet: function(d){
+						return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+					}}
+        		]]
+        	},
+        	done: function (elem, data) {
+        		var NEWJSON = []
+        		layui.each(data.data, function (index, item) {
+        			NEWJSON.push(item.member_name)
+        		})
+        		elem.val(NEWJSON.join(","))
+				console.log("数据是：",data)
+        	}
+        })
+    });
+</script>

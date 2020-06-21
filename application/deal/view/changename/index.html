@@ -37,6 +37,11 @@
 					</select>
 				</div>
 				{/if}
+				{if condition="in_array('house_number',$config['deal_changename_index_search'])"}
+				<div class="layui-input-inline j-input-margin j-width-130">
+					<input type="text" name="house_number"   placeholder="房屋编号" autocomplete="off" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('old_tenant_name',$config['deal_changename_index_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
 					<input type="text" name="old_tenant_name"   placeholder="原姓名" autocomplete="off" class="layui-input">
@@ -137,6 +142,7 @@
 		                    return params.uses[d.house_use_id];
 		                }
 					},
+					{field: 'house_number',minWidth: 120,align:'center',title: '房屋编号'}, 
 					{field: 'old_tenant_name',minWidth: 120,align:'center',title: '原姓名'}, 
 					{field: 'new_tenant_name',minWidth: 120,align:'center',title: '新姓名'}, 
 					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},

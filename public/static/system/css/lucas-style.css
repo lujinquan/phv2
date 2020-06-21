@@ -4,6 +4,7 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px white inset;/* 去谷歌默认背景色 */
 }
 .j-visibility{visibility:hidden;}
+.j-visibilitys{display: none;}
 .clear{clear:both;}
 .clearfix{zoom:1;}
 .clearfix:after{content: ".";display: block;height: 0;clear: both;visibility: hidden;}
@@ -44,6 +45,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-width-150{width: 150px;}
 .j-width-180{width: 180px;}
 .j-margin-10{margin-right: 10px;}
+.layui-table-click{background: #ccc!important;}
 /*-----------搜索输入框宽度 E-------------*/
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
@@ -142,7 +144,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .page-toolbar.j-page-toolbar  .layui-btn+.layui-btn,.page-toolbar.j-page-toolbar  .layui-btn{ margin: 0 0 10px 10px;}
 .page-toolbar.j-page-toolbar  .layui-btn.on{margin: 0 0 10px 10px;}
 .j-table-content .j-btn-reset{  background: none; color: #0084FF;padding: 0 10px;}/* 重置样式 */
-.j-page-toolbar .layui-form-pane .layui-input-inline{margin-left: 1px!important;}
+/* .j-page-toolbar .layui-form-pane .layui-input-inline{margin-left: 1px!important;} */
 /* .j-table-content .layui-tab-card{border: 0;box-shadow: none;}//自适应搜索
 .j-table-content .layui-tab-card .layui-tab-title{ border: none;} */
 .wrap{height: 38px; overflow: hidden;} 
@@ -216,12 +218,14 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 
 /*----------房屋档案详情 S----------*/
 .j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden; min-height: 550px;}
+.j-details-box.no-min{min-height: auto;}
 /* .j-details-box.floorWrap{ padding-top: 50px;} */
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
 .layui-elem-field.j-field-box.j-field-boxs{margin: 30px 0 0;}
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
 }
+.j-details-box .j-enclosure-label.j-enclosure-long-label{width: 150px;}
 .j-details-box .j-enclosure-label{float: initial;}
 /* .j-enclosure-upload{ margin-top: 15px;} */
 .j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}

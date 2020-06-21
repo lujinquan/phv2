@@ -12,6 +12,7 @@ use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangePause extends SystemBase
 {
@@ -23,10 +24,11 @@ class ChangePause extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
     ];
@@ -76,6 +78,10 @@ class ChangePause extends SystemBase
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
+        }
+        // 检索楼栋编号
+        if(isset($data['ban_number']) && $data['ban_number']){
+            $where[] = ['d.ban_number','like','%'.$data['ban_number'].'%'];
         }
         // 检索楼栋产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
@@ -172,9 +178,13 @@ class ChangePause extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         //$this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
@@ -313,6 +323,17 @@ class ChangePause extends SystemBase
      */
     private function finalDeal($finalRow)
     {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 3,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         // 1、将涉及的所有房屋，设置成暂停计租状态
         HouseModel::where([['house_id','in',$finalRow['house_id']]])->update(['house_is_pause'=>1]);
         $houseTemps = HouseModel::with('ban')->where([['house_id','in',$finalRow['house_id']]])->field('house_id,tenant_id,house_use_id,house_pre_rent,ban_id')->select()->toArray();

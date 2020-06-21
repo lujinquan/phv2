@@ -13,6 +13,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeCut extends SystemBase
 {
@@ -24,10 +25,11 @@ class ChangeCut extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
     ];
 
@@ -95,6 +97,10 @@ class ChangeCut extends SystemBase
         // 检索使用性质
         if(isset($data['house_use_id']) && $data['house_use_id']){
             $where[] = ['b.house_use_id','in',explode(',',$data['house_use_id'])];
+        }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
         }
         // 检索减免类型
         if(isset($data['cut_type']) && $data['cut_type']){
@@ -191,9 +197,14 @@ class ChangeCut extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::with(['house','tenant'])->get($id);
+        if($id){
+            $row = self::with(['house','tenant'])->find($id);
+        }else{
+            $row = self::with(['house','tenant'])->where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
+        // $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         //$this->finalDeal($row);
@@ -340,7 +351,17 @@ class ChangeCut extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {//halt($finalRow->getData('ftime'));
+    {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 1,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
         
         // 1、添加房屋台账
         $taiHouseData = [];
@@ -359,7 +380,7 @@ class ChangeCut extends SystemBase
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
         $tableData = [];       
-        $tableData['change_type'] = 1;
+        $tableData['change_type'] = 1; 
         $tableData['change_order_number'] = $finalRow['change_order_number'];
         $tableData['house_id'] = $finalRow['house_id'];
         $tableData['ban_id'] = $finalRow['ban_id'];

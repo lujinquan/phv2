@@ -339,6 +339,7 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
             url: _form.attr('action'),
             data: formData,
             success: function(res) {
+                console.log('提交表单返回的数据：',res);
                 that.text(res.msg);
                 if (res.code == 0) { //如果提价失败
                     that.removeClass('layui-btn-normal').addClass('layui-btn-danger');
@@ -348,6 +349,7 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
                     }, 3000);
                 } else { //如果提价成功
+                    that.prop('disabled', false);
                     that.removeClass('layui-btn-normal').addClass('layui-bg-green');
                     setTimeout(function() {
                         that.text(text);

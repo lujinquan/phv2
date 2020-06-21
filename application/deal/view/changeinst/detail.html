@@ -6,6 +6,7 @@
 	<table  class="layui-table j-house-boxs">
 	  <thead>
 		  <tr>
+		  	<th>异动编号</th>
 		    <th>异动类别</th>
 		    <th>原管段</th>
 		    <th>新管段</th>
@@ -13,6 +14,7 @@
 	  </thead>
 	 <tbody>
 	   <tr>
+	   	  <td>{$data_info['change_order_number']}</td>
 	 	  <td id="write_type">管段调整</td>
 		  <td id="raw_pipesection">{$params.insts[$data_info['old_inst_id']]}</td>
 		  <td id="new_pipesection">{$params.insts[$data_info['new_inst_id']]}</td>

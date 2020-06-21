@@ -12,6 +12,7 @@ use app\house\model\Ban as BanModel;
 use app\house\model\BanTai as BanTaiModel;
 use app\deal\model\Process as ProcessModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeInst extends SystemBase
 {
@@ -23,10 +24,11 @@ class ChangeInst extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
     ];
@@ -190,9 +192,13 @@ class ChangeInst extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         //$this->finalDeal($row);
         return $row;
@@ -319,7 +325,17 @@ class ChangeInst extends SystemBase
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
-    {//halt($finalRow);
+    {
+    // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 10,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
         
         // 1、将楼栋机构改成变更后的机构
         BanModel::where([['ban_id','in',$finalRow['ban_ids']]])->update(['ban_inst_id'=>$finalRow['new_inst_id']]);

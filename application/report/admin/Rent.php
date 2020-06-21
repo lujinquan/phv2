@@ -121,9 +121,13 @@ class Rent extends Admin
             $result = $ReportModel->getUnpaidRent();
             $data = [];
             $data['data'] = $result['data'];
+            $data['total_cur_month_unpaid_rent'] = $result['total_cur_month_unpaid_rent'];
+            $data['total_before_month_unpaid_rent'] = $result['total_before_month_unpaid_rent'];
+            $data['total_before_year_unpaid_rent'] = $result['total_before_year_unpaid_rent'];
+            $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_unpaid_rent'],$data['total_before_month_unpaid_rent'],$data['total_before_year_unpaid_rent']]);
             $data['count'] = count($result['data']);
             $data['code'] = 0;
-            $data['msg'] = '';
+            $data['msg'] = '获取成功';
             return json($data);
         }
         return $this->fetch();

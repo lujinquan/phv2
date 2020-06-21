@@ -132,6 +132,12 @@
 					<input type="text" name="house_unit_id" readonly value={if condition="$data_info['house_is_pause']"}是{else /}否{/if} autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">累计欠租</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_unit_id" readonly value="{$data_info['total_rent_order_unpaid']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
 			
 		</div>
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">

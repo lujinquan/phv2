@@ -23,31 +23,36 @@ class Map extends Admin
 	public function index()
 	{
 		if ($this->request->isAjax()) {
-
       $getData = $this->request->get();
       $banModel = new BanModel;
       $where = $banModel->checkWhere($getData);
       $fields = 'ban_id,ban_number,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_area_two,ban_area_three,ban_address as z,ban_gpsx as x,ban_gpsy as y,b.gpsx as area_x,b.gpsy as area_y,b.area_title';
       $data = [];
-      $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0]])->order('ban_ctime desc')->select()->toArray();
-      $areas_holds = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0],['ban_area_three','>',0]])->order('ban_ctime desc')->group('ban_area_three')->column('ban_area_three,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds');
+      // 经度不为0，纬度不为0，街道id不为0，社区id不为0
+      $points = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->field($fields)->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0],['ban_area_two','>',0],['ban_area_three','>',0]])->order('ban_ctime desc')->select()->toArray();
+      // 经度不为0，纬度不为0，街道id不为0，社区id不为0
+      $areas_holds = $banModel->alias('a')->join('base_area b','a.ban_area_three = b.id','left')->where($where)->where([['ban_gpsx','>',0],['ban_gpsy','>',0],['ban_area_two','>',0],['ban_area_three','>',0]])->order('ban_ctime desc')->group('ban_area_three')->column('ban_area_three,sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds');
+//halt($areas_holds['72']);
       $data['data'] = $points;
       foreach($points as $key => $value){
 
         $data['point'][$value['ban_area_three']]['name'] = $value['area_title'];
         $data['point'][$value['ban_area_three']]['x'] = $value['area_x'];
         $data['point'][$value['ban_area_three']]['y'] = $value['area_y'];
-                  //$data['point'][$value['ban_area_three']]['detail'][] = $value;
+        //$data['point'][$value['ban_area_three']]['detail'][] = $value;
         if(!isset($data['point'][$value['ban_area_three']]['total_house'])){
           $data['point'][$value['ban_area_three']]['total_house'] = 0;
         }
         if(!isset($data['point'][$value['ban_area_three']]['total_ban'])){
           $data['point'][$value['ban_area_three']]['total_ban'] = 0;
         }
+        if(!isset($areas_holds[$value['ban_area_three']])){
+          halt('当前楼'.$value['ban_number'].'的社区id：'.$value['ban_area_three'].'，参数错误！');
+        }
         $data['point'][$value['ban_area_three']]['total_house'] = $areas_holds[$value['ban_area_three']];
-                  // if(isset($houses[$value['ban_id']])){
-                  //       $data['point'][$value['ban_area_three']]['total_house'] += $houses[$value['ban_id']];
-                  // }
+        // if(isset($houses[$value['ban_id']])){
+        //       $data['point'][$value['ban_area_three']]['total_house'] += $houses[$value['ban_id']];
+        // }
         $data['point'][$value['ban_area_three']]['total_ban'] ++;
 
       }
@@ -74,7 +79,7 @@ class Map extends Admin
   public function statistics()
   {
     if ($this->request->isAjax()) {
-      $getData = $this->request->get();
+      $getData = $this->request->param();
       $banModel = new BanModel;
       $where = $banModel->checkWhere($getData);
       $ban_area_three = input('ban_area_three'); //搜索某社区

@@ -38,7 +38,21 @@
 				</div>
 			</div>
 		</div>
+		<!-- <div class="layui-row layui-form-item layui-col-space90">
 
+			<div class="layui-col-md4">
+				<label class="j-form-label">租差</label>
+				<div class="j-input-inline">
+					<input type="text" name="change_house_diff_rent" value="" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">泵费</label>
+				<div class="j-input-inline">
+					<input type="text" name="change_house_pump_rent" value="" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div> -->
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>楼栋信息</legend>
 		</fieldset>
@@ -62,10 +76,10 @@
 		    <td rowspan="4" colspan="2" class="HABanID"><input type="tetx" readonly name="Ban[{$key}][HABanID]" value="{$v['HABanID']}" class="layui-input" /></td>
 		    <td rowspan="4" colspan="2" class="HAAddress"><input type="tetx" readonly name="Ban[{$key}][HAAddress]" value="{$v['HAAddress']}" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="tetx" readonly name="Ban[{$key}][HABeforeRent]" value="{$v['HABeforeRent']}" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HARent]" value="{$v['HARent']}" class="HARent layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HARent]" min="0.01" onkeyup="onlyNumber(this)" value="{$v['HARent']}" class="HARent layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" name="Ban[{$key}][HAAfterRent]" value="{$v['HAAfterRent']}"/></td>
 		    <td rowspan="1" colspan="1" class="HABeforeLeasedArea"><input type="text" readonly name="Ban[{$key}][HABeforeLeasedArea]" value="{$v['HABeforeLeasedArea']}" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HALeasedArea]" value="{$v['HALeasedArea']}" class="HALeasedArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HALeasedArea]" min="0.01" onkeyup="onlyNumber(this)" value="{$v['HALeasedArea']}" class="HALeasedArea layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly name="Ban[{$key}][HAAfterLeasedArea]" value="{$v['HAAfterLeasedArea']}" class="HAAfterLeasedArea layui-input" /></td>
 		  </tr>
 		  <tr>
@@ -82,10 +96,10 @@
 		  </tr>
 		  <tr>
 		    <td rowspan="1" colspan="1" class="HABeforeBanArea"><input type="text" readonly name="Ban[{$key}][HABeforeBanArea]" value="{$v['HABeforeBanArea']}"  class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HABanArea]" value="{$v['HABanArea']}" class="HABanArea layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HABanArea]" min="0.01" onkeyup="onlyNumber(this)" value="{$v['HABanArea']}" class="HABanArea layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HAAfterBanArea]" value="{$v['HAAfterBanArea']}" readonly class="HAAfterBanArea layui-input" /></td>
 		    <td rowspan="1" colspan="1" class="HABeforePrice"><input type="text" readonly name="Ban[{$key}][HABeforePrice]" value="{$v['HABeforePrice']}" class="layui-input" /></td>
-		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HAPrice]" value="{$v['HAPrice']}" class="HAPrice layui-input" /></td>
+		    <td rowspan="1" colspan="1"><input type="number" name="Ban[{$key}][HAPrice]" min="0.01" onkeyup="onlyNumber(this)" value="{$v['HAPrice']}" class="HAPrice layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly name="Ban[{$key}][HAAfterPrice]" value="{$v['HAAfterPrice']}" class="HAAfterPrice layui-input" /></td>
 		  </tr>
 		  
@@ -133,6 +147,25 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	// 　　　　return false;
 	// 　　}
 	// });
+	// 限制input输入负数
+	function onlyNumber(obj){
+		//得到第一个字符是否为负号
+		var t = obj.value.charAt(0);
+		//先把非数字的都替换掉，除了数字和.
+		obj.value = obj.value.replace(/[^\d\.]/g,'');
+		//必须保证第一个为数字而不是.
+		obj.value = obj.value.replace(/^\./g,'');
+		//保证只有出现一个.而没有多个.
+		obj.value = obj.value.replace(/\.{2,}/g,'.');
+		//保证.只出现一次，而不能出现两次以上
+		obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+		//只能输入两位小数
+		obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+		// //如果第一位是负号，则允许添加
+		// if(t == '-'){
+		// return;
+		// }
+	};
 	var ban_length = 0;
 	$('.table_data_2').hide();
 	$('.table_data_3').hide();

@@ -15,8 +15,10 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
+use app\rent\model\Rent as RentModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
+use app\wechat\model\Weixin as WeixinModel;
 use app\deal\model\Process as ProcessModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\FloorPoint as FloorPointModel;
@@ -26,6 +28,8 @@ class House extends Admin
 
     public function index()
     {
+        // $WeixinModel = new WeixinModel;
+        // $WeixinModel->getAccessToken();
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -136,23 +140,65 @@ class House extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            // 数据验证
-            $result = $this->validate($data, 'House.form');
-            if($result !== true) {
-                return $this->error($result);
+            
+            if(isset($data['house_id']) && $data['house_id']){
+                // 数据验证
+                $result = $this->validate($data, 'House.edit');
+                if($result !== true) {
+                    return $this->error($result);
+                }
+                $HouseModel = new HouseModel();
+                // 修改
+                if ($HouseModel->allowField(true)->update($data) === false) {
+                    return $this->error('修改失败');
+                }
+                //$HouseModel = new HouseModel();
+                $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+                
+                $HouseModel->where([['house_id','eq',$data['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent]);
+
+                $row = $HouseModel->get($data['house_id']);
+                return $this->success('修改成功','',$row);
+            }else{
+                // 数据验证
+                $result = $this->validate($data, 'House.form');
+                if($result !== true) {
+                    return $this->error($result);
+                }
+                $HouseModel = new HouseModel();
+                // 数据过滤
+                $filData = $HouseModel->dataFilter($data);
+                if(!is_array($filData)){
+                    return $this->error($filData);
+                }
+
+                $row = $HouseModel->allowField(true)->create($filData);
+                // 入库
+                if (!$row) {
+                    return $this->error('新增失败');
+                }
+                $house_cou_rent = $HouseModel->count_house_rent($row['house_id']);
+                $HouseModel->where([['house_id','eq',$row['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent]);
+                $row = $HouseModel->get($row['house_id']);
+                return $this->success('新增成功','',$row);
             }
-            $HouseModel = new HouseModel();
-            // 数据过滤
-            $filData = $HouseModel->dataFilter($data);
-            if(!is_array($filData)){
-                return $this->error($filData);
-            }
-            // 入库
-            if (!$HouseModel->allowField(true)->create($filData)) {
-                return $this->error('新增失败');
-            }
-            return $this->success('新增成功');
+            
         }
+
+        // $group = input('param.group');
+        // $row = HouseModel::with(['ban','tenant'])->find($id);
+        // $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+        // $row['cut_rent'] = $cutRent?$cutRent:'0.00';
+        // //halt($row);
+        // $row['ban_struct_point'] = Db::name('ban_struct_type')->where([['id','eq',$row['ban_struct_id']]])->value('new_point');
+        // //halt($row);
+        // //获取当前房屋的房间
+        // $rooms = $row->house_room()->where([['house_room_status','<=',1]])->order('room_id asc')->column('room_id'); 
+        // //halt($rooms);
+        // //定义计租表房间数组
+        // $HouseModel = new HouseModel;
+        // $roomTables = $HouseModel->get_house_renttable($id);
+
         return $this->fetch();
     }
 
@@ -197,6 +243,11 @@ class House extends Admin
         $HouseModel = new HouseModel;
         $roomTables = $HouseModel->get_house_renttable($id);
 
+         // 统计当前租户的欠租情况
+        $RentModel = new RentModel;
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
+        
         // $roomTables = [];
         // if($rooms){
         //     $FloorPointModel =new FloorPointModel;
@@ -243,6 +294,7 @@ class House extends Admin
             $data = [];
             $data['data'] = $roomTables;
             $data['msg'] = '获取计租表数据成功！';
+            $data['house_info'] = $row->toArray();
             $data['code'] = 1;
             $flag = input('param.flag');
             if($flag === 'syn'){ //如果是房屋调整异动中调用，则执行临时表同步更新操作
@@ -290,6 +342,12 @@ class House extends Admin
             $data['msg'] = '';
             return json($data);
         }
+
+        // 统计当前租户的欠租情况
+        $RentModel = new RentModel;
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
+        //halt($total_rent_order_unpaid);
 
         //-------------- by lucas 【计租表】 Start ------------------------
         $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
@@ -388,6 +446,51 @@ class House extends Admin
             } 
             return json($data);
         }
+    }
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * 选用的二维码生成c方案
+     * 二维码方案官方文档说明地址：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/qr-code.html
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function createqrcode()
+    {
+
+        set_time_limit(0);
+
+        $houseModel = new HouseModel;
+        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(1000)->select();
+
+        //halt($houseNumberArr);
+        $WeixinModel = new WeixinModel;
+        $i = 0;
+        $width = 300;
+        foreach($houseNumberArr as $h){
+            $path = 'pages/payment/payment?houseid='.$h['house_id'];
+            $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
+            //halt($path);
+            $result = $WeixinModel->createqrcode($path,$width); //C方案生成二维码，有数量限制100000张
+            //$result = $WeixinModel->createMiniScene('house_id=22' , $path,$width); //B方案生成二维码，无数量限制，但是每分钟最多生成5000张
+            file_put_contents('.'.$filename,$result);
+            $houseModel = new HouseModel;
+            $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
+            //$h->house_share_img = 'https://procheck.ctnmit.com'.$filename;
+            if($res){
+               $i++; 
+            }
+            //exit;
+        } 
+        return $this->success('生成成功，一共生成'.$i.'张二维码！');
+
     }
 
     public function export()

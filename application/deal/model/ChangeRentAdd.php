@@ -13,6 +13,7 @@ use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 
 class ChangeRentAdd extends SystemBase
@@ -25,10 +26,11 @@ class ChangeRentAdd extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
     ];
 
@@ -172,9 +174,13 @@ class ChangeRentAdd extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
@@ -306,6 +312,17 @@ class ChangeRentAdd extends SystemBase
      */
     private function finalDeal($finalRow)
     {
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 11,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
+
         // 1、如果有追加以前年，则增加一条以前年回收的订单
         $RentModel = new RentModel;
         $rentData = [];

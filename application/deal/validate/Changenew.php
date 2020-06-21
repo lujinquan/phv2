@@ -55,7 +55,7 @@ class Changenew extends Validate
     {
         $msg = true;
         $tenantInfo = TenantModel::where([['tenant_id','eq',$value]])->find();
-        if($tenantInfo['tenant_status'] != 1){
+        if($tenantInfo['tenant_status'] == 2){
             $msg = '租户状态异常！';
         }
         if (!preg_match('/^[1-9]{1}\d{5}[1-9]{2}\d{9}[Xx0-9]{1}$/', $tenantInfo['tenant_card'])) {
@@ -74,7 +74,7 @@ class Changenew extends Validate
     // 编辑
     public function sceneEdit()
     {
-        return $this->only(['id','new_type','tenant_id']);
+        return $this->only(['id','new_type']);
     }
 
     

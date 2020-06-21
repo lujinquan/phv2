@@ -58,6 +58,12 @@
 </script>
 
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+    {{# if(d.weixin_openid){ }}
+    <button class="layui-btn layui-btn-xs layui-btn-disabled">已经授权</button>
+    {{# }else{ }}
+    <!-- <a data-href="{:url('bindWeixin')}?id={{ d.id }}" refresh="false" confirm="系统将根据小程序微信授权绑定的手机号来匹配当前账号的手机号{{ d.mobile }}，是否确认开始绑定？" class="layui-btn layui-btn-xs layui-bg-green j-ajax">微信授权</a> -->
+	<a  href="javascript:;" class="layui-btn layui-btn-xs layui-bg-green j-gave">微信授权</a>
+    {{# } }}
     <a href="{:url('editUser')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
     <a href="{:url('delUser')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 </script>
@@ -66,8 +72,9 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table'], function() {
-        var table = layui.table;
+    layui.use(['table','jquery'], function() {
+        var $ = layui.$,
+		    table = layui.table;
         table.render({
             elem: '#dataTable'
             ,url: '{:url()}' //数据接口
@@ -92,8 +99,27 @@
                 ,{field: 'last_login_ip', width: 120,align:'center',title: '最后登录IP'}
                 ,{field: 'intro', minWidth: 160, hide:true, align:'center', title: '简介'}
                 ,{field: 'status',width: 100,align:'center', title: '状态', templet: '#statusTpl'}
-                ,{title: '操作', width: 160,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 220,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
         });
+		// 点击授权
+		$(".j-table-content").on("click",".j-gave",function(){
+			console.log("点击了")
+			layer.open({
+				title: '用户权限设置'
+				,type: 2
+				,offset: 'auto'
+				,area: ['700px', '600px']
+				,btn:false
+				,pageTabs: false
+				,content: '{:url('system/user/tableSelect')}?hisi_iframe=yes'
+				,btn: ['确定','关闭']
+				,yes: function(index, layero){
+					
+				},btn2: function(index, layero){
+					layer.close(index);
+				}
+			})	
+		})
     });
 </script>

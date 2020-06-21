@@ -692,14 +692,13 @@ layui.use(['table', 'jquery','formSelects'], function(){
   		});
   		myLabel.addEventListener("click", function(e) {
   			console.log("圈点击",e.target.z.title)
-  			let point = myLabel.getPosition()
+  			let point = myLabel.getPosition();
 			let ban_area_three = e.target.z.title;//社区代号
+			var queryWhere = $('#hisi-table-search').serialize();
 			$.ajax({
 				type:"post",// 请求方式
-				url:"{:url('map/statistics')}",
-				data :{
-					'ban_area_three':ban_area_three
-				},//这里是前台传到后台的数据
+				url:"{:url('map/statistics')}?ban_area_three="+ban_area_three,
+				data :queryWhere,//这里是前台传到后台的数据
 				async:false,// 同步异步
 				dataType:"json",
 			   //回调函数

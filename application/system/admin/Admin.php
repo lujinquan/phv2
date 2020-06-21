@@ -88,18 +88,12 @@ class Admin extends Common
                     return $this->error('['.$curMenu['title'].'] 访问权限不足');
                 }
                 
-            }// else if (config('sys.admin_whitelist_verify')) {
-            //     //开启了白名单
-            //     return $this->error('节点不存在或者已禁用！');
-
-            // }
+            }
             else {
 
                 $curMenu = ['title' => '', 'url' => '', 'id' => 0];
 
             }
-
-//halt(runhook('system_admin_tips'));
 
             $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
 
@@ -131,19 +125,16 @@ class Admin extends Common
                     $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                     $menuParents = current($breadCrumbs);
                 }
-                //halt(MenuModel::getMainMenu());
+
                 // 获取面包屑导航
                 $breadCrumbs = MenuModel::getBrandCrumbs($curMenu['id']);
                 $this->assign('hisiBreadcrumb', $breadCrumbs);
 
-                //dump($curMenu);
-                //halt(MenuModel::getMainMenu());
                 // 获取当前访问的菜单信息
                 $this->assign('hisiCurMenu', $curMenu);
                 // 获取当前菜单的顶级节点
                 $this->assign('hisiCurParents', $menuParents);
                 // 获取导航菜单
-                //halt(MenuModel::getMainMenu());
                 $this->assign('hisiMenus', MenuModel::getMainMenu());
                 // 分组切换类型 0无需分组切换，1单个分组，2分组切换[无链接]，3分组切换[有链接]，具体请看后台layout.html
                 $this->assign('hisiTabType', 0);
@@ -154,19 +145,16 @@ class Admin extends Common
                 $this->assign('systemusers',session('systemusers'));
                 $config = Db::name('config')->column('title,value');
                 foreach($config as &$c){$c = explode(',',$c);}
-                //halt($config);
+  
                 $this->assign('config', $config);
                 // 当前用户的权限
                 $this->assign('auths',$auths);
                 $this->assign('paramsJson',json_encode($params));
-                //halt($auths);
+
                 //当前用户是否拥有“提交工单”权限
-                //$addOrderAuthBool = RoleModel::checkAuth(218);
                 $this->assign('addOrderAuthBool',in_array(218,$auths));
                 //当前用户是否拥有“我的工单”权限
-                //$myOrderAuthBool = RoleModel::checkAuth(219);
                 $this->assign('myOrderAuthBool',in_array(219,$auths));
-                //halt(json_encode($params));
                 // tab切换数据
                 // $hisiTabData = [
                 //     ['title' => '后台首页', 'url' => 'system/index/index'],

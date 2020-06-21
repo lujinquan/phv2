@@ -92,13 +92,21 @@
 								</div>
 							</div>
 						</div>
-						<div class="layui-row layui-form-item layui-col-space90 j-tips-newboxs j-visibility">
+						<div class="layui-row layui-form-item layui-col-space90">
 							<div class="layui-col-md12">
 								<div class="j-input-inline j-tips-show">
+								  <span class="">
+									<i class="layui-icon layui-icon-tips"></i>
+									<a id="add_tenant_info" title="新增租户信息" target="_blank">
+									  <label>点击新增租户信息</label>
+									</a>
+								  </span>
+								  <span class="j-tips-newboxs j-visibilitys">
 									<i class="layui-icon layui-icon-tips"></i>请补充完整身份证号
 									<a id="new_tenant_info" title="修改租户信息" target="_blank">
 									  <label>点击跳转</label>
 									</a>
+								  </span>
 								</div>
 							</div>
 						</div>
@@ -138,7 +146,7 @@
 					<input type="text" id="tenant_reason" name="change_remark" value="{$data_info['change_remark']}" placeholder="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md4">
+			<div class="layui-col-md4 hide">
 				<label class="j-form-label">是否生成租约</label>
 				<div class="j-input-inline j-input-radio">
 					<input type="radio" name="is_create_lease" value="1" {if condition="$data_info['is_create_lease']"}checked{/if} title="是">
@@ -271,8 +279,8 @@
 						$("#new_tenant_number").val(row.tenant_number);//获取租户编号
 						$("#new_tenant_name").val(row.tenant_name);
 						$("#new_tenant_card").val(row.tenant_card);
-						if(!row.tenant_card){
-							$(".j-tips-newboxs").removeClass("j-visibility");
+						if(!row.tenant_card||row.tenant_card==0){
+							$(".j-tips-newboxs").removeClass("j-visibilitys");
 						}
 						//$('#new_tenant_info').attr('href','{:url('house/tenant/edit')}?group=y&id='+row.tenant_id);
 					},btn2: function(index, layero){
@@ -303,8 +311,34 @@
 					            //console.log(res);
 					            if(res.data.tenant_card){
 					            	$("#new_tenant_card").val(res.data.tenant_card);
-					            	$(".j-tips-newboxs").addClass("j-visibility");
+					            	$(".j-tips-newboxs").addClass("j-visibilitys");
 					            }
+					        }
+					    });
+					}
+			  	});
+			})
+			//新增租户
+			$("#add_tenant_info").on('click',function(){
+				layer.open({
+					title: '新增租户'
+					,type: 2
+					,offset: 'auto'
+					,area: ['70%', '60%']
+					,btn:false
+					,pageTabs: false
+					,content: '{:url('house/tenant/add')}?group=y&hisi_iframe=yes&flag=change'
+					,btn: false
+					,yes: function(index, layero){
+			
+					}
+					,cancel: function(){ 
+					    console.log(old_tenant_id);
+					    $.ajax({
+					        type: 'GET',
+					        url: '{:url('house/api/tenant_info')}',
+					        success: function(res) {
+					            console.log(res);
 					        }
 					    });
 					}

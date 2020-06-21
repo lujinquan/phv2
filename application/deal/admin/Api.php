@@ -649,15 +649,26 @@ class Api extends Common
             $ban_id = input('param.ban_id/s');
             $ban_floors = input('param.ban_floors/d');
             $oldFloors = BanModel::where([['ban_id','eq',$ban_id]])->value('ban_floors');
+            
+            if(!$ban_floors){
+                return $this->error('参数错误！');
+            }
+            // 检测传入的楼层号是否符合规范，是否高于已有的最高居住层
+            $maxHouseFloorID = HouseModel::where([['ban_id','eq',$ban_id]])->max('house_floor_id');
+            if(!$maxHouseFloorID || $maxHouseFloorID > $ban_floors){
+                return $this->error('总楼层不能小于居住层！');
+            }
+
+            BanModel::where([['ban_id','eq',$ban_id]])->update(['ban_temp_floors'=>$ban_floors]);
 
             // 获取该楼栋下所有房间
             $RoomModel = new RoomModel;
-            $roomids = $RoomModel->where([['ban_id','eq',$ban_id]])->column('room_id');
+            //$roomids = $RoomModel->where([['ban_id','eq',$ban_id]])->column('room_id');
             // 更新所有房间的计算租金
-            foreach($roomids as $roomid){
-                $room_rent = $RoomModel->count_room_rent($roomid);
-                RoomModel::where([['room_id','eq',$roomid]])->update(['room_cou_rent'=>$room_rent]);
-            }
+            // foreach($roomids as $roomid){
+            //     $room_rent = $RoomModel->count_room_rent($roomid,'temp');
+            //     RoomModel::where([['room_id','eq',$roomid]])->update(['room_temp_cou_rent'=>$room_rent]);
+            // }
             // 获取该楼栋下所有房屋
             $houseOldArr = HouseModel::with('tenant')->where([['house_status','eq',1],['ban_id','eq',$ban_id],['tenant_id','>',0]])->field('house_id,house_number,tenant_id,house_pre_rent,house_floor_id,house_cou_rent')->select()->toArray();
             $HouseModel = new HouseModel;
@@ -666,10 +677,18 @@ class Api extends Common
             // 更新所有房屋的计算租金
             if($houseOldArr){
                 foreach($houseOldArr as $h){
-                    $house_rent = $HouseModel->count_house_rent($h['house_id']);
-                    HouseModel::where([['house_id','eq',$h['house_id']]])->update(['house_cou_rent'=>$house_rent]);
+                    // 更新所有房间的计算租金
+                    $roomids = Db::name('house_room')->where([['house_id','eq',$h['house_id']]])->column('room_id');
+                    foreach($roomids as $roomid){
+                        $room_rent = $RoomModel->count_room_rent($roomid,'temp');
+                        RoomModel::where([['room_id','eq',$roomid]])->update(['room_temp_cou_rent'=>$room_rent]);
+                    }
+                    
+                    $house_rent = $HouseModel->count_house_rent($h['house_id'],'temp');
+                    HouseModel::where([['house_id','eq',$h['house_id']]])->update(['house_temp_cou_rent'=>$house_rent]);
+                    //halt('房屋编号：'.$h['house_number'].',临时计算租金是'.$house_rent);
                 }
-                $houseNewArr = HouseModel::where([['ban_id','eq',$ban_id]])->column('house_id,house_cou_rent');
+                $houseNewArr = HouseModel::where([['ban_id','eq',$ban_id]])->column('house_id,house_temp_cou_rent');
                 
                 $oldCouRents = $newCouRents = 0;
                 foreach ($houseOldArr as $k => $v) {

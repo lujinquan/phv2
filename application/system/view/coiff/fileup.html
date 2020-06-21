@@ -51,8 +51,33 @@
             <input type="checkbox" name="changeuse_file_upload[]" value="UseChangeOther" title="其他" lay-skin="primary" {if condition="in_array('UseChangeOther',$config['changeuse_file_upload'])"}checked{/if}>
         </div>
     </div>
-
-    
+    <div class="layui-form-item">
+        <label class="layui-form-label">新发租：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changenew_file_upload[]" value="Houselease" title="计租表" lay-skin="primary" {if condition="in_array('Houselease',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="HouseForm" title="租约" lay-skin="primary" {if condition="in_array('HouseForm',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="TenantReIDCard" title="身份证" lay-skin="primary" {if condition="in_array('TenantReIDCard',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangenewPaper" title="收欠票据" lay-skin="primary" {if condition="in_array('ChangenewPaper',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="BanCard" title="图卡" lay-skin="primary" {if condition="in_array('BanCard',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangenewOther" title="其他" lay-skin="primary" {if condition="in_array('ChangenewOther',$config['changenew_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changenew_file_upload[]" value="ChangeNewUpload" title="资料上传（资料员）" lay-skin="primary" {if condition="in_array('ChangeNewUpload',$config['changenew_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">注销：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelOne" title="售房专用票据" lay-skin="primary" {if condition="in_array('ChangeCancelOne',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelTwo" title="审批表" lay-skin="primary" {if condition="in_array('ChangeCancelTwo',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelThree" title="危改批文" lay-skin="primary" {if condition="in_array('ChangeCancelThree',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelRetread" title="翻新计划" lay-skin="primary" {if condition="in_array('ChangeCancelRetread',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelApproval" title="发还批文" lay-skin="primary" {if condition="in_array('ChangeCancelApproval',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelReport" title="注销报告" lay-skin="primary" {if condition="in_array('ChangeCancelReport',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelPaper" title="政府文件" lay-skin="primary" {if condition="in_array('ChangeCancelPaper',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelInvoice" title="发票" lay-skin="primary" {if condition="in_array('ChangeCancelInvoice',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelDetail" title="征收明细表" lay-skin="primary" {if condition="in_array('ChangeCancelDetail',$config['changecancel_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelOfficial" title="划转公文" lay-skin="primary" {if condition="in_array('ChangeCancelOfficial',$config['changecancel_file_upload'])"}checked{/if}>
+        </div>
+    </div>
     <div class="layui-form-item">
         <label class="layui-form-label"> </label>
         <div class="layui-input-block">

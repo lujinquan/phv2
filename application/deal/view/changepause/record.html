@@ -8,6 +8,11 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('ban_number',$config['deal_changepause_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
+					<input type="text" name="ban_number" placeholder="楼栋编号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('change_order_number',$config['deal_changepause_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
@@ -166,6 +171,7 @@
 						}
 					}, */
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'},
+					{field: 'ban_number',hide:true,align:'center',minWidth: 210,title: '楼栋编号'},
 					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 140,align:'center',title: '申请机构', 
 						templet: function(d) {
@@ -178,7 +184,7 @@
 		                }
 					},
 					{field: 'change_pause_rent',minWidth: 120,align:'center',title: '暂停规定租金',totalRow: true}, 
-					{field: 'ftime',align:'center',minWidth: 120,title: '完成时间'}, 
+					{field: 'fdate',align:'center',minWidth: 120,title: '完成时间'}, 
 					{field: 'ctime',align:'center',minWidth: 120,title: '创建时间'},
 					{field: 'entry_date',align:'center',width: 100,title: '生效时间'},
 					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 

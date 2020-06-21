@@ -239,12 +239,12 @@ class Index extends Common
                 return json($result);
             }
             // 检查订单绑定的房屋是否以被当前会员绑定
-            if(!in_array($rent_order_info['house_id'],$member_houses)){
-                $result['code'] = 10033;
-                $result['msg'] = '当前房屋未绑定';
-                $result['en_msg'] = 'The house is not bound by the current member';
-                return json($result);
-            }
+            // if(!in_array($rent_order_info['house_id'],$member_houses)){
+            //     $result['code'] = 10033;
+            //     $result['msg'] = '当前房屋未绑定';
+            //     $result['en_msg'] = 'The house is not bound by the current member';
+            //     return json($result);
+            // }
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
         //halt($pay_money);
@@ -327,6 +327,39 @@ class Index extends Common
         $result['data'] = $options;
         return json($result);
 
+    }
+
+    /**
+     * 生成自定义path的微信二维码，用户可以扫描二维码跳转到对应的页面
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 官方文档地址：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+     * 创建时间: 生成二维码
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function createqrcode()
+    {
+        // 调起支付
+        include EXTEND_PATH.'wechat/include.php';
+        // $mini = new WeMini\Qrcode($config);
+        $mini = \WeMini\Qrcode::instance($this->config);
+
+        //echo '<pre>';
+        //try {
+            header('Content-type:image/jpeg'); //输出的类型
+        //    echo $mini->createDefault('pages/index?query=1');
+        //    echo $mini->createMiniScene('432432', 'pages/index/index');
+            $result = $mini->createMiniPath('pages/payment/payment?houseid=22');
+            $res = file_put_contents('./qrcode2.png',$result);
+            
+            halt($res);
+        // } catch (Exception $e) {
+        //     var_dump($e->getMessage());
+        // }
     }
 
     public function recharge()

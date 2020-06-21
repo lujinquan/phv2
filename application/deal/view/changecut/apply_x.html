@@ -211,6 +211,9 @@
   </div>
 </form>
 {include file="system@block/layui" /}
+<!-- 图片查看 -->
+<link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	/*上传参数设定*/
 	var upurl = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证

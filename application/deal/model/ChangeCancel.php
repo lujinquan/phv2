@@ -13,6 +13,7 @@ use app\house\model\Tenant as TenantModel;
 use app\house\model\BanTai as BanTaiModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 
 class ChangeCancel extends SystemBase
 {
@@ -24,10 +25,11 @@ class ChangeCancel extends SystemBase
 
     // 定义时间戳字段名
     protected $createTime = 'ctime';
-    protected $updateTime = false;
+    protected $updateTime = 'etime';
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
         'data_json' => 'json',
         'change_json' => 'json',
@@ -161,29 +163,37 @@ class ChangeCancel extends SystemBase
         if(!isset($data['cancel_ban'])){
             $data['cancel_ban'] = 0;
         }
+        $data['cancel_holds'] = $data['cancel_change_0'];
         $data['cancel_rent'] = $data['cancel_change_1'];
         $data['cancel_use_area'] = $data['cancel_change_2'];
         $data['cancel_area'] = $data['cancel_change_3'];
-        $data['cancel_oprice'] = $data['cancel_change_4'];
+        $data['cancel_oprice'] = $data['cancel_change_4'];  
+        $data['cancel_num'] = $data['cancel_change_5'];
 
         $data['change_json'] = [
             'before' => [
+                'ban_total_holds' => $data['floor_households'],
                 'ban_total_rent' => $data['floor_prescribed'],
                 'ban_total_use_area' => $data['floor_areaofuse'],
                 'ban_total_area' => $data['floor_builtuparea'],
                 'ban_total_oprice' => $data['floor_original'],
+                'ban_total_num' => $data['floor_bannumber'],
             ],
             'change' => [
+                'ban_total_holds' => $data['cancel_change_0'],
                 'ban_total_rent' => $data['cancel_change_1'],
                 'ban_total_use_area' => $data['cancel_change_2'],
                 'ban_total_area' => $data['cancel_change_3'],
                 'ban_total_oprice' => $data['cancel_change_4'],
+                'ban_total_num' => $data['cancel_change_5'],
             ],
             'after' => [
+                'ban_total_holds' => $data['changes_floor_households'],
                 'ban_total_rent' => $data['changes_floor_prescribed'],
                 'ban_total_use_area' => $data['changes_floor_areaofuse'],
                 'ban_total_area' => $data['changes_floor_builtuparea'],
                 'ban_total_oprice' => $data['changes_floor_original'],
+                'ban_total_num' => $data['changes_floor_bannumber'],
             ],
         ];
         //halt($data);
@@ -211,13 +221,15 @@ class ChangeCancel extends SystemBase
         return $data; 
     }
 
-    public function detail($id)
+    public function detail($id,$change_order_number = '')
     {
-        $row = self::get($id);
+        if($id){
+            $row = self::get($id);
+        }else{
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+        }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        // dump(session('systemusers'));
-        // halt($row);
         //$this->finalDeal($row);
         return $row;
     }
@@ -340,16 +352,29 @@ class ChangeCancel extends SystemBase
 
     /**
      * 终审审核成功后的数据处理 【完成，可优化】
+     * 问题一、整栋注销是否意味着六元素全部为0
+     * 问题二、参数值超出可注销最大值，需自动生成某个异动
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
     {//halt($finalRow);
         
         $taiBanData = $taiHouseData = $tableData = [];
+        
+        // 异动记录
+        $ChangeRecordModel = new ChangeRecordModel;
+        $ChangeRecordModel->save([
+            'change_type' => 8,
+            'change_order_number' => $finalRow['change_order_number'],
+            'ban_id' => $finalRow['ban_id'],
+            'ctime' => $finalRow->getData('ctime'),
+            'ftime' => $finalRow->getData('ftime'),
+            'change_status' => $finalRow['change_status'],
+        ]);
 
         // 按栋注销
         if($finalRow['cancel_ban']){ 
-            // 将楼栋状态改成注销
+            // 将楼栋状态改成注销(注销楼，是否意味着四元素全部为0)
             BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_status'=>2]);
             // 新增楼栋台账
             $taiBanData['ban_id'] = $finalRow['ban_id'];
@@ -395,11 +420,38 @@ class ChangeCancel extends SystemBase
                     $tableData[$k]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
                     $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
                     $tableData[$k]['use_id'] = $v['house_use_id'];
-                    $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                    $tableData[$k]['change_rent'] = $v['house_pre_rent']; //规租变化
+                    $tableData[$k]['change_oprice'] = $v['house_oprice']; //原价变化
+                    $tableData[$k]['change_use_area'] = $v['house_use_id'] == 1 ? $v['house_lease_area'] :  0 ; //使面变化，住宅就取计租面积，非住宅就是0
+                    $tableData[$k]['change_area'] = $v['house_area']; //建面变化
+                    $tableData[$k]['change_house_num'] = 1; //户数变化
+                    $tableData[$k]['change_ban_num'] = 0; //栋数变化
                     $tableData[$k]['tenant_id'] = $v['tenant_id'];
-                    $tableData[$k]['cuid'] = $finalRow['cuid']; 
-                    $tableData[$k]['order_date'] = date('Ym',$finalRow['ftime']);  
+                    $tableData[$k]['cuid'] = $finalRow['cuid'];
+                    $tableData[$k]['change_cancel_type'] = $finalRow['cancel_type'];  
+                    $tableData[$k]['order_date'] = date('Ym');  
                 }
+                //halt($finalRow);
+                //注销栋数
+                $tableData[$k+1]['change_type'] = 8;
+                $tableData[$k+1]['change_order_number'] = $finalRow['change_order_number'];
+                //$tableData[$k+1]['house_id'] = '';
+                $tableData[$k+1]['ban_id'] = $finalRow['ban_info']['ban_id'];
+                $tableData[$k+1]['inst_id'] = $finalRow['ban_info']['ban_inst_id'];
+                $tableData[$k+1]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
+                $tableData[$k+1]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
+                $tableData[$k+1]['use_id'] = $finalRow['ban_info']['ban_use_id'];
+                $tableData[$k+1]['change_area'] = $finalRow['change_json']['after']['ban_total_area']; //规租变化
+                $tableData[$k+1]['change_oprice'] = $finalRow['change_json']['after']['ban_total_oprice']; //原价变化
+                //$tableData[$k+1]['change_house_num'] = -1; //户数变化
+                $tableData[$k+1]['change_ban_num'] = 1; //栋数变化
+                //$tableData[$k+1]['tenant_id'] = $v['tenant_id'];
+                $tableData[$k+1]['cuid'] = $finalRow['cuid']; 
+                $tableData[$k+1]['change_cancel_type'] = $finalRow['cancel_type'];
+                $tableData[$k+1]['order_date'] = date('Ym');
+
+                //如果注销后有多余的数据不管正负，直接生成一个 
+
             }
 
         // 按户注销   
@@ -456,10 +508,16 @@ class ChangeCancel extends SystemBase
                 $tableData[$k]['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
                 $tableData[$k]['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
                 $tableData[$k]['use_id'] = $v['house_use_id'];
-                $tableData[$k]['change_rent'] = $v['house_pre_rent'];
+                $tableData[$k]['change_rent'] = $v['house_pre_rent']; //规租变化
+                $tableData[$k]['change_oprice'] = $v['house_oprice']; //原价变化
+                $tableData[$k]['change_use_area'] = $v['house_use_id'] == 1 ? $v['house_lease_area'] :  0 ; //使面变化，住宅就取计租面积，非住宅就是0
+                $tableData[$k]['change_area'] = $v['house_area']; //建面变化
+                $tableData[$k]['change_house_num'] = 1; //户数变化
+                $tableData[$k]['change_ban_num'] = 0; //栋数变化
                 $tableData[$k]['tenant_id'] = $v['tenant_id'];
                 $tableData[$k]['cuid'] = $finalRow['cuid']; 
                 $tableData[$k]['order_date'] = date('Ym');  
+                $tableData[$k]['change_cancel_type'] = $finalRow['cancel_type'];
             }
 
             // 添加楼栋台账

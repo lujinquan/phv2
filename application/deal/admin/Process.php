@@ -5,6 +5,7 @@ namespace app\deal\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeRecord as ChangeRecordModel;
 use app\deal\model\ChangeBan as ChangeBanModel;
 use app\deal\model\ChangeHouse as ChangeHouseModel;
 use app\deal\model\ChangeCancel as ChangeCancelModel;
@@ -64,6 +65,35 @@ class Process extends Admin
             $data['code'] = 0;
             $data['msg'] = '';
             //halt($data['data']);
+            return json($data);
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * 业务审批记录
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-12 10:38:55
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function record()
+    {
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $RecordModel = new ChangeRecordModel;
+            $where = $RecordModel->checkWhere($getData);
+            $fields = "a.id,a.change_order_number,a.change_type,a.change_status,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%s') as cdate,a.ctime,from_unixtime(a.ftime, '%Y-%m-%d %H:%i:%s') as fdate,a.ftime,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $data['data'] = Db::name('change_record')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.change_status desc,a.ctime desc')->page($page)->limit($limit)->select();
+            $data['count'] = Db::name('change_record')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count();
+            $data['code'] = 0;
+            $data['msg'] = '';
             return json($data);
         }
         return $this->fetch();
@@ -252,11 +282,16 @@ class Process extends Admin
         // 显示对应的审批页面
         $id = input('param.id/d');
         $change_type = input('param.change_type/d');
-        if(!$change_type || !$id){
-            return $this->error('参数错误！');
-        }
+        $change_order_number = input('param.change_order_number/s');
+
+        // if(!$change_type || (!$id && !$change_order_number)){
+        //     return $this->error('参数错误！');
+        // }
+        
+        
         $PorcessModel = new ProcessModel;
-        $result = $PorcessModel->detail($change_type,$id);
+        $result = $PorcessModel->detail($change_type,$id,$change_order_number);
+        //halt($result);
         if(isset($result['old_data_info'])){
             $this->assign('old_data_info',$result['old_data_info']);
         }

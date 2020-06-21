@@ -102,6 +102,11 @@
 		      </div>
 		      {/if}
 		      {/if}
+		      {if condition="in_array('ban_ctime',$config['ban_info_search'])"}
+		        <div class="layui-input-inline j-input-margin" style="width:120px">
+		            <input type="text" name="ban_ctime" value="" placeholder="创建日期" id="query_month" autocomplete="off" class="layui-input">
+		        </div>
+		        {/if}
 			  <input type="hidden" name="group" value="{$group}" class="layui-input">
             
 		</div>
@@ -150,6 +155,17 @@
         }else if(group == 'z'){
         	templet_width = 180;
         }
+        //年选择器
+        laydate.render({
+            elem: '#query_month'
+            ,type: 'month'
+            ,isInitValue: true,
+            ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
+        });
 		//var exportData = " ";//定义全局变量
 				table.render({
 					elem: '#dataTable'
