@@ -82,12 +82,13 @@
                 	if(d.member_name){
                 		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                 	}else{
-                		return '游客【未授权小程序】';
+                		return '未授权的用户';
                 	}
 					//return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
             	}}
                 ,{field: 'real_name',hide: false,width:100,align:'center', title: '真实姓名'}
-                ,{field: 'tel', minWidth: 120, align:'center', title: '手机号'}
+                ,{field: 'tel', minWidth: 120, align:'center', title: '认证手机号'}
+                ,{field: 'weixin_tel', minWidth: 160, align:'center', title: '微信授权手机号'}
                 ,{field: 'create_time',width: 200, align:'center', title: '注册时间'}
                 ,{field: 'is_show', align:'center',width:100, title: '状态', templet: '#statusTpl'}
                 ,{title: '操作', width: 340, align:'center', templet: '#buttonTpl',fixed:'right'}
