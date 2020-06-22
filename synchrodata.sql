@@ -484,24 +484,77 @@ update ph_v2.ph_system_annex_back set name='Lowassurance' where remark = '低保
 update ph_v2.ph_system_annex_back set name='Residence' where remark = '户口本';
 update ph_v2.ph_system_annex_back set name='HouseApplicationForm' where remark = '房产证';
 update ph_v2.ph_system_annex_back set name='Housingsecurity' where remark = '住房保障申请表';
+update ph_v2.ph_system_annex_back set name='ChangeCutForm' where remark = '核减租金会审单';
+update ph_v2.ph_system_annex_back set name='ChangeCutOther' where remark = '审通知书';
+update ph_v2.ph_system_annex_back set name='ChangeCutOther' where remark = '年租房合同(协议)';
+update ph_v2.ph_system_annex_back set name='ChangeCutOther' where remark = '非基数异动核算凭单';
+#租金减免取消
+update ph_v2.ph_system_annex_back set name='CallofChangeCutOtherfForm' where remark = '取消减免报告';
 #暂停计租
 update ph_v2.ph_system_annex_back set name='ChangePauseUpload' where remark = '上传报告';
 #陈欠核销
 update ph_v2.ph_system_annex_back set name='ChangeOffsetUpload' where remark = '陈欠核销情况说明报告';
+update ph_v2.ph_system_annex_back set name='ChangeOffsetUpload' where remark = '陈欠核销其它';
 #新发租
 update ph_v2.ph_system_annex_back set name='ChangeNewUpload' where remark = '新发租情况说明';
+update ph_v2.ph_system_annex_back set name='ChangeNewUpload' where remark = '新发租其它';
 #租金追加调整
 update ph_v2.ph_system_annex_back set name='RentAddPaper' where remark = '其他(票据)';
 #注销
 update ph_v2.ph_system_annex_back set name='ChangeCancelOne' where remark = '武汉市直管公有住房出售收入专用票据';
 update ph_v2.ph_system_annex_back set name='ChangeCancelTwo' where remark = '武昌区房地局出售直管公有住房审批表';
+update ph_v2.ph_system_annex_back set name='ChangeCancelReport' where remark = '注销报告';
+update ph_v2.ph_system_annex_back set name='ChangeCancelThree' where remark = '住房证复印件';
+update ph_v2.ph_system_annex_back set name='ChangeCancelThree' where remark = '房屋使用权证（权属证明书）原件/复印件';
+update ph_v2.ph_system_annex_back set name='ChangeCancelThree' where remark = '购买直管公有住房申请表';
+update ph_v2.ph_system_annex_back set name='ChangeCancelApproval' where remark = '房改批文';
+update ph_v2.ph_system_annex_back set name='ChangeCancelPaper' where remark = '武汉市房产管理局出售单元式直管公房审批表';
+update ph_v2.ph_system_annex_back set name='ChangeCancelInvoice' where remark = '最后一月租金发票';
+update ph_v2.ph_system_annex_back set name='ChangeCancelThree' where remark = '其他';
 #房屋调整
-#update ph_v2.ph_system_annex_back set name='' where remark = '调整附件报告';
+update ph_v2.ph_system_annex_back set name='HouseChangeExplain' where remark = '调整附件报告';
+update ph_v2.ph_system_annex_back set name='HouseChangeExplain' where remark = '调整说明';
+update ph_v2.ph_system_annex_back set name='HouseChangeExplain' where remark = '房屋调整其它';
 #租约管理
 update ph_v2.ph_system_annex_back set name='TenantReIDCard' where remark = '身份证';
 update ph_v2.ph_system_annex_back set name='Houselease' where remark = '计租表';
-update ph_v2.ph_system_annex_back set name='HouseForm' where remark = '租约';
+update ph_v2.ph_system_annex_back set name='HouseForm' where remark = '住宅租约';
 update ph_v2.ph_system_annex_back set name='ChangeLeaseSign' where remark = '租约签字图片';
+#楼栋调整
+update ph_v2.ph_system_annex_back set name='BanPropertyID' where remark = '产权清册';
+update ph_v2.ph_system_annex_back set name='BanPropertyID' where remark = '产权证及其他';
+update ph_v2.ph_system_annex_back set name='BanPropertyID' where remark = '楼栋调整其它';
+#租金追加调整
+update ph_v2.ph_system_annex_back set name='RentAddPaper' where remark = '其他(票据)';
+#使用权变更
+update ph_v2.ph_system_annex_back set name='UseChangeApproval' where remark = '武汉市直管公房承租人过户申请审批表';
+update ph_v2.ph_system_annex_back set name='UseChangeApproval' where remark = '使用权变更审批表';
+update ph_v2.ph_system_annex_back set name='UseChangeApplication' where remark = '武汉市公有住房承租权有偿转让申请书';
+update ph_v2.ph_system_annex_back set name='UseChangeApplication' where remark = '使用权变更书面申请报告';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '武汉市直管公房承租人过户协议书';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '武汉市公有房屋使用权转让协议';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '同意办理公有住房使用权转让或者代理转让协议';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '原承租人户口';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '现承租人户口';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '现承租人身份证';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '直管公房有偿转让备案单';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '收据';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '死亡证';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '结婚证';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '共有子女材料证明';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '离婚协议书';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '材料承诺书';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '家庭成员身份证明';
+update ph_v2.ph_system_annex_back set name='UseChangeOther' where remark = '使用权变更其它附件';
+#别字更正
+update ph_v2.ph_system_annex_back set name='NameChangeApproval' where remark = '别字更正审批表';
+update ph_v2.ph_system_annex_back set name='NameChangeApplication' where remark = '别字更正书面申请报告';
+update ph_v2.ph_system_annex_back set name='NameChangeApplication' where remark = '别字更正其它附件';
+#身份证
+update ph_v2.ph_system_annex_back set name='Positiveid' where remark = '身份证正面';
+update ph_v2.ph_system_annex_back set name='Backid' where remark = '身份证反面';
+#添加房屋
+update ph_v2.ph_system_annex_back set name='HouseImagingData' where remark = '房屋影像资料';
 update ph_v2.ph_system_annex_back as a left join ph_v2.ph_system_annex_type as b on a.name = b.file_type set a.data_id = b.id;
 
 

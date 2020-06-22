@@ -59,8 +59,10 @@
   <div class="layui-form-item">
   	<div class="j-form-label"><i class="red">*</i>业务权限：</div>
 	   <div class="layui-inline j-inline-margin e-inline room_rent_pointids_form">
+	   	<input type="checkbox" name="auth_roles[]" class="renttable" lay-filter="filter" {if condition="$data_info['auth_roles'] && in_array(100,$data_info['auth_roles'])"}checked{/if} value="100" lay-skin="primary" title="非认证用户（已授权微信未认证租户，且非后台管理员）">
+	   	<input type="checkbox" name="auth_roles[]" class="renttable" lay-filter="filter" {if condition="$data_info['auth_roles'] && in_array(101,$data_info['auth_roles'])"}checked{/if} value="101" lay-skin="primary" title="已认证租户（已认证的租户，且非后台管理员）">
 	   	{volist name="roleArr" id="v"}
-	    <input type="checkbox" name="auth_roles[]" class="renttable" lay-filter="filter" {if condition="$data_info['auth_roles'] && in_array($v['id'],$data_info['auth_roles'])"}checked{/if} value="{$v['id']}" lay-skin="primary" title="{$v['name']}">
+	    <input type="checkbox" name="auth_roles[]" class="renttable" lay-filter="filter" {if condition="$data_info['auth_roles'] && in_array($v['id'],$data_info['auth_roles'])"}checked{/if} value="{$v['id']}" lay-skin="primary" title="{$v['name']}（后台管理员）">
 	    {/volist}
 	  </div>
   </div>
