@@ -360,11 +360,10 @@ class Weixin extends Common
             return json($result);
         }else{ // 验证成功
             $member_info = $checkData['member_info']; //微信用户基础数据
-            
             $member_extra_info = $checkData['member_extra_info'];
         }
 
-//halt($checkData['role_type']);
+        //halt($checkData['role_type']);
         // 获取所有业务列表
         $WeixinColumnModel = new WeixinColumnModel;
         $columns = $WeixinColumnModel->field('col_id,col_name,auth_roles,is_top,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
@@ -374,13 +373,18 @@ class Weixin extends Common
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
 
-             if($checkData['role_type'] == 2){
+             if($checkData['role_type'] == 2){ // 2代表是后台管理员
                 if($v['auth_roles'] && !in_array($member_extra_info['role_id'],$v['auth_roles'])){
                     continue;
                 }
              }
+             if($checkData['role_type'] == 0){
+                if($v['auth_roles'] && !in_array(100,$v['auth_roles'])){ // 100这个角色代表未认证的用户
+                    continue;
+                }
+             }
              if($checkData['role_type'] == 1){
-                if($v['auth_roles'] && !in_array(100,$v['auth_roles'])){
+                if($v['auth_roles'] && !in_array(101,$v['auth_roles'])){ // 101这个角色代表已认证的用户（就是租户本人）
                     continue;
                 }
              }
@@ -528,6 +532,7 @@ class Weixin extends Common
             return json($result);
         }else{ // 验证成功
             $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
         $banners = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
@@ -555,14 +560,29 @@ class Weixin extends Common
         $result['data']['notice'] = $WeixinNoticeModel->field('id,title,content,ctime')->where($noticeWhere)->order('sort asc')->select()->toArray();
         // 获取业务列表
         $WeixinColumnModel = new WeixinColumnModel;
-        $columns = $WeixinColumnModel->field('col_id,col_name,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        $columns = $WeixinColumnModel->field('col_id,col_name,auth_roles,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
              if(!in_array($v['col_id'],$member_info['app_cols'])){
                 unset($columns[$k]);
              }
-             //halt($v);
+             //待优化，下面这一大段
+             if($checkData['role_type'] == 2){ // 2代表是后台管理员
+                if($v['auth_roles'] && !in_array($member_extra_info['role_id'],$v['auth_roles'])){
+                    unset($columns[$k]);
+                }
+             }
+             if($checkData['role_type'] == 0){
+                if($v['auth_roles'] && !in_array(100,$v['auth_roles'])){ // 100这个角色代表未认证的用户
+                    unset($columns[$k]);
+                }
+             }
+             if($checkData['role_type'] == 1){
+                if($v['auth_roles'] && !in_array(101,$v['auth_roles'])){ // 101这个角色代表已认证的用户（就是租户本人）
+                    unset($columns[$k]);
+                }
+             }
         }
         // 获取服务配置
         $result['data']['service'] = Db::name('weixin_service_config')->find();
@@ -2155,20 +2175,24 @@ class Weixin extends Common
             return ['error_code'=>10011,'error_msg'=>'用户已被禁止访问'];
         }
 
+        $role_type = 0; //默认是游客或未认证的租户
         $member_extra_info = '';
-        
+
+
         $TenantModel = new TenantModel;
         $tenant_info = $TenantModel->where([['tenant_id','eq',$member_info['tenant_id']]])->field('tenant_id,tenant_name')->find();
-        $role_type = 0; //默认是游客
+
+        
         if($tenant_info){
-            $role_type = 1; //租户
+            $role_type = 1; //已认证的租户
             $member_extra_info = $tenant_info;
         }
 
         $UserModel = new UserModel;
         $user_info = $UserModel->where([['weixin_member_id','eq',$member_info['member_id']]])->find();
+        //halt($user_info);
         //检查用户是管理员，还是租户，还是其他
-        if($member_extra_info){
+        if($user_info){
             $role_type = 2; //管理员
             $member_extra_info = $user_info;
         }
