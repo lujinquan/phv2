@@ -88,6 +88,7 @@ class Weixin extends Model
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret, $code);
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;echo '<br>'; echo 1;exit;
 	    $wxResult = json_decode($result, true);
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
@@ -118,16 +119,18 @@ class Weixin extends Model
 	 */
 	public function getAccessToken()
 	{
-		$access_token = cache(($this->appid).'_access_token');
-		//cache(($this->appid).'_access_token',null);
-		if(!empty($access_token)){
-			return ['access_token'=>$access_token,'expires_in'=>7000];
-		}
+		// $access_token = cache(($this->appid).'_access_token');
+		// //cache(($this->appid).'_access_token',null);
+		// if(!empty($access_token)){
+		// 	return ['access_token'=>$access_token,'expires_in'=>7000];
+		// }
 	    $wxUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
 	    //把appid，appsecret，code拼接到url里
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret);
+	    //echo 1;exit;
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;exit;
 	    $wxResult = json_decode($result, true);
 	    //$wxResult = ['access_token'=>'34_p9IMMq6SSBu5n8iyBlN8BceqC0XwJYqjmk6mG77FS03AuP55o58rUTP2umKNHfF9uzKiAYVhGxX_HntSL2LBnBWZ6GGiewNfOg1Tbh-YJTDhemJNRlSnvCBlrKmhY09VbhKPCSbwrQYnjWOZULIeAIAEVS','expires_in'=>7200];
 	    if (empty($wxResult)) {

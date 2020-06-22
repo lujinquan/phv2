@@ -18,6 +18,7 @@ use app\common\controller\Common;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
+use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
@@ -59,6 +60,23 @@ class Weixin extends Common
     }
 
     /**
+     * 验证进入小程序的用户角色：用户&管理员
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 10:02:41
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function check_role()
+    {
+        // $UserModel = new UserModel;
+        // $UserModel->
+    }
+
+    /**
      * 功能描述：用户进入小程序 [前端每隔3000秒请求一次]
      * @author  Lucas 
      * 创建时间: 2020-02-26 11:39:34
@@ -93,17 +111,27 @@ class Weixin extends Common
                     'expires_in' => 7200,
                 ];
             }else{
+                //echo 2;exit;
                 $resultAccessToken = $WeixinModel->getAccessToken();
             }
 
             //halt($resultAccessToken);
             
-            $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
-            $token = md5($resultOpenid['openid'].time()); //设置token
-
-            cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
-            cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
-            cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
+            // if(cache('weixin_'.$resultOpenid['openid'].'_token')){
+            //     $token = cache('weixin_'.$resultOpenid['openid'].'_token');
+            //     cache('weixin_'.$resultOpenid['openid'].'_token',$token,7000); //存储token
+            //     cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
+            //     cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
+            //     cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
+            // }else{
+                $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
+                $token = md5($resultOpenid['openid'].time()); //设置token
+                cache('weixin_'.$resultOpenid['openid'].'_token',$token,7000); //存储token
+                cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
+                cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
+                cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
+            // }
+            
             //cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
             $result['code'] = 1;
             $result['data'] = [
@@ -179,9 +207,15 @@ class Weixin extends Common
     }
 
     /**
-     * 功能描述：用户授权小程序
+     * 用户授权小程序
+     * =====================================
      * @author  Lucas 
-     * 创建时间: 2020-02-26 11:39:34
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 10:10:39
+     * @return  返回值  
+     * @version 版本  1.0
      */
     public function applogin_do()
     {
@@ -189,10 +223,19 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/applogin_do';
-        if(!$this->check_token()){
-            $result['msg'] = '令牌已失效！';
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['msg'] = $checkData['error_msg'];
             return json($result);
+        }else{ // 验证成功
+            // $result['msg'] = '授权成功';
+            // return json($result);
         }
+
+        // if(!$this->check_token()){
+        //     $result['msg'] = '令牌已失效！';
+        //     return json($result);
+        // }
         $token = input('token');
         
         //$data_json = file_get_contents('php://input');
@@ -473,10 +516,17 @@ class Weixin extends Common
         return json($result);
     }
 
+
     /**
-     * 功能描述：获取主页的数据
+     * 获取主页的数据（场景：用户访问小程序首页调用）
+     * =====================================
      * @author  Lucas 
-     * 创建时间: 2020-02-26 15:55:15
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 10:13:15
+     * @return  返回值  
+     * @version 版本  1.0
      */
     public function index_info()
     {
@@ -484,28 +534,16 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/index_info';
-        if($this->debug === false){
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
-        }
-    
-        
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        if($member_info['is_show'] == 2){
-            $result['code'] = 10011;
-            $result['msg'] = '用户已被禁止访问';
-            $result['en_msg'] = 'The user has been denied access';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
             return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
         }
+
         $banners = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
         foreach ($banners as &$b) {
             $banner = SystemAnnex::where([['id','eq',$b['banner_img']]])->value('file');
@@ -567,6 +605,452 @@ class Weixin extends Common
         $result['msg'] = '获取成功！';
          
         return json($result);    
+    }
+
+    /**
+     * 楼栋列表（场景：管理员点击业务的“房屋档案”）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_ban_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+
+        if($row){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $damage = input('ban_damage_id');
+            $owner = input('ban_owner_id');
+            $struct = input('ban_struct_id');
+            $status = input('ban_status');
+            $address = input('ban_address');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            $BanModel = new BanModel;
+            $where = [];
+            
+            $where[] = ['ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            
+            if($damage){
+                $where[] = ['ban_damage_id','eq',$damage];
+            }
+            if($owner){
+                $where[] = ['ban_owner_id','eq',$owner];
+            }
+            if($address){
+                $where[] = ['ban_address','like','%'.$address.'%'];
+            }
+            if($struct){
+                $where[] = ['ban_struct_id','eq',$struct];
+            }
+            if($status !== null){
+                $where[] = ['ban_status','eq',$status];
+            }else{
+                $where[] = ['ban_status','eq',1];
+            }
+            //halt($where);
+            $temps = $BanModel->field('ban_id,ban_number,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,ban_status')->where($where)->page($page)->limit($limit)->order('ban_ctime desc')->select()->toArray();
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['ban_status'] = $params['status'][$v['ban_status']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
+            $result['count'] = $BanModel->where($where)->order('ban_ctime desc')->count('ban_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    /**
+     * 楼栋详情（场景：管理员点击楼栋详情）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_ban_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+        $id = input('get.ban_id');
+        if($row){
+            $BanModel = new BanModel;
+            $temp = $BanModel->get($id);
+            $params = ParamModel::getCparams();
+            $temp['ban_rent'] = bcaddMerge([$temp['ban_civil_rent'],$temp['ban_party_rent'],$temp['ban_career_rent']]);
+            $temp['ban_area'] = bcaddMerge([$temp['ban_civil_area'],$temp['ban_party_area'],$temp['ban_career_area']]);
+            $temp['ban_oprice'] = bcaddMerge([$temp['ban_civil_oprice'],$temp['ban_party_oprice'],$temp['ban_career_oprice']]);
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['ban_status'] = $params['status'][$temp['ban_status']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
+            $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+
+            $result['data'] = $temp;
+                      
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
+    /**
+     * 房屋列表（场景：管理员点击业务的“房屋档案”）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_house_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+
+        if($row){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $use = input('house_use_id');
+            $owner = input('ban_owner_id');
+            $tenant = input('tenant_name');
+            $status = input('house_status');
+            $address = input('ban_address');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            
+            $where = [];
+            $where[] = ['d.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            
+            if($use){
+                $where[] = ['a.house_use_id','eq',$use];
+            }
+            if($owner){
+                $where[] = ['d.ban_owner_id','eq',$owner];
+            }
+            if($address){
+                $where[] = ['d.ban_address','like','%'.$address.'%'];
+            }
+            if($tenant){
+                $where[] = ['c.tenant_name','like','%'.$tenant.'%'];
+            }
+            if($status !== null){
+                $where[] = ['a.house_status','eq',$status];
+            }else{
+                $where[] = ['d.ban_status','eq',1]; 
+            }
+            //halt($where);
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            //halt($where);
+            $data = [];
+            $temps = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['house_status'] = $params['status'][$v['house_status']];
+                //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
+            $result['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.house_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    /**
+     * 房屋详情（场景：管理员点击房屋详情）【借口已经废弃，因为用户版已经有房屋详情接口了】
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    /*public function admin_house_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+        $id = input('get.house_id');
+
+        if($row){
+            $HouseModel = new HouseModel;
+            $temp = HouseModel::with(['ban','tenant'])->get($id);
+            $cutRent = Db::name('change_cut')->where([['house_id','eq',$id],['tenant_id','eq',$temp['tenant_id']],['change_status','eq',1],['end_date','>',date('Ym')]])->value('cut_rent');
+            $temp['cut_rent'] = $cutRent?$cutRent:'0.00';
+            $params = ParamModel::getCparams();
+
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            // $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
+            // $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+            $rooms = $HouseModel->get_house_renttable($id);
+            foreach($rooms as &$t){
+                $t['baseinfo']['room_type'] = $params['roomtypes'][$t['baseinfo']['room_type']];
+                $t['baseinfo']['room_status'] = $params['status'][$t['baseinfo']['room_status']];
+                $t['baseinfo']['ban_owner_id'] = $params['owners'][$t['baseinfo']['ban_owner_id']];
+                $t['baseinfo']['ban_inst_id'] = $params['insts'][$t['baseinfo']['ban_inst_id']];
+                $t['baseinfo']['ban_struct_id'] = $params['structs'][$t['baseinfo']['ban_struct_id']];
+            }
+            $temp['rooms'] = $rooms;
+            $result['data'] = $temp;
+
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }*/
+
+
+    /**
+     * 租户列表（场景：管理员点击业务的“租户档案”）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_tenant_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+
+        if($row){
+            $params = ParamModel::getCparams();
+            //$result['data']['params'] = $params;
+            $status = input('tenant_status');
+            $tenant = input('tenant_name');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            $where = [];
+            $where[] = ['tenant_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            if($tenant){
+                $where[] = ['a.tenant_name','like','%'.$tenant.'%'];
+            }
+            if($status !== null){
+                $where[] = ['a.tenant_status','eq',$status];
+            }else{
+                $where[] = ['a.tenant_status','eq',1];   
+            }
+            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance,a.tenant_status';
+            $result = [];
+            //halt($where);
+            $temps = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('a.tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
+            //halt($temps);
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
+                $v['tenant_status'] = $params['status'][$v['tenant_status']];
+                // $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                // $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                // $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
+            $result['count'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->count('a.tenant_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    /**
+     * 租户详情（场景：管理员点击租户详情）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:21:16
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_tenant_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/index_info';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+        $id = input('get.tenant_id');
+
+        if($row){
+            $TenantModel = new TenantModel;
+            $temp = $TenantModel->get($id);
+            $params = ParamModel::getCparams();
+
+            $temp['tenant_inst_id'] = $params['insts'][$temp['tenant_inst_id']];
+            // $temp['ban_status'] = $params['status'][$temp['ban_status']];
+            // $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            // $temp['ban_struct_id'] = $params['structs'][$temp['ban_struct_id']];
+            // $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
+            $temp['tenant_imgs'] = SystemAnnex::changeFormat($temp['tenant_imgs'],$complete = true);
+            //$temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
+
+            $result['data'] = $temp;
+
+                      
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
     }
 
     /**
@@ -1521,6 +2005,8 @@ class Weixin extends Common
         
         
         $houseID = trim(input('house_id')); //获取房屋id
+        // $houseID = 22;
+        // $scence = trim(input('scence'));
         if(!$houseID){
             $result['code'] = 10018;
             $result['msg'] = '房屋编号不能为空';
@@ -1531,6 +2017,7 @@ class Weixin extends Common
         $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID]])->order('rent_order_id desc')->select();
         foreach ($result['data']['rent'] as $key => &$value) {
             $value['id'] = $key + 1;
+            // $value['rent_order_date'] = $scence;
         }
         
         $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
@@ -1538,7 +2025,7 @@ class Weixin extends Common
          // 统计当前租户的欠租情况
         $RentModel = new RentModel;
         $rentOrderInfo = $RentModel->where([['house_id','eq',$houseID]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
-        $result['data']['house']['rent_order_unpaids'] = $rentOrderInfo['total_rent_order_unpaid'];
+        $result['data']['house']['rent_order_unpaids'] = $rentOrderInfo['total_rent_order_unpaid']?$rentOrderInfo['total_rent_order_unpaid']:'0.00';
 
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
@@ -1664,12 +2151,64 @@ class Weixin extends Common
      * @author   Lucas 
      * 创建时间:  2020-02-26 16:47:53
      */
+    protected function check_user_token()
+    {
+        $token = input('token');
+        if(empty($token)){
+            return ['error_code'=>10009,'error_msg'=>'令牌为空'];
+        }
+        if(empty(cache('weixin_openid_'.$token))){
+            return ['error_code'=>10010,'error_msg'=>'令牌失效'];
+        }
+
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        //检查用户是否允许被访问
+        if($member_info['is_show'] == 2){
+            return ['error_code'=>10011,'error_msg'=>'用户已被禁止访问'];
+        }
+
+        $member_extra_info = '';
+        
+        $TenantModel = new TenantModel;
+        $tenant_info = $TenantModel->where([['tenant_id','eq',$member_info['tenant_id']]])->field('tenant_id,tenant_name')->find();
+        if($tenant_info){
+            $role_type = 1; //租户
+            $member_extra_info = $tenant_info;
+        }
+
+        $UserModel = new UserModel;
+        $user_info = $UserModel->where([['weixin_member_id','eq',$member_info['member_id']]])->find();
+        //检查用户是管理员，还是租户，还是其他
+        if($member_extra_info){
+            $role_type = 2; //管理员
+            $member_extra_info = $user_info;
+        }
+        return ['error_code'=>0,'error_msg'=>'','role_type'=>$role_type,'member_info'=>$member_info,'member_extra_info'=>$member_extra_info];
+    }
+
+    /**
+     * 功能描述： 验证用户token
+     * @author   Lucas 
+     * 创建时间:  2020-02-26 16:47:53
+     */
     protected function check_token()
     {
         $token = input('token');
+        // if(empty($token)){
+        //     $result['code'] = 10010;
+        //     $result['msg'] = '令牌为空';
+        //     $result['en_msg'] = 'Empty token';
+        //     return json($result);exit;
+        // }
         $openid = cache('weixin_openid_'.$token);
-        $expires_time = cache('weixin_expires_time_'.$token); 
+        //$expires_time = cache('weixin_expires_time_'.$token); 
         if(!$openid){
+            /*$result['code'] = 10010;
+            $result['msg'] = '令牌失效';
+            $result['en_msg'] = 'Invalid token';
+            return json($result);exit;*/
             return false;
         }
         return true;
