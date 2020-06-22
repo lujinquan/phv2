@@ -100,7 +100,9 @@ class Weixin extends Common
                 //'unionid' => 'debug_unionid', // 特定情况下才会返回unionid
             ];
         }else{
+            //halt($code);
             $resultOpenid = $WeixinModel->getOpenid($code);
+            //halt($resultOpenid);
         }
         
         if(is_array($resultOpenid)){
@@ -115,17 +117,13 @@ class Weixin extends Common
                 $resultAccessToken = $WeixinModel->getAccessToken();
             }
 
-            if(cache('weixin_'.$resultOpenid['openid'].'_token')){
-                $token = cache('weixin_'.$resultOpenid['openid'].'_token');
-            }else{
-                $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
-                $token = md5($resultOpenid['openid'].time()); //设置token
-                cache('weixin_'.$resultOpenid['openid'].'_token',$token,7000); //存储token
-                cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
-                cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
-                cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
-            }
-            //halt($resultAccessToken);
+            $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
+            $token = md5($resultOpenid['openid'].time()); //设置token
+
+            cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
+            cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
+            cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
+            //cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
             
 
             
@@ -220,22 +218,12 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/applogin_do';
-        $checkData = $this->check_user_token();
-        if($checkData['error_code']){ // 如果有错误码
-            $result['msg'] = $checkData['error_msg'];
+        if(!$this->check_token()){
+            $result['msg'] = '令牌已失效！';
             return json($result);
-        }else{ // 验证成功
-            // $result['msg'] = '授权成功';
-            // return json($result);
         }
-
-        // if(!$this->check_token()){
-        //     $result['msg'] = '令牌已失效！';
-        //     return json($result);
-        // }
+       
         $token = input('token');
-        
-        //$data_json = file_get_contents('php://input');
         
         if($this->debug){
             $data = [
@@ -363,39 +351,40 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/column_list';
-        if($this->debug === false){
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
-        }
 
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        if($member_info['is_show'] == 2){
-            $result['code'] = 10011;
-            $result['msg'] = '用户已被禁止访问';
-            $result['en_msg'] = 'The user has been denied access';
+         // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
             return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        // $appcols = array_values($member_info['app_cols']);
-        //halt($member_info);
 
+//halt($checkData['role_type']);
         // 获取所有业务列表
         $WeixinColumnModel = new WeixinColumnModel;
-        $columns = $WeixinColumnModel->field('col_id,col_name,is_top,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
+        $columns = $WeixinColumnModel->field('col_id,col_name,auth_roles,is_top,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
         //halt($columns);
+        $all_process_columns = [];
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = 'https://procheck.ctnmit.com'.$file;
+
+             if($checkData['role_type'] == 2){
+                if($v['auth_roles'] && !in_array($member_extra_info['role_id'],$v['auth_roles'])){
+                    continue;
+                }
+             }
+             if($checkData['role_type'] == 1){
+                if($v['auth_roles'] && !in_array(100,$v['auth_roles'])){
+                    continue;
+                }
+             }
+
              if($member_info['app_cols']){
                 if(in_array($v['col_id'], $member_info['app_cols'])){ // 标记已选择的图标
                     $v['is_choose'] = 1;
@@ -405,7 +394,7 @@ class Weixin extends Common
              }else{
                 $v['is_choose'] = 0;
              }
-                
+             $all_process_columns[] = $v;  
         }
    
         // 获取待缴费金额
@@ -428,7 +417,7 @@ class Weixin extends Common
 
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
-        $result['data']['column'] = $columns;
+        $result['data']['column'] = $all_process_columns;
         $result['data']['unpaid_rent'] = $unpaid_rent; //待缴费的金额
         $result['data']['undeal_event'] = $undeal_event; //待办事项个数
         $result['data']['unread_message'] = $unread_message; //未读消息个数
@@ -2170,6 +2159,7 @@ class Weixin extends Common
         
         $TenantModel = new TenantModel;
         $tenant_info = $TenantModel->where([['tenant_id','eq',$member_info['tenant_id']]])->field('tenant_id,tenant_name')->find();
+        $role_type = 0; //默认是游客
         if($tenant_info){
             $role_type = 1; //租户
             $member_extra_info = $tenant_info;
