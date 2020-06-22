@@ -75,7 +75,9 @@
 	 <input type="hidden" name="group" value="{$group}">
 	 <div class="layui-row layui-form-item layui-col-space90">
 	 	<div class="j-margin-btn">
-	 		<!-- <a href="{:url('index')}?group=x" class="layui-btn layui-btn-primary">取消</a> -->
+	 		{if condition="$group == 'x'"}
+	 		<a href="{:url('index')}?group=x" class="layui-btn layui-btn-primary">取消</a>
+	 		{/if}
 	 		<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">确定</button>
 	 	</div>
 	 </div>

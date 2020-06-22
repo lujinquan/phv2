@@ -15,6 +15,7 @@ namespace app\wechat\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemAnnex;
+use app\system\model\SystemRole as RoleModel;
 use app\common\model\SystemAnnexType;
 use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinColumn as WeixinColumnModel;
@@ -49,6 +50,7 @@ class Wecolumn extends Admin
 	public function edit()
 	{
 		$id = input('id');
+
 		if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
@@ -61,12 +63,18 @@ class Wecolumn extends Admin
             }else{
                 $data['col_icon'] = '';
             }
-
+            if(isset($data['auth_roles'])){
+            	array_multisort($data['auth_roles']);
+            }
+            //halt($data);
             $WeixinColumnModel = new WeixinColumnModel;
             unset($data['file']);
             //halt($data);
             // 入库
-            if ($WeixinColumnModel->allowField(true)->where([['col_id','eq',$id]])->update($data) === false) {
+            // if ($WeixinColumnModel->allowField(true)->where([['col_id','eq',$id]])->update($data) === false) {
+            //     return $this->error('修改失败');
+            // }
+            if (!$WeixinColumnModel->save($data,['col_id'=>$id])) {
                 return $this->error('修改失败');
             }
             return $this->success('修改成功');
@@ -75,7 +83,9 @@ class Wecolumn extends Admin
 		$WeixinColumnModel = new WeixinColumnModel;
 		$row = $WeixinColumnModel->find($id);
 		$row['col_icon'] = SystemAnnex::changeFormat($row['col_icon']);
+		$roleArr = RoleModel::where([['status','eq',1]])->field('id,name')->select()->toArray();
 		//halt($row);
+        $this->assign('roleArr', $roleArr);
 		$this->assign('data_info',$row);
 		return $this->fetch();
 	}

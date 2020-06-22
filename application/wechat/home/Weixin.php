@@ -115,22 +115,19 @@ class Weixin extends Common
                 $resultAccessToken = $WeixinModel->getAccessToken();
             }
 
-            //halt($resultAccessToken);
-            
-            // if(cache('weixin_'.$resultOpenid['openid'].'_token')){
-            //     $token = cache('weixin_'.$resultOpenid['openid'].'_token');
-            //     cache('weixin_'.$resultOpenid['openid'].'_token',$token,7000); //存储token
-            //     cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
-            //     cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
-            //     cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
-            // }else{
+            if(cache('weixin_'.$resultOpenid['openid'].'_token')){
+                $token = cache('weixin_'.$resultOpenid['openid'].'_token');
+            }else{
                 $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
                 $token = md5($resultOpenid['openid'].time()); //设置token
                 cache('weixin_'.$resultOpenid['openid'].'_token',$token,7000); //存储token
                 cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
                 cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
                 cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
-            // }
+            }
+            //halt($resultAccessToken);
+            
+
             
             //cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
             $result['code'] = 1;

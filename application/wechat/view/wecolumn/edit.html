@@ -56,6 +56,14 @@
     </div>
     <div class="layui-form-mid layui-word-aux">链接查看小程序基本设置</div>
   </div>
+  <div class="layui-form-item">
+  	<div class="j-form-label"><i class="red">*</i>业务权限：</div>
+	   <div class="layui-inline j-inline-margin e-inline room_rent_pointids_form">
+	   	{volist name="roleArr" id="v"}
+	    <input type="checkbox" name="auth_roles[]" class="renttable" lay-filter="filter" {if condition="$data_info['auth_roles'] && in_array($v['id'],$data_info['auth_roles'])"}checked{/if} value="{$v['id']}" lay-skin="primary" title="{$v['name']}">
+	    {/volist}
+	  </div>
+  </div>
   <div class="pop-bottom-bar">
     <div class="layui-input-block">
       <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">修改</button>
