@@ -30,6 +30,7 @@ class WeixinColumn extends Model
 
     protected $type = [
         'ctime' => 'timestamp:Y-m-d H:i:s',
+        'auth_roles' => 'json'
     ];
 
     public function checkWhere($data)

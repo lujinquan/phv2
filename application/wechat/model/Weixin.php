@@ -88,6 +88,7 @@ class Weixin extends Model
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret, $code);
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;echo '<br>'; echo 1;exit;
 	    $wxResult = json_decode($result, true);
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
@@ -118,16 +119,18 @@ class Weixin extends Model
 	 */
 	public function getAccessToken()
 	{
-		$access_token = cache(($this->appid).'_access_token');
-		//cache(($this->appid).'_access_token',null);
-		if(!empty($access_token)){
-			return ['access_token'=>$access_token,'expires_in'=>7000];
-		}
+		// $access_token = cache(($this->appid).'_access_token');
+		// //cache(($this->appid).'_access_token',null);
+		// if(!empty($access_token)){
+		// 	return ['access_token'=>$access_token,'expires_in'=>7000];
+		// }
 	    $wxUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
 	    //把appid，appsecret，code拼接到url里
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret);
+	    //echo 1;exit;
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;exit;
 	    $wxResult = json_decode($result, true);
 	    //$wxResult = ['access_token'=>'34_p9IMMq6SSBu5n8iyBlN8BceqC0XwJYqjmk6mG77FS03AuP55o58rUTP2umKNHfF9uzKiAYVhGxX_HntSL2LBnBWZ6GGiewNfOg1Tbh-YJTDhemJNRlSnvCBlrKmhY09VbhKPCSbwrQYnjWOZULIeAIAEVS','expires_in'=>7200];
 	    if (empty($wxResult)) {
@@ -139,7 +142,7 @@ class Weixin extends Model
 	            return '请求失败，错误码：' . $wxResult['errcode'];
 	        //请求成功
 	        } else {
-	        	Db::name('weixin_access_token')->insert(['appid'=>$this->appid,'access_token'=>$wxResult['access_token'],'ctime'=>time(),'expires_in'=>$wxResult['expires_in']]);
+	        	Db::name('weixin_access_token')->insert(['appid'=>$this->appid,'access_token'=>$wxResult['access_token'],'ctime'=>time(),'expires_in'=>$wxResult['expires_in'],'remark'=>'微信小程序接口请求的access_token']);
 	        	cache(($this->appid).'_access_token',$wxResult['access_token'],7000);
 	        	return $wxResult;
 	        }
@@ -249,35 +252,7 @@ class Weixin extends Model
 	 */
 	public function sendWxtemplateMsg($template_data,$url,$pagepath,$to_openid,$template_id,$form_id='1')
 	{
-/*		//$appid_info 	=  M('config')->where( array('name' => 'APPID') )->find();
-		$weprogram_appid_info 	=  M('config')->where( array('name' => 'weprogram_appid') )->find();
-	    $appsecret_info =  M('config')->where( array('name' => 'weprogram_appscret') )->find();
-	    //$mchid_info =  M('config')->where( array('name' => 'MCHID') )->find();
-	    
-	    $weixin_config = array();
-	    $weixin_config['appid'] = $weprogram_appid_info['value'];
-	    $weixin_config['appscert'] = $appsecret_info['value'];
-	    //$weixin_config['mchid'] = $mchid_info['value'];
-		
-		$we_appid = $weprogram_appid_info['value'];
-	    
-	    $jssdk = new \Lib\Weixin\Jssdk( $weixin_config['appid'], $weixin_config['appscert']);
-	    $re_access_token = $jssdk->getweAccessToken();
-	    
-		
-	    $template = array(
-	        'touser' => $to_openid,
-	        'template_id' => $template_id,
-	        'form_id' => $form_id,
-			'page' => $pagepath,
-	        'data' => $template_data
-	    );
-		
-		 
-	    $send_url ="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token={$re_access_token}";
-	    $result = sendhttps_post($send_url, json_encode($template));
-		//var_dump($form_id, json_decode($result,true));die();
-	    return json_decode($result,true);*/
+
 	}
 
 
