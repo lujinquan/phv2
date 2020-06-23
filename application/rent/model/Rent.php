@@ -466,7 +466,7 @@ class Rent extends Model
     }
 
     /**
-     * [payBackList 批量撤回订单]
+     * [payBackList 批量撤回订单],只能撤回现金支付的订单，不能撤回线上支付的订单
      * @param  [type] $data [description]
      * @return [type]       [description]
      */
@@ -476,8 +476,8 @@ class Rent extends Model
          
         $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
 
-        $res1 = self::where([['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
-        $res2 = self::where([['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+        $res1 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+        $res2 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
         return $res1 + $res2;
     }
 
