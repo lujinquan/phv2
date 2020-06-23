@@ -24,6 +24,7 @@ use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\wechat\model\Weixin as WeixinModel;
 use app\system\model\SystemUser as UserModel;
+use app\deal\model\Process as ProcessModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinGuide as WeixinGuideModel;
 use app\wechat\model\WeixinColumn as WeixinColumnModel;
@@ -506,6 +507,459 @@ class Weixin extends Common
         return json($result);
     }
 
+    /**
+     * 高管获取审批列表
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 10:56:21
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_process_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_process_list';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+
+        if($row){
+            $params = ParamModel::getCparams();        
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $type = input('type',1);
+            $changetype = input('change_type');
+            $inst = input('ban_inst_id');
+
+            $ProcessModel = new ProcessModel;
+            if($changetype){
+                $where[] = ['change_type','eq',$changetype];
+            }else{
+                $where[] = ['change_type','in',[1,3,4,7,8,9,10,11,13,14,17]];
+            }
+            $insts = config('inst_ids');
+            if($inst){
+                $where[] = ['d.ban_inst_id','in',$insts[$inst]];
+            }else{
+                $instid = $inst?$data['ban_inst_id']:$row['inst_id'];
+                $where[] = ['d.ban_inst_id','in',$insts[$instid]];
+            }
+            $where[] = ['a.status','eq',1];
+
+            $fields = "a.id,a.change_id,a.change_type,a.print_times,a.change_order_number,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,a.change_desc,a.curr_role,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $result = [];
+            $result['data'] = $dataTemps = [];
+            $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
+            foreach($temps as $k => $v){
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['change_type_name'] = $params['changes'][$v['change_type']];
+                if($type == 1){ // 
+                    if($v['curr_role'] == $row['role_id']){
+                        array_push($dataTemps,$v);
+                    }
+                }
+                // else{
+                //     if($v['curr_role'] != $row['role_id']){
+                //         array_unshift($dataTemps,$v);
+                //     }
+                // }
+            }
+
+            $result['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
+            $result['count'] = count($dataTemps);   
+
+        
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    /**
+     * 审批接口
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 10:57:05
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function process()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/process';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+        $id = input('param.id/d');
+        $change_type = input('param.change_type/d');
+
+        define('ADMIN_ID', $row['id']);
+        define('ADMIN_ROLE', $row['role_id']);
+
+        //检查当前页面或当前表单，是否允许被请求？
+        $PorcessModel = new ProcessModel;
+        $rowProcess = $PorcessModel->where([['change_id','eq',$id],['change_type','eq',$change_type]])->find();
+        if($rowProcess['curr_role'] != ADMIN_ROLE){
+            $result['msg'] = '审批状态错误!';
+            return json($result);
+        }
+        if($rowProcess['ftime'] > 0){
+            $result['msg'] = '异动已经完成，请刷新重试！';
+            return json($result);
+        }
+
+        $data = $this->request->get();
+        //halt($data);
+        if($change_type == 18 && ADMIN_ROLE == 6){
+            $ChangeModel = new ChangeLeaseModel;
+            $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
+            if(!$changeRow['print_times']){
+                $result['msg'] = '请先打印租约后再审批！';
+                return json($result);
+                //return $this->error('请先打印租约后再审批！');
+            }
+        }
+
+        // 如果审批失败，数据回滚
+        Db::transaction(function () {
+            $model = new ProcessModel;
+            $change_type = input('param.change_type/d');
+            $data = $this->request->get();
+            $model->process($change_type,$data); //$data必须包含子表的id
+        });
+
+        $result['msg'] = '审批成功！';
+        $result['code'] = 1;
+        return json($result);
+    }
+
+    /**
+     * 某个异动审批的详情
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 11:02:01
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_process_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_process_detail';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+        $id = input('get.id/d');
+        $change_type = input('param.change_type/d');
+        $userRoles = UserModel::alias('a')->join('system_role b','a.role_id = b.id','left')->column('a.id,a.nick,a.role_id,b.name as role_name');
+
+        if($row){
+            $params = ParamModel::getCparams();
+            // 显示对应的审批页面
+            $id = input('param.id/d');
+            
+            if(!$change_type || !$id){
+                return $this->error('参数错误！');
+            }
+            $PorcessModel = new ProcessModel;
+            $result = [];
+            $temps = $PorcessModel->detail($change_type,$id);
+            $temps['row'] = $temps['row']->toArray();
+            switch ($change_type) {
+                case 1: // 租金减免
+                    $temps['row']['cut_type'] = $params['cuttypes'][$temps['row']['cut_type']];
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['house_use_id'] = $params['uses'][$temps['row']['house_use_id']];
+                    break;
+                case 3: // 暂停计租
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
+                        }
+                    }
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['ban_info']['ban_struct_id'] = $params['structs'][$temps['row']['ban_info']['ban_struct_id']];
+                    $temps['row']['ban_info']['ban_damage_id'] = $params['damages'][$temps['row']['ban_info']['ban_damage_id']];
+                    break;
+                case 4: // 陈欠核销
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
+                            $temps['row']['data_json'][$a]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']]; 
+                        }
+                    }
+                    break;
+                case 7: // 新发租
+                    $temps['row']['new_type'] = $params['news'][$temps['row']['new_type']];
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+                    $temps['row']['house_info']['house_use_id'] = $params['uses'][$temps['row']['house_info']['house_use_id']];
+                    break;
+                case 8: // 注销
+                    $temps['row']['cancel_type'] = $params['cancels'][$temps['row']['cancel_type']];
+                    break;
+                case 9: // 房屋调整
+                    
+                    break;
+                case 10: // 管段调整
+                    $temps['row']['old_inst_id'] = $params['insts'][$temps['row']['old_inst_id']];
+                    $temps['row']['new_inst_id'] = $params['insts'][$temps['row']['new_inst_id']];
+                    if($temps['row']['data_json']){
+                        foreach ($temps['row']['data_json'] as $a => $b) {
+                            $temps['row']['data_json'][$a]['ban_inst_id'] = $params['insts'][$b['ban_inst_id']];
+                        }
+                    }
+                    break;
+                case 11: // 租金追加调整
+                    $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
+
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    break;
+                case 13: // 使用权变更
+                    $temps['row']['change_use_type'] = $params['usetypes'][$temps['row']['change_use_type']];
+                    break;
+                case 14: // 楼栋调整
+                    $temps['row']['ban_change_id_name'] = $params['ban_change_ids'][$temps['row']['ban_change_id']];
+                    if($temps['row']['old_damage']){
+                        $temps['row']['old_damage'] = $params['damages'][$temps['row']['old_damage']];
+                    }
+                    if($temps['row']['new_damage']){
+                        $temps['row']['new_damage'] = $params['damages'][$temps['row']['new_damage']];
+                    }
+                    if($temps['row']['old_struct']){
+                        $temps['row']['old_struct'] = $params['structs'][$temps['row']['old_struct']];
+                    }
+                    if($temps['row']['new_struct']){
+                        $temps['row']['new_struct'] = $params['structs'][$temps['row']['new_struct']];
+                    }
+                    $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
+                    break;
+                case 17: // 别字更正
+                    
+                    break;
+                default:
+                    break;
+            }
+            
+            
+            if($temps['row']['change_imgs']){
+                foreach ($temps['row']['change_imgs'] as $k => $v) {
+                    $temps['row']['change_imgs'][$k]['file'] = get_domain().$v['file'];
+                }
+            }        
+            if($temps['row']['child_json']){
+                foreach ($temps['row']['child_json'] as $a => $b) {
+                    $temps['row']['child_json'][$a]['role_name'] = $userRoles[$b['uid']]['role_name'];
+                    $temps['row']['child_json'][$a]['nick'] = $userRoles[$b['uid']]['nick'];
+                }
+            }
+
+            $result['data'] = $temps;      
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
+    /**
+     * 获取租金列表
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 11:18:20
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_rent_list()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_rent_list';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+
+        if($row){
+            $params = ParamModel::getCparams();
+            $result['data']['params'] = $params;
+            $type = input('type');
+            $use = input('house_use_id');
+            $owner = input('ban_owner_id');
+            $tenant = input('tenant_name');
+            $status = input('house_status');
+            $address = input('ban_address');
+            $date = input('rent_order_date');
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+
+            
+            $where = [];
+            $where[] = ['d.ban_inst_id','eq',$row['inst_id']];
+            if($type){
+                $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+                $where[] = ['a.ptime','>',0];
+            }else{
+               $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
+            }
+            
+            if($use){
+                $where[] = ['a.house_use_id','eq',$use];
+            }
+            if($owner){
+                $where[] = ['d.ban_owner_id','eq',$owner];
+            }
+            if($address){
+                $where[] = ['d.ban_address','like','%'.$address.'%'];
+            }
+            if($tenant){
+                $where[] = ['c.tenant_name','like','%'.$tenant.'%'];
+            }
+            if($date){
+                $tempDate = str_replace('-', '', $date);
+                $where[] = ['rent_order_date','eq',$tempDate];
+            }
+            //halt($where);
+            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $data = [];
+            $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+           
+
+            $result['data'] = [];
+            foreach ($temps as $v) {
+                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                $v['rent_order_date'] = substr($v['rent_order_date'],0,4).'年'.substr($v['rent_order_date'],4,2).'月01日';
+                if($v['ptime']){
+                    $v['ptime'] = date('Y年m月d日',$v['ptime']);
+                }
+                //$v['house_status'] = $params['status'][$v['house_status']];
+                //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
+                //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
+                $result['data'][] = $v;
+            }
+            $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
+            $result['pages'] = ceil($result['count'] / $limit);
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+
+        return json($result); 
+
+        
+    }
+
+    /**
+     * 获取某个租金订单的详情
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 11:19:31
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_rent_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_rent_detail';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+
+        $id = input('get.rent_order_id');
+
+        if($row){
+            $BanModel = new BanModel;
+
+            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
+
+            $params = ParamModel::getCparams();
+
+            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+            $temp['rent_order_date'] = substr($temp['rent_order_date'],0,4).'年'.substr($temp['rent_order_date'],4,2).'月01日';
+            if($temp['ptime']){
+                $temp['ptime'] = date('Y年m月d日',$temp['ptime']);
+            }
+            $result['data'] = $temp;            
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
 
     /**
      * 获取主页的数据（场景：用户访问小程序首页调用）
@@ -629,7 +1083,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/index_info';
+        $result['action'] = 'wechat/weixin/admin_ban_list';
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -719,7 +1173,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/index_info';
+        $result['action'] = 'wechat/weixin/admin_ban_detail';
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -777,7 +1231,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/index_info';
+        $result['action'] = 'wechat/weixin/admin_house_list';
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -939,7 +1393,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/index_info';
+        $result['action'] = 'wechat/weixin/admin_tenant_list';
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -1017,7 +1471,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/index_info';
+        $result['action'] = 'wechat/weixin/admin_tenant_detail';
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -2025,8 +2479,17 @@ class Weixin extends Common
             $value['id'] = $key + 1;
             // $value['rent_order_date'] = $scence;
         }
+
         
         $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
+        // 判断是否认证过当前房屋
+        // $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        // $is_auth_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['is_auth','eq',1],['dtime','eq',0]])->column('house_id');
+        // $result['data']['house']['is_auth'] = 0;
+        // if($is_auth_houses && in_array($result['data']['house']['house_id'], $is_auth_houses)){
+        //     $result['data']['house']['is_auth'] = 1;
+        // }
+
         //$result['data']['house']['house_share_img'] = 'https://procheck.ctnmit.com/static/wechat/image/share/20200616180247.jpg';
          // 统计当前租户的欠租情况
         $RentModel = new RentModel;
@@ -2153,9 +2616,15 @@ class Weixin extends Common
     }
 
     /**
-     * 功能描述： 验证用户token
-     * @author   Lucas 
-     * 创建时间:  2020-02-26 16:47:53
+     * 验证用户token
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 11:23:56
+     * @return  返回值  
+     * @version 版本  1.0
      */
     protected function check_user_token()
     {
@@ -2207,19 +2676,8 @@ class Weixin extends Common
     protected function check_token()
     {
         $token = input('token');
-        // if(empty($token)){
-        //     $result['code'] = 10010;
-        //     $result['msg'] = '令牌为空';
-        //     $result['en_msg'] = 'Empty token';
-        //     return json($result);exit;
-        // }
         $openid = cache('weixin_openid_'.$token);
-        //$expires_time = cache('weixin_expires_time_'.$token); 
         if(!$openid){
-            /*$result['code'] = 10010;
-            $result['msg'] = '令牌失效';
-            $result['en_msg'] = 'Invalid token';
-            return json($result);exit;*/
             return false;
         }
         return true;
@@ -2277,91 +2735,7 @@ class Weixin extends Common
 
     
 
-    /**
-     * 功能描述：
-     * =====================================
-     * @author  Lucas 
-     * email:   598936602@qq.com 
-     * Website  address:  www.mylucas.com.cn
-     * =====================================
-     * 创建时间: 2020-02-26 11:13:17 
-     * @example 
-     * @link    文档参考地址：
-     * @return  返回值  
-     * @version 版本  1.0
-     */
-    public function me()
-    {
-        /*$token = I('get.token');
-        
-        $weprogram_token = M('weprogram_token')->field('member_id')->where( array('token' =>$token) )->find();
-        if(empty($weprogram_token))
-        {
-            $data = array('code' =>1);
-        } else{
-            $member_info =  M('member')->field('name,avatar')->where( array('member_id' => $weprogram_token['member_id']) )->find();
-        
-            $user_info = array();
-            $user_info['headimgurl'] = $member_info['avatar'];
-            $user_info['nickname'] = $member_info['name'];
-            
-            $data = array('code' =>0, 'user_info' => $user_info);
-        }
-        
-        echo json_encode($data);
-        die();*/
-    }
 
-    public function addhistory_community()
-    {
-        /*$gpc = I('request.');
-        
-        $token =  $gpc['token'];
-        $head_id = $gpc['community_id'];
-        
-        
-        $weprogram_token = M('lionfish_comshop_weprogram_token')->field('member_id')->where( array('token' => $token) )->find();
-        
-        if(  empty($weprogram_token) ||  empty($weprogram_token['member_id']) )
-        {
-            echo json_encode( array('code' => 2) );
-            die();
-        }
-        $member_id = $weprogram_token['member_id'];
-        
-        D('Seller/Community')->in_community_history($member_id,$head_id);
-        
-        echo json_encode( array('code' => 0) );
-        die();*/
-    }
-
-    public function in_community_history($member_id,$head_id)
-    {
-    
-        /*if( !empty($head_id) && $head_id > 0 )
-        {
-            $history_info = M('lionfish_community_history')->where( array('head_id' => $head_id,'member_id' =>$member_id ) )->find();
-        
-            if( empty($history_info) )
-            {
-                $data = array();
-                $data['member_id'] = $member_id;
-                $data['head_id'] = $head_id;
-                $data['addtime'] = time();
-                
-                M('lionfish_community_history')->add($data);
-                
-                
-                $this->upgrade_head_level($head_id);
-                
-            } else {
-                
-                $sql = 'UPDATE '.C('DB_PREFIX'). 'lionfish_community_history SET addtime = '.time().' where id = '.$history_info['id'].'  order by id desc limit 1';
-                M()->execute($sql);
-            }
-        }*/
-        
-    }
 
 
 
