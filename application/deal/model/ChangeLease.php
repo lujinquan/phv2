@@ -221,17 +221,16 @@ class ChangeLease extends SystemBase
 
     public function detail($id,$change_order_number = '')
     {
+        $changeWhere = [];
         if($id){
             $row = self::get($id);
         }else{
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
-        $row['process_info'] = Process::where([['change_type','eq',18],['change_id','eq',$id]])->find();
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
-        //halt($row);
         return $row;
     }
 
