@@ -108,19 +108,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>规定租金</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_pre_rent" value="" autocomplete="off" readonly class="layui-input">
+					<input type="text" name="house_pre_rent" min="0.01" onkeyup="onlyNumber(this)" value="" autocomplete="off" readonly class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>租差</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_diff_rent" value="" autocomplete="off" class="layui-input">
+					<input type="text" name="house_diff_rent" min="0.01" onkeyup="onlyNumber(this)" value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>泵费</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_pump_rent" value="" autocomplete="off" class="layui-input">
+					<input type="text" name="house_pump_rent" min="0.01" onkeyup="onlyNumber(this)" value="" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -230,12 +230,30 @@
 <!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2xlodrKVRyFNeopCajiMTfgIOr8dnUAe"></script>
 <script type="text/javascript" src="__PUBLIC_JS__/baiduMaps.js?v={:config('hisiphp.version')}"></script> -->
 <script type="text/javascript">
+	// 限制input输入负数
+	function onlyNumber(obj){
+		//得到第一个字符是否为负号
+		var t = obj.value.charAt(0);
+		//先把非数字的都替换掉，除了数字和.
+		obj.value = obj.value.replace(/[^\d\.]/g,'');
+		//必须保证第一个为数字而不是.
+		obj.value = obj.value.replace(/^\./g,'');
+		//保证只有出现一个.而没有多个.
+		obj.value = obj.value.replace(/\.{2,}/g,'.');
+		//保证.只出现一次，而不能出现两次以上
+		obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+		//只能输入两位小数
+		obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+		//如果第一位是负号，则允许添加
+		if(t == '-'){
+		return;
+		}
+	};
 	layui.use(['table','form','layer'], function() {
 			var table = layui.table
 				,$ = layui.jquery
 				,form = layui.form
 				,layer = layui.layer;
-      
 	      //双击获取楼栋查询器
 		  $(".layui-form").on('click','.j-ban_number',function(){
 		 layer.open({
