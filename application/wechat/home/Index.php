@@ -33,7 +33,8 @@ use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
  */
 class Index extends Common
 {
-    private $config;
+    private $config_ziyang;
+    private $config_liangdao;
     protected $debug = false;
     /**
      * 初始化方法
@@ -43,7 +44,7 @@ class Index extends Common
         parent::initialize();
         $configDatas = WeixinConfigModel::column('name,value');
         //halt($configDatas);
-        $this->config = [
+        $this->config_ziyang = [
             //调用mini_login方法的时候，用下面的配置
             // 'appid'     => 'wx2cb8b9b001e3b37b',
             // 'appsecret' => '7813490da6f1265e4901ffb80afaa36f',
@@ -56,12 +57,34 @@ class Index extends Common
             // 公众号消息加解密密钥
             'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
             // 配置商户支付参数
-            'mch_id'         => $configDatas['app_user_pay_mchid'], //"1244050802",
-            'mch_key'        => $configDatas['app_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            'mch_id'         => $configDatas['app_ziyang_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_ziyang_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
-            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_key.pem',
-            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
+            // 配置缓存目录，需要拥有写权限
+            //'cache_path'     => '',
+        ];
+        $this->config_liangdao = [
+            //调用mini_login方法的时候，用下面的配置
+            // 'appid'     => 'wx2cb8b9b001e3b37b',
+            // 'appsecret' => '7813490da6f1265e4901ffb80afaa36f',
+            // 令牌
+            //'token'          => 'lucas',
+            // 支付AppID
+            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
+            // 公众号AppSecret
+            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
+            // 公众号消息加解密密钥
+            'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
+            // 配置商户支付参数
+            'mch_id'         => $configDatas['app_liangdao_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_liangdao_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
+            //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
+            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
+            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
@@ -224,6 +247,8 @@ class Index extends Common
         $pay_money = 0;
         foreach($rentOrderIDS as $rid){
             $rent_order_info = $RentModel->find($rid);
+
+            $ban_row = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','inner')->where([['a.house_id','eq',$rent_order_info['house_id']]])->field('b.ban_inst_pid')->find();
             // 检查订单是否存在
             if(!$rent_order_info){
                 $result['code'] = 10031;
@@ -247,6 +272,8 @@ class Index extends Common
             // }
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
+
+        //$inst_pid = Db::name('base_inst')->where([['inst_id','eq',$ban_row['ban_inst_pid']]])->field('inst_pid')->find();
         //halt($pay_money);
         
 
@@ -254,13 +281,21 @@ class Index extends Common
         //     $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
         //     $member_houses = array_merge($member_houses,$houses);
         // }
-        
+        $inst_pid = $ban_row['ban_inst_pid'];
+        //var_dump($inst_pid);exit;
         //halt($member_houses);
-        
-        
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        if($inst_pid == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($inst_pid == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }else{
+            $result['code'] = 10038;
+            $result['msg'] = '房屋所属机构异常';
+            return json($result); 
+        }
+
         //商户订单号的规则，年月日时分秒+6数字随机码
         $out_trade_no = date('YmdHis') . random(6);
 
@@ -276,10 +311,16 @@ class Index extends Common
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
-            'notify_url'       => 'https://'.$curr_domin.'/wechat/index/payordernotify',
+            //'notify_url'       => 'https://'.$curr_domin.'/wechat/index/payordernotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
+        if($inst_pid == 2){
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify?inst_id=2';
+        }else if($inst_pid == 3){
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify?inst_id=3';
+            //$wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }
         if ($this->debug === true) {
             $result['code'] = 1;
             $result['msg'] = '获取成功，这是测试数据';
@@ -346,7 +387,7 @@ class Index extends Common
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         // $mini = new WeMini\Qrcode($config);
-        $mini = \WeMini\Qrcode::instance($this->config);
+        $mini = \WeMini\Qrcode::instance($this->config_ziyang);
 
         //echo '<pre>';
         //try {
@@ -394,7 +435,7 @@ class Index extends Common
             $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
         }
         // 检查房屋id是否为空
-        $house_id = input('house_id');
+        $house_id = trim(input('house_id'));
         if(!$house_id){
             $result['code'] = 10071;
             $result['msg'] = '房屋编号不能为空';
@@ -433,6 +474,8 @@ class Index extends Common
             $result['en_msg'] = 'Member not bound to current house';
             return json($result);
         }
+
+        
         // $RentModel = new RentModel;
         // $rentOrderIDS = explode(',',$rent_order_id);
         // //halt($rentOrderIDS);
@@ -472,7 +515,19 @@ class Index extends Common
         
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+
+        $ban_row = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','inner')->where([['a.house_id','eq',$house_id]])->field('b.ban_inst_pid')->find();
+        $inst_pid = $ban_row['ban_inst_pid'];
+        if($inst_pid == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($inst_pid == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }else{
+            $result['code'] = 10038;
+            $result['msg'] = '房屋所属机构异常';
+            return json($result); 
+        }
+        //$wechat = \WeChat\Pay::instance($this->config_ziyang);
         //商户订单号的规则，年月日时分秒+6数字随机码
         $out_trade_no = date('YmdHis') . random(6);
 
@@ -487,10 +542,16 @@ class Index extends Common
             'openid'           => $openid, //用世念的openid
             'trade_type'       => 'JSAPI',
             'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
-            'notify_url'       => 'https://'.$curr_domin.'/wechat/index/rechargenotify',
+            //'notify_url'       => 'https://'.$curr_domin.'/wechat/index/rechargenotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
+        if($inst_pid == 2){
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargenotify?inst_id=2';
+        }else if($inst_pid == 3){
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargenotify?inst_id=3';
+            //$wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }
         if ($this->debug === true) {
             $result['code'] = 1;
             $result['msg'] = '获取成功，这是测试数据';
@@ -551,7 +612,12 @@ class Index extends Common
     {
 
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        $type = input('type');
+        if($type == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($type == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }
         // 获取通知参数
         $data = $wechat->getNotify();
         // 下面是一个返回data的例子
@@ -644,7 +710,12 @@ class Index extends Common
     {
 
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        $type = input('type');
+        if($type == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($type == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }
         // 获取通知参数
         $data = $wechat->getNotify();
         // 下面是一个返回data的例子
@@ -759,7 +830,7 @@ class Index extends Common
             include EXTEND_PATH.'wechat/include.php';
             $sessionKey = WeixinTokenModel::where([['token','eq',$token]])->value('session_key');
 
-            $mini = \WeMini\Crypt::instance($this->config);
+            $mini = \WeMini\Crypt::instance($this->config_ziyang);
 
             //print_r($mini->session($code));
             $data = $mini->decode($iv, $sessionKey, $encryptedData);
@@ -793,7 +864,7 @@ class Index extends Common
      */
     public function mini_template_list(){
         include EXTEND_PATH.'wechat/include.php';
-        $mini = \WeMini\Template::instance($this->config);
+        $mini = \WeMini\Template::instance($this->config_ziyang);
         $res = $mini->getSubscribeTemplateList();
         $result = [];
         $result['data'] = $res['data'];
@@ -827,8 +898,22 @@ class Index extends Common
         $WeixinOrderModel = new WeixinOrderModel;
         $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
 
+        $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+        $order_trade_info = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->find();
+
+        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+        $inst_pid = $ban_row['ban_inst_pid'];
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        if($inst_pid == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($inst_pid == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }else{
+            return  $this->error('房屋所属机构异常');
+        }
+
+        
+        //$wechat = \WeChat\Pay::instance($this->config_ziyang);
         // 下面的参数注意要换成动态的
         $options = [
             'transaction_id' => $order_info['transaction_id'], //微信订单号 transaction_id
@@ -911,7 +996,7 @@ class Index extends Common
     public function refundQuery()
     {
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        $wechat = \WeChat\Pay::instance($this->config_ziyang);
         // 下面的参数注意要换成动态的
         $options = [
             'transaction_id' => '4200000505202003108122210096',
@@ -939,7 +1024,7 @@ class Index extends Common
     public function downloadBill()
     {
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        $wechat = \WeChat\Pay::instance($this->config_ziyang);
         // 下面的参数注意要换成动态的
         $options = [
             'bill_date' => '20200305',
@@ -981,7 +1066,7 @@ class Index extends Common
     public function payOrderQuery()
     {
         include EXTEND_PATH.'wechat/include.php';
-        $wechat = \WeChat\Pay::instance($this->config);
+        $wechat = \WeChat\Pay::instance($this->config_ziyang);
         $options = [
             'transaction_id' => '1008450740201411110005820873',
         //        'out_trade_no'   => '商户订单号',
