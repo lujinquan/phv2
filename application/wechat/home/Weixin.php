@@ -2497,7 +2497,27 @@ class Weixin extends Common
         }
 
         
-        $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
+        $houseRow = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_number,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
+
+        $domain = get_domain();
+
+        $findFile = str_replace('https://procheck.ctnmit.com',$_SERVER['DOCUMENT_ROOT'],$houseRow['house_share_img']);
+        if($houseRow['house_share_img'] && is_file($findFile)){
+
+        }else{
+            $width = 300;
+            $WeixinModel = new WeixinModel;
+            $path = 'pages/payment/payment'; //注意路径格式，这个路径不能带参数！
+            $filename = '/upload/wechat/qrcode/share_'.$houseRow['house_id'].'_'.$houseRow['house_number'].'.png';
+            $createMiniSceneData = $WeixinModel->createMiniScene($houseRow['house_id'] , $path,$width); //B方案生成二维码，
+            file_put_contents('.'.$filename,$createMiniSceneData);
+            $houseModel = new HouseModel;
+            $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
+            $houseRow['house_share_img'] = 'https://procheck.ctnmit.com'.$filename;
+        }
+
+        $result['data']['house'] = $houseRow;
+        
         // 判断是否认证过当前房屋
         // $WeixinMemberHouseModel = new WeixinMemberHouseModel;
         // $is_auth_houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['is_auth','eq',1],['dtime','eq',0]])->column('house_id');
