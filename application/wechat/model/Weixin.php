@@ -39,8 +39,7 @@ class Weixin extends Model
     	$this->appid = $configDatas['app_user_appid'];
     	$this->appSecret = $configDatas['app_user_appsecret'];
 
-        //halt($configDatas);
-        $this->config = [
+        $this->config_ziyang = [
             //调用mini_login方法的时候，用下面的配置
             // 'appid'     => 'wx2cb8b9b001e3b37b',
             // 'appsecret' => '7813490da6f1265e4901ffb80afaa36f',
@@ -53,12 +52,34 @@ class Weixin extends Model
             // 公众号消息加解密密钥
             'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
             // 配置商户支付参数
-            'mch_id'         => $configDatas['app_user_pay_mchid'], //"1244050802",
-            'mch_key'        => $configDatas['app_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            'mch_id'         => $configDatas['app_ziyang_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_ziyang_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
-            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_key.pem',
-            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
+            // 配置缓存目录，需要拥有写权限
+            //'cache_path'     => '',
+        ];
+        $this->config_liangdao = [
+            //调用mini_login方法的时候，用下面的配置
+            // 'appid'     => 'wx2cb8b9b001e3b37b',
+            // 'appsecret' => '7813490da6f1265e4901ffb80afaa36f',
+            // 令牌
+            //'token'          => 'lucas',
+            // 支付AppID
+            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
+            // 公众号AppSecret
+            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
+            // 公众号消息加解密密钥
+            'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
+            // 配置商户支付参数
+            'mch_id'         => $configDatas['app_liangdao_user_pay_mchid'], //"1244050802",
+            'mch_key'        => $configDatas['app_liangdao_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
+            //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
+            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
+            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
@@ -88,6 +109,7 @@ class Weixin extends Model
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret, $code);
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;echo '<br>'; echo 1;exit;
 	    $wxResult = json_decode($result, true);
 	    if (empty($wxResult)) {
 	        return '请求失败，微信内部错误';
@@ -118,16 +140,18 @@ class Weixin extends Model
 	 */
 	public function getAccessToken()
 	{
-		$access_token = cache(($this->appid).'_access_token');
-		//cache(($this->appid).'_access_token',null);
-		if(!empty($access_token)){
-			return ['access_token'=>$access_token,'expires_in'=>7000];
-		}
+		// $access_token = cache(($this->appid).'_access_token');
+		// //cache(($this->appid).'_access_token',null);
+		// if(!empty($access_token)){
+		// 	return ['access_token'=>$access_token,'expires_in'=>7000];
+		// }
 	    $wxUrl = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
 	    //把appid，appsecret，code拼接到url里
 	    $getUrl = sprintf($wxUrl, $this->appid, $this->appSecret);
+	    //echo 1;exit;
 	    //请求拼接好的url
 	    $result = curl_get($getUrl);
+	    //echo $result;exit;
 	    $wxResult = json_decode($result, true);
 	    //$wxResult = ['access_token'=>'34_p9IMMq6SSBu5n8iyBlN8BceqC0XwJYqjmk6mG77FS03AuP55o58rUTP2umKNHfF9uzKiAYVhGxX_HntSL2LBnBWZ6GGiewNfOg1Tbh-YJTDhemJNRlSnvCBlrKmhY09VbhKPCSbwrQYnjWOZULIeAIAEVS','expires_in'=>7200];
 	    if (empty($wxResult)) {
@@ -139,7 +163,7 @@ class Weixin extends Model
 	            return '请求失败，错误码：' . $wxResult['errcode'];
 	        //请求成功
 	        } else {
-	        	Db::name('weixin_access_token')->insert(['appid'=>$this->appid,'access_token'=>$wxResult['access_token'],'ctime'=>time(),'expires_in'=>$wxResult['expires_in']]);
+	        	Db::name('weixin_access_token')->insert(['appid'=>$this->appid,'access_token'=>$wxResult['access_token'],'ctime'=>time(),'expires_in'=>$wxResult['expires_in'],'remark'=>'微信小程序接口请求的access_token']);
 	        	cache(($this->appid).'_access_token',$wxResult['access_token'],7000);
 	        	return $wxResult;
 	        }
@@ -205,7 +229,7 @@ class Weixin extends Model
 	public function createqrcode( $path = '' ,$width = 430)
     {
         include EXTEND_PATH.'wechat/include.php';
-        $mini = \WeMini\Qrcode::instance($this->config);
+        $mini = \WeMini\Qrcode::instance($this->config_ziyang); //暂时取紫阳所的配置，其实只用到了appid和appsecret,所以为所谓。
         header('Content-type:image/jpeg'); //输出的类型
         $result = $mini->createMiniPath($path , $width);
         return $result;
@@ -228,7 +252,7 @@ class Weixin extends Model
 	public function createMiniScene( $scene, $page, $width = 430, $auto_color = false, $line_color = ["r" => "0", "g" => "0", "b" => "0"], $is_hyaline = true, $outType = null )
     {
         include EXTEND_PATH.'wechat/include.php';
-        $mini = \WeMini\Qrcode::instance($this->config);
+        $mini = \WeMini\Qrcode::instance($this->config_ziyang); //暂时取紫阳所的配置，其实只用到了appid和appsecret,所以为所谓。
         header('Content-type:image/jpeg'); //输出的类型
         $result = $mini->createMiniScene($scene, $page , $width, $auto_color ,$line_color,$is_hyaline,$outType);
         return $result;
@@ -249,35 +273,7 @@ class Weixin extends Model
 	 */
 	public function sendWxtemplateMsg($template_data,$url,$pagepath,$to_openid,$template_id,$form_id='1')
 	{
-/*		//$appid_info 	=  M('config')->where( array('name' => 'APPID') )->find();
-		$weprogram_appid_info 	=  M('config')->where( array('name' => 'weprogram_appid') )->find();
-	    $appsecret_info =  M('config')->where( array('name' => 'weprogram_appscret') )->find();
-	    //$mchid_info =  M('config')->where( array('name' => 'MCHID') )->find();
-	    
-	    $weixin_config = array();
-	    $weixin_config['appid'] = $weprogram_appid_info['value'];
-	    $weixin_config['appscert'] = $appsecret_info['value'];
-	    //$weixin_config['mchid'] = $mchid_info['value'];
-		
-		$we_appid = $weprogram_appid_info['value'];
-	    
-	    $jssdk = new \Lib\Weixin\Jssdk( $weixin_config['appid'], $weixin_config['appscert']);
-	    $re_access_token = $jssdk->getweAccessToken();
-	    
-		
-	    $template = array(
-	        'touser' => $to_openid,
-	        'template_id' => $template_id,
-	        'form_id' => $form_id,
-			'page' => $pagepath,
-	        'data' => $template_data
-	    );
-		
-		 
-	    $send_url ="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token={$re_access_token}";
-	    $result = sendhttps_post($send_url, json_encode($template));
-		//var_dump($form_id, json_decode($result,true));die();
-	    return json_decode($result,true);*/
+
 	}
 
 

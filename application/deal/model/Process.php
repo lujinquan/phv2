@@ -199,7 +199,7 @@ class Process extends SystemBase
             
     }
 
-    public function detail($change_type,$id,$change_order_number)
+    public function detail($change_type,$id,$change_order_number = '')
     {
         switch ($change_type) {
             case '1': // 租金减免

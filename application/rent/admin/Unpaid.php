@@ -80,7 +80,7 @@ class Unpaid extends Admin
         if($res){
             $this->success('撤回成功，本次撤回'.$res.'条账单！');
         }else{
-            $this->error('撤回失败，请检查账单支付日期是否为本月');
+            $this->error('撤回失败，请检查账单支付日期是否为本月，是否为房管员现金支付订单');
         }
     }
 

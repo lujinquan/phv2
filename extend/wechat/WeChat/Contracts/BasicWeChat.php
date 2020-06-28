@@ -14,6 +14,7 @@
 
 namespace WeChat\Contracts;
 
+use think\Db;
 use WeChat\Exceptions\InvalidArgumentException;
 use WeChat\Exceptions\InvalidResponseException;
 
@@ -102,6 +103,7 @@ class BasicWeChat
     public function getAccessToken()
     {
         if (!empty($this->access_token)) {
+            //echo 1;exit;
             return $this->access_token;
         }
         $cache = $this->config->get('appid') . '_access_token';
@@ -121,6 +123,7 @@ class BasicWeChat
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$appid}&secret={$secret}";
         $result = Tools::json2arr(Tools::get($url));
         if (!empty($result['access_token'])) {
+            Db::name('weixin_access_token')->insert(['appid'=>$this->config->get('appid'),'access_token'=>$result['access_token'],'ctime'=>time(),'expires_in'=>$result['expires_in'],'remark'=>'微信小程序接口请求的access_token']);
             Tools::setCache($cache, $result['access_token'], 7000);
         }
         return $this->access_token = $result['access_token'];
