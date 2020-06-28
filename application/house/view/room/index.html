@@ -45,7 +45,7 @@
 					<select name="room_pub_num" xm-select="room_pub_num">
 						<option value="" disabled="disabled">租用状态</option>
 						<option value="1">独用</option>
-						<option value="2">公摊</option>
+						<option value="2">共用</option>
 						<option value="3">公共</option>
 						{/volist}
 					</select>
@@ -123,7 +123,7 @@
 							if(parseInt(d.room_pub_num) == 1){
 								return '独用';
 							}else if(parseInt(d.room_pub_num) == 2){
-								return '公摊';
+								return '共用';
 							}else{
 								return '公共';
 							}
@@ -215,7 +215,7 @@
 					if(parseInt(result[i].room_pub_num) == 1){
 						result[i].room_pub_num= '独用';
 					}else if(parseInt(result[i].room_pub_num) == 2){
-						result[i].room_pub_num= '公摊';
+						result[i].room_pub_num= '共用';
 					}else{
 						result[i].room_pub_num= '共用';
 					}

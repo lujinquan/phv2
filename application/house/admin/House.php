@@ -28,8 +28,6 @@ class House extends Admin
 
     public function index()
     {
-        // $WeixinModel = new WeixinModel;
-        // halt($WeixinModel->getAccessToken());
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -468,26 +466,31 @@ class House extends Admin
         set_time_limit(0);
 
         $houseModel = new HouseModel;
-        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(1000)->select();
+        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(1)->select();
 
         //halt($houseNumberArr);
         $WeixinModel = new WeixinModel;
         $i = 0;
         $width = 300;
         foreach($houseNumberArr as $h){
-            $path = 'pages/payment/payment?houseid='.$h['house_id'];
+            // C方案生成二维码，C方案生成二维码，有数量限制100000张
+            /*$path = 'pages/payment/payment?houseid='.$h['house_id'];
             $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
-            //halt($path);
-            $result = $WeixinModel->createqrcode($path,$width); //C方案生成二维码，有数量限制100000张
-            //$result = $WeixinModel->createMiniScene('house_id=22' , $path,$width); //B方案生成二维码，无数量限制，但是每分钟最多生成5000张
+            $result = $WeixinModel->createqrcode($path,$width);
+            file_put_contents('.'.$filename,$result);
+            $houseModel = new HouseModel;
+            $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);*/
+
+            // B方案生成二维码,无数量限制，但是每分钟最多生成5000张
+            $path = 'pages/payment/payment'; //注意路径格式，这个路径不能带参数！
+            $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
+            $result = $WeixinModel->createMiniScene($h['house_id'] , $path,$width); //B方案生成二维码，
             file_put_contents('.'.$filename,$result);
             $houseModel = new HouseModel;
             $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
-            //$h->house_share_img = 'https://procheck.ctnmit.com'.$filename;
             if($res){
                $i++; 
             }
-            //exit;
         } 
         return $this->success('生成成功，一共生成'.$i.'张二维码！');
 
