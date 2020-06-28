@@ -182,8 +182,8 @@
 						none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 					},
 					cols: [[ //表头
-						// {type: 'checkbox', hide: isHide ,fixed: 'left'}
-						{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
+						{type: 'checkbox', hide: isHide ,fixed: 'left'}
+						,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号' ,totalRowText: '合计：'}
 						,{field: 'ban_inst_id', minWidth: 120, align:'center', title: '管段', hide: isShowInst, templet: function(d) {
 							return params.insts[d.ban_inst_id];
 						}}
