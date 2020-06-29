@@ -859,12 +859,7 @@ class Weixin extends Common
 
             $where = [];
             $where[] = ['d.ban_inst_id','in',$insts[$row['inst_id']]];
-            if($type){
-                $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-                $where[] = ['a.ptime','>',0];
-            }else{
-               $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
-            }
+            
             
             if($use){
                 $where[] = ['a.house_use_id','eq',$use];
@@ -887,30 +882,47 @@ class Weixin extends Common
                 $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
                 $where[] = ['ptime','between time',[$nowDate,$nextDate]];
             }
-            //halt($where);
-            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-            $data = [];
-            $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
-           
 
-            $result['data'] = [];
-            foreach ($temps as $v) { 
-                $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
-                $v['house_use_id'] = $params['uses'][$v['house_use_id']];
-                $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-                $v['rent_order_date'] = substr($v['rent_order_date'],0,4).'-'.substr($v['rent_order_date'],4,2).'-01';
-                if($v['ptime']){
-                    $v['ptime'] = date('Y-m-d H:i:s',$v['ptime']);
+            if($type){ //如果是已缴，按照订单来排列
+                $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+                $where[] = ['a.ptime','>',0];
+
+                $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+                $data = [];
+                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+               
+
+                $result['data'] = [];
+                foreach ($temps as $v) { 
+                    $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                    $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                    $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                    $v['rent_order_date'] = substr($v['rent_order_date'],0,4).'-'.substr($v['rent_order_date'],4,2).'-01';
+                    if($v['ptime']){
+                        $v['ptime'] = date('Y-m-d H:i:s',$v['ptime']);
+                    }
+                    if($v['pay_way']){
+                        $v['pay_way'] = $params['pay_way'][$v['pay_way']];
+                    }
+                    $result['data'][] = $v;
                 }
-                if($v['pay_way']){
-                    $v['pay_way'] = $params['pay_way'][$v['pay_way']];
+                $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($keywordsWhere)->count('a.rent_order_id');
+
+            }else{ //如果是代缴，按照房屋来排列
+                $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
+                $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->limit($limit)->select();
+                $result['data'] = [];
+                foreach ($temps as $v) { 
+                    $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                    $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                    $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                    
+                   
+                    $result['data'][] = $v;
                 }
-                //$v['house_status'] = $params['status'][$v['house_status']];
-                //$v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
-                //$v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
-                $result['data'][] = $v;
+                $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
             }
-            $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($keywordsWhere)->count('a.rent_order_id');
             $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
