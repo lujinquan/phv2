@@ -316,9 +316,10 @@ class Index extends Common
             'spbill_create_ip' => '127.0.0.1',
         ];
         if($inst_pid == 2){
-            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify?inst_id=2';
+            //回调函数不能带参数
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify';
         }else if($inst_pid == 3){
-            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify?inst_id=3';
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify';
             //$wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
         if ($this->debug === true) {
@@ -612,10 +613,10 @@ class Index extends Common
     {
 
         include EXTEND_PATH.'wechat/include.php';
-        $type = input('type');
-        if($type == 2){
+        $inst_id = input('inst_id');
+        if($inst_id == 2){
             $wechat = \WeChat\Pay::instance($this->config_ziyang);
-        }else if($type == 3){
+        }else if($inst_id == 3){
             $wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
         // 获取通知参数
@@ -657,6 +658,15 @@ class Index extends Common
                 if($row['recharge_status'] == 0){
                     $pay_rent = $data['total_fee'] / 100;
 
+                    // 如果有欠缴的订单，先处理订单
+                    $RentModel = new RentModel;
+                    $rent_info = $RentModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->field('sum(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
+                    if($rent_info && $pay_rent > $rent_info['rent_order_unpaid']){
+                        $pay_rent = bcsub($pay_rent, $rent_info['rent_order_unpaid']);
+                        $RentModel = new RentModel;
+                        $RentModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->update(['rent_order_paid'=>Db::raw('rent_order_receive'),'is_deal'=>1,'pay_way'=>4,'ptime'=>time()]);
+                    }
+
                     // 更新房屋余额
                     $HouseModel = new HouseModel;
                     $house_info = $HouseModel->where([['house_id','eq',$row['house_id']]])->find();
@@ -679,7 +689,7 @@ class Index extends Common
                     $HouseTaiModel = new HouseTaiModel;
                     $HouseTaiModel->house_id = $house_info['house_id'];
                     $HouseTaiModel->tenant_id = $house_info['tenant_id'];
-                    $HouseTaiModel->cuid = ADMIN_ID;
+                    //$HouseTaiModel->cuid = ADMIN_ID;
                     $HouseTaiModel->house_tai_type = 2;
                     $HouseTaiModel->house_tai_remark = '微信充值：'. $pay_rent .'元，剩余余额：'.$yue.'元。';
                     $HouseTaiModel->data_json = [];
@@ -710,12 +720,12 @@ class Index extends Common
     {
 
         include EXTEND_PATH.'wechat/include.php';
-        $type = input('type');
-        if($type == 2){
+        // $inst_id = input('inst_id');
+        // if($inst_id == 2){
             $wechat = \WeChat\Pay::instance($this->config_ziyang);
-        }else if($type == 3){
-            $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        }
+        // }else if($inst_id == 3){
+        //     $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        // }
         // 获取通知参数
         $data = $wechat->getNotify();
         // 下面是一个返回data的例子
