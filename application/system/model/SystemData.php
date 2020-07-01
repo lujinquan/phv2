@@ -110,7 +110,11 @@ class SystemData extends Model
                 case 7: //新发
                     $where[] = ['tenant_status','<',2];
                     break;
+                case 13: //使用权变更
+                    $where[] = ['tenant_status','<',2];
+                    break;
                 case 17: //别字更正
+                    $where[] = ['tenant_status','<',2];
                     break;
                 case 18: //发租约
                     break;
@@ -120,7 +124,7 @@ class SystemData extends Model
                     break;
             }  
         }else{
-            $where[] = ['tenant_status','eq',1]; // 默认查询正常状态下的租户 
+            $where[] = ['tenant_status','<',2]; // 默认查询正常状态下的租户 
         }
 //halt($where);    
         $TenantModel = new TenantModel;
@@ -193,7 +197,7 @@ class SystemData extends Model
                     break;
                 case 13: //使用权变更
                     $where[] = ['a.house_status','eq',1];
-                    $where[] = ['house_is_pause','eq',0];
+                    //$where[] = ['house_is_pause','eq',0]; //暂停计租的房子也可以使用权变更
                     $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 14: //楼栋调整
@@ -211,7 +215,7 @@ class SystemData extends Model
                     break;
                 case 17: //别字更正
                     $where[] = ['a.house_status','eq',1];
-                    $where[] = ['a.house_is_pause','eq',0];
+                    //$where[] = ['a.house_is_pause','eq',0]; //暂停计租的房子也可以别字更正
                     $applyHouseidArr = Db::name('change_name')->where([['change_status','>',1]])->column('house_id');
                     break;
                 case 18: //发租约
