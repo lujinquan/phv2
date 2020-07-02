@@ -51,7 +51,7 @@
 		//判断当前异动类型改变提示文字
 				var changeType = '{$changeType}';
 				if(changeType==13){
-					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请使用权变更");
+					$(".layui-elem-quote").text("红色表示房屋存在欠租无法申请使用权变更");
 				}
 				else if(changeType==9){
 					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请房屋调整");
@@ -63,7 +63,7 @@
 					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请租金减免");
 				}
 				else if(changeType==17){
-					$(".layui-elem-quote").text("灰色表示房屋已暂停计租，无法申请别字更正");
+					$(".layui-elem-quote").text("红色表示房屋存在欠租无法申请别字更正");
 				}
 				else if(changeType==11){
 					$(".layui-elem-quote").text("灰色表示正在异动中的房屋");
