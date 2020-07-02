@@ -138,12 +138,14 @@
 						field: 'tenant_card',
 						minWidth: 180,
 						title: '身份证号'
-					}, {
-						field: 'tenant_balance',
-						minWidth: 120,
-						title: '余额',
-						totalRow: true
-					}, {
+					}
+					// , {
+					// 	field: 'tenant_balance',
+					// 	minWidth: 120,
+					// 	title: '余额',
+					// 	totalRow: true
+					// }
+					, {
 						title: '操作',
 						minWidth: 160,
 						align:'center',
@@ -153,7 +155,7 @@
 				]
 			],
 			done: function(res, curr, count) {
-				$(".layui-table-total td[data-field='tenant_balance']").find("div").text(res.total_tenant_balance);
+				// $(".layui-table-total td[data-field='tenant_balance']").find("div").text(res.total_tenant_balance);
 				var exportData=res.data;
 				for(i in exportData){
 				  exportData[i].tenant_inst_id = params.insts[exportData[i].tenant_inst_id];//转化管段
