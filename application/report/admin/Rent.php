@@ -69,6 +69,13 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             //set_time_limit(0);
             $date = date('Ym');
+
+            //检查上月的报表是否生成
+            // $last_month = date('Ym',strtotime('- 1 month'));
+            // $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$last_month.'.txt');
+            // if(!$tempData){
+
+            // }
             //$date = 201909;
             //Debug::remark('begin');
             $MonthReportModel = new MonthReportModel;

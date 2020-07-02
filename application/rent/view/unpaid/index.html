@@ -106,6 +106,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <a href="{:url('pay')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="缴费" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">缴费</a>
     <a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
@@ -158,13 +159,13 @@
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
                 ,{field: 'rent_order_diff', minWidth: 80, align:'center', title: '租差',totalRow: true}
                 ,{field: 'rent_order_pump', minWidth: 80, align:'center', title: '泵费',totalRow: true}
-                ,{field: 'rent_order_cut', minWidth: 80, align:'center', title: '减免',totalRow: true}
-                ,{field: 'house_pre_rent', minWidth: 100, align:'center', title: '规定租金',totalRow: true}
-                ,{field: 'house_cou_rent', minWidth: 100, align:'center', title: '计算租金',totalRow: true}
-                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金', totalRow: true}
-                ,{field: 'rent_order_paid', minWidth: 100, align:'center', title: '已缴租金', totalRow: true}
-                ,{field: 'rent_order_unpaid', minWidth: 100, align:'center', title: '欠缴租金', totalRow: true}
-                ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'rent_order_cut', minWidth: 120, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent', minWidth: 120, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
+                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
+                ,{field: 'rent_order_unpaid', minWidth: 120, align:'center', title: '欠缴租金', totalRow: true}
+                ,{title: '操作', minWidth: 140,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                 $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);

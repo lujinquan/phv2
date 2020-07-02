@@ -18,16 +18,16 @@ class MonthReport extends Model
         $arr7 = substr($cacheDate,0,4); // 2018
 
         //从往期欠租表中,获取当月收缴到的以前月的【以前月实收】租金
-        $rentOldMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$arr1],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','eq',$arr1],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中,获取今年【以前月实收累计】收缴到的以前月的租金
-        $rentOldTotalMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','between',$arr6],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldTotalMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','between',$arr6],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中,获取当月收缴到的【以前年度实收】的租金
-        $rentOldYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$arr1],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','eq',$arr1],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中，获取今年实收累计收缴到的【以前年度实收累计】的租金
-        $rentOldTotalYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','between',$arr6],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldTotalYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','between',$arr6],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
 
         //从租金订单表中,获取规定、已缴、欠缴、应缴租金
@@ -318,10 +318,12 @@ class MonthReport extends Model
         }
         $cachedate = date('Ym',strtotime($cacheDate . '01 -1 month'));
 
-        $reportolddata = Db::name('report')->where([['type','eq','RentReport'],['date','eq',$cachedate]])->value('data');
+        //$reportolddata = Db::name('report')->where([['type','eq','RentReport'],['date','eq',$cachedate]])->value('data');
+        $reportolddata = @file_get_contents(ROOT_PATH.'file/report/rent/'.$cachedate.'.txt');
+
         $datas = json_decode($reportolddata,true);
         $lastMonthData = isset($datas)?$datas:array();
-//halt($lastMonthData);
+        //halt($lastMonthData);
         //如果缓存的是某年的第一个月的数据
         if(substr($cacheDate,4,2) == '01' ){
             //$lastMonthData = array();
@@ -333,7 +335,7 @@ class MonthReport extends Model
         //         $temps[] = json_decode(Cache::store('file')->get('RentReport'.($s),''),true);
         //     }
         // }
-//halt($temps);
+        //halt($temps);
 
         //第一步：处理市、区、代、自、托的每一个管段的数据
         foreach ($ownertypes as $owners) { //处理市、区、代、自、托

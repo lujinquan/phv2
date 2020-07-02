@@ -148,6 +148,7 @@ class Changelease extends Admin
 
             // 入库使用权变更表
             $row = $ChangeModel->allowField(true)->update($filData);
+            //halt($row);
             //$row = $ChangeModel->allowField(true)->update($filData);
             if ($row === false) {
                 return $this->error('申请失败');
