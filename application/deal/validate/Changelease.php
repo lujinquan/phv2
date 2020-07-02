@@ -23,7 +23,7 @@ class Changelease extends Validate
 {
     //定义验证规则
     protected $rule = [	
-        'id|异动单号' => 'require', 
+        'id|异动单号' => 'require|checkRepeat', 
         'house_id|房屋编号' => 'require|isAllow',
         'applyType|附记' => 'require',      
     ];
@@ -44,6 +44,16 @@ class Changelease extends Validate
         $row = ChangeLeaseModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
+        }
+        return $msg?$msg:true;
+    }
+
+    protected function checkRepeat($value, $rule='', $data)
+    {
+        $msg = '';
+        $row = ChangeLeaseModel::where([['id','eq',$value]])->field('change_status')->find();
+        if($row['change_status'] == 3){
+            $msg = '请勿重复提交！';
         }
         return $msg?$msg:true;
     }
