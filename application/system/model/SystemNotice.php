@@ -32,7 +32,7 @@ class SystemNotice extends Model
                 return '全部（包含租户）';
     			break;
             case 5:
-                return '仅超级管理员';
+                return '仅区公司';
                 break;
     		default:
     			# code...
@@ -72,7 +72,7 @@ class SystemNotice extends Model
         if(INST == 1){
             //
         }elseif(INST == 2){
-            $where[] = ['inst_id','in',[1,2,4,5]];
+            $where[] = ['inst_id','in',[1,2,4]];
         }elseif(INST == 3){
             $where[] = ['inst_id','in',[1,3,4]];
         }elseif(INST == 4){
