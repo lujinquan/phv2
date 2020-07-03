@@ -1,0 +1,119 @@
+<form class="layui-form" action="{url('pay')}" method="post">
+  <div class="j-details-box floorWrap layui-form">
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>基本信息</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>订单编号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['rent_order_number']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>租户姓名</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_name']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_tel']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['tenant_card']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['ban_address']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	
+	<fieldset class="layui-elem-field layui-field-title j-field-box">
+		<legend>缴费</legend>
+	</fieldset>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>账单期</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['rent_order_date']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>账单金额</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['rent_order_receive']}" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search">元</b>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>已缴金额</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['rent_order_paid']}" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search">元</b>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>欠缴金额</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['rent_order_unpaid']}" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search">元</b>
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>缴纳金额</label>
+			<div class="j-input-inline">
+				<input type="number" name="pay_rent" value="" autocomplete="off" class="layui-input">
+				<b class="j-explain-search">元</b>
+			</div>
+		</div>
+	</div>
+	 <input type="hidden" name="rent_order_id" value="{$data_info['rent_order_id']}">
+	 <div class="pop-bottom-bar">
+        <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交保存</button>
+        <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10">取消</a>
+    </div>
+  </div>
+</form>
+{include file="system@block/layui" /}
+<script type="text/javascript">
+layui.use(['form', 'func'], function() {
+    var $ = layui.jquery, form = layui.form;
+
+	//双击获取房屋查询器
+	 $(".j-house_number").click(function(){
+	 	//event.stopPropagation();
+		 //var that = $(this);
+		 //console.log(that.attr('data-id'));
+		layer.open({
+					title: '房屋查询器'
+					,type: 2
+					,offset: 'auto'
+					,area: ['90%', '90%']
+					, btn:false
+					,pageTabs: false
+					,content: '{:url('system/index/house')}?hisi_iframe=yes'
+					,btn: ['确定','关闭']
+					,yes: function(index, layero){
+						var row = window["layui-layer-iframe" + index].hoesedata();
+						/* console.log(row); */
+						layer.close(index);
+						$("input[name='house_number']").val(row.house_number);//房屋编号
+						$("#ban_address").val(row.ban_address);//楼栋地址
+						$("#house_pre_rent").val(row.house_pre_rent);//房屋规租
+						$("#tenant_name").val(row.tenant_name);//租户姓名
+						$("#house_balance").val(row.house_balance); // 账户余额
+					},btn2: function(index, layero){
+						layer.close(index);
+					}
+		 });
+	})
+});
+</script>

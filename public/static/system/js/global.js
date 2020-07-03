@@ -349,7 +349,13 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                         that.removeClass('layui-btn-danger').addClass('layui-btn-normal').text(text);
                     }, 3000);
                 } else { //如果提价成功
-                    that.prop('disabled', false);
+                    //if(options.jump == false || res.url == ''){
+                    if(res.url != ''){ //如果有跳转或者刷新，则不能再次提交
+                        that.prop('disabled', true);
+                    }else{ 
+                        that.prop('disabled', false);
+                    }
+                    console.log('提交按钮是否禁用：',that.attr('disabled'));
                     that.removeClass('layui-btn-normal').addClass('layui-bg-green');
                     setTimeout(function() {
                         that.text(text);

@@ -4,7 +4,11 @@
 {else /}
         </div>
     </div>
-    
+    {if condition="false"}
+    <div class="layui-footer footer">
+       楚天新媒 © <a href="/" target="_blank">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label>
+    </div>
+    {/if}
 </div>
 </body>
 </html>

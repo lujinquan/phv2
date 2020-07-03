@@ -67,8 +67,18 @@ class Rent extends Admin
     public function makeMonthReport()
     {
         if ($this->request->isAjax()) {
-            //set_time_limit(0);
-            $date = date('Ym');
+            
+            $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
+
+            $full_date = substr_replace($date,'-',4,0);
+
+            //检查上月的报表是否生成
+            $last_month = date('Ym',strtotime('- 1 month',strtotime($full_date)));
+
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$last_month.'.txt');
+            if(!$tempData){
+                return $this->error('未生成'.substr_replace($last_month,'-',4,0).'月报表');
+            }
             //$date = 201909;
             //Debug::remark('begin');
             $MonthReportModel = new MonthReportModel;

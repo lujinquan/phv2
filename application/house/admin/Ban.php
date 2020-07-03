@@ -29,7 +29,7 @@ class Ban extends Admin
 {
 
     public function index()
-    {   
+    { 
         $areas = Db::name('base_area')->where([['level','eq',3]])->column('id,area_title');
         $this->assign('areas',$areas);
         //halt($areas);

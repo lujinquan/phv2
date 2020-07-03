@@ -101,7 +101,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+    <a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '400px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
 <script type="text/javascript">
@@ -157,10 +157,10 @@
                 ,{field: 'rent_order_diff',hide:true, minWidth: 140, align:'center', title: '租差',totalRow: true}
                 ,{field: 'rent_order_pump',hide:true, minWidth: 140, align:'center', title: '泵费',totalRow: true}
                 ,{field: 'rent_order_cut',hide:true, minWidth: 140, align:'center', title: '减免',totalRow: true}
-                ,{field: 'house_pre_rent', minWidth: 100, align:'center', title: '规定租金',totalRow: true}
-                ,{field: 'house_cou_rent',hide:true, minWidth: 100, align:'center', title: '计算租金',totalRow: true}
-                ,{field: 'rent_order_receive', minWidth: 100, align:'center', title: '应收租金', totalRow: true}
-                //,{field: 'rent_order_paid', minWidth: 100, align:'center', title: '已缴租金', totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent',hide:true, minWidth: 120, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
+                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
                 // ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
                 //     return params.is_invoice[d.is_invoice];
                 // }}
@@ -173,6 +173,11 @@
             ,done:function(res,curr,count){
                 $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
                 $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
+                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_rent_order_paid);
+                $(".layui-table-total td[data-field='rent_order_cut']").find("div").text(res.total_rent_order_cut);
+                $(".layui-table-total td[data-field='rent_order_diff']").find("div").text(res.total_rent_order_diff);
+                $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);
+                $(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
                //导出转换后台数据
                var exportData=res.data;
                for(i in exportData){

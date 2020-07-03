@@ -166,13 +166,13 @@ class User extends Admin
                 return $this->error('密码不能为空');
             }
             // 效验弱口令
-            // if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
-            //     return $this->error('密码必须为6-15位的数字和字母的组合');
-            // }
-            // 优化强化密码口令
-            if(!preg_match('/(?=^.{6,15}$)(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).*$/',$data['password'])){
-                return $this->error('6-15位，至少有一个数字，一个大写字母，一个小写字母和一个特殊字符（包括!@#$%^&*），四个任意组合');
+            if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
+                return $this->error('密码必须为6-15位的数字和字母的组合');
             }
+            // 优化强化密码口令
+            // if(!preg_match('/(?=^.{6,15}$)(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).*$/',$data['password'])){
+            //     return $this->error('6-15位，至少有一个数字，一个大写字母，一个小写字母和一个特殊字符（包括!@#$%^&*），四个任意组合');
+            // }
             $data['password'] = md5($data['password']);
             $data['password_confirm'] = md5($data['password_confirm']);
             // 验证
@@ -338,13 +338,13 @@ class User extends Admin
 
             if ($data['password']) {
                 // 效验弱口令
-                /*if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
+                if(!preg_match('/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/',$data['password'])){
                     return $this->error('密码必须为6-15位的数字和字母的组合');
-                }*/
-                // 优化强化密码口令
-                if(!preg_match('/(?=^.{6,15}$)(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).*$/',$data['password'])){
-                    return $this->error('6-15位，至少有一个数字，一个大写字母，一个小写字母和一个特殊字符（包括!@#$%^&*），四个任意组合');
                 }
+                // 优化强化密码口令
+                // if(!preg_match('/(?=^.{6,15}$)(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).*$/',$data['password'])){
+                //     return $this->error('6-15位，至少有一个数字，一个大写字母，一个小写字母和一个特殊字符（包括!@#$%^&*），四个任意组合');
+                // }
                 $data['password'] = md5($data['password']);
                 $data['password_confirm'] = md5($data['password_confirm']);
             } else {

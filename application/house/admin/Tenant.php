@@ -34,15 +34,15 @@ class Tenant extends Admin
             $getData = $this->request->get();
             $TenantModel = new TenantModel;
             $where = $TenantModel->checkWhere($getData);
-            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance';
+            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card';
             $data = [];
-            $data['data'] = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
+            $data['data'] = TenantModel::alias('a')->field($fields)->where($where)->page($page)->group('tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
             $data['count'] = TenantModel::where($where)->count('tenant_id');//halt($data['data']);
             // 统计租户租金
-            $totalRow = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->field('sum(house_balance) as total_tenant_balance')->find();
-            if($totalRow){
-                $data['total_tenant_balance'] = $totalRow['total_tenant_balance'];
-            }
+            // $totalRow = TenantModel::alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->field('sum(house_balance) as total_tenant_balance')->find();
+            // if($totalRow){
+            //     $data['total_tenant_balance'] = $totalRow['total_tenant_balance'];
+            // }
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

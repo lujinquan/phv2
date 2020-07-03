@@ -31,12 +31,19 @@ class SystemNotice extends Model
             case 4:
                 return '全部（包含租户）';
     			break;
+            case 5:
+                return '仅区公司';
+                break;
     		default:
     			# code...
     			break;
     	}
     }
-
+    
+    public function getCuidAttr($value){
+        //halt(session('systemusers')[$value]);
+        return session('systemusers')?session('systemusers')[$value]['nick']:$value;
+    }
     // public function getCuidAttr($value){
     //     //halt(session('systemusers')[$value]);
     //     return session('systemusers')?session('systemusers')[$value]['nick']:$value;

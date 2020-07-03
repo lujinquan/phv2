@@ -39,7 +39,7 @@ class Notice extends Admin
             $SystemNotice = new SystemNotice;
             $where = $SystemNotice->checkWhere($getData);
             $data = [];
-            $data['data'] = $SystemNotice->where($where)->page($page)->order('sort asc')->limit($limit)->select();
+            $data['data'] = $SystemNotice->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
             //halt($data['data']);
             $data['count'] = $SystemNotice->count();
             $data['code'] = 0;
