@@ -43,6 +43,7 @@ class Tenant extends Validate
     public function sceneForm()
     {
         return $this->only(['tenant_name','tenant_tel','tenant_card']);
+        //return $this->only(['tenant_name']);
     }
 
     // 编辑
