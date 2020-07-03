@@ -26,17 +26,17 @@
 	</div>
 	{if condition="$Think.INST_LEVEL < 3"}
 	<div class="layui-row layui-form-item layui-col-space90">
-	 <div class="layui-col-md4">
-		<label class="j-form-label"><i class="red">*</i>管段</label>
-		<div class="j-input-inline">
-			<select id="ban_inst_id" name="tenant_inst_id" lay-verify="required"  class="field-cid" type="select" required>
-				<option value="">请选择</option>
-				{volist name=":config('inst_data_names')[INST]" id="v"}
-				<option value="{$key}">{$v}</option>
-				{/volist}
-			</select>
+		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red">*</i>管段</label>
+			<div class="j-input-inline">
+				<select id="ban_inst_id" name="tenant_inst_id" lay-verify="required"  class="field-cid" type="select" required>
+					<option value="">请选择</option>
+					{volist name=":config('inst_data_names')[INST]" id="v"}
+					<option value="{$key}">{$v}</option>
+					{/volist}
+				</select>
+			</div>
 		</div>
-	</div>
 	</div>
 	{/if}
 	 <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">

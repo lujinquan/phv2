@@ -18,7 +18,6 @@ class Report extends Model
     {
     	$ownerid = input('param.owner_id/d',1); //默认查询市属
         $instid = input('param.inst_id/d',INST); //默认查询当前机构
-        
         $useid = input('param.use_id/d',1); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
         $month = str_replace('-','',$curMonth);

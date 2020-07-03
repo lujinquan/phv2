@@ -24,7 +24,8 @@ class Tenant extends Validate
         'tenant_id' => 'isAllowChange',
         'tenant_name|租户姓名' => 'require',
         'tenant_tel|联系电话' => 'require|number',
-        'tenant_card|身份证号' => 'require|idCard|unique:tenant',
+        //'tenant_card|身份证号' => 'require|idCard|unique:tenant',
+        'tenant_card|身份证号' => 'require|unique:tenant',
     ];
 
     //定义验证提示

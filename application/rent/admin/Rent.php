@@ -37,13 +37,11 @@ class Rent extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
-
-
-            // $res = $RentModel->configRentOrder(1); //生成本月份订单
+            // $res = $RentModel->configRentOrder(0); //生成本月份订单,参数1代表所有管段都生成，0代表只生成当前机构的订单
             // if(!$res){
             //     $this->error('本月份订单生成失败！');
             // }
-            //halt($limit);
+         
             $where = $RentModel->checkWhere($getData,'rent');
             
             $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
@@ -88,6 +86,47 @@ class Rent extends Admin
         }else{
             return $this->success($res['msg']);
         }
+    }
+
+    /**
+     * 缴费，可以缴纳部分
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-02 14:10:46
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function pay()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            //halt($data);
+            $RentModel = new RentModel;
+            $row = $RentModel->where([['rent_order_id','eq',$data['rent_order_id']]])->field('(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
+            if(floatval($data['pay_rent']) <= 0){
+                $this->error('缴纳金额必须大于0');
+            }
+            if($row['rent_order_unpaid'] < $data['pay_rent']){
+                $this->error('缴纳金额不能大于欠缴金额');
+            }
+            $RentModel = new RentModel;
+            $res = $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
+            // 入库
+            // if (!$BanModel->allowField(true)->create($filData)) {
+            //     return $this->error('新增失败');
+            // }
+            return $this->success('缴费成功');
+        }
+        $id = input('param.id/d');
+        $RentModel = new RentModel;      
+        $row = $RentModel->detail($id);
+        //halt($row);
+        $this->assign('data_info',$row);
+        return $this->fetch();
     }
 
     /**
