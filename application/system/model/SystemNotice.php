@@ -39,7 +39,11 @@ class SystemNotice extends Model
     			break;
     	}
     }
-
+    
+    public function getCuidAttr($value){
+        //halt(session('systemusers')[$value]);
+        return session('systemusers')?session('systemusers')[$value]['nick']:$value;
+    }
     // public function getCuidAttr($value){
     //     //halt(session('systemusers')[$value]);
     //     return session('systemusers')?session('systemusers')[$value]['nick']:$value;

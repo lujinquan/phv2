@@ -572,12 +572,13 @@ class Rent extends Model
                 if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime){ 
                     continue;
                 }
+
                 // 如果支付时间是当月，代表是撤回以前年或以前月的收欠
                 $RentRecycleModel = new RentRecycleModel;
 
-                $rent_recycle = $RentRecycleModel->where([['house_id','eq',$row['house_id']],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
+                $rent_recycle = $RentRecycleModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
 
-                $RentRecycleModel->where([['house_id','eq',$row['house_id']],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->delete();
+                $RentRecycleModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->delete();
 
                 $row->is_deal = 1; 
                 $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_recycle['pay_rents']);
