@@ -37,7 +37,7 @@ class Rent extends Admin
             $getData = $this->request->post();
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:12;
-            $query_month = (isset($getData['query_month']) && $getData['query_month'])?str_replace('-','',$getData['query_month']):date('Ym');
+            $query_month = (isset($getData['query_month']) && $getData['query_month'])?str_replace('-','',$getData['query_month']):202006;
 
             $where[] = [['date','eq',$query_month]];
 
@@ -70,6 +70,7 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             
             $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
+            $date = 202006;
 
             $full_date = substr_replace($date,'-',4,0);
 
@@ -192,6 +193,7 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             
             $date = date('Ym');
+            $date = 202006;
 
             $full_date = substr_replace($date,'-',4,0);
 
