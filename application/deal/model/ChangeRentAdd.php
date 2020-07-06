@@ -12,6 +12,7 @@ use app\common\model\Cparam as ParamModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\rent\model\RentRecycle as RentRecycleModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
 use app\deal\model\ChangeRecord as ChangeRecordModel;
 
@@ -307,7 +308,7 @@ class ChangeRentAdd extends SystemBase
     }
 
     /**
-     * 终审审核成功后的数据处理 【完成】
+     * 终审审核成功后的数据处理 【待优化】
      * @return [type] [description]
      */
     private function finalDeal($finalRow)
@@ -323,57 +324,133 @@ class ChangeRentAdd extends SystemBase
             'change_status' => $finalRow['change_status'],
         ]);
 
-        // 1、如果有追加以前年，则增加一条以前年回收的订单
+        // 1、如果有追加以前年，则增加一条以前年回收的订单，同时添加一条收欠记录表recycle记录【待优化】
         $RentModel = new RentModel;
         $rentData = [];
         $houseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->find();
-       
-        if($finalRow['before_year_rent']){ //rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id
+    // halt($finalRow);  
+        if($finalRow['before_year_rent'] > 0){ //rent_order_number,rent_order_date,rent_order_cut,rent_order_receive,house_id,tenant_id
             $rent_order_date = date('Y'.'12',strtotime('-1 year')); 
-            $rentData[] = [         
-                'house_id' => $finalRow['house_id'],
-                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
-                'tenant_id' => $finalRow['tenant_id'],
-                'rent_order_date' => $rent_order_date,
-                'rent_order_receive' => $finalRow['before_year_rent'],
-                'rent_order_paid' => $finalRow['before_year_rent'],
-                'rent_order_remark' => '租金追加调整创建的以前年回收订单，异动单号：'.$finalRow['change_order_number'],
-                'pay_way' => 1,
-                'ptime' => time(),
-                'is_deal' => 1,
-            ];  
+              
+            if($finalRow['is_take_back']){ // 如果已收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['before_year_rent'],
+                    'rent_order_paid' => $finalRow['before_year_rent'],
+                    'rent_order_remark' => '租金追加调整创建的以前年回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 1,
+                    'ptime' => time(),
+                    'is_deal' => 1,
+                ];
+                // 添加一条以前年的收欠记录
+                $RentRecycleModel = new RentRecycleModel;
+                $RentRecycleModel->house_id = $finalRow['house_id'];
+                $RentRecycleModel->tenant_id = $finalRow['tenant_id'];
+                $RentRecycleModel->pay_year = date('Y',strtotime('-1 year'));
+                $RentRecycleModel->pay_month = $rent_order_date;
+                $RentRecycleModel->pay_rent = $finalRow['before_year_rent'];
+                $RentRecycleModel->cdate = date('Ym');
+                $RentRecycleModel->save();
+            }else{ // 如果未收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['before_year_rent'],
+                    'rent_order_paid' => 0,
+                    'rent_order_remark' => '租金追加调整创建的以前年回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 0,
+                    'ptime' => 0,
+                    'is_deal' => 1,
+                ];
+
+            }
+            
         }
-        // 2、如果有追加以前月，则增加一条以前月回收的订单
-        if($finalRow['before_month_rent']){
+
+
+
+        // 2、如果有追加以前月，则增加一条以前月回收的订单，同时添加一条收欠记录表recycle记录【待优化】
+        if($finalRow['before_month_rent'] > 0){
             $rent_order_date = date('Ym',strtotime('-1 month')); 
-            $rentData[] = [         
-                'house_id' => $finalRow['house_id'],
-                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
-                'tenant_id' => $finalRow['tenant_id'],
-                'rent_order_date' => $rent_order_date,
-                'rent_order_receive' => $finalRow['before_month_rent'],
-                'rent_order_paid' => $finalRow['before_month_rent'],
-                'rent_order_remark' => '租金追加调整创建的以前月回收订单，异动单号：'.$finalRow['change_order_number'],
-                'pay_way' => 1,
-                'ptime' => time(),
-                'is_deal' => 1,
-            ];
+
+            if($finalRow['is_take_back']){ // 如果已收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['before_month_rent'],
+                    'rent_order_paid' => $finalRow['before_month_rent'],
+                    'rent_order_remark' => '租金追加调整创建的以前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 1,
+                    'ptime' => time(),
+                    'is_deal' => 1,
+                ];
+                // 添加一条以前月的收欠记录
+                $RentRecycleModel = new RentRecycleModel;
+                $RentRecycleModel->house_id = $finalRow['house_id'];
+                $RentRecycleModel->tenant_id = $finalRow['tenant_id'];
+                $RentRecycleModel->pay_year = date('Y');
+                $RentRecycleModel->pay_month = $rent_order_date;
+                $RentRecycleModel->pay_rent = $finalRow['before_month_rent'];
+                $RentRecycleModel->cdate = date('Ym');
+                $RentRecycleModel->save();
+            }else{ // 如果未收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['before_month_rent'],
+                    'rent_order_paid' => 0,
+                    'rent_order_remark' => '租金追加调整创建的以前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 0,
+                    'ptime' => 0,
+                    'is_deal' => 1,
+                ];
+
+            }
+
+            
         }
         // 3、如果有追加当月，则增加一条当月回收的订单
         if($finalRow['this_month_rent']){
             $rent_order_date = date('Ym'); 
-            $rentData[] = [         
-                'house_id' => $finalRow['house_id'],
-                'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
-                'tenant_id' => $finalRow['tenant_id'],
-                'rent_order_date' => $rent_order_date,
-                'rent_order_receive' => $finalRow['this_month_rent'],
-                'rent_order_paid' => $finalRow['this_month_rent'],
-                'rent_order_remark' => '租金追加调整创建的当前月回收订单，异动单号：'.$finalRow['change_order_number'],
-                'pay_way' => 1,
-                'ptime' => time(),
-                'is_deal' => 1,
-            ];
+            
+
+            if($finalRow['is_take_back']){ // 如果已收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['this_month_rent'],
+                    'rent_order_paid' => $finalRow['this_month_rent'],
+                    'rent_order_remark' => '租金追加调整创建的当前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 1,
+                    'ptime' => time(),
+                    'is_deal' => 1,
+                ];
+               
+            }else{ // 如果未收回
+                $rentData[] = [         
+                    'house_id' => $finalRow['house_id'],
+                    'rent_order_number' => $houseInfo['house_number'].$rent_order_date,
+                    'tenant_id' => $finalRow['tenant_id'],
+                    'rent_order_date' => $rent_order_date,
+                    'rent_order_receive' => $finalRow['this_month_rent'],
+                    'rent_order_paid' => 0,
+                    'rent_order_remark' => '租金追加调整创建的当前月回收订单，异动单号：'.$finalRow['change_order_number'],
+                    'pay_way' => 0,
+                    'ptime' => 0,
+                    'is_deal' => 1,
+                ];
+            }
         }
         $RentModel->insertAll($rentData);
 
