@@ -209,6 +209,13 @@ class Rent extends Model
                     $queryMonth = substr($data['rent_order_date'],0,4).substr($data['rent_order_date'],-2);
                     $where[] = ['rent_order_date','eq',$queryMonth];
                 }
+                // 缴纳日期
+                if(isset($data['ptime']) && $data['ptime']){
+                    $pStartDate = strtotime(substr($data['ptime'],0,10));
+                    $pEndDate = strtotime(substr($data['ptime'],13,11));
+                    //dump($pStartDate);halt($pEndDate);
+                    $where[] = ['ptime','between',[$pStartDate,$pEndDate]];
+                }
                 // 检索机构
                 if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
                     $insts = explode(',',$data['ban_inst_id']);
@@ -267,7 +274,7 @@ class Rent extends Model
         //halt(config('inst_ids')[$instid]);
         //halt($currMonthOrder);
         
-        if(!$currMonthOrder){
+        if($currMonthOrder){
             //$houseModel = new HouseModel;
             $where = [];
             $where[] = ['a.house_status','eq',1];

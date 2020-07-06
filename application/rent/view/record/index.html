@@ -77,6 +77,11 @@
             <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
         </div>
         {/if}
+         <div class="layui-input-inline j-input-margin" style="width:200px;">
+            <input type="text" name="ptime" class="layui-input" title="缴纳日期范围" placeholder="缴纳日期范围" id="test6" placeholder=" ~ ">
+        </div>
+
+
         </div>
         <div class="j-search-fr layui-col-md4 fr">
         	<div class="layui-input-inline fr">
@@ -122,6 +127,14 @@
                 });
             }
         });
+
+        //日期范围
+          laydate.render({
+            elem: '#test6'
+            //,range: true
+            ,range: '~'
+          });
+
         var table = layui.table;
         table.render({
             elem: '#dataTable'
