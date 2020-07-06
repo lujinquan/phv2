@@ -4,7 +4,7 @@
 <fieldset class="layui-elem-field layui-field-title j-field-box">
 	<legend>楼栋查询</legend>
 </fieldset>
-<blockquote class="layui-elem-quote">红色表示房屋存在欠租，无法申请注销</blockquote>
+<blockquote class="layui-elem-quote"></blockquote>
 <div class="page-toolbar j-page-toolbar clearfix">
       <form class="layui-form layui-form-pane" action="{:url('system/Index/cancellation')}?change_type={$changeType}" method="post" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
@@ -63,11 +63,29 @@
 		    ,$ = layui.$;
 		//判断当前异动类型改变提示文字
 		var changeType = '{$changeType}';
-		if(changeType==8){
-			$(".layui-elem-quote").text("红色表示房屋存在欠租，无法申请注销");
+		if(changeType==13){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租无法申请使用权变更");
 		}
-		if(changeType==3){
-			$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请暂停计租");
+		else if(changeType==9){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋正在异动中，两者均无法申请房屋调整");
+		}
+		else if(changeType==18){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋正在申请租约，橙色表示规定租金与计算租金不一致");
+		}
+		else if(changeType==1){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋正在异动中，两者均无法申请租金减免");
+		}
+		else if(changeType==17){
+			$(".layui-elem-quote").text("红色表示房屋存在欠租无法申请别字更正");
+		}
+		else if(changeType==11){
+			$(".layui-elem-quote").text("灰色表示正在异动中的房屋");
+		}
+		else if(changeType==4){
+			$(".layui-elem-quote").text("灰色表示房屋正在陈欠核销异动中");
+		}
+		else{
+			$(".layui-elem-quote").hide();
 		}
 		//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
 		//楼栋查询

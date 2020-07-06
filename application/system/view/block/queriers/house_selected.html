@@ -57,7 +57,7 @@
 					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请房屋调整");
 				}
 				else if(changeType==18){
-					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，橙色表示规定租金与计算租金不一致");
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋正在申请租约，橙色表示规定租金与计算租金不一致");
 				}
 				else if(changeType==1){
 					$(".layui-elem-quote").text("红色表示房屋存在欠租，灰色表示房屋已暂停计租，两者均无法申请租金减免");
@@ -67,6 +67,9 @@
 				}
 				else if(changeType==11){
 					$(".layui-elem-quote").text("灰色表示正在异动中的房屋");
+				}
+				else if(changeType==4){
+					$(".layui-elem-quote").text("灰色表示房屋正在陈欠核销异动中");
 				}
 				else{
 					$(".layui-elem-quote").hide();
