@@ -29,7 +29,8 @@
 			      </select>
 			  </div>
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
-	              <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+	              <input type="text" name="query_month" value="2020-06" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+	              <!-- <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input"> -->
 	          </div>
 	        </div>
 			
@@ -442,7 +443,7 @@
             elem: '#timeYear'
             ,btns: ['now', 'confirm']
             ,type: 'month'
-			,value: new Date() 
+			//,value: new Date() 
             ,isInitValue: true
             //,showBottom: false
 			,ready: function(date){

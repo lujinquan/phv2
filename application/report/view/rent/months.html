@@ -25,7 +25,8 @@
             </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
-            <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+            <input type="text" name="query_month" value="2020-06" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+            <!-- <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input"> -->
         </div>
         </div>
 
@@ -141,7 +142,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
             elem: '#query_month'
             ,type: 'month'
             ,btns: ['now', 'confirm']
-			,value: new Date() 
+			//,value: new Date() 
 			,isInitValue: true,
 			ready: function(date){
 			    $('.layui-laydate li').click(function () {

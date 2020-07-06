@@ -250,6 +250,7 @@ class Rent extends Model
     {
         //defined('INST');
         $currMonth = date('Ym');
+        $currMonth = 202006;
         $instid = $is_all_inst?$is_all_inst:session('admin_user.inst_id');
 
         //$instid = 5;
@@ -273,24 +274,32 @@ class Rent extends Model
             //$where[] = ['f.change_status','eq',1];
             $where[] = ['a.house_is_pause','eq',0];
             $where[] = ['a.house_pre_rent','>',0];
-            //$where[] = ['f.end_date','>',date('Ym')];
+            //$where[] = ['f.is_valid','eq',1];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-            $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,f.cut_rent,f.end_date,f.is_valid,d.ban_owner_id';
-            $houseArr = Db::name('house')->alias('a')->join('change_cut f','f.house_id = a.house_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->select();
-            
-            //halt($houseArr);
+            $fields = 'a.house_id,a.house_number,a.tenant_id,a.house_pre_rent,a.house_cou_rent,a.house_pump_rent,a.house_diff_rent,a.house_protocol_rent,d.ban_owner_id';
+            $houseArr = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','right')->where($where)->field($fields)->select();
+
+            $cutsArr = Db::name('change_cut')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.is_valid','eq',1],['c.ban_inst_id','in',config('inst_ids')[$instid]]])->column('a.house_id,a.cut_rent');
+            //halt($cutsArr);
             $str = '';
             foreach ($houseArr as $k => $v) {
                 // if($v['house_id'] == '14239'){
                 //     dump(1);
                 // }
                 // 减免租金
-                if($v['is_valid'] == 1){
-                    $rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
-                }elseif($v['is_valid'] === null){
-                    $rent_order_cut = 0;
+                // if($v['is_valid'] == 1){
+                //     $rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
+                // }
+                // // elseif($v['is_valid'] === null){
+                // //     $rent_order_cut = 0;
+                // // }
+                // else{
+                //     $rent_order_cut = 0;
+                // }
+                if($cutsArr && isset($cutsArr[$v['house_id']])){
+                   $rent_order_cut = $cutsArr[$v['house_id']]; 
                 }else{
-                    continue;
+                    $rent_order_cut = 0;
                 }
                 //$rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
                 // 租金订单id
@@ -330,7 +339,7 @@ class Rent extends Model
         // 如果没有，直接处理当前月的所有is_deal = 0 的租金订单
         }else{
             $date = date('Ym');
-            
+            $date = 202006;
             $where = [];
             $where[] = ['is_deal','eq',0];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_paid')->select()->toArray();
@@ -424,8 +433,11 @@ class Rent extends Model
         $row->pay_way = 1;
         $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
         $res = $row->save();
+        $now_date =  date('Ym');
 
-        if($row['rent_order_date'] < date('Ym')){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
+        $now_date = 202006; // 暂时调整
+
+        if($row['rent_order_date'] <$now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
             $RentRecycleModel = new RentRecycleModel;
             $RentRecycleModel->house_id = $row['house_id'];
             $RentRecycleModel->tenant_id = $row['tenant_id'];
@@ -461,6 +473,10 @@ class Rent extends Model
 
         $ctime = time();
         $cdate = date('Ym',$ctime);
+
+        $now_date =  date('Ym');
+        $now_date = 202006; // 暂时调整
+
         foreach($ids as $id){
             // 修改租金订单
             $row = $this->find($id);
@@ -473,7 +489,7 @@ class Rent extends Model
             $row->rent_order_paid = Db::raw('rent_order_receive');
             $res = $row->save();
 
-            if($row['rent_order_date'] < date('Ym')){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
+            if($row['rent_order_date'] < $now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
                 $RentRecycleModel = new RentRecycleModel;
                 $RentRecycleModel->house_id = $row['house_id'];
                 $RentRecycleModel->tenant_id = $row['tenant_id'];
