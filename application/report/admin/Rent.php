@@ -49,10 +49,14 @@ class Rent extends Admin
                 $temps = json_decode($tempData,true);
                 $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             }else{
-                $data['data'] = [];
+                $MonthReportModel = new MonthReportModel;
+                $temps = $MonthReportModel->makeMonthReport($query_month);
+                //halt($tempData);
+                $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
+                // $data['data'] = [];
             }
-            $temps = json_decode($tempData,true);
-            $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
+            //$temps = json_decode($tempData,true);
+            //$data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             $data['msg'] = '';
             $data['code'] = 0;
             //halt(json_encode($data));

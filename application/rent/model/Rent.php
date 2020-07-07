@@ -274,7 +274,7 @@ class Rent extends Model
         //halt(config('inst_ids')[$instid]);
         //halt($currMonthOrder);
         
-        if($currMonthOrder){
+        if(!$currMonthOrder){
             //$houseModel = new HouseModel;
             $where = [];
             $where[] = ['a.house_status','eq',1];
