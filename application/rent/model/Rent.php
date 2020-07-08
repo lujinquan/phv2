@@ -257,7 +257,6 @@ class Rent extends Model
     {
         //defined('INST');
         $currMonth = date('Ym');
-        $currMonth = 202006;
         $instid = $is_all_inst?$is_all_inst:session('admin_user.inst_id');
 
         //$instid = 5;
@@ -290,19 +289,7 @@ class Rent extends Model
             //halt($cutsArr);
             $str = '';
             foreach ($houseArr as $k => $v) {
-                // if($v['house_id'] == '14239'){
-                //     dump(1);
-                // }
-                // 减免租金
-                // if($v['is_valid'] == 1){
-                //     $rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
-                // }
-                // // elseif($v['is_valid'] === null){
-                // //     $rent_order_cut = 0;
-                // // }
-                // else{
-                //     $rent_order_cut = 0;
-                // }
+
                 if($cutsArr && isset($cutsArr[$v['house_id']])){
                    $rent_order_cut = $cutsArr[$v['house_id']]; 
                 }else{
@@ -346,7 +333,6 @@ class Rent extends Model
         // 如果没有，直接处理当前月的所有is_deal = 0 的租金订单
         }else{
             $date = date('Ym');
-            $date = 202006;
             $where = [];
             $where[] = ['is_deal','eq',0];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_paid')->select()->toArray();
@@ -442,8 +428,6 @@ class Rent extends Model
         $res = $row->save();
         $now_date =  date('Ym');
 
-        $now_date = 202006; // 暂时调整
-
         if($row['rent_order_date'] <$now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
             $RentRecycleModel = new RentRecycleModel;
             $RentRecycleModel->house_id = $row['house_id'];
@@ -477,12 +461,9 @@ class Rent extends Model
     public function payList($ids)
     {     
         $ji = 0;
-
         $ctime = time();
         $cdate = date('Ym',$ctime);
-
         $now_date =  date('Ym');
-        $now_date = 202006; // 暂时调整
 
         foreach($ids as $id){
             // 修改租金订单
