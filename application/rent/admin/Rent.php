@@ -37,10 +37,12 @@ class Rent extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
+
             // $res = $RentModel->configRentOrder(0); //生成本月份订单,参数1代表所有管段都生成，0代表只生成当前机构的订单
             // if(!$res){
             //     $this->error('本月份订单生成失败！');
             // }
+
          
             $where = $RentModel->checkWhere($getData,'rent');
             
