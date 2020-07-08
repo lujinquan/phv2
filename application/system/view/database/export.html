@@ -33,19 +33,17 @@
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
-            //,toolbar: '#toolbar'
-            //,defaultToolbar: ['filter']
             ,cols: [[ //表头
                 {type:'checkbox'}
                 ,{field: 'Name', title: '表名', minWidth: 200,align:'center'}
                 ,{field: 'Rows', title: '数据量', minWidth: 100,align:'center'}
                 ,{field: 'Data_length', title: '大小', minWidth: 180,align:'center', templet: function(d) {
-                    return bytesToSize(d.Data_length);
+                    return (d.Data_length > 0)?bytesToSize(d.Data_length):'0 k';
                 }}
                 ,{field: 'Data_free', title: '数据余量', minWidth: 180,align:'center',templet: function(d) {
-                    return bytesToSize(d.Data_free);
+                    return (d.Data_free > 0)?bytesToSize(d.Data_free):'0 k';             
                 }}
-                ,{field: 'Comment', title: '备注',Width: 300,align:'center'}
+                ,{field: 'Comment', title: '备注',Width: 300,align:'left'}
                 ,{title: '操作', minWidth: 260,Width: 260,align:'center', templet: '#buttonTpl'}
             ]]
         });
