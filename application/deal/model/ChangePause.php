@@ -87,6 +87,10 @@ class ChangePause extends SystemBase
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
+        // 检索楼栋使用性质
+        if(isset($data['ban_use_id']) && $data['ban_use_id']){
+            $where[] = ['d.ban_use_id','in',explode(',',$data['ban_use_id'])];
+        }
         // 检索申请时间(按月搜索)
         if(isset($data['ctime']) && $data['ctime']){
             $endTime = date('Y-m',strtotime('+1 month',strtotime($data['ctime'])));

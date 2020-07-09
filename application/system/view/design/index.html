@@ -57,25 +57,25 @@
                 ,{field: 'Name', title: '表名',width:200,align:'center'}
                 ,{field: 'Comment', title: '备注', width: 180,align:'center'}
                 // ,{field: 'Version', title: '版本', minWidth: 80,align:'center'}
-                ,{field: 'Rows', title: '数据量/条', sort: true,width: 100,align:'center',templet: function(d) {
+                ,{field: 'Rows', title: '数据量/条', sort: true,width: 120,align:'center',templet: function(d) {
                     return d.Rows;
                 }}
                 ,{field: 'Engine', title: '引擎',sort: true, width: 100,align:'center'}
                 ,{field: 'Data_length', title: '大小', sort: true,width: 100, align:'center',templet: function(d) {
-                    return bytesToSize(d.Data_length);
+                    return (d.Data_length > 0)?bytesToSize(d.Data_length):'0 k';
                 }}
                 // ,{field: 'Max_data_length', title: '可容最大数据量', sort: true,minWidth: 180,align:'center' ,templet: function(d) {
                 //     return bytesToSize(d.Max_data_length);
                 // }}
                 ,{field: 'Avg_row_length', title: '平均每条', sort: true,width: 120,align:'center' ,templet: function(d) {
-                    return bytesToSize(d.Avg_row_length);
+                    return (d.Avg_row_length > 0)?bytesToSize(d.Avg_row_length):'0 k';
                 }}
                 ,{field: 'Index_length', title: '索引大小', sort: true,width: 120,align:'center', templet: function(d) {
-                    return bytesToSize(d.Index_length);
+                    return (d.Index_length > 0)?bytesToSize(d.Index_length):'0 k';
                 }}
                 ,{field: 'Check_time', title: '最近检查表时间', width: 160,align:'center'}
                 ,{field: 'Data_free', title: '数据余量', width: 100,align:'center', templet: function(d) {
-                    return bytesToSize(d.Data_free);
+                    return (d.Data_free > 0)?bytesToSize(d.Data_free):'0 k'; 
                 }}
                 
                 ,{title: '操作', width: 120,align:'center', fixed: 'right',templet: '#buttonTpl'}

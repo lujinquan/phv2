@@ -37,10 +37,12 @@ class Rent extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
 
-            $res = $RentModel->configRentOrder(1); //生成本月份订单,参数1代表所有管段都生成，0代表只生成当前机构的订单
-            if(!$res){
-                $this->error('本月份订单生成失败！');
-            }
+
+            // $res = $RentModel->configRentOrder(0); //生成本月份订单,参数1代表所有管段都生成，0代表只生成当前机构的订单
+            // if(!$res){
+            //     $this->error('本月份订单生成失败！');
+            // }
+
          
             $where = $RentModel->checkWhere($getData,'rent');
             
@@ -140,26 +142,39 @@ class Rent extends Admin
         if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
 
         $lastDate = date('Ym',strtotime('-1 month'));
+
         $ptime = time();
 
         $RentModel = new RentModel;
         // 获取上期订单
         $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive,a.rent_order_paid');
 
-        $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.ptime','eq',0]])->column('a.house_id,a.rent_order_id,a.rent_order_paid,a.rent_order_receive');
+        $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.is_deal','eq',0]])->column('a.house_id,a.rent_order_id,a.rent_order_paid,a.rent_order_receive');
 
         $data = [];
         foreach($nowRents as $k => $v){
             // 过滤
             if(isset($lastRents[$k])){
                 if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
-                    if($lastRents[$k]['rent_order_receive'] == $lastRents[$k]['rent_order_paid']){
-                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
-                    }
+                    if($lastRents[$k]['rent_order_paid'] > 0){
+                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>$lastRents[$k]['rent_order_paid']];
+                    }else{
+                        $data[] = ['is_deal'=>1,'pay_way'=>0,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+                    } 
+                }
+                if($v['rent_order_receive'] != $lastRents[$k]['rent_order_receive']){
                     if($lastRents[$k]['rent_order_paid'] == 0){
                         $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
                     }
                 }
+                // if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
+                //     if($lastRents[$k]['rent_order_receive'] == $lastRents[$k]['rent_order_paid']){
+                //         $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>Db::raw('rent_order_receive')];
+                //     }
+                //     if($lastRents[$k]['rent_order_paid'] == 0){
+                //         $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+                //     }
+                // }
             }
             // if(in_array($key,$lastRents)){
 

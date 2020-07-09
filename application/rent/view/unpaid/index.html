@@ -8,10 +8,10 @@
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">   
          {if condition="in_array(343,$auths) || $Think.ADMIN_ROLE == 1"}
-         <a data-href="{:url('payList')}" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a>  
+         <a data-href="{:url('payList')}" title="需要勾选订单" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量缴费</button></a>  
          {/if}
          {if condition="in_array(341,$auths) || $Think.ADMIN_ROLE == 1"}
-         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回（本月）</button></a> 
+         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单，或本月处理的订单，例如本月收欠的订单" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回（本月）</button></a> 
          {/if} 
          </div>
      </div>
@@ -106,7 +106,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="{:url('pay')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="缴费" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">缴费</a>
+    <a href="{:url('pay')}?id={{ d.rent_order_id }}" title="提示：可以缴纳部分或全部欠费金额" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="缴费" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">缴费</a>
     <a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>

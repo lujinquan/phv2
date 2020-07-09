@@ -70,19 +70,16 @@ class House extends Admin
      */
     public function makeArchivesReport()
     {
-        //if ($this->request->isAjax()) {
-            set_time_limit(0);
-            $date = date('Ym');
-            $date = 202006;
+        set_time_limit(0);
+        $date = date('Ym');
 
-            $HouseReportModel = new HouseReportModel;
-            $HouseReportdata = $HouseReportModel->makeHouseReport($date);
-            file_put_contents(ROOT_PATH.'file/report/house/'.$date.'.txt', json_encode($HouseReportdata));
-            $data = [];
-            $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
-            $data['code'] = 1;
-            return json($data);
-        //}
+        $HouseReportModel = new HouseReportModel;
+        $HouseReportdata = $HouseReportModel->makeHouseReport($date);
+        file_put_contents(ROOT_PATH.'file/report/house/'.$date.'.txt', json_encode($HouseReportdata));
+        $data = [];
+        $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
+        $data['code'] = 1;
+        return json($data);
     }
 
     /**
@@ -154,10 +151,8 @@ class House extends Admin
     public function makeMonthPropertysReport()
     {
         if ($this->request->isAjax()) {
-            //set_time_limit(0);
 
             $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-            $date = 202006;
             
             $full_date = substr_replace($date,'-',4,0);
 

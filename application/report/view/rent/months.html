@@ -1,4 +1,5 @@
 <!-- 月租金报表 -->
+<div class="layui-layer layui-layer-loading" id="layui-layer1" type="loading" times="1" showtime="0" contype="string" style="z-index: 19891015; top: 293.5px; left: 1036.5px;"><div id="" class="layui-layer-content layui-layer-loading0"></div><span class="layui-layer-setwin"></span></div>
 <div class="j-table-content j-no-title j-reportform">
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" id="report-form">
@@ -25,8 +26,7 @@
             </select>
         </div>
         <div class="layui-input-inline" style="width:120px;padding-left:5px">
-            <input type="text" name="query_month" value="2020-06" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
-            <!-- <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input"> -->
+            <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
         </div>
         </div>
 
@@ -96,6 +96,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 						data :queryWhere,
 					   //回调函数
 						success:function(result){
+							layui.layer.closeAll();//结束加载中
 							var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
 							console.log('生成报表后查询成功！');
 							if(data.length==0)
@@ -648,7 +649,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
 			   //回调函数
 				success:function(jsondata){
-				
+					layui.layer.closeAll();//结束加载中
 					var data = JSON.parse(jsondata).data;//由JSON字符串转换为JSON对象
 					if(data.length==0)
 					{
@@ -686,6 +687,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			dataType:"json",
 		   //回调函数
 			success:function(result){
+				layui.layer.closeAll();//结束加载中
 				var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
 				if(data.length==0)
 				{
