@@ -74,7 +74,7 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             
             $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-//$date = 202006;
+
             $full_date = substr_replace($date,'-',4,0);
 
             //检查上月的报表是否生成
@@ -131,6 +131,7 @@ class Rent extends Admin
      */
     public function unpaidRent()
     {
+        $params = ParamModel::getCparams();
         if ($this->request->isAjax()) {
 
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
@@ -138,31 +139,33 @@ class Rent extends Admin
             $tempData = @file_get_contents(ROOT_PATH.'file/report/unpaid/'.$query_month.'.txt');
             if($tempData){ // 有缓存就读取缓存数据
                 $temps = json_decode($tempData,true);
-                //halt($temps);
                 $ownerid = input('param.owner_id/d',1); //默认查询市属
                 $instid = input('param.inst_id/d',INST); //默认查询当前机构
                 $useid = input('param.use_id/d',1); //默认查询住宅
-                //halt(config('inst_ids'));
-                $data = [];
+            //halt($temps);
+                $data = $result = [];
                 $total_cur_month_unpaid_rent = 0;
                 $total_before_month_unpaid_rent = 0;
                 $total_before_year_unpaid_rent = 0;
                 foreach ($temps as $k => $v) {
-                    if($v['owner'] != $ownerid || $v['use'] != $useid || !in_array($v['inst'],config('inst_ids')[$instid])){
-                        continue;
+                    //halt(in_array($v['inst'],config('inst_ids')[$instid]));
+                    if($v['owner'] == $ownerid && $v['use'] == $useid && in_array($v['inst'],config('inst_ids')[$instid])){
+                        $v['use'] = $params['uses'][$v['use']];
+                        if($v['curMonthUnpaidRent'] > 0){
+                            $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['curMonthUnpaidRent'],2);
+                        }
+                        if($v['beforeMonthUnpaidRent'] > 0){
+                            $total_before_month_unpaid_rent = bcadd($total_before_month_unpaid_rent,$v['beforeMonthUnpaidRent'],2);
+                        }
+                        if($v['beforeYearUnpaidRent'] > 0){
+                            $total_before_year_unpaid_rent = bcadd($total_before_year_unpaid_rent,$v['beforeYearUnpaidRent'],2);
+                        } 
+                        $result[$k] = $v;
                     }
-                    if($v['curMonthUnpaidRent'] > 0){
-                        $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['curMonthUnpaidRent'],2);
-                    }
-                    if($v['beforeMonthUnpaidRent'] > 0){
-                        $total_before_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeMonthUnpaidRent'],2);
-                    }
-                    if($v['beforeYearUnpaidRent'] > 0){
-                        $total_before_year_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeYearUnpaidRent'],2);
-                    }
+                    
                 }
 
-                $data['data'] = $temps;
+                $data['data'] = $result;
                 $data['total_cur_month_unpaid_rent'] = $total_cur_month_unpaid_rent;
                 $data['total_before_month_unpaid_rent'] = $total_before_month_unpaid_rent;
                 $data['total_before_year_unpaid_rent'] = $total_before_year_unpaid_rent;
@@ -265,6 +268,68 @@ class Rent extends Admin
             $data['code'] = 1;
             return json($data);
         }
+    }
+
+     /**
+     * [months 缴费明细报表]
+     * @return [type] [description]
+     */
+    public function paidRent()
+    {
+        if ($this->request->isAjax()) {
+
+            $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+            $query_month = str_replace('-','',$curMonth);
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/paid/'.$query_month.'.txt');
+            if($tempData){ // 有缓存就读取缓存数据
+                $temps = json_decode($tempData,true);
+                //halt($temps);
+                $ownerid = input('param.owner_id/d',1); //默认查询市属
+                $instid = input('param.inst_id/d',INST); //默认查询当前机构
+                $useid = input('param.use_id/d',1); //默认查询住宅
+                //halt(config('inst_ids'));
+                $data = [];
+                $total_cur_month_unpaid_rent = 0;
+                $total_before_month_unpaid_rent = 0;
+                $total_before_year_unpaid_rent = 0;
+                foreach ($temps as $k => $v) {
+                    if($v['owner'] != $ownerid || $v['use'] != $useid || !in_array($v['inst'],config('inst_ids')[$instid])){
+                        continue;
+                    }
+                    if($v['curMonthUnpaidRent'] > 0){
+                        $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['curMonthUnpaidRent'],2);
+                    }
+                    if($v['beforeMonthUnpaidRent'] > 0){
+                        $total_before_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeMonthUnpaidRent'],2);
+                    }
+                    if($v['beforeYearUnpaidRent'] > 0){
+                        $total_before_year_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeYearUnpaidRent'],2);
+                    }
+                }
+
+                $data['data'] = $temps;
+                $data['total_cur_month_unpaid_rent'] = $total_cur_month_unpaid_rent;
+                $data['total_before_month_unpaid_rent'] = $total_before_month_unpaid_rent;
+                $data['total_before_year_unpaid_rent'] = $total_before_year_unpaid_rent;
+                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_unpaid_rent'],$data['total_before_month_unpaid_rent'],$data['total_before_year_unpaid_rent']]);
+            }else{
+                $ReportModel = new ReportModel;
+                $result = $ReportModel->getPaidRent();
+                $data = [];
+                $data['data'] = $result['data'];
+                $data['total_cur_month_unpaid_rent'] = $result['total_cur_month_unpaid_rent'];
+                $data['total_before_month_unpaid_rent'] = $result['total_before_month_unpaid_rent'];
+                $data['total_before_year_unpaid_rent'] = $result['total_before_year_unpaid_rent'];
+                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_unpaid_rent'],$data['total_before_month_unpaid_rent'],$data['total_before_year_unpaid_rent']]);
+            }
+
+            $data['count'] = count($data['data']);
+            $data['code'] = 0;
+            $data['msg'] = '获取成功';
+            return json($data);
+            
+        }
+        return $this->fetch();
     }
 
     /**
