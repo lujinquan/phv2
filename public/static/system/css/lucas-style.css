@@ -456,8 +456,8 @@ opacity: .8color: #333;}
 .layui-layout-admin .layui-footer{ text-align: center;}
 /* 脚注样式 E */
 /* 打印样式 S*/
- #leaseprint_1_{font-size: 12px!important; color: #666; font-weight:100;font-family:'宋体'!important;}
- .print_1_ td,.print_1_ th{}
+ /* #leaseprint_1_{font-size: 12px!important; color: #666; font-weight:100;font-family:'宋体'!important;}
+ .print_1_ td,.print_1_ th{} */
 /* 打印样式 E */
 
 /* 租约 */
