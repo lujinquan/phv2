@@ -188,11 +188,27 @@ class ChangeLease extends SystemBase
             }
             
         }
+
+        // 重组applyText_other数据
+        $change_remark = self::where([['house_id','eq',$data['house_id']],['change_status','eq',1]])->order('ctime desc')->value('change_remark');
+        if(!$change_remark){
+            $change_remark = '';
+        }
+        
+        $data['change_remark'] = date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark;
+            
+//halt(date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark);
         $applyColumns = config('apply_columns');
         foreach($applyColumns as $c){
-            $data['data_json'][$c] = $data[$c];
+            // if($c == 'applyText_other'){
+            //     $data['data_json']['applyText_other'] = date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark;
+            // }else{
+                $data['data_json'][$c] = $data[$c];
+            //}
+            
             unset($data[$c]);
         }
+        $data['data_json']['applyText_other'] = $data['change_remark'];
 
         if($data['save_type'] == 'save'){ //保存
             $data['change_status'] = 2;
@@ -227,6 +243,9 @@ class ChangeLease extends SystemBase
         }else{
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
+        // if($row['change_status'] > 1){
+        //     $row['change_remark'] = self::where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ctime desc')->value('change_remark');
+        // }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);

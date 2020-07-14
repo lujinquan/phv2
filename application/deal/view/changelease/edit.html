@@ -615,19 +615,19 @@
 						<input type="hidden" class="applyText_other" name="Recorde" />
 					</div> -->
 					<div class="layui-row layui-form-item layui-col-space15 j-input-margin">
-						<div class="layui-col-md4">
+						<div class="layui-col-md4 remark">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
 								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
 									{volist name="params['leasetypes']" id="v"}
-									<option value="{$key}" {if condition="$data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
+									<option value="{$key}" {if condition="$data_info['data_json']['applyType'] == $v || $data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
 									{/volist}
 								</select>
 							</div>
 						</div>
 						<div class="layui-col-md6">
-							<input type="text" id="editing_reason" name="change_remark" value="{$data_info['change_remark']}"  placeholder="编辑原因" autocomplete="off" class="layui-input">
+							<!-- <input type="text" id="editing_reason" name="change_remark" value="{$data_info['change_remark']}"  placeholder="编辑原因" autocomplete="off" class="layui-input"> -->
 							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
 							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
 						</div>
@@ -637,6 +637,14 @@
 				</td>
 			</tr>
 		</tbody></table>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label"><i class="red"></i>换租原因</label>
+				<div class="j-input-inline">
+					<input type="text" id="change_reasons" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
 		<!-- 约定事项 -->
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>约定事项</legend>
@@ -807,6 +815,13 @@
 			$('#applyRentName').val(res.data.tenant_info.tenant_name);
 			$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
 			$('#applyRentNumber').val(res.data.tenant_info.tenant_card);
+			
+			$('.remark p').remove();
+			console.log(res.data.change_remark);
+		    var recorde_array = res.data.change_remark.split(';');
+			for(var i = 0,length = recorde_array.length;i < length; i++){
+				$('.remark').append($('<p class="layui-text">'+recorde_array[i]+'</p>'));
+			}
 			// $('#applyRentName1').val('监护人 姓名:张三');
 			// $('#applyRentNumber1').val('监护人身份证号:4203...');
 			$('#applyYear').val(res.data.data_json.applyYear);
