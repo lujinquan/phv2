@@ -649,7 +649,7 @@
 							</div>
 						</div>
 						<div class="layui-col-md6">
-							<input type="text" id="editing_reason" name="change_remark" readonly value="{$data_info['change_remark']}"  placeholder="" autocomplete="off" class="layui-input">
+							<input type="text" id="change_remark" name="change_remark" readonly value="{$data_info['change_remark']}"  placeholder="" autocomplete="off" class="layui-input">
 							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
 							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
 						</div>
@@ -843,6 +843,11 @@
 			$('#applyRentName').val(res.data.tenant_info.tenant_name);
 			$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
 			$('#applyRentNumber').val(res.data.tenant_info.tenant_card);
+			if(res.data.id < 10342){
+				$('#editing_reason').val(res.data.data_json.applyReason);
+				$('#change_remark').val(res.data.data_json.applyReason);
+			}
+			
 			// $('#applyRentName1').val('监护人 姓名:张三');
 			// $('#applyRentNumber1').val('监护人身份证号:4203...');
 			$('#applyYear').val(res.data.data_json.applyYear);
