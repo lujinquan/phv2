@@ -203,7 +203,8 @@ class SystemUser extends Model
             session('admin_user', $login);
             session('admin_user_sign', $this->dataSign($login));
             // 缓存用户表基础数据
-            $users = $this->with('role')->where([['status','eq','1']])->select();
+            //$users = $this->with('role')->where([['status','eq','1']])->select();
+            $users = $this->with('role')->select();
             $usersArr = [];
             foreach($users as $v){
                 $usersArr[$v['id']] = $v;
