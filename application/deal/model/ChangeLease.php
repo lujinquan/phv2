@@ -244,7 +244,7 @@ class ChangeLease extends SystemBase
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
         // if($row['change_status'] > 1){
-        //     $row['change_remark'] = self::where([['house_id','eq',$row['house_id']],['change_status','eq',1]])->order('ctime desc')->value('change_remark');
+        //     $row['change_remark'] = self::where([['house_id','eq',$row['house_id']],['change_status','eq',1],['id','<',$id]])->order('ctime desc')->value('change_remark');
         // }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);

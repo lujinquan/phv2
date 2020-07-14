@@ -651,7 +651,7 @@
 							{/if}
 						</div>
 						<div class="layui-col-md6">
-							<!-- <input type="text" id="change_remark" name="change_remark" readonly value="{$data_info['change_remark']}"  placeholder="" autocomplete="off" class="layui-input"> -->
+							<!-- <input type="text" id="change_remark" name="change_remark" readonly value=""  placeholder="" autocomplete="off" class="layui-input"> -->
 							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
 							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
 						</div>
@@ -857,14 +857,14 @@
 			// 
 			// 	$('#change_remark').val(res.data.data_json.applyReason);
 			// }
-			console.log(res.data.change_remark);
+
 			$('.remark p').remove();
 		    var recorde_array = res.data.change_remark.split(';');
 			for(var i = 0,length = recorde_array.length;i < length; i++){
-				$('.remark').append($('<p class="layui-text">'+recorde_array[i]+'</p>'));
+				$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
 			}
-			var obj = {"1":"老证换新证","2":"遗失补发","3":"亲属转让","4":"正常过户","5":"新发租","6":"其他"};
-			
+			var 
+			obj = {"1":"老证换新证","2":"遗失补发","3":"亲属转让","4":"正常过户","5":"新发租","6":"其他"};
 			if(res.data.id > 10342){
 				if(res.data.data_json.applyType < 7){
 					$('#editing_reason').val(obj[res.data.data_json.applyType]);

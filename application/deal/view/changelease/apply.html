@@ -625,6 +625,7 @@
 									{/volist}
 								</select>
 							</div>
+							
 						</div>
 						<div class="layui-col-md6 hide">
 							<!-- <input type="text" id="editing_reason" name="change_remark" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input"> -->
@@ -833,7 +834,7 @@
                         		$('.remark p').remove();
 							    var recorde_array = res.data.house.change_remark.split(';');
 								for(var i = 0,length = recorde_array.length;i < length; i++){
-									$('.remark').append($('<p class="layui-text">'+recorde_array[i]+'</p>'));
+									$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
 								}
 
                             	

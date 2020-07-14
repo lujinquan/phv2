@@ -630,6 +630,8 @@
 							<!-- <input type="text" id="editing_reason" name="change_remark" value="{$data_info['change_remark']}"  placeholder="编辑原因" autocomplete="off" class="layui-input"> -->
 							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
 							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
+							<input type="hidden" class="applyText_other" name="applyText_other" />
+							<input type="hidden" class="applyText_other" name="change_remark" />
 						</div>
 					</div>
 					
@@ -819,8 +821,8 @@
 			$('.remark p').remove();
 			console.log(res.data.change_remark);
 		    var recorde_array = res.data.change_remark.split(';');
-			for(var i = 0,length = recorde_array.length;i < length; i++){
-				$('.remark').append($('<p class="layui-text">'+recorde_array[i]+'</p>'));
+			for(var i = 1,length = recorde_array.length;i < length; i++){
+				$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
 			}
 			// $('#applyRentName1').val('监护人 姓名:张三');
 			// $('#applyRentNumber1').val('监护人身份证号:4203...');
