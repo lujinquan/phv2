@@ -20,7 +20,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>身份证号</label>
 			<div class="j-input-inline">
-				<input type="text" name="tenant_card" lay-verify="required|identity"  value="" autocomplete="off" class="layui-input">
+				<input type="text" name="tenant_card" lay-verify="required|identity_extra"  value="" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -94,6 +94,14 @@
 			$ = layui.$,
 			upload = layui.upload,
 			form = layui.form;
+		form.verify({
+			identity_extra: function(value, item){ //value：表单的值、item：表单的DOM对象			    
+			    if(/(^\d{15}$)|(^\d{16}$)|(^\d{17}(x|X|\d)$)/.test(value) || value=='死亡'){    	
+			    }else{
+			    	return '身份证格式不正确';
+			    }
+			}
+		});   	
 
 		//身份证正面
 		upload.render({

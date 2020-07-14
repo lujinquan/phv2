@@ -832,10 +832,15 @@
                             		
                         		/*by lucas 2020-07-14 10:08:57*/
                         		$('.remark p').remove();
-							    var recorde_array = res.data.house.change_remark.split(';');
-								for(var i = 0,length = recorde_array.length;i < length; i++){
-									$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
-								}
+                        		//console.log(res.data.house.change_remark);
+                        		if(res.data.house.change_remark){
+                        			var recorde_array = res.data.house.change_remark.split(';');
+
+									for(var i = 0,length = recorde_array.length;i < length; i++){
+										$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
+									}
+                        		}
+							    
 
                             	
                             	$('#applyRoom7_data9').val(res.data.house.pump_cost);
