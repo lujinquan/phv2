@@ -15,6 +15,7 @@ namespace app\house\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
+use app\common\model\SystemTcpdf;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
@@ -23,8 +24,119 @@ use app\deal\model\Process as ProcessModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
+
 class House extends Admin
 {
+    public function demo(){
+        $data = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.rent_order_id','eq',0]])->field('a.*,b.house_number')->select();
+        halt($data);
+        // $str = '';
+
+        // foreach ($data as $k => $v) {
+
+        //     if($cutsArr && isset($cutsArr[$v['house_id']])){
+        //        $rent_order_cut = $cutsArr[$v['house_id']]; 
+        //     }else{
+        //         $rent_order_cut = 0;
+        //     }
+        //     //$rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
+        //     // 租金订单id
+        //     $rent_order_number = $v['house_number'].$v['ban_owner_id'].$currMonth;
+
+        //     // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
+        //     $rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
+        //     // 待入库的数据
+        //     $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id']. "," . time() . "),";
+        // }
+
+        // //halt($str);
+        // $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
+    }
+
+    public function print()
+    {
+        $html = <<<EOF
+<!DOCTYPE html>
+<title>JS 分页批量打印解决方案(只支持IE)</title>
+<head>
+    <script language="javascript">
+        function printPrieview() {
+            window.print(); 
+        }
+    </script>
+    <style media=print>
+        .NoPrint {
+            display: none;
+        }
+
+        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';}
+        .j-print-title{width: 310px; text-align: center;font-size: 20px;padding: 0 0 10px;}
+        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;}
+        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;}
+        .j-print-table td.j-print-90{width: 90px;}
+        .j-print-table td.j-print-120{width: 120px;}
+        .j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
+    </style>
+    <style>
+        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';}
+        .j-print-title{width: 310px; text-align: center;font-size: 20px;padding: 0 0 10px;}
+        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;}
+        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;}
+        .j-print-table td.j-print-90{width: 90px;}
+        .j-print-table td.j-print-120{width: 120px;}
+        .j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
+    </style>
+</head>
+<body>
+    <div class="PageNext">
+        <div class="j-print-title">缴费单</div>
+        <table class="j-print-table">
+            <tr>
+                <td class="j-print-90" align="left">
+                  租户名
+                </td>
+                <td colspan="2"  align="left">
+                    刘道荣
+                </td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">租户地址</td>
+                <td colspan="2" align="left">新生里还建楼1栋</td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">历史欠租</td>
+                <td class="j-print-120" align="left">1667.2</td>
+                <td rowspan="3" align="left">
+                    <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
+                </td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">本期欠租</td>
+                <td class="j-print-120" align="left">97.5</td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">合计欠租</td>
+                <td class="j-print-120" align="left">16672</td>
+            </tr>
+            <tr>
+                <td class="j-print-con" colspan="3" align="left">
+                    尊敬的租户：
+                    <br/>
+                      可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
+                    <br/>
+                      特此通知，谢谢合作！
+                </td>
+            </tr>
+        </table>
+    </div>
+        
+</body>
+</html>
+EOF;
+//echo $html;
+        $SystemTcpdf = new SystemTcpdf;
+        $SystemTcpdf->example_000($html,[100,100]);
+    }
 
     public function index()
     {
@@ -32,7 +144,7 @@ class House extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-           
+            
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
@@ -496,6 +608,17 @@ class House extends Admin
 
     }
 
+    /**
+     * excel导出
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-05-11 16:30:36
+     * @return  返回值  
+     * @version 版本  1.0
+     */
     public function export()
     {   
         if ($this->request->isAjax()) {
@@ -524,8 +647,7 @@ class House extends Admin
                     array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
                     array('title' => '楼栋编号', 'field' => 'ban_number', 'width' => 12 ,'type' => 'string'),
                     array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
-                    array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
-                    
+                    array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),                    
                     array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
                     array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
                     array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
