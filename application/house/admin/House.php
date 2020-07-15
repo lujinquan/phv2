@@ -56,48 +56,22 @@ class House extends Admin
     public function print()
     {
         $html = <<<EOF
-<!DOCTYPE html>
-<title>JS 分页批量打印解决方案(只支持IE)</title>
-<head>
-    <script language="javascript">
-        function printPrieview() {
-            window.print(); 
-        }
-    </script>
-    <style media=print>
-        .NoPrint {
-            display: none;
-        }
-
-        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';}
-        .j-print-title{width: 310px; text-align: center;font-size: 20px;padding: 0 0 10px;}
-        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;}
-        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;}
-        .j-print-table td.j-print-90{width: 90px;}
-        .j-print-table td.j-print-120{width: 120px;}
-        .j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
-    </style>
     <style>
-        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';}
-        .j-print-title{width: 310px; text-align: center;font-size: 20px;padding: 0 0 10px;}
-        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;}
-        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;}
+        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';width: 310px;}
+        .j-print-title{width: 310px; font-size: 20px;padding: 0 0 10px;font-weight: bold;display: inline-block;text-align: center;}
+        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;display: inline-block;padding:6px;}
+        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;height:20px;line-height: 20px;}
         .j-print-table td.j-print-90{width: 90px;}
-        .j-print-table td.j-print-120{width: 120px;}
-        .j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
+        .j-print-table td.j-print-120{width: 103px;}
+        .j-print-table td.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;line-height: 18px;font-size: 12px;}
+        .j-print-table td.j-print-con span{line-height: 18px;display:block;}
     </style>
-</head>
-<body>
     <div class="PageNext">
-        <div class="j-print-title">缴费单</div>
+        <div class="j-print-title">缴费单<br/></div>
         <table class="j-print-table">
             <tr>
-                <td class="j-print-90" align="left">
-                  租户名
-                </td>
-                <td colspan="2"  align="left">
-                    刘道荣
-                </td>
+                <td class="j-print-90" align="left">租户名</td>
+                <td colspan="2"  align="left">刘道荣</td>
             </tr>
             <tr>
                 <td class="j-print-90" align="left">租户地址</td>
@@ -106,7 +80,7 @@ class House extends Admin
             <tr>
                 <td class="j-print-90" align="left">历史欠租</td>
                 <td class="j-print-120" align="left">1667.2</td>
-                <td rowspan="3" align="left">
+                <td rowspan="3">
                     <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
                 </td>
             </tr>
@@ -120,22 +94,17 @@ class House extends Admin
             </tr>
             <tr>
                 <td class="j-print-con" colspan="3" align="left">
-                    尊敬的租户：
-                    <br/>
-                      可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
-                    <br/>
-                      特此通知，谢谢合作！
+					<span>尊敬的租户：</span>
+					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>
+					<span>特此通知，谢谢合作！</span>  
                 </td>
             </tr>
         </table>
     </div>
-        
-</body>
-</html>
 EOF;
-//echo $html;
+//echo $html;exit;
         $SystemTcpdf = new SystemTcpdf;
-        $SystemTcpdf->example_000($html,[100,100]);
+        $SystemTcpdf->example_000($html,[95,95]);
     }
 
     public function index()

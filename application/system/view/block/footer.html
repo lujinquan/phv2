@@ -4,10 +4,80 @@
 {else /}
         </div>
     </div>
-    {if condition="false"}
+    {if condition="true"}
+	<style>
+		.layui-layer-title{padding: 0 40px 0 0px;text-align: center;}
+		.j-versions{padding:0 10px 10px;}
+		.j-versions .j-title{margin-top: 20px;}
+		.j-versions .j-title .fl{color: #0084FF;}
+		.j-versions .j-title .fl i{display: inline-block;width: 4px;height: 4px;background:#0084FF;border-radius: 50%;margin-right: 5px;position: relative;top:-3px}
+		.j-versions .j-title .fr{color: #838383;}
+		.j-versions .j-label{font-weight: 500;margin: 10px 0 5px;color: #494949;}
+		.j-versions .j-list{color: #838383;line-height: 22px;}
+		.j-versions .j-con{font-size: 10px;}
+	</style>
     <div class="layui-footer footer">
-       楚天新媒 © <a href="/" target="_blank">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label>
+       <!-- 楚天新媒 © <a href="/" target="_blank">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label> -->
+	   © {:config('hisiphp.name')} <a data-method="offset" data-type="rb" class="j-version" href="javascript:;">v{:config('hisiphp.main_version')}</a>
     </div>
+	<div class="j-versions">
+		<ul>
+			<li>
+				<dl class="clearfix">
+					<dt class="j-title clearfix">
+						<span class="fl"><i></i>武房公房系统v2.0.01更新提醒</span>
+						<span class="fr">2020-01-09</span>
+					</dt>
+					<dd class="j-con clearfix">
+						<dl class="clearfix">
+							<dt class="j-label clearfix">[优化]</dt>
+							<dd class="j-list clearfix">
+								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+							</dd>
+							<dd class="j-list clearfix">
+								2.租金减免年审异动：新增租金减免年审异动，房管员
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt class="j-label clearfix">[功能迭代]</dt>
+							<dd class="j-list clearfix">
+								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+							</dd>
+							<dd class="j-list clearfix">
+								2.租金减免年审异动：新增租金减免年审异动，房管员
+							</dd>
+						</dl>
+					</dd>
+				</dl>
+				<dl class="clearfix">
+					<dt class="j-title clearfix">
+						<span class="fl"><i></i>武房公房系统v2.0.02更新提醒</span>
+						<span class="fr">2020-01-09</span>
+					</dt>
+					<dd class="j-con clearfix">
+						<dl class="clearfix">
+							<dt class="j-label clearfix">[优化]</dt>
+							<dd class="j-list clearfix">
+								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+							</dd>
+							<dd class="j-list clearfix">
+								2.租金减免年审异动：新增租金减免年审异动，房管员
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt class="j-label clearfix">[功能迭代]</dt>
+							<dd class="j-list clearfix">
+								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+							</dd>
+							<dd class="j-list clearfix">
+								2.租金减免年审异动：新增租金减免年审异动，房管员
+							</dd>
+						</dl>
+					</dd>
+				</dl>
+			</li>
+		</ul>
+	</div>
     {/if}
 </div>
 </body>
@@ -49,6 +119,21 @@
 		            }).find("li:first").appendTo($uList);
 		        });
 		    }
+			// 
+			$(".j-version").click(function(){
+			  layer.open({
+			        type: 1
+					,title: '武房公房系统版本更新日志'
+			        ,offset: 'rb'
+			        ,content: $('.j-versions')
+			        ,btn: false
+					,area: ['360px', '440px']
+			        ,shade: 0 //不显示遮罩
+			        ,yes: function(){
+			          layer.closeAll();
+			        }
+			      });
+		  })
 		});
     });
 </script>
