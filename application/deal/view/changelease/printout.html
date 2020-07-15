@@ -665,12 +665,21 @@
             //         $('#'+name_id_print).text(data[key] == "0"?" " : data[key]);
             //     }
             // }
-  
-            var recorde_array = res.data.change_remark.split(';');
+            if(res.data.change_remark){
+                var recorde_array = res.data.change_remark.split(';');
             for(var i = 0,length = recorde_array.length;i < length; i++){
-                $('#print_1_Text_other').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
+                    $('#print_1_Text_other').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
+                }
+            }else{
+                if(res.data.data_json.applyType < 7){
+                    $('#print_1_Text_other').html(res.data.data_json.applyYear+'年'+res.data.data_json.applyMonth+'月'+res.data.data_json.applyDay+'日 '+params.leasetypes[res.data.data_json.applyType]);
+                }else{
+                    $('#print_1_Text_other').html(res.data.data_json.applyYear+'年'+res.data.data_json.applyMonth+'月'+res.data.data_json.applyDay+'日 '+res.data.data_json.applyType);
+                }
+               
             }
-			//$('#print_1_Text_other').html(res.data.data_json.applyYear+'-'+res.data.data_json.applyMonth+'-'+res.data.data_json.applyDay+params.leasetypes[res.data.data_json.applyType]);
+            
+			
 
 			$('#print_1_Room1_data1').text(res.data.data_json.applyRoom1_data1);
 			$('#print_1_Room1_data2').text(res.data.data_json.applyRoom1_data2);
