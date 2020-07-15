@@ -846,12 +846,16 @@
 			$('#tenant_id').val(res.data.house.tenant_id);
 			$('#tenant_name').val(res.data.house.tenant_name); */
 			$('#rent_straight').val(res.data.szno);
-			$('#applyAddress').val(res.data.ban_info.ban_address);
-			$('#applyStruct').val(params.structs[res.data.ban_info.ban_struct_id]);
+			$('#applyAddress').val(res.data.data_json.applyAddress);
+			$('#applyStruct').val(res.data.data_json.applyStruct);
+			//$('#applyStruct').val(params.structs[res.data.ban_info.ban_struct_id]);
 			$('#applyHouseFloor').val(res.data.data_json.applyHouseFloor);
 			$('#applyLiveFloor').val(res.data.data_json.applyLiveFloor);
-			$('#applyRentName').val(res.data.tenant_info.tenant_name);
-			$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
+			$('#applyRentName').val(res.data.data_json.applyRentName);
+			$('#applyRentTel').val(res.data.data_json.applyRentTel);
+			//$('#applyRentNumber').val(res.data.data_json.tenant_card);
+			//$('#applyRentName').val(res.data.tenant_info.tenant_name);
+			//$('#applyRentTel').val(res.data.tenant_info.tenant_tel);
 			$('#applyRentNumber').val(res.data.tenant_info.tenant_card);
 			// if(res.data.id < 10342){
 			// 
