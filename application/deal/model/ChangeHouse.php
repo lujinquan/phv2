@@ -347,9 +347,19 @@ class ChangeHouse extends SystemBase
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
+                if($changeRow['change_status'] == 3){ 
+                    $change_imgs = trim($changeRow['change_imgs']);
+                    if(isset($data['HouseChangeState']) && $data['HouseChangeState']){
+                        $change_imgs .= ','.implode(',',$data['HouseChangeState']);
+                    }
+                    if(isset($data['HouseChangeExtra']) && $data['HouseChangeExtra']){
+                        $change_imgs .=  ','.implode(',',$data['HouseChangeExtra']);
+                    }
+                    $changeUpdateData['change_imgs'] = $change_imgs;
 
+                }
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];

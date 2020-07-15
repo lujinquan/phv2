@@ -615,21 +615,23 @@
 						<input type="hidden" class="applyText_other" name="Recorde" />
 					</div> -->
 					<div class="layui-row layui-form-item layui-col-space15 j-input-margin">
-						<div class="layui-col-md4">
+						<div class="layui-col-md4 remark">
 							<label class="j-form-label"><i class="red">*</i><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
 								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
 									{volist name="params['leasetypes']" id="v"}
-									<option value="{$key}">{$v}</option>
+									<option value="{$v}">{$v}</option>
 									{/volist}
 								</select>
 							</div>
+							
 						</div>
 						<div class="layui-col-md6 hide">
-							<input type="text" id="editing_reason" name="change_remark" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input">
-							<!-- <input type="hidden" class="applyText_other" name="applyText_other" />
-							<input type="hidden" class="applyText_other" name="applyText_other" /> -->
+							<!-- <input type="text" id="editing_reason" name="change_remark" value=""  placeholder="编辑原因" autocomplete="off" class="layui-input"> -->
+							<input type="hidden" class="applyText_other" name="applyText_other" />
+							<input type="hidden" class="applyText_other" name="change_remark" />
+							<!-- <input type="hidden" class="applyText_other" name="applyText_other" /> -->
 						</div>
 					</div>
 					
@@ -637,6 +639,14 @@
 				</td>
 			</tr>
 		</tbody></table>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md8">
+				<label class="j-form-label"><i class="red"></i>换租原因</label>
+				<div class="j-input-inline">
+					<input type="text" id="change_reasons" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
 		<!-- 约定事项 -->
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>约定事项</legend>
@@ -714,14 +724,7 @@
 			<div class="layui-upload">
 			</div>
 		</div>
-		<!-- <div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md8">
-				<label class="j-form-label"><i class="red">*</i>换租原因</label>
-				<div class="j-input-inline">
-					<input type="text" id="change_reasons" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-		</div> -->
+		
 		{include file="common/submit"}
 		<!-- <div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
@@ -752,11 +755,13 @@
 			,layer = layui.layer;
 		//监听租约申请理由
 		form.on('select(reason)', function(data){
+			//console.log('选中的value值',data.value); //得到select原始DOM对象
 			if(data.value == 3  || data.value == 4 || data.value == 6){
 				$(".j-input-margin .layui-col-md6").show();
 			}else{
 				$(".j-input-margin .layui-col-md6").hide();
 			}
+
 		});
 		//获取房屋查询器
 		 $(".layui-form").on('click','.j-house_number',function(){
@@ -825,6 +830,19 @@
                             		$('#applyRoom7_data8').val(0);
                             	}
                             		
+                        		/*by lucas 2020-07-14 10:08:57*/
+                        		$('.remark p').remove();
+                        		//console.log(res.data.house.change_remark);
+                        		if(res.data.house.change_remark){
+                        			var recorde_array = res.data.house.change_remark.split(';');
+
+									for(var i = 0,length = recorde_array.length;i < length; i++){
+										$('.remark').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
+									}
+                        		}
+							    
+
+                            	
                             	$('#applyRoom7_data9').val(res.data.house.pump_cost);
                             	$('#applyRoom20_data2').val(res.data.house.house_use_area);
                             	$('#applyRoom20_data3').val(res.data.house.total_lease_area);
@@ -971,83 +989,16 @@
                             				break;
                             		}
                             	}
-                            	
-                            	/* $('.input_remark').off('blur');
-                                $('.input_remark').blur(function(){
-                                	var str_new = $('.remark label').text() + '&nbsp&nbsp'
-                                	 + $('.remark select option:selected').text() + '&nbsp&nbsp'
-                                	 + $('.input_remark').val();
-                                	
-                                	if(res.data.house.Recorde != ''){
-                                		str_new = str_new + ';' + res.data.house.Recorde;
-                                	}
-                                	$('.applyText_other').val(str_new);
-                                	console.log(str_new);
-                                });
-                            		
-                            	$('.remark p').remove();
-                                var recorde_array = res.data.house.Recorde.split(';');
-                            	for(var i = 0,length = recorde_array.length;i < length; i++){
-                            		$('.remark').append($('<p>'+recorde_array[i]+'</p>'));
-                            	}
-                                $('.remark select').off('change');
-                                $('.remark select').change(function(){
-                                	if($(this).val() == "3" || $(this).val() == "4"){
-                                		$.get('/ph/Api/lease_use?HouseID'+$('#leaseHouseInput').val(),function(res){
-                                			res = JSON.parse(res);
-                                			$('.input_remark').val(res.data.recorde).show();
-                                		})
-                                	}else if($(this).val() == "6"){
-                                		$('.input_remark').show();
-                                	}else{
-                                		$('.input_remark').hide();
-                                	}
-                            		
-                            		
-                                	var str_new = $('.remark label').text() + '&nbsp&nbsp' 
-                                	+ $('.remark select option:selected').text() + '&nbsp&nbsp' 
-                                	+ $('.input_remark').val();
-                                	
-                                	if(res.data.house.Recorde != ''){
-                                		str_new = str_new + ';' + res.data.house.Recorde;
-                                	}
-                                	$('.applyText_other').val(str_new);
-                                	//console.log(str_new);
-                                }) */
+
                             })
                             
-                            
-                            /* var data = $('#MyForm').serializeArray();;
-                            var formData = fileTotall.getArrayFormdata();
-                            if(!formData){
-                            	formData = new FormData();
-                            }
-                            for(var i = 0;i < data.length;i++){
-                            	formData.append(data[i].name,data[i].value);
-                            }
-                            		
-                            formData.append('houseID',$('#leaseHouseInput').val());
-                            formData.append('applyReason',$('.applyReason').val()); 
-                            $.ajax({
-                                type: "post",
-                                url: "/ph/LeaseApply/add",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function(res) {
-                                    res = JSON.parse(res);
-                                    layer.msg(res.msg,{time:4000});
-                                    if(res.retcode == '2000'){
-                                        location.reload();
-                                    }
-                                }
-                            }); */
                             
 						},btn2: function(index, layero){
 							layer.close(index);
 						}
 			 });
 		})	
+
 		//身份证
 		upload.render({
 			elem: '#upload_img3',

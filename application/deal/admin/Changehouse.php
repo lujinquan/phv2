@@ -42,6 +42,13 @@ class Changehouse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            $file = [];
+            if(isset($data['HouseChangeExplain']) && $data['HouseChangeExplain']){ // 书面申请报告  
+                $file = array_merge($file,$data['HouseChangeExplain']);
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangeHouseModel;
             //halt($data);
             // 数据过滤
@@ -133,6 +140,11 @@ class Changehouse extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $file = [];
+            if(isset($data['HouseChangeExplain']) && $data['HouseChangeExplain']){ // 书面申请报告  
+                $file = array_merge($file,$data['HouseChangeExplain']);
+            }
+            $data['file'] = $file;
             $ChangeModel = new ChangeHouseModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

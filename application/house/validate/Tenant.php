@@ -11,6 +11,7 @@
 namespace app\house\validate;
 
 use think\Validate;
+use app\house\model\Tenant as TenantModel;
 use app\deal\model\ChangeNew as ChangeNewModel;
 
 /**
@@ -25,19 +26,38 @@ class Tenant extends Validate
         'tenant_name|租户姓名' => 'require',
         'tenant_tel|联系电话' => 'require|number',
         //'tenant_card|身份证号' => 'require|idCard|unique:tenant',
-        'tenant_card|身份证号' => 'require|unique:tenant',
+        'tenant_card|身份证号' => 'require|theonly',
     ];
 
     //定义验证提示
     protected $message = [
         'tenant_card.idCard' => '身份证格式不正确',
-        'tenant_card.unique' => '身份证号已在系统中存在',
+        //'tenant_card.unique' => '身份证号已在系统中存在',
     ];
 
     protected function isAllowChange($value, $rule='', $data)
     { 
         $row = ChangeNewModel::where([['tenant_id','in',$value],['change_status','>',2]])->value('id');
         return $row?'该楼栋已经在新发租异动中':true;  
+    }
+
+    protected function theonly($value, $rule='', $data)
+    {
+        if($value == '死亡'){
+            return true;
+        }else{
+            $count = TenantModel::where([['tenant_card','eq',$value],['tenant_status','eq',1]])->count();
+            if(isset($data['tenant_id'])){
+                if($count > 1){
+                    return '身份证号已在系统中存在';
+                }
+            }else{
+                if($count > 0){
+                    return '身份证号已在系统中存在';
+                }
+            }
+        }
+        return true;  
     }
 
     //添加
