@@ -26,8 +26,8 @@ class House extends Validate
         'house_id' => 'isAllowChange',
         'ban_id|楼栋编号' => 'require|existInBan',
         'tenant_id|租户编号' => 'require|existInTenant',
-        'house_unit_id|单元号' => 'require|number|checkUnitsInBan',
-        'house_floor_id|楼层号' => 'require|number|checkFloorsInBan',
+        'house_unit_id|居住单元号' => 'require|number|checkUnitsInBan',
+        'house_floor_id|居住楼层号' => 'require|number|checkFloorsInBan',
         'house_use_id|使用性质' => 'require|number',
         'house_oprice|房屋原价' => 'gt:0',
         'house_area|建筑面积' => 'gt:0',
@@ -42,13 +42,13 @@ class House extends Validate
     protected function checkUnitsInBan($value, $rule='', $data)
     {
         $row = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_units');
-        return $row < $value ? '单元号超出总单元数'.$row : true ;  
+        return $row < $value ? '居住单元号超出总单元数'.$row : true ;  
     }
 
     protected function checkFloorsInBan($value, $rule='', $data)
     { 
         $row = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_floors');
-        return $row < $value ? '楼层号超出总楼层数'.$row : true ;
+        return $row < $value ? '居住楼层号超出总楼层数'.$row : true ;
     }
 
     protected function isAllowChange($value, $rule='', $data)

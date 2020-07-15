@@ -626,19 +626,61 @@
 			console.log(res);
 			$('#print_1_picCode').show().prop('src',res.data.qrcode);
 			$('#print_1_NO').text(res.data.szno);
-			$('#print_1_Address').text(res.data.ban_info.ban_address);
+            //$('#print_1_Address').text(res.data.ban_info.ban_address);
+			$('#print_1_Address').text(res.data.data_json.applyAddress);
 			$('#print_1_Struct').text(params.structs[res.data.ban_info.ban_struct_id]);
 			$('#print_1_HouseFloor').text(res.data.data_json.applyHouseFloor);
 			$('#print_1_LiveFloor').text(res.data.data_json.applyLiveFloor);
 			$('#print_1_RentName').text(res.data.tenant_info.tenant_name);
             $('#print_1_RentNumber').text(res.data.tenant_info.tenant_card);
-			$('#detailRentTel').text(res.data.tenant_info.tenant_tel);
+			$('#detailRentTel').text(res.data.tenant_info.tenant_tel);           
+
 			/* $('#print_1_RentName1').text('监护人 姓名:张三');
 			$('#print_1_RentNumber1').text('监护人身份证号:4203...'); */
 			$('#print_1_Year').text(res.data.data_json.applyYear);
 			$('#print_1_Month').text(res.data.data_json.applyMonth);
 			$('#print_1_Day').text(res.data.data_json.applyDay);
-			$('#print_1_Text_other').html(res.data.data_json.applyYear+'-'+res.data.data_json.applyMonth+'-'+res.data.data_json.applyDay+params.leasetypes[res.data.data_json.applyType]);
+
+            // for(var key in data){
+            //     var name_id_print = key.replace(/apply/,'print_1_');
+            //     if(key.indexOf('Text_other') > -1){
+            //         var recorde_array = data[key].split(';');
+            //         //console.log(recorde_array);
+            //         $('#print_1_Text_other').empty();
+            //         var d = 0;
+            //         for(var i = 0,length = recorde_array.length;i < length; i++){
+            //             var s = recorde_array[i].indexOf('老证换新证');
+                        
+            //             if(s > -1){
+            //                 if(d == 0){
+            //                     $('#print_1_Text_other').append($('<p>'+recorde_array[i]+'</p>'));
+            //                 }
+            //                 ++d;
+            //             }else{
+            //                 $('#print_1_Text_other').append($('<p>'+recorde_array[i]+'</p>'));
+            //             }
+                        
+            //         }
+            //     }else{
+            //         $('#'+name_id_print).text(data[key] == "0"?" " : data[key]);
+            //     }
+            // }
+            if(res.data.change_remark){
+                var recorde_array = res.data.change_remark.split(';');
+            for(var i = 0,length = recorde_array.length;i < length; i++){
+                    $('#print_1_Text_other').append($('<p style="text-align:left;margin-top:10px;" class="layui-text">'+recorde_array[i]+'</p>'));
+                }
+            }else{
+                if(res.data.data_json.applyType < 7){
+                    $('#print_1_Text_other').html(res.data.data_json.applyYear+'年'+res.data.data_json.applyMonth+'月'+res.data.data_json.applyDay+'日 '+params.leasetypes[res.data.data_json.applyType]);
+                }else{
+                    $('#print_1_Text_other').html(res.data.data_json.applyYear+'年'+res.data.data_json.applyMonth+'月'+res.data.data_json.applyDay+'日 '+res.data.data_json.applyType);
+                }
+               
+            }
+            
+			
+
 			$('#print_1_Room1_data1').text(res.data.data_json.applyRoom1_data1);
 			$('#print_1_Room1_data2').text(res.data.data_json.applyRoom1_data2);
 			$('#print_1_Room1_data3').text(res.data.data_json.applyRoom1_data3);
@@ -677,10 +719,19 @@
 			$('#print_1_Room7_data3').text(res.data.data_json.applyRoom7_data3);
 			$('#print_1_Room7_data4').text(res.data.data_json.applyRoom7_data4);
 			$('#print_1_Room7_data5').text(res.data.data_json.applyRoom7_data5);
-			$('#print_1_Room8_data2').text(res.data.data_json.applyRoom8_data2);
-			$('#print_1_Room8_data3').text(res.data.data_json.applyRoom8_data3);
-			$('#print_1_Room8_data4').text(res.data.data_json.applyRoom8_data4);
-			$('#print_1_Room8_data5').text(res.data.data_json.applyRoom8_data5);
+
+            /* by lucas 2020-07-15 17:49:13 */
+            $('#print_1_Room7_data6').val(res.data.data_json.applyRoom7_data6);
+            $('#print_1_Room7_data7').val(res.data.data_json.applyRoom7_data7);
+            $('#print_1_Room7_data8').val(res.data.data_json.applyRoom7_data8);
+            $('#print_1_Room7_data9').val(res.data.data_json.applyRoom7_data9);
+            $('#print_1_Room8_data2').val(res.data.data_json.applyRoom8_data2);
+            $('#print_1_Room8_data3').val(res.data.data_json.applyRoom8_data3);
+            $('#print_1_Room8_data4').val(res.data.data_json.applyRoom8_data4);
+            $('#print_1_Room8_data5').val(res.data.data_json.applyRoom8_data5);
+            $('#print_1_Room8_data6').val(res.data.data_json.applyRoom8_data6);
+            $('#print_1_Room8_data7').val(res.data.data_json.applyRoom8_data7);
+
 			$('#print_1_Room9_data2').text(res.data.data_json.applyRoom9_data2);
 			$('#print_1_Room9_data3').text(res.data.data_json.applyRoom9_data3);
 			$('#print_1_Room9_data4').text(res.data.data_json.applyRoom9_data4);
