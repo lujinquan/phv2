@@ -119,14 +119,11 @@
 						width: 110,
 						title: '租用状态',
 						templet: function(d) {
-							// if(parseInt(d.room_pub_num) == 1){
-							// 	return '独用';
-							// }else if(parseInt(d.room_pub_num) == 2){
-							// 	return '共用';
-							// }else{
-							// 	return '公用';
-							// }
-							return params.room_pub_num[d.room_pub_num];
+							if(parseInt(d.room_pub_num) < 3){
+								return params.room_pub_num[d.room_pub_num];
+							}else{
+								return '公用';
+							}
 						}
 					}, {
 						field: 'ban_inst_id',
