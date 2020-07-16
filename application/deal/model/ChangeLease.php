@@ -195,7 +195,7 @@ class ChangeLease extends SystemBase
             $change_remark = '';
         }
         
-        $data['change_remark'] = date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark;
+        $data['change_remark'] = date('Y年m月d日'). ' '.$data['applyType'].' '.$data['applyReason'].';'.$change_remark;
             
 //halt(date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark);
         $applyColumns = config('apply_columns');
@@ -239,10 +239,15 @@ class ChangeLease extends SystemBase
     {
         $changeWhere = [];
         if($id){
-            $row = self::get($id);
+            $row = self::get($id)->toArray();
         }else{
-            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find()->toArray(); 
         }
+
+        if($row['change_status'] == 6){
+            $row['change_remark'] = preg_replace("/\(.*\)/", '', $row['change_remark']);
+        }
+
         // if($row['change_status'] > 1){
         //     $row['change_remark'] = self::where([['house_id','eq',$row['house_id']],['change_status','eq',1],['id','<',$id]])->order('ctime desc')->value('change_remark');
         // }
