@@ -14,6 +14,7 @@ display: flex;flex-direction: column;flex-wrap: nowrap;transition: left .25s eas
 .j-help-fr h1.j-title{flex: 1;margin: 0;font-size: 20px;font-weight: 200;text-align: center;line-height: 30px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color: #7e888b; margin: 10px 0; padding: 0 40px;}
 .j-help-fr .j-shrink{ width: 17px; height: 17px; display: block; position: relative; left: 20px;top:20px;}
 .j-help-content{ width: 80%; margin: 0 auto;}
+.j-help-content img{max-width: 100%;height: auto;}
 .j-header .j-title{padding: 0 12px;border-bottom: 1px solid #ddd;line-height: 55px;color: inherit;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 700;font-size: 16px;}
 .j-search-form{padding: 12px;border-bottom: 1px solid #ddd;flex: none;}
 .j-search-form .j-input{position: relative;}
