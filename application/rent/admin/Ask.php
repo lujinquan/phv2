@@ -29,4 +29,9 @@ class Ask extends Admin
     {
     	return $this->fetch();
     }
+
+    public function print_out()
+    {
+    	return $this->fetch();
+    }
 }
