@@ -1,2 +1,238 @@
-催缴单
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
+<style>
+    .j-table-content.on .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"]{top:115px}/* 标题筛选定位 */
+</style>
+<!-- 新增后台导出按钮 -->
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
+<div class="j-table-content j-no-tab">
+    <div class="layui-btn-container j-container-margin">
+         <div class="layui-btn-container">
+           <button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button>
+         </div>
+     </div>
+  <div class="page-toolbar j-page-toolbar clearfix">
+    <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+      <div class="j-search-fl layui-col-md8  fl">
+        {if condition="in_array('house_number',$config['house_info_search'])"}
+		<div class="layui-input-inline j-input-margin j-width-120">
+			<input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
+		</div>
+		{/if}
+		{if condition="in_array('tenant_name',$config['house_info_search'])"}
+		<div class="layui-input-inline j-input-margin j-width-100">
+			<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
+		</div>
+		{/if}
+		{if condition="in_array('ban_number',$config['house_info_search'])"}
+		<div class="layui-input-inline j-input-margin j-width-100">
+			<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
+		</div>
+		{/if}
+		{if condition="in_array('ban_address',$config['house_info_search'])"}
+		<div class="layui-input-inline j-input-margin  j-width-100">
+			<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
+		</div>
+		{/if}
+		{if condition="in_array('ban_inst_id',$config['house_info_search'])"}
+		{if condition="INST_LEVEL != 3"}
+		<div class="layui-input-inline  j-width-130 j-margin-10 j-select-width130">
+			<select name="ban_inst_id" xm-select="ban_inst_id">
+				<option value="" disabled="disabled">机构</option>
+				{volist name=":config('inst_check_names')[INST]" id="v"}
+				<option value="{$key}">{$v}</option>
+				{/volist}
+			</select>
+		</div>
+		{/if}
+		{/if}
+		{if condition="in_array('ban_owner_id',$config['house_info_search'])"}
+		<div class="layui-input-inline  j-width-90 j-margin-10">
+			<select name="ban_owner_id" xm-select="ban_owner_id">
+				<option value="" disabled="disabled">产别</option>
+				{volist name="params['owners']" id="v"}
+				<option value="{$key}">{$v}</option>
+				{/volist}
+			</select>
+		</div>
+		{/if}
+		{if condition="in_array('house_use_id',$config['house_info_search'])"}
+		<div class="layui-input-inline  j-width-115 j-margin-10">
+			<select name="house_use_id" xm-select="house_use_id">
+				<option value="" disabled="disabled">使用性质</option>
+				{volist name="params['uses']" id="v"}
+				<option value="{$key}">{$v}</option>
+				{/volist}
+			</select>
+		</div>
+		{/if}
+		{if condition="in_array('house_is_pause',$config['house_info_search'])"}
+		  <div class="layui-input-inline" style="width:120px;">
+			  <select name="house_is_pause">
+				  <option value="">是否暂停计租</option>
+				  <option value="1">是</option>
+				  <option value="0">否</option>
+				</select>
+		  </div>
+        {/if}
+        {if condition="in_array('house_pre_rent',$config['house_info_search'])"}
+          <div class="layui-input-inline j-input-margin j-width-100">
+			<input type="text" name="house_pre_rent" title="规定租金" placeholder="规定租金" class="layui-input">
+		  </div>
+		{/if}
+		{if condition="in_array('house_cou_rent',$config['house_info_search'])"}
+		  <div class="layui-input-inline j-input-margin j-width-100">
+			<input type="text" name="house_cou_rent" title="计算租金" placeholder="计算租金" class="layui-input">
+		  </div>
+		 {/if}
+		{if condition="in_array('house_lease_area',$config['house_info_search'])"}
+		<div class="layui-input-inline j-input-margin j-width-100">
+			<input type="text" name="house_lease_area" title="计租面积" placeholder="计租面积" class="layui-input">
+		</div>
+		{/if}
+		{if condition="in_array('ban_struct_id',$config['house_info_search'])"}
+		<div class="layui-input-inline j-width-110 j-margin-10">
+			<select name="ban_struct_id" xm-select="ban_struct_id">
+				<option disabled="disabled" value="">结构类别</option>
+				 {volist name="params['structs']" id="v"}
+				 <option value="{$key}">{$v}</option>
+				 {/volist}
+			</select>
+        </div>
+        {/if}
+        {if condition="in_array('ban_damage_id',$config['house_info_search'])"}
+        <div class="layui-input-inline j-width-110 j-margin-10">
+		  <select name="ban_damage_id" xm-select="ban_damage_id">
+			  <option value="">完损等级</option>
+			  {volist name="params['damages']" id="v"}
+			  <option value="{$key}">{$v}</option>
+			  {/volist}
+			</select>
+        </div>
+        {/if}
+        
+        </div>
+        <div class="j-search-fr layui-col-md4 fr">
+        	<div class="layui-input-inline fr">
+        		<div class="layui-input-inline" style="margin-left:10px;">
+                   <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
+                        <i class="layui-icon layui-icon-print"></i>
+                        导出
+                    </button> -->
+        			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+        			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+        				<i class="layui-icon">&#xe615;</i>
+        				搜索
+        			</button>
+        			<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+        		</div>
+        	</div>
+        </div>
+    </form>
+</div>
 {include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="toolbar">
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+	<a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '400px',refresh: 2}" title="打印" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">打印</a>
+    <a href="{:url('detail')}?id={{ d.rent_order_id }}" hisi-data="{width: '1200px', height: '400px',refresh: 2}" title="明细" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['jquery', 'laydate', 'element','table','jquery','formSelects'], function() {
+        var laydate = layui.laydate,
+        $ = layui.$
+        ,element = layui.element
+		,formSelects = layui.formSelects;
+        var table = layui.table;
+        table.render({
+            elem: '#dataTable'
+            //,height: 550
+            ,url: '{:url("index")}'
+			,toolbar: '#toolbar'
+			,defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
+            ,totalRow: true
+            ,page: true 
+            ,limit: 10
+            ,limits: [10,20,30,40,50,100]
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {type: 'checkbox',hide: isHide,fixed: 'left'}
+                , {field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
+                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
+                ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
+                    return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);
+                }}
+                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
+                    return params.insts[d.ban_inst_id];
+                }}
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
+                    return params.owners[d.ban_owner_id];
+                }}
+                ,{field: 'house_use_id', minWidth: 100, align:'center', title: '使用性质', templet: function(d) {
+                    return params.uses[d.house_use_id];
+                }}
+                ,{field: 'tenant_name', minWidth: 100, align:'center', title: '租户姓名'}
+                ,{field: 'rent_order_diff',hide:true, minWidth: 140, align:'center', title: '租差',totalRow: true}
+                ,{field: 'rent_order_pump',hide:true, minWidth: 140, align:'center', title: '泵费',totalRow: true}
+                ,{field: 'rent_order_cut',hide:true, minWidth: 140, align:'center', title: '减免',totalRow: true}
+                ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
+                ,{field: 'house_cou_rent',hide:true, minWidth: 120, align:'center', title: '计算租金',totalRow: true}
+                ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
+                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
+                // ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
+                //     return params.is_invoice[d.is_invoice];
+                // }}
+                ,{field: 'pay_way', minWidth: 100, align:'center', title: '缴纳方式', templet: function(d) {
+                    return params.pay_way[d.pay_way];
+                }}
+                ,{field: 'ptime', minWidth: 120, align:'center', title: '缴纳时间'}
+                ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
+                $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
+                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_rent_order_paid);
+                $(".layui-table-total td[data-field='rent_order_cut']").find("div").text(res.total_rent_order_cut);
+                $(".layui-table-total td[data-field='rent_order_diff']").find("div").text(res.total_rent_order_diff);
+                $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);
+                $(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
+               //导出转换后台数据
+               var exportData=res.data;
+               for(i in exportData){
+                 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+               	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+               	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+				 exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
+               }
+            }
+        },isShowInst)
+
+        $('#button_prints').click(function(){
+            var queryWhere = $('#hisi-table-search').serialize();
+            console.log('导出的条件：',queryWhere);
+            $('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+            $.ajax({
+                type:"post",// 请求方式
+                url:"{:url('record/export')}",
+                async:true,// 同步异步
+                dataType:"json",
+                data : queryWhere,//这里是前台传到后台的数据
+                //回调函数
+                success:function(output){
+                    layer.msg(output.msg);
+                    if(output.code){ //成功则直接下载      
+                        $('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-print"></i> 导出');  
+                        document.location.href = output.data;
+                    }
+                    else{
+                    	$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                    }
+                }
+            });
+        })
+    });
+</script>
