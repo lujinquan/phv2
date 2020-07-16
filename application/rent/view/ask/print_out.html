@@ -1,2 +1,77 @@
-打印页面
 {include file="system@block/layui" /}
+<link rel="stylesheet" href="__ADMIN_CSS__/print.css?v={:config('hisiphp.version')}" media="print">
+<style>
+	.PageNext {page-break-after: always;font-family: 'Microsoft YaHei';margin: 0 auto;width: 310px;}
+	.j-print-title{width: 310px; text-align: center;font-size: 20px;padding: 20px 0 10px;}
+	.j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;}
+	.j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;}
+	.j-print-table td.j-print-90{width: 90px;}
+	.j-print-table td.j-print-120{width: 120px;}
+	.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
+	.j-buttom{text-align: center;padding: 20px 0;}
+</style>
+  <div class="j-click-print">
+	<div class="PageNext">
+		<div class="j-print-title">缴费单</div>
+		<table class="j-print-table">
+			<tr>
+				<td class="j-print-90" align="left">
+				  租户名
+				</td>
+				<td colspan="2"  align="left">
+					刘道荣
+				</td>
+			</tr>
+			<tr>
+				<td class="j-print-90" align="left">租户地址</td>
+				<td colspan="2" align="left">新生里还建楼1栋</td>
+			</tr>
+			<tr>
+				<td class="j-print-90" align="left">历史欠租</td>
+				<td class="j-print-120" align="left">1667.2</td>
+				<td rowspan="3" align="left">
+					<img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
+				</td>
+			</tr>
+			<tr>
+				<td class="j-print-90" align="left">本期欠租</td>
+				<td class="j-print-120" align="left">97.5</td>
+			</tr>
+			<tr>
+				<td class="j-print-90" align="left">合计欠租</td>
+				<td class="j-print-120" align="left">16672</td>
+			</tr>
+			<tr>
+				<td class="j-print-con" colspan="3" align="left">
+					尊敬的租户：
+					<br/>
+					  可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
+					<br/>
+					  特此通知，谢谢合作！
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<form>
+	<div class="j-buttom">
+		<button type="button" onclick="click_print()" class="layui-btn">打印</button>
+		<button type="button" class="layui-btn layui-btn-primary  j-close">取消</button>
+	</div>
+</form>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript">
+	layui.use(['jquery'], function() {
+	    var $ = layui.$;
+		$(".j-close").click(function(){
+			var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+			parent.layer.close(index); //再执行关闭
+		}) 
+    });
+	function  click_print(){
+	 $(".j-click-print").jqprint();
+	}
+	
+</script>
