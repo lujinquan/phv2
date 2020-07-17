@@ -7,33 +7,34 @@
 <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">
-           <button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button>
+           <!-- <a href="{:url('print_out')}" target="_blank" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</a> -->
+           <a href="{:url('print_out')}" data-id="house_id" title="提示：需要勾选催缴单" class="j-page-btns-extra"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button></a>
          </div>
      </div>
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
       <div class="j-search-fl layui-col-md8  fl">
-        {if condition="in_array('house_number',$config['house_info_search'])"}
+        {if condition="in_array('house_number',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-input-margin j-width-120">
 			<input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
 		</div>
 		{/if}
-		{if condition="in_array('tenant_name',$config['house_info_search'])"}
+		{if condition="in_array('tenant_name',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-input-margin j-width-100">
 			<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
 		</div>
 		{/if}
-		{if condition="in_array('ban_number',$config['house_info_search'])"}
+		{if condition="in_array('ban_number',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-input-margin j-width-100">
 			<input type="text" name="ban_number" title="楼栋编号" placeholder="楼栋编号" class="layui-input">
 		</div>
 		{/if}
-		{if condition="in_array('ban_address',$config['house_info_search'])"}
+		{if condition="in_array('ban_address',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-input-margin  j-width-100">
 			<input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
 		</div>
 		{/if}
-		{if condition="in_array('ban_inst_id',$config['house_info_search'])"}
+		{if condition="in_array('ban_inst_id',$config['rent_ask_index_search'])"}
 		{if condition="INST_LEVEL != 3"}
 		<div class="layui-input-inline  j-width-130 j-margin-10 j-select-width130">
 			<select name="ban_inst_id" xm-select="ban_inst_id">
@@ -45,7 +46,7 @@
 		</div>
 		{/if}
 		{/if}
-		{if condition="in_array('ban_owner_id',$config['house_info_search'])"}
+		{if condition="in_array('ban_owner_id',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline  j-width-90 j-margin-10">
 			<select name="ban_owner_id" xm-select="ban_owner_id">
 				<option value="" disabled="disabled">产别</option>
@@ -55,7 +56,7 @@
 			</select>
 		</div>
 		{/if}
-		{if condition="in_array('house_use_id',$config['house_info_search'])"}
+		{if condition="in_array('house_use_id',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline  j-width-115 j-margin-10">
 			<select name="house_use_id" xm-select="house_use_id">
 				<option value="" disabled="disabled">使用性质</option>
@@ -65,7 +66,7 @@
 			</select>
 		</div>
 		{/if}
-		{if condition="in_array('house_is_pause',$config['house_info_search'])"}
+		{if condition="in_array('house_is_pause',$config['rent_ask_index_search'])"}
 		  <div class="layui-input-inline" style="width:120px;">
 			  <select name="house_is_pause">
 				  <option value="">是否暂停计租</option>
@@ -74,22 +75,22 @@
 				</select>
 		  </div>
         {/if}
-        {if condition="in_array('house_pre_rent',$config['house_info_search'])"}
+        {if condition="in_array('house_pre_rent',$config['rent_ask_index_search'])"}
           <div class="layui-input-inline j-input-margin j-width-100">
 			<input type="text" name="house_pre_rent" title="规定租金" placeholder="规定租金" class="layui-input">
 		  </div>
 		{/if}
-		{if condition="in_array('house_cou_rent',$config['house_info_search'])"}
+		{if condition="in_array('house_cou_rent',$config['rent_ask_index_search'])"}
 		  <div class="layui-input-inline j-input-margin j-width-100">
 			<input type="text" name="house_cou_rent" title="计算租金" placeholder="计算租金" class="layui-input">
 		  </div>
-		 {/if}
-		{if condition="in_array('house_lease_area',$config['house_info_search'])"}
+		{/if}
+		{if condition="in_array('house_lease_area',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-input-margin j-width-100">
 			<input type="text" name="house_lease_area" title="计租面积" placeholder="计租面积" class="layui-input">
 		</div>
 		{/if}
-		{if condition="in_array('ban_struct_id',$config['house_info_search'])"}
+		{if condition="in_array('ban_struct_id',$config['rent_ask_index_search'])"}
 		<div class="layui-input-inline j-width-110 j-margin-10">
 			<select name="ban_struct_id" xm-select="ban_struct_id">
 				<option disabled="disabled" value="">结构类别</option>
@@ -99,7 +100,7 @@
 			</select>
         </div>
         {/if}
-        {if condition="in_array('ban_damage_id',$config['house_info_search'])"}
+        {if condition="in_array('ban_damage_id',$config['rent_ask_index_search'])"}
         <div class="layui-input-inline j-width-110 j-margin-10">
 		  <select name="ban_damage_id" xm-select="ban_damage_id">
 			  <option value="">完损等级</option>
@@ -159,35 +160,32 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
+                {type: 'checkbox',fixed: 'left'}
+                ,{field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
-                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
-                    return params.insts[d.ban_inst_id];
-                }}
-                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
-                    return params.owners[d.ban_owner_id];
-                }}
-                ,{field: 'house_use_id', minWidth: 100,hide: true,align:'center', title: '使用性质', templet: function(d) {
-                    return params.uses[d.house_use_id];
-                }}
-                ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true},
+                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段'}
+                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别'}
+                ,{field: 'house_use_id', minWidth: 100,hide: true,align:'center', title: '使用性质'}
+                ,{field: 'house_pre_rent', minWidth: 100, align:'center', title: '规定租金'}
 				,{field: 'tenant_name', minWidth: 100, align:'center', title: '租户姓名'}
-                ,{field: 'rent_order_monthUnpaid', minWidth: 100, align:'center', title: '本月欠缴'},
-				,{field: 'rent_order_historyUnpaid', minWidth: 100, align:'center', title: '历史欠缴'},
-				,{field: 'rent_order_sumUnpaid', minWidth: 100, align:'center', title: '总欠缴'}
-                ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{field: 'curMonthUnpaidRent', minWidth: 100, align:'center', title: '本月欠缴'}
+                ,{field: 'beforeMonthUnpaidRent', minWidth: 100, align:'center', title: '以前月欠缴'}
+                ,{field: 'beforeYearUnpaidRent', minWidth: 100, align:'center', title: '以前年欠缴'}
+				,{field: 'total', minWidth: 100, align:'center', title: '总欠缴'}
+                ,{title: '操作', width: 120,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
-                $(".layui-table-total td[data-field='rent_order_monthUnpaid']").find("div").text(res.total_rent_order_monthUnpaid);
-                $(".layui-table-total td[data-field='rent_order_historyUnpaid']").find("div").text(res.total_rent_order_historyUnpaid);
-                $(".layui-table-total td[data-field='rent_order_sumUnpaid']").find("div").text(res.total_rent_order_sumUnpaid);
+                $(".layui-table-total td[data-field='curMonthUnpaidRent']").find("div").text(res.total_cur_month_unpaid_rent);
+                $(".layui-table-total td[data-field='beforeMonthUnpaidRent']").find("div").text(res.total_before_month_unpaid_rent);
+                $(".layui-table-total td[data-field='beforeYearUnpaidRent']").find("div").text(res.total_before_year_unpaid_rent);
+                $(".layui-table-total td[data-field='total']").find("div").text(res.total_unpaid_rent);
                //导出转换后台数据
                var exportData=res.data;
                for(i in exportData){
-                 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
-               	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
-               	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+                 // exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+               	 // exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+               	 // exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
 				 exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
                }
             }
