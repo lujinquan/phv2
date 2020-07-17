@@ -419,7 +419,7 @@ class ChangeRentAdd extends SystemBase
             
         }
         // 3、如果有追加当月，则增加一条当月回收的订单
-        if($finalRow['this_month_rent']){
+        if($finalRow['this_month_rent'] > 0){
             $rent_order_date = date('Ym'); 
             
 
