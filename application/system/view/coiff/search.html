@@ -124,10 +124,27 @@
             <input type="checkbox" name="rent_recharge_info_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['rent_recharge_info_search'])"}checked{/if}> 
             <input type="checkbox" name="rent_recharge_info_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['rent_recharge_info_search'])"}checked{/if}>
             <input type="checkbox" name="rent_recharge_info_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['rent_recharge_info_search'])"}checked{/if}>
-
             <input type="checkbox" name="rent_recharge_info_search[]" value="ctime" title="日期范围" lay-skin="primary" {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}checked{/if}>
             <input type="checkbox" name="rent_recharge_info_search[]" value="pay_way" title="充值方式" lay-skin="primary" {if condition="in_array('pay_way',$config['rent_recharge_info_search'])"}checked{/if}>
             <input type="checkbox" name="rent_recharge_info_search[]" value="pay_rent" title="充值金额" lay-skin="primary" {if condition="in_array('pay_rent',$config['rent_recharge_info_search'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">催缴单：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['rent_ask_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['rent_ask_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['rent_ask_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_is_pause" title="是否暂停计租" lay-skin="primary" {if condition="in_array('house_is_pause',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_pre_rent" title="规定租金" lay-skin="primary" {if condition="in_array('house_pre_rent',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_cou_rent" title="计算租金" lay-skin="primary" {if condition="in_array('house_cou_rent',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="house_lease_area" title="计租面积" lay-skin="primary" {if condition="in_array('house_lease_area',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_struct_id" title="结构类别" lay-skin="primary" {if condition="in_array('ban_struct_id',$config['rent_ask_index_search'])"}checked{/if}>
+            <input type="checkbox" name="rent_ask_index_search[]" value="ban_damage_id" title="完损等级" lay-skin="primary" {if condition="in_array('ban_damage_id',$config['rent_ask_index_search'])"}checked{/if}>
         </div>
     </div>
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">

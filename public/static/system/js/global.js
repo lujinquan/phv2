@@ -595,6 +595,50 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
      * @class confirm 类似系统confirm
      * @attr tips confirm提示内容
      */
+    $(document).on('click', '.j-page-btns-extra', function(){
+        
+        var that = $(this),
+            query = '';
+        //console.log(3);
+            //code = function (that) {
+                console.log(4);
+                var href = that.attr('href') ? that.attr('href') : that.attr('data-href');
+                var tableObj = that.attr('data-table') ? that.attr('data-table') : 'dataTable';
+                //获取主键
+                var witchid = that.attr('data-id') ? that.attr('data-id') : 'id';
+                if (!href) {
+                    layer.msg('请设置data-href参数');
+                    return false;
+                }
+                console.log(2);
+                console.log($('.checkbox-ids:checked'));
+                if ($('.checkbox-ids:checked').length <= 0) {
+                    var checkStatus = table.checkStatus(tableObj);
+                    if (checkStatus.data.length <= 0) {
+                        layer.msg('请选择要操作的数据');
+                        return false;
+                    }
+                    for (var i in checkStatus.data) {
+                        if (i > 0) {
+                            query += ',';
+                        }
+                        query += checkStatus.data[i][witchid];
+                    }
+                    that.attr('href',href+'?id='+query);
+                }
+                //return false;
+            //};
+            console.log(5);
+        //return false;
+    });
+
+    /**
+     * 列表页批量操作按钮组
+     * @attr href 操作地址
+     * @attr data-table table容器ID
+     * @class confirm 类似系统confirm
+     * @attr tips confirm提示内容
+     */
     $(document).on('click', '.j-page-btns,.hisi-page-btns', function(){
         var that = $(this),
             query = '',

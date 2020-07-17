@@ -47,8 +47,10 @@
   <legend>异常数据检测</legend>
   <div class="layui-col-md12">
 	  <div class="layui-btn-group">
-	    <button type="button" data-value="1" class="layui-btn layui-btn-normal check w300">楼栋信息</button>
-	    <button type="button" data-value="2" class="layui-btn layui-btn-normal check w300">房屋信息</button>
+	    <!-- <button type="button" data-value="1" class="layui-btn layui-btn-normal check w300">楼栋信息</button> -->
+	    <a href="{:url('house/ban/check_data')}" hisi-data="{width: '1000px', height: '700px',refresh: 2}" title="楼栋信息检测" class="layui-btn layui-btn-normal w300 j-iframe-pop">楼栋信息</a>
+	    <a href="{:url('house/house/check_data')}" hisi-data="{width: '1000px', height: '700px',refresh: 2}" title="房屋信息检测" class="layui-btn layui-btn-normal w300 j-iframe-pop">房屋信息</a>
+	    <!-- <button type="button" data-value="2" class="layui-btn layui-btn-normal check w300">房屋信息</button> -->
 	    <button type="button" data-value="3" class="layui-btn layui-btn-normal check w300">房间信息</button>
 	      
 	  </div>

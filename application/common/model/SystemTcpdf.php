@@ -80,6 +80,8 @@ class SystemTcpdf extends Model
         $pdf->SetMargins('0', '0', '0');
         // 设置是否自动分页  距离底部多少距离时分页  
         $pdf->SetAutoPageBreak(false, '15');
+        // 设置字体  
+        $pdf->SetFont('stsongstdlight', '', 14, '', true);
         // 设置图像比例因子  
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
@@ -87,10 +89,19 @@ class SystemTcpdf extends Model
             $pdf->setLanguageArray($l);
         }
         $pdf->setFontSubsetting(true);
-        $pdf->AddPage();
-        // 设置字体  
-        $pdf->SetFont('stsongstdlight', '', 14, '', true);
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+        if(is_array($html)){
+            foreach ($html as $h) {
+                $pdf->AddPage();
+                $pdf->writeHTMLCell(0, 0, '', '', $h, 0, 1, 0, true, '', true);
+            }
+        }else{
+            $pdf->AddPage();
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        }
+        
+        
+        
         $pdf->Output('example_001.pdf', 'I');
 	}
 
