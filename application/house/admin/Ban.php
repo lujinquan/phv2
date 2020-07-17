@@ -23,6 +23,7 @@ use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\BanTai as BanTaiModel;
 use app\deal\model\Process as ProcessModel;
+use app\system\model\SystemUser as UserModel;
 use app\house\model\FloorPoint as FloorPointModel;
 
 class Ban extends Admin
@@ -77,6 +78,62 @@ class Ban extends Admin
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
+        return $this->fetch();
+    }
+
+    /**
+     * 检查楼栋信息的异常数据
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-16 16:02:30
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function check_data()
+    {
+        $params = ParamModel::getCparams();
+        $useridArr = UserModel::column('id');
+        $BanModel = new BanModel();
+
+        //$all_data = $BanModel->limit(10)->select()->toArray();
+        $all_data = $BanModel->select()->toArray();
+        //halt($all_data);
+        $error_data = [];
+        $error_data['base_error'] = [];
+        foreach($all_data as $k => $v){
+            if(($v['ban_civil_num'] + $v['ban_party_num'] + $v['ban_career_num']) > 1){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，合栋数异常';
+            }
+            if(!isset($params['owners'][$v['ban_owner_id']])){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，产别异常';
+            }
+            if(!isset($params['structs'][$v['ban_struct_id']])){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，结构类别异常';
+            }
+            if(!isset($params['damages'][$v['ban_damage_id']])){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，完损等级异常';
+            }
+            if(strlen($v['ban_number']) != 10){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，长度异常';
+            }
+            if(!in_array($v['ban_inst_pid'], [2,3]) || $v['ban_inst_id'] > 35 || $v['ban_inst_id'] < 4){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，所属机构异常';
+            }
+            if($v['ban_status'] > 1 && $v['ban_dtime'] == 0){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，状态为注销，但缺失注销时间状态';
+            }
+            if(!in_array($v['ban_cuid'],$useridArr)){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，创建人在系统中无法找到';
+            }
+            if(!in_array($v['ban_use_id'], [1,2,3])){
+                $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，使用性质异常';
+            }
+        }
+        //halt($error_data);
+        $this->assign('error_data',$error_data);
         return $this->fetch();
     }
 

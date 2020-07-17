@@ -28,29 +28,39 @@ use app\house\model\FloorPoint as FloorPointModel;
 class House extends Admin
 {
     public function demo(){
-        $data = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.rent_order_id','eq',0]])->field('a.*,b.house_number')->select();
-        halt($data);
-        // $str = '';
+        // 收欠表中，缺失rent_order_id的记录
+        $data = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.rent_order_id','eq',0]])->field('a.*,b.house_number,b.house_pre_rent,b.house_cou_rent,c.ban_owner_id')->select();
 
-        // foreach ($data as $k => $v) {
+        $a = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','eq',0]])->field('a.*,b.house_number')->select();
 
-        //     if($cutsArr && isset($cutsArr[$v['house_id']])){
-        //        $rent_order_cut = $cutsArr[$v['house_id']]; 
-        //     }else{
-        //         $rent_order_cut = 0;
-        //     }
-        //     //$rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
-        //     // 租金订单id
-        //     $rent_order_number = $v['house_number'].$v['ban_owner_id'].$currMonth;
+        $b = Db::name('rent_recycle')->where([['rent_order_id','eq',0]])->select();
+        //halt($a);
+        
 
-        //     // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
-        //     $rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
-        //     // 待入库的数据
-        //     $str .= "('" . $rent_order_number . "',". $currMonth . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $rent_order_receive . ",". $v['house_id'] . "," . $v['tenant_id']. "," . time() . "),";
-        // }
+        $str = '';
+
+        foreach ($data as $k => $v) {
+            $ctime = strtotime(substr_replace($v['pay_month'], '-', 4,0));
+            // halt($ptime);
+            $rent_order_cut = 0;
+            // if($cutsArr && isset($cutsArr[$v['house_id']])){
+            //    $rent_order_cut = $cutsArr[$v['house_id']]; 
+            // }else{
+            //     $rent_order_cut = 0;
+            // }
+            //$rent_order_cut = ($v['end_date'] > date('Ym'))?$v['cut_rent']:0;
+            // 租金订单id
+            $rent_order_number = $v['house_number'].$v['ban_owner_id'].$v['pay_month'];
+
+            // 应收 = 规租 + 泵费 + 租差 + 协议租金 - 减免 
+            //$rent_order_receive = $v['house_pre_rent'] - $rent_order_cut;
+            // 待入库的数据
+            $str .= "('" . $rent_order_number . "',". $v['pay_month'] . ",". $rent_order_cut ."," .$v['house_pre_rent']. ",". $v['house_cou_rent'] . ",". $v['pay_rent'] .",". $v['pay_rent'] . ",". $v['house_id'] . "," . $v['tenant_id']. ",1,1," . $v['ctime'] . "," . $ctime . "),";
+            //halt($str);
+        }
 
         // //halt($str);
-        // $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,house_id,tenant_id,ctime) values " . rtrim($str, ','));
+        $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,rent_order_paid,house_id,tenant_id,is_deal,pay_way,ptime,ctime) values " . rtrim($str, ','));
     }
 
     public function print()
@@ -109,7 +119,7 @@ EOF;
 
     public function index()
     {
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
@@ -212,6 +222,67 @@ EOF;
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
+        return $this->fetch();
+    }
+
+    /**
+     * 检查房屋信息的异常数据
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-16 16:02:30
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function check_data()
+    {
+        $params = ParamModel::getCparams();
+        $useridArr = UserModel::column('id');
+        
+        //$BanModel = new HouseModel();
+        $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            //halt($where);
+            $data = [];
+            $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
+
+        //$all_data = $BanModel->limit(10)->select()->toArray();
+        //$all_data = $Model->select()->toArray();
+        //halt($all_data);
+        $error_data = [];
+        $error_data['base_error'] = [];
+        foreach($all_data as $k => $v){
+            // if(($v['ban_civil_num'] + $v['ban_party_num'] + $v['ban_career_num']) > 1){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，合栋数异常';
+            // }
+            // if(!isset($params['owners'][$v['ban_owner_id']])){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，产别异常';
+            // }
+            // if(!isset($params['structs'][$v['ban_struct_id']])){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，结构类别异常';
+            // }
+            // if(!isset($params['damages'][$v['ban_damage_id']])){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，完损等级异常';
+            // }
+            // if(strlen($v['ban_number']) != 10){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，长度异常';
+            // }
+            // if(!in_array($v['ban_inst_pid'], [2,3]) || $v['ban_inst_id'] > 35 || $v['ban_inst_id'] < 4){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，所属机构异常';
+            // }
+            // if($v['ban_status'] > 1 && $v['ban_dtime'] == 0){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，状态为注销，但缺失注销时间状态';
+            // }
+            // if(!in_array($v['ban_cuid'],$useridArr)){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，创建人在系统中无法找到';
+            // }
+            // if(!in_array($v['ban_use_id'], [1,2,3])){
+            //     $error_data['base_error'][] = '楼栋编号：'.$v['ban_number'].'，使用性质异常';
+            // }
+        }
+        //halt($error_data);
+        $this->assign('error_data',$error_data);
         return $this->fetch();
     }
 
