@@ -1437,7 +1437,8 @@ class Weixin extends Common
             }
             $row = $checkData['member_extra_info'];
         }
-
+// $UserModel = new UserModel;
+// $row = $UserModel->where([['weixin_member_id','eq',42]])->find();
         if($row){
             $params = ParamModel::getCparams();
             //$result['data']['params'] = $params;
@@ -1449,28 +1450,31 @@ class Weixin extends Common
             $where = [];
             $where[] = ['tenant_inst_id','in',config('inst_ids')[$row['inst_id']]];
             if($tenant){
-                $where[] = ['a.tenant_name','like','%'.$tenant.'%'];
+                $where[] = ['tenant_name','like','%'.$tenant.'%'];
             }
             if($status !== null){
-                $where[] = ['a.tenant_status','eq',$status];
+                $where[] = ['tenant_status','eq',$status];
             }else{
-                $where[] = ['a.tenant_status','eq',1];   
+                $where[] = ['tenant_status','eq',1];   
             }
-            $fields = 'a.tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,sum(house_balance) as tenant_balance,a.tenant_status';
+            //,sum(house_balance) as tenant_balance
+            $fields = 'tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_status';
             $result = [];
             //halt($where);
-            $temps = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->field($fields)->where($where)->page($page)->group('a.tenant_id')->order('tenant_ctime desc')->limit($limit)->select();
-            //halt($temps);
+            $temps = Db::name('tenant')->field($fields)->where($where)->page($page)->order('tenant_ctime desc')->limit($limit)->select();
+            
             $result['data'] = [];
             foreach ($temps as $v) {
                 // $v['tenant_inst_id'] = $params['insts'][$v['tenant_inst_id']];
                 $v['tenant_status'] = $params['status'][$v['tenant_status']];
+                $v['tenant_balance'] = Db::name('house')->where([['tenant_id','eq',$v['tenant_id']]])->sum('house_balance');
+                //halt($v);
                 // $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
                 // $v['ban_struct_id'] = $params['structs'][$v['ban_struct_id']];
                 // $v['ban_damage_id'] = $params['damages'][$v['ban_damage_id']];
                 $result['data'][] = $v;
             }
-            $result['count'] = Db::name('tenant')->alias('a')->join('house b','a.tenant_id = b.tenant_id','left')->where($where)->count('a.tenant_id');
+            $result['count'] = Db::name('tenant')->where($where)->count('tenant_id');
             $result['pages'] = ceil($result['count'] / $limit);
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
