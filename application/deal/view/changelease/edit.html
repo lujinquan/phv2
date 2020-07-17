@@ -621,7 +621,7 @@
 								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
 									{volist name="params['leasetypes']" id="v"}
-									<option value="{$key}" {if condition="$data_info['data_json']['applyType'] == $v || $data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
+									<option value="{$v}" {if condition="$data_info['data_json']['applyType'] == $v || $data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
 									{/volist}
 								</select>
 							</div>
@@ -643,7 +643,7 @@
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red"></i>换租原因</label>
 				<div class="j-input-inline">
-					<input type="text" id="change_reasons" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
+					<input type="text" id="applyReason" name="applyReason"  lay-verify="required" value="老证换新证"  placeholder="请输入原因" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>

@@ -194,6 +194,10 @@ class ChangeLease extends SystemBase
         if(!$change_remark){
             $change_remark = '';
         }
+
+        // if($data['applyType'] < 7){
+        //     $data['applyType'] = 
+        // }
         
         $data['change_remark'] = date('Y年m月d日'). ' '.$data['applyType'].' '.$data['applyReason'].';'.$change_remark;
             
