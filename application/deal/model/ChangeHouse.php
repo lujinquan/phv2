@@ -433,8 +433,8 @@ class ChangeHouse extends SystemBase
             'change_order_number' => $finalRow['change_order_number'],
             'ban_id' => $finalRow['ban_id'],
             'ctime' => $finalRow->getData('ctime'),
-            'ftime' => $finalRow->getData('ftime'),
-            'change_status' => $finalRow['change_status'],
+            'ftime' => time(),
+            'change_status' => 1,
         ]);
 
         $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();

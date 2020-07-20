@@ -322,8 +322,8 @@ class ChangeName extends SystemBase
             'change_order_number' => $finalRow['change_order_number'],
             'ban_id' => $finalRow['ban_id'],
             'ctime' => $finalRow->getData('ctime'),
-            'ftime' => $finalRow->getData('ftime'),
-            'change_status' => $finalRow['change_status'],
+            'ftime' => time(),
+            'change_status' => 1,
         ]);
 
         // 1、别字更正

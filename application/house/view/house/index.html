@@ -218,11 +218,10 @@
 					, {field: 'ban_inst_id',width: 110,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
 						return params.insts[d.ban_inst_id];
 					}}
+					, {field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'}
 					, {field: 'ban_owner_id',minWidth: 60,title: '产别',align:'center',templet: function(d) {
 						return params.owners[d.ban_owner_id];
 					}}
-					, {field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'}
-					
 					, {field: 'house_use_id',width: 100,align:'center',title: '使用性质',templet: function(d) {
 						return params.uses[d.house_use_id];
 					}}
@@ -233,28 +232,29 @@
 						}else{
 							return d.house_cou_rent;
 						}
-	                    
 	                }}
 					, {field: 'house_lease_area',width: 120,align:'center',title: '计租面积',totalRow: true}
+					, {field: 'house_diff_rent',hide: false,width: 100,align:'center',title: '租差',totalRow: true}
+					, {field: 'house_pump_rent',hide: false,width: 80,align:'center',title: '泵费',totalRow: true}
+					, {field: 'house_area',hide: false,width: 120,align:'center',title: '房屋建面',totalRow: true}
+					, {field: 'house_oprice',hide: false,width: 120,align:'center',title: '房屋原价',totalRow: true}
 					, {field: 'last_print_time',hide: isHideXin,width: 200,align:'center',title: '出证时间'}
-					, {field: 'house_area',hide: true,width: 80,align:'center',title: '房屋建面',totalRow: true}
-					, {field: 'house_oprice',hide: true,width: 80,align:'center',title: '房屋原价',totalRow: true}
-					, {field: 'ban_struct_id', hide: true, minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
+					, {field: 'ban_struct_id', hide: false, minWidth: 120, align:'center', title: '结构类别', templet: function(d) {
 	                    return params.structs[d.ban_struct_id];
 	                }}
-					, {field: 'ban_damage_id',hide: true,width: 80,align:'center',title: '完损等级', templet: function(d) {
+					, {field: 'ban_damage_id',hide: false,width: 120,align:'center',title: '完损等级', templet: function(d) {
 	                    return params.damages[d.ban_damage_id];
 	                }}
-					, {field: 'house_is_pause',hide: true,width: 100,align:'center',title: '是否暂停计租',templet: function(d) {
+					, {field: 'house_is_pause',hide: false,width: 140,align:'center',title: '是否暂停计租',templet: function(d) {
 						return parseInt(d.house_is_pause)?'是':'否';
 					}}
-					, {field: 'house_unit_id',width: 80,hide: true,align:'center',title: '单元',templet: function(d) {
+					, {field: 'house_unit_id',width: 80,hide: false,align:'center',title: '单元',templet: function(d) {
 						return d.house_unit_id + '/' + d.ban_units;
 					}}
-					, {field: 'house_floor_id',align:'center',hide: true,width: 80,title: '楼层',templet: function(d) {
+					, {field: 'house_floor_id',align:'center',hide: false,width: 80,title: '楼层',templet: function(d) {
 						return d.house_floor_id + '/' + d.ban_floors;
 					}}
-					, {field: 'house_door',hide: true,width: 100,align:'center',title: '门牌号'}
+					, {field: 'house_door',hide: false,width: 100,align:'center',title: '门牌号'}
 					, {title: '操作',minWidth: templet_width,align:'center',templet: '#buttonTpl',fixed: 'right'}
 				]
 			],
@@ -263,6 +263,8 @@
 				$(".layui-table-total td[data-field='house_area']").find("div").text(res.total_house_area);
 				$(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
 				$(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
+				$(".layui-table-total td[data-field='house_diff_rent']").find("div").text(res.total_house_diff_rent);
+				$(".layui-table-total td[data-field='house_pump_rent']").find("div").text(res.total_house_pump_rent);
               //导出转换后台数据
               var exportData=res.data;
               for(i in exportData){

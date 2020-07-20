@@ -320,8 +320,8 @@ class ChangeRentAdd extends SystemBase
             'change_order_number' => $finalRow['change_order_number'],
             'ban_id' => $finalRow['ban_id'],
             'ctime' => $finalRow->getData('ctime'),
-            'ftime' => $finalRow->getData('ftime'),
-            'change_status' => $finalRow['change_status'],
+            'ftime' => time(),
+            'change_status' => 1,
         ]);
 
         // 1、如果有追加以前年，则增加一条以前年回收的订单，同时添加一条收欠记录表recycle记录【待优化】
