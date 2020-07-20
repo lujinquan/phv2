@@ -189,6 +189,7 @@
 		   ,formSelects = layui.formSelects;
 		var isHide = ('{$group}' == 'x')?false:true;
 		var isHideXin = ('{$group}' == 'x')?true:false;
+		var isDtimeHide = ('{$group}' == 'z')?false:true;
 		var group = '{$group}';
 		var templet_width; //模板长度
         if(group == 'x'){
@@ -225,6 +226,7 @@
 					, {field: 'house_use_id',width: 100,align:'center',title: '使用性质',templet: function(d) {
 						return params.uses[d.house_use_id];
 					}}
+					, {field: 'house_dtime',hide: isDtimeHide,width: 120,align:'center',title: '注销时间'}
 					, {field: 'house_pre_rent',width: 120,align:'center',title: '规定租金',totalRow: true}
 					, {field: 'house_cou_rent',width: 120,align:'center',title: '计算租金',totalRow: true, templet: function(d) {
 						if(parseFloat(d.house_pre_rent) != parseFloat(d.house_cou_rent)){
@@ -238,7 +240,7 @@
 					, {field: 'house_pump_rent',hide: false,width: 80,align:'center',title: '泵费',totalRow: true}
 					, {field: 'house_area',hide: false,width: 120,align:'center',title: '房屋建面',totalRow: true}
 					, {field: 'house_oprice',hide: false,width: 120,align:'center',title: '房屋原价',totalRow: true}
-					, {field: 'last_print_time',hide: isHideXin,width: 200,align:'center',title: '出证时间'}
+					, {field: 'last_print_time',hide: isHideXin , width: 200,align:'center',title: '出证时间'}
 					, {field: 'ban_struct_id', hide: false, minWidth: 120, align:'center', title: '结构类别', templet: function(d) {
 	                    return params.structs[d.ban_struct_id];
 	                }}
@@ -295,7 +297,7 @@
 			  	}
 			  }
 			}
-		}, isShowInst,isHide,templet_width);
+		}, isShowInst,isHide,templet_width,isDtimeHide);
 		$('#button_prints').click(function(){
 			var queryWhere = $('#hisi-table-search').serialize();
 			console.log('导出的条件：',queryWhere);

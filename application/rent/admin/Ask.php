@@ -204,7 +204,7 @@ class Ask extends Admin
     	$month = date('Ym');
     	$separate = substr($month,0,4).'00';
 
-    	$fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
+    	$fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_share_img,b.house_pre_rent,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
 
 	    $result = $data = $where = [];
 	    $where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
@@ -295,53 +295,53 @@ class Ask extends Admin
      //    }
 
 
-        $html = <<<EOF
-    <style>
-        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';width: 310px;}
-        .j-print-title{width: 310px; font-size: 20px;padding: 0 0 10px;font-weight: bold;display: inline-block;text-align: center;}
-        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;display: inline-block;padding:6px;}
-        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;height:20px;line-height: 20px;}
-        .j-print-table td.j-print-90{width: 90px;}
-        .j-print-table td.j-print-120{width: 103px;}
-        .j-print-table td.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;line-height: 18px;font-size: 12px;}
-        .j-print-table td.j-print-con span{line-height: 18px;display:block;}
-    </style>
-    <div class="PageNext">
-        <div class="j-print-title">缴费单<br/></div>
-        <table class="j-print-table">
-            <tr>
-                <td class="j-print-90" align="left">租户名</td>
-                <td colspan="2"  align="left">刘道荣</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">租户地址</td>
-                <td colspan="2" align="left">新生里还建楼1栋</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">历史欠租</td>
-                <td class="j-print-120" align="left">1667.2</td>
-                <td rowspan="3">
-                    <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
-                </td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">本期欠租</td>
-                <td class="j-print-120" align="left">97.5</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">合计欠租</td>
-                <td class="j-print-120" align="left">16672</td>
-            </tr>
-            <tr>
-                <td class="j-print-con" colspan="3" align="left">
-					<span>尊敬的租户：</span>
-					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>
-					<span>特此通知，谢谢合作！</span>  
-                </td>
-            </tr>
-        </table>
-    </div>
-EOF;
+//         $html = <<<EOF
+//     <style>
+//         .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';width: 310px;}
+//         .j-print-title{width: 310px; font-size: 20px;padding: 0 0 10px;font-weight: bold;display: inline-block;text-align: center;}
+//         .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;display: inline-block;padding:6px;}
+//         .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;height:20px;line-height: 20px;}
+//         .j-print-table td.j-print-90{width: 90px;}
+//         .j-print-table td.j-print-120{width: 103px;}
+//         .j-print-table td.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;line-height: 18px;font-size: 12px;}
+//         .j-print-table td.j-print-con span{line-height: 18px;display:block;}
+//     </style>
+//     <div class="PageNext">
+//         <div class="j-print-title">缴费单<br/></div>
+//         <table class="j-print-table">
+//             <tr>
+//                 <td class="j-print-90" align="left">租户名</td>
+//                 <td colspan="2"  align="left">刘道荣</td>
+//             </tr>
+//             <tr>
+//                 <td class="j-print-90" align="left">租户地址</td>
+//                 <td colspan="2" align="left">新生里还建楼1栋</td>
+//             </tr>
+//             <tr>
+//                 <td class="j-print-90" align="left">历史欠租</td>
+//                 <td class="j-print-120" align="left">1667.2</td>
+//                 <td rowspan="3">
+//                     <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
+//                 </td>
+//             </tr>
+//             <tr>
+//                 <td class="j-print-90" align="left">本期欠租</td>
+//                 <td class="j-print-120" align="left">97.5</td>
+//             </tr>
+//             <tr>
+//                 <td class="j-print-90" align="left">合计欠租</td>
+//                 <td class="j-print-120" align="left">16672</td>
+//             </tr>
+//             <tr>
+//                 <td class="j-print-con" colspan="3" align="left">
+// 					<span>尊敬的租户：</span>
+// 					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>
+// 					<span>特此通知，谢谢合作！</span>  
+//                 </td>
+//             </tr>
+//         </table>
+//     </div>
+// EOF;
 //$html .= $html;
 //echo $html;exit;
         $SystemTcpdf = new SystemTcpdf;

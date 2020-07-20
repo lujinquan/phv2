@@ -23,6 +23,7 @@ class House extends SystemBase
 
     protected $type = [
         'house_ctime' => 'timestamp:Y-m-d H:i:s',
+        'house_dtime' => 'timestamp:Y-m-d H:i:s',
     ];
 
     public function ban()

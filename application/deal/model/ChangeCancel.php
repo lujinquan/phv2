@@ -28,11 +28,11 @@ class ChangeCancel extends SystemBase
     protected $updateTime = 'etime';
 
     protected $type = [
+        'data_json' => 'json',
+        'child_json' => 'json',
+        'change_json' => 'json',
         'ctime' => 'timestamp:Y-m-d H:i:s',
         'etime' => 'timestamp:Y-m-d H:i:s',
-        'child_json' => 'json',
-        'data_json' => 'json',
-        'change_json' => 'json',
     ];
 
     protected $processAction = ['审批不通过','审批成功','打回给房管员','初审通过','审批通过','终审通过'];
@@ -230,7 +230,7 @@ class ChangeCancel extends SystemBase
         }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        //$this->finalDeal($row);
+        $this->finalDeal($row);
         return $row;
     }
 
@@ -393,7 +393,8 @@ class ChangeCancel extends SystemBase
                     HouseModel::where([['house_number','eq',$v['house_number']]])->update([
                         'house_oprice' => $v['house_oprice'],
                         'house_area' => $v['house_area'],
-                        'house_status' => 3,
+                        'house_status' => 2,
+                        'house_dtime' => time(),
                         'house_is_pause' => 0,
                     ]);
                     //如果有暂停计租，则需要让暂停计租失效
@@ -463,7 +464,8 @@ class ChangeCancel extends SystemBase
                 HouseModel::where([['house_number','eq',$v['house_number']]])->update([
                     'house_oprice' => $v['house_oprice'],
                     'house_area' => $v['house_area'],
-                    'house_status' => 3,
+                    'house_status' => 2,
+                    'house_dtime' => time(),
                 ]);
                 //如果有暂停计租，则需要让暂停计租失效
                 ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
