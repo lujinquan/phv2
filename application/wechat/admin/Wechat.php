@@ -228,6 +228,9 @@ class Wechat extends Admin
             // }
             $WeixinConfigModel = new WeixinConfigModel();
             foreach ($data as $key => $value) {
+                // if(($key == 'app_ziyang_user_pay_key' || $key == 'app_liangdao_user_pay_key') && !$value){
+                //     continue;
+                // }
                 $WeixinConfigModel->where([['name','eq',$key]])->update(['value'=>$value]);
             }
             //halt($data);
