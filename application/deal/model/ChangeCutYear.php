@@ -174,8 +174,9 @@ class ChangeCutYear extends SystemBase
         
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 16; //减免年审
-        $data['change_order_number'] = date('Ym').'16'.random(14);
-
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'16'.random(14);   
+        }
         // 审批表数据
         $processRoles = $this->processRole;
         $processDescs = $this->processDesc;

@@ -164,7 +164,9 @@ class ChangeRentAdd extends SystemBase
         }
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 11; //暂停计租
-        $data['change_order_number'] = date('Ym').'11'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'11'.random(14);   
+        }
         
         // 审批表数据
         $processRoles = $this->processRole;

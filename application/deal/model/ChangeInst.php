@@ -162,7 +162,9 @@ class ChangeInst extends SystemBase
 
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 10; //别字更正
-        $data['change_order_number'] = date('Ym').'10'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'10'.random(14);   
+        }
 
         $fields = 'ban_id,ban_number,ban_inst_id,ban_address,ban_owner_id,ban_damage_id,ban_struct_id,ban_civil_area,ban_party_area,ban_career_area,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,ban_civil_num,ban_party_num,ban_career_num,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,ban_civil_rent,ban_party_rent,ban_career_rent,(ban_civil_rent + ban_party_rent + ban_career_rent) as ban_rent,ban_civil_oprice,ban_party_oprice,ban_career_oprice,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_use_area';
 

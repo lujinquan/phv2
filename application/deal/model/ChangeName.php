@@ -167,7 +167,9 @@ class ChangeName extends SystemBase
         
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 17; //别字更正
-        $data['change_order_number'] = date('Ym').'17'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'17'.random(14);   
+        }
 
         // 审批表数据
         $processRoles = $this->processRole;

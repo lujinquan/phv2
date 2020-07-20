@@ -154,10 +154,12 @@ class ChangeCancel extends SystemBase
                 'img' => '',
             ];
         }
-
+        
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 8; //注销
-        $data['change_order_number'] = date('Ym').'08'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'08'.random(14);   
+        }
         
         $banRow = BanModel::get($data['ban_id']);
         if(!isset($data['cancel_ban'])){
@@ -230,7 +232,7 @@ class ChangeCancel extends SystemBase
         }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 

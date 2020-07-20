@@ -165,8 +165,10 @@ class ChangePause extends SystemBase
             ];
         }
         $data['cuid'] = ADMIN_ID;
-        $data['change_type'] = 03; //暂停计租
-        $data['change_order_number'] = date('Ym').'03'.random(14);
+        $data['change_type'] = 3; //暂停计租
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'03'.random(14);   
+        }
         
         if($data['house_id']){
             $data['data_json'] = HouseModel::with(['tenant'])->where([['house_id','in',$data['house_id']]])->field('house_id,house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent,house_protocol_rent')->select()->toArray();

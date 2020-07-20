@@ -171,7 +171,9 @@ class ChangeOffset extends SystemBase
         }
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 4; //陈欠核销
-        $data['change_order_number'] = date('Ym').'04'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'04'.random(14);   
+        }
 
         
             //$rentorderdates = explode(',',$data['rent_order_date']);

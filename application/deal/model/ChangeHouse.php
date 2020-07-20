@@ -192,7 +192,9 @@ class ChangeHouse extends SystemBase
 
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 9; //楼栋调整
-        $data['change_order_number'] = date('Ym').'09'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'09'.random(14);   
+        }
 
         // 审批表数据
         $processRoles = $this->processRole;

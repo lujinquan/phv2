@@ -176,7 +176,9 @@ class ChangeNew extends SystemBase
 
         $data['cuid'] = ADMIN_ID;
         $data['change_type'] = 7; //新发租
-        $data['change_order_number'] = date('Ym').'07'.random(14);
+        if($flag === 'add'){
+            $data['change_order_number'] = date('Ym').'07'.random(14);   
+        }
 
         // 审批表数据
         $processRoles = $this->processRole;
