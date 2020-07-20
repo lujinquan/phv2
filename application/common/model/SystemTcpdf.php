@@ -51,7 +51,7 @@ class SystemTcpdf extends Model
         // 设置作者 
         $pdf->SetAuthor('Lucas');
         // 设置标题
-        $pdf->SetTitle('测试一下');
+        $pdf->SetTitle('缴费单');
         // 设置主题
         $pdf->SetSubject('TCPDF Tutorial');
         // 设置关键词

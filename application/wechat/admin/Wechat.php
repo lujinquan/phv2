@@ -56,25 +56,25 @@ class Wechat extends Admin
             return $this->success('提交成功');
         }
 
-        $tabData = [];
-        $tabData['menu'] = [
-            [
-                'title' => '用户版小程序',
-                'url' => '?group=index',
-            ],
-            [
-                'title' => '房管版小程序',
-                'url' => '?group=base',
-            ],
-            [
-                'title' => '高管版小程序',
-                'url' => '?group=leader',
-            ]
-        ];
-        $tabData['current'] = url('?group='.$group);
-        $this->assign('group',$group);
-        $this->assign('hisiTabData', $tabData);
-        $this->assign('hisiTabType', 3);
+        // $tabData = [];
+        // $tabData['menu'] = [
+        //     [
+        //         'title' => '用户版小程序',
+        //         'url' => '?group=index',
+        //     ],
+        //     [
+        //         'title' => '房管版小程序',
+        //         'url' => '?group=base',
+        //     ],
+        //     [
+        //         'title' => '高管版小程序',
+        //         'url' => '?group=leader',
+        //     ]
+        // ];
+        // $tabData['current'] = url('?group='.$group);
+        // $this->assign('group',$group);
+        // $this->assign('hisiTabData', $tabData);
+        // $this->assign('hisiTabType', 3);
 		return $this->fetch($group);
 	}
 
@@ -198,21 +198,21 @@ class Wechat extends Admin
 	public function configIndex()
 	{
 		$group = input('group','index');
-        $tabData = [];
-        $tabData['menu'] = [
-            [
-                'title' => '用户版小程序',
-                'url' => '?group=index',
-            ],
-            [
-                'title' => '房管版小程序',
-                'url' => '?group=base',
-            ],
-            [
-                'title' => '高管版小程序',
-                'url' => '?group=leader',
-            ]
-        ];
+        // $tabData = [];
+        // $tabData['menu'] = [
+        //     [
+        //         'title' => '用户版小程序',
+        //         'url' => '?group=index',
+        //     ],
+        //     [
+        //         'title' => '房管版小程序',
+        //         'url' => '?group=base',
+        //     ],
+        //     [
+        //         'title' => '高管版小程序',
+        //         'url' => '?group=leader',
+        //     ]
+        // ];
         if ($this->request->isPost()) {
             $data = $this->request->post();
             //halt($data);
@@ -249,8 +249,8 @@ class Wechat extends Admin
         $tabData['current'] = url('?group='.$group);
         $this->assign('data_info',$data);
         $this->assign('group',$group);
-        $this->assign('hisiTabData', $tabData);
-        $this->assign('hisiTabType', 3);
+        // $this->assign('hisiTabData', $tabData);
+        // $this->assign('hisiTabType', 3);
 		return $this->fetch();
 	}
 }

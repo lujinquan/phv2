@@ -570,7 +570,7 @@ EOF;
         if($result !== true) {
             return $this->error($result);
         }     
-        $res = HouseModel::where([['house_id','in',$ids]])->delete();
+        $res = HouseModel::where([['house_id','in',$ids],['house_status','eq',0]])->delete();
         if($res){
             $this->success('删除成功');
         }else{

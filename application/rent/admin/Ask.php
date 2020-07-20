@@ -196,6 +196,8 @@ class Ask extends Admin
     {
     	$ids = input('id');
 
+    	$type = input('type');
+
     	if(!$ids){
     		return false;
     	}
@@ -271,16 +273,21 @@ class Ask extends Admin
         	$html .= '</td></tr><tr><td class="j-print-90" align="left">租户地址</td><td colspan="2" align="left">';
         	$html .= $v['ban_address'];
         	$html .= '</td></tr><tr><td class="j-print-90" align="left">历史欠租</td><td class="j-print-120" align="left">';
-        	$html .= ($v['beforeMonthUnpaidRent'] + $v['beforeYearUnpaidRent']);
+        	$html .= bcaddMerge([$v['beforeMonthUnpaidRent'] + $v['beforeYearUnpaidRent']]);
 
-        	$html .= '</td><td rowspan="3"><img style="width: 100px;box-sizing: border-box;" src="';
+        	$html .= ' 元</td><td rowspan="3"><img style="width: 100px;box-sizing: border-box;" src="';
         	$html .= 'https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png';
         	$html .= '" /></td></tr><tr><td class="j-print-90" align="left">本期欠租</td><td class="j-print-120" align="left">';
         	$html .= $v['curMonthUnpaidRent'];
-        	$html .= '</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
+        	$html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
         	$html .= $v['total'];
-        	$html .= '</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！</span></td></tr></table></div>';
+        	$html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！</span></td></tr></table></div>';
         	$htmlArr[] = $html;
+        }
+        if($type == 1){
+
+        	$this->assign('data_info',$v);
+        	return $this->fetch();exit;
         }
         //halt($htmlArr);
         //$result['data'] = array_slice($data, ($page - 1) * $limit, $limit);

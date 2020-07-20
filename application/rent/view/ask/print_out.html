@@ -19,33 +19,33 @@
 				  租户名
 				</td>
 				<td colspan="2"  align="left">
-					刘道荣
+					{$data_info['tenant_name']}
 				</td>
 			</tr>
 			<tr>
 				<td class="j-print-90" align="left">租户地址</td>
-				<td colspan="2" align="left">新生里还建楼1栋</td>
+				<td colspan="2" align="left">{$data_info['ban_address']}</td>
 			</tr>
 			<tr>
 				<td class="j-print-90" align="left">历史欠租</td>
-				<td class="j-print-120" align="left">1667.2</td>
+				<td class="j-print-120" align="left">{:bcaddMerge([$data_info['beforeMonthUnpaidRent'],$data_info['beforeYearUnpaidRent']])} 元</td>
 				<td rowspan="3" align="left">
 					<img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
 				</td>
 			</tr>
 			<tr>
 				<td class="j-print-90" align="left">本期欠租</td>
-				<td class="j-print-120" align="left">97.5</td>
+				<td class="j-print-120" align="left">{$data_info['curMonthUnpaidRent']} 元</td>
 			</tr>
 			<tr>
 				<td class="j-print-90" align="left">合计欠租</td>
-				<td class="j-print-120" align="left">16672</td>
+				<td class="j-print-120" align="left">{$data_info['total']} 元</td>
 			</tr>
 			<tr>
 				<td class="j-print-con" colspan="3" align="left">
 					尊敬的租户：
 					<br/>
-					  可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
+					  可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
 					<br/>
 					  特此通知，谢谢合作！
 				</td>
