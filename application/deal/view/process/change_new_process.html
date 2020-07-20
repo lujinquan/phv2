@@ -259,14 +259,14 @@
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md12">
 			{if condition="$data_info['change_status'] == 3"}
-			<div class="j-enclosure-upload clearfix">
+			<!-- <div class="j-enclosure-upload clearfix">
 				<div class="j-enclosure-label">{if condition="in_array('ChangeNewUpload',$config['changenew_file_upload'])"}<i class="red">*</i>{/if} 资料上传</div>
 				<div class="j-enclosure-label j-uplode-icon">
 					<i><img src="/static/system/image/Group8.png"></i>点击上传
 					<button type="button" class="layui-btn layui-btn-primary" id="upload_img1">上传图片</button>
 				</div>
 				<div class="layui-form-mid layui-word-aux">限制5M</div>
-			</div>
+			</div> -->
 			<div class="j-enclosure-imgs clearfix">
 	   				<div id="upload_img_list1" class="upload_img_list j-viewer-img">
 	   					{volist name="$data_info['change_imgs']" id="v"}
