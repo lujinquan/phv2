@@ -63,60 +63,6 @@ class House extends Admin
         $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,rent_order_paid,house_id,tenant_id,is_deal,pay_way,ptime,ctime) values " . rtrim($str, ','));
     }
 
-    public function print()
-    {
-        $html = <<<EOF
-    <style>
-        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';width: 310px;}
-        .j-print-title{width: 310px; font-size: 20px;padding: 0 0 10px;font-weight: bold;display: inline-block;text-align: center;}
-        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;display: inline-block;padding:6px;}
-        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;height:20px;line-height: 20px;}
-        .j-print-table td.j-print-90{width: 90px;}
-        .j-print-table td.j-print-120{width: 103px;}
-        .j-print-table td.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;line-height: 18px;font-size: 12px;}
-        .j-print-table td.j-print-con span{line-height: 18px;display:block;}
-    </style>
-    <div class="PageNext">
-        <div class="j-print-title">缴费单<br/></div>
-        <table class="j-print-table">
-            <tr>
-                <td class="j-print-90" align="left">租户名</td>
-                <td colspan="2"  align="left">刘道荣</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">租户地址</td>
-                <td colspan="2" align="left">新生里还建楼1栋</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">历史欠租</td>
-                <td class="j-print-120" align="left">1667.2</td>
-                <td rowspan="3">
-                    <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
-                </td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">本期欠租</td>
-                <td class="j-print-120" align="left">97.5</td>
-            </tr>
-            <tr>
-                <td class="j-print-90" align="left">合计欠租</td>
-                <td class="j-print-120" align="left">16672</td>
-            </tr>
-            <tr>
-                <td class="j-print-con" colspan="3" align="left">
-					<span>尊敬的租户：</span>
-					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>
-					<span>特此通知，谢谢合作！</span>  
-                </td>
-            </tr>
-        </table>
-    </div>
-EOF;
-//echo $html;exit;
-        $SystemTcpdf = new SystemTcpdf;
-        $SystemTcpdf->example_000($html,[95,95]);
-    }
-
     public function index()
     {
         if ($this->request->isAjax()) {
@@ -368,7 +314,16 @@ EOF;
             if ($HouseModel->allowField(true)->update($data) === false) {
                 return $this->error('修改失败');
             }
-            return $this->success('修改成功');
+            $HouseModel = new HouseModel();
+            //halt($HouseModel->count_house_pre_rent($data['house_id']));
+            //$house_pre_rent = $HouseModel->count_house_pre_rent($data['house_id']);
+            $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+
+            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_pre_rent'=>$house_cou_rent,'house_cou_rent'=>$house_cou_rent]);
+
+            $HouseModel = new HouseModel();
+            $row = $HouseModel->find($data['house_id']);
+            return $this->success('修改成功','',$row);
         }
         $id = input('param.id/d');
         $row = HouseModel::with(['ban','tenant'])->get($id);
@@ -738,5 +693,59 @@ EOF;
                 $str .= '("' .$k .'","'.$a . '"),';
             }
         }
+    }
+
+    public function print()
+    {
+        $html = <<<EOF
+    <style>
+        .PageNext {page-break-after: always;font-family: 'Microsoft YaHei';width: 310px;}
+        .j-print-title{width: 310px; font-size: 20px;padding: 0 0 10px;font-weight: bold;display: inline-block;text-align: center;}
+        .j-print-table{border: 1px solid #333;border-collapse: collapse; width: 310px;font-size: 14px;font-weight: 200;box-sizing: border-box;display: inline-block;padding:6px;}
+        .j-print-table td{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;height:20px;line-height: 20px;}
+        .j-print-table td.j-print-90{width: 90px;}
+        .j-print-table td.j-print-120{width: 103px;}
+        .j-print-table td.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;box-sizing: border-box;line-height: 18px;font-size: 12px;}
+        .j-print-table td.j-print-con span{line-height: 18px;display:block;}
+    </style>
+    <div class="PageNext">
+        <div class="j-print-title">缴费单<br/></div>
+        <table class="j-print-table">
+            <tr>
+                <td class="j-print-90" align="left">租户名</td>
+                <td colspan="2"  align="left">刘道荣</td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">租户地址</td>
+                <td colspan="2" align="left">新生里还建楼1栋</td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">历史欠租</td>
+                <td class="j-print-120" align="left">1667.2</td>
+                <td rowspan="3">
+                    <img  style="width: 100px;box-sizing: border-box;" src="https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png" />
+                </td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">本期欠租</td>
+                <td class="j-print-120" align="left">97.5</td>
+            </tr>
+            <tr>
+                <td class="j-print-90" align="left">合计欠租</td>
+                <td class="j-print-120" align="left">16672</td>
+            </tr>
+            <tr>
+                <td class="j-print-con" colspan="3" align="left">
+                    <span>尊敬的租户：</span>
+                    <span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>
+                    <span>特此通知，谢谢合作！</span>  
+                </td>
+            </tr>
+        </table>
+    </div>
+EOF;
+//echo $html;exit;
+        $SystemTcpdf = new SystemTcpdf;
+        $SystemTcpdf->example_000($html,[95,95]);
     }
 }

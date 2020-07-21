@@ -184,9 +184,10 @@
 </script>
 </div>
 <script type="text/javascript">
-	layui.use(['table', 'jquery','formSelects'], function() {
+	layui.use(['table', 'jquery','laydate','formSelects'], function() {
 		var table = layui.table
 		   ,formSelects = layui.formSelects;
+		var laydate = layui.laydate;
 		var isHide = ('{$group}' == 'x')?false:true;
 		var isHideXin = ('{$group}' == 'x')?true:false;
 		var isDtimeHide = ('{$group}' == 'z')?false:true;
@@ -298,6 +299,11 @@
 			  }
 			}
 		}, isShowInst,isHide,templet_width,isDtimeHide);
+ //日期范围
+  laydate.render({
+    elem: '#test6'
+    ,range: true
+  });
 		$('#button_prints').click(function(){
 			var queryWhere = $('#hisi-table-search').serialize();
 			console.log('导出的条件：',queryWhere);
