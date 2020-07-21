@@ -64,7 +64,7 @@ class Rent extends Admin
                     $data['total_house_cou_rent'] = $totalRow['total_house_cou_rent'];
                 }
             }else{
-               $data['data'] = []; 
+               $data['data'] = [];
             }
             
             $data['code'] = 0;

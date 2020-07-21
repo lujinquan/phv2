@@ -53,6 +53,38 @@ class Record extends Admin
         return $this->fetch();
     }
 
+   /* public function index()
+    {
+        if ($this->request->isAjax()) {
+            $page = input('param.page/d', 1);
+            $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $RentModel = new RentModel;
+            $where = $RentModel->checkWhere($getData,'record');
+            $fields = "a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $data = [];
+            //halt($where);
+            $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('rent_record e','a.rent_order_id = e.rent_order_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+            //halt($data);
+            $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
+            // 统计
+            $totalRow = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.rent_order_receive) as total_rent_order_receive,  sum(b.house_pre_rent) as total_house_pre_rent,  sum(a.rent_order_paid) as total_rent_order_paid, sum(a.rent_order_cut) as total_rent_order_cut, sum(a.rent_order_diff) as total_rent_order_diff, sum(a.rent_order_pump) as total_rent_order_pump, sum(b.house_cou_rent) as total_house_cou_rent')->find();
+            if($totalRow){
+                $data['total_rent_order_receive'] = $totalRow['total_rent_order_receive'];
+                $data['total_house_pre_rent'] = $totalRow['total_house_pre_rent'];
+                $data['total_rent_order_paid'] = $totalRow['total_rent_order_paid'];
+                $data['total_rent_order_cut'] = $totalRow['total_rent_order_cut'];
+                $data['total_rent_order_diff'] = $totalRow['total_rent_order_diff'];
+                $data['total_rent_order_pump'] = $totalRow['total_rent_order_pump'];
+                $data['total_house_cou_rent'] = $totalRow['total_house_cou_rent'];
+            }
+            $data['code'] = 0;
+            $data['msg'] = '';
+            return json($data);
+        }
+        return $this->fetch();
+    }*/
+
     /**
      *  批量撤回
      */

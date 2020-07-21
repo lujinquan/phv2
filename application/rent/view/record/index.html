@@ -77,8 +77,8 @@
             <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
         </div>
         {/if}
-         <div class="layui-input-inline j-input-margin" style="width:200px;">
-            <input type="text" name="ptime" class="layui-input" title="缴纳日期范围" placeholder="缴纳日期范围" id="test6" placeholder=" ~ ">
+         <div class="layui-input-inline j-input-margin" style="width:240px;">
+            <input type="text" name="ptime" class="layui-input" title="缴纳日期范围，默认为当月" placeholder="缴纳日期范围" id="test6" placeholder=" ~ " value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
         </div>
 
 
@@ -120,6 +120,7 @@
         laydate.render({
             elem: '#query_month'
             ,type: 'month'
+            //,value: '2018-08-18' 
             ,isInitValue: true,
             ready: function(date){
                 $('.layui-laydate li').click(function () {
