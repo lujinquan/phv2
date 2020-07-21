@@ -133,14 +133,14 @@ class Changecut extends Admin
             
                 // 入库使用权变更表
                 unset($filData['id']);
-                $useRow = $ChangeCutModel->allowField(true)->create($filData);
-                if (!$useRow) {
+                $row = $ChangeCutModel->allowField(true)->create($filData);
+                if (!$row) {
                     return $this->error('申请失败');
                 }
                 if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $useRow['id'];
+                    $filData['change_id'] = $row['id'];
                     unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
@@ -165,14 +165,15 @@ class Changecut extends Admin
                 }
                 // 入库使用权变更表
                 unset($filData['id']);
-                $useRow = $ChangeCutYearModel->allowField(true)->create($filData);
-                if (!$useRow) {
+                $row = $ChangeCutYearModel->allowField(true)->create($filData);
+                if (!$row) {
                     return $this->error('申请失败');
                 }
                 if($data['save_type'] == 'submit'){ //如果是保存并提交，则入库审批表
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $useRow['id'];
+                    $filData['change_id'] = $row['id'];
+                    $filData['change_order_number'] = $row['change_order_number'];
                     unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
@@ -250,24 +251,25 @@ class Changecut extends Admin
                 }
 
                 // 入库使用权变更表
-                $useRow = $ChangeCutModel->allowField(true)->update($filData);
-                if ($useRow === false) {
+                $row = $ChangeCutModel->allowField(true)->update($filData);
+                if ($row === false) {
                     return $this->error('申请失败');
                 }
-                //halt($useRow);
-                if($data['save_type'] == 'submit' && count($useRow['child_json']) == 1){ //如果是保存并提交，则入库审批表
+                //halt($row);
+                if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $useRow['id'];
+                    $filData['change_id'] = $row['id'];
+                    $filData['change_order_number'] = $row['change_order_number'];
                     unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
                     $msg = '保存并提交成功';
-                }elseif($data['save_type'] == 'submit' && count($useRow['child_json']) > 1){ 
+                }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $process = $ProcessModel->where([['change_type','eq',1],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    $process = $ProcessModel->where([['change_type','eq',1],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
                     if (!$process) {
                         return $this->error('未知错误');
                     }
@@ -289,24 +291,25 @@ class Changecut extends Admin
                 }
                 //halt($filData);
                 // 入库使用权变更表
-                $useRow = $ChangeCutYearModel->allowField(true)->update($filData);
-                if (!$useRow) {
+                $row = $ChangeCutYearModel->allowField(true)->update($filData);
+                if (!$row) {
                     return $this->error('申请失败');
                 }
-                //halt($useRow);
-                if($data['save_type'] == 'submit' && count($useRow['child_json']) == 1){ //如果是保存并提交，则入库审批表
+                //halt($row);
+                if($data['save_type'] == 'submit' && count($row['child_json']) == 1){ //如果是保存并提交，则入库审批表
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $useRow['id'];
+                    $filData['change_id'] = $row['id'];
+                    $filData['change_order_number'] = $row['change_order_number'];
                     unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
                     }
                     $msg = '保存并提交成功';
-                }elseif($data['save_type'] == 'submit' && count($useRow['child_json']) > 1){ 
+                }elseif($data['save_type'] == 'submit' && count($row['child_json']) > 1){ 
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $process = $ProcessModel->where([['change_type','eq',16],['change_id','eq',$useRow['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
+                    $process = $ProcessModel->where([['change_type','eq',16],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
                     if (!$process) {
                         return $this->error('未知错误');
                     }

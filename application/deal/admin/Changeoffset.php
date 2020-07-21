@@ -81,6 +81,7 @@ class Changeoffset extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                $filData['change_order_number'] = $row['change_order_number'];
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -132,6 +133,7 @@ class Changeoffset extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                $filData['change_order_number'] = $row['change_order_number'];
                 unset($filData['id']);
                 //halt($filData);
                 if (!$ProcessModel->allowField(true)->create($filData)) {

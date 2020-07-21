@@ -4,7 +4,7 @@
 			<legend>基本信息</legend>
 		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md12">
+			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 				<div class="j-input-inline j-tips">
 					<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
@@ -15,6 +15,12 @@
 					<!-- <b class="j-explain-search j-house_number">查询</b> -->
 				</div>
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">异动编号</label>
+				<div class="j-input-inline">
+					<input type="text" name="change_order_number" value="{$data_info['change_order_number']}" autocomplete="off" class="layui-input" readonly>
+				</div>
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">

@@ -79,6 +79,7 @@ class Changerentadd extends Admin
                 // 入库审批表
                 $ProcessModel = new ProcessModel;
                 $filData['change_id'] = $row['id'];
+                $filData['change_order_number'] = $row['change_order_number'];
                 if (!$ProcessModel->allowField(true)->create($filData)) {
                     return $this->error('未知错误');
                 }
@@ -152,6 +153,7 @@ class Changerentadd extends Admin
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
                     $filData['change_id'] = $row['id'];
+                    $filData['change_order_number'] = $row['change_order_number'];
                     unset($filData['id']);
                     if (!$ProcessModel->allowField(true)->create($filData)) {
                         return $this->error('未知错误');
