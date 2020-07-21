@@ -161,7 +161,8 @@ class Changeuse extends Admin
                 }elseif(count($row['child_json']) > 1){
                     // 入库审批表
                     $ProcessModel = new ProcessModel;
-                    $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$row['id']]])->update(['curr_role'=>5,'change_desc'=>'待资料员初审']);
+                    //$process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$row['id']]])->update(['curr_role'=>5,'change_desc'=>'待资料员初审']);
+                    $process = $ProcessModel->where([['change_type','eq',13],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计审批']);
                     if (!$process) {
                         return $this->error('未知错误');
                     } 
