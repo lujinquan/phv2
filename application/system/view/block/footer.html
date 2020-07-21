@@ -4,7 +4,7 @@
 {else /}
         </div>
     </div>
-    {if condition="false"}
+    {if condition="true"}
 	<style>
 		.layui-layer-title{padding: 0 40px 0 0px;text-align: center;}
 		.j-versions{padding:0 10px 10px;}
@@ -17,39 +17,54 @@
 		.j-versions .j-con{font-size: 10px;}
 	</style>
     <div class="layui-footer footer">
-       <!-- 楚天新媒 © <a href="/" target="_blank">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label> -->
-	   © {:config('hisiphp.name')} <a data-method="offset" data-type="rb" class="j-version" href="javascript:;">v{:config('hisiphp.main_version')}</a>
+       楚天新媒 © <a data-method="offset" data-type="rb" class="j-version-1" href="javascript:;">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label>
+	   <!-- © {:config('hisiphp.name')} <a data-method="offset" data-type="rb" class="j-version-1" href="javascript:;">v{:config('hisiphp.main_version')}</a> -->
     </div>
 	<div class="j-versions hide">
 		<ul>
 			<li>
 				<dl class="clearfix">
 					<dt class="j-title clearfix">
-						<span class="fl"><i></i>武房公房系统v2.0.01更新提醒</span>
-						<span class="fr">2020-01-09</span>
+						<span class="fl"><i></i>武房公房系统 v2.0.1 更新提醒</span>
+						<span class="fr">2020-07-23</span>
 					</dt>
 					<dd class="j-con clearfix">
 						<dl class="clearfix">
 							<dt class="j-label clearfix">[优化]</dt>
 							<dd class="j-list clearfix">
-								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+								1.租金记录：优化在线支付的订单无法退款
 							</dd>
 							<dd class="j-list clearfix">
-								2.租金减免年审异动：新增租金减免年审异动，房管员
+								2.房屋信息：列表新增“租差”、“泵费”字段，且展示统计信息，房屋详情基本信息数据不完整
 							</dd>
 						</dl>
 						<dl class="clearfix">
-							<dt class="j-label clearfix">[功能迭代]</dt>
+							<dt class="j-label clearfix">[迭代]</dt>
 							<dd class="j-list clearfix">
-								1.租金减免年审优化：优化租金减免年审申请条件，附件分类显示，多次年审审批记录明细展示
+								1.使用权变更异动：使用权变更删除资料员审批步骤
 							</dd>
 							<dd class="j-list clearfix">
-								2.租金减免年审异动：新增租金减免年审异动，房管员
+								2.新发租异动：新发租申请资料员审批时，不需要上传资料
+							</dd>
+							<dd class="j-list clearfix">
+								3.租金催缴单：租金催缴单信息及批量打印
+							</dd>
+						</dl>
+						<dl class="clearfix">
+							<dt class="j-label clearfix">[修复]</dt>
+							<dd class="j-list clearfix">
+								1.租约管理：审批页面 - 计租表 “二次供水”数据不显示，附记未显示用户填写的换租原因，打回修改后异动订单编号被修改
+							</dd>
+							<dd class="j-list clearfix">
+								2.房屋调整异动：房屋调整明细附件未展示 编辑房屋时，仅修改租差泵费未重新计算租金
+							</dd>
+							<dd class="j-list clearfix">
+								3.计租表：仅修改租差泵费未重新计算租金
 							</dd>
 						</dl>
 					</dd>
 				</dl>
-				<dl class="clearfix">
+				<!-- <dl class="clearfix">
 					<dt class="j-title clearfix">
 						<span class="fl"><i></i>武房公房系统v2.0.02更新提醒</span>
 						<span class="fr">2020-01-09</span>
@@ -74,7 +89,7 @@
 							</dd>
 						</dl>
 					</dd>
-				</dl>
+				</dl> -->
 			</li>
 		</ul>
 	</div>

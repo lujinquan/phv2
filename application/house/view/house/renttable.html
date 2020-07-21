@@ -67,6 +67,20 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
+				<label class="j-form-label">使用性质</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_use_id" readonly value="{$params['uses'][$data_info['house_use_id']]}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">住改非</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_is_nonlife" readonly value={if condition="$data_info['house_is_nonlife']"}是{else /}否{/if} autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
 				<label class="j-form-label">实有面积</label>
 				<div class="j-input-inline">
 					<input type="text" name="house_oprice" readonly value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
