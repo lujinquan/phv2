@@ -193,13 +193,23 @@
                 $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);
                 $(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
                //导出转换后台数据
-               var exportData=res.data;
-               for(i in exportData){
-                 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
-               	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
-               	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
-				 exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
-               }
+     //           var exportData=res.data;
+     //           for(i in exportData){
+     //             exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+     //           	 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+     //           	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+				 // exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
+     //           }
+				 // 根据类型标注颜色
+				 var result = res.data;
+				 for (var i = 0; i < result.length; i++) {
+					if(parseInt(result[i].pay_way) == 4){
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#5fb878');
+						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").prop('disabled', true);
+						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").next().addClass('layui-btn-disabled');
+						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").removeAttr('name');
+					}
+				 }
             }
         },isShowInst)
 
