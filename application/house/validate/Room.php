@@ -38,7 +38,8 @@ class Room extends Validate
 
     protected function existInBan($value, $rule='', $data)
   	{
-    		$row = BanModel::where([['ban_number','eq',$value]])->find();
+        //halt($data);
+    	$row = BanModel::where([['ban_number','eq',$value]])->find();
 
         if($row){
             if($row['ban_units'] < $data['room_unit_id']){
