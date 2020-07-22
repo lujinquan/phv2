@@ -73,6 +73,15 @@ class Changeban extends Validate
                     $msg = '异动前后完损等级不能相同！';
                 }
             }
+        }elseif($data['ban_change_id'] == 3){
+            if(!$data['new_address']){
+                $msg = '异动后的楼栋地址不能为空！';
+            }else{
+                $address = BanModel::where([['ban_id','eq',$data['ban_id']]])->value('ban_address');
+                if($address == $data['new_address']){
+                    $msg = '异动前后楼栋地址不能相同！';
+                }
+            }
         }else{
             if(!$data['new_struct']){
                 $msg = '异动后的结构类别不能为空！';

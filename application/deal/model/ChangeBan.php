@@ -228,6 +228,8 @@ class ChangeBan extends SystemBase
                         'endloss_changes_tung' => $data['endloss_changes_tung'],
                     ],
                 ];
+            }elseif($data['ban_change_id'] == 3){
+
             }else{
                 $data['data_json'] = [
                     'houseDetail'=>[],
@@ -510,6 +512,27 @@ class ChangeBan extends SystemBase
                 'ban_damage_id' => [
                     'old' => $finalRow['old_damage'],
                     'new' => $finalRow['new_damage'],
+                ],
+            ];
+            $BanTaiModel = new BanTaiModel;
+            $BanTaiModel->allowField(true)->create($taiBanData);
+
+        }elseif($finalRow['ban_change_id'] == 3){ // 如果是调整楼栋地址
+
+            // 1、修改楼栋完损等级
+            $BanModel = new BanModel;
+            $BanModel->where([['ban_id','eq',$finalRow['ban_id']]])->update(['ban_address'=>$finalRow['new_address']]);
+
+            // 2、添加楼栋台账
+            $taiBanData = [];
+            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_tai_type'] = 5;
+            $taiBanData['cuid'] = $finalRow['cuid'];
+            $taiBanData['ban_tai_remark'] = '楼栋调整异动单号：'.$finalRow['change_order_number'];
+            $taiBanData['data_json'] = [
+                'ban_address' => [
+                    'old' => $finalRow['old_address'],
+                    'new' => $finalRow['new_address'],
                 ],
             ];
             $BanTaiModel = new BanTaiModel;
