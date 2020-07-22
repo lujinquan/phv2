@@ -7,7 +7,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>房间类型</label>
 				<div class="j-input-inline">
-					 <select name="room_type" lay-verify="required" class="field-cid" type="select" required>
+					 <select name="room_type" lay-verify="required" lay-filter="room_type" class="field-cid" type="select" required>
 					     <option value="">请选择</option>
 					     {volist name="params['roomtypes']" id="v"}
 					     <option value="{$key}" {if condition="$key == $data_info['room_type']"}selected{/if}>{$v}</option>
@@ -82,9 +82,9 @@
 				</div>
 			</div>
 			<div class="layui-col-md4">
-		  		<label class="j-form-label"><i class="red">*</i>规定租金</label>
+		  		<label class="j-form-label"><i class="red"></i>规定租金</label>
 		  		<div class="j-input-inline">
-		  			<input type="number" name="room_pre_rent" lay-verify="required" value="{$data_info['room_pre_rent']}" autocomplete="off" class="layui-input">
+		  			<input type="number" name="room_pre_rent" value="{$data_info['room_pre_rent']}" {if condition="$data_info['room_type'] != 12"}readonly{/if} autocomplete="off" class="layui-input">
 		  		</div>
 		  	</div>
 		</div>
@@ -120,6 +120,18 @@ layui.use(['form', 'func'], function() {
         var html = '<div class="layui-col-md4"><label class="j-form-label">绑定房屋</label><div class="j-input-inline"><input type="text" value="" autocomplete="off" readonly placeholder="点击查询" class="layui-input"><input type="hidden" name="house_id[]" value=""><b class="j-explain-search j-house_number">查询</b><i class="icon-cancel lu-del"></i></div></div>';
         $('.lu-add').parent().before(html);
     });
+    form.on('select(room_type)', function(data){
+		//console.log(data.elem); //得到select原始DOM对象
+		var select_value = data.value;
+		if(select_value != 12){
+			$("input[name='room_pre_rent']").attr('readonly','true');
+			$("input[name='room_pre_rent']").val('');
+		}else{
+			$("input[name='room_pre_rent']").removeAttr('readonly');
+		}
+	  //console.log(data.value); //得到被选中的值
+	  //console.log(data.othis); //得到美化后的DOM对象
+	});
     $('.e-house').on('click','.lu-del',function(){
         var that = $(this);
         console.log(that);

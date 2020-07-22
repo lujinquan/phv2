@@ -87,6 +87,9 @@ class Room extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            if($data['room_type'] == 12 && $data['room_pre_rent'] <= 0){
+                return $this->error('规租不能为空或为零');
+            }
             $RoomModel = new RoomModel();
             // 数据过滤
             $filData = $RoomModel->dataFilter($data);
@@ -97,9 +100,15 @@ class Room extends Admin
             if (!$RoomModel->allowField(true)->save($filData)) {
                 return $this->error('新增失败');
             }
-            // 2、补充房间计算租金，入库room表
-            $room_cou_rent = $RoomModel->count_room_rent($RoomModel->room_id);
-            $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_cou_rent',$room_cou_rent);
+            if($filData['room_type'] != 12){ // 如果不是营业类型，则将房间的规定租金等于计算租金
+                // 补充房间计算租金，更新room表
+                // 2、补充房间计算租金，入库room表
+                $room_cou_rent = $RoomModel->count_room_rent($RoomModel->room_id);
+                $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_cou_rent',$room_cou_rent);
+                $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_pre_rent',$room_cou_rent);
+            }else{ // 如果是营业类型
+                $RoomModel->where([['room_id','eq',$RoomModel->room_id]])->setField('room_cou_rent',$filData['room_pre_rent']);
+            }
             // 3、入库house_room表
             $HouseModel = new HouseModel;
             $HouseRoomModel = new HouseRoomModel;
@@ -133,13 +142,22 @@ class Room extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
+            if($data['room_type'] == 12 && $data['room_pre_rent'] <= 0){
+                return $this->error('规租不能为空或为零');
+            }
             // 入库room表
             if ($RoomModel->allowField(true)->update($filData) === false) {
                 return $this->error('修改失败');
             }
-            // 补充房间计算租金，更新room表
-            $room_cou_rent = $RoomModel->count_room_rent($filData['room_id']);
-            $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_cou_rent',$room_cou_rent);      
+            
+            if($filData['room_type'] != 12){ // 如果不是营业类型，则将房间的规定租金等于计算租金
+                // 补充房间计算租金，更新room表
+                $room_cou_rent = $RoomModel->count_room_rent($filData['room_id']);
+                $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_cou_rent',$room_cou_rent);
+                $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_pre_rent',$room_cou_rent);
+            }else{ // 如果是营业类型
+                $RoomModel->where([['room_id','eq',$data['room_id']]])->setField('room_cou_rent',$data['room_pre_rent']);
+            }     
             //更新house_room表
             $HouseModel = new HouseModel;
             foreach($filData['house_room'] as &$v){
