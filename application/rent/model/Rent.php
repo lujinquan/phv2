@@ -210,16 +210,17 @@ class Rent extends Model
                     $where[] = ['rent_order_date','eq',$queryMonth];
                 }
                 // 缴纳日期
+                if(!isset($data['ptime'])){
+                    $pStartDate = strtotime(date('Y-m').'-01');
+                    $pEndDate = strtotime(date('Y-m',strtotime('1 month')).'-01');
+                    //dump($pStartDate);halt($pEndDate);
+                    $where[] = ['ptime','between',[$pStartDate,$pEndDate]]; 
+                }
                 if(isset($data['ptime']) && $data['ptime']){
                     $pStartDate = strtotime(substr($data['ptime'],0,10));
                     $pEndDate = strtotime(substr($data['ptime'],13,11));
                     //dump($pStartDate);halt($pEndDate);
                     $where[] = ['ptime','between',[$pStartDate,$pEndDate]];
-                }else{
-                    $pStartDate = strtotime(date('Y-m').'-01');
-                    $pEndDate = strtotime(date('Y-m',strtotime('1 month')).'-01');
-                    //dump($pStartDate);halt($pEndDate);
-                    $where[] = ['ptime','between',[$pStartDate,$pEndDate]]; 
                 }
                 // 检索机构
                 if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
