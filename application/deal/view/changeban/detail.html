@@ -56,6 +56,9 @@
 			  {elseif condition="$data_info['ban_change_id'] == 2" /}
 			   <td><input type="text"  readonly value="{$params.damages[$data_info['old_damage']]}" placeholder=""  autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" readonly value="{$params.damages[$data_info['new_damage']]}" placeholder="" autocomplete="off" class="layui-input"></td>
+			  {elseif condition="$data_info['ban_change_id'] == 3" /}
+			  <td><input type="text"  readonly value="{$data_info['old_address']}" placeholder=""  autocomplete="off" class="layui-input"></td>
+			  <td><input type="text" readonly value="{$data_info['new_address']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  {else /}
 			  <td><input type="text"  readonly value="{$params.structs[$data_info['old_struct']]}" placeholder=""  autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" readonly value="{$params.structs[$data_info['new_struct']]}" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -182,7 +185,7 @@
 	  </table>
 	  {/if}
 	  <!-- 结构类别 -->
-	  {if condition="$data_info['ban_change_id'] == 3"}
+	  <!-- {if condition="$data_info['ban_change_id'] == 3"}
 	  <table class="layui-table j-hides j-structure-boxs">
 		  <thead>
 			  <tr>
@@ -217,7 +220,7 @@
 		  </tbody>
 		  
 	  </table>
-	  {/if}
+	  {/if} -->
       <!-- 使用性质 -->
 <!-- 	  <table class="layui-table j-hides j-nature-box hide">
 		  <thead>
