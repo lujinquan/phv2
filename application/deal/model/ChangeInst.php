@@ -81,6 +81,10 @@ class ChangeInst extends SystemBase
             }
             $where[] = ['a.new_inst_id','in',array_unique($instid_arr)];
         }
+        // 检索异动单号
+        if(isset($data['change_order_number']) && $data['change_order_number']){
+            $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
+        }
         // 检索审核状态
         if(isset($data['change_status']) && $data['change_status'] !== ''){
             $where[] = ['a.change_status','eq',$data['change_status']];

@@ -10,6 +10,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8 fl">
+				{if condition="in_array('change_order_number',$config['deal_changerentadd_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('house_number',$config['deal_changerentadd_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
@@ -131,8 +136,8 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号', totalRowText: '合计'}, 
-					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号', totalRowText: '合计'},
+					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
 					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {

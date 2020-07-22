@@ -78,6 +78,10 @@ class ChangeCut extends SystemBase
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['c.tenant_name','like','%'.$data['tenant_name'].'%'];
         }
+        // 检索异动单号
+        if(isset($data['change_order_number']) && $data['change_order_number']){
+            $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];

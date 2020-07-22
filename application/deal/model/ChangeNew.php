@@ -71,6 +71,10 @@ class ChangeNew extends SystemBase
                 # code...
                 break;
         }
+        // 检索异动单号
+        if(isset($data['change_order_number']) && $data['change_order_number']){
+            $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
+        }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];

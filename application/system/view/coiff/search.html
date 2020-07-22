@@ -154,6 +154,7 @@
         <label class="layui-form-label">业务审批：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_process_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_process_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_process_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_process_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_process_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_search[]" value="inst_id" title="申请机构" lay-skin="primary" {if condition="in_array('inst_id',$config['deal_process_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_process_search'])"}checked{/if}>
@@ -165,6 +166,7 @@
         <label class="layui-form-label">业务审批记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_process_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_process_record_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_process_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_process_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_process_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_record_search[]" value="inst_id" title="申请机构" lay-skin="primary" {if condition="in_array('inst_id',$config['deal_process_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_process_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_process_record_search'])"}checked{/if}>
@@ -178,6 +180,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changepause_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changepause_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_index_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changepause_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changepause_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changepause_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changepause_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changepause_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changepause_index_search'])"}checked{/if}>
@@ -188,6 +191,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changepause_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changepause_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_record_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changepause_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changepause_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changepause_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changepause_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changepause_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changepause_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changepause_record_search'])"}checked{/if}>
@@ -204,6 +208,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeoffset_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changeoffset_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changeoffset_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changeoffset_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changeoffset_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeoffset_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeoffset_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeoffset_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeoffset_index_search'])"}checked{/if}>
@@ -215,6 +220,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeoffset_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changeoffset_record_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changeoffset_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changeoffset_record_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changeoffset_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeoffset_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeoffset_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeoffset_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeoffset_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeoffset_record_search'])"}checked{/if}>
@@ -227,6 +233,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changelease_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changelease_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changelease_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changelease_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changelease_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changelease_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_index_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['deal_changelease_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changelease_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changelease_index_search'])"}checked{/if}>
@@ -238,10 +245,10 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changelease_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changelease_record_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changelease_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changelease_record_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changelease_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changelease_record_search'])"}checked{/if}>
-            <input type="checkbox" name="deal_changelease_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="ftime" title="完成时间" lay-skin="primary" {if condition="in_array('ftime',$config['deal_changelease_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changelease_record_search[]" value="effecttime" title="生效时间" lay-skin="primary" {if condition="in_array('effecttime',$config['deal_changelease_record_search'])"}checked{/if}>
@@ -254,6 +261,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changerentadd_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changerentadd_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changerentadd_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changerentadd_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changerentadd_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changerentadd_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changerentadd_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changerentadd_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changerentadd_index_search'])"}checked{/if}>
@@ -267,6 +275,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changerentadd_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changerentadd_record_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changerentadd_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changerentadd_record_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changerentadd_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changerentadd_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changerentadd_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changerentadd_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changerentadd_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changerentadd_record_search'])"}checked{/if}>
@@ -283,6 +292,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecut_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecut_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changecut_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changecut_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changecut_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecut_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecut_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changecut_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_index_search[]" value="house_use_id" title="使用性质" lay-skin="primary" {if condition="in_array('house_use_id',$config['deal_changecut_index_search'])"}checked{/if}>
@@ -294,6 +304,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecut_record_search'])"}checked{/if}>  
             <input type="checkbox" name="deal_changecut_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changecut_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changecut_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changecut_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecut_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changecut_record_search'])"}checked{/if}>
@@ -309,6 +320,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changename_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changename_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changename_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changename_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changename_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changename_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changename_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changename_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changename_index_search'])"}checked{/if}>
@@ -321,6 +333,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changename_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changename_record_search'])"}checked{/if}>  
             <input type="checkbox" name="deal_changename_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changename_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changename_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changename_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changename_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changename_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changename_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changename_record_search'])"}checked{/if}>
@@ -336,6 +349,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeuse_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeuse_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeuse_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="old_tenant_name" title="原姓名" lay-skin="primary" {if condition="in_array('old_tenant_name',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="new_tenant_name" title="变更后租户名" lay-skin="primary" {if condition="in_array('new_tenant_name',$config['deal_changeuse_index_search'])"}checked{/if}>
@@ -346,6 +360,7 @@
         <label class="layui-form-label">使用权变更记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeuse_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeuse_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeuse_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="old_tenant_name" title="原姓名" lay-skin="primary" {if condition="in_array('old_tenant_name',$config['deal_changeuse_record_search'])"}checked{/if}>
@@ -360,6 +375,7 @@
         <label class="layui-form-label">新发租申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changenew_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changenew_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changenew_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changenew_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changenew_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changenew_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changenew_index_search'])"}checked{/if}>
@@ -372,6 +388,7 @@
         <label class="layui-form-label">新发租记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changenew_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changenew_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changenew_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changenew_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changenew_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changenew_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changenew_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changenew_record_search'])"}checked{/if}>
@@ -386,6 +403,7 @@
         <label class="layui-form-label">楼栋调整申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeban_index_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changeban_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeban_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeban_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeban_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changeban_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeban_index_search'])"}checked{/if}>
@@ -396,6 +414,7 @@
         <label class="layui-form-label">楼栋调整记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeban_record_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changeban_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeban_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeban_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeban_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeban_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeban_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changeban_record_search'])"}checked{/if}>
@@ -408,6 +427,7 @@
         <label class="layui-form-label">注销申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecancel_index_search[]" value="cancel_type" title="注销类别" lay-skin="primary" {if condition="in_array('cancel_type',$config['deal_changecancel_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changecancel_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecancel_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changecancel_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecancel_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecancel_index_search'])"}checked{/if}>
@@ -418,6 +438,7 @@
         <label class="layui-form-label">注销记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecancel_record_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changecancel_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changecancel_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecancel_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecancel_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changecancel_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecancel_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecancel_record_search'])"}checked{/if}>
@@ -431,6 +452,7 @@
         <label class="layui-form-label">房屋调整申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changehouse_index_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changehouse_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changehouse_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changehouse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changehouse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changehouse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_index_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['deal_changehouse_index_search'])"}checked{/if}>
@@ -442,6 +464,7 @@
         <label class="layui-form-label">房屋调整记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changehouse_record_search[]" value="ban_number" title="楼栋编号" lay-skin="primary" {if condition="in_array('ban_number',$config['deal_changehouse_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changehouse_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changehouse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changehouse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_record_search[]" value="tenant_name" title="租户姓名" lay-skin="primary" {if condition="in_array('tenant_name',$config['deal_changehouse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changehouse_record_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changehouse_record_search'])"}checked{/if}>
@@ -455,6 +478,7 @@
         <label class="layui-form-label">管段调整申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeinst_index_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeinst_index_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeinst_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeinst_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeinst_index_search[]" value="new_inst_id" title="新管段" lay-skin="primary" {if condition="in_array('new_inst_id',$config['deal_changeinst_index_search'])"}checked{/if}>
         </div>
     </div>
@@ -462,6 +486,7 @@
         <label class="layui-form-label">管段调整申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changeinst_record_search[]" value="new_inst_id" title="新管段" lay-skin="primary" {if condition="in_array('new_inst_id',$config['deal_changeinst_record_search'])"}checked{/if}>
+            <input type="checkbox" name="deal_changeinst_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeinst_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeinst_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeinst_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeinst_record_search[]" value="effecttime" title="生效时间" lay-skin="primary" {if condition="in_array('effecttime',$config['deal_changeinst_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeinst_record_search[]" value="change_status" title="审核状态" lay-skin="primary" {if condition="in_array('change_status',$config['deal_changeinst_record_search'])"}checked{/if}>
@@ -471,6 +496,7 @@
         <label class="layui-form-label">租金减免年审申请：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecutyear_index_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecutyear_index_search'])"}checked{/if}> 
+            <input type="checkbox" name="deal_changecutyear_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecutyear_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecutyear_index_search[]" value="tenant_name" title="租户名称" lay-skin="primary" {if condition="in_array('tenant_name',$config['deal_changecutyear_index_search'])"}checked{/if}> 
             <input type="checkbox" name="deal_changecutyear_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecutyear_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecutyear_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changecutyear_index_search'])"}checked{/if}>
@@ -483,6 +509,7 @@
         <label class="layui-form-label">租金减免年审记录：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="deal_changecutyear_record_search[]" value="ban_address" title="地址" lay-skin="primary" {if condition="in_array('ban_address',$config['deal_changecutyear_record_search'])"}checked{/if}>  
+            <input type="checkbox" name="deal_changecutyear_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changecutyear_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecutyear_record_search[]" value="tenant_name" title="租户名称" lay-skin="primary" {if condition="in_array('tenant_name',$config['deal_changecutyear_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecutyear_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changecutyear_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changecutyear_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changecutyear_record_search'])"}checked{/if}>

@@ -60,6 +60,10 @@ class Process extends SystemBase
         if(isset($data['change_type']) && $data['change_type']){
             $where[] = ['change_type','eq',$data['change_type']];
         }
+        // 检索异动单号
+        if(isset($data['change_order_number']) && $data['change_order_number']){
+            $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
+        }
         // 检索审核当前的状态
         if(isset($data['change_desc']) && $data['change_desc']){
             $where[] = ['a.change_desc','like','%'.$data['change_desc'].'%'];

@@ -3,6 +3,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('change_order_number',$config['deal_changepause_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('ban_address',$config['deal_changepause_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin  j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
@@ -171,8 +176,8 @@
 						}
 					}, */
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址',totalRowText: '合计'},
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_number',hide:true,align:'center',minWidth: 210,title: '楼栋编号'},
-					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 140,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];

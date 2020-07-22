@@ -11,6 +11,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}?group={$group}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('change_order_number',$config['deal_changecut_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('ban_address',$config['deal_changecut_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
@@ -130,8 +135,9 @@ var process_config = {'0':'失败','1':'成功','2':'待房管员处理','3':'�
 			    }
 			    ,cols: [
 				  [ //表头 
-				   {field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址',totalRowText: '合计'}, 
-				   {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+				   {field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号',totalRowText: '合计'},
+				   {field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
+				   
 				   {field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质', templet: function(d) {
 		               return params.uses[d.house_use_id];
 		           }}, 

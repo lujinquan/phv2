@@ -48,6 +48,10 @@ class ChangeRecord extends SystemBase
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];
         }
+        // 检索异动单号
+        if(isset($data['change_order_number']) && $data['change_order_number']){
+            $where[] = ['a.change_order_number','like','%'.$data['change_order_number'].'%'];
+        }
         // 检索状态
         if(isset($data['change_status']) && $data['change_status'] != ''){
         	if($data['change_status']){

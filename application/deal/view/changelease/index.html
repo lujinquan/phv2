@@ -16,6 +16,11 @@
 					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('change_order_number',$config['deal_changelease_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('ban_address',$config['deal_changelease_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
@@ -134,8 +139,8 @@
 						     return d.LAY_INDEX ;
 						}
 					}, */
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
-					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'},
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {

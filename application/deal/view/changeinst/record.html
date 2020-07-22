@@ -3,6 +3,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('change_order_number',$config['deal_changeinst_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('old_inst_id',$config['deal_changeinst_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
@@ -140,10 +145,12 @@
 		                    return d.LAY_INDEX ;
 		                }
 					}, */
-					{field: 'old_inst_id',minWidth: 120,align:'center',title: '原管段',totalRowText: '合计',templet: function(d) {
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号',totalRowText: '合计'},
+					{field: 'old_inst_id',minWidth: 120,align:'center',title: '原管段',
+						templet: function(d) {
 		                    return params.insts[d.old_inst_id];
-		            }}, 
-		            {field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+		                }
+					}, 
 					{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段', templet: function(d) {
 	                    return params.insts[d.new_inst_id];
 	                }}, 

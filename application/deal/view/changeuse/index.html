@@ -10,6 +10,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('change_order_number',$config['deal_changeuse_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('old_tenant_name',$config['deal_changeuse_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-80">
 					<input type="text" name="old_tenant_name" placeholder="原租户" class="layui-input">
@@ -125,7 +130,7 @@
 			  }
 			  ,cols: [
 				[ 
-					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', 
 						templet: function(d) {

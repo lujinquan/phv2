@@ -10,6 +10,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('change_order_number',$config['deal_changeinst_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('old_inst_id',$config['deal_changeinst_index_search'])"}
 			    {if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-input-margin j-width-130 j-select-width130 j-margin-10">
@@ -118,12 +123,13 @@
 		                    return d.LAY_INDEX ;
 		                }
 					}, */
-					{field: 'old_inst_id',minWidth: 120,align:'center',title: '原管段',totalRowText: '合计', 
+					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号',totalRowText: '合计'},
+					{field: 'old_inst_id',minWidth: 120,align:'center',title: '原管段',
 						templet: function(d) {
 		                    return params.insts[d.old_inst_id];
 		                }
 					}, 
-					{field: 'change_order_number',hide:true,align:'center',minWidth: 210,title: '异动单号'},
+					
 					{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段', 
 						templet: function(d) {
 		                    return params.insts[d.new_inst_id];
@@ -133,7 +139,7 @@
 					
 					{field: 'change_ban_area',minWidth: 100,align:'center',title: '建筑面积',totalRow: true},  
 					{field: 'change_ban_rent',minWidth: 100,align:'center',title: '规定租金',totalRow: true},
-					{field: 'change_ban_oprice',minWidth: 100,align:'center',title: '原价',totalRow: true},
+					{field: 'change_ban_oprice',minWidth: 140,align:'center',title: '原价',totalRow: true},
 					{field: 'change_ban_use_area',minWidth: 100,align:'center',title: '使用面积',totalRow: true},
 					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 160,title: '审核状态', 
