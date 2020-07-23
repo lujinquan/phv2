@@ -146,6 +146,13 @@ class House extends SystemBase
             $end = strtotime(substr($data['house_dtime'],-10));
             $where[] = ['a.house_dtime','between',[$start,$end]];
         }
+        // 检索楼栋创建日期
+        if(isset($data['house_ctime']) && $data['house_ctime']){
+            $start1 = strtotime($data['house_ctime']);
+            $end1 = strtotime('+ 1 month',$start1);
+            //dump($start);halt($end);
+            $where[] = ['house_ctime','between',[$start1,$end1]];
+        }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);
