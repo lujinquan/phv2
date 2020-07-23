@@ -63,6 +63,8 @@ class Index extends Common
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
+            // 'ssl_key'        => $configDatas['app_ziyang_apiclient_key_pem'],
+            // 'ssl_cer'        => $configDatas['app_ziyang_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
@@ -85,6 +87,8 @@ class Index extends Common
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            // 'ssl_key'        => $configDatas['app_liangdao_apiclient_key_pem'],
+            // 'ssl_cer'        => $configDatas['app_liangdao_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
@@ -317,9 +321,9 @@ class Index extends Common
         ];
         if($inst_pid == 2){
             //回调函数不能带参数
-            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify';
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payOrderNotifyZiyang';
         }else if($inst_pid == 3){
-            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payordernotify';
+            $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payOrderNotifyLiangdao';
             //$wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
         if ($this->debug === true) {
@@ -716,13 +720,110 @@ class Index extends Common
      * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
      * 创建时间: 2020-03-12 21:53:40
      */
-    public function payOrderNotify()
+    public function payOrderNotifyZiyang()
     {
 
         include EXTEND_PATH.'wechat/include.php';
         // $inst_id = input('inst_id');
         // if($inst_id == 2){
             $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        // }else if($inst_id == 3){
+        //     $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        // }
+        // 获取通知参数
+        $data = $wechat->getNotify();
+        // 下面是一个返回data的例子
+        // $data = [
+        //     'appid' => 'wx2421b1c4370ec43b',
+        //     'attach' => '支付测试',
+        //     'bank_type' => 'CFT',
+        //     'fee_type' => 'CNY',
+        //     'is_subscribe' => 'Y',
+        //     'mch_id' => '10000100',
+        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
+        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
+        //     'out_trade_no' => '1409811653',
+        //     'result_code' => 'SUCCESS',
+        //     'return_code' => 'SUCCESS',
+        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
+        //     'time_end' => '20140903131540',
+        //     'total_fee' => '1',
+        //     'coupon_fee' => '10',
+        //     'coupon_count' => '1',
+        //     'coupon_type' => 'CASH',
+        //     'coupon_id' => '10000',
+        //     'coupon_fee' => '100',
+        //     'trade_type' => 'JSAPI',
+        //     'transaction_id' => '1004400740201409030005092168',
+        // ];
+        if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
+            // @todo 去更新下原订单的支付状态
+            //$order_no = $data['out_trade_no'];
+
+            // 生成后台订单
+            $WeixinOrderModel = new WeixinOrderModel;
+            $row = $WeixinOrderModel->where([['out_trade_no','eq',$data['out_trade_no']]])->find();
+            // 更新预付订单
+            if($row){
+                // 更新预付订单
+                $row->transaction_id = $data['transaction_id'];
+                $row->ptime = strtotime($data['time_end']); //支付时间
+                $row->pay_money = $data['total_fee'] / 100; //支付金额，单位：分
+                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
+                $row->order_status = 1; //支付状态1，支付完成
+                $row->save();
+                // 更新租金订单表
+                $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+                $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
+
+
+                $RentModel = new RentModel;
+                foreach ($rent_order_ids as $rid) {
+                    $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+                    $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
+                    $rent_order_info->ptime = strtotime($data['time_end']);
+                    $rent_order_info->pay_way = 4; //4是微信支付
+                    $rent_order_info->is_deal = 1; 
+                    $rent_order_info->save();
+
+                    // 添加房屋台账，记录缴费状况
+                    $HouseTaiModel = new HouseTaiModel;
+                    $HouseTaiModel->house_id = $rent_order_info['house_id'];
+                    $HouseTaiModel->tenant_id = $rent_order_info['tenant_id'];
+                    $HouseTaiModel->cuid = 0;
+                    $HouseTaiModel->house_tai_type = 2;
+                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$rent_order_info['rent_order_receive'].'元';
+                    $HouseTaiModel->data_json = [];
+                    $HouseTaiModel->change_type = '';
+                    $HouseTaiModel->change_id = '';
+                    $HouseTaiModel->save();
+                }
+
+                
+            // 如果通过out_trae_no无法找到预付订单，则抛出错误
+            }else{
+                
+            }
+
+            // 返回接收成功的回复
+            ob_clean();
+            echo $wechat->getNotifySuccessReply();
+        }
+    }
+
+    /**
+     * 功能描述：支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
+     * 创建时间: 2020-03-12 21:53:40
+     */
+    public function payOrderNotifyLiangdao()
+    {
+
+        include EXTEND_PATH.'wechat/include.php';
+        // $inst_id = input('inst_id');
+        // if($inst_id == 2){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
         // }else if($inst_id == 3){
         //     $wechat = \WeChat\Pay::instance($this->config_liangdao);
         // }

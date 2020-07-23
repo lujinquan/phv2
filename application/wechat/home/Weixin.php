@@ -2103,6 +2103,10 @@ class Weixin extends Common
         foreach ($result['data']['house'] as $k => &$v) {
             //,['tenant_id','eq',$v['tenant_id']]
             $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            if($row['rent_order_unpaids'] == 0){
+                unset($result['data']['house'][$k]);
+                continue;
+            }
             // dump($v);
             // dump($row);
             $v['is_auth'] = 0;

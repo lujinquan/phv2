@@ -58,6 +58,8 @@ class Weixin extends Model
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
+            // 'ssl_key'        => $configDatas['app_ziyang_apiclient_key_pem'],
+            // 'ssl_cer'        => $configDatas['app_ziyang_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
@@ -80,6 +82,8 @@ class Weixin extends Model
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            // 'ssl_key'        => $configDatas['app_liangdao_apiclient_key_pem'],
+            // 'ssl_cer'        => $configDatas['app_liangdao_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限
             //'cache_path'     => '',
         ];
