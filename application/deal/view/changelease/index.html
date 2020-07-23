@@ -26,6 +26,19 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('change_status',$config['deal_changelease_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
+					<select name="change_status">
+						<option value="">审批状态</option>
+						<option value="2">待房管员处理</option>
+						<option value="3">待资料员初审</option>
+						<option value="4">待经管所长审批</option>
+						<option value="5">待经管科长审批</option>
+						<option value="6">待经租会计发证</option>
+						<option value="7">待房管员提交签字</option>
+					</select>
+				</div>
+				{/if}
 				{if condition="in_array('house_use_id',$config['deal_changelease_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
 					<select name="house_use_id" xm-select="house_use_id">
@@ -177,7 +190,7 @@
 		                    return process_config[d.change_status];
 		                }
 					}, 
-					{title: '操作',width: 240,align:'center',templet: '#buttonTpl',fixed: 'right'}
+					{title: '操作',width: 240,align:'left',templet: '#buttonTpl',fixed: 'right'}
 				]],
 			done: function(res, curr, count) {
                //导出转换后台数据
