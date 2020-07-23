@@ -17,7 +17,7 @@
 		.j-versions .j-con{font-size: 10px;}
 	</style>
     <div class="layui-footer footer">
-       楚天新媒 © <a data-method="offset" data-type="rb" class="j-version-1" href="javascript:;">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <label>客服：027-81368886</label>
+       武房网 © <a data-method="offset" data-type="rb" class="j-version" href="javascript:;">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <!-- <label>客服：027-81368886</label> -->
 	   <!-- © {:config('hisiphp.name')} <a data-method="offset" data-type="rb" class="j-version-1" href="javascript:;">v{:config('hisiphp.main_version')}</a> -->
     </div>
 	<div class="j-versions hide">
@@ -36,6 +36,9 @@
 							</dd>
 							<dd class="j-list clearfix">
 								2.房屋信息：列表新增“租差”、“泵费”字段，且展示统计信息，房屋详情基本信息数据不完整
+							</dd>
+							<dd class="j-list clearfix">
+								3.业务审批：租约异动待房管员签字记录过多，造成视觉杂乱
 							</dd>
 						</dl>
 						<dl class="clearfix">
@@ -56,7 +59,7 @@
 								1.租约管理：审批页面 - 计租表 “二次供水”数据不显示，附记未显示用户填写的换租原因，打回修改后异动订单编号被修改
 							</dd>
 							<dd class="j-list clearfix">
-								2.房屋调整异动：房屋调整明细附件未展示 编辑房屋时，仅修改租差泵费未重新计算租金
+								2.房屋调整异动：房屋调整明细附件未展示
 							</dd>
 							<dd class="j-list clearfix">
 								3.计租表：仅修改租差泵费未重新计算租金
@@ -142,7 +145,7 @@
 			        ,offset: 'rb'
 			        ,content: $('.j-versions')
 			        ,btn: false
-					,area: ['360px', '440px']
+					,area: ['460px', '460px']
 			        ,shade: 0 //不显示遮罩
 			        ,yes: function(){
 			          layer.closeAll();
