@@ -79,18 +79,26 @@
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 		{{#  if (d.change_status == 2) { }}
+		{if condition="in_array(325,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
+		{/if}
 		{{# if (d.is_back == 0){ }}
+		{if condition="in_array(295,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a data-href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+		{/if}
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{# } }}
 		{{#  } else if(d.change_status == 7){ }}
+		{if condition="in_array(339,$auths) || $Think.ADMIN_ROLE == 1"}
 		<!-- <a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a> -->
 		<a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop" hisi-data="{width: '600px', height: '500px',refresh: 1}" title="上传签字图片">上传签字图片</a>
+		{/if}
 		<!-- <a href="" class="layui-btn layui-btn-xs layui-btn-danger">不通过</a> -->
 		<!-- <a href="javascript:;" value="{{ d.id }}" id="handover" class="layui-btn layui-btn-xs layui-btn-danger handover">不通过</a> -->
+		{if condition="in_array(337,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a href="{:url('unpass')}?id={{ d.id }}" hisi-data="{pop: true, width: '500px', height: '500px',refresh: 1}" title="不通过" class="layui-btn layui-btn-xs layui-btn-danger j-iframe-pop">不通过</a>
+		{/if}
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
