@@ -438,7 +438,7 @@ class Rent extends Model
             $RentRecycleModel = new RentRecycleModel;
             $RentRecycleModel->house_id = $row['house_id'];
             $RentRecycleModel->tenant_id = $row['tenant_id'];
-            //$RentRecycleModel->rent_order_id = $id;
+            $RentRecycleModel->rent_order_id = $row['rent_order_id'];
             $RentRecycleModel->pay_rent = $pay_rent;
             $RentRecycleModel->pay_year = substr($row['rent_order_date'],0,4);
             $RentRecycleModel->pay_month = $row['rent_order_date'];
@@ -487,7 +487,7 @@ class Rent extends Model
                 $RentRecycleModel = new RentRecycleModel;
                 $RentRecycleModel->house_id = $row['house_id'];
                 $RentRecycleModel->tenant_id = $row['tenant_id'];
-                //$RentRecycleModel->rent_order_id = $id;
+                $RentRecycleModel->rent_order_id = $row['rent_order_id'];
                 $RentRecycleModel->pay_rent = bcsub($row->rent_order_receive , $old_rent_order_paid,2);
                 $RentRecycleModel->pay_year = substr($row['rent_order_date'],0,4);
                 $RentRecycleModel->pay_month = $row['rent_order_date'];
