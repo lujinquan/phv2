@@ -41,6 +41,26 @@ class Changeban extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeban_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['BanPropertyID']) && $data['BanPropertyID']){ // 售房专用票据  
+                $file = array_merge($file,$data['BanPropertyID']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanPropertyID') !== false){
+                    return $this->error('请上传附件产权清册');
+                }
+            }
+            if(isset($data['BanPropertyIDExtra']) && $data['BanPropertyIDExtra']){ // 审批表
+                $file = array_merge($file,$data['BanPropertyIDExtra']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanPropertyIDExtra') !== false){
+                    return $this->error('请上传附件产权证及其他');
+                }
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangeBanModel;
             //halt($data);
             // 数据过滤
@@ -48,7 +68,7 @@ class Changeban extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-            
+
             // 入库使用权变更表
             unset($filData['id']);
             $row = $ChangeModel->allowField(true)->create($filData);
@@ -81,6 +101,26 @@ class Changeban extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title','eq','changeban_file_upload']])->value('value');
+            $file = [];
+            if(isset($data['BanPropertyID']) && $data['BanPropertyID']){
+                $file = array_merge($file,$data['BanPropertyID']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanPropertyID') !== false){
+                    return $this->error('请上传附件产权清册');
+                }
+            }
+            if(isset($data['BanPropertyIDExtra']) && $data['BanPropertyIDExtra']){
+                $file = array_merge($file,$data['BanPropertyIDExtra']);
+            }else{
+                if(strpos($fileUploadConfig, 'BanPropertyIDExtra') !== false){
+                    return $this->error('请上传附件产权证及其他');
+                }
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangeBanModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

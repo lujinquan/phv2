@@ -299,6 +299,57 @@
 		</div>
 	</div>
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		<legend>补充附件</legend>
+	</fieldset>
+	  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">产权清册</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'BanPropertyID'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">产权证及其他</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'BanPropertyIDExtra'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md12">
+  		<div class="j-enclosure-label clearfix">楼栋调整其他</div>
+  		<div class="j-enclosure-img j-viewer-img clearfix">
+  			<ul>
+				{volist name="$data_info['change_imgs']" id="v"}
+				{if condition="$v['file_type'] == 'BanChangeExtra'"}
+				<li>
+  					<img src="{$v['file']}" class="img">
+  				</li>
+				{/if}
+				{/volist}
+  			</ul>
+  	    </div>
+  	</div>
+  </div>
+	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>审批状态</legend>
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
