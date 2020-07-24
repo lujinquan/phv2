@@ -56,7 +56,7 @@ class Process extends Admin
             }
             if($dataTemps1){
                 foreach ($dataTemps1 as $v1) {
-                    if($v1['curr_role'] == 4 && $v1['change_type'] == 18){
+                    if($v1['curr_role'] == 4 && $v1['change_type'] == 18 && $v1['print_times'] > 0){
                     continue;
                 }
                     array_push($dataTemps,$v1);
