@@ -404,7 +404,7 @@ class OpOrder extends SystemBase
                         if($ftime){
                             $result['partOne'][$v['id']]['end']++;  //已完结
                         }else{
-                            if(end($uids) == 97){
+                            if(end($uids) == 114){
                                 $result['partOne'][$v['id']]['jinguan']++;
                             }elseif(end($uids) == 83){
                                 $result['partOne'][$v['id']]['jishu']++;
