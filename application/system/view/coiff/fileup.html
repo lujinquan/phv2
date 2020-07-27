@@ -64,6 +64,14 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">楼栋调整：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="changeban_file_upload[]" value="BanPropertyID" title="产权清册" lay-skin="primary" {if condition="in_array('BanPropertyID',$config['changeban_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changeban_file_upload[]" value="BanPropertyIDExtra" title="产权证及其他" lay-skin="primary" {if condition="in_array('BanPropertyIDExtra',$config['changeban_file_upload'])"}checked{/if}>
+            <input type="checkbox" name="changeban_file_upload[]" value="UseChangeOther" title="其他" lay-skin="primary" {if condition="in_array('UseChangeOther',$config['changeban_file_upload'])"}checked{/if}>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">注销：</label>
         <div class="layui-input-block">
             <input type="checkbox" name="changecancel_file_upload[]" value="ChangeCancelOne" title="售房专用票据" lay-skin="primary" {if condition="in_array('ChangeCancelOne',$config['changecancel_file_upload'])"}checked{/if}>

@@ -42,7 +42,11 @@ class Process extends Admin
             $data['data'] = $dataTemps = $dataTemps1 = [];
             $temps = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ctime asc')->select();
             foreach($temps as $k => $v){
+                
                 if($v['curr_role'] == ADMIN_ROLE){
+                //     if($v['curr_role'] == 4 && $v['change_type'] == 18){
+                //     continue;
+                // }
                     $v['is_process'] = 1;
                     array_push($dataTemps,$v);
                 }else{
@@ -52,6 +56,9 @@ class Process extends Admin
             }
             if($dataTemps1){
                 foreach ($dataTemps1 as $v1) {
+                    if($v1['curr_role'] == 4 && $v1['change_type'] == 18 && $v1['print_times'] > 0){
+                    continue;
+                }
                     array_push($dataTemps,$v1);
                 }
             }
@@ -61,7 +68,8 @@ class Process extends Admin
             //$data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.id');
 
             $data['data'] = array_slice($dataTemps, ($page - 1) * $limit, $limit);
-            $data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('id');
+            $data['count'] = count($dataTemps);
+            // $data['count'] = Db::name('change_process')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
             //halt($data['data']);

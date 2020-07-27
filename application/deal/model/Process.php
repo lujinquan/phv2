@@ -49,7 +49,7 @@ class Process extends SystemBase
         }
         $where = [];
         $where[] = ['a.status','eq',1];
-        $where[] = ['a.curr_role','neq',4]; // 剔除由房管员处理的异动（租约数据太多太杂了）
+        //$where[] = ['a.curr_role','neq',4]; // 剔除由房管员处理的异动（租约数据太多太杂了）
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];

@@ -342,9 +342,24 @@ class ChangeBan extends SystemBase
                     'uid' => ADMIN_ID,
                     'img' => '',
                 ];
+                //如果是第二步经租会计（则可以修改附件）
+                if($changeRow['change_status'] == 3){ 
+                    // if(isset($data['file']) && $data['file']){
+                    //     $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
+                    // }
 
+                    if(isset($data['BanChangeExtra']) && $data['BanChangeExtra']){
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['BanChangeExtra']),',');
+                    }else{
+                        $fileUploadConfig = Db::name('config')->where([['title','eq','changenew_file_upload']])->value('value');
+                        if(strpos($fileUploadConfig, 'BanChangeExtra') !== false){
+                            return ['error_msg' => '请上传楼栋调整其他附件'];
+                        }
+                        
+                    }
+                }
                 // 更新使用权变更表
-                $changeRow->allowField(['child_json','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
+                $changeRow->allowField(['child_json','change_imgs','change_status'])->save($changeUpdateData, ['id' => $data['id']]);;
                 // 更新审批表
                 $processUpdateData['change_desc'] = $processDescs[$changeUpdateData['change_status']];
                 $processUpdateData['curr_role'] = $processRoles[$changeUpdateData['change_status']];
