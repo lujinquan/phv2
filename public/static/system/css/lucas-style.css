@@ -438,7 +438,7 @@ opacity: .8color: #333;}
 .j-PropertyForm{max-height: 390px;overflow-y:auto;display: block;}
 /* 房屋报表 E */
 /* 表格样式 */
-.report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #666;} 
+.report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #333;word-wrap:break-word;word-break:break-all;} 
 .report tr td.yellow{color: #ff8700;}
 .report td,.report th{padding:0.5rem 0;}
 .report {width:100%;}

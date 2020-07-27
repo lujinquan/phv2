@@ -1,4 +1,7 @@
 <!-- 月租金报表 -->
+<style>
+	.j-explain{padding: 30px 0;}
+</style>
 <div class="layui-layer layui-layer-loading" id="layui-layer1" type="loading" times="1" showtime="0" contype="string" style="z-index: 19891015; top: 293.5px; left: 1036.5px;"><div id="" class="layui-layer-content layui-layer-loading0"></div><span class="layui-layer-setwin"></span></div>
 <div class="j-table-content j-no-title j-reportform">
 <div class="page-toolbar j-page-toolbar clearfix">
@@ -54,16 +57,73 @@
 </div>
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
-<style>
-    
-</style>
-<div class="e-space"></div>
-<table class="report j-report-con" >
-    <tbody>
-         
-    </tbody>
-</table>
-<div id="box"></div>
+<div class="j-report-con hide">
+	<div style="text-align: center;font:bold 18px/30px '';">武汉市房地局经管月租金报表</div>
+	<div class="j-row-title" style="padding: 10px 0;display: inline-block;width: 100%;font-weight: bold;">
+		<div style="float: left;width: 33.3%;">
+		   填报单位：紫阳所03管段
+		</div>
+		<div style="float: left;width: 33.3%;">
+		  产别：自管
+		</div>
+		<div style="float: left;width: 33.3%;">
+		  填报时间：2020-06
+		</div>
+	</div>
+	<table class="report" style="font-size: 12px;">
+		<tbody>
+			 
+		</tbody>
+	</table>
+	<div id="box"></div>
+	  <div class="j-explain" style="padding: 30px 0;font-weight: bold;">
+		<div class="j-row-title" style="padding-bottom: 30px;">
+			<div style="float: left;width:10%;">
+			   说明：
+			</div>
+			<div style="float: left;width:25%;">
+			  上项空栏：按使用性质填报的应填写：
+			</div>
+			<div style="float: left;width:22%;">
+			  （一）企事业用房租金收入，
+			</div>
+			<div style="float: left;width:22%;">
+			  （二）党政群机关用房租金收入，
+			</div>
+			<div style="float: left;width:21%;">
+			  （三）民用住宅租金收入，
+			</div>
+		</div>
+		<div class="j-row-title"  style="padding-bottom: 30px;">
+			<div style="float: left;width:10%;">
+			   补充资料：
+			</div>
+			<div style="float: left;width:25%;">
+			  本月份实有户数：企事业 113户，
+			</div>
+			<div style="float: left;width:22%;">
+			   机关27户，
+			</div>
+			<div style="float: left;width:22%;">
+			  民用 805户，
+			</div>
+		</div>
+		<div class="j-row-title">
+			<div style="float: left;width:10%;">
+			   &nbsp;
+			</div>
+			<div style="float: left;width:25%;">
+			  单位负责人：区房产公司
+			</div>
+			<div style="float: left;width:22%;">
+			   制表人：lucas
+			</div>
+			<div style="float: left;width:22%;">
+			  报出日期：2020-07-27
+			</div>
+		</div>
+	  </div>
+	</div>
 </div>
 <!-- 打印 S -->
 <script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
@@ -658,6 +718,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 					else{
 						var trData = datajson(data);
 						$('tbody').html(trData);
+						$(".j-report-con").removeClass("hide");
 					}
 					
 					//将值为0.00的替换为空
@@ -696,6 +757,7 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				else{
 					var trData = datajson(data);
 					$('tbody').append(trData);
+					$(".j-report-con").removeClass("hide");
 				}
                 
 				//将值为0.00的替换为空
