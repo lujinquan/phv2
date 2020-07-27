@@ -60,13 +60,13 @@
 <div class="j-report-con hide">
 	<div style="text-align: center;font:bold 18px/30px '';">武汉市房地局经管月租金报表</div>
 	<div class="j-row-title" style="padding: 10px 0;display: inline-block;width: 100%;font-weight: bold;">
-		<div style="float: left;width: 33.3%;">
+		<div id="ban_inst_name" style="float: left;width: 33.3%;">
 		   填报单位：紫阳所03管段
 		</div>
-		<div style="float: left;width: 33.3%;">
+		<div id="ban_owner_name" style="float: left;width: 33.3%;">
 		  产别：自管
 		</div>
-		<div style="float: left;width: 33.3%;">
+		<div id="curr_date" style="float: left;width: 33.3%;">
 		  填报时间：2020-06
 		</div>
 	</div>
@@ -98,13 +98,13 @@
 			<div style="float: left;width:10%;">
 			   补充资料：
 			</div>
-			<div style="float: left;width:25%;">
+			<div id="career_num" style="float: left;width:25%;">
 			  本月份实有户数：企事业 113户，
 			</div>
-			<div style="float: left;width:22%;">
+			<div id="party_num" style="float: left;width:22%;">
 			   机关27户，
 			</div>
-			<div style="float: left;width:22%;">
+			<div id="civil_num" style="float: left;width:22%;">
 			  民用 805户，
 			</div>
 		</div>
@@ -112,13 +112,13 @@
 			<div style="float: left;width:10%;">
 			   &nbsp;
 			</div>
-			<div style="float: left;width:25%;">
+			<div id="admin" style="float: left;width:25%;">
 			  单位负责人：区房产公司
 			</div>
-			<div style="float: left;width:22%;">
+			<div id="author" style="float: left;width:22%;">
 			   制表人：lucas
 			</div>
-			<div style="float: left;width:22%;">
+			<div id="create_date" style="float: left;width:22%;">
 			  报出日期：2020-07-27
 			</div>
 		</div>
@@ -213,6 +213,8 @@ layui.use(['jquery', 'laydate', 'element'], function(){
         });
 		//搜索
 		function datajson(data){
+			console.log(data);
+			//$('#ban_inst_name').text();
 			var data_17_1 = '';
 			if(parseFloat(data[17][1]).toFixed(23)*1000 != parseFloat(data[8][1]).toFixed(3)*1000 - parseFloat(data[10][1]).toFixed(3)*1000){
 				data_17_1 = 'yellow';
@@ -708,14 +710,27 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				dataType:"json",
 				data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
 			   //回调函数
-				success:function(jsondata){
+				success:function(result){
 					layui.layer.closeAll();//结束加载中
-					var data = JSON.parse(jsondata).data;//由JSON字符串转换为JSON对象
+					var result = JSON.parse(result);
+					var data = result.data;//由JSON字符串转换为JSON对象
 					if(data.length==0)
 					{
 						$('tbody').html("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
 					}
 					else{
+						$('#ban_inst_name').text('填报单位：'+ result.instid);
+						$('#ban_owner_name').text('产别：'+ result.ownerid);
+						$('#curr_date').text('填报时间：'+ result.query_month);
+
+						$('#career_num').text('本月份实有户数：企事业 '+ parseInt(data[100][1]) +'户');
+						$('#party_num').text('机关 '+parseInt(data[100][2])+'户');
+						$('#civil_num').text('民用 '+parseInt(data[100][3])+'户');
+
+						//$('#admin').text('填报单位：'+ result.instid);
+						$('#author').text('制表人：'+ '{$login['nick']}');
+						$('#create_date').text('报出日期：'+ result.query_date);
+
 						var trData = datajson(data);
 						$('tbody').html(trData);
 						$(".j-report-con").removeClass("hide");
@@ -749,12 +764,28 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 		   //回调函数
 			success:function(result){
 				layui.layer.closeAll();//结束加载中
-				var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
+				var result = JSON.parse(result);
+				var data = result.data;//由JSON字符串转换为JSON对象
 				if(data.length==0)
 				{
 					$('tbody').append("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
-				}
-				else{
+				}else{
+
+					console.log('结果：',result);
+
+					$('#ban_inst_name').text('填报单位：'+ result.instid);
+					$('#ban_owner_name').text('产别：'+ result.ownerid);
+					$('#curr_date').text('填报时间：'+ result.query_month);
+
+					$('#career_num').text('本月份实有户数：企事业 '+ parseInt(data[100][1]) +'户');
+					$('#party_num').text('机关 '+parseInt(data[100][2])+'户');
+					$('#civil_num').text('民用 '+parseInt(data[100][3])+'户');
+
+					//$('#admin').text('填报单位：'+ result.instid);
+					$('#author').text('制表人：'+ '{$login['nick']}');
+					$('#create_date').text('报出日期：'+ result.query_date);
+
+
 					var trData = datajson(data);
 					$('tbody').append(trData);
 					$(".j-report-con").removeClass("hide");

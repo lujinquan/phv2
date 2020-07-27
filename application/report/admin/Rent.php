@@ -55,11 +55,19 @@ class Rent extends Admin
                 $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
                 // $data['data'] = [];
             }
+            $params = ParamModel::getCparams();
             //$temps = json_decode($tempData,true);
             //$data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             $data['msg'] = '';
             $data['code'] = 0;
-            //halt(json_encode($data));
+            $data['instid'] = $params['insts'][$instid];
+            // [1,2,3,5,7,10,11,12]; //市、区、代、自、托、市代托、市区代托、全部
+            $owners = ['1'=>'市属','2'=>'区属','3'=>'代管','5'=>'自管','7'=>'托管','10'=>'市代托','11'=>'市区代托','12'=>'所有产别'];
+            //$data['ownerid'] = $params['owners'][$ownerid];
+            $data['ownerid'] = $owners[$ownerid];
+            $data['query_month'] = date('Y-m');
+            $data['query_date'] = date('Y-m-d');
+            //$data['admin'] = $params['owners'][];
             return json_encode($data);
         }
         return $this->fetch();
