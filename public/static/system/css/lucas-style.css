@@ -59,7 +59,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-no-contents{/* line-height: 450px; *//* position: absolute;left: 50%;top: 50%;margin-left: -70px;margin-top: -100px; */margin-top: 80px;}/* 表格无数据行高 */
 .j-details-box input[readonly]{  background-color: #F4F4F5;} /*input不能输入框背景颜色*/
 .layui-select-title input[readonly]{ background: #fff;}
-.j-reportform .layui-table td,.j-reportform .report td{font-size: 12px!important;}/* 报表管理table字体大小 */
+.j-reportform .layui-table td,.j-reportform .layui-table th,.j-reportform .report td{font-size: 12px!important;color: #333!important;/*word-wrap:break-word;word-break:break-all;*/padding:0.5rem!important;text-align: center;}/* 报表管理table字体大小 */
 /* 登录 S */
 .layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
 .layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}
@@ -218,6 +218,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 
 /*----------房屋档案详情 S----------*/
 .j-details-box{ padding: 0 17px 20px; box-sizing: border-box;overflow: hidden; min-height: 550px;}
+.j-details-box.j-no-height{min-height: auto;}
 .j-details-box.no-min{min-height: auto;}
 /* .j-details-box.floorWrap{ padding-top: 50px;} */
 .layui-elem-field.j-field-box{ margin: 30px 0 20px;}
@@ -431,11 +432,16 @@ opacity: .8color: #333;}
 .layui-laydate .layui-this{ background: #2E77EF!important;}
 /* 房屋报表 S */
 /* .j-report-table{ max-height: 350px;overflow-y: auto;} */
-.j-report-con .j-report-title{ font:bold 20px/25px 'MicrosoftYaHei-Bold'; text-align: center; margin-bottom: 15px;}
-.layui-table .j-bold-size,.j-report-con .j-bold-size,.am-text-middle{ font-weight: bold; color: #666;  font-size: 14px;}
-.j-report-table li{float: left; width: 33.3%;margin-bottom: 15px;}
-
-.j-PropertyForm{max-height: 390px;overflow-y:auto;display: block;}
+#PropertyForm{width: 100%;/*table-layout:fixed;*/}
+/* #PropertyForm td{word-break: break-all; word-wrap:break-word;line-height: 18px!important;} */
+/* .j-bold-size.j-width{width: 60px;} */
+/* #PropertyForm .three td{width: 4.5%!important;} */
+.j-report-con .j-report-title{ font:bold 20px/25px 'MicrosoftYaHei-Bold'; text-align: center; margin-bottom: 15px;color: #333;}
+.layui-table .j-bold-size,.j-report-con .j-bold-size,.am-text-middle{ font-weight: bold; color: #333;  font-size: 14px;}
+.j-report-table li{float: left; width: 33.3%;margin-bottom: 15px;font-weight: bold;}
+/* .j-PropertyForm{max-height: 390px;overflow-y:auto;display: block;} */
+.j-archives-box{padding:10px 0;font-weight: bold;}
+.j-archives-box dd{float: left;width: 33.3%;margin-top: 10px; font-size: 14px;}
 /* 房屋报表 E */
 /* 表格样式 */
 .report,.report tr th, .report tr td { border:1px solid #e6e6e6;text-align:center;color: #333;word-wrap:break-word;word-break:break-all;} 
