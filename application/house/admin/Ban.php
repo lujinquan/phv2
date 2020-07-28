@@ -39,11 +39,29 @@ class Ban extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 1);
             $getData = $this->request->get();
+
+            $group = isset($getData['group'])?$getData['group']:'y';
+
+            switch ($group) {
+                case 'y':
+                    $order = 'ban_ctime desc';
+                    break;
+                case 'x':
+                    $order = 'ban_ctime desc';
+                    break;
+                case 'z':
+                    $order = 'ban_dtime desc';
+                    break;
+                default:
+                    $order = 'ban_ctime desc';
+                    break;
+            }
+
             $banModel = new BanModel;
             $where = $banModel->checkWhere($getData);
-            $fields = 'ban_id,ban_number,ban_area_three,ban_use_id,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+            $fields = 'ban_id,ban_number,ban_area_three,ban_use_id,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,from_unixtime(ban_dtime, \'%Y-%m-%d\') as ban_dtime,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
             $data = [];
-            $data['data'] = $banModel->field($fields)->where($where)->page($page)->order('ban_ctime desc')->limit($limit)->select();
+            $data['data'] = $banModel->field($fields)->where($where)->page($page)->limit($limit)->order($order)->select();
             $data['count'] = $banModel->where($where)->count('ban_id');
             $totalRow = $banModel->where($where)->field('sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area, sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent, sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds,sum(ban_civil_num+ban_party_num+ban_career_num) as total_ban_num, sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice, sum(ban_use_area) as total_ban_use_area')->find();
             if($totalRow){

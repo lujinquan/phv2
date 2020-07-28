@@ -101,8 +101,21 @@ class SystemTcpdf extends Model
         }
         
         
-        
-        $pdf->Output('example_001.pdf', 'I');
+        // I，默认值，在浏览器中打开；D，点击下载按钮， PDF文件会被下载下来；F，文件会被保存在服务器中；S，PDF会以字符串形式输出；E：PDF以邮件的附件输出
+        //$pdf->Output('example_001.pdf', 'I');
+        $file_name = date('Y-m-d-H-i-s').'.pdf';
+        //$file_name = '1.pdf';
+        $pdf->Output($_SERVER['DOCUMENT_ROOT'].'upload/pdf/'.$file_name, 'F');
+
+         // $suffix = '_'.date('Y-m-d', time()) . '.'.$tableInfo['FileSuffix'];
+         // $objWriter->save('.'.$tableInfo['FilePath'].$filename.$suffix);
+
+        $result = [];
+        $result['code'] = 1;
+        $result['msg'] = '导出成功！';
+        $result['data'] = '/upload/pdf/'.$file_name;
+        return $result;  // 返回的文件名需要是以UTF-8编码
+        //file_put_contents('./example_001.pdf', data)
 	}
 
 	public function example_001()
