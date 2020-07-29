@@ -6,6 +6,7 @@ use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
+use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
@@ -192,7 +193,8 @@ class ChangeName extends SystemBase
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['house_number'] = HouseModel::where([['house_id','eq',$row['house_id']]])->value('house_number');
+        $row['house_info'] = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
+		$row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
         $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         $row['old_tenant_info'] = $oldTenantRow;
         //$this->finalDeal($row);exit;

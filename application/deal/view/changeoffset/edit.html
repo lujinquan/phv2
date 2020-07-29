@@ -28,30 +28,80 @@
 			</div>
 		</div>
 	</div>
-		<table  class="layui-table">
-		  <thead>
-			  <tr>
-			    <th>房屋编号</th>
-			    <th>楼栋地址</th>
-			    <th>机构</th>
-			    <th>产别</th>
-			    <th>使用性质</th>
-			    <th>租户姓名</th>
-			    <th>规定租金</th>
-			  </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		  	  <td id="house_numbers">&nbsp;{$data_info['house_info']['house_number']}</td>
-			  <td id="building_address">&nbsp;{$data_info['ban_info']['ban_address']}</td>
-			  <td id="mechanism">&nbsp;{$params['insts'][$data_info['ban_info']['ban_inst_id']]}</td>
-	    	  <td id="yield_differentiation">&nbsp;{$params['owners'][$data_info['ban_info']['ban_owner_id']]}</td>
-	    	  <td id="nature_usage">&nbsp;{$params['uses'][$data_info['house_info']['house_use_id']]}</td>
-	    	  <td id="tenant_name">&nbsp;{$data_info['tenant_info']['tenant_name']}</td>
-			  <td id="prescribed_rent">&nbsp;{$data_info['house_info']['house_pre_rent']}</td>
-		    </tr>
-		  </tbody>
-		</table>
+    <div class="layui-row layui-form-item layui-col-space90">
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">楼栋编号</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="ban_number" readonly value="{$data_info['ban_info']['ban_number']}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    	<div class="layui-col-md8">
+    		<label class="j-form-label">楼栋地址</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="ban_address" readonly value="{$data_info['ban_info']['ban_address']}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">楼栋产别</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="ban_owner_id" readonly value="{$params.owners[$data_info['ban_info']['ban_owner_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">使用性质</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="house_use_id" readonly value="{$params.uses[$data_info['house_info']['house_use_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">结构类别</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="ban_struct_id" readonly value="{$params.structs[$data_info['ban_info']['ban_struct_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+        <div class="layui-col-md4">
+        	<label class="j-form-label">规定租金</label>
+        	<div class="j-input-inline">
+        		<input type="text" name="house_pre_rent" readonly value="{$data_info['house_info']['house_pre_rent']}" placeholder=""  autocomplete="off" class="layui-input">
+        	</div>
+        </div>
+        <div class="layui-col-md4">
+        	<label class="j-form-label">使用面积</label>
+        	<div class="j-input-inline">
+        		<input type="text" name="house_use_area" readonly value="{$data_info['house_info']['house_use_area']}" placeholder=""  autocomplete="off" class="layui-input">
+        	</div>
+        </div>
+        <div class="layui-col-md4">
+        	<label class="j-form-label">计租面积</label>
+        	<div class="j-input-inline">
+        		<input type="text" name="house_lease_area" readonly value="{$data_info['house_info']['house_lease_area']}" placeholder=""  autocomplete="off" class="layui-input">
+        	</div>
+        </div>
+    </div>
+    <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_name" readonly value="{$data_info['tenant_info']['tenant_name']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">联系电话</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="tenant_tel" readonly value="{$data_info['tenant_info']['tenant_tel']}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    	<div class="layui-col-md4">
+    		<label class="j-form-label">身份证号</label>
+    		<div class="j-input-inline">
+    			<input type="text" name="tenant_card" readonly value="{$data_info['tenant_info']['tenant_card']}" placeholder=""  autocomplete="off" class="layui-input">
+    		</div>
+    	</div>
+    </div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
@@ -188,14 +238,17 @@
 						$("#house_id").val(row.house_id);//获取房屋id
 						$("#ban_id").val(row.ban_id);//获取楼栋id
 						$("#tenant_id").val(row.tenant_id);//获取租户id
-						$("#house_number").val(row.house_number);//获取房屋编号
-						$("#house_numbers").text(row.house_number);//获取房屋编号
-						$("#building_address").text(row.ban_address);//获取楼栋地址
-						$("#mechanism").text(params.insts[row.ban_inst_id]);//获取机构
-						$("#yield_differentiation").text(params.owners[row.ban_owner_id]);//获取产别
-						$("#nature_usage").text(params.uses[row.house_use_id]);//获取使用性质
-						$("#tenant_name").text(row.tenant_name);//获取租户姓名
-						$("#prescribed_rent").text(row.house_pre_rent);//获取规定租金
+						$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+						$("input[name='ban_address']").val(row.ban_address);//获取楼栋地址
+						$("input[name='ban_owner_id']").val(params.owners[row.ban_owner_id]);//获取产别
+						$("input[name='house_use_id']").val(params.uses[row.house_use_id]);//获取使用性质
+						$("input[name='ban_struct_id']").val(params.structs[row.ban_struct_id]);//获取结构类别
+						$("input[name='house_pre_rent']").val(row.house_pre_rent);//获取规定租金
+						$("input[name='house_use_area']").val(row.house_use_area);//获取使用面积
+						$("input[name='house_lease_area']").val(row.house_lease_area);//获取计租面积
+						$("input[name='tenant_tel']").val(row.tenant_tel);//获取联系电话
+						$("input[name='tenant_name']").val(row.tenant_name);//获取租户姓名
+						$("input[name='tenant_card']").val(row.tenant_card);//获取租户身份证
 						$('.default-tables').hide();
 						table.render({
 						    elem: '#dataTable'

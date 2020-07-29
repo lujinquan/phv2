@@ -14,7 +14,7 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label">楼栋查询</label>
+			<label class="j-form-label">楼栋编号</label>
 			<div class="j-input-inline">
 				<input type="text" value="{$data_info['ban_info']['ban_number']}" readonly autocomplete="off" class="layui-input">
 			</div>
@@ -34,21 +34,29 @@
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>结构类别</label>
+			<label class="j-form-label">结构类别</label>
 			<div class="j-input-inline">
 				<input type="text" value="{$params.structs[$data_info['ban_info']['ban_struct_id']]}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>完损等级</label>
+			<label class="j-form-label">完损等级</label>
 			<div class="j-input-inline">
 				<input type="text" value="{$params.damages[$data_info['ban_info']['ban_damage_id']]}" readonly  autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label"><i class="red">*</i>暂停规定租金</label>
+			<label class="j-form-label">暂停规定租金</label>
 			<div class="j-input-inline">
 				<input type="text" value="{$data_info['change_pause_rent']}" readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">备案时间</label>
+			<div class="j-input-inline">
+				<input type="text" value="{$data_info['ctime']}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>

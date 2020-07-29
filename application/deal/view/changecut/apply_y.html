@@ -16,19 +16,6 @@
 				<b class="j-explain-search j-ban_number">查询</b>
 			</div>
 		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label">计租表</label>
-			<div class="j-input-inline">
-				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
-        <a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
-			</div>
-		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label">产别</label>
-			<div class="j-input-inline">
-				<input type="text" id="reduction_class" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md4">
@@ -37,16 +24,31 @@
 				<input type="text" id="reduction_id" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		<div class="layui-col-md4">
+		<div class="layui-col-md8">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_address" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_class" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">使用性质</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_nature" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+		<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
 			</div>
 		</div>
 	</div>
@@ -58,23 +60,35 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">租户</label>
+			<label class="j-form-label">使用面积</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_use_area" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租面积</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_lease_area" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_tenant" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tel" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">身份证号</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_idnumber" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">电话</label>
-			<div class="j-input-inline">
-				<input type="text" id="reduction_tel" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -375,11 +389,13 @@
 				$("#reduction_idnumber").val(res.data.tenant_card); //身份证号
 				$("#reduction_tel").val(res.data.tenant_tel); //电话
 				$("#reduction_cut").val(params.cuttypes[res.data.cut_type]); //减免类型
-        $("#reduction_cut_year").val(params.cuttypes[res.data.cut_type]); //年审减免类型
+                $("#reduction_cut_year").val(params.cuttypes[res.data.cut_type]); //年审减免类型
 				$("#cut_type").val(res.data.cut_type); //年审减免类型
 				$("#reduction_waiver_amount").val(res.data.cut_rent); //减免金额
 				$("#cut_rent_year").val(res.data.cut_rent); //减免年审金额
 				$("#reduction_card_number").val(res.data.cut_rent_number); //减免证号
+				$("#house_use_area").val(row.house_use_area);//获取使用面积
+				$("#house_lease_area").val(row.house_lease_area);//获取计租面积
 
 			})
 			},btn2: function(index, layero){

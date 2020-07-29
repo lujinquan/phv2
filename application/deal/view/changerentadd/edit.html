@@ -4,9 +4,9 @@
 		<legend>基本信息</legend>
 	</fieldset>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md8">
-			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
-			<div class="j-input-inline j-tips">
+		<div class="layui-col-md4">
+			<label class="j-form-label">房屋编号</label>
+			<div class="j-input-inline">
 				<input type="text" id="house_number" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
 				<input type="hidden" name="ban_id" value="{$data_info['ban_id']}">
 				<input type="hidden" name="house_id" value="{$data_info['house_id']}">
@@ -21,30 +21,80 @@
 			</div>
 		</div>
 	</div>
-		<table  class="layui-table">
-		  <thead>
-			  <tr>
-			    <th>房屋编号</th>
-			    <th>楼栋地址</th>
-			    <th>机构</th>
-			    <th>产别</th>
-			    <th>使用性质</th>
-			    <th>租户姓名</th>
-			    <th>规定租金</th>
-			  </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		  	  <td id="house_numbers">&nbsp;{$data_info['house_info']['house_number']}</td>
-			  <td id="building_address">&nbsp;{$data_info['ban_info']['ban_address']}</td>
-			  <td id="mechanism">&nbsp;{$params.insts[$data_info['ban_info']['ban_inst_id']]}</td>
-	    	  <td id="yield_differentiation">&nbsp;{$params.owners[$data_info['ban_info']['ban_owner_id']]}</td>
-	    	  <td id="nature_usage">&nbsp;{$params.uses[$data_info['house_info']['house_use_id']]}</td>
-	    	  <td id="tenant_name">&nbsp;{$data_info['tenant_info']['tenant_name']}</td>
-			  <td id="prescribed_rent">&nbsp;{$data_info['house_info']['house_pre_rent']}</td>
-		    </tr>
-		  </tbody>
-		</table>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋编号</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_number" readonly value="{$data_info['ban_info']['ban_number']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md8">
+			<label class="j-form-label">楼栋地址</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_address" readonly value="{$data_info['ban_info']['ban_address']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋产别</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_owner_id" readonly value="{$params.owners[$data_info['ban_info']['ban_owner_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">使用性质</label>
+			<div class="j-input-inline">
+				<input type="text" name="house_use_id" readonly value="{$params.uses[$data_info['house_info']['house_use_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">完损等级</label>
+			<div class="j-input-inline">
+				<input type="text" name="ban_damage_id" readonly value="{$params.damages[$data_info['ban_info']['ban_damage_id']]}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+	    <div class="layui-col-md4">
+	    	<label class="j-form-label">规定租金</label>
+	    	<div class="j-input-inline">
+	    		<input type="text" name="house_pre_rent" readonly value="{$data_info['house_info']['house_pre_rent']}" placeholder=""  autocomplete="off" class="layui-input">
+	    	</div>
+	    </div>
+	    <div class="layui-col-md4">
+	    	<label class="j-form-label">使用面积</label>
+	    	<div class="j-input-inline">
+	    		<input type="text" name="house_use_area" readonly value="{$data_info['house_info']['house_use_area']}" placeholder=""  autocomplete="off" class="layui-input">
+	    	</div>
+	    </div>
+	    <div class="layui-col-md4">
+	    	<label class="j-form-label">计租面积</label>
+	    	<div class="j-input-inline">
+	    		<input type="text" name="house_lease_area" readonly value="{$data_info['house_info']['house_lease_area']}" placeholder=""  autocomplete="off" class="layui-input">
+	    	</div>
+	    </div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_name" readonly value="{$data_info['tenant_info']['tenant_name']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_tel" readonly value="{$data_info['tenant_info']['tenant_tel']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">身份证号</label>
+			<div class="j-input-inline">
+				<input type="text" name="tenant_card" readonly value="{$data_info['tenant_info']['tenant_card']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>

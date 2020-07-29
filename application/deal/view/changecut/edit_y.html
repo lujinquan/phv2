@@ -10,7 +10,7 @@
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
+		<div class="layui-col-md8">
 			<label class="j-form-label"><i class="red">*</i>房屋编号</label>
 			<div class="j-input-inline">
 				<input type="text" name="house_number" value="{$data_info['house_number']}" lay-verify="required" readonly autocomplete="off" class="layui-input">
@@ -22,16 +22,9 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">计租表</label>
+			<label class="j-form-label">异动编号</label>
 			<div class="j-input-inline">
-				<input type="text" id="reduction_rentlist" value="" placeholder=""   readonly autocomplete="off" class="layui-input j-rent-list">
-				<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
-			</div>
-		</div>
-		<div class="layui-col-md4">
-			<label class="j-form-label">产别</label>
-			<div class="j-input-inline">
-				<input type="text" id="reduction_class" value="{$params['owners'][$old_data_info['ban_info']['ban_owner_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+				<input type="text" name="change_order_number" value="{$data_info['change_order_number']}" autocomplete="off" class="layui-input" readonly>
 			</div>
 		</div>
 	</div>
@@ -42,16 +35,31 @@
 				<input type="text" id="reduction_id" value="{$data_info['ban_info']['ban_number']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
-		<div class="layui-col-md4">
+		<div class="layui-col-md8">
 			<label class="j-form-label">楼栋地址</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_address" value="{$data_info['ban_info']['ban_address']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">产别</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_class" value="{$params['owners'][$old_data_info['ban_info']['ban_owner_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label">使用性质</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_nature" value="{$params['uses'][$data_info['house_use_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租表</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_rentlist" value="" placeholder=""   readonly autocomplete="off" class="layui-input j-rent-list">
+				<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
 			</div>
 		</div>
 	</div>
@@ -63,9 +71,29 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
-			<label class="j-form-label">租户</label>
+			<label class="j-form-label">使用面积</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_use_area" readonly value="{$data_info['house_use_area']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">计租面积</label>
+			<div class="j-input-inline">
+				<input type="text" id="house_lease_area" readonly value="{$data_info['house_lease_area']}" placeholder=""  autocomplete="off" class="layui-input">
+			</div>
+		</div>
+	</div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">租户姓名</label>
 			<div class="j-input-inline">
 				<input type="text" id="reduction_tenant" value="{$data_info['tenant_name']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-col-md4">
+			<label class="j-form-label">联系电话</label>
+			<div class="j-input-inline">
+				<input type="text" id="reduction_tel" value="{$data_info['tenant_tel']}" placeholder=""   readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">
@@ -75,18 +103,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">电话</label>
-			<div class="j-input-inline">
-				<input type="text" id="reduction_tel" value="{$data_info['tenant_tel']}" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-	</div>
-
-
-
-
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
   	<legend>减免信息</legend>
   </fieldset>
