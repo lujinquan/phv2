@@ -16,6 +16,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 
 /**
  * 租金记录
@@ -180,11 +181,23 @@ class Record extends Admin
     public function detail()
     {
         $id = input('param.id/d');
-        $RentModel = new RentModel;      
-        $row = $RentModel->detail($id);
+        // $RentModel = new RentModel;      
+        // $row = $RentModel->detail($id);
+
+        $RentOrderChildModel = new RentOrderChildModel;
+        $row = $RentOrderChildModel->detail($id);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
+
+    // public function detail()
+    // {
+    //     $id = input('param.id/d');
+    //     $RentModel = new RentModel;      
+    //     $row = $RentModel->detail($id);
+    //     $this->assign('data_info',$row);
+    //     return $this->fetch();
+    // }
 
     public function export()
     {   
