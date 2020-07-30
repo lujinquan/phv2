@@ -141,7 +141,7 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', totalRowText: '合计：'}
-                ,{field: 'rent_order_number', hide:true,minWidth: 240, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_number', hide:false,minWidth: 240, align:'center', title: '订单编号'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
                     return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);

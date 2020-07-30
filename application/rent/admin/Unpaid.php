@@ -70,27 +70,21 @@ class Unpaid extends Admin
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
-            //halt($data);
-            $RentModel = new RentModel;
-            $row = $RentModel->where([['rent_order_id','eq',$data['rent_order_id']]])->field('(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
             if(floatval($data['pay_rent']) <= 0){
                 $this->error('缴纳金额必须大于0');
             }
+            $RentModel = new RentModel;
+            $row = $RentModel->where([['rent_order_id','eq',$data['rent_order_id']]])->field('(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
             if($row['rent_order_unpaid'] < $data['pay_rent']){
                 $this->error('缴纳金额不能大于欠缴金额');
             }
             $RentModel = new RentModel;
-            $res = $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
-            // 入库
-            // if (!$BanModel->allowField(true)->create($filData)) {
-            //     return $this->error('新增失败');
-            // }
+            $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
             return $this->success('缴费成功');
         }
         $id = input('param.id/d');
         $RentModel = new RentModel;      
         $row = $RentModel->detail($id);
-        //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
@@ -117,7 +111,7 @@ class Unpaid extends Admin
     {
         $ids = $this->request->param('id/a'); 
         $RentModel = new RentModel;
-        $res = $RentModel->payBackList($ids,date('Y-m'));
+        $res = $RentModel->payBackList($ids,date('Y-m'),'unpaid');
         if($res){
             $this->success('撤回成功，本次撤回'.$res.'条账单！');
         }else{

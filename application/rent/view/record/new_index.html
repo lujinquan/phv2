@@ -174,20 +174,20 @@
                 ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
                 ,{field: 'house_cou_rent',hide:true, minWidth: 120, align:'center', title: '计算租金',totalRow: true}
                 ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
-                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
+                ,{field: 'pay_rent', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
                 // ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
                 //     return params.is_invoice[d.is_invoice];
                 // }}
                 ,{field: 'pay_way', minWidth: 100, align:'center', title: '缴纳方式', templet: function(d) {
                     return params.pay_way[d.pay_way];
                 }}
-                ,{field: 'ptime', minWidth: 120, align:'center', title: '缴纳时间'}
+                ,{field: 'ctime', minWidth: 120, align:'center', title: '缴纳时间'}
                 ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                 $(".layui-table-total td[data-field='rent_order_receive']").find("div").text(res.total_rent_order_receive);
                 $(".layui-table-total td[data-field='house_pre_rent']").find("div").text(res.total_house_pre_rent);
-                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_rent_order_paid);
+                $(".layui-table-total td[data-field='rent_order_paid']").find("div").text(res.total_pay_rent);
                 $(".layui-table-total td[data-field='rent_order_cut']").find("div").text(res.total_rent_order_cut);
                 $(".layui-table-total td[data-field='rent_order_diff']").find("div").text(res.total_rent_order_diff);
                 $(".layui-table-total td[data-field='rent_order_pump']").find("div").text(res.total_rent_order_pump);

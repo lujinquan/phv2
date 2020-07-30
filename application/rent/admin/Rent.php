@@ -18,6 +18,7 @@ use app\common\model\SystemExport;
 use app\house\model\House as HouseModel;
 use app\rent\model\Rent as RentModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 
 /**
  * 租金应缴
@@ -101,7 +102,7 @@ class Rent extends Admin
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function pay()
+    public function pay_old()
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -132,10 +133,128 @@ class Rent extends Admin
     }
 
     /**
+     * 缴费，可以缴纳部分（迭代2.0.3）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-02 14:10:46
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function pay()
+    {
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            if(floatval($data['pay_rent']) <= 0){
+                $this->error('缴纳金额必须大于0');
+            }
+            // 数据验证
+            // $RentModel = new RentModel;
+            // $row = $RentModel->where([['rent_order_id','eq',$data['rent_order_id']]])->field('rent_order_receive')->find();
+            // $RentOrderChildModel = new RentOrderChildModel;
+            // $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$data['rent_order_id']]])->sum('rent_order_paid'); // 获取该订单累计已缴的金额
+            // if(bcsub($row['rent_order_receive'], $rent_order_paid_total,2) < $data['pay_rent']){ // 验证输入的金额是否大于欠缴金额
+            //     $this->error('缴纳金额不能大于欠缴金额');
+            // }
+            $RentModel = new RentModel;
+            $row = $RentModel->where([['rent_order_id','eq',$data['rent_order_id']]])->field('(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
+            if($row['rent_order_unpaid'] < $data['pay_rent']){
+                $this->error('缴纳金额不能大于欠缴金额');
+            }
+            // 执行缴费程序
+            $RentModel = new RentModel;
+            $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
+            return $this->success('缴费成功');
+        }
+        $id = input('param.id/d');
+        $RentModel = new RentModel;      
+        $row = $RentModel->detail($id);
+        $this->assign('data_info',$row);
+        return $this->fetch();
+    }
+
+    /**
      *  按上期欠缴处理（只处理全部已缴和全部未缴订单）
      *  
      */
     public function dealAsLast()
+    {        
+        //验证合法性
+        if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
+        $lastDate = date('Ym',strtotime('-1 month'));
+        $ptime = time();
+        
+        // 获取上期订单
+        $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive,a.rent_order_paid');
+
+        $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.is_deal','eq',0]])->column('a.house_id,a.rent_order_id,a.tenant_id,a.rent_order_paid,a.rent_order_receive,a.rent_order_cou_rent,a.rent_order_pre_rent,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,a.rent_order_number,a.rent_order_date');
+
+        $data = [];
+        $child_data = [];
+        foreach($nowRents as $k => $v){
+            // 过滤
+            if(isset($lastRents[$k])){
+                if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
+                    if($lastRents[$k]['rent_order_paid'] > 0){
+                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>$lastRents[$k]['rent_order_paid']];
+                        $child_data[] = [
+                            'is_deal'=>1,
+                            'rent_order_id'=>$v['rent_order_id'],
+                            'ptime'=>$ptime,
+                            'rent_order_paid'=>$lastRents[$k]['rent_order_paid'],
+                            'rent_order_id'=>$v['rent_order_id'],
+                            'rent_order_receive'=>$v['rent_order_receive'],
+                            'rent_order_cou_rent'=>$v['rent_order_cou_rent'],
+                            'rent_order_pre_rent'=>$v['rent_order_pre_rent'],
+                            'rent_order_diff'=>$v['rent_order_diff'],
+                            'rent_order_pump'=>$v['rent_order_pump'],
+                            'rent_order_cut'=>$v['rent_order_cut'],
+                            'rent_order_number'=>$v['rent_order_number'],
+                            'rent_order_date'=>$v['rent_order_date'],
+                            'house_id'=>$k,
+                            'tenant_id'=>$v['tenant_id'],
+                        ];
+
+                    }else{
+                        $data[] = ['is_deal'=>1,'pay_way'=>0,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+                    } 
+                }
+                if($v['rent_order_receive'] != $lastRents[$k]['rent_order_receive']){
+                    if($lastRents[$k]['rent_order_paid'] == 0){
+                        $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+                    }
+                }
+
+            }
+
+        }
+        //halt($data);
+        //halt($child_data);
+        if($data) {
+
+            $RentModel = new RentModel;
+            $bool = $RentModel->saveAll($data);
+            if($child_data){
+                $RentOrderChildModel = new RentOrderChildModel;
+                $RentOrderChildModel->saveAll($child_data);
+            } 
+            if($bool){
+                return $this->success('处理成功');
+            }else{
+                return $this->error('处理失败');
+            }
+        }else{
+            return $this->success('无匹配订单');
+        }
+    }
+
+    /**
+     *  按上期欠缴处理（只处理全部已缴和全部未缴订单）
+     *  
+     */
+    public function dealAsLast_old()
     {
         
         //验证合法性

@@ -8,7 +8,7 @@
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">
          {if condition="in_array(342,$auths) || $Think.ADMIN_ROLE == 1"}
-         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="rent_order_id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回(本月)</button></a>
+         <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回(本月)</button></a>
          {/if}
          </div>
      </div>
@@ -152,7 +152,7 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', fixed: 'left', totalRowText: '合计：'}
-                ,{field: 'rent_order_number',hide:true, minWidth: 200, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_number',hide:false, minWidth: 200, align:'center', title: '订单编号'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
                     return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);
@@ -200,9 +200,11 @@
      //           	 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
 				 // exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
      //           }
-				 // 根据类型标注颜色
+				 
+                 // 根据类型标注颜色
 				 var result = res.data;
 				 for (var i = 0; i < result.length; i++) {
+                    console.log('这是支付时间：',result[i].ptime);
 					if(parseInt(result[i].pay_way) == 4){
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#5fb878');
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").prop('disabled', true);

@@ -8,6 +8,7 @@ use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\rent\model\RentRecycle as RentRecycleModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 
 class Rent extends Model
 {
@@ -241,8 +242,8 @@ class Rent extends Model
                 // $where[] = ['ban_inst_id','in',config('inst_ids')[$instid]];
 
                 //$where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-                $where[] = ['rent_order_paid','>',0];
-                $where[] = ['is_deal','eq',1];
+                //$where[] = ['rent_order_paid','>',0];
+                //$where[] = ['is_deal','eq',1];
                 break;
 
             default:
@@ -420,7 +421,7 @@ class Rent extends Model
         }*/
     }
 
-    public function pay($id,$pay_rent)
+    public function pay_old($id,$pay_rent)
     {
         $ctime = time();
 
@@ -436,16 +437,16 @@ class Rent extends Model
         $now_date =  date('Ym');
 
         if($row['rent_order_date'] <$now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
-            $RentRecycleModel = new RentRecycleModel;
-            $RentRecycleModel->house_id = $row['house_id'];
-            $RentRecycleModel->tenant_id = $row['tenant_id'];
-            $RentRecycleModel->rent_order_id = $row['rent_order_id'];
-            $RentRecycleModel->pay_rent = $pay_rent;
-            $RentRecycleModel->pay_year = substr($row['rent_order_date'],0,4);
-            $RentRecycleModel->pay_month = $row['rent_order_date'];
-            $RentRecycleModel->cdate = date('Ym',$ctime);
-            $RentRecycleModel->ctime = $ctime;
-            $RentRecycleModel->save();
+            $RentOrderChildModel = new RentRecycleModel;
+            $RentOrderChildModel->house_id = $row['house_id'];
+            $RentOrderChildModel->tenant_id = $row['tenant_id'];
+            $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
+            $RentOrderChildModel->pay_rent = $pay_rent;
+            $RentOrderChildModel->pay_year = substr($row['rent_order_date'],0,4);
+            $RentOrderChildModel->pay_month = $row['rent_order_date'];
+            $RentOrderChildModel->cdate = date('Ym',$ctime);
+            $RentOrderChildModel->ctime = $ctime;
+            $RentOrderChildModel->save();
         }
 
         // 添加房屋台账，记录缴费状况
@@ -463,9 +464,59 @@ class Rent extends Model
     }
 
     /**
-     *  批量缴费
+     * 改版后的功能调整（迭代2.0.3）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-28 14:15:45 
+     * @return  返回值  
+     * @version 版本  1.0
      */
-    public function payList($ids)
+    public function pay($id,$pay_rent)
+    {
+        $ctime = time();
+
+        $row = $this->find($id);
+
+        // 缴费生成一条条子订单
+        $RentOrderChildModel = new RentOrderChildModel;
+        $RentOrderChildModel->rent_order_id = $id;
+        $RentOrderChildModel->house_id = $row['house_id'];
+        $RentOrderChildModel->tenant_id = $row['tenant_id'];
+        $RentOrderChildModel->rent_order_paid = $pay_rent;
+        $RentOrderChildModel->rent_order_number = $row->rent_order_number;
+        $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
+        $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
+        $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
+        $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
+        $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
+        $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
+        $RentOrderChildModel->rent_order_date = $row->rent_order_date;
+        $RentOrderChildModel->ptime = $ctime;
+        $RentOrderChildModel->save();
+
+
+        $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
+        $row->is_deal = 1;
+        $res = $row->save();
+
+        // 添加房屋台账，记录缴费状况
+        $HouseTaiModel = new HouseTaiModel;
+        $HouseTaiModel->house_id = $row['house_id'];
+        $HouseTaiModel->tenant_id = $row['tenant_id'];
+        $HouseTaiModel->cuid = ADMIN_ID;
+        $HouseTaiModel->house_tai_type = 2;
+        $HouseTaiModel->house_tai_remark = '现金缴费：'.$pay_rent.'元';
+        $HouseTaiModel->data_json = [];
+        $HouseTaiModel->change_type = '';
+        $HouseTaiModel->change_id = '';
+        $HouseTaiModel->save();
+
+    }
+
+    public function payList_old($ids)
     {     
         $ji = 0;
         $ctime = time();
@@ -485,20 +536,17 @@ class Rent extends Model
             $res = $row->save();
 
             if($row['rent_order_date'] < $now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
-                $RentRecycleModel = new RentRecycleModel;
-                $RentRecycleModel->house_id = $row['house_id'];
-                $RentRecycleModel->tenant_id = $row['tenant_id'];
-                $RentRecycleModel->rent_order_id = $row['rent_order_id'];
-                $RentRecycleModel->pay_rent = bcsub($row->rent_order_receive , $old_rent_order_paid,2);
-                $RentRecycleModel->pay_year = substr($row['rent_order_date'],0,4);
-                $RentRecycleModel->pay_month = $row['rent_order_date'];
-                $RentRecycleModel->cdate = $cdate;
-                $RentRecycleModel->ctime = $ctime;
-                $RentRecycleModel->save();
+                $RentOrderChildModel = new RentRecycleModel;
+                $RentOrderChildModel->house_id = $row['house_id'];
+                $RentOrderChildModel->tenant_id = $row['tenant_id'];
+                $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
+                $RentOrderChildModel->pay_rent = bcsub($row->rent_order_receive , $old_rent_order_paid,2);
+                $RentOrderChildModel->pay_year = substr($row['rent_order_date'],0,4);
+                $RentOrderChildModel->pay_month = $row['rent_order_date'];
+                $RentOrderChildModel->cdate = $cdate;
+                $RentOrderChildModel->ctime = $ctime;
+                $RentOrderChildModel->save();
             }
-            
-
-
 
             $ji += $res;
 
@@ -513,22 +561,90 @@ class Rent extends Model
             $HouseTaiModel->change_type = '';
             $HouseTaiModel->change_id = '';
             $HouseTaiModel->save();
+
+        }
+        return $ji;
+    }
+
+    /**
+     *  批量缴费（迭代2.0.3已完成）
+     */
+    public function payList($ids)
+    {     
+        $ji = 0;
+        $ctime = time();
+        $cdate = date('Ym',$ctime);
+        $now_date =  date('Ym');
+
+        foreach($ids as $id){
+            // 修改租金订单
+            $row = $this->find($id);
+
+            //$old_rent_order_paid = $row->rent_order_paid;
+
+            $row->is_deal = 1;
+            //$row->ptime = $ctime;
+            //$row->pay_way = 1;
+            
+
+            //if($row['rent_order_date'] < $now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
+                $RentOrderChildModel = new RentOrderChildModel;
+                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id]])->sum('rent_order_paid'); // 获取该订单累计已缴的金额
+                $RentOrderChildModel->house_id = $row['house_id'];
+                $RentOrderChildModel->tenant_id = $row['tenant_id'];
+                $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
+                $RentOrderChildModel->rent_order_number = $row['rent_order_number'];
+                $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
+                $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
+                $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
+                $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
+                $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
+                $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
+                $RentOrderChildModel->rent_order_date = $row->rent_order_date;
+                
+                // $RentOrderChildModel->pay_year = substr($row['rent_order_date'],0,4);
+                // $RentOrderChildModel->pay_month = $row['rent_order_date'];
+                //$RentOrderChildModel->cdate = $cdate;
+                //if($row['rent_order_date'] < $now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
+                    $RentOrderChildModel->rent_order_paid = bcsub($row->rent_order_receive , $rent_order_paid_total,2);
+                // }else{
+                //     $RentOrderChildModel->
+                // }
+                $row->rent_order_paid = Db::raw('rent_order_paid+'.($RentOrderChildModel->rent_order_paid));
+                //$row->rent_order_paid = $RentOrderChildModel->rent_order_paid;
+                $res = $row->save();
+
+                $RentOrderChildModel->ptime = $ctime;
+                $RentOrderChildModel->save();
+            // }else{
+            //     $RentOrderChildModel = new RentRecycleModel;
+            //     $RentOrderChildModel->house_id = $row['house_id'];
+            //     $RentOrderChildModel->tenant_id = $row['tenant_id'];
+            //     $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
+            //     $RentOrderChildModel->pay_rent = $row->rent_order_receive;
+            //     $RentOrderChildModel->pay_year = substr($row['rent_order_date'],0,4);
+            //     $RentOrderChildModel->pay_month = $row['rent_order_date'];
+            //     $RentOrderChildModel->cdate = $cdate;
+            //     $RentOrderChildModel->ctime = $ctime;
+            //     $RentOrderChildModel->save();
+            // }
+
+            $ji += $res;
+
+            // 添加房屋台账，记录缴费状况
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->house_id = $row['house_id'];
+            $HouseTaiModel->tenant_id = $row['tenant_id'];
+            $HouseTaiModel->cuid = ADMIN_ID;
+            $HouseTaiModel->house_tai_type = 2;
+            $HouseTaiModel->house_tai_remark = '现金缴费：'.$RentOrderChildModel->rent_order_paid.'元';
+            $HouseTaiModel->data_json = [];
+            $HouseTaiModel->change_type = '';
+            $HouseTaiModel->change_id = '';
+            $HouseTaiModel->save();
             //halt($row);
             //self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
         }
-        //$res = self::where([['rent_order_id','in',$ids]])->update(['is_deal'=>1,'ptime'=>time(),'pay_way'=>1,'rent_order_paid'=>Db::raw('rent_order_receive')]);
-        //halt($res);
-        // 缴费台账
-        // $HouseTaiModel = new HouseTaiModel;   
-        // $HouseTaiModel->house_id = $v['house_id'];
-        // $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
-        // $taiHouseData[$k]['cuid'] = $finalRow['cuid'];
-        // $taiHouseData[$k]['house_tai_type'] = 4;
-        // $taiHouseData[$k]['house_tai_remark'] = '注销异动单号：'.$finalRow['change_order_number'];
-        // $taiHouseData[$k]['data_json'] = [];
-        // $taiHouseData[$k]['change_type'] = 8;
-        // $taiHouseData[$k]['change_id'] = $finalRow['id']; 
-        // $HouseTaiModel->save();
         return $ji;
     }
 
@@ -546,7 +662,76 @@ class Rent extends Model
      * @param  [type] $data [description]
      * @return [type]       [description]
      */
-    public function payBackList($ids,$nowDate)
+    public function payBackList($ids,$nowDate,$type = 'unpaid')
+    {
+        // 验证可以撤回的订单有哪些
+        $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
+        $payStartTime = strtotime($nowDate);
+        $payEndTime = strtotime('1 month',strtotime($nowDate));
+        $re = 0;
+        if($type == 'unpaid'){ //欠缴列表里，点击的是order表
+            foreach ($ids as $id) {
+                $row->is_deal = 0;     
+                //如果是本月的订单，而且也没支付过，则直接回退订单状态            
+                $RentOrderChildModel = new RentOrderChildModel;
+                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['pay_way','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->sum('rent_order_paid');
+
+                if(floatval($rent_order_paid_total) > 0){ //如果有子订单
+                    
+                    if($row->rent_order_paid > $rent_order_paid_total){ //如果够减
+                        $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_order_paid_total);
+                    }else{
+                        $row->rent_order_paid = 0;
+                        if($row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
+                            $row->is_deal = 0;
+                        }
+                    }
+                    $row->save();
+                }else{ //如果没有子订单，直接修改主订单表
+                    $row->pay_way = 0;
+                    $row->rent_order_paid = 0;
+                    $row->save();
+                }
+
+                $RentOrderChildModel = new RentOrderChildModel;
+                $RentOrderChildModel->where([['rent_order_id','eq',$id],['ptime','between',[$payStartTime,$payEndTime]]])->delete(); //只删除本月处理的订单，且是现金缴纳方式的订单
+
+                $re++;
+            }
+        }else{ //租金记录表里，点击的是order_child表
+            foreach ($ids as $id) {
+                $RentOrderChildModel = new RentOrderChildModel;
+                $row = $RentOrderChildModel->find($id);
+                if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1){ //如果不是本月操作的实收订单，或者不是现金交的
+                    continue;
+                }else{ //如果是本月收的订单
+                    $order_row = $this->find($row['rent_order_id']);
+                    if($order_row->rent_order_paid > $row->rent_order_paid){ //如果够减
+                        $order_row->rent_order_paid = Db::raw('rent_order_paid-'.($row->rent_order_paid));
+                    }else{
+                        $order_row->rent_order_paid = 0;
+                        if($order_row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
+                            $order_row->is_deal = 0;
+                        }
+                    }
+                    $order_row->save(); //修改order表
+                    $row->delete(); //删除时间记录
+
+                    $re++;
+                }
+
+            }
+        }
+
+        return $re;
+    }
+
+    /**
+     * [payBackList 批量撤回订单],只能撤回现金支付的订单，不能撤回线上支付的订单,【未完成】
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function payBackList_old($ids,$nowDate)
     {
         // 验证可以撤回的订单有哪些
         $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
@@ -585,11 +770,11 @@ class Rent extends Model
                 }
 
                 // 如果支付时间是当月，代表是撤回以前年或以前月的收欠
-                $RentRecycleModel = new RentRecycleModel;
+                $RentOrderChildModel = new RentRecycleModel;
 
-                $rent_recycle = $RentRecycleModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
+                $rent_recycle = $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
 
-                $RentRecycleModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->delete();
+                $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->delete();
 
                 $row->is_deal = 1; 
                 $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_recycle['pay_rents']);
