@@ -7,6 +7,7 @@
  <div class="j-table-content j-no-tab">
     <div class="layui-btn-container j-container-margin">
          <div class="layui-btn-container">  
+             
              {if condition="in_array(347,$auths) || $Think.ADMIN_ROLE == 1"}
              <!-- <a data-href="{:url('createRentOrders')}" class="j-ajax"><button class="layui-btn layui-bg-green"><i class="layui-icon layui-icon-rmb"></i> 生成本月租金</button></a> -->
              {/if}
@@ -27,6 +28,11 @@
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
+        {if condition="in_array('rent_order_number',$config['rent_rent_info_search'])"}
+        <div class="layui-input-inline j-input-margin" style="width:200px;">
+            <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
+        </div>
+        {/if}
         {if condition="in_array('tenant_name',$config['rent_rent_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">

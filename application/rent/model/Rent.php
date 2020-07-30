@@ -674,7 +674,7 @@ class Rent extends Model
                 $row->is_deal = 0;     
                 //如果是本月的订单，而且也没支付过，则直接回退订单状态            
                 $RentOrderChildModel = new RentOrderChildModel;
-                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['pay_way','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->sum('rent_order_paid');
+                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['pay_way','eq',1],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->sum('rent_order_paid');
 
                 if(floatval($rent_order_paid_total) > 0){ //如果有子订单
                     
@@ -694,7 +694,7 @@ class Rent extends Model
                 }
 
                 $RentOrderChildModel = new RentOrderChildModel;
-                $RentOrderChildModel->where([['rent_order_id','eq',$id],['ptime','between',[$payStartTime,$payEndTime]]])->delete(); //只删除本月处理的订单，且是现金缴纳方式的订单
+                $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->update(['rent_order_status'=>0,'muid'=>ADMIN_ID]); //只删除本月处理的订单，且是现金缴纳方式的订单
 
                 $re++;
             }
@@ -702,7 +702,7 @@ class Rent extends Model
             foreach ($ids as $id) {
                 $RentOrderChildModel = new RentOrderChildModel;
                 $row = $RentOrderChildModel->find($id);
-                if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1){ //如果不是本月操作的实收订单，或者不是现金交的
+                if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1 || $row->rent_order_status != 1){ //如果不是本月操作的实收订单，或者不是现金交的
                     continue;
                 }else{ //如果是本月收的订单
                     $order_row = $this->find($row['rent_order_id']);
@@ -715,7 +715,10 @@ class Rent extends Model
                         }
                     }
                     $order_row->save(); //修改order表
-                    $row->delete(); //删除时间记录
+
+                    $row->rent_order_status = 0;
+                    $row->muid = ADMIN_ID;
+                    $row->save(); //删除时间记录
 
                     $re++;
                 }
@@ -726,95 +729,95 @@ class Rent extends Model
         return $re;
     }
 
-    /**
-     * [payBackList 批量撤回订单],只能撤回现金支付的订单，不能撤回线上支付的订单,【未完成】
-     * @param  [type] $data [description]
-     * @return [type]       [description]
-     */
-    public function payBackList_old($ids,$nowDate)
-    {
-        // 验证可以撤回的订单有哪些
-        $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
+    // /**
+    //  * [payBackList 批量撤回订单],只能撤回现金支付的订单，不能撤回线上支付的订单,【未完成】
+    //  * @param  [type] $data [description]
+    //  * @return [type]       [description]
+    //  */
+    // public function payBackList_old($ids,$nowDate)
+    // {
+    //     // 验证可以撤回的订单有哪些
+    //     $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
 
-        //$rentList = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->whereOr([['pay_way','eq','1'],['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->select()->toArray();
+    //     //$rentList = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->whereOr([['pay_way','eq','1'],['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->select()->toArray();
 
-        $payStartTime = strtotime($nowDate);
-        $payEndTime = strtotime('1 month',strtotime($nowDate));
-        $res = 0;
-        foreach ($ids as $id) {
-            $row = $this->find($id);
-            //halt($row);
-            // 支付方式不是现金支付,跳过
-            if($row['pay_way'] != 1){
-                continue;
-            }
-            // 如果是当月的订单
-            if($row['rent_order_date'] == str_replace('-', '', $nowDate)){ 
-                if($row->getData('ptime') > 0){ //如果有支付时间，
-                    $row->is_deal = 0; 
-                    $row->rent_order_paid = 0;
-                    $row->pay_way = 0;
-                    $row->ptime = 0;
-                    $row->save();
-                }else{ //如果是本月的订单，而且也没支付过，则直接回退订单状态
-                    $row->is_deal = 0; 
-                    $row->rent_order_paid = 0;
-                    $row->pay_way = 0;
-                    $row->save();
-                }
-            // 如果不是当月的订单 
-            }else{ 
-                // 如果支付时间不是当月，则跳过
-                if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime){ 
-                    continue;
-                }
+    //     $payStartTime = strtotime($nowDate);
+    //     $payEndTime = strtotime('1 month',strtotime($nowDate));
+    //     $res = 0;
+    //     foreach ($ids as $id) {
+    //         $row = $this->find($id);
+    //         //halt($row);
+    //         // 支付方式不是现金支付,跳过
+    //         if($row['pay_way'] != 1){
+    //             continue;
+    //         }
+    //         // 如果是当月的订单
+    //         if($row['rent_order_date'] == str_replace('-', '', $nowDate)){ 
+    //             if($row->getData('ptime') > 0){ //如果有支付时间，
+    //                 $row->is_deal = 0; 
+    //                 $row->rent_order_paid = 0;
+    //                 $row->pay_way = 0;
+    //                 $row->ptime = 0;
+    //                 $row->save();
+    //             }else{ //如果是本月的订单，而且也没支付过，则直接回退订单状态
+    //                 $row->is_deal = 0; 
+    //                 $row->rent_order_paid = 0;
+    //                 $row->pay_way = 0;
+    //                 $row->save();
+    //             }
+    //         // 如果不是当月的订单 
+    //         }else{ 
+    //             // 如果支付时间不是当月，则跳过
+    //             if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime){ 
+    //                 continue;
+    //             }
 
-                // 如果支付时间是当月，代表是撤回以前年或以前月的收欠
-                $RentOrderChildModel = new RentRecycleModel;
+    //             // 如果支付时间是当月，代表是撤回以前年或以前月的收欠
+    //             $RentOrderChildModel = new RentRecycleModel;
 
-                $rent_recycle = $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
+    //             $rent_recycle = $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['rent_order_status','eq',1],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->field('sum(pay_rent) as pay_rents')->find();
 
-                $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['pay_month','eq',$row['rent_order_date']]])->delete();
+    //             $RentOrderChildModel->where([['house_id','eq',$row['house_id']],['cdate','eq',str_replace('-', '', $nowDate)],['rent_order_status','eq',1],['pay_month','eq',$row['rent_order_date']]])->update(['rent_order_status'=>0]);
 
-                $row->is_deal = 1; 
-                $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_recycle['pay_rents']);
-                $row->pay_way = 0;
-                $row->ptime = 0;
-                $row->save();
+    //             $row->is_deal = 1; 
+    //             $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_recycle['pay_rents']);
+    //             $row->pay_way = 0;
+    //             $row->ptime = 0;
+    //             $row->save();
 
 
-                // 是否需要添加撤销的台账记录？
+    //             // 是否需要添加撤销的台账记录？
                 
-            }
-            if($row->getData('ptime') > 0){ //如果有支付时间，
-                continue;
-            }
-            // // 如果是欠缴的订单
-            // if($row['rent_order_receive'] > $row['rent_order_paid']){ 
+    //         }
+    //         if($row->getData('ptime') > 0){ //如果有支付时间，
+    //             continue;
+    //         }
+    //         // // 如果是欠缴的订单
+    //         // if($row['rent_order_receive'] > $row['rent_order_paid']){ 
 
-            // }
-            // // 支付时间不是本月，或者支付方式不是现金支付，或者订单期不是本月
-            // if(($row['ptime'] < $payStartTime || $row['ptime'] >= $payEndTime)  || $row['pay_way'] != 1){ 
-            //     continue;
-            // }
+    //         // }
+    //         // // 支付时间不是本月，或者支付方式不是现金支付，或者订单期不是本月
+    //         // if(($row['ptime'] < $payStartTime || $row['ptime'] >= $payEndTime)  || $row['pay_way'] != 1){ 
+    //         //     continue;
+    //         // }
 
-            // if($row['ptime'] > ){
+    //         // if($row['ptime'] > ){
 
-            // }else{
+    //         // }else{
 
-            // }
-            // 
-            $res++;
-        }
+    //         // }
+    //         // 
+    //         $res++;
+    //     }
         
-        //撤回后，是否处理:0,支付时间:0,支付金额:0,支付方式:0   
+    //     //撤回后，是否处理:0,支付时间:0,支付金额:0,支付方式:0   
          
-        // $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
+    //     // $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
 
-        // $res1 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
-        // $res2 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
-        return $res;
-    }
+    //     // $res1 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['ptime','between time',[$nowDate,$nextDate]]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+    //     // $res2 = self::where([['pay_way','eq','1'],['rent_order_id','in',$ids],['rent_order_date','eq',str_replace('-', '', $nowDate)]])->update(['is_deal'=>0,'ptime'=>0,'rent_order_paid'=>0,'pay_way'=>0]);
+    //     return $res;
+    // }
 
     public function detail($id)
     {

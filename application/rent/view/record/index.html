@@ -15,6 +15,11 @@
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
       <div class="j-search-fl layui-col-md8  fl">
+        {if condition="in_array('rent_order_number',$config['rent_record_info_search'])"}
+        <div class="layui-input-inline j-input-margin" style="width:200px;">
+            <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
+        </div>
+        {/if}
         {if condition="in_array('house_number',$config['rent_record_info_search'])"}
     	<div class="layui-input-inline j-input-margin" style="width:180px;">
     	    <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
@@ -22,7 +27,7 @@
         {/if}
         {if condition="in_array('rent_order_date',$config['rent_record_info_search'])"}
     	<div class="layui-input-inline j-input-margin" style="width:100px;">
-    	    <input type="text" name="rent_order_date" value="" title="月份" placeholder="月份" id="query_month" autocomplete="off" class="layui-input">
+    	    <input type="text" name="rent_order_date" value="" title="账单期" placeholder="账单期" id="query_month" autocomplete="off" class="layui-input">
     	</div>
         {/if}
         {if condition="in_array('ban_inst_id',$config['rent_record_info_search'])"}
@@ -174,7 +179,7 @@
                 ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
                 ,{field: 'house_cou_rent',hide:true, minWidth: 120, align:'center', title: '计算租金',totalRow: true}
                 ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
-                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '已缴租金', totalRow: true}
+                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '本次缴纳租金', totalRow: true}
                 // ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
                 //     return params.is_invoice[d.is_invoice];
                 // }}

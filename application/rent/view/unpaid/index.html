@@ -18,6 +18,11 @@
   <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 	  <div class="j-search-fl layui-col-md8  fl">
+        {if condition="in_array('rent_order_number',$config['rent_unpaid_info_search'])"}
+        <div class="layui-input-inline j-input-margin" style="width:200px;">
+            <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
+        </div>
+        {/if}
         {if condition="in_array('house_number',$config['rent_unpaid_info_search'])"}
         <div class="layui-input-inline j-input-margin" style="width:120px;">
             <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
@@ -141,7 +146,7 @@
             }
             ,cols: [[ //表头
                 {type: 'checkbox', totalRowText: '合计：'}
-                ,{field: 'rent_order_number', hide:false,minWidth: 240, align:'center', title: '订单编号'}
+                ,{field: 'rent_order_number', hide:false,minWidth: 200, align:'center', title: '订单编号'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
                     return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);
