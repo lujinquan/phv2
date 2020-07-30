@@ -226,6 +226,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .layui-elem-field.j-field-box legend{ font:bold 16px ''; color:#0084FF;}
 .j-details-box .j-form-label,.j-details-box .j-enclosure-label{ float: left; padding: 0; width: 120px; text-align: center; line-height: 36px;background:rgba(240,241,245,1);border:1px solid rgba(198,210,223,1);color: #8592A3; font-weight: bold;border-radius: 2px 0 0 2px ;
 }
+.j-details-box .long .j-form-label{width: 200px;}
 .j-details-box .j-enclosure-label.j-enclosure-long-label{width: 150px;}
 .j-details-box .j-enclosure-label{float: initial;}
 /* .j-enclosure-upload{ margin-top: 15px;} */
@@ -236,6 +237,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .j-lengthen .j-form-label{ width: 190px;}
 .j-details-box .j-form-label i{padding-right: 5px;color:rgba(255,87,34,1);}
 .j-details-box .layui-form-item .j-input-inline{padding-left: 123px; position: relative;left: -2px;/* font-weight: bold; */color: #666;}
+.j-details-box .layui-form-item.long .j-input-inline{padding-left: 203px;}
 .j-details-box .layui-form-item .j-input-inline.j-tips{ padding-left: initial; float: left;width: 22%;}/* 表单后面带提示 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show i{color: #FF8700;margin: 0 5px 0 10px;}/* 提示信息 */
 .j-details-box .layui-form-item .j-input-inline.j-tips-show a,.j-details-box .layui-form-item .j-input-inline.j-tips-show{color: #FF8700; font-size: 12px; font-weight: bold;}
@@ -399,6 +401,7 @@ opacity: .8color: #333;}
 .j-news-details h2{color: #141414; font:12px/31px '';  margin-bottom: 5px;}
 .j-news-details a{ color: #0084FF;}
 .j-news-details .j-content-size{ line-height: 24px;}
+.j-news-details .j-content-size img{max-width: 100%;height: auto;/*margin: 0 auto;*/display: block;}
 /*------------------ 站内信 E ----------------*/
 /*------------------ 公告 S ----------------*/
 .j-index-notice{background: #fff;border-radius: 4px;padding: 15px;}

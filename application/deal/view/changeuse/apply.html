@@ -17,6 +17,54 @@
 			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">楼栋编号</label>
+				<div class="j-input-inline">
+					<input type="text" id="reduction_id" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md8">
+				<label class="j-form-label">楼栋地址</label>
+				<div class="j-input-inline">
+					<input type="text" id="reduction_address" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">楼层</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_floor_id" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">使用面积</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_use_area" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">计租面积</label>
+				<div class="j-input-inline">
+					<input type="text" id="house_lease_area" readonly value="" placeholder=""  autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">楼栋产别</label>
+				<div class="j-input-inline">
+					<input type="text" id="reduction_class" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">使用性质</label>
+				<div class="j-input-inline">
+					<input type="text" id="reduction_nature" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md6">
 				<div class="j-column-box">
 					<div class="j-column-title clearfix">
@@ -271,6 +319,13 @@
 						$("#old_tenant_number").val(row.tenant_number);//当前租户编号
 						$("#old_tenant_name").val(row.tenant_name);//当前租户姓名
 						$("#old_tenant_card").val(row.tenant_card);//当前租户身份证号
+						$("#reduction_id").val(row.ban_number);//获取楼栋编号
+						$("#reduction_address").val(row.ban_address);//获取楼栋地址
+						$("#house_floor_id").val(row.house_floor_id);//获取楼层数
+						$("#reduction_class").val(params.owners[row.ban_owner_id]);//获取产别
+						$("#reduction_nature").val(params.uses[row.house_use_id]);//获取楼栋使用性质
+						$("#house_use_area").val(row.house_use_area);//获取使用面积
+						$("#house_lease_area").val(row.house_lease_area);//获取计租面积
 						if(!row.tenant_card || row.tenant_card==0){
 							$(".j-tips-boxs").removeClass("j-visibility");
 						}
