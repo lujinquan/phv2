@@ -1,4 +1,4 @@
-<form class="layui-form" id="form1" action="{url('index_x')}" method="post">
+<form class="layui-form" action="{:url('copyright_edit')}" method="post">
 	<!-- 版权设置 S -->
 	<div class="j-details-box j-no-height floorWrap layui-form">
 	  <div class="item">
@@ -8,12 +8,12 @@
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md12">
-			 <textarea id="editor_id" name="content" style="width:100%;height:300px;"></textarea>
+			 <textarea id="editor_id" name="content" style="width:100%;height:300px;">{:htmlspecialchars_decode($data_info['options'])}</textarea>
 			</div>
 	  </div>
 	  <div class="layui-row layui-form-item layui-col-space90">
 		<div class="j-margin-btn">
-			<a href="{:url('index_y')}?group=n" class="layui-btn layui-btn-primary">取消</a>
+			<a href="{:url('index_x')}?group=n" class="layui-btn layui-btn-primary">取消</a>
 			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
 		</div>
 	  </div>

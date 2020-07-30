@@ -11,9 +11,11 @@
 
 namespace app\system\admin;
 
+use Env;
 use hisi\Dir;
 use think\Db;
-use Env;
+use app\system\model\SystemBasis;
+use app\system\model\SystemConfig;
 
 /**
  * 基础配置控制器
@@ -28,47 +30,20 @@ class Basis extends Admin
 			$page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-
             $group = isset($getData['group'])?$getData['group']:'y';
+            if($group == 'y'){
+                $SystemBasis = new SystemBasis;
+                // $where = $SystemNotice->checkWhere($getData);
+                $data = $where = [];
+                $where[] = ['delete_time','eq',0];
+                $data['data'] = $SystemBasis->where($where)->page($page)->order('create_time desc')->limit($limit)->select();
+                $data['count'] = $SystemBasis->where($where)->count();
+                $data['code'] = 0;
+                $data['msg'] = '';
+                return json($data);
+            }else{
 
-            switch ($group) {
-                case 'y':
-                    $order = 'house_ctime desc';
-                    break;
-                case 'x':
-                    $order = 'house_ctime desc';
-                    break;
-                case 'z':
-                    $order = 'house_dtime desc';
-                    break;
-                default:
-                    $order = 'house_ctime desc';
-                    break;
-            }
-
-            $where = 1;
-            if(isset($getData['table_name']) && $getData['table_name']){
-            	$where .= " AND NAME LIKE '%".$getData['table_name']."%'";
-            }
-            if(isset($getData['table_remark']) && $getData['table_remark']){
-            	$where .= " AND Comment LIKE '%".$getData['table_remark']."%'";
-            }
-            $data = [];
-            $sql = "SHOW TABLE STATUS WHERE ".$where;
-            $tables = Db::query($sql);
-            foreach ($tables as $k => &$v) {
-                if(strpos($v['Name'], '_back') !== false || strpos($v['Name'], '_copy') !== false){
-                    unset($tables[$k]);
-                }else{
-                    $v['id'] = $v['Name'];
-                }
-                $v['id'] = $v['Name'];
-            }
-            $data['data'] = array_slice($tables, ($page- 1) * $limit, $limit);
-            $data['count'] = count($tables);
-            $data['code'] = 0;
-
-            return json($data);
+            }  
         }
         $group = input('group','y');
         $tabData = [];
@@ -82,6 +57,10 @@ class Basis extends Admin
                 'url' => '?group=x',
             ]
         ];
+        $SystemConfig = new SystemConfig;
+        $row = $SystemConfig->where([['name','eq','copy_right']])->find();
+        $this->assign('data_info',$row);
+
         $tabData['current'] = url('?group='.$group);
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
@@ -91,22 +70,71 @@ class Basis extends Admin
 
 	public function version_add()
 	{
-		return $this->fetch();
+		if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'SystemBasis');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            $SystemBasis = new SystemBasis;
+            $data['cuid'] = ADMIN_ID;
+            $data['content'] = $data['content'];
+            // 入库
+            if (!$SystemBasis->allowField(true)->create($data)) {
+                return $this->error('发布失败');
+            }
+            return $this->success('发布成功','','index');
+        }
+        return $this->fetch();
 	}
 
 	public function version_edit()
 	{
+        $SystemBasis = new SystemBasis;
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            $result = $this->validate($data, 'SystemBasis');
+            if($result !== true) {
+                return $this->error($result);
+            }
+            // 入库
+            if (!$SystemBasis->allowField(true)->update($data)) {
+                return $this->error('编辑失败');
+            }
+            return $this->success('编辑成功');
+        }
+        $id = input('param.id/d');
+        $row = $SystemBasis->find($id);
+        //halt($row);
+        $this->assign('data_info',$row);
 		return $this->fetch();
 	}
 
 	public function copyright_edit()
 	{
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $SystemConfig = new SystemConfig;
+            $row = $SystemConfig->where([['name','eq','copy_right']])->find();
+            $row->options = $data['content'];
+            $row->save();
+            return $this->success('编辑成功');
+        }
 		return $this->fetch();
 	}
 
 	public function version_del()
 	{
-
+        $id = input('id');
+        $SystemBasis = new SystemBasis;       
+        $res = $SystemBasis->where([['id','eq',$id]])->update(['delete_time'=>time()]);
+        if($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
 	}
 
 }

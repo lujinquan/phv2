@@ -7,6 +7,7 @@
 	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 		<a href="{:url('version_edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+        <a href="{:url('version_del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
 	</script>
 </div>
 <script type="text/javascript">
@@ -17,19 +18,20 @@
             elem: '#dataTable'
             //,toolbar: true
 			//,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
-            ,url: '{:url("system/basis/index")}' //数据接口
+            ,url: '{:url()}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {
                 none : '暂无相关数据'
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
-                ,{field: 'version_number' , minWidth: 200 , align:'center' , title: '版本号'}
+                //{type: 'checkbox', fixed: 'left'}
+                {field: 'title' , minWidth: 120 , align:'center' , title: '版本号'}
+                ,{field: 'remark' , minWidth: 200 , align:'center' , title: '版本描述'}
                 ,{field: 'create_time' , minWidth: 200 ,  align:'center' , title: '创建时间'}
                 ,{field: 'update_time' , minWidth: 200 ,  align:'center' , title: '更新时间'}
                 ,{field: 'cuid',minWidth: 130 , align:'center', title: '发布人'}
-                ,{title: '操作', minWidth: 260,Width: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 180, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                

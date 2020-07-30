@@ -26,6 +26,8 @@ use app\house\model\House as HouseModel;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Ban as BanModel;
 use think\Db;
+use app\system\model\SystemBasis;
+use app\system\model\SystemConfig;
 
 /**
  * 后台公共控制器
@@ -110,6 +112,17 @@ class Admin extends Common
             $affiche = $afficheModel->getAffiche();//halt($affiches);
             $this->assign('affiche',$affiche);
             
+            // 底部版本信息
+            $SystemBasis = new SystemBasis;
+            $basis = $SystemBasis->where([['delete_time','eq',0]])->order('create_time desc')->select();
+            $this->assign('basis',$basis);
+
+            // 底部版权信息
+            $SystemConfig = new SystemConfig;
+            $copyRightInfo = $SystemConfig->where([['name','eq','copy_right']])->find();
+            //halt($copyRightInfo);
+            $this->assign('copyRightInfo',$copyRightInfo);
+            //halt($basis);
             // 自动执行的文件【待优化】
             $AutoExecuteModel = new AutoExecuteModel;
             $AutoExecuteModel->autocomplete();

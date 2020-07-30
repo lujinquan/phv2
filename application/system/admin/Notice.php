@@ -12,10 +12,9 @@
 
 namespace app\system\admin;
 
+use think\Db;
 use app\common\controller\Common;
 use app\system\model\SystemNotice;
-
-use think\Db;
 
 /**
  * 系统公告控制器

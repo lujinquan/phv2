@@ -1,4 +1,4 @@
-<form class="layui-form" id="form1" action="{url('add')}" method="post">
+<form class="layui-form" id="form1" action="{url()}" method="post">
 	<!-- 新增版本 S -->
 	<div class="j-details-box floorWrap layui-form">
 		<div class="item">
@@ -9,7 +9,15 @@
 				<div class="layui-col-md12">
 					<div class="j-form-label"><i class="red">*</i>版本号</div>
 					<div class="j-input-inline">
-						<input type="text" id="title" name="title" lay-verify="required"  autocomplete="off" class="layui-input">
+						<input type="text" name="title" lay-verify="required" placeholder="例如：1.0.1" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+			</div>
+			<div class="layui-row layui-form-item layui-col-space90">
+				<div class="layui-col-md12">
+					<div class="j-form-label">版本备注</div>
+					<div class="j-input-inline">
+						<input type="text" name="remark" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 			</div>
@@ -18,18 +26,34 @@
 					<label class="j-form-label"><i class="red">*</i>内容</label>
 				</div>
 				<div class="layui-col-md12">
-				 <textarea id="editor_id" name="content" style="width:100%;height:300px;"></textarea>
+				 <textarea id="editor_id" name="content" style="width:100%;height:300px;">&lt;p&gt;
+	&lt;b&gt;&lt;b&gt;[ 优化 ]&lt;/b&gt;&lt;/b&gt; 
+&lt;/p&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 1. 增加查询器不同状态&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 2. 文件上传增加多个类型&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 3. 产别不同房屋按不同租金计算&lt;/span&gt;&lt;br /&gt;
+&lt;p&gt;
+	&lt;span style=&quot;line-height:2;&quot;&gt;&lt;b&gt;[ 迭代 ]&lt;/b&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt;1. 房屋信息确认里的计租表点确认后房屋数据不变成确认状态&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt;2. 无房屋数据且楼栋下没有房屋的时候，点击楼栋中的房屋跳转报页面bug，调整为成功跳转到房屋信息&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt;3. 修改楼栋时的电梯状态异常&lt;/span&gt;&lt;br /&gt;
+&lt;/span&gt; 
+&lt;/p&gt;
+&lt;b&gt;[ 修复 ]&lt;/b&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 1. 房屋信息确认里的计租表点确认后房屋数据不变成确认状态&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 2. 无房屋数据且楼栋下没有房屋的时候，点击楼栋中的房屋跳转报页面bug，调整为成功跳转到房屋信息&lt;/span&gt;&lt;br /&gt;
+&lt;span style=&quot;line-height:2;&quot;&gt; 3. 修改楼栋时的电梯状态异常&lt;/span&gt;&lt;br /&gt;</textarea>
 				</div>
 			</div>
-	</div>
-	{:token()}
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="j-margin-btn">
-			<a href="{:url('index')}?group=y" class="layui-btn layui-btn-primary">取消</a>
-			<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
+		</div>
+		{:token()}
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="j-margin-btn">
+				<a href="{:url('index')}?group=y" class="layui-btn layui-btn-primary">取消</a>
+				<button type="submit" class="layui-btn" lay-submit lay-filter="formSubmit">发布</button>
+			</div>
 		</div>
 	</div>
-</div>
 	<!-- 新增版本 E -->
 </form>
 {include file="block/layui" /}

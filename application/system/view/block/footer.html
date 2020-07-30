@@ -17,14 +17,25 @@
 		.j-versions .j-con{font-size: 14px;}
 	</style>
     <div class="layui-footer footer">
-       武房网 © <a data-method="offset" data-type="rb" class="j-version" href="javascript:;">{:config('hisiphp.name')} v{:config('hisiphp.main_version')}</a>  <!-- <label>客服：027-81368886</label> -->
+    	{:htmlspecialchars_decode($copyRightInfo['options'])}	v{$basis[0]['title']}
+       <!-- 武房网 © <a data-method="offset" data-type="rb" class="j-version" href="javascript:;">{:config('hisiphp.name')} {// :config('hisiphp.main_version')}</a> -->  <!-- <label>客服：027-81368886</label> -->
 	   <!-- © {:config('hisiphp.name')} <a data-method="offset" data-type="rb" class="j-version-1" href="javascript:;">v{:config('hisiphp.main_version')}</a> -->
     </div>
 	<div class="j-versions hide">
 		<ul>
 			<li>
 				<dl class="clearfix">
-					<dt class="j-title clearfix">
+					{volist name="$basis" id="v"}
+						<dt class="j-title clearfix">
+							<span class="fl"><i></i>武房公房系统 v{$v['title']} 更新提醒</span>
+							<span class="fr">{:substr($v['create_time'],0,10)}</span>
+						</dt>
+						<br />
+						<dd>
+							{:htmlspecialchars_decode($v['content'])}
+						</dd>
+					{/volist}
+					<!-- <dt class="j-title clearfix">
 						<span class="fl"><i></i>武房公房系统 v2.0.1 更新提醒</span>
 						<span class="fr">2020-07-23</span>
 					</dt>
@@ -92,7 +103,7 @@
 								3.计租表：修复编辑房屋时，仅修改租差泵费未重新计算租金的问题
 							</dd>
 						</dl>
-					</dd>
+					</dd> -->
 				</dl>
 				<!-- <dl class="clearfix">
 					<dt class="j-title clearfix">
