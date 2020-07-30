@@ -145,6 +145,13 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
+			<label class="j-form-label">楼栋信息</label>
+			<div class="j-input-inline">
+				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+				<a id="checktables" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="楼栋信息"><b id="checks" class="j-explain-search hide">查看</b></a>
+			</div>
+		</div>
+		<div class="layui-col-md4">
 			<label class="j-form-label">计租表</label>
 			<div class="j-input-inline">
 				<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
@@ -302,7 +309,9 @@
 								//楼栋信息
 								$("#reduction_seach").val(row.house_number);//获取房屋编号
 								$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
+								$("#checktables").attr('href',"{:url('house/ban/detail')}?group=y&id="+row.ban_id);//获取楼栋编号
 								$("#check").removeClass('hide');
+								$("#checks").removeClass('hide');
 								$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
 								$("input[name='house_id']").val(row.house_id);//获取房屋id
 								$("input[name='tenant_id']").val(row.tenant_id);//获取租户id
@@ -332,7 +341,6 @@
 						}
 			 });
 		})
-        
         //计租表
         upload.render({
         	elem: '#upload_img1',
