@@ -14,6 +14,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 use app\house\model\Tenant as TenantModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
 use app\deal\model\ChangeRecord as ChangeRecordModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 
 /**
  * 陈欠核销
@@ -351,9 +352,9 @@ class ChangeOffset extends SystemBase
             'ftime' => time(),
             'change_status' => 1,
         ]);
-
+        //halt($finalRow);
         // 1、将核销掉的订单全部删除
-        RentModel::where([['house_id','eq',$finalRow['house_id']],['rent_order_date','in',$finalRow['rent_order_date']]])->delete();
+        RentModel::where([['house_id','eq',$finalRow['house_id']],['rent_order_date','in',$finalRow['rent_order_date']]])->update(['rent_order_status'=>0]);
 
         // 2、将核销对应的，当月租金、以前月租金、以前年租金，入库到数据统计表中
         $ChangeTableModel = new ChangeTableModel;

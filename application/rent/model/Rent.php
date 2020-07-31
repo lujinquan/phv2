@@ -45,7 +45,7 @@ class Rent extends Model
         }
 
         $where = [];
-
+        $where[] = ['rent_order_status','eq',1];
         switch ($type) {
             //租金应缴的查询
             case 'rent': 
@@ -421,7 +421,7 @@ class Rent extends Model
         }*/
     }
 
-    public function pay_old($id,$pay_rent)
+    /*public function pay_old($id,$pay_rent)
     {
         $ctime = time();
 
@@ -461,7 +461,7 @@ class Rent extends Model
         $HouseTaiModel->change_id = '';
         $HouseTaiModel->save();
 
-    }
+    }*/
 
     /**
      * 改版后的功能调整（迭代2.0.3）
