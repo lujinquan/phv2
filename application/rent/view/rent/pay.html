@@ -50,7 +50,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red"></i>账单期</label>
 			<div class="j-input-inline">
-				<input type="text" value="{$data_info['rent_order_date']}" readonly autocomplete="off" class="layui-input">
+				<input type="text" value="{:substr_replace($data_info['rent_order_date'],'-',4,0)}" readonly autocomplete="off" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-col-md4">

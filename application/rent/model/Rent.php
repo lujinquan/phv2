@@ -45,7 +45,7 @@ class Rent extends Model
         }
 
         $where = [];
-
+        $where[] = ['rent_order_status','eq',1];
         switch ($type) {
             //租金应缴的查询
             case 'rent': 
@@ -343,7 +343,7 @@ class Rent extends Model
             $date = date('Ym');
             $where = [];
             $where[] = ['is_deal','eq',0];
-            $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_paid')->select()->toArray();
+            $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
 
             $HouseModel = new HouseModel;
             $houses = $HouseModel->where([['house_balance','>',0]])->column('house_id,house_balance');
@@ -351,19 +351,39 @@ class Rent extends Model
            
             foreach ($rent_orders as $k => $v) {
                 if(isset($houses[$v['house_id']])){
+
                     $unpaid_rent = bcsub($v['rent_order_receive'],$v['rent_order_paid'],2);
                     $yue = bcsub($houses[$v['house_id']],$unpaid_rent,2);
                     //halt($unpaid_rent);
                     if($yue >= 0){ //如果余额充足
+
                         // 扣缴
                         self::where([['rent_order_id','eq',$v['rent_order_id']]])->update([
                             'is_deal'=>1,
-                            'ptime'=>time(),
-                            'pay_way'=>2,
+                            // 'ptime'=>time(),
+                            // 'pay_way'=>2,
                             'rent_order_paid' => $unpaid_rent,
                         ]);
 
-                        HouseModel::where([['house_id','eq',$v['house_id']]])->update(['house_balance'=>$unpaid_rent]);
+                        // 租金记录
+                        $RentOrderChildModel = new RentOrderChildModel;
+                        $RentOrderChildModel->rent_order_id = $v['rent_order_id'];
+                        $RentOrderChildModel->house_id = $v['house_id'];
+                        $RentOrderChildModel->tenant_id = $v['tenant_id'];
+                        $RentOrderChildModel->rent_order_paid = $unpaid_rent;
+                        $RentOrderChildModel->rent_order_number = $v['rent_order_number'];
+                        $RentOrderChildModel->rent_order_receive = $v['rent_order_receive'];
+                        $RentOrderChildModel->rent_order_pre_rent = $v['rent_order_pre_rent'];
+                        $RentOrderChildModel->rent_order_cou_rent = $v['rent_order_cou_rent'];
+                        $RentOrderChildModel->rent_order_cut = $v['rent_order_cut'];
+                        $RentOrderChildModel->rent_order_diff = $v['rent_order_diff'];
+                        $RentOrderChildModel->rent_order_pump = $v['rent_order_pump'];
+                        $RentOrderChildModel->rent_order_date = $v['rent_order_date'];
+                        $RentOrderChildModel->ptime = time();
+                        $RentOrderChildModel->pay_way = 2;
+                        $RentOrderChildModel->save();
+
+                        HouseModel::where([['house_id','eq',$v['house_id']]])->update(['house_balance'=>Db::raw('house_balance-'.$unpaid_rent)]);
                         // 台账
                         $HouseTaiModel = new HouseTaiModel;
                         $HouseTaiModel->house_id = $v['house_id'];
@@ -421,7 +441,7 @@ class Rent extends Model
         }*/
     }
 
-    public function pay_old($id,$pay_rent)
+    /*public function pay_old($id,$pay_rent)
     {
         $ctime = time();
 
@@ -461,7 +481,7 @@ class Rent extends Model
         $HouseTaiModel->change_id = '';
         $HouseTaiModel->save();
 
-    }
+    }*/
 
     /**
      * 改版后的功能调整（迭代2.0.3）
@@ -516,7 +536,7 @@ class Rent extends Model
 
     }
 
-    public function payList_old($ids)
+    /*public function payList_old($ids)
     {     
         $ji = 0;
         $ctime = time();
@@ -564,7 +584,7 @@ class Rent extends Model
 
         }
         return $ji;
-    }
+    }*/
 
     /**
      *  批量缴费（迭代2.0.3已完成）

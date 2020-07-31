@@ -182,7 +182,7 @@ class Rent extends Admin
     {        
         //验证合法性
         if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
-        $lastDate = date('Ym',strtotime('-1 month'));
+        $lastDate = date('Ym',strtotime('last day of -1 month'));
         $ptime = time();
         
         // 获取上期订单
@@ -259,7 +259,7 @@ class Rent extends Admin
         //验证合法性
         if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
 
-        $lastDate = date('Ym',strtotime('-1 month'));
+        $lastDate = date('Ym',strtotime('last day of -1 month'));
 
         $ptime = time();
 
