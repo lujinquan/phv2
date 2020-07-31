@@ -828,9 +828,9 @@ class Rent extends Model
         return $row;
     }
 
-    public function get_data($getData,$page,$limit)
+    public function get_data($getData,$page = 1,$limit = 10)
     {
-
+        //halt($page);
             // $ownerid = input('param.owner_id/d',1); //默认查询市属
             //       $instid = input('param.inst_id/d',INST); //默认查询当前机构
             //       $useid = input('param.use_id/d',1); //默认查询住宅
@@ -841,6 +841,10 @@ class Rent extends Model
             $where = [];
             $where[] = ['a.rent_order_date','<=',$month];
             $where[] = ['a.is_deal','eq',1];
+
+            if(isset($getData['house_id']) && $getData['house_id']){
+                $where[] = ['b.house_id','eq',$getData['house_id']];
+            }
             //$where[] = ['d.ban_address','like','%烈士街27%'];
             if(isset($getData['house_number']) && $getData['house_number']){
                 $where[] = ['b.house_number','like','%'.$getData['house_number'].'%'];
@@ -969,7 +973,12 @@ class Rent extends Model
                 $data[$b['house_id']]['remark'] = '';
             }
 
-            $result['data'] = array_slice($data, ($page - 1) * $limit, $limit);
+            if($page){ // 如果分页
+                $result['data'] = array_slice($data, ($page - 1) * $limit, $limit);
+            }else{ // 如果不分页
+                $result['data'] = $data;
+            }
+            
             $result['count'] = count($data);
             $result['total_cur_month_unpaid_rent'] = $total_cur_month_unpaid_rent;
             $result['total_before_month_unpaid_rent'] = $total_before_month_unpaid_rent;

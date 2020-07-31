@@ -74,9 +74,9 @@ class Record extends Admin
             $getData = $this->request->get();
             $RentOrderChildModel = new RentOrderChildModel;
             $where = $RentOrderChildModel->checkWhere($getData);
-            $fields = "a.id,a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d %H-%i-%s') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+            $data['data'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.ptime desc')->select();
             //halt($data['data']);
             $data['count'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
             // 统计
