@@ -257,17 +257,18 @@ class Rent extends Admin
                 //dump($month);dump($separate);dump($b['rent_order_date']);exit;
                 if($b['rent_order_date'] == $date){ // 统计本月欠租
                     $data[$b['house_id']]['curMonthUnpaidRent'] = $b['rent_order_unpaid'];
-                    $total_cur_month_unpaid_rent += $b['rent_order_unpaid'];
-                }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $date){ // 统计以前月欠租
-                    
-                    $data[$b['house_id']]['beforeMonthUnpaidRent'] += $b['rent_order_unpaid'];
-                    $total_before_month_unpaid_rent += $b['rent_order_unpaid'];
+                    $total_cur_month_unpaid_rent = bcaddMerge([$total_cur_month_unpaid_rent,$b['rent_order_unpaid']]);
+                }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $date){ // 统计以前月欠租 
+                    //$data[$b['house_id']]['beforeMonthUnpaidRent'] += $b['rent_order_unpaid'];
+                    $total_before_month_unpaid_rent = bcaddMerge([$total_before_month_unpaid_rent,$b['rent_order_unpaid']]);
+                    $data[$b['house_id']]['beforeMonthUnpaidRent'] = bcaddMerge([$data[$b['house_id']]['beforeMonthUnpaidRent'],$b['rent_order_unpaid']]);  
                 }else if($b['rent_order_date'] < $separate){ //统计以前年欠租
-                    $data[$b['house_id']]['beforeYearUnpaidRent'] += $b['rent_order_unpaid'];
-                    $total_before_year_unpaid_rent += $b['rent_order_unpaid'];
+                    $data[$b['house_id']]['beforeYearUnpaidRent'] = bcaddMerge([$data[$b['house_id']]['beforeYearUnpaidRent'],$b['rent_order_unpaid']]);
+                    $total_before_year_unpaid_rent = bcaddMerge([$total_before_year_unpaid_rent,$b['rent_order_unpaid']]);
                 }
                 //halt($data[$b['house_id']]);
-                $data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
+                //$data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
+                $data[$b['house_id']]['total'] = bcaddMerge([$data[$b['house_id']]['total'],$b['rent_order_unpaid']]);
                 $data[$b['house_id']]['remark'] = '';
             }
 

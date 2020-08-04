@@ -122,8 +122,10 @@ class HouseReport extends Model
         // 将$v5[0],用作计算左侧合计部分
         foreach ($datas as $k5 => &$v5) {
             $v5[0]['ban_nums'] = $v5[1]['ban_nums'] + $v5[2]['ban_nums'] + $v5[3]['ban_nums'] + $v5[4]['ban_nums'] + $v5[5]['ban_nums'];
-            $v5[0]['ban_areas'] = $v5[1]['ban_areas'] + $v5[2]['ban_areas'] + $v5[3]['ban_areas'] + $v5[4]['ban_areas'] + $v5[5]['ban_areas'];
-            $v5[0]['ban_career_areas'] = $v5[1]['ban_career_areas'] + $v5[2]['ban_career_areas'] + $v5[3]['ban_career_areas'] + $v5[4]['ban_career_areas'] + $v5[5]['ban_career_areas'];
+            //$v5[0]['ban_areas'] = $v5[1]['ban_areas'] + $v5[2]['ban_areas'] + $v5[3]['ban_areas'] + $v5[4]['ban_areas'] + $v5[5]['ban_areas'];
+            $v5[0]['ban_areas'] = bcaddMerge([$v5[1]['ban_areas'] , $v5[2]['ban_areas'] , $v5[3]['ban_areas'] , $v5[4]['ban_areas'] , $v5[5]['ban_areas']]);
+            //$v5[0]['ban_career_areas'] = $v5[1]['ban_career_areas'] + $v5[2]['ban_career_areas'] + $v5[3]['ban_career_areas'] + $v5[4]['ban_career_areas'] + $v5[5]['ban_career_areas'];
+            $v5[0]['ban_career_areas'] = bcaddMerge([$v5[1]['ban_career_areas'] , $v5[2]['ban_career_areas'] , $v5[3]['ban_career_areas'] , $v5[4]['ban_career_areas'] , $v5[5]['ban_career_areas']]);
         }
 
         foreach ($datas as $k6 => $v6) {

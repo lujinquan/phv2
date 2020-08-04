@@ -56,6 +56,7 @@ class Servicer extends Admin
         $save_mode = ini_get('save_mode');
         $post_max_size = ini_get('post_max_size');
         $upload_max_filesize = ini_get('upload_max_filesize');
+        $error_log = ini_get('error_log');
         $this->assign([
             'memory_limit' => $memory_limit,
             'max_input_vars' => $max_input_vars,
@@ -66,6 +67,7 @@ class Servicer extends Admin
             'save_mode' => $save_mode,
             'post_max_size' => $post_max_size,
             'upload_max_filesize' => $upload_max_filesize,
+            'error_log' => $error_log,
         ]);
     	return $this->fetch();
     }

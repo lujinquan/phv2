@@ -43,7 +43,7 @@
             </tr>
             <tr>
                 <td>错误日志文件</td>
-                <td>{if condition="ini_get('error_log ')"}{:ini_get('error_log ')}{else /}未设置{/if}</td>
+                <td>{if condition="$error_log"}{$error_log}{else /}<span style="color:red">未设置</span>{/if}</td>
             </tr>
         </tbody>
     </table>
@@ -93,7 +93,7 @@
             </tr>
             <tr>
                 <td>PHP内存限制</td>
-                <td>{$memory_limit}&nbsp;&nbsp;{if(substr($memory_limit,0,-1) < 256)}<span style="color:red">（推荐设置256M）</span>{/if}</td>
+                <td>{$memory_limit}&nbsp;&nbsp;{if(substr($memory_limit,0,-1) < 512)}<span style="color:red">（推荐设置512M）</span>{/if}</td>
             </tr>
         </tbody>
     </table>
