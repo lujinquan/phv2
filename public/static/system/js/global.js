@@ -927,10 +927,30 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
 		});
       $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
           e.stopPropagation();
-      });  
-	  
+      }); 
+      //根据不同权限判断标题筛选是否可选
+	  var searchtab = $(".j-container-margin .layui-btn-container a,.j-container-margin .layui-btn-container button").html();
+	  var searchtitle = $(".layui-tab-brief .layui-tab-title li");
+	   $(function(){ 
+			console.log("html值",searchtitle);
+			if(searchtitle.length==0){
+				console.log("有内容!");
+				if(searchtab == null || searchtab.length == 0)
+				{  
+					console.log("执行2");
+					$(".j-table-content").removeClass("j-no-tab").addClass("j-no-title");
+				} 
+				else{
+					$(".j-table-content").removeClass("j-no-title").addClass("j-no-tab");
+				}
+			 }
+			 else{
+				 console.log("无内容!");
+				 $(".j-table-content").removeClass("j-no-tab j-no-title");
+			}
+	   });  
   })
-
+          
 function bytesToSize(bytes) {  
 　　if (bytes === 0) return '0 B';
 　　var k = 1024;
