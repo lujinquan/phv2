@@ -210,7 +210,7 @@
 				 var result = res.data;
 				 for (var i = 0; i < result.length; i++) {
                     console.log('这是支付时间：',result[i].ptime);
-					if(parseInt(result[i].pay_way) == 4){
+					if(parseInt(result[i].pay_way) == 4 || parseInt(result[i].pay_way) == 2){
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#5fb878');
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").prop('disabled', true);
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").next().addClass('layui-btn-disabled');

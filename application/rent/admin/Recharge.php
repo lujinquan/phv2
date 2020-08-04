@@ -117,6 +117,40 @@ class Recharge extends Admin
         return $this->fetch();
     }
 
+    public function payBack()
+    {
+        if ($this->request->isPost()) {
+            $id = input('param.id');
+            $RechargeModel = new RechargeModel; 
+            // 验证     
+            $row = $RechargeModel->detail($id);
+            if($row['pay_way'] != 2){
+                return $this->error('非扣缴类型无法撤回');
+            }
+            if(substr($row['ctime'],0,7) !== date('Y-m')){
+                //return $this->error('非本月扣缴无法撤回'); 
+            }
+            // 将流水记录变成无效状态
+            RechargeModel::where([['id','eq',$id]])->update(['recharge_status'=>2]);
+            // 将金额返还给房屋余额
+            HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_balance',abs($row['pay_rent']));
+            // 添加撤销台账
+            $taiHouseData = [];
+            $taiHouseData['house_id'] = $row['house_id'];
+            $taiHouseData['tenant_id'] = $row['tenant_id'];
+            $taiHouseData['house_tai_type'] = 100;
+            $taiHouseData['cuid'] = ADMIN_ID;
+            $taiHouseData['house_tai_remark'] = '扣缴记录撤回：'.abs($row['pay_rent']).'元';
+            $taiHouseData['data_json'] = [];
+            $taiHouseData['change_type'] = 0;
+            $taiHouseData['change_id'] = 0;
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->allowField(true)->create($taiHouseData);
+
+            return $this->success('撤销成功');
+        }
+    }
+
     public function export()
     {   
         if ($this->request->isAjax()) {

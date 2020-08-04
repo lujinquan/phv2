@@ -106,12 +106,22 @@ class House extends Admin
             $data = [];
             // $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
             $dataJson = @file_get_contents(ROOT_PATH.'file/report/property/'.str_replace('-','',$date).'.txt');
+            // 如果没有缓存数据
             if(!$dataJson){
-                $data['code'] = 0;
-                $data['msg'] = '暂无数据！';
-                return json($data);
-            }
-            $datas = json_decode($dataJson,true);
+                // 如果查的是当月或当年的数据，实时显示
+                if($date == date('Y-m') || $date == date('Y')){
+                    $MonthPropertyReportModel = new MonthPropertyReportModel;
+                    $datas  = $MonthPropertyReportModel->makeMonthPropertyReport($date);
+                // 如果查的是不是当月或当年的数据，提示暂无数据
+                }else{
+                    $data['code'] = 0;
+                    $data['msg'] = '暂无数据！';
+                    return json($data); 
+                }     
+            // 如果没有缓存数据         
+            }else{
+                $datas = json_decode($dataJson,true);
+            }   
             $data['data'] = $datas?$datas[$owner][$inst]:array();
             $data['msg'] = '';
             if($data['data']){
