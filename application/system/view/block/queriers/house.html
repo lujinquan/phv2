@@ -53,6 +53,7 @@
 		    ,$ = layui.$;
 		//判断当前异动类型改变提示文字
 				var changeType = '{$changeType}';
+				var msg = '{$msg}';
 				if(changeType==13){
 					$(".layui-elem-quote").text("红色表示房屋存在欠租无法申请使用权变更");
 				}
@@ -74,9 +75,12 @@
 				else if(changeType==4){
 					$(".layui-elem-quote").text("灰色表示房屋正在陈欠核销异动中");
 				}
+				else if(msg){
+					$(".layui-elem-quote").text(msg);
+				}
 				else{
-					$(".layui-elem-quote").text("红色表示房屋存在欠租，不能办理当前业务");
-					//$(".layui-elem-quote").hide();
+					//$(".layui-elem-quote").text("红色表示房屋存在欠租，不能办理当前业务");
+					$(".layui-elem-quote").hide();
 				}
 				//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
 		table.render({

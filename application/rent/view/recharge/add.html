@@ -76,7 +76,7 @@ layui.use(['form', 'func'], function() {
 					,area: ['90%', '90%']
 					, btn:false
 					,pageTabs: false
-					,content: '{:url('system/index/house')}?hisi_iframe=yes'
+					,content: '{:url('system/index/house')}?hisi_iframe=yes&msg=红色表示房屋存在欠租，不能办理充值业务'
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].hoesedata();
