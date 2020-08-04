@@ -150,6 +150,9 @@ class SystemData extends Model
         if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
             $where[] = ['a.house_number','like','%'.$queryWhere['house_number'].'%'];
         }
+        if(isset($queryWhere['house_pre_rent']) && $queryWhere['house_pre_rent']){ //查询房屋规租
+            $where[] = ['a.house_pre_rent','eq',$queryWhere['house_pre_rent']];
+        }
         if(isset($queryWhere['tenant_name']) && $queryWhere['tenant_name']){ //查询租户姓名
             $where[] = ['b.tenant_name','like','%'.$queryWhere['tenant_name'].'%'];
         }

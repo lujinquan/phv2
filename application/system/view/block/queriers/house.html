@@ -14,6 +14,9 @@
 				<div class="layui-input-inline" style="width:150px;padding-left:5px">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
+				<div class="layui-input-inline" style="width:150px;padding-left:5px">
+					<input type="text" name="house_pre_rent" placeholder="规定租金" class="layui-input">
+				</div>
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:150px;padding-left:5px">
 					<select name="ban_inst_id">
@@ -72,7 +75,8 @@
 					$(".layui-elem-quote").text("灰色表示房屋正在陈欠核销异动中");
 				}
 				else{
-					$(".layui-elem-quote").hide();
+					$(".layui-elem-quote").text("红色表示房屋存在欠租，不能办理当前业务");
+					//$(".layui-elem-quote").hide();
 				}
 				//console.log('当前异动类型为：',params.changes[changeType],'代号：',changeType);
 		table.render({
@@ -115,6 +119,11 @@
 						templet: function(d) {
 							return params.owners[d.ban_owner_id];
 						}
+					}, {
+						field: 'house_pre_rent',
+						minWidth: 90,
+						align:'center',
+						title: '规定租金'
 					}, {
 						field: 'house_use_id',
 						minWidth: 90,
