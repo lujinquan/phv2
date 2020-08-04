@@ -100,8 +100,9 @@ class Index extends Admin
             $data = $DataModel->queryHouse($queryWhere);
             return json($data);
         }
-        $changeType = input('param.change_type');
-        $this->assign('changeType',$changeType);
+        //$changeType = input('param.change_type');
+        $this->assign('changeType',input('param.change_type'));
+        $this->assign('msg',input('param.msg'));
 		return $this->fetch('block/queriers/house');
 	}
 	

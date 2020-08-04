@@ -23,7 +23,7 @@ class Recharge extends Validate
     //定义验证规则
     protected $rule = [	
         'house_number|房屋编号' => 'require|existInHouse',
-        'pay_rent|充值金额' => 'require|gt:0',
+        'pay_rent|充值金额' => 'require',
     ];
 
     //定义验证提示
