@@ -152,17 +152,18 @@ class Rent extends Admin
             $tempData = @file_get_contents(ROOT_PATH.'file/report/unpaid/'.$query_month.'.txt');
             if($tempData){ // 有缓存就读取缓存数据
                 $temps = json_decode($tempData,true);
-                $ownerid = input('param.owner_id/d',1); //默认查询市属
-                $instid = input('param.inst_id/d',INST); //默认查询当前机构
-                $useid = input('param.use_id/d',1); //默认查询住宅
-            //halt($temps);
+                $ownerid = input('param.owner_id',1); //默认查询市属
+                $instid = input('param.inst_id',INST); //默认查询当前机构
+                $useid = input('param.use_id',1); //默认查询住宅
+            
                 $data = $result = [];
                 $total_cur_month_unpaid_rent = 0;
                 $total_before_month_unpaid_rent = 0;
                 $total_before_year_unpaid_rent = 0;
                 foreach ($temps as $k => $v) {
+                     
                     //halt(in_array($v['inst'],config('inst_ids')[$instid]));
-                    if($v['owner'] == $ownerid && $v['use'] == $useid && in_array($v['inst'],config('inst_ids')[$instid])){
+                    if(in_array($v['owner'], explode(',',$ownerid)) && $v['use'] == $useid && in_array($v['inst'],config('inst_ids')[$instid])){
                         $v['use'] = $params['uses'][$v['use']];
                         if($v['curMonthUnpaidRent'] > 0){
                             $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['curMonthUnpaidRent'],2);
@@ -303,38 +304,100 @@ class Rent extends Admin
                 $useid = input('param.use_id/d',1); //默认查询住宅
                 //halt(config('inst_ids'));
                 $data = [];
-                $total_cur_month_unpaid_rent = 0;
-                $total_before_month_unpaid_rent = 0;
-                $total_before_year_unpaid_rent = 0;
+                $total_cur_month_paid_rent = 0;
+                $total_before_month_paid_rent = 0;
+                $total_before_year_paid_rent = 0;
                 foreach ($temps as $k => $v) {
                     if($v['owner'] != $ownerid || $v['use'] != $useid || !in_array($v['inst'],config('inst_ids')[$instid])){
                         continue;
                     }
-                    if($v['curMonthUnpaidRent'] > 0){
-                        $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['curMonthUnpaidRent'],2);
+                    if($v['curMonthPaidRent'] > 0){
+                        $total_cur_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['curMonthPaidRent'],2);
                     }
-                    if($v['beforeMonthUnpaidRent'] > 0){
-                        $total_before_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeMonthUnpaidRent'],2);
+                    if($v['beforeMonthPaidRent'] > 0){
+                        $total_before_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeMonthPaidRent'],2);
                     }
-                    if($v['beforeYearUnpaidRent'] > 0){
-                        $total_before_year_unpaid_rent = bcadd($total_cur_month_unpaid_rent,$v['beforeYearUnpaidRent'],2);
+                    if($v['beforeYearPaidRent'] > 0){
+                        $total_before_year_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeYearPaidRent'],2);
                     }
                 }
 
                 $data['data'] = $temps;
-                $data['total_cur_month_unpaid_rent'] = $total_cur_month_unpaid_rent;
-                $data['total_before_month_unpaid_rent'] = $total_before_month_unpaid_rent;
-                $data['total_before_year_unpaid_rent'] = $total_before_year_unpaid_rent;
-                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_unpaid_rent'],$data['total_before_month_unpaid_rent'],$data['total_before_year_unpaid_rent']]);
+                $data['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
+                $data['total_before_month_paid_rent'] = $total_before_month_paid_rent;
+                $data['total_before_year_paid_rent'] = $total_before_year_paid_rent;
+                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
             }else{
                 $ReportModel = new ReportModel;
-                $result = $ReportModel->getPaidRent();
+                $result = $ReportModel->getPaidRent();//halt($result);
                 $data = [];
                 $data['data'] = $result['data'];
-                $data['total_cur_month_unpaid_rent'] = $result['total_cur_month_unpaid_rent'];
-                $data['total_before_month_unpaid_rent'] = $result['total_before_month_unpaid_rent'];
-                $data['total_before_year_unpaid_rent'] = $result['total_before_year_unpaid_rent'];
-                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_unpaid_rent'],$data['total_before_month_unpaid_rent'],$data['total_before_year_unpaid_rent']]);
+                $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
+                $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
+                $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
+                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+            }
+
+            $data['count'] = count($data['data']);
+            $data['code'] = 0;
+            $data['msg'] = '获取成功';
+            return json($data);
+            
+        }
+        return $this->fetch();
+    }
+
+     /**
+     * [months 预收明细报表]
+     * @return [type] [description]
+     */
+    public function prePaidRent()
+    {
+        if ($this->request->isAjax()) {
+
+            $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+            $query_month = str_replace('-','',$curMonth);
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/paid/'.$query_month.'.txt');
+            if($tempData){ // 有缓存就读取缓存数据
+                $temps = json_decode($tempData,true);
+                //halt($temps);
+                $ownerid = input('param.owner_id/d',1); //默认查询市属
+                $instid = input('param.inst_id/d',INST); //默认查询当前机构
+                $useid = input('param.use_id/d',1); //默认查询住宅
+                //halt(config('inst_ids'));
+                $data = [];
+                $total_cur_month_paid_rent = 0;
+                $total_before_month_paid_rent = 0;
+                $total_before_year_paid_rent = 0;
+                foreach ($temps as $k => $v) {
+                    if($v['owner'] != $ownerid || $v['use'] != $useid || !in_array($v['inst'],config('inst_ids')[$instid])){
+                        continue;
+                    }
+                    if($v['curMonthPaidRent'] > 0){
+                        $total_cur_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['curMonthPaidRent'],2);
+                    }
+                    if($v['beforeMonthPaidRent'] > 0){
+                        $total_before_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeMonthPaidRent'],2);
+                    }
+                    if($v['beforeYearPaidRent'] > 0){
+                        $total_before_year_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeYearPaidRent'],2);
+                    }
+                }
+
+                $data['data'] = $temps;
+                $data['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
+                $data['total_before_month_paid_rent'] = $total_before_month_paid_rent;
+                $data['total_before_year_paid_rent'] = $total_before_year_paid_rent;
+                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+            }else{
+                $ReportModel = new ReportModel;
+                $result = $ReportModel->getPaidRent();//halt($result);
+                $data = [];
+                $data['data'] = $result['data'];
+                $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
+                $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
+                $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
+                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
             }
 
             $data['count'] = count($data['data']);

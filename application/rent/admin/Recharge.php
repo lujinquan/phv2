@@ -63,6 +63,9 @@ class Recharge extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            if(round($data['pay_rent'],2) == 0){
+                return $this->error('充值余额不能为零,或金额小于1分钱');
+            }
             $RechargeModel = new RechargeModel;
             // 数据过滤
             $filData = $RechargeModel->dataFilter($data);
@@ -73,6 +76,10 @@ class Recharge extends Admin
 
             $house_info = HouseModel::where([['house_id','eq',$filData['house_id']]])->find();
             $filData['yue'] = bcaddMerge([$house_info['house_balance'],$filData['pay_rent']]);
+            if($filData['yue'] < 0){
+                return $this->error('充值后余额不能为负');
+            }
+            //halt($filData['yue']);
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
                 return $this->error('充值失败');
