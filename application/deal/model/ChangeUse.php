@@ -207,7 +207,7 @@ class ChangeUse extends SystemBase
         $newTenantRow = TenantModel::where([['tenant_id','eq',$row['new_tenant_id']]])->field('tenant_number,tenant_card')->find();
         $row['new_tenant_number'] = $newTenantRow['tenant_number'];
         $row['new_tenant_card'] = $newTenantRow['tenant_card'];
-
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -346,6 +346,8 @@ class ChangeUse extends SystemBase
 
         // 1、改变房屋绑定的租户;
         HouseModel::where([['house_id','eq',$finalRow['house_id']]])->update(['tenant_id'=>$finalRow['new_tenant_id']]);
+        // 1、变更后的租户的状态改成正常
+        TenantModel::where([['tenant_id','eq',$finalRow['new_tenant_id']],['tenant_status','eq',0]])->update(['tenant_status'=>1]);
         
         // 2、添加房屋台账记录
         $taiData = [];

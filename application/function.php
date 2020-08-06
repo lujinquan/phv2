@@ -43,7 +43,7 @@ if (!function_exists('tranTime')) {
 
 	}
 
-} 
+}
 
 if (!function_exists('http_request')) {
 

@@ -3,7 +3,6 @@
 	.j-table-content.j-no-title{min-height: 300px;}
 </style>
 <!-- 新增后台导出按钮 -->
-<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
@@ -18,22 +17,20 @@
 					</select>
 				</div>
 				{/if}
-	          <div class="layui-input-inline  j-width-90 j-margin-10">
-					<select name="owner_id" xm-select="ban_owner_id">
-						<option value="" disabled="disabled">产别</option>
-						{volist name="params['owners']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-	          <div class="layui-input-inline  j-width-115 j-margin-10">
-					<select name="use_id" xm-select="house_use_id">
-						<option value="" disabled="disabled">使用性质</option>
-						{volist name="params['uses']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
+	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
+	              <select name="owner_id" lay-filter="owner_id">
+	                  {volist name="params['owners']" id="v"}
+	                  <option value="{$key}" {if condition="$key == 1"}selected{/if}>{$v}</option>
+	                  {/volist}
+	              </select>
+	          </div>
+	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
+	              <select name="use_id" lay-filter="owner_id">
+	                  {volist name="params['uses']" id="v"}
+	                  <option value="{$key}" {if condition="$key == 1"}selected{/if}>{$v}</option>
+	                  {/volist}
+	              </select>
+	          </div>
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
 	              <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
 	              <!-- <input type="text" name="query_month" value="2020-06" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input"> -->
@@ -63,7 +60,7 @@
 	  </div>
 	   <!--startprint1-->
 	  <div class="j-report-con">
-		  <h1 class="j-report-title">缴费明细统计<!-- （<span id="DOwnerTyp">市属</span>） -->报表</h1>
+		  <h1 class="j-report-title">预收明细统计<!-- （<span id="DOwnerTyp">市属</span>） -->报表</h1>
 		  <div class="j-report-table">
 			  <!-- <ul>
 				  <li><div class=" DQueryType j-bold-size">产别：</div></li>
@@ -78,14 +75,14 @@
 						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">地址</th>
 						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">户名</th>
 						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">使用性质</th>
-						       <th rowspan="1" colspan="4" class="j-bold-size" style="min-width:600px">房屋实收情况</th>
+						       <th rowspan="1" colspan="4" class="j-bold-size" style="min-width:600px">房屋欠租情况</th>
 						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">备注</th>
 						     </tr>
 						     <tr>
-						       <td rowspan="1" colspan="1" style="min-width:150px">本月份</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">以前月份</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">以前年度</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">合计</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">规定租金</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">本月预缴</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">本月扣缴</td>
+						       <td rowspan="1" colspan="1" style="min-width:150px">余额</td>
 						     </tr>  
 					  </thead>
 			          <tbody id="Tbody" class="j-PropertyForm">
@@ -113,20 +110,16 @@
 <table id="dataTable" lay-filter='dataTable'></table>
 <!-- <script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_archives.js?v={:config('hisiphp.version')}"></script> -->
 <script>
-    layui.use(['jquery', 'laydate', 'element','table','formSelects'], function(){
+    layui.use(['jquery', 'laydate', 'element','table'], function(){
         var laydate = layui.laydate,
 		    $ = layui.$
 			,element = layui.element
-			,table = layui.table
-			,formSelects = layui.formSelects;
+			,table = layui.table;
 		$("#button_search").click(function(){
-
-			var queryWhere = $('#report-form').serialize();
-
-			// var inst = $("select[name='inst_id']").val();
-			// var owner = $("select[name='owner_id']").val();
-			// var use = $("select[name='use_id']").val();
-			// var month = $("input[name='query_month']").val();
+			var inst = $("select[name='inst_id']").val();
+			var owner = $("select[name='owner_id']").val();
+			var use = $("select[name='use_id']").val();
+			var month = $("input[name='query_month']").val();
 			$("#j-month").text();
 			$("#j-previous-months").text();	
 			$("#j-previous-year").text();
@@ -136,7 +129,7 @@
 				url:"{:url('rent/paidRent')}",
 				async:true,// 同步异步
 				dataType:"json",
-				data :queryWhere,//这里是前台传到后台的数据
+				data :{'inst_id':inst,'owner_id':owner,'use_id':use,'query_month':month},//这里是前台传到后台的数据
 			    //回调函数
 				success:function(jsondata){
                     console.log("打印搜索数据:",jsondata);
@@ -164,14 +157,14 @@
 			that.prop('disabled', true);
 			that.addClass('layui-btn-disabled').removeClass('layui-bg-green').text('生成中……');
 
-			$.post('{:url('rent/makePaidReport')}', function(res) {
+			$.post('{:url('rent/makeUnpaidReport')}', function(res) {
                 layer.msg(res.msg, {time:3000},function(){
 
                 	that.prop('disabled', false);
 					that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成本月报表');	
 
                 	var queryWhere = $('#report-form').serialize();
-					//console.log('生成报表后查询的条件：',queryWhere);
+					console.log('生成报表后查询的条件：',queryWhere);
                 	$.ajax({
 						type:"post",// 请求方式
 						url:"{:url('rent/paidRent')}",
@@ -221,7 +214,7 @@
 			//data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
 		    //回调函数
 			success:function(jsondata){
-				//console.log("欠租明细数据:",jsondata);
+				console.log("欠租明细数据:",jsondata);
 				var data = jsondata.data;//由JSON字符串转换为JSON对象
 
 				var str = ``;
@@ -274,7 +267,7 @@
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式
-				url:"{:url('rent/export')}?type=paid",
+				url:"{:url('rent/export')}",
 				async:true,// 同步异步
 				dataType:"json",
 				data :queryWhere,//这里是前台传到后台的数据

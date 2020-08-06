@@ -126,7 +126,7 @@ class SystemData extends Model
         }else{
             $where[] = ['tenant_status','<',2]; // 默认查询正常状态下的租户 
         }
-//halt($where);    
+  
         $TenantModel = new TenantModel;
 
         $fields = 'tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card';
@@ -256,7 +256,7 @@ class SystemData extends Model
         //      ],'left')->field($fields)->where($where['house'])->page($page)->order('house_ctime desc,house_id desc')->limit($limit)->select();
         
         $temps = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','inner')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
-      //halt($temps);  
+      //halt($where);  
         foreach ($temps as $k => &$v) {
             
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();

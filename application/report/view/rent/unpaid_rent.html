@@ -26,13 +26,14 @@
 						{/volist}
 					</select>
 				</div>
-	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
-	              <select name="use_id" lay-filter="owner_id">
-	                  {volist name="params['uses']" id="v"}
-	                  <option value="{$key}" {if condition="$key == 1"}selected{/if}>{$v}</option>
-	                  {/volist}
-	              </select>
-	          </div>
+	          <div class="layui-input-inline  j-width-115 j-margin-10">
+					<select name="use_id" xm-select="house_use_id">
+						<option value="" disabled="disabled">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
 	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
 	              <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
 	          </div>
@@ -119,7 +120,7 @@
 			,formSelects = layui.formSelects;
 		$("#button_search").click(function(){
 			var queryWhere = $('#report-form').serialize();
-			console.log('生成报表后查询的条件：',queryWhere);
+			//console.log('生成报表后查询的条件：',queryWhere);
 
 			// var inst = $("select[name='inst_id']").val();
 			// var owner = $("select[name='owner_id']").val();

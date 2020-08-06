@@ -15,15 +15,19 @@ namespace app\rent\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
+use app\rent\model\Invoice as InvoiceModel;
 
 /**
  * 发票记录
  */
 class Invoice extends Admin
 {
-
+    
     public function index()
     {
+        $InvoiceModel = new InvoiceModel;
+        $InvoiceModel->fpcx();
+        exit;
         // 余票查询接口
         $data = [
             'serviceid' => 'S0005',
@@ -33,6 +37,18 @@ class Invoice extends Admin
         ];
         $result1 = http_request('http://124.204.39.242:7280/bwcs/apiService',$data);
         $this->assign('result1',$result1);
+        /**
+         * YHLX 用户类型 
+         * =====================================
+         * @author  Lucas 
+         * email:   598936602@qq.com 
+         * Website  address:  www.mylucas.com.cn
+         * =====================================
+         * 创建时间:  <-- 这里输入 ctrl + shift + . 自动生成当前时间戳
+         * @return  返回值  
+         * @version 版本  1.0
+         */
+        
         // 发票查询接口
         $data = [
             'serviceid' => 'S0003',

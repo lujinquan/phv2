@@ -23,9 +23,9 @@ class Report extends Model
      */
     public function getUnpaidRent()
     {
-    	$ownerid = input('param.owner_id',1); //默认查询市属
+    	$ownerid = input('param.owner_id'); //默认查询市属
         $instid = input('param.inst_id',INST); //默认查询当前机构
-        $useid = input('param.use_id',1); //默认查询住宅
+        $useid = input('param.use_id'); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
@@ -34,7 +34,7 @@ class Report extends Model
         $where[] = ['a.rent_order_date','<=',$month];
         $where[] = ['a.is_deal','eq',1];
         if($useid != 0){
-            $where[] = ['b.house_use_id','eq',$useid];
+            $where[] = ['b.house_use_id','in',explode(',',$useid)];
         }
         if($ownerid != 0){
             $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
@@ -112,11 +112,14 @@ class Report extends Model
      */
     public function getPaidRent()
     {
-        $ownerid = input('param.owner_id/d',1); //默认查询市属
+        $ownerid = input('param.owner_id/d'); //默认查询市属
         $instid = input('param.inst_id/d',INST); //默认查询当前机构
-        $useid = input('param.use_id/d',1); //默认查询住宅
+        $useid = input('param.use_id/d'); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
-        $lastMonth = date('Y-m',strtotime('1 month'));
+        
+        //$curMonth = '2020-08';
+
+        $nextMonth = date('Y-m',strtotime('1 month'));
         //halt($lastMonth);
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
@@ -125,18 +128,19 @@ class Report extends Model
         //$where[] = ['a.rent_order_date','eq',$month];
         //$where[] = ['a.is_deal','eq',1];
         if($useid != 0){
-            $where[] = ['b.house_use_id','eq',$useid];
+            $where[] = ['b.house_use_id','in',explode(',',$useid)];
         }
         if($ownerid != 0){
-            $where[] = ['d.ban_owner_id','eq',$ownerid];
+            $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
         }
-        $where[] = ['ptime','between',[strtotime($curMonth),strtotime($lastMonth)]];
+        $where[] = ['ptime','between',[strtotime($curMonth),strtotime($nextMonth)]];
         //$where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
         //$where[] = ['rent_order_receive','eq',rent_order_paid];
         $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
         $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,a.ptime,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];
         $baseData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
+        //halt($baseData);
 //halt(Db::name('rent_order_child')->getLastSql());
         // $houses = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.house_id,a.house_number,c.tenant_name')->select();
         // foreach ($houses as $b) {
@@ -194,7 +198,7 @@ class Report extends Model
         $result['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
         $result['total_before_month_paid_rent'] = $total_before_month_paid_rent;
         $result['total_before_year_paid_rent'] = $total_before_year_paid_rent;
-        $result['op'] = $params['insts'][$instid].'_'.$params['owners'][$ownerid].'_'.$params['uses'][$useid].'_';
+        //$result['op'] = $params['insts'][$instid].'_'.$params['owners'][$ownerid].'_'.$params['uses'][$useid].'_';
         return $result;
     }
 
