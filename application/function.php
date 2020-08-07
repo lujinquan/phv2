@@ -328,6 +328,36 @@ if (!function_exists('is_weixin')) {
 }
 
 /**
+ * 获取毫秒级别的时间戳
+ */
+if (!function_exists('get_msec_time')) {
+	function get_msec_time(){
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime =  (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        return $msectime;
+    }
+}
+
+/**
+ * 毫秒转日期
+ */
+if (!function_exists('get_msec_to_mescdate')) {
+	function get_msec_to_mescdate($msectime){
+	    $msectime = $msectime * 0.001;
+	    if(strstr($msectime,'.')){
+	        sprintf("%01.3f",$msectime);
+	        list($usec, $sec) = explode(".",$msectime);
+	        $sec = str_pad($sec,3,"0",STR_PAD_RIGHT);
+	    }else{
+	        $usec = $msectime;
+	        $sec = "000";
+	    }
+	    $date = date("YmdHisx",$usec);
+	    return $mescdate = str_replace('x', $sec, $date);
+	}
+}
+
+/**
  * 微信对账单数据处理
  * @param $response 对账单数据
  * @return array 返回结果
