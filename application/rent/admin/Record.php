@@ -203,12 +203,12 @@ class Record extends Admin
     {   
         if ($this->request->isAjax()) {
             //ini_set('memory_limit', '300M');
-            $getData = $this->request->post();
-            $rentModel = new RentModel;
-            $where = $rentModel->checkWhere($getData,'record');
-            $fields = 'a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-            // 待优化，去掉limit全部取出数据会报错
-            $tableData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->limit(10000)->order('a.rent_order_date desc')->select();
+            $getData = $this->request->get();
+            $RentOrderChildModel = new RentOrderChildModel;
+            $where = $RentOrderChildModel->checkWhere($getData);
+            $fields = "a.pay_way,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,b.house_protocol_rent,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d %H-%i-%s') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $data = [];
+            $tableData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ptime desc')->select();
 
             //halt($tableData);
             if($tableData){
@@ -220,10 +220,8 @@ class Record extends Admin
                     array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
                     array('title' => '账单期', 'field' => 'rent_order_date', 'width' => 12,'type' => 'string'),
                     array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
-                   
                     array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
                     array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
-                    
                     array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
                     array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
                     array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
@@ -231,11 +229,11 @@ class Record extends Admin
                     array('title' => '减免', 'field' => 'rent_order_cut', 'width' => 12,'type' => 'number'),
                     array('title' => '租差', 'field' => 'rent_order_diff', 'width' => 12,'type' => 'number'),
                     array('title' => '泵费', 'field' => 'rent_order_pump', 'width' => 12,'type' => 'number'),
-                    array('title' => '协议租金', 'field' => 'rent_order_diff', 'width' => 12,'type' => 'number'),
+                    array('title' => '协议租金', 'field' => 'house_protocol_rent', 'width' => 12,'type' => 'number'),
                     array('title' => '应收租金', 'field' => 'rent_order_receive', 'width' => 12,'type' => 'number'),
                     array('title' => '已缴租金', 'field' => 'rent_order_paid', 'width' => 12,'type' => 'number'),
-                    array('title' => '欠缴租金', 'field' => 'rent_order_unpaid', 'width' => 12,'type' => 'number'),
-                    array('title' => '是否已开发票', 'field' => 'is_invoice', 'width' => 24,'type' => 'number'),
+                    array('title' => '缴纳方式', 'field' => 'pay_way', 'width' => 12,'type' => 'number'),
+                    array('title' => '缴纳时间', 'field' => 'ptime', 'width' => 24,'type' => 'number'),
                 );
 
                 $tableInfo = [

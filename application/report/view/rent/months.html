@@ -229,8 +229,8 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				// console.log(data[8][13] - data[10][13]);
 				data_17_13 = 'yellow';
 			}
-		
-			return '<tr>\
+
+			var html = '<tr>\
 				<th rowspan="2" colspan="3" class="am-text-middle">租金月报</th>\
 				<th rowspan="2" colspan="1" class="am-text-middle">合计</th>\
 				<th rowspan="1" colspan="3" class="am-text-middle">(一)工商企事业用房</th>\
@@ -427,8 +427,10 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				<td rowspan="1" colspan="1">'+ data[8][13] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[8][14] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[8][15] + '</td>\
-			</tr>\
-			<tr>\
+			</tr>';
+
+			if(data[30]){
+			html += '<tr>\
 				<td rowspan="1" colspan="3">租差</td>\
 				<td rowspan="1" colspan="1" class="some_hide_9">'+ data[30][0] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[30][1] + '</td>\
@@ -465,8 +467,10 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				<td rowspan="1" colspan="1">'+ data[31][13] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[31][14] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[31][15] + '</td>\
-			</tr>\
-			<tr>\
+			</tr>';
+			}
+
+			html += '<tr>\
 				<td rowspan="8" colspan="1" class="am-text-middle">非基数增减</td>\
 				<td rowspan="1" colspan="2">计</td>\
 				<td rowspan="1" colspan="1" class="some_hide_10 red">'+ data[9][0] + '</td>\
@@ -694,7 +698,9 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 				<td rowspan="1" colspan="1">'+ data[20][13] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[20][14] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[20][15] + '</td>\
-			</tr>';	
+			</tr>';
+
+			return html;	
 		}
 		$("#button_search").click(function(inst_id,owner_id,query_month){
 

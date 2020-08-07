@@ -65,7 +65,7 @@ class Rent extends Admin
             $owners = ['1'=>'市属','2'=>'区属','3'=>'代管','5'=>'自管','7'=>'托管','10'=>'市代托','11'=>'市区代托','12'=>'所有产别'];
             //$data['ownerid'] = $params['owners'][$ownerid];
             $data['ownerid'] = $owners[$ownerid];
-            $data['query_month'] = date('Y-m');
+            $data['query_month'] =  substr_replace($query_month, '-', 4 ,0);
             $data['query_date'] = date('Y-m-d');
             //$data['admin'] = $params['owners'][];
             return json_encode($data);
