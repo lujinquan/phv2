@@ -8,6 +8,7 @@ use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
@@ -662,14 +663,30 @@ class Index extends Common
                 if($row['recharge_status'] == 0){
                     $pay_rent = $data['total_fee'] / 100;
 
-                    // 如果有欠缴的订单，先处理订单
-                    $RentModel = new RentModel;
+                    // 充值的钱，如果有欠缴的订单，先处理订单，由于功能要改版，所以充值的钱，暂时不去抵扣欠钱
+                    /*$RentModel = new RentModel;
                     $rent_info = $RentModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->field('sum(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
                     if($rent_info && $pay_rent > $rent_info['rent_order_unpaid']){
-                        $pay_rent = bcsub($pay_rent, $rent_info['rent_order_unpaid']);
+                        $pay_rent = bcsub($pay_rent, $rent_info['rent_order_unpaid'],2);
+
                         $RentModel = new RentModel;
                         $RentModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->update(['rent_order_paid'=>Db::raw('rent_order_receive'),'is_deal'=>1,'pay_way'=>4,'ptime'=>time()]);
-                    }
+
+                        //缴费后，更新order_child表
+                        $rent_info = $RentModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->select();
+                        $RentOrderChildModel = new RentOrderChildModel;
+                        $RentOrderChildModel->house_id = $row['house_id'];
+                        $RentOrderChildModel->tenant_id = $row['tenant_id'];
+                        $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
+                        $RentOrderChildModel->pay_rent = $pay_rent;
+                        $RentOrderChildModel->pay_year = substr($row['rent_order_date'],0,4);
+                        $RentOrderChildModel->pay_month = $row['rent_order_date'];
+                        $RentOrderChildModel->cdate = date('Ym',$ctime);
+                        $RentOrderChildModel->ctime = $ctime;
+                        $RentOrderChildModel->save();
+
+                        //$RentOrderChildModel->where([['house_id','eq',$row['house_id']],['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->update(['rent_order_paid'=>Db::raw('rent_order_receive'),'is_deal'=>1,'pay_way'=>4,'ptime'=>time()]);
+                    }*/
 
                     // 更新房屋余额
                     $HouseModel = new HouseModel;
@@ -722,14 +739,8 @@ class Index extends Common
      */
     public function payOrderNotifyZiyang()
     {
-
         include EXTEND_PATH.'wechat/include.php';
-        // $inst_id = input('inst_id');
-        // if($inst_id == 2){
-            $wechat = \WeChat\Pay::instance($this->config_ziyang);
-        // }else if($inst_id == 3){
-        //     $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        // }
+        $wechat = \WeChat\Pay::instance($this->config_ziyang);
         // 获取通知参数
         $data = $wechat->getNotify();
         // 下面是一个返回data的例子
@@ -776,15 +787,34 @@ class Index extends Common
                 $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
                 $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
 
-
                 $RentModel = new RentModel;
                 foreach ($rent_order_ids as $rid) {
+
+                    // 缴纳欠租订单order
                     $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
                     $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
-                    $rent_order_info->ptime = strtotime($data['time_end']);
-                    $rent_order_info->pay_way = 4; //4是微信支付
+                    //$rent_order_info->ptime = strtotime($data['time_end']);
+                    //$rent_order_info->pay_way = 4; 
                     $rent_order_info->is_deal = 1; 
                     $rent_order_info->save();
+                    
+                    // 缴纳欠租订单order_child
+                    $RentOrderChildModel = new RentOrderChildModel;
+                    $RentOrderChildModel->house_id = $rent_order_info['house_id'];
+                    $RentOrderChildModel->tenant_id = $rent_order_info['tenant_id'];
+                    $RentOrderChildModel->rent_order_id = $rent_order_info['rent_order_id'];
+                    $RentOrderChildModel->rent_order_number = $rent_order_info['rent_order_number'];
+                    $RentOrderChildModel->rent_order_receive = $rent_order_info['rent_order_receive'];
+                    $RentOrderChildModel->rent_order_pre_rent = $rent_order_info['rent_order_pre_rent'];
+                    $RentOrderChildModel->rent_order_cou_rent = $rent_order_info['rent_order_cou_rent']; 
+                    $RentOrderChildModel->rent_order_cut = $rent_order_info['rent_order_cut'];
+                    $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
+                    $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
+                    $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
+                    $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+                    $RentOrderChildModel->pay_way = 4; // 4是微信支付
+                    $RentOrderChildModel->save();
+
 
                     // 添加房屋台账，记录缴费状况
                     $HouseTaiModel = new HouseTaiModel;
@@ -819,40 +849,11 @@ class Index extends Common
      */
     public function payOrderNotifyLiangdao()
     {
-
         include EXTEND_PATH.'wechat/include.php';
-        // $inst_id = input('inst_id');
-        // if($inst_id == 2){
-            $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        // }else if($inst_id == 3){
-        //     $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        // }
+        $wechat = \WeChat\Pay::instance($this->config_liangdao);
         // 获取通知参数
         $data = $wechat->getNotify();
-        // 下面是一个返回data的例子
-        // $data = [
-        //     'appid' => 'wx2421b1c4370ec43b',
-        //     'attach' => '支付测试',
-        //     'bank_type' => 'CFT',
-        //     'fee_type' => 'CNY',
-        //     'is_subscribe' => 'Y',
-        //     'mch_id' => '10000100',
-        //     'nonce_str' => '5d2b6c2a8db53831f7eda20af46e531c',
-        //     'openid' => 'oUpF8uMEb4qRXf22hE3X68TekukE',
-        //     'out_trade_no' => '1409811653',
-        //     'result_code' => 'SUCCESS',
-        //     'return_code' => 'SUCCESS',
-        //     'sign' => 'B552ED6B279343CB493C5DD0D78AB241',
-        //     'time_end' => '20140903131540',
-        //     'total_fee' => '1',
-        //     'coupon_fee' => '10',
-        //     'coupon_count' => '1',
-        //     'coupon_type' => 'CASH',
-        //     'coupon_id' => '10000',
-        //     'coupon_fee' => '100',
-        //     'trade_type' => 'JSAPI',
-        //     'transaction_id' => '1004400740201409030005092168',
-        // ];
+        
         if ($data['return_code'] === 'SUCCESS' && $data['result_code'] === 'SUCCESS') {
             // @todo 去更新下原订单的支付状态
             //$order_no = $data['out_trade_no'];
@@ -873,15 +874,31 @@ class Index extends Common
                 $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
                 $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
 
-
                 $RentModel = new RentModel;
                 foreach ($rent_order_ids as $rid) {
                     $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
                     $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
-                    $rent_order_info->ptime = strtotime($data['time_end']);
-                    $rent_order_info->pay_way = 4; //4是微信支付
+                    // $rent_order_info->ptime = strtotime($data['time_end']);
+                    // $rent_order_info->pay_way = 4; //4是微信支付
                     $rent_order_info->is_deal = 1; 
                     $rent_order_info->save();
+
+                    // 缴纳欠租订单order_child
+                    $RentOrderChildModel = new RentOrderChildModel;
+                    $RentOrderChildModel->house_id = $rent_order_info['house_id'];
+                    $RentOrderChildModel->tenant_id = $rent_order_info['tenant_id'];
+                    $RentOrderChildModel->rent_order_id = $rent_order_info['rent_order_id'];
+                    $RentOrderChildModel->rent_order_number = $rent_order_info['rent_order_number'];
+                    $RentOrderChildModel->rent_order_receive = $rent_order_info['rent_order_receive'];
+                    $RentOrderChildModel->rent_order_pre_rent = $rent_order_info['rent_order_pre_rent'];
+                    $RentOrderChildModel->rent_order_cou_rent = $rent_order_info['rent_order_cou_rent']; 
+                    $RentOrderChildModel->rent_order_cut = $rent_order_info['rent_order_cut'];
+                    $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
+                    $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
+                    $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
+                    $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+                    $RentOrderChildModel->pay_way = 4; // 4是微信支付
+                    $RentOrderChildModel->save();
 
                     // 添加房屋台账，记录缴费状况
                     $HouseTaiModel = new HouseTaiModel;
@@ -895,7 +912,6 @@ class Index extends Common
                     $HouseTaiModel->change_id = '';
                     $HouseTaiModel->save();
                 }
-
                 
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
@@ -1082,6 +1098,23 @@ class Index extends Common
             $rent_order_info->pay_way = 0; 
             $rent_order_info->is_deal = 0; 
             $rent_order_info->save();
+
+            // 缴纳欠租订单order_child
+            // $RentOrderChildModel = new RentOrderChildModel;
+            // $RentOrderChildModel->house_id = $rent_order_info['house_id'];
+            // $RentOrderChildModel->tenant_id = $rent_order_info['tenant_id'];
+            // $RentOrderChildModel->rent_order_id = $rent_order_info['rent_order_id'];
+            // $RentOrderChildModel->rent_order_number = $rent_order_info['rent_order_number'];
+            // $RentOrderChildModel->rent_order_receive = $rent_order_info['rent_order_receive'];
+            // $RentOrderChildModel->rent_order_pre_rent = $rent_order_info['rent_order_pre_rent'];
+            // $RentOrderChildModel->rent_order_cou_rent = $rent_order_info['rent_order_cou_rent']; 
+            // $RentOrderChildModel->rent_order_cut = $rent_order_info['rent_order_cut'];
+            // $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
+            // $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
+            // $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
+            // $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+            // $RentOrderChildModel->pay_way = 4; // 4是微信支付
+            // $RentOrderChildModel->save();
         }
 
         $order_info->order_status = 2;

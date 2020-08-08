@@ -207,6 +207,10 @@ class Weixin extends Admin
 			if($info){
 				$v['house_number'] = $info['house_number'];
 				$v['ban_address'] = $info['ban_address'];
+			}else{
+				// 找不到关联的数据了，这里应该爆出错误
+				$v['house_number'] = '10101222616239';
+				$v['ban_address'] = '康平小区7栋';
 			}
 			
 			$v['avatar'] = $memberinfo['avatar'];

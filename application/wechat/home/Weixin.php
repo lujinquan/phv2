@@ -2208,6 +2208,7 @@ class Weixin extends Common
             }
            
             $value['pay_way_name'] = $params['pay_way'][$value['pay_way']];
+            //$value['pay_way_name'] = $value['pay_way'];
             $result['data']['rent'][] = $value;
         }
         //halt($result['data']['rent']);
