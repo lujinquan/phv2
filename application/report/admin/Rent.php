@@ -369,7 +369,7 @@ class Rent extends Admin
                 $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
                 $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
                 $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
-                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
             }
 
             $data['count'] = count($data['data']);
@@ -467,7 +467,7 @@ class Rent extends Admin
 
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
             $query_month = str_replace('-','',$curMonth);
-            $tempData = @file_get_contents(ROOT_PATH.'file/report/paid/'.$query_month.'.txt');
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$query_month.'.txt');
             if($tempData){ // 有缓存就读取缓存数据
                 $temps = json_decode($tempData,true);
                 //halt($temps);
@@ -501,7 +501,7 @@ class Rent extends Admin
                 $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
             }else{
                 $ReportModel = new ReportModel;
-                $result = $ReportModel->getPaidRent();//halt($result);
+                $result = $ReportModel->getPrePaidRent();//halt($result);
                 $data = [];
                 $data['data'] = $result['data'];
                 $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
