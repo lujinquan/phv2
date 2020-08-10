@@ -437,6 +437,8 @@ opacity: .8color: #333;}
 /* 房屋报表 S */
 /* .j-report-table{ max-height: 350px;overflow-y: auto;} */
 #PropertyForm{width: 100%;/*table-layout:fixed;*/}
+.j-PropertyForm td{min-width: 149px;}
+
 /* #PropertyForm td{word-break: break-all; word-wrap:break-word;line-height: 18px!important;} */
 /* .j-bold-size.j-width{width: 60px;} */
 /* #PropertyForm .three td{width: 4.5%!important;} */

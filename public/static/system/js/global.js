@@ -905,26 +905,22 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
           }
       });
       //解决table出现竖向滚动条错位的问题
-	    $(document).ready(function(){
-		  setTimeout(function(){
-			$(".j-table-content .layui-table-view").each(function(){
-			  var that=$(this);
-			 $(this).bind("change",'.layui-laypage-limits select', function(){
-				   var result =that.find(".layui-laypage-limits select").val();
-				   if(result>10){
-					 console.log("大于10!");
-					 that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"16px","box-sizing":"border-box"});
-					 that.find(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
-				   }
-				   else{
-					  console.log("小于10!");
-					  that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"0","box-sizing":"border-box"});
-					  that.find(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
-				   }
-			  });
-		    })
-		  },0);
-		});
+		$(".j-table-content .layui-table-view").each(function(){
+		  var that=$(this);
+		 $(this).bind("change",'.layui-laypage-limits select', function(){
+			   var result =that.find(".layui-laypage-limits select").val();
+			   if(result>10){
+				 console.log("大于10!");
+				 that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"16px","box-sizing":"border-box"});
+				 that.find(".layui-table-total").css({"padding-right":"16px","box-sizing":"border-box"});
+			   }
+			   else{
+				  console.log("小于10!");
+				  that.find(".layui-table-box .layui-table-header:first").css({"padding-right":"0","box-sizing":"border-box"});
+				  that.find(".layui-table-total").css({"padding-right":"0","box-sizing":"border-box"});
+			   }
+		  });
+		})
       $(document).on("click", "td div.laytable-cell-checkbox div.layui-form-checkbox", function (e) {
           e.stopPropagation();
       }); 
