@@ -1,0 +1,210 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
+<!-- 新增后台导出按钮 -->
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
+<div class="j-table-content  j-no-title">
+	<div class="page-toolbar j-page-toolbar clearfix">
+		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('ban_inst_id',$config['szno_info_search'])"}
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
+					<select name="ban_inst_id"  xm-select="ban_inst_id">
+						<option value=""  disabled="disabled">机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['ban_info_search'])"}
+				<div class="layui-input-inline j-width-90 j-margin-10">
+					<select name="ban_owner_id" xm-select="ban_owner_id">
+						<option disabled="disabled" value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('change_type',$config['deal_process_search'])"}
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+					<select name="change_type" xm-select="change_type">
+						<option value="">异动类型</option>
+						{volist name="params['changes']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('ban_use_id',$config['ban_info_search'])"}
+				<div class="layui-input-inline  j-width-115 j-margin-10">
+					<select name="ban_use_id" xm-select="ban_use_id">
+						<option value="" disabled="disabled">使用性质</option>
+						{volist name="params['uses']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('ban_struct_id',$config['ban_info_search'])"}
+				<div class="layui-input-inline j-width-110 j-margin-10">
+					<select name="ban_struct_id" xm-select="ban_struct_id">
+						<option disabled="disabled" value="">结构类别</option>
+						 {volist name="params['structs']" id="v"}
+						 <option value="{$key}">{$v}</option>
+						 {/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('ban_damage_id',$config['ban_info_search'])"}
+				<div class="layui-input-inline j-width-110 j-margin-10">
+				  <select name="ban_damage_id" xm-select="ban_damage_id">
+					  <option value="">完损等级</option>
+					  {volist name="params['damages']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
+				<div class="layui-input-inline j-width-160 j-margin-10">
+				    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
+				</div> 
+				{/if}
+			</div>
+			<div class="j-search-fr layui-col-md4 fr">
+				<div class="layui-input-inline fr">
+					<div class="layui-input-inline" style="margin-left:10px;">
+						<!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
+						    <i class="layui-icon layui-icon-print"></i>
+						    导出
+					  	</button> -->
+						<button type="reset" class="layui-btn j-btn-reset">重置</button>
+						<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+							<i class="layui-icon">&#xe615;</i>
+							搜索
+						</button>
+						<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{include file="system@block/layui" /}
+	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
+</div>
+<script type="text/javascript">
+	layui.use(['table', 'jquery','formSelects','laydate'], function() {
+		var $ = layui.$
+		   ,formSelects = layui.formSelects
+		   ,laydate = layui.laydate;
+		var s = $('#dataTable').attr('params');
+		var params = JSON.parse(s);
+		var table = layui.table;
+		//日期范围
+		laydate.render({
+		    elem: '#test6'
+		    //,range: true
+		    ,range: '~'
+		});
+		table.render({
+			elem: '#dataTable',
+			/* height: 550, */
+			toolbar: '#toolbar'
+				// ,defaultToolbar: ['print']
+				,
+				defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
+			,url: '{:url("Lease/index")}' //数据接口
+			,page: true //开启分页
+			,limit: 10
+			,limits: [10,20,30,40,50,100,300,500,1000]
+			,text: {
+				none: "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+			}
+			,cols: [
+				[ //表头
+				    {field:'zizeng', width:60, title: 'ID',fixed: 'center',type:'numbers'}
+					,{
+						field: 'change_type',
+						minWidth: 90,
+						align:'center',
+						title: '异动类型'
+					},{
+						field: 'ban_inst_id',
+						minWidth: 100,
+						align:'center',
+						title: '管段',
+						hide: isShowInst,
+						templet: function(d) {
+							return params.insts[d.ban_inst_id];
+						}
+					}
+					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
+					,{field: 'house_number', minWidth: 110, align:'center', title: '房屋编号'}
+					,{field: 'ban_address',minWidth:120,align:'center', title: '地址'}
+					,{field: 'tenant_name',minWidth:80,align:'center', title: '租户姓名'}
+					,{field: 'ban_holds',minWidth:60,align:'center', title: '户数'}
+					,{field: 'house_pre_rent',minWidth:90,align:'center', title: '规定租金'}
+					,{field: 'house_lease_area',minWidth:90,align:'center', title: '计租面积'}
+					,{field: 'ban_area',minWidth:90,align:'center', title: '建筑面积'}
+					,{field: 'ban_oprice',minWidth:90,align:'center', title: '原价'}
+					,{field: 'ban_num',minWidth:60,align:'center', title: '栋数'}
+					,{field: 'fdate',minWidth:90,align:'center', title: '完成时间'}
+					,{field: 'ban_owner_id',minWidth: 80,title: '产别',align:'center',templet: function(d) {
+						return params.owners[d.ban_owner_id];
+					}}, {field: 'house_use_id',minWidth: 80,align:'center',title: '使用性质',templet: function(d) {
+						return params.uses[d.house_use_id];
+					}}
+					,{field: 'ban_damage_id',minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
+						return params.damages[d.ban_damage_id];
+					}}
+					,{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构类别', templet: function(d) {
+						return params.structs[d.ban_struct_id];
+					}}
+					,{field: 'remarks',minWidth:100,align:'center', title: '备注'}
+				]
+			],
+			done: function(res, curr, count) {
+			   //导出转换后台数据
+     //           var exportData=res.data;
+     //           for(i in exportData){
+     //             exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化管段
+				 // exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+				 // exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+     //           }
+			}
+		},isShowInst)
+
+		$('#button_prints').click(function(){
+			var queryWhere = new Object();
+        	queryWhere.ban_inst_id = $("input[name='ban_inst_id']").val();  // 搜索机构
+			queryWhere.ban_owner_id = $("input[name='ban_owner_id']").val();  // 搜索产别
+			queryWhere.change_type = $("input[name='change_type']").val();  // 搜索异动类型
+			queryWhere.ban_struct_id = $("input[name='ban_struct_id']").val();// 搜索结构类别
+			queryWhere.ban_damage_id = $("input[name='ban_damage_id']").val();// 搜索完损等级
+			queryWhere.ctime = $("input[name='ctime']").val();// 搜索日期范围
+			//console.log(queryWhere);
+			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+        	$.ajax({
+				type:"post",// 请求方式
+				url:"{:url('lease/export')}",
+				async:true,// 同步异步
+				dataType:"json",
+				data : queryWhere,//这里是前台传到后台的数据
+			    //回调函数
+				success:function(output){
+					layer.msg(output.msg);
+					if(output.code){ //成功则直接下载		
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');	
+						document.location.href = output.data;
+					}
+					else{
+						$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+					}
+					
+				}
+			});
+        })
+	});
+</script>

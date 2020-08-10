@@ -45,10 +45,12 @@ class ChangePause extends SystemBase
             $data = request()->param();
         }
         $where = [];
+        $where[] = ['a.dtime','eq',0];
         switch ($type) {
             // 申请列表
             case 'apply':
                 $where[] = ['a.change_status','>',1];
+
                 break;
             // 记录列表
             case 'record':

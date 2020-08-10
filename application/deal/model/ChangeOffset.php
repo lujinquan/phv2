@@ -58,6 +58,7 @@ class ChangeOffset extends SystemBase
             $data = request()->param();
         }
         $where = [];
+        $where[] = ['a.dtime','eq',0];
         switch ($type) {
             // 申请列表
             case 'apply':

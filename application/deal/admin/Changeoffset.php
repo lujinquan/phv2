@@ -207,19 +207,14 @@ class Changeoffset extends Admin
             }else{
                 $this->error('删除失败');
             } 
+        }else if($row['change_status'] == 2 && $row['is_back'] == 1){
+            $row->dtime = time();
+            $row->save();
+            ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+            $this->success('删除成功！');
         }else{
-            $this->error('已被审批，无法删除！');
+            $this->error('非房管员处理状态，无法删除！');
         }
-        // if($row['change_status'] != 3){
-        //     $this->error('已被审批，无法删除！');
-        // }
-        
-        // if($row->delete()){
-        //     ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-        //     $this->success('删除成功');
-        // }else{
-        //     $this->error('删除失败');
-        // }
     }
 
 }

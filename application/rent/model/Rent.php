@@ -860,7 +860,7 @@ class Rent extends Model
             $separate = substr($month,0,4).'00';
             $where = [];
             $where[] = ['a.rent_order_date','<=',$month];
-            $where[] = ['a.is_deal','eq',1];
+            //$where[] = ['a.is_deal','eq',1];
 
             if(isset($getData['house_id']) && $getData['house_id']){
                 $where[] = ['b.house_id','eq',$getData['house_id']];
