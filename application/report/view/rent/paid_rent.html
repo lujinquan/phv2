@@ -70,38 +70,40 @@
 				  <li><div class="time j-bold-size"></div></li>
 				  <li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
 			  </ul> -->
-			  <table class="layui-table" id="PropertyForm">
+			  <table class="layui-table" id="PropertyForm" style="position: relative;">
 			          <!-- 完损等级分 -->
-					  <thead style="background-color: #f2f2f2;">
+					  <thead style="background-color: #f2f2f2;position: absolute;top: 0px;width: 100%;display: inherit;">
 						 <tr>
-						 	  <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">房屋编号</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">地址</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">户名</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">使用性质</th>
-						       <th rowspan="1" colspan="4" class="j-bold-size" style="min-width:600px">房屋实收情况</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="min-width:150px">备注</th>
+						 	  <th rowspan="2" colspan="1" class="j-bold-size" style="width:10%">房屋编号</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="width:10%">地址</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="width:10%">户名</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="width:10%">使用性质</th>
+						       <th rowspan="1" colspan="4" class="j-bold-size" style="width:50%">房屋实收情况</th>
+						       <th rowspan="2" colspan="1" class="j-bold-size" style="width:10%">备注</th>
+							   <th rowspan="2" colspan="1" class="j-bold-sizes" style="padding-right:8px!important;box-sizing: border-box;"></th>
 						     </tr>
 						     <tr>
-						       <td rowspan="1" colspan="1" style="min-width:150px">本月份</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">以前月份</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">以前年度</td>
-						       <td rowspan="1" colspan="1" style="min-width:150px">合计</td>
+						       <td rowspan="1" colspan="1" style="width:10%">本月份</td>
+						       <td rowspan="1" colspan="1" style="width:10%">以前月份</td>
+						       <td rowspan="1" colspan="1" style="width:10%">以前年度</td>
+						       <td rowspan="1" colspan="1" style="width:20%">合计</td>
 						     </tr>  
 					  </thead>
-			          <tbody id="Tbody" class="j-PropertyForm">
+			          <tbody id="Tbody" class="j-PropertyForm" style=" display: table-caption;overflow-y: auto;max-height:400px;margin-top:75px ;">
 			             
 			          </tbody>
 					  <tfoot id="Statistics">
 						<tr>
-							<td style="min-width:150px">统计</td>
-							<td id="j-heji" style="min-width:150px">&nbsp;</td>
-							<td style="min-width:150px">&nbsp;</td>
-							<td style="min-width:150px">&nbsp;</td>
-							<td id="j-month" style="min-width:150px"></td>
-							<td id="j-previous-months" style="min-width:150px"></td>
-							<td id="j-previous-year" style="min-width:150px"></td>
-							<td id="j-sum" style="min-width:150px"></td>
-							<td style="min-width:150px">&nbsp;</td>
+							<td style="width:10%">统计</td>
+							<td id="j-heji" style="width:10%">&nbsp;</td>
+							<td style="width:10%">&nbsp;</td>
+							<td style="width:10%">&nbsp;</td>
+							<td id="j-month" style="width:10%"></td>
+							<td id="j-previous-months" style="width:10%"></td>
+							<td id="j-previous-year" style="width:10%"></td>
+							<td id="j-sum" style="width:20%"></td>
+							<td style="width:10%">&nbsp;</td>
+							<td class="j-bold-sizes" style="padding-right:8px!important;box-sizing: border-box;"></td>
 						</tr>   
 					  </tfoot>
 			  </table>
@@ -144,10 +146,16 @@
 					var data = jsondata.data;//由JSON字符串转换为JSON对象
 					var k = 0;
 					for(var i in data) {
-						tableStr += "<tr><td style='min-width:150px'>" + data[i].number + "</td><td style='min-width:150px'>" + data[i].address + "</td><td style='min-width:150px'>" + data[i].tenant + "</td><td style='min-width:150px'>" + data[i].use + "</td><td style='min-width:150px'>"+ data[i].curMonthPaidRent + "</td><td style='min-width:150px'>" +data[i].beforeMonthPaidRent+ "</td><td style='min-width:150px'>" +data[i].beforeYearPaidRent+ "</td><td style='min-width:150px'>" +data[i].total+ "</td><td style='min-width:150px'>" + data[i].remark+"</td></tr>";
+						tableStr += "<tr><td style='width:10%'>" + data[i].number + "</td><td style='width:10%'>" + data[i].address + "</td><td style='width:10%'>" + data[i].tenant + "</td><td style='width:10%'>" + data[i].use + "</td><td style='width:10%'>"+ data[i].curMonthPaidRent + "</td><td style='width:10%'>" +data[i].beforeMonthPaidRent+ "</td><td style='width:10%'>" +data[i].beforeYearPaidRent+ "</td><td style='width:20%'>" +data[i].total+ "</td><td style='width:10%'>" + data[i].remark+"</td></tr>";
 						k++;
 					}
 					$('#j-heji').text('总数：'+k+'条');
+					if(k>11){
+						$(".j-bold-sizes").show();
+					}
+					else{
+						$(".j-bold-sizes").hide();
+					}
 					//console.log(tableStr);
 					$('#Tbody').html(tableStr);
 					
@@ -238,12 +246,17 @@
 					// 				<td rowspan='1' colspan='1'>7</td>\
 					// 				<td rowspan='1' colspan='1'>8</td>\
 					// 			</tr>";
-					str += "<tr><td style='min-width:150px'>" + data[i].number + "</td><td style='min-width:150px'>" + data[i].address + "</td><td style='min-width:150px'>" + data[i].tenant + "</td><td style='min-width:150px'>" + data[i].use + "</td><td style='min-width:150px'>"+ data[i].curMonthPaidRent + "</td><td style='min-width:150px'>" + data[i].beforeMonthPaidRent + "</td><td style='min-width:150px'>" +data[i].beforeYearPaidRent+ "</td><td style='min-width:150px'>" +data[i].total+ "</td><td style='min-width:150px'>" + data[i].remark+"</td></tr>";
+					str += "<tr><td style='width:10%'>" + data[i].number + "</td><td style='width:10%'>" + data[i].address + "</td><td style='width:10%'>" + data[i].tenant + "</td><td style='width:10%'>" + data[i].use + "</td><td style='width:10%'>"+ data[i].curMonthPaidRent + "</td><td style='width:10%'>" + data[i].beforeMonthPaidRent + "</td><td style='width:10%'>" +data[i].beforeYearPaidRent+ "</td><td style='width:20%'>" +data[i].total+ "</td><td style='width:10%'>" + data[i].remark+"</td></tr>";
 					k++;
 				}
 				
 				$('#j-heji').text('总数：'+k+'条');
-			
+			    if(k>11){
+			    	$(".j-bold-sizes").show();
+			    }
+			    else{
+			    	$(".j-bold-sizes").hide();
+			    }
 				$('#Tbody').html(str);
 				$("#j-month").text(jsondata.total_cur_month_paid_rent);
 				$("#j-previous-months").text(jsondata.total_before_month_paid_rent);	
