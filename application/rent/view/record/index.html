@@ -20,6 +20,9 @@
             <input type="text" name="rent_order_number" title="订单编号" placeholder="订单编号" class="layui-input">
         </div>
         {/if}
+        <div class="layui-input-inline j-input-margin" style="width:180px;">
+            <input type="text" name="house_pre_rent" title="规定租金" placeholder="规定租金" class="layui-input">
+        </div>
         {if condition="in_array('house_number',$config['rent_record_info_search'])"}
     	<div class="layui-input-inline j-input-margin" style="width:180px;">
     	    <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
