@@ -26,7 +26,7 @@ class Invoice extends Admin
     public function index()
     {
         $InvoiceModel = new InvoiceModel;
-        //halt(json_decode($InvoiceModel->fpcx(),true)); 
+        //halt(json_decode($InvoiceModel->dpkj(),true));
         return $this->fetch();
     }
 

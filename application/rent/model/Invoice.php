@@ -89,7 +89,7 @@ class Invoice extends Model
     public function dpkj()
     {
         $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n" .
-                "  <FPQQLSH><![CDATA[]]></FPQQLSH>\n" .
+                "  <FPQQLSH><![CDATA[LUCAS201711280943001]]></FPQQLSH>\n" .
                 "  <KPLX><![CDATA[0]]></KPLX>\n" .
                 "  <FPLX><![CDATA[026]]></FPLX>\n" .
                 "  <ZSFS><![CDATA[0]]></ZSFS>\n" .

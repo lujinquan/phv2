@@ -470,46 +470,53 @@ class Rent extends Admin
             $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$query_month.'.txt');
             if($tempData){ // 有缓存就读取缓存数据
                 $temps = json_decode($tempData,true);
-                //halt($temps);
-                $ownerid = input('param.owner_id/d',1); //默认查询市属
-                $instid = input('param.inst_id/d',INST); //默认查询当前机构
-                $useid = input('param.use_id/d',1); //默认查询住宅
-                //halt(config('inst_ids'));
-                $data = [];
-                $total_cur_month_paid_rent = 0;
-                $total_before_month_paid_rent = 0;
-                $total_before_year_paid_rent = 0;
-                foreach ($temps as $k => $v) {
-                    if($v['owner'] != $ownerid || $v['use'] != $useid || !in_array($v['inst'],config('inst_ids')[$instid])){
-                        continue;
-                    }
-                    if($v['curMonthPaidRent'] > 0){
-                        $total_cur_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['curMonthPaidRent'],2);
-                    }
-                    if($v['beforeMonthPaidRent'] > 0){
-                        $total_before_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeMonthPaidRent'],2);
-                    }
-                    if($v['beforeYearPaidRent'] > 0){
-                        $total_before_year_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeYearPaidRent'],2);
-                    }
-                }
-
-                $data['data'] = $temps;
-                $data['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
-                $data['total_before_month_paid_rent'] = $total_before_month_paid_rent;
-                $data['total_before_year_paid_rent'] = $total_before_year_paid_rent;
-                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+                
             }else{
                 $ReportModel = new ReportModel;
-                $result = $ReportModel->getPrePaidRent();//halt($result);
-                $data = [];
-                $data['data'] = $result['data'];
-                $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
-                $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
-                $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
-                $data['total_unpaid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+                $temps = $ReportModel->getPrePaidRent($curMonth);           
+            }
+            $params = ParamModel::getCparams();
+            $ownerid = input('param.owner_id'); //默认查询市属
+            $instid = input('param.inst_id',INST); //默认查询当前机构
+            $useid = input('param.use_id'); //默认查询住宅
+            if($ownerid){
+                $owners = explode(',',$ownerid);
+            }else{
+                $owners = [1,2,3,5,6,7];
             }
 
+            if($useid){
+                $uses = explode(',',$useid);
+            }else{
+                $uses = [1,2,3];
+            }
+            //dump($owners);halt($uses);
+            // 合计上期结转余额
+            $total_last_yue = 0;
+            // 合计本期预缴
+            $total_pay_rent = 0;
+            // 合计本月扣缴
+            $total_kou_rent = 0;
+            // 合计本月余额
+            $total_yue = 0;
+            foreach ($temps as $k => &$v) {
+                if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
+                    $v['use'] = $params['uses'][$v['use']];
+                    $total_last_yue = bcaddMerge([$total_last_yue,$v['last_yue']]);
+                    $total_pay_rent = bcaddMerge([$total_pay_rent,$v['pay_rent']]);
+                    $total_kou_rent = bcaddMerge([$total_kou_rent,$v['kou_rent']]);
+                    $total_yue = bcaddMerge([$total_yue,$v['house_balance']]);
+                }else{
+                    unset($temps[$k]);
+                }
+                
+            }
+            $data = [];
+            $data['data'] = $temps;
+            $data['total_last_yue'] = $total_last_yue;
+            $data['total_pay_rent'] = $total_pay_rent;
+            $data['total_kou_rent'] = $total_kou_rent;
+            $data['total_yue'] = $total_yue;
             $data['count'] = count($data['data']);
             $data['code'] = 0;
             $data['msg'] = '获取成功';
@@ -520,10 +527,179 @@ class Rent extends Admin
     }
 
     /**
+     * [months 生成预收明细报表]
+     * @return [type] [description]
+     */
+    public function makePrePaidReport()
+    {
+        if ($this->request->isAjax()) {
+            $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+            //$curMonth = '2020-08';
+            $month = str_replace('-','',$curMonth);
+            $ReportModel = new ReportModel;
+            $data = $ReportModel->getPrePaidRent($curMonth);
+
+            file_put_contents(ROOT_PATH.'file/report/prepaid/'.$month.'.txt', json_encode($data));
+            $result = [];
+            $result['msg'] = $curMonth.'月预收明细报表，保存成功！';
+            $result['code'] = 1;
+            return json($result);
+        }
+    }
+
+    /**
      * [months 欠租明细报表]
      * @return [type] [description]
      */
     public function export()
+    {
+        if ($this->request->isAjax()) {
+            $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+            $type = input('type','unpaid');
+
+            if($type == 'unpaid'){
+                $ReportModel = new ReportModel; 
+                $tableTemp =  $ReportModel->getUnpaidRent();
+                //设置字段的排序
+                $sort = ['number','address','tenant','inst','owner','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
+                //标题
+                $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
+                $title = '欠租明细';
+                $table = $tableTemp['data'];
+            }else if($type == 'paid'){
+                $ReportModel = new ReportModel; 
+                $tableTemp =  $ReportModel->getPaidRent();
+                //设置字段的排序
+                $sort = ['number','address','tenant','inst','owner','use','curMonthPaidRent','beforeMonthPaidRent','beforeYearPaidRent','total','remark'];
+                //标题
+                $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月份','以前月份','以前年份','合计','备注'];
+                $title = '实收明细';
+                $table = $tableTemp['data'];
+            }else if($type == 'prepaid'){
+                $ReportModel = new ReportModel; 
+                $tableTemp =  $ReportModel->getPrePaidRent($curMonth);
+                //设置字段的排序
+                $sort = ['number','address','tenant','inst','owner','use','house_pre_rent','last_yue','pay_rent','kou_rent','house_balance','remark'];
+                //标题
+                $values = ['房屋编号','地址','户名','管段','产别','使用性质','规定租金','上期结转余额','本月预缴','本月扣缴','本月余额','备注'];
+                $title = '预收明细';
+                $table = $tableTemp;
+            }
+            
+           
+            
+
+            if(!$table){
+                return $this->error('暂无数据导出！');
+            }
+
+            $tableData = [];
+            
+            $sortFlip = array_flip($sort);
+            //将数组重新按一定顺序组装成数值型键值对数组
+            $y = 0;//halt($table);
+            foreach($table as $s){
+                foreach($s as $u => $o){
+                    $tableData[$y][$sortFlip[$u]] = $o;
+                } 
+                ksort($tableData[$y]);
+                $y++;
+            }
+            //halt($tableData);
+            $objPHPExcel = new \PHPExcel();
+            $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel); //保存excel—2007格式
+
+            //设置文档基本属性
+            $objProps = $objPHPExcel->getProperties();
+            $objProps->setCreator("Lucas");
+            $objProps->setLastModifiedBy("Lucas");
+            $objProps->setTitle("Office XLS");
+            $objProps->setSubject("Office XLS");
+            $objProps->setDescription("Test document, generated by PHPExcel");
+            $objProps->setKeywords("system data");
+            $objProps->setCategory("data report");
+            
+            /*----------------创建sheet-----------------*/
+            
+            $letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'];
+
+            /*----------------创建sheet-----------------*/
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objActSheet = $objPHPExcel->getActiveSheet();
+
+            //设置当前活动sheet的名称
+            $objActSheet->setTitle($title);
+
+            // ak 是行
+            foreach($tableData as $ak => $a){ 
+                $objActSheet->getRowDimension($ak+1)->setRowHeight(18);//设置行高度
+                // bk 是列
+                foreach($a as $bk => $b){
+    
+                    if($ak === 0){ //如果是第一行
+                        $objActSheet->getColumnDimension($letter[$bk])->setWidth(20); //设置列宽度                  
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFont()->setBold(true); //设置是否加粗
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);//设置填充颜色
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->getStartColor()->setRGB('E6E6E6'); //设置填充颜色
+
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
+                    }
+                    if($bk == 'A'){ //将第一列的格式改成文本，其他列不变
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), ' ' . $b . ' ');
+                    }else{
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), $b);  
+                    }
+                    
+                    
+     
+                }
+            }
+            //生成excel表格，自定义名
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+            /*------------这种是保存到浏览器下载位置（客户端）-------------------*/
+            $queryOption = (isset($tableTemp['op']) && $tableTemp['op'])?$tableTemp['op']:'';
+
+            $filename = $queryOption. $title .'_' . date('YmdHis', time()) . '.xlsx';    //定义文件名
+
+            /*
+            
+            // 方案一：直接在浏览器上下载
+            header("Pragma: public");
+            header("Expires: 0");
+            header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+            header("Content-Type:application/force-download");
+            header("Content-Type:application/vnd.ms-execl");
+            header("Content-Type:application/octet-stream");
+            header("Content-Type:application/download");
+            header('Content-Disposition:attachment;filename=' . $filename);
+            header("Content-Transfer-Encoding:binary");
+            $objWriter->save('php://output');
+
+            */
+           //echo strtoupper(substr(PHP_OS,0,3))==='WIN'?'windows 服务器':'不是 widnows 服务器';
+
+           // 方案二：先保存在服务器，然后返回文件路径【注意windows默认使用GBK编码，linux默认使用UTF-8编码】
+           if(strtoupper(substr(PHP_OS,0,3))==='WIN'){ //如果是windows服务器，则保存成GBK编码格式
+                $filePath = './upload/excel/'.convertGBK($filename);
+           }else{ //如果不是，则保存成UTF-8格式
+                $filePath = './upload/excel/'.convertUTF8($filename);
+           }
+           $objWriter->save($filePath);
+           $returnJson = [];
+           $returnJson['code'] = 1;
+           $returnJson['msg'] = '导出成功！';
+           $returnJson['data'] = '/upload/excel/'.$filename;
+           return json($returnJson); // 返回的文件名需要是以UTF-8编码
+        }
+    }
+
+    /**
+     * [months 实收明细报表导出]
+     * @return [type] [description]
+     */
+    public function export_paid()
     {
         if ($this->request->isAjax()) {
 
@@ -536,6 +712,142 @@ class Rent extends Admin
                 $sort = ['number','address','tenant','inst','owner','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
                 //标题
                 $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
+                $title = '欠租明细';
+            }else if($type == 'paid'){
+                $ReportModel = new ReportModel; 
+                $tableTemp =  $ReportModel->getPaidRent();
+                //设置字段的排序
+                $sort = ['number','address','tenant','inst','owner','use','curMonthPaidRent','beforeMonthPaidRent','beforeYearPaidRent','total','remark'];
+                //标题
+                $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月份','以前月份','以前年份','合计','备注'];
+                $title = '实收明细';
+            }
+            
+           
+            $table = $tableTemp['data'];
+
+            if(!$table){
+                return $this->error('暂无数据导出！');
+            }
+
+            $tableData = [];
+            
+            $sortFlip = array_flip($sort);
+            //将数组重新按一定顺序组装成数值型键值对数组
+            $y = 0;//halt($table);
+            foreach($table as $s){
+                foreach($s as $u => $o){
+                    $tableData[$y][$sortFlip[$u]] = $o;
+                } 
+                ksort($tableData[$y]);
+                $y++;
+            }
+            //halt($tableData);
+            $objPHPExcel = new \PHPExcel();
+            $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel); //保存excel—2007格式
+
+            //设置文档基本属性
+            $objProps = $objPHPExcel->getProperties();
+            $objProps->setCreator("Lucas");
+            $objProps->setLastModifiedBy("Lucas");
+            $objProps->setTitle("Office XLS");
+            $objProps->setSubject("Office XLS");
+            $objProps->setDescription("Test document, generated by PHPExcel");
+            $objProps->setKeywords("system data");
+            $objProps->setCategory("data report");
+            
+            /*----------------创建sheet-----------------*/
+            
+            $letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'];
+
+            /*----------------创建sheet-----------------*/
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objActSheet = $objPHPExcel->getActiveSheet();
+
+            //设置当前活动sheet的名称
+            $objActSheet->setTitle($title);
+
+            // ak 是行
+            foreach($tableData as $ak => $a){ 
+                $objActSheet->getRowDimension($ak+1)->setRowHeight(18);//设置行高度
+                // bk 是列
+                foreach($a as $bk => $b){
+    
+                    if($ak === 0){ //如果是第一行
+                        $objActSheet->getColumnDimension($letter[$bk])->setWidth(20); //设置列宽度                  
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFont()->setBold(true); //设置是否加粗
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->setFillType(\PHPExcel_Style_Fill::FILL_SOLID);//设置填充颜色
+                        $objActSheet->getStyle($letter[$bk] . ($ak+1))->getFill()->getStartColor()->setRGB('E6E6E6'); //设置填充颜色
+
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+1), $values[$bk]);  //写入标题
+                    }
+                    if($bk == 'A'){ //将第一列的格式改成文本，其他列不变
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), ' ' . $b . ' ');
+                    }else{
+                        $objActSheet->setCellValue($letter[$bk] . ($ak+2), $b);  
+                    }
+                    
+                    
+     
+                }
+            }
+            //生成excel表格，自定义名
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+            /*------------这种是保存到浏览器下载位置（客户端）-------------------*/
+
+            $filename = $tableTemp['op']. $title .'_' . date('YmdHis', time()) . '.xlsx';    //定义文件名
+
+            /*
+            
+            // 方案一：直接在浏览器上下载
+            header("Pragma: public");
+            header("Expires: 0");
+            header("Cache-Control:must-revalidate, post-check=0, pre-check=0");
+            header("Content-Type:application/force-download");
+            header("Content-Type:application/vnd.ms-execl");
+            header("Content-Type:application/octet-stream");
+            header("Content-Type:application/download");
+            header('Content-Disposition:attachment;filename=' . $filename);
+            header("Content-Transfer-Encoding:binary");
+            $objWriter->save('php://output');
+
+            */
+           //echo strtoupper(substr(PHP_OS,0,3))==='WIN'?'windows 服务器':'不是 widnows 服务器';
+
+           // 方案二：先保存在服务器，然后返回文件路径【注意windows默认使用GBK编码，linux默认使用UTF-8编码】
+           if(strtoupper(substr(PHP_OS,0,3))==='WIN'){ //如果是windows服务器，则保存成GBK编码格式
+                $filePath = './upload/excel/'.convertGBK($filename);
+           }else{ //如果不是，则保存成UTF-8格式
+                $filePath = './upload/excel/'.convertUTF8($filename);
+           }
+           $objWriter->save($filePath);
+           $returnJson = [];
+           $returnJson['code'] = 1;
+           $returnJson['msg'] = '导出成功！';
+           $returnJson['data'] = '/upload/excel/'.$filename;
+           return json($returnJson); // 返回的文件名需要是以UTF-8编码
+        }
+    }
+
+    /**
+     * [months 预收明细报表导出]
+     * @return [type] [description]
+     */
+    public function export_prepaid()
+    {
+        if ($this->request->isAjax()) {
+
+            $type = input('type','unpaid');
+
+            if($type == 'unpaid'){
+                $ReportModel = new ReportModel; 
+                $tableTemp =  $ReportModel->getUnpaidRent();
+                //设置字段的排序
+                $sort = ['number','address','tenant','inst','owner','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
+                //标题
+                $values = ['房屋编号','地址','户名','管段','产别','使用性质','上期结转余额','本月预缴','本月扣缴','本月余额','备注'];
                 $title = '欠租明细';
             }else if($type == 'paid'){
                 $ReportModel = new ReportModel; 
