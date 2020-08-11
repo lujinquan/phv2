@@ -481,29 +481,22 @@ class Changecut extends Admin
         $id = $this->request->param('id');
         $group = input('group','x');
         if($group == 'x'){
-            $row = ChangeCutModel::get($id);
-            if($row['change_status'] == 2 && $row['is_back'] == 0){
-               if($row->delete()){
-                    ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-                    $this->success('删除成功');
-                }else{
-                    $this->error('删除失败');
-                } 
-            }else{
-                $this->error('已被审批，无法删除！');
-            }
+            $row = ChangeCutModel::get($id); 
         }else{
             $row = ChangeCutYearModel::get($id);
-            if($row['change_status'] == 2 && $row['is_back'] == 0){
-               if($row->delete()){
-                    ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
-                    $this->success('删除成功');
-                }else{
-                    $this->error('删除失败');
-                } 
+        }
+
+        if($row['change_status'] == 2){
+           if($row->delete()){
+                $row->dtime = time();
+                $row->save();
+                ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
+                $this->success('删除成功！');
             }else{
-                $this->error('已被审批，无法删除！');
-            }
+                $this->error('删除失败');
+            } 
+        }else{
+            $this->error('非房管员处理状态，无法删除！');
         }
                
         

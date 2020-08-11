@@ -95,13 +95,11 @@
 		{if condition="in_array(325,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
 		{/if}
-		{{# if (d.is_back == 0){ }}
+	
 		{if condition="in_array(295,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a data-href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 		{/if}
-		{{#  } else { }}
-		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
-		{{# } }}
+		
 		{{#  } else if(d.change_status == 7){ }}
 		{if condition="in_array(339,$auths) || $Think.ADMIN_ROLE == 1"}
 		<!-- <a href="{:url('uploadsign')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">上传签字图片</a> -->
