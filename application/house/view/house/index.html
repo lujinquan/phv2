@@ -244,7 +244,7 @@
 						return params.uses[d.house_use_id];
 					}}
 					, {field: 'house_dtime',hide: isDtimeHide,width: 120,align:'center',title: '注销时间'}
-					//, {field: 'house_ctime',hide: isDtimeHide,width: 120,align:'center',title: '创建时间'}
+					, {field: 'house_advance_rent',hide: false,width: 180,align:'center',title: '房管员垫付金额'}
 					, {field: 'house_pre_rent',width: 120,align:'center',title: '规定租金',totalRow: true}
 					, {field: 'house_cou_rent',width: 120,align:'center',title: '计算租金',totalRow: true, templet: function(d) {
 						if(parseFloat(d.house_pre_rent) != parseFloat(d.house_cou_rent)){

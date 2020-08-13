@@ -90,7 +90,7 @@ class House extends Admin
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
-            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,from_unixtime(a.house_ctime, \'%Y-%m-%d\') as house_ctime,from_unixtime(a.house_dtime, \'%Y-%m-%d\') as house_dtime,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_advance_rent,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,from_unixtime(a.house_ctime, \'%Y-%m-%d\') as house_ctime,from_unixtime(a.house_dtime, \'%Y-%m-%d\') as house_dtime,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
             //halt($where);
             $data = [];
             $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order($order)->select();

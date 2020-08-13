@@ -73,10 +73,16 @@
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 	  	{{#  if (d.change_status == 2) { }}
+	  	{if condition="in_array(321,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">修改</a>
-		
+		{else /}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+		{/if}
+		{if condition="in_array(276,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a data-href="{:url('del')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
-		
+		{else /}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{/if}
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>

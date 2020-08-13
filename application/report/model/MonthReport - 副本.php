@@ -4,44 +4,37 @@ namespace app\report\model;
 use think\Db;
 use think\Model;
 use app\rent\model\RentRecycle as RentRecycleModel;
-use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\common\model\Cparam as ParamModel;
 
 class MonthReport extends Model
 {
-	public function makeMonthReport($cacheDate){ // 202008
-   
-        $cacheYear = substr($cacheDate,0,4); // 2020
+	public function makeMonthReport($cacheDate){
+        
+        $arr1 = $cacheDate;     // 201805
+        $arr2 = getlastMonthDays($cacheDate); // 201804
+        $arr4 = substr($cacheDate,0,4); // 2018
+        $arr5 = [substr($cacheDate,0,4) . '01', $cacheDate - 1]; // 201801~201804,包含201801和201804
+        $arr6 = [substr($cacheDate,0,4) . '01', $cacheDate]; // 201801~201805,包含201801和201805
+        $arr7 = substr($cacheDate,0,4); // 2018
 
-        $cacheYearFirstMonth = $cacheYear.'-01'; // 2020-01
-        $cacheYearZeroMonth = $cacheYear.'00';
-        // $arr5 = [substr($cacheDate,0,4) . '01', $cacheDate - 1]; // 201801~201804,包含201801和201804
-        // $arr6 = [substr($cacheDate,0,4) . '01', $cacheDate]; // 201801~201805,包含201801和201805
-        // $arr7 = substr($cacheDate,0,4); // 2018
-
-        $cacheFullDate = substr_replace($cacheDate,'-',4,0); // 2020-08
-
-        $cacheFullDateToTime = strtotime($cacheFullDate);
-        $nextFullDate = date('Y-m',strtotime('+1 month',$cacheFullDateToTime)); // 2020-09
-        $nextDate = str_replace('-', '', $nextFullDate); // 202009
-        //dump($cacheDate);dump($cacheFullDate);dump($nextFullDate);halt($nextDate);
         //从往期欠租表中,获取当月收缴到的以前月的【以前月实收】租金
-        $rentOldMonthData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','between',[$cacheYearZeroMonth,$cacheDate]]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','eq',$arr1],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+
         //从往期欠租表中,获取今年【以前月实收累计】收缴到的以前月的租金
-        $rentOldTotalMonthData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheYearFirstMonth,$nextFullDate]],['a.rent_order_date','between',[$cacheYearZeroMonth,$cacheDate]]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldTotalMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','between',$arr6],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中,获取当月收缴到的【以前年度实收】的租金
-        $rentOldYearData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','<',$cacheYearZeroMonth]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','eq',$arr1],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中，获取今年实收累计收缴到的【以前年度实收累计】的租金
-        $rentOldTotalYearData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheYearFirstMonth,$nextFullDate]],['a.rent_order_date','<',$cacheYearZeroMonth]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldTotalYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.cdate','between',$arr6],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
 
         //从租金订单表中,获取规定、已缴、欠缴、应缴租金
-        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$cacheDate]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$arr1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从租金订单表中,欠缴租金
-        $rentUnpaidData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids')->where([['a.rent_order_date','eq',$cacheDate],['a.is_deal','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentUnpaidData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids')->where([['a.rent_order_date','eq',$arr1],['a.is_deal','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
         
 
         //从房屋表中分组获取年度欠租、租差
@@ -51,17 +44,17 @@ class MonthReport extends Model
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,change_type')->group('use_id,owner_id,inst_id,change_type')
-        ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$cacheDate],['change_status','eq',1]])
+        ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$arr1],['change_status','eq',1]])
         ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-        ->where([['change_type','eq',10],['order_date','eq',$cacheDate],['change_status','eq',1]])
+        ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
         ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanIncData = Db::name('change_table')->field('use_id,owner_id,new_inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,new_inst_id')
-        ->where([['change_type','eq',10],['order_date','eq',$cacheDate],['change_status','eq',1]])
+        ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
         ->select();
 
         //获取非基数异动
@@ -71,12 +64,12 @@ class MonthReport extends Model
 
         //陈欠核销的是一个特别的非基数异动，以前年月必须是当月数据，不能同本月一样每个月继承
         $changeHeXiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-        ->where([['order_date','eq',$cacheDate],['change_type','eq',4],['change_status','eq',1]])
+        ->where([['order_date','eq',$arr1],['change_type','eq',4],['change_status','eq',1]])
         ->select();
 
         //房屋出售
         $changeSaleData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-        ->where([['order_date','eq',$cacheDate],['change_cancel_type','eq',1],['change_status','eq',1]])
+        ->where([['order_date','eq',$arr1],['change_cancel_type','eq',1],['change_status','eq',1]])
         ->select();
 
         //政策减免
@@ -876,7 +869,7 @@ class MonthReport extends Model
 
 /*        public function makeMonthReport($cacheDate){  //按照原始1.0的方式统计的
         
-        $cacheDate = $cacheDate;     // 201805
+        $arr1 = $cacheDate;     // 201805
         $arr2 = getlastMonthDays($cacheDate); // 201804
         $arr4 = substr($cacheDate,0,4); // 2018
         $arr5 = [substr($cacheDate,0,4) . '01', $cacheDate - 1]; // 201801~201804,包含201801和201804
@@ -884,20 +877,20 @@ class MonthReport extends Model
         $arr7 = substr($cacheDate,0,4); // 2018
 
         //从往期欠租表中,获取当月收缴到的以前月的【以前月实收】租金
-        $rentOldMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$cacheDate],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$arr1],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中,获取今年【以前月实收累计】收缴到的以前月的租金
         $rentOldTotalMonthData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','between',$arr6],['a.pay_year','eq',$arr4]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中,获取当月收缴到的【以前年度实收】的租金
-        $rentOldYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$cacheDate],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentOldYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','eq',$arr1],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从往期欠租表中，获取今年实收累计收缴到的【以前年度实收累计】的租金
         $rentOldTotalYearData = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.pay_rent) as pay_rents')->where([['a.pay_month','between',$arr6],['a.pay_year','<',$arr7]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
 
         //从租金订单表中,获取规定、已缴、欠缴、应缴租金
-        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$cacheDate]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$arr1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从房屋表中分组获取年度欠租、租差
         $houseData = Db::name('house')->alias('b')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(b.house_id) as house_ids,sum(b.house_diff_rent) as house_diff_rents,sum(b.house_pump_rent) as house_pump_rents,sum(b.house_pre_rent) as house_pre_rents')->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')
@@ -906,17 +899,17 @@ class MonthReport extends Model
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,change_type')->group('use_id,owner_id,inst_id,change_type')
-            ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$cacheDate],['change_status','eq',1]])
+            ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$arr1],['change_status','eq',1]])
             ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-            ->where([['change_type','eq',10],['order_date','eq',$cacheDate],['change_status','eq',1]])
+            ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
             ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanIncData = Db::name('change_table')->field('use_id,owner_id,new_inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,new_inst_id')
-            ->where([['change_type','eq',10],['order_date','eq',$cacheDate],['change_status','eq',1]])
+            ->where([['change_type','eq',10],['order_date','eq',$arr1],['change_status','eq',1]])
             ->select();
 
         //获取非基数异动
@@ -926,12 +919,12 @@ class MonthReport extends Model
 
         //陈欠核销的是一个特别的非基数异动，以前年月必须是当月数据，不能同本月一样每个月继承
         $changeHeXiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-            ->where([['order_date','eq',$cacheDate],['change_type','eq',4],['change_status','eq',1]])
+            ->where([['order_date','eq',$arr1],['change_type','eq',4],['change_status','eq',1]])
             ->select();
 
         //房屋出售
         $changeSaleData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['order_date','eq',$cacheDate],['change_cancel_type','eq',1],['change_status','eq',1]])
+            ->where([['order_date','eq',$arr1],['change_cancel_type','eq',1],['change_status','eq',1]])
             ->select();
 
         //政策减免
