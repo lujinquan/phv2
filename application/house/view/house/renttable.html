@@ -78,8 +78,20 @@
 					<input type="text" name="house_is_nonlife" readonly value={if condition="$data_info['house_is_nonlife']"}是{else /}否{/if} autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋建面</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_area" readonly value="{$data_info['house_area']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">房屋原价</label>
+				<div class="j-input-inline">
+					<input type="text" name="house_oprice" readonly value="{$data_info['house_oprice']}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label">实有面积</label>
 				<div class="j-input-inline">
@@ -92,14 +104,14 @@
 					<input type="text" name="house_area" readonly value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">规定租金</label>
 				<div class="j-input-inline">
 					<input type="text" name="house_number" readonly value="{$data_info['house_pre_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">计算租金</label>
 				<div class="j-input-inline">
@@ -112,14 +124,14 @@
 					<input type="text" name="house_floor_id" readonly value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">泵费</label>
 				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">租金减免</label>
 				<div class="j-input-inline">
@@ -132,14 +144,14 @@
 					<input type="text" name="house_unit_id" readonly value="{$data_info['house_protocol_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">电梯</label>
 				<div class="j-input-inline">
 					<input type="text" name="ban_owner_id" readonly value={if condition="$data_info['ban_is_levator']"}有{else /}无{/if} autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">暂停计租</label>
 				<div class="j-input-inline">
@@ -152,14 +164,14 @@
 					<input type="text" name="house_unit_id" readonly value="{$data_info['total_rent_order_unpaid']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">门牌号</label>
 				<div class="j-input-inline">
 					<input type="text" name="house_door" readonly value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
 				<label class="j-form-label">创建时间</label>
 				<div class="j-input-inline">
