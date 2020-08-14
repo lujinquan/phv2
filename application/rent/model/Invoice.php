@@ -86,9 +86,10 @@ class Invoice extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function dpkj()
+    public function dpkj($content = '')
     {
-        $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n" .
+        if(!$content){
+            $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n" .
                 "  <FPQQLSH><![CDATA[LUCAS201711280943001]]></FPQQLSH>\n" .
                 "  <KPLX><![CDATA[0]]></KPLX>\n" .
                 "  <FPLX><![CDATA[026]]></FPLX>\n" .
@@ -142,7 +143,8 @@ class Invoice extends Model
                 "      <BY5><![CDATA[]]></BY5>\n" .
                 "    </COMMON_FPKJ_XMXX>\n" .
                 "  </COMMON_FPKJ_XMXXS>\n" .
-                "</REQUEST_COMMON_FPKJ>";;
+                "</REQUEST_COMMON_FPKJ>";
+        }
         $base64Sign = base64_encode($content);
         //dump('base64加密>>>> '.$base64Sign);
         $queryMap = [];

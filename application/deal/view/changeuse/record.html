@@ -3,6 +3,11 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
+				{if condition="in_array('house_number',$config['deal_changeuse_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
+				</div>
+				{/if}
 				{if condition="in_array('change_order_number',$config['deal_changeuse_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">

@@ -130,7 +130,7 @@ class ChangePause extends SystemBase
         //     $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         //     $where[] = ['d.ban_inst_id','in',$insts[$instid]];
         // }
-        
+  
         return $where;
     }
 

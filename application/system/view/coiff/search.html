@@ -356,6 +356,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">使用权变更申请：</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="deal_changeuse_index_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="ban_inst_id" title="机构" lay-skin="primary" {if condition="in_array('ban_inst_id',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeuse_index_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_index_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeuse_index_search'])"}checked{/if}>
@@ -368,6 +369,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">使用权变更记录：</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="deal_changeuse_record_search[]" value="house_number" title="房屋编号" lay-skin="primary" {if condition="in_array('house_number',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="ban_owner_id" title="产别" lay-skin="primary" {if condition="in_array('ban_owner_id',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="change_order_number" title="异动单号" lay-skin="primary" {if condition="in_array('change_order_number',$config['deal_changeuse_record_search'])"}checked{/if}>
             <input type="checkbox" name="deal_changeuse_record_search[]" value="ctime" title="申请时间" lay-skin="primary" {if condition="in_array('ctime',$config['deal_changeuse_record_search'])"}checked{/if}>

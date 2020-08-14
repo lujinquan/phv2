@@ -16,6 +16,7 @@ use think\Db;
 use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
 use app\wechat\model\Weixin as WeixinModel;
+use app\rent\model\Invoice as InvoiceModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
@@ -124,6 +125,190 @@ class Weixin extends Admin
         
 		return $this->fetch();
 	}
+
+	// 开票
+    public function dpkj()
+    {
+        // if ($this->request->isPost()) {
+        //     $data = $this->request->post();
+        //     $InvoiceModel = new InvoiceModel;
+        //     halt(json_decode($InvoiceModel->dpkj(),true));
+        // }
+        $id = input('param.id/d');
+        $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+        $row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
+        $dpkj = [];
+        // 发票请求流水号 20 是 企业内部唯一请求开票流水 号，每个请求流水号只能开一 次 ,流水号前面以公司名称 前 缀 例 如 合 力 中 税 ： HLZS20171128094300001
+        $dpkj['fpqqlsh'] = 'LUCAS201711280943001'; 
+        // 开票类型 1 是 0-蓝字发票；1-红字发票
+        $dpkj['kplx'] = 0;
+        // 发票类型 10 是 026-增值税电子发票 032-区块链发票
+        $dpkj['fplx'] = '026';
+        // 征税方式 1 是 0：普通征税 2：差额征税
+        $dpkj['zsfs'] = 0;
+        // 销售方名称 100 是 如为非收购发票，此销 售方指开票纳税人；如 为收购发票，指销售方 名称，例如烟叶农户
+        $dpkj['xsf_mc'] = "税控服务器升级版测试用户10";
+        // 销售方纳税方纳 税人识别号 20 是 如为非收购发票，此项 必填，即开票方纳税人 识别号；如为收购发 票，此项为可选
+        $dpkj['xsf_nsrsbh'] = '150000000001000';
+        // 销售方地址、电 话 100 是 如为非收购发票，此项必填， 即开票方纳税人地址、电话； 如为收购发票，此项为可选
+        $dpkj['xsf_dzdh'] = '北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996';
+        // 销售方银行账号 100 否
+        $dpkj['xsf_yhzh'] = '中信银行 1234567890';
+        // 购买方纳税人识 别号 20 否 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
+        $dpkj['gmf_nsrsbh'] = '91110133745594417B';
+        // 购买方名称 100 是 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
+        $dpkj['gmf_mc'] = '测试';
+        // 购买方地址、电话 100 否 如为非收购发票，此项可 选；如为收购发票，此项必 填，即开票纳税人地址、电 话
+        $dpkj['gmf_dzdh'] = '地址 120';
+        // 购买方银行账号 100 否
+        $dpkj['gmf_yhzh'] = '银行 123456';
+        // 购买方手机号 11 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方手机号；如 收购发票则为销售方手机 号
+        $dpkj['gmf_sjh'] = '';
+        // 购买方电子邮箱 100 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方电子邮箱； 如为收购发票则为销货方 电子邮箱
+        $dpkj['gmf_dzyx'] = '';
+
+        $dpkj['skr'] = '收款人';
+
+        $dpkj['fhr'] = '复核人';
+
+        $dpkj['gmf_dzyx'] = '';
+
+		    $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n";
+        $content .= "  <FPQQLSH><![CDATA[". $dpkj['fpqqlsh'] ."]]></FPQQLSH>\n";
+        $content .= "  <KPLX><![CDATA[". $dpkj['kplx'] ."]]></KPLX>\n";
+        $content .= "  <FPLX><![CDATA[". $dpkj['fplx'] ."]]></FPLX>\n";
+        $content .= "  <ZSFS><![CDATA[". $dpkj['zsfs'] ."]]></ZSFS>\n";
+        $content .= "  <XSF_MC><![CDATA[". $dpkj['xsf_mc'] ."]]></XSF_MC>\n";
+        $content .= "  <XSF_NSRSBH><![CDATA[". $dpkj['xsf_nsrsbh'] ."]]></XSF_NSRSBH>\n";
+        $content .= "  <XSF_DZDH><![CDATA[". $dpkj['xsf_dzdh'] ."]]></XSF_DZDH>\n";
+        $content .= "  <XSF_YHZH><![CDATA[". $dpkj['xsf_yhzh'] ."]]></XSF_YHZH>\n";
+        $content .= "  <GMF_NSRSBH><![CDATA[". $dpkj['gmf_nsrsbh'] ."]]></GMF_NSRSBH>\n";
+        $content .= "  <GMF_MC><![CDATA[". $dpkj['gmf_mc'] ."]]></GMF_MC>\n";
+        $content .= "  <GMF_DZDH><![CDATA[". $dpkj['gmf_dzdh'] ."]]></GMF_DZDH>\n";
+        $content .= "  <GMF_YHZH><![CDATA[". $dpkj['gmf_yhzh'] ."]]></GMF_YHZH>\n";
+        $content .= "  <GMF_SJH><![CDATA[". $dpkj['gmf_sjh'] ."]]></GMF_SJH>\n";
+        $content .= "  <GMF_DZYX><![CDATA[". $dpkj['gmf_dzyx'] ."]]></GMF_DZYX>\n" .
+        $content .= "  <SKR><![CDATA[". $dpkj['skr'] ."]]></SKR>\n" .
+        $content .= "  <FHR><![CDATA[". $dpkj['fhr'] ."]]></FHR>\n" .
+        $content .= "  <KPR><![CDATA[开票人]]></KPR>\n" .
+        $content .= "  <YFP_DM><![CDATA[]]></YFP_DM>\n" .
+        $content .= "  <YFP_HM><![CDATA[]]></YFP_HM>\n" .
+        $content .= "  <JSHJ><![CDATA[12.00]]></JSHJ>\n" .
+        $content .= "  <HJJE><![CDATA[12]]></HJJE>\n" .
+        $content .= "  <HJSE><![CDATA[0]]></HJSE>\n" .
+        $content .= "  <KCE><![CDATA[]]></KCE>\n" .
+        $content .= "  <BZ><![CDATA[]]></BZ>\n" .
+        $content .= "  <HYLX><![CDATA[0]]></HYLX>\n" .
+        $content .= "  <BY4><![CDATA[]]></BY4>\n" .
+        $content .= "  <TSPZ><![CDATA[00]]></TSPZ>\n" .
+            "  <DKBZ><![CDATA[0]]></DKBZ>\n" .
+            "  <COMMON_FPKJ_XMXXS class=\"COMMON_FPKJ_XMXX\" size=\"1\">\n" .
+            "    <COMMON_FPKJ_XMXX>\n" .
+            "      <uuid><![CDATA[]]></uuid>\n" .
+            "      <zb_uuid><![CDATA[]]></zb_uuid>\n" .
+            "      <FPHXZ><![CDATA[0]]></FPHXZ>\n" .
+            "      <SPBM><![CDATA[1100301010000000000]]></SPBM>\n" .
+            "      <ZXBM><![CDATA[]]></ZXBM>\n" .
+            "      <YHZCBS><![CDATA[0]]></YHZCBS>\n" .
+            "      <LSLBS><![CDATA[]]></LSLBS>\n" .
+            "      <ZZSTSGL><![CDATA[]]></ZZSTSGL>\n" .
+            "      <XMMC><![CDATA[自来水]]></XMMC>\n" .
+            "      <GGXH><![CDATA[]]></GGXH>\n" .
+            "      <DW><![CDATA[]]></DW>\n" .
+            "      <XMSL><![CDATA[2]]></XMSL>\n" .
+            "      <XMDJ><![CDATA[6]]></XMDJ>\n" .
+            "      <XMJE><![CDATA[12.0]]></XMJE>\n" .
+            "      <SL><![CDATA[0]]></SL>\n" .
+            "      <SE><![CDATA[0.0]]></SE>\n" .
+            "      <BY1><![CDATA[]]></BY1>\n" .
+            "      <BY2><![CDATA[]]></BY2>\n" .
+            "      <BY3><![CDATA[]]></BY3>\n" .
+            "      <BY4><![CDATA[]]></BY4>\n" .
+            "      <BY5><![CDATA[]]></BY5>\n" .
+            "    </COMMON_FPKJ_XMXX>\n" .
+            "  </COMMON_FPKJ_XMXXS>\n" .
+            "</REQUEST_COMMON_FPKJ>";
+
+        $InvoiceModel = new InvoiceModel;
+        halt(json_decode($InvoiceModel->dpkj($content),true));
+
+	$a =        "<business id="10008" comment="发票开具">
+  <body yylxdm="1">
+    <returncode><![CDATA[0]]></returncode>
+    <returnmsg><![CDATA[成功]]></returnmsg>
+    <returndata>
+      <fpdm><![CDATA[050003521107]]></fpdm>
+      <fphm><![CDATA[54352895]]></fphm>
+      <kprq><![CDATA[20200810144709]]></kprq>
+      <fwqdz><![CDATA[]]></fwqdz>
+      <fwqdkh><![CDATA[]]></fwqdkh>
+      <jqbh><![CDATA[499098899194]]></jqbh>
+      <fplxdm><![CDATA[]]></fplxdm>
+      <fpcbh><![CDATA[]]></fpcbh>
+      <kplx><![CDATA[0]]></kplx>
+      <bbh><![CDATA[]]></bbh>
+      <tspz><![CDATA[00]]></tspz>
+      <xhdwsbh><![CDATA[150000000001000]]></xhdwsbh>
+      <xhdwmc><![CDATA[税控服务器升级版测试用户10]]></xhdwmc>
+      <xhdwdzdh><![CDATA[北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996]]></xhdwdzdh>
+      <xhdwyhzh><![CDATA[中信银行 1234567890]]></xhdwyhzh>
+      <ghdwsbh><![CDATA[91110133745594417B]]></ghdwsbh>
+      <ghdwmc><![CDATA[测试]]></ghdwmc>
+      <ghdwdzdh><![CDATA[地址 120]]></ghdwdzdh>
+      <ghdwyhzh><![CDATA[银行 123456]]></ghdwyhzh>
+      <bmbbbh><![CDATA[]]></bmbbbh>
+      <zsfs><![CDATA[0]]></zsfs>
+      <fyxm count="1">
+        <group xh="1">
+          <fphxz><![CDATA[0]]></fphxz>
+          <spmc><![CDATA[*水冰雪*自来水]]></spmc>
+          <spsm><![CDATA[]]></spsm>
+          <ggxh><![CDATA[]]></ggxh>
+          <dw><![CDATA[]]></dw>
+          <spsl><![CDATA[2]]></spsl>
+          <dj><![CDATA[6]]></dj>
+          <je><![CDATA[12.0]]></je>
+          <sl><![CDATA[0.0]]></sl>
+          <se><![CDATA[0.0]]></se>
+          <hsbz><![CDATA[]]></hsbz>
+          <spbm><![CDATA[1100301010000000000]]></spbm>
+          <zxbm><![CDATA[]]></zxbm>
+          <yhzcbs><![CDATA[0]]></yhzcbs>
+          <lslbs><![CDATA[]]></lslbs>
+          <zzstsgl><![CDATA[]]></zzstsgl>
+        </group>
+      </fyxm>
+      <zhsl><![CDATA[]]></zhsl>
+      <hjje><![CDATA[12.0]]></hjje>
+      <hjse><![CDATA[0.0]]></hjse>
+      <jshj><![CDATA[12.0]]></jshj>
+      <bz><![CDATA[]]></bz>
+      <skr><![CDATA[收款人]]></skr>
+      <fhr><![CDATA[复核人]]></fhr>
+      <kpr><![CDATA[开票人]]></kpr>
+      <jmbbh><![CDATA[]]></jmbbh>
+      <zyspmc><![CDATA[]]></zyspmc>
+      <spsm><![CDATA[]]></spsm>
+      <qdbz><![CDATA[]]></qdbz>
+      <ssyf><![CDATA[]]></ssyf>
+      <kpjh><![CDATA[]]></kpjh>
+      <tzdbh><![CDATA[]]></tzdbh>
+      <yfpdm><![CDATA[]]></yfpdm>
+      <yfphm><![CDATA[]]></yfphm>
+      <qmcs><![CDATA[]]></qmcs>
+      <tsbz><![CDATA[]]></tsbz>
+      <gfkhdh><![CDATA[]]></gfkhdh>
+      <gfkhyx><![CDATA[']]></gfkhyx>
+      <skm><![CDATA[]]></skm>
+      <jym><![CDATA[00207416902920906061]]></jym>
+      <ewm><![CDATA[]]></ewm>
+      <pdfUrl><![CDATA[http://api.scnebula.com/pdf/d/8fadb615edbe93d8]]></pdfUrl>
+    </returndata>
+  </body>
+</business>"
+
+        //return $this->fetch();
+    }
 
 	/**
 	 * 功能描述：支付记录详情
