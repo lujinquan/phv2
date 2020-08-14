@@ -94,11 +94,13 @@
   	  </div>
   	</div>
   </div>
+  {if condition="$data_info['pay_way'] == 2"}
   <input type="hidden" name="id" value="{$data_info['id']}">
    <div class="pop-bottom-bar">
-        <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">撤销当前扣缴</button>
+        <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">撤销当前扣缴</button> 
         <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10">取消</a>
     </div>
+    {/if}
 </div>
 </form>
 {include file="system@block/layui" /}

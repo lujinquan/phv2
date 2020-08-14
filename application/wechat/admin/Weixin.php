@@ -135,8 +135,8 @@ class Weixin extends Admin
         //     halt(json_decode($InvoiceModel->dpkj(),true));
         // }
         $id = input('param.id/d');
-        $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-        $row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
+        // $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+        // $row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
         $dpkj = [];
         // 发票请求流水号 20 是 企业内部唯一请求开票流水 号，每个请求流水号只能开一 次 ,流水号前面以公司名称 前 缀 例 如 合 力 中 税 ： HLZS20171128094300001
         $dpkj['fpqqlsh'] = 'LUCAS201711280943001'; 
@@ -166,12 +166,60 @@ class Weixin extends Admin
         $dpkj['gmf_sjh'] = '';
         // 购买方电子邮箱 100 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方电子邮箱； 如为收购发票则为销货方 电子邮箱
         $dpkj['gmf_dzyx'] = '';
-
+        // 收款人 8 否
         $dpkj['skr'] = '收款人';
-
+        // 复核人 8 否
         $dpkj['fhr'] = '复核人';
+        // 开票人 8 是
+        $dpkj['kpr'] = '开票人';
+        // 原发票代码 12 红字发票时必须
+        $dpkj['yfp_dm'] = '';
+        // 原发票号码 8 红字发票时必须
+        $dpkj['yfp_hm'] = '';
+        // 价税合计 12 是 单位：元（2位小数）
+        $dpkj['jshj'] = '12.00';
+        // 合计金额 12 是 不含税，单位：元（最多保 留2位小数）
+        $dpkj['hjje'] = '12';
+        // 合计税额 12 是 单位：元（2位小数）
+        $dpkj['hjse'] = 0;
+        // 扣除额 12 否 最多保留至小数点后2位， 当 ZSFS为 2时扣 除额为必填项
+        $dpkj['kce'] = 0;
+        // 备注 130 否
+        $dpkj['bz'] = '';
+        // 行业类型 1 是 0商业、1其它
+        $dpkj['hylx'] = 0;
+        // 特殊票种标识 2 是 “00”不是 “01”农产品销售 “02”农产品收购
+        $dpkj['tspz'] = '00';
+        // 代开标志 1 否 0-非代开，1-代开
+        $dpkj['dkbz'] = 0;
+        // 发票行性质 1 是 0正常行、1折扣行、2被折 扣行
+        $dpkj['fphxz'] = 0;
+        // 商品编码 19 否 税局下发的商品编码表中 最末级节点的编码
+        $dpkj['spbm'] = '1100301010000000000';
+        // 自行编码 20 否 未填写商品编码时，须使用 自行增加的项目 名称，并填写该商品的编码 至自行编码中
+        $dpkj['zxbm'] = '';
+        // 优惠政策标识 1 是 0：不使用，1：使用
+        $dpkj['yhzcbs'] = 0;
+        // 零税率标识 1 否 空：非零税率， 1：免税， 2：不征收，3：普通零税率
+        $dpkj['lslbs'] = '';
+        // 增值税特殊管理 50 否 若含有预售卡业务，税率为 0，零税率标示必须为不征 税，优惠政策标示为 1，增 值税特殊管理必须为不征 税
+        $dpkj['zzstsgl'] = '';
+        // 项目名称 90 是 如果为折扣行，商品名称须 与被折扣行的商品名称相 同，不能多行折扣
+        $dpkj['xmmc'] = '自来水';
+        // 项目数量 12 否 最多保留6位小数，总长度 包含小数点不能超过12位
+        $dpkj['xmsl'] = 2;
+        // 项目单价 12 否 不含税，最多保留6位小数， 总长度包含小数点不能超 过12位
+        $dpkj['xmdj'] = 6;
+        // 项目金额 12 是 不含税，单位：元（最多保 留2位小数）
+        $dpkj['xmje'] = 12.0;
+        // 税率 3 是 最多保留2位小数，例17%为 0.17。小数点后最末位不能 为零，例10%为0.1
+        $dpkj['sl'] = 0;
+        // 税额 12 是 单位：元（最多保留2位小 数）
+        $dpkj['se'] = 0.0;
 
-        $dpkj['gmf_dzyx'] = '';
+
+
+
 
 		    $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n";
         $content .= "  <FPQQLSH><![CDATA[". $dpkj['fpqqlsh'] ."]]></FPQQLSH>\n";
@@ -187,126 +235,130 @@ class Weixin extends Admin
         $content .= "  <GMF_DZDH><![CDATA[". $dpkj['gmf_dzdh'] ."]]></GMF_DZDH>\n";
         $content .= "  <GMF_YHZH><![CDATA[". $dpkj['gmf_yhzh'] ."]]></GMF_YHZH>\n";
         $content .= "  <GMF_SJH><![CDATA[". $dpkj['gmf_sjh'] ."]]></GMF_SJH>\n";
-        $content .= "  <GMF_DZYX><![CDATA[". $dpkj['gmf_dzyx'] ."]]></GMF_DZYX>\n" .
-        $content .= "  <SKR><![CDATA[". $dpkj['skr'] ."]]></SKR>\n" .
-        $content .= "  <FHR><![CDATA[". $dpkj['fhr'] ."]]></FHR>\n" .
-        $content .= "  <KPR><![CDATA[开票人]]></KPR>\n" .
-        $content .= "  <YFP_DM><![CDATA[]]></YFP_DM>\n" .
-        $content .= "  <YFP_HM><![CDATA[]]></YFP_HM>\n" .
-        $content .= "  <JSHJ><![CDATA[12.00]]></JSHJ>\n" .
-        $content .= "  <HJJE><![CDATA[12]]></HJJE>\n" .
-        $content .= "  <HJSE><![CDATA[0]]></HJSE>\n" .
-        $content .= "  <KCE><![CDATA[]]></KCE>\n" .
-        $content .= "  <BZ><![CDATA[]]></BZ>\n" .
-        $content .= "  <HYLX><![CDATA[0]]></HYLX>\n" .
-        $content .= "  <BY4><![CDATA[]]></BY4>\n" .
-        $content .= "  <TSPZ><![CDATA[00]]></TSPZ>\n" .
-            "  <DKBZ><![CDATA[0]]></DKBZ>\n" .
-            "  <COMMON_FPKJ_XMXXS class=\"COMMON_FPKJ_XMXX\" size=\"1\">\n" .
-            "    <COMMON_FPKJ_XMXX>\n" .
-            "      <uuid><![CDATA[]]></uuid>\n" .
-            "      <zb_uuid><![CDATA[]]></zb_uuid>\n" .
-            "      <FPHXZ><![CDATA[0]]></FPHXZ>\n" .
-            "      <SPBM><![CDATA[1100301010000000000]]></SPBM>\n" .
-            "      <ZXBM><![CDATA[]]></ZXBM>\n" .
-            "      <YHZCBS><![CDATA[0]]></YHZCBS>\n" .
-            "      <LSLBS><![CDATA[]]></LSLBS>\n" .
-            "      <ZZSTSGL><![CDATA[]]></ZZSTSGL>\n" .
-            "      <XMMC><![CDATA[自来水]]></XMMC>\n" .
-            "      <GGXH><![CDATA[]]></GGXH>\n" .
-            "      <DW><![CDATA[]]></DW>\n" .
-            "      <XMSL><![CDATA[2]]></XMSL>\n" .
-            "      <XMDJ><![CDATA[6]]></XMDJ>\n" .
-            "      <XMJE><![CDATA[12.0]]></XMJE>\n" .
-            "      <SL><![CDATA[0]]></SL>\n" .
-            "      <SE><![CDATA[0.0]]></SE>\n" .
-            "      <BY1><![CDATA[]]></BY1>\n" .
-            "      <BY2><![CDATA[]]></BY2>\n" .
-            "      <BY3><![CDATA[]]></BY3>\n" .
-            "      <BY4><![CDATA[]]></BY4>\n" .
-            "      <BY5><![CDATA[]]></BY5>\n" .
-            "    </COMMON_FPKJ_XMXX>\n" .
-            "  </COMMON_FPKJ_XMXXS>\n" .
+        $content .= "  <GMF_DZYX><![CDATA[". $dpkj['gmf_dzyx'] ."]]></GMF_DZYX>\n";
+        $content .= "  <SKR><![CDATA[". $dpkj['skr'] ."]]></SKR>\n";
+        $content .= "  <FHR><![CDATA[". $dpkj['fhr'] ."]]></FHR>\n";
+        $content .= "  <KPR><![CDATA[". $dpkj['kpr'] ."]]></KPR>\n";
+        $content .= "  <YFP_DM><![CDATA[". $dpkj['yfp_dm'] ."]]></YFP_DM>\n";
+        $content .= "  <YFP_HM><![CDATA[". $dpkj['yfp_hm'] ."]]></YFP_HM>\n";
+        $content .= "  <JSHJ><![CDATA[". $dpkj['jshj'] ."]]></JSHJ>\n";
+        $content .= "  <HJJE><![CDATA[". $dpkj['hjje'] ."]]></HJJE>\n";
+        $content .= "  <HJSE><![CDATA[". $dpkj['hjse'] ."]]></HJSE>\n";
+        $content .= "  <KCE><![CDATA[". $dpkj['kce'] ."]]></KCE>\n";
+        $content .= "  <BZ><![CDATA[". $dpkj['bz'] ."]]></BZ>\n";
+        $content .= "  <HYLX><![CDATA[". $dpkj['hylx'] ."]]></HYLX>\n";
+        $content .= "  <BY4><![CDATA[]]></BY4>\n";
+        $content .= "  <TSPZ><![CDATA[". $dpkj['tspz'] ."]]></TSPZ>\n";
+        $content .= "  <DKBZ><![CDATA[". $dpkj['dkbz'] ."]]></DKBZ>\n";
+        $content .= "  <COMMON_FPKJ_XMXXS class=\"COMMON_FPKJ_XMXX\" size=\"1\">\n";
+        $content .= "    <COMMON_FPKJ_XMXX>\n";
+        $content .= "      <uuid><![CDATA[]]></uuid>\n";
+        $content .= "      <zb_uuid><![CDATA[]]></zb_uuid>\n";
+        $content .= "      <FPHXZ><![CDATA[". $dpkj['fphxz'] ."]]></FPHXZ>\n";
+        $content .= "      <SPBM><![CDATA[". $dpkj['spbm'] ."]]></SPBM>\n";
+        $content .= "      <ZXBM><![CDATA[". $dpkj['zxbm'] ."]]></ZXBM>\n";
+        $content .= "      <YHZCBS><![CDATA[". $dpkj['yhzcbs'] ."]]></YHZCBS>\n";
+        $content .= "      <LSLBS><![CDATA[". $dpkj['lslbs'] ."]]></LSLBS>\n";
+        $content .= "      <ZZSTSGL><![CDATA[". $dpkj['zzstsgl'] ."]]></ZZSTSGL>\n";
+        $content .= "      <XMMC><![CDATA[". $dpkj['xmmc'] ."]]></XMMC>\n";
+        $content .= "      <GGXH><![CDATA[]]></GGXH>\n";
+        $content .= "      <DW><![CDATA[]]></DW>\n";
+        $content .= "      <XMSL><![CDATA[". $dpkj['xmsl'] ."]]></XMSL>\n";
+        $content .= "      <XMDJ><![CDATA[". $dpkj['xmdj'] ."]]></XMDJ>\n";
+        $content .= "      <XMJE><![CDATA[". $dpkj['xmje'] ."]]></XMJE>\n";
+        $content .= "      <SL><![CDATA[". $dpkj['sl'] ."]]></SL>\n";
+        $content .= "      <SE><![CDATA[". $dpkj['se'] ."]]></SE>\n";
+        $content .= "      <BY1><![CDATA[]]></BY1>\n";
+        $content .= "      <BY2><![CDATA[]]></BY2>\n";
+        $content .= "      <BY3><![CDATA[]]></BY3>\n";
+        $content .= "      <BY4><![CDATA[]]></BY4>\n";
+        $content .= "      <BY5><![CDATA[]]></BY5>\n";
+        $content .= "    </COMMON_FPKJ_XMXX>\n" .
+             "  </COMMON_FPKJ_XMXXS>\n" .
             "</REQUEST_COMMON_FPKJ>";
 
         $InvoiceModel = new InvoiceModel;
-        halt(json_decode($InvoiceModel->dpkj($content),true));
+        //$result = json_decode($InvoiceModel->dpkj($content),true);
+        
 
-	$a =        "<business id="10008" comment="发票开具">
-  <body yylxdm="1">
-    <returncode><![CDATA[0]]></returncode>
-    <returnmsg><![CDATA[成功]]></returnmsg>
-    <returndata>
-      <fpdm><![CDATA[050003521107]]></fpdm>
-      <fphm><![CDATA[54352895]]></fphm>
-      <kprq><![CDATA[20200810144709]]></kprq>
-      <fwqdz><![CDATA[]]></fwqdz>
-      <fwqdkh><![CDATA[]]></fwqdkh>
-      <jqbh><![CDATA[499098899194]]></jqbh>
-      <fplxdm><![CDATA[]]></fplxdm>
-      <fpcbh><![CDATA[]]></fpcbh>
-      <kplx><![CDATA[0]]></kplx>
-      <bbh><![CDATA[]]></bbh>
-      <tspz><![CDATA[00]]></tspz>
-      <xhdwsbh><![CDATA[150000000001000]]></xhdwsbh>
-      <xhdwmc><![CDATA[税控服务器升级版测试用户10]]></xhdwmc>
-      <xhdwdzdh><![CDATA[北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996]]></xhdwdzdh>
-      <xhdwyhzh><![CDATA[中信银行 1234567890]]></xhdwyhzh>
-      <ghdwsbh><![CDATA[91110133745594417B]]></ghdwsbh>
-      <ghdwmc><![CDATA[测试]]></ghdwmc>
-      <ghdwdzdh><![CDATA[地址 120]]></ghdwdzdh>
-      <ghdwyhzh><![CDATA[银行 123456]]></ghdwyhzh>
-      <bmbbbh><![CDATA[]]></bmbbbh>
-      <zsfs><![CDATA[0]]></zsfs>
-      <fyxm count="1">
-        <group xh="1">
-          <fphxz><![CDATA[0]]></fphxz>
-          <spmc><![CDATA[*水冰雪*自来水]]></spmc>
-          <spsm><![CDATA[]]></spsm>
-          <ggxh><![CDATA[]]></ggxh>
-          <dw><![CDATA[]]></dw>
-          <spsl><![CDATA[2]]></spsl>
-          <dj><![CDATA[6]]></dj>
-          <je><![CDATA[12.0]]></je>
-          <sl><![CDATA[0.0]]></sl>
-          <se><![CDATA[0.0]]></se>
-          <hsbz><![CDATA[]]></hsbz>
-          <spbm><![CDATA[1100301010000000000]]></spbm>
-          <zxbm><![CDATA[]]></zxbm>
-          <yhzcbs><![CDATA[0]]></yhzcbs>
-          <lslbs><![CDATA[]]></lslbs>
-          <zzstsgl><![CDATA[]]></zzstsgl>
-        </group>
-      </fyxm>
-      <zhsl><![CDATA[]]></zhsl>
-      <hjje><![CDATA[12.0]]></hjje>
-      <hjse><![CDATA[0.0]]></hjse>
-      <jshj><![CDATA[12.0]]></jshj>
-      <bz><![CDATA[]]></bz>
-      <skr><![CDATA[收款人]]></skr>
-      <fhr><![CDATA[复核人]]></fhr>
-      <kpr><![CDATA[开票人]]></kpr>
-      <jmbbh><![CDATA[]]></jmbbh>
-      <zyspmc><![CDATA[]]></zyspmc>
-      <spsm><![CDATA[]]></spsm>
-      <qdbz><![CDATA[]]></qdbz>
-      <ssyf><![CDATA[]]></ssyf>
-      <kpjh><![CDATA[]]></kpjh>
-      <tzdbh><![CDATA[]]></tzdbh>
-      <yfpdm><![CDATA[]]></yfpdm>
-      <yfphm><![CDATA[]]></yfphm>
-      <qmcs><![CDATA[]]></qmcs>
-      <tsbz><![CDATA[]]></tsbz>
-      <gfkhdh><![CDATA[]]></gfkhdh>
-      <gfkhyx><![CDATA[']]></gfkhyx>
-      <skm><![CDATA[]]></skm>
-      <jym><![CDATA[00207416902920906061]]></jym>
-      <ewm><![CDATA[]]></ewm>
-      <pdfUrl><![CDATA[http://api.scnebula.com/pdf/d/8fadb615edbe93d8]]></pdfUrl>
-    </returndata>
-  </body>
-</business>"
+// 	$a =        "<business id="10008" comment="发票开具">
+//   <body yylxdm="1">
+//     <returncode><![CDATA[0]]></returncode>
+//     <returnmsg><![CDATA[成功]]></returnmsg>
+//     <returndata>
+//       <fpdm><![CDATA[050003521107]]></fpdm>
+//       <fphm><![CDATA[54352895]]></fphm>
+//       <kprq><![CDATA[20200810144709]]></kprq>
+//       <fwqdz><![CDATA[]]></fwqdz>
+//       <fwqdkh><![CDATA[]]></fwqdkh>
+//       <jqbh><![CDATA[499098899194]]></jqbh>
+//       <fplxdm><![CDATA[]]></fplxdm>
+//       <fpcbh><![CDATA[]]></fpcbh>
+//       <kplx><![CDATA[0]]></kplx>
+//       <bbh><![CDATA[]]></bbh>
+//       <tspz><![CDATA[00]]></tspz>
+//       <xhdwsbh><![CDATA[150000000001000]]></xhdwsbh>
+//       <xhdwmc><![CDATA[税控服务器升级版测试用户10]]></xhdwmc>
+//       <xhdwdzdh><![CDATA[北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996]]></xhdwdzdh>
+//       <xhdwyhzh><![CDATA[中信银行 1234567890]]></xhdwyhzh>
+//       <ghdwsbh><![CDATA[91110133745594417B]]></ghdwsbh>
+//       <ghdwmc><![CDATA[测试]]></ghdwmc>
+//       <ghdwdzdh><![CDATA[地址 120]]></ghdwdzdh>
+//       <ghdwyhzh><![CDATA[银行 123456]]></ghdwyhzh>
+//       <bmbbbh><![CDATA[]]></bmbbbh>
+//       <zsfs><![CDATA[0]]></zsfs>
+//       <fyxm count="1">
+//         <group xh="1">
+//           <fphxz><![CDATA[0]]></fphxz>
+//           <spmc><![CDATA[*水冰雪*自来水]]></spmc>
+//           <spsm><![CDATA[]]></spsm>
+//           <ggxh><![CDATA[]]></ggxh>
+//           <dw><![CDATA[]]></dw>
+//           <spsl><![CDATA[2]]></spsl>
+//           <dj><![CDATA[6]]></dj>
+//           <je><![CDATA[12.0]]></je>
+//           <sl><![CDATA[0.0]]></sl>
+//           <se><![CDATA[0.0]]></se>
+//           <hsbz><![CDATA[]]></hsbz>
+//           <spbm><![CDATA[1100301010000000000]]></spbm>
+//           <zxbm><![CDATA[]]></zxbm>
+//           <yhzcbs><![CDATA[0]]></yhzcbs>
+//           <lslbs><![CDATA[]]></lslbs>
+//           <zzstsgl><![CDATA[]]></zzstsgl>
+//         </group>
+//       </fyxm>
+//       <zhsl><![CDATA[]]></zhsl>
+//       <hjje><![CDATA[12.0]]></hjje>
+//       <hjse><![CDATA[0.0]]></hjse>
+//       <jshj><![CDATA[12.0]]></jshj>
+//       <bz><![CDATA[]]></bz>
+//       <skr><![CDATA[收款人]]></skr>
+//       <fhr><![CDATA[复核人]]></fhr>
+//       <kpr><![CDATA[开票人]]></kpr>
+//       <jmbbh><![CDATA[]]></jmbbh>
+//       <zyspmc><![CDATA[]]></zyspmc>
+//       <spsm><![CDATA[]]></spsm>
+//       <qdbz><![CDATA[]]></qdbz>
+//       <ssyf><![CDATA[]]></ssyf>
+//       <kpjh><![CDATA[]]></kpjh>
+//       <tzdbh><![CDATA[]]></tzdbh>
+//       <yfpdm><![CDATA[]]></yfpdm>
+//       <yfphm><![CDATA[]]></yfphm>
+//       <qmcs><![CDATA[]]></qmcs>
+//       <tsbz><![CDATA[]]></tsbz>
+//       <gfkhdh><![CDATA[]]></gfkhdh>
+//       <gfkhyx><![CDATA[']]></gfkhyx>
+//       <skm><![CDATA[]]></skm>
+//       <jym><![CDATA[00207416902920906061]]></jym>
+//       <ewm><![CDATA[]]></ewm>
+//       <pdfUrl><![CDATA[http://api.scnebula.com/pdf/d/8fadb615edbe93d8]]></pdfUrl>
+//     </returndata>
+//   </body>
+// </business>"
 
+        dump($result);
+        halt(xml2array($result['msg']));
+        
         //return $this->fetch();
     }
 

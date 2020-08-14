@@ -345,6 +345,9 @@ class Rent extends Model
             $where[] = ['is_deal','eq',0];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
 
+            // $where[] = ['d.ban_inst_id','in',config('inst_ids')[3]];
+            // $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,a.house_id,a.tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->select()->toArray();
+
             $HouseModel = new HouseModel;
             $houses = $HouseModel->where([['house_balance','>',0]])->column('house_id,house_balance');
 
