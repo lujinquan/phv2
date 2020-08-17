@@ -171,10 +171,10 @@ class SystemData extends Model
                 case 1: //租金减免
                     $where[] = ['a.house_status','eq',1];
                     $where[] = ['a.house_is_pause','eq',0];
-                    $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',1]])->column('house_id'); //在减免中的不能再次申请
+                    $applyHouseidArr = Db::name('change_cut')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id'); //在减免中的不能再次申请
                     break;
                 case 3: //暂停计租 【待优化】
-                    $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1]])->column('house_id'); //在减免中的不能再次申请
+                    $tempApplyHouseidArr = Db::name('change_pause')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id'); //在减免中的不能再次申请
                     if($tempApplyHouseidArr){
                         $applyHouseidArr = explode(',',implode(',',$tempApplyHouseidArr));
                     }
@@ -183,7 +183,7 @@ class SystemData extends Model
                     break;
                 case 4: //陈欠核销 【待优化】
                     $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
-                    $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1]])->column('house_id');  //在减免中的不能再次申请
+                    $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');  //在减免中的不能再次申请
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
                     break;
@@ -192,16 +192,16 @@ class SystemData extends Model
                     break;
                 case 9: //房屋调整
                     $where[] = ['a.house_status','eq',1];
-                    $applyHouseidArr = Db::name('change_house')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_house')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     break;
                 case 11: //租金追加调整
                     $where[] = ['a.house_status','eq',1];
-                    $applyHouseidArr = Db::name('change_rentadd')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_rentadd')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     break;
                 case 13: //使用权变更
                     $where[] = ['a.house_status','eq',1];
                     //$where[] = ['house_is_pause','eq',0]; //暂停计租的房子也可以使用权变更
-                    $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_use')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     break;
                 case 14: //楼栋调整
                     $where[] = ['a.house_status','eq',1];
@@ -210,23 +210,23 @@ class SystemData extends Model
                     break;
                 case 16: //减免年审
                     $endDate = (date('Y')+1).'01';
-                    $houseids = Db::name('change_cut')->where([['change_status','eq',1],['end_date','eq',$endDate]])->column('house_id');
+                    $houseids = Db::name('change_cut')->where([['change_status','eq',1],['end_date','eq',$endDate],['dtime','eq',0]])->column('house_id');
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
                     $where[] = ['house_is_pause','eq',0];
-                    $applyHouseidArr = Db::name('change_cut_year')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_cut_year')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     break;
                 case 17: //别字更正
                     $where[] = ['a.house_status','eq',1];
                     //$where[] = ['a.house_is_pause','eq',0]; //暂停计租的房子也可以别字更正
-                    $applyHouseidArr = Db::name('change_name')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_name')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     break;
                 case 18: //发租约
                     // $houseids = Db::name('change_cut')->where([['change_status','eq',1]])->column('house_id');
                     // $where['house'][] = ['house_id','in',$houseids];
                     $where[] = ['house_use_id','eq',1];
                     $where[] = ['house_status','eq',1];
-                    $applyHouseidArr = Db::name('change_lease')->where([['change_status','>',1]])->column('house_id');
+                    $applyHouseidArr = Db::name('change_lease')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');
                     //halt($where);
                     break;
                 
