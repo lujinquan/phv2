@@ -505,7 +505,7 @@ class ChangeHouse extends SystemBase
 
             $tableData['tenant_id'] = $finalRow['tenant_id']; 
             $tableData['cuid'] = $finalRow['cuid'];
-            $tableData['order_date'] = date('Ym'); 
+            $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
             $ChangeTableModel = new ChangeTableModel;
             $ChangeTableModel->save($tableData);
         }

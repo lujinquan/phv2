@@ -437,7 +437,7 @@ class ChangeCancel extends SystemBase
                     $tableData[$k]['tenant_id'] = $v['tenant_id'];
                     $tableData[$k]['cuid'] = $finalRow['cuid'];
                     $tableData[$k]['change_cancel_type'] = $finalRow['cancel_type'];  
-                    $tableData[$k]['order_date'] = date('Ym');  
+                    $tableData[$k]['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效  
                 }
                 //halt($finalRow);
                 //注销栋数
@@ -456,7 +456,7 @@ class ChangeCancel extends SystemBase
                 //$tableData[$k+1]['tenant_id'] = $v['tenant_id'];
                 $tableData[$k+1]['cuid'] = $finalRow['cuid']; 
                 $tableData[$k+1]['change_cancel_type'] = $finalRow['cancel_type'];
-                $tableData[$k+1]['order_date'] = date('Ym');
+                $tableData[$k+1]['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
 
                 //如果注销后有多余的数据不管正负，直接生成一个 
 
@@ -525,7 +525,7 @@ class ChangeCancel extends SystemBase
                 $tableData[$k]['change_ban_num'] = 0; //栋数变化
                 $tableData[$k]['tenant_id'] = $v['tenant_id'];
                 $tableData[$k]['cuid'] = $finalRow['cuid']; 
-                $tableData[$k]['order_date'] = date('Ym');  
+                $tableData[$k]['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效 
                 $tableData[$k]['change_cancel_type'] = $finalRow['cancel_type'];
             }
 

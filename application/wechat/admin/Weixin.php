@@ -357,8 +357,28 @@ class Weixin extends Admin
   </body>
 </business>
 EOF;
-        dump($a);
-        //halt(xml2array($result['msg']));
+
+//$file = $_SERVER['DOCUMENT_ROOT'].'/a.xml';
+
+// 解析xml
+$xml = simplexml_load_string($a, null, LIBXML_NOCDATA);
+
+$InvoiceModel = new InvoiceModel;
+$dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
+//halt($dpkj['pdfurl']);
+if(!$InvoiceModel->allowField(true)->create($dpkj)){
+  return $this->error('开票失败');
+}
+return $this->success('开票成功');
+
+// dump($xml);
+// halt($xml->body->returndata->fpdm);
+// $demo = file_get_contents($file);
+// //halt(file_get_contents($file));
+// // $b = "<skr><![CDATA[收款人]]></skr>\n" .
+// // "<fhr><![CDATA[复核人]]></fhr>";
+//         //dump($a);
+//         halt(xml2array($demo));
         
         //return $this->fetch();
     }

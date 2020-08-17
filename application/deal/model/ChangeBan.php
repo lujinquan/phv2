@@ -509,7 +509,7 @@ class ChangeBan extends SystemBase
                     $tableData['tenant_id'] = $houseRow['tenant_id']; 
                     $tableData['change_remark'] = '楼栋调整，调整了楼栋总层数造成房屋规租变化'; 
                     $tableData['cuid'] = $finalRow['cuid'];
-                    $tableData['order_date'] = date('Ym'); 
+                    $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效 
                     $ChangeTableModel = new ChangeTableModel;
                     $ChangeTableModel->save($tableData);
                 }

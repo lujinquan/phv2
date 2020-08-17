@@ -18,6 +18,10 @@ use hisi\Http;
  */
 class Invoice extends Model
 {
+    // 设置模型名称
+    protected $name = 'rent_invoice';
+    // 设置主键
+    protected $pk = 'invoice_id';
     // 接口地址
     protected $url = "http://124.205.255.18:28500/api";
 	// 用户appid
@@ -27,6 +31,14 @@ class Invoice extends Model
     // 对应相应的接口报文
     protected $content;
 
+    // 定义时间戳字段名
+    protected $createTime = 'ctime';
+    // 自动写入时间戳
+    protected $autoWriteTimestamp = true;
+
+    protected $type = [
+        'ban_ctime' => 'timestamp:Y-m-d H:i:s',
+    ];
     protected function initialize()
     {
         parent::initialize();
