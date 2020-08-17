@@ -278,86 +278,87 @@ class Weixin extends Admin
             "</REQUEST_COMMON_FPKJ>";
 
         $InvoiceModel = new InvoiceModel;
-        //$result = json_decode($InvoiceModel->dpkj($content),true);
-        
+        // $result = json_decode($InvoiceModel->dpkj($content),true);
+        // halt($result['msg']);
 
-// 	$a =        "<business id="10008" comment="发票开具">
-//   <body yylxdm="1">
-//     <returncode><![CDATA[0]]></returncode>
-//     <returnmsg><![CDATA[成功]]></returnmsg>
-//     <returndata>
-//       <fpdm><![CDATA[050003521107]]></fpdm>
-//       <fphm><![CDATA[54352895]]></fphm>
-//       <kprq><![CDATA[20200810144709]]></kprq>
-//       <fwqdz><![CDATA[]]></fwqdz>
-//       <fwqdkh><![CDATA[]]></fwqdkh>
-//       <jqbh><![CDATA[499098899194]]></jqbh>
-//       <fplxdm><![CDATA[]]></fplxdm>
-//       <fpcbh><![CDATA[]]></fpcbh>
-//       <kplx><![CDATA[0]]></kplx>
-//       <bbh><![CDATA[]]></bbh>
-//       <tspz><![CDATA[00]]></tspz>
-//       <xhdwsbh><![CDATA[150000000001000]]></xhdwsbh>
-//       <xhdwmc><![CDATA[税控服务器升级版测试用户10]]></xhdwmc>
-//       <xhdwdzdh><![CDATA[北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996]]></xhdwdzdh>
-//       <xhdwyhzh><![CDATA[中信银行 1234567890]]></xhdwyhzh>
-//       <ghdwsbh><![CDATA[91110133745594417B]]></ghdwsbh>
-//       <ghdwmc><![CDATA[测试]]></ghdwmc>
-//       <ghdwdzdh><![CDATA[地址 120]]></ghdwdzdh>
-//       <ghdwyhzh><![CDATA[银行 123456]]></ghdwyhzh>
-//       <bmbbbh><![CDATA[]]></bmbbbh>
-//       <zsfs><![CDATA[0]]></zsfs>
-//       <fyxm count="1">
-//         <group xh="1">
-//           <fphxz><![CDATA[0]]></fphxz>
-//           <spmc><![CDATA[*水冰雪*自来水]]></spmc>
-//           <spsm><![CDATA[]]></spsm>
-//           <ggxh><![CDATA[]]></ggxh>
-//           <dw><![CDATA[]]></dw>
-//           <spsl><![CDATA[2]]></spsl>
-//           <dj><![CDATA[6]]></dj>
-//           <je><![CDATA[12.0]]></je>
-//           <sl><![CDATA[0.0]]></sl>
-//           <se><![CDATA[0.0]]></se>
-//           <hsbz><![CDATA[]]></hsbz>
-//           <spbm><![CDATA[1100301010000000000]]></spbm>
-//           <zxbm><![CDATA[]]></zxbm>
-//           <yhzcbs><![CDATA[0]]></yhzcbs>
-//           <lslbs><![CDATA[]]></lslbs>
-//           <zzstsgl><![CDATA[]]></zzstsgl>
-//         </group>
-//       </fyxm>
-//       <zhsl><![CDATA[]]></zhsl>
-//       <hjje><![CDATA[12.0]]></hjje>
-//       <hjse><![CDATA[0.0]]></hjse>
-//       <jshj><![CDATA[12.0]]></jshj>
-//       <bz><![CDATA[]]></bz>
-//       <skr><![CDATA[收款人]]></skr>
-//       <fhr><![CDATA[复核人]]></fhr>
-//       <kpr><![CDATA[开票人]]></kpr>
-//       <jmbbh><![CDATA[]]></jmbbh>
-//       <zyspmc><![CDATA[]]></zyspmc>
-//       <spsm><![CDATA[]]></spsm>
-//       <qdbz><![CDATA[]]></qdbz>
-//       <ssyf><![CDATA[]]></ssyf>
-//       <kpjh><![CDATA[]]></kpjh>
-//       <tzdbh><![CDATA[]]></tzdbh>
-//       <yfpdm><![CDATA[]]></yfpdm>
-//       <yfphm><![CDATA[]]></yfphm>
-//       <qmcs><![CDATA[]]></qmcs>
-//       <tsbz><![CDATA[]]></tsbz>
-//       <gfkhdh><![CDATA[]]></gfkhdh>
-//       <gfkhyx><![CDATA[']]></gfkhyx>
-//       <skm><![CDATA[]]></skm>
-//       <jym><![CDATA[00207416902920906061]]></jym>
-//       <ewm><![CDATA[]]></ewm>
-//       <pdfUrl><![CDATA[http://api.scnebula.com/pdf/d/8fadb615edbe93d8]]></pdfUrl>
-//     </returndata>
-//   </body>
-// </business>"
-
-        dump($result);
-        halt(xml2array($result['msg']));
+	$a =    <<<EOF
+<business id="10008" comment="发票开具">
+  <body yylxdm="1">
+    <returncode><![CDATA[0]]></returncode>
+    <returnmsg><![CDATA[成功]]></returnmsg>
+    <returndata>
+      <fpdm><![CDATA[050003521107]]></fpdm>
+      <fphm><![CDATA[54352895]]></fphm>
+      <kprq><![CDATA[20200810144709]]></kprq>
+      <fwqdz><![CDATA[]]></fwqdz>
+      <fwqdkh><![CDATA[]]></fwqdkh>
+      <jqbh><![CDATA[499098899194]]></jqbh>
+      <fplxdm><![CDATA[]]></fplxdm>
+      <fpcbh><![CDATA[]]></fpcbh>
+      <kplx><![CDATA[0]]></kplx>
+      <bbh><![CDATA[]]></bbh>
+      <tspz><![CDATA[00]]></tspz>
+      <xhdwsbh><![CDATA[150000000001000]]></xhdwsbh>
+      <xhdwmc><![CDATA[税控服务器升级版测试用户10]]></xhdwmc>
+      <xhdwdzdh><![CDATA[北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996]]></xhdwdzdh>
+      <xhdwyhzh><![CDATA[中信银行 1234567890]]></xhdwyhzh>
+      <ghdwsbh><![CDATA[91110133745594417B]]></ghdwsbh>
+      <ghdwmc><![CDATA[测试]]></ghdwmc>
+      <ghdwdzdh><![CDATA[地址 120]]></ghdwdzdh>
+      <ghdwyhzh><![CDATA[银行 123456]]></ghdwyhzh>
+      <bmbbbh><![CDATA[]]></bmbbbh>
+      <zsfs><![CDATA[0]]></zsfs>
+      <fyxm count="1">
+        <group xh="1">
+          <fphxz><![CDATA[0]]></fphxz>
+          <spmc><![CDATA[*水冰雪*自来水]]></spmc>
+          <spsm><![CDATA[]]></spsm>
+          <ggxh><![CDATA[]]></ggxh>
+          <dw><![CDATA[]]></dw>
+          <spsl><![CDATA[2]]></spsl>
+          <dj><![CDATA[6]]></dj>
+          <je><![CDATA[12.0]]></je>
+          <sl><![CDATA[0.0]]></sl>
+          <se><![CDATA[0.0]]></se>
+          <hsbz><![CDATA[]]></hsbz>
+          <spbm><![CDATA[1100301010000000000]]></spbm>
+          <zxbm><![CDATA[]]></zxbm>
+          <yhzcbs><![CDATA[0]]></yhzcbs>
+          <lslbs><![CDATA[]]></lslbs>
+          <zzstsgl><![CDATA[]]></zzstsgl>
+        </group>
+      </fyxm>
+      <zhsl><![CDATA[]]></zhsl>
+      <hjje><![CDATA[12.0]]></hjje>
+      <hjse><![CDATA[0.0]]></hjse>
+      <jshj><![CDATA[12.0]]></jshj>
+      <bz><![CDATA[]]></bz>
+      <skr><![CDATA[收款人]]></skr>
+      <fhr><![CDATA[复核人]]></fhr>
+      <kpr><![CDATA[开票人]]></kpr>
+      <jmbbh><![CDATA[]]></jmbbh>
+      <zyspmc><![CDATA[]]></zyspmc>
+      <spsm><![CDATA[]]></spsm>
+      <qdbz><![CDATA[]]></qdbz>
+      <ssyf><![CDATA[]]></ssyf>
+      <kpjh><![CDATA[]]></kpjh>
+      <tzdbh><![CDATA[]]></tzdbh>
+      <yfpdm><![CDATA[]]></yfpdm>
+      <yfphm><![CDATA[]]></yfphm>
+      <qmcs><![CDATA[]]></qmcs>
+      <tsbz><![CDATA[]]></tsbz>
+      <gfkhdh><![CDATA[]]></gfkhdh>
+      <gfkhyx><![CDATA[']]></gfkhyx>
+      <skm><![CDATA[]]></skm>
+      <jym><![CDATA[00207416902920906061]]></jym>
+      <ewm><![CDATA[]]></ewm>
+      <pdfUrl><![CDATA[http://api.scnebula.com/pdf/d/8fadb615edbe93d8]]></pdfUrl>
+    </returndata>
+  </body>
+</business>
+EOF;
+        dump($a);
+        //halt(xml2array($result['msg']));
         
         //return $this->fetch();
     }

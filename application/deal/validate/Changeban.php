@@ -44,7 +44,7 @@ class Changeban extends Validate
         if($banStatus != 1){
             $msg = '楼栋状态异常！';
         }
-  		$row = ChangeBanModel::where([['ban_id','eq',$value],['change_status','>',1]])->find();
+  		$row = ChangeBanModel::where([['ban_id','eq',$value],['change_status','>',1],['dtime','eq',0]])->find();
         if($row){
             $msg = '楼栋已在该异动中，请勿重复申请！';
         }

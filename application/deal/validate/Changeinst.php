@@ -13,7 +13,7 @@ namespace app\deal\validate;
 
 use think\Validate;
 use app\house\model\House as HouseModel;
-use app\deal\model\ChangeName as ChangeNameModel;
+use app\deal\model\ChangeInst as ChangeInstModel;
 
 /**
  * 管段调整验证器
@@ -42,7 +42,7 @@ class Changeinst extends Validate
         if($houseStatus != 1){
             $msg = '房屋状态异常！';
         }
-  		$row = ChangeNameModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
+  		$row = ChangeInstModel::where([['house_id','eq',$value],['change_status','>',1],['dtime','eq',0]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }

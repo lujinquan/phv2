@@ -45,7 +45,7 @@ class Changename extends Validate
         if($houseStatus != 1){
             $msg = '房屋状态异常！';
         }
-  		$row = ChangeNameModel::where([['house_id','eq',$value],['change_status','>',1]])->find();
+  		$row = ChangeNameModel::where([['house_id','eq',$value],['change_status','>',1],['dtime','eq',0]])->find();
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
