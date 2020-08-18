@@ -6,6 +6,7 @@ use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\rent\model\Invoice as InvoiceModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\rent\model\RentOrderChild as RentOrderChildModel;
@@ -717,6 +718,8 @@ class Index extends Common
                     $HouseTaiModel->change_type = '';
                     $HouseTaiModel->change_id = '';
                     $HouseTaiModel->save();
+
+                    
                 }
 
                 
@@ -829,7 +832,10 @@ class Index extends Common
                     $HouseTaiModel->save();
                 }
 
-                
+                // 开具电子发票
+                $InvoiceModel = new InvoiceModel;
+                $InvoiceModel->dpkj($row['order_id']);
+
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
                 

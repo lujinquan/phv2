@@ -27,7 +27,7 @@ use app\house\model\FloorPoint as FloorPointModel;
 
 class House extends Admin
 {
-    public function demo(){
+    /*public function demo(){
         // 收欠表中，缺失rent_order_id的记录
         $data = Db::name('rent_recycle')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.rent_order_id','eq',0]])->field('a.*,b.house_number,b.house_pre_rent,b.house_cou_rent,c.ban_owner_id')->select();
 
@@ -61,7 +61,7 @@ class House extends Admin
 
         // //halt($str);
         $res = Db::execute("insert into ".config('database.prefix')."rent_order (rent_order_number,rent_order_date,rent_order_cut,rent_order_pre_rent,rent_order_cou_rent,rent_order_receive,rent_order_paid,house_id,tenant_id,is_deal,pay_way,ptime,ctime) values " . rtrim($str, ','));
-    }
+    }*/
 
     public function index()
     {

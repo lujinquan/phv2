@@ -114,7 +114,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    <a href="{:url('detail')}?id={{ d.id }}" hisi-data="{width: '1200px', height: '400px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+    <a href="{:url('detail')}?id={{ d.invoice_id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
 <script type="text/javascript">
@@ -159,12 +159,9 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                {type: 'checkbox', fixed: 'left', totalRowText: '合计：'}
-                ,{field: 'rent_order_number',hide:false, minWidth: 200, align:'center', title: '订单编号'}
+                
+                {field: 'fpqqlsh',hide:false, minWidth: 200, align:'center', title: '发票流水号'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
-                ,{field: 'rent_order_date', minWidth: 100, align:'center', title: '账单期', templet: function(d) {
-                    return d.rent_order_date.substr(0,4) +'-'+ d.rent_order_date.substr(4,2);
-                }}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
                 }}
@@ -176,20 +173,13 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 100, align:'center', title: '租户姓名'}
-                ,{field: 'rent_order_diff',hide:true, minWidth: 140, align:'center', title: '租差',totalRow: true}
-                ,{field: 'rent_order_pump',hide:true, minWidth: 140, align:'center', title: '泵费',totalRow: true}
-                ,{field: 'rent_order_cut',hide:true, minWidth: 140, align:'center', title: '减免',totalRow: true}
+                ,{field: 'jshj', minWidth: 100, align:'center', title: '价税合计'}
+                ,{field: 'hjje', minWidth: 100, align:'center', title: '合计金额'}
+                ,{field: 'hjse', minWidth: 100, align:'center', title: '合计税额'}
+
                 ,{field: 'house_pre_rent', minWidth: 120, align:'center', title: '规定租金',totalRow: true}
                 ,{field: 'house_cou_rent',hide:true, minWidth: 120, align:'center', title: '计算租金',totalRow: true}
-                ,{field: 'rent_order_receive', minWidth: 120, align:'center', title: '应收租金', totalRow: true}
-                ,{field: 'rent_order_paid', minWidth: 120, align:'center', title: '本次缴纳租金', totalRow: true}
-                // ,{field: 'is_invoice', minWidth: 100, align:'center', title: '发票', templet: function(d) {
-                //     return params.is_invoice[d.is_invoice];
-                // }}
-                ,{field: 'pay_way', minWidth: 100, align:'center', title: '缴纳方式', templet: function(d) {
-                    return params.pay_way[d.pay_way];
-                }}
-                ,{field: 'ptime', minWidth: 180, align:'center', title: '缴纳时间'}
+                ,{field: 'ctime', minWidth: 180, align:'center', title: '开票时间'}
                 ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){

@@ -1,1 +1,267 @@
+
+<div class="j-details-box j-no-border floorWrap layui-form">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>基本信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">支付订单编号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="rent_order_number" value="{$data_info['out_trade_no']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">租户姓名</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_name" value="{$data_info['tenant_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">联系电话</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">身份证号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="tenant_card" value="{$data_info['tenant_card']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">楼栋地址</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="ban_address" value="{$data_info['ban_address']}" disabled="disabled" autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">楼栋产别</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$params['owners'][$data_info['ban_owner_id']]}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">使用性质</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$params['uses'][$data_info['house_use_id']]}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>发票信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">发票流水号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['fpqqlsh']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">开票类型</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value={if condition="$data_info['kplx']"}红字发票{else /}蓝字发票{/if} disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">发票类型</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value={if condition="$data_info['fplx'] == '026'"}增值税电子发票{else /}区块链发票{/if} disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+    <div class="layui-col-md4">
+      <label class="j-form-label">征税方式</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_name" value={if condition="$data_info['zsfs'] == 2"}差额征税{else /}普通征税{/if} disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">收款人</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['skr']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">复核人</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['fhr']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">开票人</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['kpr']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">销售方名称</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['xsf_mc']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">销售方税人识别号</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['xsf_nsrsbh']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">销售方地址、电话</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['xsf_dzdh']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">销售方银行账号</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['xsf_yhzh']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">购买方税人识别号</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['gmf_nsrsbh']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">购买方名称</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['gmf_mc']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">购买方地址、电话</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['gmf_dzdh']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">购买方银行账号</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['gmf_yhzh']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">购买方手机号</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['gmf_sjh']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">购买方电子邮箱</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['gmf_dzyx']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">原发票代码</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['yfp_dm']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">原发票号码</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['yfp_hm']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">价税合计</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['jshj']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">合计金额</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['hjje']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">合计税额</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['hjse']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">扣除额</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['kce']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">备注</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['bz']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">行业类型</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value={if condition="$data_info['hylx']"}其它{else /}商业{/if} disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">商品编码</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['spbm']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">项目名称</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['xmmc']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">税率</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value={if condition="$data_info['sl']"}其它{else /}商业{/if} disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">税额</label> 
+  		<div class="j-input-inline">
+  			<input type="text" name="register_name" value="{$data_info['se']}" disabled="disabled" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">项目单价</label> 
+  	  <div class="j-input-inline">
+  		<input type="text" name="register_bodies" value="{$data_info['xmdj']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  	<div class="layui-col-md4">
+  	  <label class="j-form-label">项目数量</label> 
+  	  <div class="j-input-inline">
+  	  	<input type="text" name="register_bodies" value="{$data_info['xmsl']}" disabled="disabled"  autocomplete="off" class="layui-input">
+  	  </div>
+  	</div>
+  </div>
+</div>
 {include file="system@block/layui" /}
