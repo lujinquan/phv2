@@ -109,6 +109,7 @@ body{background-color:#f5f5f5;margin:0;padding:0;}
 .page-list-form.j-padding-button{ padding-bottom: 20px;}
 .layui-nav-child dd:hover {background-color:#f2f2f2;color:#fff}
 .input-sort {height:24px;line-height:24px;width:40px;padding:0;text-align:center;color:#666}
+.input-sort-lucas {height:24px;line-height:24px;padding:0;text-align:center;color:#666}
 .module-list-info {display:block;overflow:hidden}
 .module-list-info img {float:left;margin-right:10px;border-radius:10px}
 .module-list-info i {float:left;margin-right:10px;font-size:80px;line-height:82px;text-align:center;overflow:hidden;color:#2a95de}
