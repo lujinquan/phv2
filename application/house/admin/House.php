@@ -317,6 +317,20 @@ class House extends Admin
         return $this->fetch();
     }
 
+    public function update()
+    {
+        $id         = $this->request->param('id');
+        $house_advance_rent      = $this->request->param('val');
+        if($house_advance_rent < 0){
+            return $this->success('金额不能为负数');
+        }
+        if(HouseModel::where([['house_id','eq',$id]])->update(['house_advance_rent'=>$house_advance_rent]) !== false){
+            return $this->success('修改成功');
+        }else{
+            return $this->error('修改失败');
+        }
+    }
+
     public function edit()
     {
         if ($this->request->isPost()) {
