@@ -2098,27 +2098,24 @@ class Weixin extends Common
 
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         // 去掉暂停计租的房子+已注销的房子
-        $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
+        $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_use_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
-            //,['tenant_id','eq',$v['tenant_id']]
             $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
             if($row['rent_order_unpaids'] == 0){
                 unset($result['data']['house'][$k]);
                 continue;
             }
-            // dump($v);
-            // dump($row);
             $v['is_auth'] = 0;
+            $v['house_use_id'] = $v['house_use_id'];
             if(in_array($v['house_id'], $is_auth_houses)){
                 $yue += $v['house_balance'];
                 $v['is_auth'] = 1;
             }
-            
             $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
             $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
-            //$value['id'] = $key + 1;
         }
+        $result['data']['house'] = array_values($result['data']['house']);
         $result['data']['yue'] = $yue;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';

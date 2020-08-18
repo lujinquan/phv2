@@ -28,7 +28,7 @@ class House extends SystemBase
 
     public function ban()
     {
-        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_inst_pid,ban_address,ban_units,ban_floors,ban_temp_floors,ban_struct_id,ban_damage_id,ban_is_levator');
+        return $this->belongsTo('ban', 'ban_id', 'ban_id')->bind('ban_owner_id,ban_number,ban_inst_id,ban_inst_pid,ban_address,ban_units,ban_floors,ban_temp_floors,ban_struct_id,ban_damage_id,ban_gpsx,ban_gpsy,ban_is_levator');
     }
 
     public function tenant()
