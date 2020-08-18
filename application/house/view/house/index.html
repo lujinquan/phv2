@@ -189,7 +189,7 @@
     
 </script>
 <script type="text/html" title="排序模板" id="sortTpl">
-    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/^([A-Za-z]|[\u4e00-\u9fa5])*$/g,'')" value="{{ d.house_advance_rent }}" data-value="{{ d.house_id }}" data-href="{:url('update')}?id={{ d.house_id }}">
+    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/([A-Za-z]|[\u4e00-\u9fa5])*$/g,'')" value="{{ d.house_advance_rent }}" data-value="{{ d.house_id }}" data-href="{:url('update')}?id={{ d.house_id }}">
 </script>
 </div>
 <script type="text/javascript">
@@ -248,7 +248,7 @@
 						return params.uses[d.house_use_id];
 					}}
 					, {field: 'house_dtime',hide: isDtimeHide,width: 120,align:'center',title: '注销时间'}
-					, {field: 'house_advance_rent',hide: false,width: 180,align:'center',title: '房管员垫付金额' , templet: '#sortTpl'}
+					, {field: 'house_advance_rent',hide: false,width: 180,align:'center',title: '房管员垫付金额' , templet: '#sortTpl',totalRow: true}
 					, {field: 'house_pre_rent',width: 120,align:'center',title: '规定租金',totalRow: true}
 					, {field: 'house_cou_rent',width: 120,align:'center',title: '计算租金',totalRow: true, templet: function(d) {
 						if(parseFloat(d.house_pre_rent) != parseFloat(d.house_cou_rent)){
@@ -289,6 +289,7 @@
 				$(".layui-table-total td[data-field='house_cou_rent']").find("div").text(res.total_house_cou_rent);
 				$(".layui-table-total td[data-field='house_diff_rent']").find("div").text(res.total_house_diff_rent);
 				$(".layui-table-total td[data-field='house_pump_rent']").find("div").text(res.total_house_pump_rent);
+				$(".layui-table-total td[data-field='house_advance_rent']").find("div").text(res.total_house_advance_rent);
               //导出转换后台数据
               var exportData=res.data;
               for(i in exportData){
