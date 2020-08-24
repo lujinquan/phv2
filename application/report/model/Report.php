@@ -126,7 +126,7 @@ class Report extends Model
         $separate = substr($month,0,4).'00';
         $where = [];
         //$where[] = ['a.rent_order_date','eq',$month];
-        //$where[] = ['a.is_deal','eq',1];
+        $where[] = ['a.rent_order_status','eq',1];
         if($useid != 0){
             $where[] = ['b.house_use_id','in',explode(',',$useid)];
         }
@@ -140,7 +140,7 @@ class Report extends Model
         $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,a.ptime,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];
         $baseData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
-        //halt($baseData);
+        //halt($where);
 //halt(Db::name('rent_order_child')->getLastSql());
         // $houses = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.house_id,a.house_number,c.tenant_name')->select();
         // foreach ($houses as $b) {
@@ -180,17 +180,20 @@ class Report extends Model
             //dump($month);dump($separate);dump($b['rent_order_date']);exit;
             if($b['rent_order_date'] == $month){ // 统计本月欠租
                 $data[$b['house_id']]['curMonthPaidRent'] = $b['rent_order_paid'];
-                $total_cur_month_paid_rent += $b['rent_order_paid'];
-            }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $month){ // 统计以前月欠租
-                
-                $data[$b['house_id']]['beforeMonthPaidRent'] += $b['rent_order_paid'];
-                $total_before_month_paid_rent += $b['rent_order_paid'];
+                $total_cur_month_paid_rent = bcaddMerge([$total_cur_month_paid_rent,$b['rent_order_paid']]);
+                $data[$b['house_id']]['total'] = bcaddMerge([$data[$b['house_id']]['total'], $b['rent_order_paid']]);
+            }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $month ){ // 统计以前月欠租
+                //dump($b['rent_order_date']);halt(date('Ym',$b['ptime']));
+                $data[$b['house_id']]['beforeMonthPaidRent'] = bcaddMerge([$data[$b['house_id']]['beforeMonthPaidRent'], $b['rent_order_paid']]);
+                $total_before_month_paid_rent  = bcaddMerge([$total_before_month_paid_rent, $b['rent_order_paid']]);
+                $data[$b['house_id']]['total'] = bcaddMerge([$data[$b['house_id']]['total'], $b['rent_order_paid']]);
             }else if($b['rent_order_date'] < $separate){ //统计以前年欠租
-                $data[$b['house_id']]['beforeYearPaidRent'] += $b['rent_order_paid'];
-                $total_before_year_paid_rent += $b['rent_order_paid'];
+                $data[$b['house_id']]['beforeYearPaidRent'] = bcaddMerge([$data[$b['house_id']]['beforeYearPaidRent'], $b['rent_order_paid']]);
+                $total_before_year_paid_rent = bcaddMerge([$total_before_year_paid_rent, $b['rent_order_paid']]);
+                $data[$b['house_id']]['total'] = bcaddMerge([$data[$b['house_id']]['total'], $b['rent_order_paid']]);
             }
             //halt($data[$b['house_id']]);
-            $data[$b['house_id']]['total'] += $b['rent_order_paid'];
+            
             $data[$b['house_id']]['remark'] = '';
         }
 
@@ -228,6 +231,8 @@ class Report extends Model
         $baseData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('house_id')->where($where)->select();
 
         $kouData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where(['pay_way'=>2])->column('a.house_id,sum(a.pay_rent) as pay_rent');
+
+        $payData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where([['pay_way','neq',2]])->column('a.house_id,sum(a.pay_rent) as pay_rent');
         //halt($kouData);
         // 合计上期结转余额
         $total_last_yue = 0;
@@ -242,7 +247,7 @@ class Report extends Model
             $data[$b['house_id']]['kou_rent'] = isset($kouData[$b['house_id']])?abs($kouData[$b['house_id']]):0;
             $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
             $data[$b['house_id']]['house_balance'] = $b['house_balance'];
-            $data[$b['house_id']]['pay_rent'] = $b['pay_rent'];
+            $data[$b['house_id']]['pay_rent'] = isset($payData[$b['house_id']])?abs($payData[$b['house_id']]):0;
             $data[$b['house_id']]['number'] = $b['house_number'];
             $data[$b['house_id']]['address'] = $b['ban_address'];
             $data[$b['house_id']]['tenant'] = $b['tenant_name'];

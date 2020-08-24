@@ -369,7 +369,7 @@ class Rent extends Admin
                 $data['total_cur_month_paid_rent'] = $result['total_cur_month_paid_rent'];
                 $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
                 $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
-                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']],2);
             }
 
             $data['count'] = count($data['data']);
