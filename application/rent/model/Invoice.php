@@ -269,7 +269,8 @@ class Invoice extends Model
             $dpkj['fhr'] = '张润'; // 复核人
             $dpkj['kpr'] = '冯超'; // 开票人
         }
-
+        $dpkj['house_id'] = $RentOrderRow['house_id'];
+        $dpkj['tenant_id'] = $RentOrderRow['tenant_id'];
         $dpkj['gmf_mc'] = $RentOrderRow['tenant_name']; // 购买方名称
         $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address']. ' ' .$RentOrderRow['tenant_tel'];
         $dpkj['skr'] = $SystemUserRow['nick']; // 收款人

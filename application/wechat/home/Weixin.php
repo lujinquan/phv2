@@ -848,6 +848,8 @@ class Weixin extends Common
             $ptime = input('ptime');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
+            $gpsx = input('param.gpsx', 113.334228);
+            $gpsy = input('param.gpsy', 31.560371);
 
             $insts = config('inst_ids');
             
@@ -910,15 +912,30 @@ class Weixin extends Common
 
             }else{ //如果是代缴，按照房屋来排列
                 $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
-                $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->limit($limit)->select();
+                $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
+                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->select();
+
+                $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
+
+                $distances = array();
+
+                foreach ($ban_arr as &$ban) {
+                    // 计算距离
+                    $ban['distance'] = get_distance($gpsy,$gpsx,$ban['ban_gpsy'],$ban['ban_gpsx']);
+                }
+
+                
+                // foreach ($users as $user) {
+                //   $distances[] = $user['age'];
+                // }
+                // array_multisort($ages, SORT_ASC, $users);
+
                 $result['data'] = [];
                 foreach ($temps as $v) { 
                     $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                     $v['house_use_id'] = $params['uses'][$v['house_use_id']];
                     $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-                    
-                   
+                    $v['distance'] = $ban_arr[$v['ban_id']]['distance'];
                     $result['data'][] = $v;
                 }
                 $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
@@ -1244,6 +1261,7 @@ class Weixin extends Common
     }
 
     /**
+     * 房管员版
      * 房屋列表（场景：管理员点击业务的“房屋档案”）
      * =====================================
      * @author  Lucas 
@@ -1485,6 +1503,58 @@ class Weixin extends Common
         return json($result); 
 
         
+    }
+
+    /**
+     * 缴费，可以缴纳部分（迭代2.0.3）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-07-02 14:10:46
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_pay()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_pay';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+
+
+
+        $rent_order_ids = trim(input('rent_order_ids')); //缴费的ids
+        $pay_rent = trim(input('pay_rent')); //缴费的金额
+        $house_id = trim(input('house_id')); //缴费的房屋
+
+        if($rent_order_ids){ // 方式：收欠，以订单为单位
+            $RentModel = new RentModel;
+            $RentModel->whole_orders_to_pay(explode(',',$rent_order_ids),$row['id']); 
+        }else{ // 方式：缴费，缴费金额
+            $RentModel = new RentModel; 
+            $RentModel->pay_for_rent($house_id,$pay_rent,$row['id']);
+        }
+        
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+        return json($result);    
     }
 
     /**
