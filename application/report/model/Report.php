@@ -226,6 +226,9 @@ class Report extends Model
         $fields = 'a.house_id,b.house_number,b.house_balance,sum(a.pay_rent) as pay_rent,a.ctime,b.house_use_id,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];
         $baseData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('house_id')->where($where)->select();
+
+        $kouData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where(['pay_way'=>2])->column('a.house_id,sum(a.pay_rent) as pay_rent');
+        //halt($kouData);
         // 合计上期结转余额
         $total_last_yue = 0;
         // 合计本期预缴
@@ -236,7 +239,7 @@ class Report extends Model
         $total_yue = 0;
         foreach($baseData as $b){ 
             $data[$b['house_id']]['last_yue'] = 0;
-            $data[$b['house_id']]['kou_rent'] = 0;
+            $data[$b['house_id']]['kou_rent'] = isset($kouData[$b['house_id']])?abs($kouData[$b['house_id']]):0;
             $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
             $data[$b['house_id']]['house_balance'] = $b['house_balance'];
             $data[$b['house_id']]['pay_rent'] = $b['pay_rent'];

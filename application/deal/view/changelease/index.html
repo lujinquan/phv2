@@ -114,10 +114,15 @@
 		{if condition="in_array(337,$auths) || $Think.ADMIN_ROLE == 1"}
 		<a href="{:url('unpass')}?id={{ d.id }}" hisi-data="{pop: true, width: '500px', height: '500px',refresh: 1}" title="不通过" class="layui-btn layui-btn-xs layui-btn-danger j-iframe-pop">不通过</a>
 		{/if}
+		{if condition="$Think.ADMIN_ROLE != 4"}
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
+		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
+		{/if}
 		{{#  } else { }}
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
 		<button class="layui-btn layui-btn-xs layui-btn-disabled">删除</button>
 		{{#  } }}
+
 		<a href="{:url('detail')}?id={{ d.id }}" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
     </script>
 </div>
