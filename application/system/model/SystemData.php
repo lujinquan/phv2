@@ -260,7 +260,7 @@ class SystemData extends Model
       //halt($where);  
         foreach ($temps as $k => &$v) {
             
-            $unpaids = Db::name('rent_order_child')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
+            $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; // 正常的
             if($unpaids){ 
                 if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4 && $queryWhere['change_type'] != 11){
