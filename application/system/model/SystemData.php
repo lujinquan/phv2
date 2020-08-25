@@ -8,6 +8,7 @@ use think\Model;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\House as HouseModel;
 use app\rent\model\Rent as RentModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\house\model\Ban as BanModel;
 
 /**
@@ -182,7 +183,7 @@ class SystemData extends Model
                     $where[] = ['house_is_pause','eq',0];
                     break;
                 case 4: //陈欠核销 【待优化】
-                    $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')]])->group('house_id')->column('house_id');
+                    $houseids = RentOrderChildModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['rent_order_status','eq',1]])->group('house_id')->column('house_id');
                     $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');  //在减免中的不能再次申请
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];
@@ -259,7 +260,7 @@ class SystemData extends Model
       //halt($where);  
         foreach ($temps as $k => &$v) {
             
-            $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
+            $unpaids = Db::name('rent_order_child')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; // 正常的
             if($unpaids){ 
                 if(isset($queryWhere['change_type']) && $queryWhere['change_type'] != 4 && $queryWhere['change_type'] != 11){
