@@ -14,6 +14,7 @@ use app\common\model\Cparam as ParamModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
 use app\deal\model\ChangeRecord as ChangeRecordModel;
+use app\deal\model\ChangeLease as ChangeLeaseModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
 
@@ -381,7 +382,22 @@ class ChangeUse extends SystemBase
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
         }
-        // 5、检查微信会员是否绑定当前房屋
+        $szno = HouseModel::where([['house_id','eq',$finalRow['house_id']]])->value('house_szno');
+        
+        if ($finalRow['is_create_lease']) {
+            // 5、自动生成租约异动
+            $ChangeLeaseModel = new ChangeLeaseModel;
+            $changeleaseData = [];
+            $changeleaseData['ban_id'] = $finalRow['ban_id'];
+            $changeleaseData['house_id'] = $finalRow['house_id'];
+            $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
+            $changeleaseData['cuid'] = $finalRow['cuid'];
+            $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
+            $changeleaseData['szno'] = $szno;
+            $ChangeLeaseModel->auto_create_changelease($changeleaseData);
+        }
+        
+        // 6、检查微信会员是否绑定当前房屋
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['tenant_id','eq',$finalRow['old_tenant_id']]])->field('member_id')->find();
         $new_member_info = $WeixinMemberModel->where([['tenant_id','eq',$finalRow['new_tenant_id']]])->field('member_id')->find();
