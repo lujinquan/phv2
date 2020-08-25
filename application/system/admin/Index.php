@@ -46,7 +46,7 @@ class Index extends Admin
             $getData = $this->request->post();
             $systemNotice = new SystemNotice;
             $where = $systemNotice->checkWhere($getData);
-            $data['data'] = $systemNotice->field('id,title,type,content,cuid,reads,create_time')->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
+            $data['data'] = $systemNotice->field('id,title,type,content,cuid,reads,sort,create_time')->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
             $data['count'] = $systemNotice->where($where)->count('id');
             $data['code'] = 0;
             $data['msg'] = '';
