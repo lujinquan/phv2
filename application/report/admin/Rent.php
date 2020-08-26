@@ -475,21 +475,22 @@ class Rent extends Admin
                 $ReportModel = new ReportModel;
                 $temps = $ReportModel->getPrePaidRent($curMonth);           
             }
+            //halt($temps);
             $params = ParamModel::getCparams();
-            $ownerid = input('param.owner_id'); //默认查询市属
-            $instid = input('param.inst_id',INST); //默认查询当前机构
-            $useid = input('param.use_id'); //默认查询住宅
-            if($ownerid){
-                $owners = explode(',',$ownerid);
-            }else{
-                $owners = [1,2,3,5,6,7];
-            }
+            // $ownerid = input('param.owner_id'); //默认查询市属
+            // $instid = input('param.inst_id',INST); //默认查询当前机构
+            // $useid = input('param.use_id'); //默认查询住宅
+            // if($ownerid){
+            //     $owners = explode(',',$ownerid);
+            // }else{
+            //     $owners = [1,2,3,5,6,7];
+            // }
 
-            if($useid){
-                $uses = explode(',',$useid);
-            }else{
-                $uses = [1,2,3];
-            }
+            // if($useid){
+            //     $uses = explode(',',$useid);
+            // }else{
+            //     $uses = [1,2,3];
+            // }
             //dump($owners);halt($uses);
             // 合计上期结转余额
             $total_last_yue = 0;
@@ -500,15 +501,15 @@ class Rent extends Admin
             // 合计本月余额
             $total_yue = 0;
             foreach ($temps as $k => &$v) {
-                if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
-                    $v['use'] = $params['uses'][$v['use']];
+                // if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
+                    //$v['use'] = $params['uses'][$v['use']];
                     $total_last_yue = bcaddMerge([$total_last_yue,$v['last_yue']]);
                     $total_pay_rent = bcaddMerge([$total_pay_rent,$v['pay_rent']]);
                     $total_kou_rent = bcaddMerge([$total_kou_rent,$v['kou_rent']]);
                     $total_yue = bcaddMerge([$total_yue,$v['house_balance']]);
-                }else{
-                    unset($temps[$k]);
-                }
+                // }else{
+                //     unset($temps[$k]);
+                // }
                 
             }
             $data = [];
