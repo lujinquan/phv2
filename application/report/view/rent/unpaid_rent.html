@@ -7,7 +7,7 @@
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
-	      <form class="layui-form layui-form-pane" id="report-form">
+	      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md6  fl">
 	            {if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:140px;">
@@ -42,7 +42,7 @@
 	        <div class="j-search-fr layui-col-md6 fr">
 	          <div class="layui-input-inline fr">
 				<button type="reset" class="layui-btn j-btn-reset">重置</button>
-				<button type="button" class="layui-btn"  id="button_search" lay-submit lay-filter="formDemo">
+				<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
 				    <i class="layui-icon">&#xe615;</i>
 				    搜索
 				</button>
@@ -69,44 +69,7 @@
 				  <li><div class="time j-bold-size"></div></li>
 				  <li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
 			  </ul> -->
-			  <table class="layui-table" id="PropertyForm" style="position: relative;">
-			          <!-- 完损等级分 -->
-					  <thead style="background-color: #f2f2f2;position: absolute;top: 0px;width: 100%;display: inherit;">
-						 <tr>
-						 	  <th rowspan="2" colspan="1" class="j-bold-size" style="width: 10%;">房屋编号</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="width: 10%;">地址</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="width: 10%;">户名</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="width: 10%;">使用性质</th>
-						       <th rowspan="1" colspan="4" class="j-bold-size" style="width: 50%;">房屋欠租情况</th>
-						       <th rowspan="2" colspan="1" class="j-bold-size" style="width: 10%;">备注</th>
-							   <th rowspan="2" colspan="1" class="j-bold-sizes" style="padding-right:8px!important;box-sizing: border-box;"></th>
-						     </tr>
-						     <tr>
-						       <td rowspan="1" colspan="1" style="width: 10%;">本月份</td>
-						       <td rowspan="1" colspan="1" style="width: 10%;">以前月份</td>
-						       <td rowspan="1" colspan="1" style="width: 10%;">以前年度</td>
-						       <td rowspan="1" colspan="1" style="width: 20%;">合计</td>
-						     </tr>  
-					  </thead>
-			          <tbody id="Tbody" class="j-PropertyForm" style="width: 100%; display: table-caption;overflow-y: auto;max-height:400px;margin-top:75px ;">
-			             
-			          </tbody>
-					  <tfoot id="Statistics">
-						<tr>
-							<td style="width: 10%;">统计</td>
-							<td id="j-heji" style="width: 10%;">&nbsp;</td>
-							<td style="width: 10%;">&nbsp;</td>
-							<td style="width: 10%;">&nbsp;</td>
-							<td id="j-month" style="width: 10%;"></td>
-							<td id="j-previous-months" style="width: 10%;"></td>
-							<td id="j-previous-year" style="width: 10%;"></td>
-							<td id="j-sum" style="width: 20%;"></td>
-							<td style="width: 10%;">&nbsp;</td>
-							<td class="j-bold-sizes" style="padding-right:8px!important;box-sizing: border-box;"></td>
-							
-						</tr>   
-					  </tfoot>
-			  </table>
+			  <table id="dataTable" lay-filter='dataTable'></table>
 		  </div>
 	  </div>
 	   <!--endprint1-->
@@ -121,54 +84,46 @@
 			,element = layui.element
 			,table = layui.table
 			,formSelects = layui.formSelects;
-		$("#button_search").click(function(){
-			var queryWhere = $('#report-form').serialize();
-			//console.log('生成报表后查询的条件：',queryWhere);
-
-			// var inst = $("select[name='inst_id']").val();
-			// var owner = $("select[name='owner_id']").val();
-			// var use = $("select[name='use_id']").val();
-			// var month = $("input[name='query_month']").val();
-			$("#j-month").text();
-			$("#j-previous-months").text();	
-			$("#j-previous-year").text();
-			$("#j-sum").text();
-			$.ajax({
-				type:"post",// 请求方式
-				url:"{:url('rent/unpaidRent')}",
-				async:true,// 同步异步
-				dataType:"json",
-				//data :{'inst_id':inst,'owner_id':owner,'use_id':use,'query_month':month},//这里是前台传到后台的数据
-				data : queryWhere,//这里是前台传到后台的数据
-			    //回调函数
-				success:function(jsondata){
-                    console.log("打印搜索数据:",jsondata);
-					var tableStr = ``;
-
-					var data = jsondata.data;//由JSON字符串转换为JSON对象
+			table.render({
+				elem: '#dataTable'
+				,id: 'dataTable'
+				// ,height: 330
+				,toolbar: true
+				,defaultToolbar: [/*'filter','exports','print'*/]//设置右边筛选，导出，打印显示
+				,url: '{:url('rent/unpaidRent')}' //数据接口
+				,totalRow: true
+				,page: false //开启分页
+				,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
+				,limit: 10
+				,text: {
+					none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+				},
+				cols: [[ //表头
+					{field: 'number', width: '10%', rowspan: "2", align:'center', title: '房屋编号',totalRowText: '统计：'}
+					,{field: 'address',width:'10%',rowspan: "2",align:'center', title: '地址'}
+					,{field: 'tenant',width:'10%',rowspan: "2",align:'center', title: '户名'}
+					,{field: 'use', width: '10%',rowspan: "2", align:'center', title: '使用性质'}
+					,{width: '50%',colspan:"4", align:'center',title:'房屋欠租情况'}
+					,{field:'remark', title: '备注',width: '10%',rowspan: "2",align:'center',fixed:'right'}
+				],[
+					{field: 'curMonthUnpaidRent', width:'12.5%', align:'center', title: '本月份'}
+				    ,{field: 'beforeMonthUnpaidRent', width:'12.5%', align:'center', title: '以前月份'}
+					,{field: 'beforeYearUnpaidRent', width:'12.5%', align:'center', title: '以前年度'}
+					,{field: 'total', width:'12.5%', align:'center', title: '合计'}
+				]]
+				,done:function(res,curr,count){
+					console.log("欠租明细值：",res);
 					var k = 0;
-					for(var i in data) {
-						tableStr += "<tr><td style='width: 10%;'>" + data[i].number + "</td><td style='width: 10%;'>" + data[i].address + "</td><td style='width: 10%;'>" + data[i].tenant + "</td><td style='width: 10%;'>" + data[i].use + "</td><td style='width: 10%;'>"+ data[i].curMonthUnpaidRent + "</td><td style='width: 10%;'>" +data[i].beforeMonthUnpaidRent+ "</td><td style='width: 10%;'>" +data[i].beforeYearUnpaidRent+ "</td><td style='width: 20%;'>" +data[i].total+ "</td><td style='width: 10%;'>" + data[i].remark+"</td></tr>";
+					for(var i in res.data) {
 						k++;
 					}
-					$('#j-heji').text('总数：'+k+'条');
-					if(k>11){
-						$(".j-bold-sizes").show();
-					}
-					else{
-						$(".j-bold-sizes").hide();
-					}
-					//console.log(tableStr);
-					$('#Tbody').html(tableStr);
-					
-					$("#j-month").text(jsondata.total_cur_month_unpaid_rent);
-					$("#j-previous-months").text(jsondata.total_before_month_unpaid_rent);	
-					$("#j-previous-year").text(jsondata.total_before_year_unpaid_rent);
-					$("#j-sum").text(jsondata.total_unpaid_rent);
-					
+					$(".layui-table-total td[data-field='curMonthUnpaidRent']").find("div").text(res.total_cur_month_unpaid_rent);
+					$(".layui-table-total td[data-field='beforeMonthUnpaidRent']").find("div").text(res.total_before_month_unpaid_rent);
+					$(".layui-table-total td[data-field='beforeYearUnpaidRent']").find("div").text(res.total_before_year_unpaid_rent);
+					$(".layui-table-total td[data-field='total']").find("div").text(res.total_unpaid_rent);
+					$(".layui-table-total td[data-field='address']").find("div").text('总数：'+k+'条');
 				}
-			})
-		});
+			});
 		$('#button_create').click(function(){
 			var that = $(this);
 			that.prop('disabled', true);
@@ -180,7 +135,7 @@
                 	that.prop('disabled', false);
 					that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成本月报表');	
 
-                	var queryWhere = $('#report-form').serialize();
+                	var queryWhere = $('#hisi-table-search').serialize();
 					console.log('生成报表后查询的条件：',queryWhere);
                 	$.ajax({
 						type:"post",// 请求方式
@@ -190,15 +145,17 @@
 						data :queryWhere,
 					    // 回调函数
 						success:function(result){
-							var data = JSON.parse(result).data;//由JSON字符串转换为JSON对象
+							var data = result.data;//由JSON字符串转换为JSON对象
 							console.log('生成报表后查询成功！');
 							if(data.length==0)
 							{
-								$('tbody').html("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
+								//$('tbody').html("<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div>");
 							}
 							else{
-								var trData = datajson(data);
-								$('tbody').html(trData);
+								var trData = data;
+								table.reload('dataTable', {
+								})
+								//$('tbody').html(trData);
 							}
 			                
 							//将值为0.00的替换为空
@@ -222,52 +179,6 @@
                 
             });
 		})
-		// 写入数据
-		$.ajax({
-			type:"post",// 请求方式
-			url:"{:url('rent/unpaidRent')}",
-			async:true,// 同步异步
-			dataType:"json",
-			//data :{'inst_id':inst,'owner_id':owner,'query_month':month},//这里是前台传到后台的数据
-		    //回调函数
-			success:function(jsondata){
-				console.log("欠租明细数据:",jsondata);
-				var data = jsondata.data;//由JSON字符串转换为JSON对象
-
-				var str = ``;
-				var k = 0;
-				for(var i in data) {
-					//console.log(data[i].address);
-					// tableStr += "<tr>\
-					// 				<td rowspan='1' colspan='1'>1</td>\
-					// 				<td rowspan='1' colspan='1'>2</td>\
-					// 				<td rowspan='1' colspan='1'>3</td>\
-					// 				<td rowspan='1' colspan='1'>4</td>\
-					// 				<td rowspan='1' colspan='1'>5</td>\
-					// 				<td rowspan='1' colspan='1'>6</td>\
-					// 				<td rowspan='1' colspan='1'>7</td>\
-					// 				<td rowspan='1' colspan='1'>8</td>\
-					// 			</tr>";
-					str += "<tr><td style='width: 10%;'>" + data[i].number + "</td><td style='width: 10%;'>" + data[i].address + "</td><td style='width: 10%;'>" + data[i].tenant + "</td><td style='width: 10%;'>" + data[i].use + "</td><td style='width: 10%;'>"+ data[i].curMonthUnpaidRent + "</td><td style='width: 10%;'>" + data[i].beforeMonthUnpaidRent + "</td><td style='width: 10%;'>" +data[i].beforeYearUnpaidRent+ "</td><td style='width: 20%;'>" +data[i].total+ "</td><td style='width: 10%;'>" + data[i].remark+"</td></tr>";
-					k++;
-				}
-				
-				$('#j-heji').text('总数：'+k+'条');
-			    if(k>11){
-			    	$(".j-bold-sizes").show();
-			    }
-			    else{
-			    	$(".j-bold-sizes").hide();
-			    }
-				$('#Tbody').html(str);
-				$("#j-month").text(jsondata.total_cur_month_unpaid_rent);
-				$("#j-previous-months").text(jsondata.total_before_month_unpaid_rent);	
-				$("#j-previous-year").text(jsondata.total_before_year_unpaid_rent);
-				$("#j-sum").text(jsondata.total_unpaid_rent);
-			}
-		})
-        
-
         //年选择器
         laydate.render({
             elem: '#timeYear'
@@ -284,7 +195,7 @@
         });
 
         $('#button_prints').click(function(){
-        	var queryWhere = $('#report-form').serialize();
+        	var queryWhere = $('#hisi-table-search').serialize();
 			console.log('导出的条件：',queryWhere);
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({

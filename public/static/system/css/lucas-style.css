@@ -401,10 +401,11 @@ opacity: .8color: #333;}
 .j-news-details h2{color: #141414; font:12px/31px '';  margin-bottom: 5px;}
 .j-news-details a{ color: #0084FF;}
 .j-news-details .j-content-size{ line-height: 24px;}
-.j-news-details .j-content-size img{max-width: 100%;height: auto;/*margin: 0 auto;*/display: block;}
+.j-news-details .j-content-size img{max-width: 100%;height: auto;margin: 0 auto;display: block;text-align: center;}
 /*------------------ 站内信 E ----------------*/
 /*------------------ 公告 S ----------------*/
-.j-index-notice{background: #fff;border-radius: 4px;padding: 15px;}
+.layui-table tr.on td{font-size: 15px; font-weight: bold;}
+.j-index-notice{background: #fff;border-radius: 4px;padding:15px;}
 .j-notice-details{ padding: 10px;}
 .j-notice-details .j-title{position: relative;}
 .j-notice-details .j-title .layui-btn{ position: absolute; right: 0; top:50%; margin-top: -19px;}
@@ -435,9 +436,9 @@ opacity: .8color: #333;}
 /* 时间控件选中样式 */
 .layui-laydate .layui-this{ background: #2E77EF!important;}
 /* 房屋报表 S */
-/* .j-report-table{ max-height: 350px;overflow-y: auto;} */
-#PropertyForm{width: 100%;/*table-layout:fixed;*/}
-.j-PropertyForm td{min-width: 149px;}
+/* .j-report-table{ max-height: 350px;overflow-y: auto;}
+#PropertyForm{width: 100%;table-layout:fixed;}
+.j-PropertyForm td{min-width: 149px;} */
 
 /* #PropertyForm td{word-break: break-all; word-wrap:break-word;line-height: 18px!important;} */
 /* .j-bold-size.j-width{width: 60px;} */

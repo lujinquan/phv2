@@ -126,7 +126,7 @@
 						</form>
 					</div>
 				  </div>
-				  <table id="dataTable" class="layui-table" lay-filter='dataTable'></table>
+				  <table id="dataTable" class="layui-table j-list" lay-filter='dataTable'></table>
 			  </div>
 			</div>
 		</div>
@@ -407,14 +407,21 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-				{field: 'title', maxwidth:200, title: '标题'}
+			    {field: 'sort', maxwidth:80, hide: true,title: '排序'}
+				,{field: 'title', maxwidth:200, title: '标题'}
                 ,{field: 'content',maxwidth: 240, hide: true ,title: '内容'}
                 ,{field: 'reads', width: 240, hide: true ,title: '阅读记录'}
                 ,{field: 'cuid', width: 240, hide: true ,title: '创建人'}
                 ,{field: 'create_time', maxwidth: 180, title: '创建时间'}
             ]]
             ,done:function(res,curr,count){
-               
+               // 根据类型标注颜色
+               var result = res.data;
+               for (var i = 0; i < result.length; i++) {
+				if(parseInt(result[i].sort) == 1){
+					$("[lay-id='dataTable'] tr[data-index="+i+"]").addClass("on");
+				}
+               }
             }
         })
         table.on('row(dataTable)', function(obj){
@@ -422,9 +429,9 @@
 		  	layer.open({
 			  title: '公告'
 			  ,offset: 'auto'
-			  ,area: ['70%', '60%']
+			  ,area: ['50%', '60%']
 			  , btn:false
-			  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>'+ obj.data.title +'</h1><h2>'+ obj.data.create_time +'</h2><div class="j-content-size">'+ htmlRestore(obj.data.content) +'</div></div>'
+			  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>'+ obj.data.title +'</h1><h2>作者：'+ obj.data.cuid +' 发布于：'+ obj.data.create_time +'</h2><div class="j-content-size">'+ htmlRestore(obj.data.content) +'</div></div>'
 			});
 		});
 		
