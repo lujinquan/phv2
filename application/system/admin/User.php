@@ -92,7 +92,17 @@ class User extends Admin
         $this->assign('hisiTabType', 3);
         return $this->fetch();
     }
-	
+	/**
+     * 管理员绑定微信
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间:  <-- 这里输入 ctrl + shift + . 自动生成当前时间戳
+     * @return  返回值  
+     * @version 版本  1.0
+     */  
 	public function wechatAuth()
 	{
         $id = input('id');
@@ -215,27 +225,27 @@ class User extends Admin
      * @return  返回值  
      * @version 版本  1.0
      */    
-    public function bindWeixin()
-    {
-        $id = input('id');
-        $row = UserModel::where('id', $id)->field('mobile,nick')->find();
-        if($row['mobile']){
-            $WeixinMemberModel = new WeixinMemberModel;
-            $find = $WeixinMemberModel->where([['weixin_tel','eq',$row['mobile']]])->find();
-            if($find){
-                $row->weixin_openid = $find['openid'];
-                if($row->save()){
-                    return $this->success('授权成功！');
-                }else{
-                    return $this->error('未知错误');
-                }
-            }else{
-                return $this->error('请用户“'.$row['nick'].'”先登录小程序并授权手机号，或检查手机号是否与系统一致');
-            }
-        }else{
-            return $this->error('请先补充当前用户“'.$row['nick'].'”的手机号');
-        }
-    }
+    // public function bindWeixin()
+    // {
+    //     $id = input('id');
+    //     $row = UserModel::where('id', $id)->field('mobile,nick')->find();
+    //     if($row['mobile']){
+    //         $WeixinMemberModel = new WeixinMemberModel;
+    //         $find = $WeixinMemberModel->where([['weixin_tel','eq',$row['mobile']]])->find();
+    //         if($find){
+    //             $row->weixin_openid = $find['openid'];
+    //             if($row->save()){
+    //                 return $this->success('授权成功！');
+    //             }else{
+    //                 return $this->error('未知错误');
+    //             }
+    //         }else{
+    //             return $this->error('请用户“'.$row['nick'].'”先登录小程序并授权手机号，或检查手机号是否与系统一致');
+    //         }
+    //     }else{
+    //         return $this->error('请先补充当前用户“'.$row['nick'].'”的手机号');
+    //     }
+    // }
 
     /**
      * 修改用户

@@ -24,6 +24,7 @@ use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
 use app\wechat\model\Weixin as WeixinModel;
 use app\system\model\SystemUser as UserModel;
+use app\system\model\SystemRole as RoleModel;
 use app\deal\model\Process as ProcessModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinGuide as WeixinGuideModel;
@@ -848,9 +849,9 @@ class Weixin extends Common
             $ptime = input('ptime');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
-            $gpsx = input('param.gpsx', 113.334228);
-            $gpsy = input('param.gpsy', 31.560371);
-
+            $gpsx = input('param.gpsx', '114.307803');
+            $gpsy = input('param.gpsy', '30.556853');
+//dump('gpsx：'.$gpsx);halt($gpsy);
             $insts = config('inst_ids');
             
             $keywords = input('keywords');
@@ -913,7 +914,7 @@ class Weixin extends Common
             }else{ //如果是代缴，按照房屋来排列
                 $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
                 $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
-                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->select();
+                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
 
                 $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
 
@@ -931,16 +932,29 @@ class Weixin extends Common
                 // array_multisort($ages, SORT_ASC, $users);
 
                 $result['data'] = [];
-                foreach ($temps as $v) { 
+                foreach ($temps as &$v) { 
                     $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                     $v['house_use_id'] = $params['uses'][$v['house_use_id']];
                     $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
                     $v['distance'] = $ban_arr[$v['ban_id']]['distance'];
-                    $result['data'][] = $v;
+                    //$result['data'][] = $v;
                 }
+
+                sort($temps);
+
+                //二维数组冒泡排序
+                $a = [];
+                foreach($temps as $key=>$val){
+                    $a[] = $val['distance']; // $a是$sort的其中一个字段
+                }
+                $temps = bubble_sort($temps,$a,'asc'); // 正序
+
+                $result['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
                 $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
             }
+            //halt($result);
             $result['pages'] = ceil($result['count'] / $limit);
+            $result['cur_page'] = $page;
             $result['code'] = 1;
             $result['msg'] = '获取成功！';
         }else{
@@ -1887,7 +1901,7 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/add_member_house';
+        $result['action'] = 'wechat/weixin/add_member_house_check';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
@@ -2041,6 +2055,38 @@ class Weixin extends Common
     }
 
     /**
+     * 功能描述： 给会员删除房屋（添加member_house关联记录）
+     * @author  Lucas 
+     * 创建时间: 2020-02-26 17:36:54
+     */
+    public function del_member_house()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/del_member_house';
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+        }
+        $house_id = trim(input('house_id'));
+        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        $WeixinMemberHouseModel->where([['house_id','eq',$house_id],['member_id','eq',$member_info['member_id']]])->update(['dtime'=>time()]);
+        $result['code'] = 1;
+        $result['msg'] = '删除成功';
+        return json($result);
+    }
+
+    /**
      * 功能描述： 获取我的房屋列表数据
      * @author  Lucas 
      * 创建时间: 2020-02-26 17:36:54
@@ -2135,22 +2181,35 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/member_info';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
+        // if($this->debug === false){ 
+        //     if(!$this->check_token()){
+        //         $result['code'] = 10010;
+        //         $result['msg'] = '令牌失效';
+        //         $result['en_msg'] = 'Invalid token';
+        //         return json($result);
+        //     }
+        //     $token = input('token');
+        //     $openid = cache('weixin_openid_'.$token);
+        // }else{
+        //     $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
+        // }
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     $result['msg'] = '20000';
+            //     return json($result);
+            // }
+            $member_extra_info = $checkData['member_extra_info'];
         }
-
         // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        //$WeixinMemberModel = new WeixinMemberModel;
+        //$member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2158,6 +2217,8 @@ class Weixin extends Common
             return json($result);
         }
         $result['data']['member'] = $member_info;
+        $result['data']['role_type'] = $checkData['role_type'];
+        $result['data']['member_extra_info'] = $member_extra_info;
 
         // 查找绑定的房屋
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
@@ -2786,8 +2847,11 @@ class Weixin extends Common
         //halt($user_info);
         //检查用户是管理员，还是租户，还是其他
         if($user_info){
+            $RoleModel = new RoleModel;
+            $role_name = $RoleModel->where([['id','eq',$user_info['role_id']]])->value('name');
             $role_type = 2; //管理员
             $member_extra_info = $user_info;
+            $member_extra_info['role_name'] = $role_name;
         }
         return ['error_code'=>0,'error_msg'=>'','role_type'=>$role_type,'member_info'=>$member_info,'member_extra_info'=>$member_extra_info];
     }

@@ -242,6 +242,38 @@ class ChangeLease extends SystemBase
         return $data; 
     }
 
+    /**
+     * 某些异动完成后，自动生成租约的功能
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-25 11:02:33
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function auto_create_changelease($data = [])
+    {
+        //halt($data);
+        $form = [];
+        $form['change_order_number'] = date('Ym').'18'.random(14);
+        $form['change_type'] = 18;
+        $form['ban_id'] = $data['ban_id'];
+        $form['house_id'] = $data['house_id'];
+        $form['tenant_id'] = $data['tenant_id'];
+        $form['cuid'] = $data['cuid'];
+        $form['tenant_name'] = $data['tenant_name'];
+        $form['change_status'] = 2;
+
+        $val = Db::name('system_config')->where([['name','eq','szno']])->value('value');
+
+        //$result['house']['house_szno'] = $result['house']['house_szno'].$val;
+
+        $form['szno'] = $data['szno'].$val;
+        $this->save($form);
+    }
+
     public function detail($id,$change_order_number = '')
     {
         $changeWhere = [];

@@ -12,9 +12,14 @@
 			<div class="j-input-block">
 				<select name="transfer_to" id="transfer_to" lay-filter="transfer">
 					<option value="">请选择工单受理人</option>
-					{if condition="ADMIN_ROLE != 10"}
-					<optgroup label="技术服务中心">
+					{if condition="ADMIN_ID != 57"}
+					<!-- <optgroup label="技术服务中心">
 						<option value="57" {if condition="session('admin_user.nick') == '卢金权'"}disabled{/if}>卢金权</option>
+					</optgroup> -->
+					{/if}
+					{if condition="ADMIN_ID != 126"}
+					<optgroup label="技术服务中心">
+						<option value="126" {if condition="session('admin_user.nick') == '刘霞'"}disabled{/if}>刘霞</option>
 					</optgroup>
 					{/if}
 					{if condition="ADMIN_ROLE != 9"}
