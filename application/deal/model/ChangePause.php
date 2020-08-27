@@ -275,7 +275,7 @@ class ChangePause extends SystemBase
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_date'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date( "Y-m", strtotime( "first day of next month" ) );  // 次月生效
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
