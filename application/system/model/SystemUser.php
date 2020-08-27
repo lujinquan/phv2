@@ -14,6 +14,7 @@ use think\Model;
 use app\system\model\SystemMenu as MenuModel;
 use app\system\model\SystemRole as RoleModel;
 use app\system\model\SystemLog as LogModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
 
 /**
  * 后台用户模型
@@ -271,7 +272,7 @@ class SystemUser extends Model
         /*关联1.0登录代码     开始 》》》*/
         $user_id = input('user_id');
         $secret = input('secret');
-        if($user_id && $secret){halt(1);
+        if($user_id && $secret){
             if(!$secret == md5(md5($user_id))){
                 return false;
             }
@@ -345,6 +346,21 @@ class SystemUser extends Model
         $code = http_build_query($data);
         $sign = sha1($code);
         return $sign;
+    }
+
+    /**
+     * 详情
+     * @param 用户id
+     * @author Lucas <598936602@qq.com>
+     * @return array
+     */
+    public function detail($id)
+    {
+        $user = self::find($id);
+        $WeixinMemberModel = new WeixinMemberModel;
+        $weixin_member_info = $WeixinMemberModel->where([['member_id','in',$user->weixin_member_id]])->find();
+        $user['weixin_member_info'] = $weixin_member_info;
+        return $user;
     }
 
     // /**

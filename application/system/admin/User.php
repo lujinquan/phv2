@@ -108,17 +108,28 @@ class User extends Admin
         $id = input('id');
         if ($this->request->isPost()) {
             $weixin_member_id = input('weixin_member_id');
+            $UserModel = new UserModel;
+            $row = $UserModel->find($id);
+
             if(empty($weixin_member_id)){
-                return $this->error('参数错误');
-            }else{
-                if (!UserModel::where([['id','eq',$id]])->update(['weixin_member_id'=>$weixin_member_id])) {
-                    return $this->error('绑定失败');
+                if($row['weixin_member_id']){
+                    $row->weixin_member_id = '';
+                    $row->save();
+                    return $this->success('解绑成功');
+                }else{
+                    return $this->error('未选择微信用户');
                 }
+            }else{
+                $row->weixin_member_id = $weixin_member_id;
+                $row->save();
                 return $this->success('绑定成功');
             }
         }
-        
+        $UserModel = new UserModel;
+        $row = $UserModel->detail($id);
+        //halt($row);
         $this->assign('id', $id);
+        $this->assign('data_info', $row);
 		return $this->fetch();
 	}
 
