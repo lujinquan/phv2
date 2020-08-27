@@ -607,7 +607,7 @@ class House extends Admin
         set_time_limit(0);
 
         $houseModel = new HouseModel;
-        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(1)->select();
+        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(2000)->select();
 
         //halt($houseNumberArr);
         $WeixinModel = new WeixinModel;
@@ -626,14 +626,17 @@ class House extends Admin
             $path = 'pages/payment/payment'; //注意路径格式，这个路径不能带参数！
             $filename = '/upload/wechat/qrcode/share_'.$h['house_id'].'_'.$h['house_number'].'.png';
             $result = $WeixinModel->createMiniScene($h['house_id'] , $path,$width); //B方案生成二维码，
+            //halt($result);
             file_put_contents('.'.$filename,$result);
             $houseModel = new HouseModel;
-            $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
+            $res = $houseModel->where([['house_id','eq',$h['house_id']]])->update(['house_share_img'=>'https://pro.ctnmit.com'.$filename]);
             if($res){
                $i++; 
             }
+            //halt($res);
         } 
-        return $this->success('生成成功，一共生成'.$i.'张二维码！');
+        halt($i);
+        //return $this->success('生成成功，一共生成'.$i.'张二维码！');
 
     }
 
