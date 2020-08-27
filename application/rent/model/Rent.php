@@ -786,8 +786,9 @@ class Rent extends Model
                 // }else{
                 //     $RentOrderChildModel->
                 // }
+
                 $row->rent_order_paid = Db::raw('rent_order_paid+'.($RentOrderChildModel->rent_order_paid));
-                //$row->rent_order_paid = $RentOrderChildModel->rent_order_paid;
+                
                 $res = $row->save();
 
                 $RentOrderChildModel->ptime = $ctime;
