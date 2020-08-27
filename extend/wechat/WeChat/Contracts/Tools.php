@@ -444,6 +444,7 @@ class Tools
         if (empty(self::$cache_path)) {
             self::$cache_path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'Cache' . DIRECTORY_SEPARATOR;
         }
+        //echo dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'Cache' . DIRECTORY_SEPARATOR;exit;
         self::$cache_path = rtrim(self::$cache_path, '/\\') . DIRECTORY_SEPARATOR;
         file_exists(self::$cache_path) || mkdir(self::$cache_path, 0755, true);
         return self::$cache_path . $name;
