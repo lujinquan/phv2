@@ -10,10 +10,10 @@
             <div class="layui-form-item">
             	<label class="layui-form-label">授权用户</label>
             	<div class="layui-input-inline">
-            		<input type="text" name="" placeholder="请选择" readonly autocomplete="off" class="layui-input" id="demo" value="" ts-selected="">
+            		<input type="text" name="" readonly="readonly" placeholder="请选择"  autocomplete="off" class="layui-input" id="demo" value="{if condition="isset($data_info['weixin_member_info'])"}{$data_info['weixin_member_info']['member_name']}{/if}" ts-selected="{if condition="isset($data_info['weixin_member_info'])"}{$data_info['weixin_member_info']['member_id']}{/if}">
             	</div>
             </div>
-            <input type="hidden" name="weixin_member_id" id="weixin_member_id" value="">
+            <input type="hidden" name="weixin_member_id" id="weixin_member_id" value="{if condition="isset($data_info['weixin_member_info'])"}{$data_info['weixin_member_info']['member_id']}{/if}">
             <input type="hidden" name="id" value="{$id}">
             <div class="pop-bottom-bar">
                 <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">提交保存</button>
@@ -33,31 +33,33 @@
 			form.render();
         tableSelect.render({
         	elem: '#demo',
-        	searchKey: 'member_name',
+        	searchKey: "keyword",
         	checkedKey: 'member_id',
-        	searchPlaceholder: '输入用户名查找',
+        	searchPlaceholder: '输入用户名、手机号查找',
         	table: {
         		url: '{:url('wechat/weixin/userIndex')}',
 				page: false, //是否开启分页
 				limit: 1000000000,
         		cols: [[
         			{ type: 'checkbox' }
-					,{field: 'member_id', align:'center',width: 100, title: '用户编号'}
-					,{field: 'member_name',align:'center', title: '用户名',templet: function(d){
+					,{field: 'member_id', align:'center',width: 90, title: '用户编号'}
+					,{field: 'weixin_tel', align:'center',width: 120, title: '手机号'}
+					,{field: 'member_name',align:'center',minwWidth: 150, title: '用户名',templet: function(d){
 						return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
 					}}
         		]]
         	},
+			//elem, data 
         	done: function (elem, data) {
-        		var NEWJSON = []
+        		var NEWJSON = [];
                 var NEWIDJSON = [];
-        		layui.each(data.data, function (index, item) {
+        		layui.each(data .data, function (index, item) {
         			NEWJSON.push(item.member_name)
                     NEWIDJSON.push(item.member_id);
         		})
         		elem.val(NEWJSON.join(","))
                 $('#weixin_member_id').val(NEWIDJSON.join(","));
-				console.log("数据是：",data)
+				console.log("数据是：",data )
         	}
         })
     });

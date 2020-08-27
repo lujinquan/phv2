@@ -85,7 +85,8 @@
             ,cols: [[ //表头
                {field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
                // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-               ,{field: 'weixin_username', minWidth: 120, align:'center', title: '用户名',templet: function(d){
+			   ,{field: 'tenant_name', minWidth: 120, align:'center', title: '租户姓名'}
+               ,{field: 'weixin_username', minWidth: 120, align:'center', title: '缴费用户',templet: function(d){
                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                }}
                 ,{field: 'openid',minWidth:260,hide:true,align:'center', title: 'OPENID'}
@@ -118,7 +119,7 @@
    //        }
    //      ]
             ,done:function(res,curr,count){
-				
+				console.log("支付记录数据：",res)
             }
         },isShowInst);
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
