@@ -19,6 +19,7 @@ use app\common\model\SystemAnnex;
 use app\common\model\SystemAnnexType;
 use app\rent\model\Rent as RentModel;
 use app\house\model\Ban as BanModel;
+use app\rent\model\Invoice as InvoiceModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
 use app\common\model\Cparam as ParamModel;
@@ -2254,12 +2255,12 @@ class Weixin extends Common
     }
 
     /**
-     * 功能描述： 获取我的订单列表数据
+     * 功能描述： 获取我的订单列表数据【原接口，由于调整成了按照支付记录来，所以暂时弃用】
      * 小程序使用页面：【 我的 -> 历史账单 】
      * @author  Lucas 
      * 创建时间: 2020-02-28 10:13:33
      */
-    public function my_order_list() 
+    public function my_order_list_old() 
     {
         // 验证令牌
         $result = [];
@@ -2306,7 +2307,8 @@ class Weixin extends Common
 
         $where = [];
         $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-        
+        // 只显示微信支付的记录
+        $where[] = ['a.pay_way','eq',4];
         if($houseID){
             $houseArr = $WeixinMemberHouseModel->where([['house_id','eq',$houseID],['dtime','eq',0]])->column('house_id,is_auth');
             $where[] = ['a.house_id','eq',$houseID];
@@ -2322,7 +2324,7 @@ class Weixin extends Common
             $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
         }
         $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_way,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
-        $rents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
+        $rents = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ptime desc')->select();
         $params = ParamModel::getCparams();
         $result['data']['rent'] = [];
         foreach ($rents as $key => $value) {
@@ -2343,6 +2345,160 @@ class Weixin extends Common
         //$result['data']['rent'] = $rents;
         $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houseIds]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        $result['code'] = 1;
+        
+        $result['msg'] = '获取成功！';
+      
+        return json($result); 
+    }
+
+    /**
+     * 功能描述： 获取我的订单列表数据
+     * 小程序使用页面：【 我的 -> 历史账单 】
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function my_order_list() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/my_order_list';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+
+        // 初始化参数
+        $where = $data = [];
+        $params = ParamModel::getCparams();
+        $where[] = ['a.ptime','>',0];
+
+        // 支付时间搜索
+        $datasel = input('get.data_sel');
+        if($datasel){
+            $startDate = substr($datasel,0,4);
+            $endDate = substr($datasel,5,2);
+            $where[] = ['a.ptime','between',[$startDate,$endDate]];
+        }
+        // 查找绑定的房屋
+        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+        
+        $houseArr = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->column('house_id,is_auth');
+        if(!$houseArr){
+            $result['code'] = 10050;
+            $result['msg'] = '当前会员未绑定任何房屋';
+            $result['en_msg'] = 'The current user is not bound to any house';
+            return json($result);
+        }
+        $houseIds = array_keys($houseArr);
+
+        // 查询微信支付订单
+        $temp = WeixinOrderModel::with('weixinMember')->where($where)->order('ctime desc')->select()->toArray();
+        if(empty($temp)){
+            $result['code'] = 10051;
+            $result['msg'] = '暂无支付订单记录';
+            return json($result);
+        }
+        foreach ($temp as $k => &$v) {
+            // 每一个支付订单有可能对应多个月租金订单，但是由于都是一个房屋，所以只取一个即可
+            $rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
+            $info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.rent_order_date,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
+            if($info){
+                $v['house_number'] = $info['house_number'];
+                $v['tenant_name'] = $info['tenant_name'];
+                $v['rent_order_date'] = $info['rent_order_date'];
+                $v['ban_address'] = $info['ban_address'];
+                $v['pay_way_name'] = $params['pay_way'][4]; // 只有微信支付，所以是4
+            }
+        }
+
+        $result['data']['rent'] = $temp;
+        $result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houseIds]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+        return json($result); 
+    }
+
+    /**
+     * 功能描述： 获取我的订单列表的详情
+     * 小程序使用页面：【 我的 -> 历史账单 】
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function my_order_detail() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/my_order_detail';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+        // 接收微信支付订单的id（即weixin_order的主键order_id）
+        $id = input('get.order_id');
+        
+        
+        $WeixinOrderModel = new WeixinOrderModel;
+        $order_info = $WeixinOrderModel->with('weixinMember')->find($id)->toArray();
+        if($order_info['order_status'] == 2){ //如果状态是已退款
+            $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+            $order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
+            $result['order_refund_info'] = $order_refund_info;
+        }
+        if($order_info['invoice_id']){
+          $InvoiceModel = new InvoiceModel;
+          $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+          $result['invoice_info'] = $invoice_info;
+        }
+        $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+        $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+        $rent_order_ids = array_keys($rent_orders);
+        $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+        foreach ($houses as $k => &$v) {
+            $v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+            $v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
+        }
+        $result['houses'] = $houses;
+        
+        $result['order_info'] = $order_info;
+
         $result['code'] = 1;
         
         $result['msg'] = '获取成功！';

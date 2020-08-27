@@ -18,6 +18,9 @@ class RentOrderChild extends Model
     // 自动写入时间戳
     protected $autoWriteTimestamp = true;
 
+    // 定义时间戳字段名
+    protected $createTime = 'ptime';
+
     protected $type = [
         'ptime' => 'timestamp:Y-m-d H:i:s',
     ];
