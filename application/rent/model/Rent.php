@@ -751,7 +751,7 @@ class Rent extends Model
         $ctime = time();
         $cdate = date('Ym',$ctime);
         $now_date =  date('Ym');
-
+//halt($ids);
         foreach($ids as $id){
             // 修改租金订单
             $row = $this->find($id);
@@ -765,7 +765,7 @@ class Rent extends Model
 
             //if($row['rent_order_date'] < $now_date){ //判断是不是以前月或以前年订单，如果是，则添加收欠记录
                 $RentOrderChildModel = new RentOrderChildModel;
-                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id]])->sum('rent_order_paid'); // 获取该订单累计已缴的金额
+                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1]])->sum('rent_order_paid'); // 获取该订单累计已缴的金额
                 $RentOrderChildModel->house_id = $row['house_id'];
                 $RentOrderChildModel->tenant_id = $row['tenant_id'];
                 $RentOrderChildModel->rent_order_id = $row['rent_order_id'];
