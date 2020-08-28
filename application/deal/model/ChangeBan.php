@@ -370,7 +370,7 @@ class ChangeBan extends SystemBase
             }else if(($data['flag'] === 'passed') && ($changeRow['change_status'] == $finalStep)){
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_date'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date( "Y-m", strtotime( "first day of next month" ) );  // 次月生效
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,

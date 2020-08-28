@@ -301,7 +301,7 @@ class ChangeCut extends SystemBase
                 $changeUpdateData['is_valid'] = 1;
                 $changeUpdateData['end_date'] = (date('Y')+1).'01';
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_date'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date( "Y-m", strtotime( "first day of next month" ) );  // 次月生效
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
