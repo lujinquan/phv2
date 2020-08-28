@@ -1026,6 +1026,7 @@ class Weixin extends Common
         $row['ban_inst_id'] = $params['insts'][$row['ban_inst_id']];
         $row['house_use_id'] = $params['uses'][$row['house_use_id']];
         $row['ban_owner_id'] = $params['owners'][$row['ban_owner_id']];
+        $row['pay_way'] = $params['pay_way'][$row['pay_way']];
         $row['rent_order_date'] = substr($row['rent_order_date'],0,4).'年'.substr($row['rent_order_date'],4,2).'月01日';
         // if($row['ptime']){
         //     $row['ptime'] = date('Y年m月d日',$row['ptime']);
@@ -2865,11 +2866,11 @@ class Weixin extends Common
         }
 
         
-        $houseRow = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_id,house_number,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
+        $houseRow = HouseModel::with('ban,tenant')->where([['house_id','eq',$houseID]])->field('house_balance,ban_id,house_use_id,house_id,house_number,tenant_id,house_pre_rent,house_unit_id,house_share_img,house_floor_id')->find();
 
         $domain = get_domain();
 
-        $findFile = str_replace('https://procheck.ctnmit.com',$_SERVER['DOCUMENT_ROOT'],$houseRow['house_share_img']);
+        $findFile = str_replace('https://pro.ctnmit.com',$_SERVER['DOCUMENT_ROOT'],$houseRow['house_share_img']);
         if($houseRow['house_share_img'] && is_file($findFile)){
 
         }else{
@@ -2880,10 +2881,19 @@ class Weixin extends Common
             $createMiniSceneData = $WeixinModel->createMiniScene($houseRow['house_id'] , $path,$width); //B方案生成二维码，
             file_put_contents('.'.$filename,$createMiniSceneData);
             $houseModel = new HouseModel;
-            $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>'https://procheck.ctnmit.com'.$filename]);
-            $houseRow['house_share_img'] = 'https://procheck.ctnmit.com'.$filename;
-        }
+            $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>'https://pro.ctnmit.com'.$filename]);
+            $houseRow['house_share_img'] = 'https://pro.ctnmit.com'.$filename;
 
+
+        }
+        // 判断是否允许支付，只开放部分管段（目前仅紫阳01、02），和部分使用性质（目前仅住宅）
+        if (in_array($houseRow['ban_inst_id'], [4,5]) && $houseRow['house_use_id'] == 1) {
+            $houseRow['is_allow_to_pay'] = 1;
+        }else{
+            $houseRow['is_allow_to_pay'] = 0;
+        }
+        //halt($houseRow);
+        //$houseRow['is_allow_to_pay'] = 0;
         $result['data']['house'] = $houseRow;
         
         // 判断是否认证过当前房屋

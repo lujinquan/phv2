@@ -25,11 +25,15 @@ class Invoice extends Model
     // 设置主键
     protected $pk = 'invoice_id';
     // 接口地址
-    protected $url = "http://124.205.255.18:28500/api";
+    //protected $url = "http://124.205.255.18:28500/api";
+    //protected $url = "http://211.151.124.79:8500/api";
+    protected $url = "https://dzfpapi.holytax.com/api";
 	// 用户appid
-    protected $appid = '92edfcd96405';
+    //protected $appid = '92edfcd96405';
+    protected $appid = '';
     // 用户appsecret
-    protected $appsecret = '340d9826992051020add';
+    //protected $appsecret = '340d9826992051020add';
+    protected $appsecret = '';
     // 对应相应的接口报文
     protected $content;
 
@@ -39,7 +43,7 @@ class Invoice extends Model
     protected $autoWriteTimestamp = true;
 
     protected $type = [
-        'ban_ctime' => 'timestamp:Y-m-d H:i:s',
+        //'ban_ctime' => 'timestamp:Y-m-d H:i:s',
     ];
     protected function initialize()
     {
@@ -175,17 +179,20 @@ class Invoice extends Model
         // 销售方纳税方纳 税人识别号 20 是 如为非收购发票，此项 必填，即开票方纳税人 识别号；如为收购发 票，此项为可选
         $dpkj['xsf_nsrsbh'] = '150000000001000';
         // 销售方地址、电 话 100 是 如为非收购发票，此项必填， 即开票方纳税人地址、电话； 如为收购发票，此项为可选
-        $dpkj['xsf_dzdh'] = '北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996';
+        //$dpkj['xsf_dzdh'] = '北京市海淀区复兴路甲23号城乡华懋商厦12层 4006056996';
+        $dpkj['xsf_dzdh'] = '';
         // 销售方银行账号 100 否
-        $dpkj['xsf_yhzh'] = '中信银行 1234567890';
+        //$dpkj['xsf_yhzh'] = '中信银行 1234567890';
+        $dpkj['xsf_yhzh'] = '';
         // 购买方纳税人识 别号 20 否 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
         $dpkj['gmf_nsrsbh'] = '91110133745594417B';
         // 购买方名称 100 是 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
-        $dpkj['gmf_mc'] = '测试';
+        $dpkj['gmf_mc'] = '测试购买方名称';
         // 购买方地址、电话 100 否 如为非收购发票，此项可 选；如为收购发票，此项必 填，即开票纳税人地址、电 话
-        $dpkj['gmf_dzdh'] = '测试地址 120';
+        $dpkj['gmf_dzdh'] = '测试购买方地址 120';
         // 购买方银行账号 100 否
-        $dpkj['gmf_yhzh'] = '测试银行 123456';
+        //$dpkj['gmf_yhzh'] = '测试银行 123456';
+        $dpkj['gmf_yhzh'] = '1';
         // 购买方手机号 11 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方手机号；如 收购发票则为销售方手机 号
         $dpkj['gmf_sjh'] = '';
         // 购买方电子邮箱 100 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方电子邮箱； 如为收购发票则为销货方 电子邮箱
@@ -219,7 +226,7 @@ class Invoice extends Model
         // 发票行性质 1 是 0正常行、1折扣行、2被折 扣行
         $dpkj['fphxz'] = 0;
         // 商品编码 19 否 税局下发的商品编码表中 最末级节点的编码
-        $dpkj['spbm'] = '1100301010000000000';
+        $dpkj['spbm'] = '3040502020102000000';
         // 自行编码 20 否 未填写商品编码时，须使用 自行增加的项目 名称，并填写该商品的编码 至自行编码中
         $dpkj['zxbm'] = '';
         // 优惠政策标识 1 是 0：不使用，1：使用
@@ -253,27 +260,32 @@ class Invoice extends Model
         // 紫阳所的订单
         if($RentOrderRow['ban_inst_pid'] == 2){
             $dpkj['fpqqlsh'] = 'CZY'.$timestamp; // C代表武昌区，ZY代表紫阳所
-            // $dpkj['xsf_mc'] = '武昌区紫阳房管所'; // 销售方名称
-            // $dpkj['xsf_nsrsbh'] = '150000000001000'; // 纳税人识别号
+            $dpkj['xsf_mc'] = '武汉市武昌区房地产公司紫阳房管所'; // 销售方名称
+            $dpkj['xsf_nsrsbh'] = '12420106931266704D'; // 纳税人识别号
             // $dpkj['xsf_dzdh'] = '武汉市武昌区黄鹤楼街办事处彭刘杨路103号'; // 销售方地址
             // $dpkj['xsf_yhzh'] = '中信银行 1234567890'; // 销售方银行账号
             $dpkj['fhr'] = '曹秀芳'; // 复核人
-            $dpkj['kpr'] = '冯晖'; // 开票人
+            //$dpkj['kpr'] = '冯晖'; // 开票人
+            $this->appid = 'b3d3e0bf9221'; // 紫阳所的appid
+            $this->appsecret = '33ed9898d7b779ff3804'; // 紫阳所的appsecret
         // 粮道所的订单
         }else{
             $dpkj['fpqqlsh'] = 'CLD'.$timestamp; // C代表武昌区，LD代表粮道所
-            // $dpkj['xsf_mc'] = '销售方-武昌区粮道房管所'; // 销售方名称
-            // $dpkj['xsf_nsrsbh'] = '150000000001000'; // 纳税人识别号
+            $dpkj['xsf_mc'] = '武汉市武昌区房地产公司粮道街房管所'; // 销售方名称
+            $dpkj['xsf_nsrsbh'] = '12420106441363712E'; // 纳税人识别号
             // $dpkj['xsf_dzdh'] = '武汉市武昌区三道街2号'; // 销售方地址
             // $dpkj['xsf_yhzh'] = '农业银行 1234567890'; // 销售方银行账号
             $dpkj['fhr'] = '张润'; // 复核人
-            $dpkj['kpr'] = '冯超'; // 开票人
+            //$dpkj['kpr'] = '冯超'; // 开票人
+            $this->appid = 'b6fba0d617c7'; // 粮道所的appid
+            $this->appsecret = '30868888cbdf99f7b1e7'; // 粮道所的appsecret
         }
         $dpkj['house_id'] = $RentOrderRow['house_id'];
         $dpkj['tenant_id'] = $RentOrderRow['tenant_id'];
         $dpkj['gmf_mc'] = $RentOrderRow['tenant_name']; // 购买方名称
         $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address']. ' ' .$RentOrderRow['tenant_tel'];
         $dpkj['skr'] = $SystemUserRow['nick']; // 收款人
+        $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
         $dpkj['xmmc'] = substr($RentOrderRow['rent_order_date'], 0,4).'年'.substr($RentOrderRow['rent_order_date'], 4,2).'月房屋租金'; // 项目名称
         $dpkj['xmdj'] = $WeixinOrderRow['pay_money']; // 项目单价
         $dpkj['xmje'] = $WeixinOrderRow['pay_money']; // 项目金额
@@ -337,10 +349,6 @@ class Invoice extends Model
         $content .= "    </COMMON_FPKJ_XMXX>\n" .
              "  </COMMON_FPKJ_XMXXS>\n" .
             "</REQUEST_COMMON_FPKJ>";
-
-        //$InvoiceModel = new InvoiceModel;
-        // $result = json_decode($InvoiceModel->dpkj($content),true);
-        // halt($result['msg']);
 
 //         $a =    <<<EOF
 //       <business id="10008" comment="发票开具">
@@ -418,7 +426,9 @@ class Invoice extends Model
 //         </body>
 //       </business>
 // EOF;
-
+        // 打印请求开发票的所有数据，用作调试的
+        //dump($this->appid);dump($this->appsecret);halt($dpkj);
+        
         $base64Sign = base64_encode($content);
         //dump('base64加密>>>> '.$base64Sign);
         $queryMap = [];
@@ -432,38 +442,31 @@ class Invoice extends Model
         $signature = $this->getSignature($queryMap,$this->appsecret);
         //dump('报文签名>>>> '.$signature);
         $queryMap['signature'] = $signature;
+
         $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
-
-        // $xml = simplexml_load_string($result, null, LIBXML_NOCDATA);
-
-        // $InvoiceModel = new InvoiceModel;
-        // $dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
-        // $row = $InvoiceModel->allowField(true)->create($dpkj);
-        // if(!$row){
-        //     return $this->error('开票失败');
-        // }
-
-        // // 将开票成功的id返回写入weixin_order表
-        // $WeixinOrderRow->invoice_id = $row['invoice_id'];
-        // $WeixinOrderRow->save();
-
-        // return $this->success('开票成功');
+        
+        //halt($result);
+        
+        // 这是一个错误的案例，用作调试的
+        // $result = [
+        //     "msg" => "税控服务器调用异常,请稍后再试,异常码为302;发票同步出错:f0003,税控服务器调用异常,请稍后再试,异常码为302",
+        //     "code" => "fpkj0007",
+        //     "requestid" => "976c9fda61b642efb74dc835bae3ed0e",
+        // ];
 
         if($result['code'] !== '0000'){
-            $this->error($result['msg']);
+            $this->error = $result['msg'];
             return false;
         }
-        //halt($result);
-        //$file = $_SERVER['DOCUMENT_ROOT'].'/a.xml';
 
         // 解析xml
         $xml = simplexml_load_string($result['msg'], null, LIBXML_NOCDATA);
 
-        //$InvoiceModel = new InvoiceModel;
+        // 将成功开票的数据写入到invoice表
         $dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
         $row = $this->allowField(true)->create($dpkj);
         if(!$row){
-            $this->error('开票失败');
+            $this->error = '开票失败';
             return false;
         }
 
