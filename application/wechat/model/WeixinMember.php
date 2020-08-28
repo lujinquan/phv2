@@ -54,8 +54,8 @@ class WeixinMember extends Model
             $where[] = ['member_name','like','%'.$data['member_name'].'%'];
         }
         // 检索产别
-        if(isset($data['tel']) && $data['tel']){
-            $where[] = ['tel','like','%'.$data['tel'].'%'];
+        if(isset($data['weixin_tel']) && $data['weixin_tel']){
+            $where[] = ['weixin_tel','like','%'.$data['weixin_tel'].'%'];
         }
         // 检索真实姓名
         if(isset($data['real_name']) && $data['real_name']){
@@ -72,6 +72,10 @@ class WeixinMember extends Model
         // 检索是否启用
         if(isset($data['is_show']) && $data['is_show']){
             $where[] = ['is_show','eq',$data['is_show']];
+        }
+        // 检索关键词
+        if(isset($data['keyword']) && $data['keyword']){   
+            $where = "member_name like '%".$data['keyword']."%' or weixin_tel like '%".$data['keyword']."%'";          
         }
         //$where[] = ['tenant_inst_id','in',config('inst_ids')[$instid]];
 

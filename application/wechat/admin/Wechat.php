@@ -107,6 +107,7 @@ class Wechat extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $data['content'] = $_POST['content']; //用原始的方法接收带标签的数据
             $WeixinNoticeModel = new WeixinNoticeModel;
             $data['cuid'] = ADMIN_ID;
             //$data['content'] = htmlspecialchars($data['content']);
@@ -129,6 +130,7 @@ class Wechat extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $data['content'] = $_POST['content']; //用原始的方法接收带标签的数据
             // 入库
             if ($WeixinNoticeModel->allowField(true)->update($data) === false) {
                 return $this->error('编辑失败');

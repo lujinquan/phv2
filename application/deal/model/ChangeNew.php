@@ -295,7 +295,7 @@ class ChangeNew extends SystemBase
             }else if(($data['flag'] === 'passed') && ($changeRow['change_status'] == $finalStep)){
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_date'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date( "Y-m", strtotime( "first day of next month" ) );  // 次月生效
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -463,7 +463,7 @@ class ChangeNew extends SystemBase
         }
         $tenant_name = TenantModel::where([['tenant_id','eq',$finalRow['tenant_id']]])->value('tenant_name');
         // 5、自动生成租约异动
-        $ChangeLeaseModel = new ChangeLeaseModel;
+        /*$ChangeLeaseModel = new ChangeLeaseModel;
         $changeleaseData = [];
         $changeleaseData['ban_id'] = $finalRow['ban_id'];
         $changeleaseData['house_id'] = $finalRow['house_id'];
@@ -471,7 +471,7 @@ class ChangeNew extends SystemBase
         $changeleaseData['cuid'] = $finalRow['cuid'];
         $changeleaseData['tenant_name'] = $tenant_name;
         $changeleaseData['szno'] = $houseInfo['house_szno'];
-        $ChangeLeaseModel->auto_create_changelease($changeleaseData);
+        $ChangeLeaseModel->auto_create_changelease($changeleaseData);*/
 
     }
 

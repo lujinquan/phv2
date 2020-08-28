@@ -38,6 +38,7 @@ class Weixin extends Admin
             $getData = $this->request->get();
             $WeixinMemberModel = new WeixinMemberModel;
             $where = $WeixinMemberModel->checkWhere($getData);
+            //halt($where);
             $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
             $data = [];
             $data['data'] = WeixinMemberModel::field($fields)->where($where)->page($page)->order('create_time desc')->limit($limit)->select();
