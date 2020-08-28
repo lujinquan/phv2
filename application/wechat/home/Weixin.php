@@ -27,6 +27,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\deal\model\Process as ProcessModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinGuide as WeixinGuideModel;
 use app\wechat\model\WeixinColumn as WeixinColumnModel;
@@ -891,13 +892,14 @@ class Weixin extends Common
                 $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
                 $where[] = ['a.ptime','>',0];
 
-                $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+                $fields = 'a.id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
                 $data = [];
-                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+                $temps = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
                
 
                 $result['data'] = [];
                 foreach ($temps as $v) { 
+                    //$v['id'] = $v['id'];
                     $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                     $v['house_use_id'] = $params['uses'][$v['house_use_id']];
                     $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
@@ -910,48 +912,66 @@ class Weixin extends Common
                     }
                     $result['data'][] = $v;
                 }
-                $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($keywordsWhere)->count('a.rent_order_id');
+                $result['count'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($keywordsWhere)->count('a.rent_order_id');
 
-            }else{ //如果是代缴，按照房屋来排列
+            }else{ //如果是待缴，按照房屋来排列
                 $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
-                $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
-                $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
-
-                $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
-
-                $distances = array();
-
-                foreach ($ban_arr as &$ban) {
-                    // 计算距离
-                    $ban['distance'] = get_distance($gpsy,$gpsx,$ban['ban_gpsy'],$ban['ban_gpsx']);
-                }
-
                 
-                // foreach ($users as $user) {
-                //   $distances[] = $user['age'];
-                // }
-                // array_multisort($ages, SORT_ASC, $users);
+                // 按照距离来排序
+                $is_distance_sort = false;
+                if ($is_distance_sort) {
+                    $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
+                    $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
+                    $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
 
-                $result['data'] = [];
-                foreach ($temps as &$v) { 
-                    $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
-                    $v['house_use_id'] = $params['uses'][$v['house_use_id']];
-                    $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
-                    $v['distance'] = $ban_arr[$v['ban_id']]['distance'];
-                    //$result['data'][] = $v;
+                    $distances = array();
+
+                    foreach ($ban_arr as &$ban) {
+                        // 计算距离
+                        $ban['distance'] = get_distance($gpsy,$gpsx,$ban['ban_gpsy'],$ban['ban_gpsx']);
+                    }
+
+                    
+                    // foreach ($users as $user) {
+                    //   $distances[] = $user['age'];
+                    // }
+                    // array_multisort($ages, SORT_ASC, $users);
+
+                    $result['data'] = [];
+                    foreach ($temps as &$v) { 
+                        $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                        $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                        $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                        $v['distance'] = $ban_arr[$v['ban_id']]['distance'];
+                        //$result['data'][] = $v;
+                    }
+
+                    sort($temps);
+
+                    //二维数组冒泡排序
+                    $a = [];
+                    foreach($temps as $key=>$val){
+                        $a[] = $val['distance']; // $a是$sort的其中一个字段
+                    }
+                    $temps = bubble_sort($temps,$a,'asc'); // 正序
+
+                    $result['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
+                    $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
+                }else{
+                    $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
+                    $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->page($page)->limit($limit)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
+
+                    foreach ($temps as &$v) { 
+                        $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
+                        $v['house_use_id'] = $params['uses'][$v['house_use_id']];
+                        $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
+                        //$v['distance'] = $ban_arr[$v['ban_id']]['distance'];
+                        //$result['data'][] = $v;
+                    }
+                    $result['data'] = $temps;
+                    $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
                 }
-
-                sort($temps);
-
-                //二维数组冒泡排序
-                $a = [];
-                foreach($temps as $key=>$val){
-                    $a[] = $val['distance']; // $a是$sort的其中一个字段
-                }
-                $temps = bubble_sort($temps,$a,'asc'); // 正序
-
-                $result['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
-                $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
+                
             }
             //halt($result);
             $result['pages'] = ceil($result['count'] / $limit);
@@ -995,29 +1015,46 @@ class Weixin extends Common
             $row = $checkData['member_extra_info'];
         }
 
-        $id = input('get.rent_order_id');
+        $id = input('get.id');
+        //$id = 1;
 
-        if($row){
-            $BanModel = new BanModel;
+        $RentOrderChildModel = new RentOrderChildModel;
+        $row = $RentOrderChildModel->detail($id);
 
-            $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-            $temp = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$id]])->find();
+        $params = ParamModel::getCparams();
 
-            $params = ParamModel::getCparams();
+        $row['ban_inst_id'] = $params['insts'][$row['ban_inst_id']];
+        $row['house_use_id'] = $params['uses'][$row['house_use_id']];
+        $row['ban_owner_id'] = $params['owners'][$row['ban_owner_id']];
+        $row['rent_order_date'] = substr($row['rent_order_date'],0,4).'年'.substr($row['rent_order_date'],4,2).'月01日';
+        // if($row['ptime']){
+        //     $row['ptime'] = date('Y年m月d日',$row['ptime']);
+        // }
+        $result['data'] = $row;
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+//halt($id);
+        // if($row){
+        //     $BanModel = new BanModel;
 
-            $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
-            $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
-            $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
-            $temp['rent_order_date'] = substr($temp['rent_order_date'],0,4).'年'.substr($temp['rent_order_date'],4,2).'月01日';
-            if($temp['ptime']){
-                $temp['ptime'] = date('Y年m月d日',$temp['ptime']);
-            }
-            $result['data'] = $temp;            
-            $result['code'] = 1;
-            $result['msg'] = '获取成功！';
-        }else{
-            $result['msg'] = '参数错误！';
-        }
+        //     $fields = 'a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+        //     $temp = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['id','eq',$id]])->find();
+
+        //     $params = ParamModel::getCparams();
+
+        //     $temp['ban_inst_id'] = $params['insts'][$temp['ban_inst_id']];
+        //     $temp['house_use_id'] = $params['uses'][$temp['house_use_id']];
+        //     $temp['ban_owner_id'] = $params['owners'][$temp['ban_owner_id']];
+        //     $temp['rent_order_date'] = substr($temp['rent_order_date'],0,4).'年'.substr($temp['rent_order_date'],4,2).'月01日';
+        //     if($temp['ptime']){
+        //         $temp['ptime'] = date('Y年m月d日',$temp['ptime']);
+        //     }
+        //     $result['data'] = $temp;            
+        //     $result['code'] = 1;
+        //     $result['msg'] = '获取成功！';
+        // }else{
+        //     $result['msg'] = '参数错误！';
+        // }
         return json($result);  
     }
 
@@ -2537,12 +2574,12 @@ class Weixin extends Common
      * @author  Lucas 
      * 创建时间: 2020-02-28 10:13:33
      */
-    public function order_hisitory() 
+    public function order_history() 
     {
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        $result['action'] = 'wechat/weixin/order_hisitory';
+        $result['action'] = 'wechat/weixin/order_history';
         if($this->debug === false){ 
             if(!$this->check_token()){
                 $result['code'] = 10010;
