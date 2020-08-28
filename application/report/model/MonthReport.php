@@ -70,9 +70,8 @@ class MonthReport extends Model
 
         //获取非基数异动
         $changeNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents,change_type')->group('use_id,owner_id,inst_id,change_type')
-        ->where([['order_date','<',$nextDate],['change_cancel_type','neq',1],['change_type','neq',1],['change_status','eq',1]])
-        ->select();
-
+        ->where([['order_date','<',$nextDate],['change_cancel_type','neq',1],['change_type','neq',1],['change_status','eq',1]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
+//halt(Db::name('change_table')->getLastSql());
         //陈欠核销的是一个特别的非基数异动，以前年月必须是当月数据，不能同本月一样每个月继承
         $changeHeXiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
         ->where([['order_date','eq',$cacheDate],['change_type','eq',4],['change_status','eq',1]])

@@ -405,10 +405,10 @@ class ChangeCancel extends SystemBase
                         'house_is_pause' => 0,
                     ]);
                     //如果有暂停计租，则需要让暂停计租失效
-                    ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
+                    ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
                     //如果有减免，则需要让减免失效
-                    ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
-                    Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['end_date'=>date('Ym')]);
+                    ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
+                    Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['is_valid'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
                     // 添加房屋台账
                     $taiHouseData[$k]['house_id'] = $v['house_id'];
                     $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
@@ -475,10 +475,10 @@ class ChangeCancel extends SystemBase
                     'house_dtime' => time(),
                 ]);
                 //如果有暂停计租，则需要让暂停计租失效
-                ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
+                ChangeTableModel::where([['change_type','eq',3],['house_id','eq',$v['house_id']]])->update(['change_status'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
                 //如果有减免，则需要让减免失效
-                ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>0]);
-                Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['is_valid'=>0,'end_date'=>date('Ym')]);
+                ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$v['house_id']]])->update(['change_status'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
+                Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$v['house_id']]])->update(['is_valid'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
 
                 $taiHouseData[$k]['house_id'] = $v['house_id'];
                 $taiHouseData[$k]['tenant_id'] = $v['tenant_id'];
