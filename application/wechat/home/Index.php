@@ -124,12 +124,6 @@ class Index extends Common
     {
         include EXTEND_PATH.'wxpay/WxPayNativePay.php';
         include EXTEND_PATH.'wxpay/log.php';
-        //Loader::import('wxpay.WxPayNativePay', EXTEND_PATH);
-        //Loader::import('wxpay.lib.WxPayApi', EXTEND_PATH);
-        //Loader::import('wxpay.log', EXTEND_PATH);
-        //require_once "../lib/WxPay.Api.php";
-        //require_once "WxPay.NativePay.php";
-        //require_once 'log.php';
         //模式一
         /**
          * 流程：
@@ -205,20 +199,6 @@ class Index extends Common
      */
     public function jsapi()
     {
-        //halt($_SERVER['HTTP_USER_AGENT']);
-        // 生成后台订单
-        // $WeixinOrderModel = new WeixinOrderModel;
-        // $WeixinOrderModel->perpay_id = 'perpay_id';
-        // $WeixinOrderModel->out_trade_no = 'out_trade_no';
-        // $WeixinOrderModel->member_id = 'member_id';
-        // $WeixinOrderModel->rent_order_id = 1;
-        // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
-        // $res = $WeixinOrderModel->save();
-        // if($res){
-        //     $result['code'] = 1;
-        //     $result['msg'] = '添加成功';
-        //     return json($result);
-        // }
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -279,17 +259,8 @@ class Index extends Common
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
 
-        //$inst_pid = Db::name('base_inst')->where([['inst_id','eq',$ban_row['ban_inst_pid']]])->field('inst_pid')->find();
-        //halt($pay_money);
-        
-
-        // if($member_info->tenant_id){
-        //     $houses = HouseModel::where([['tenant_id','eq',$member_info->tenant_id]])->column('house_id');
-        //     $member_houses = array_merge($member_houses,$houses);
-        // }
         $inst_pid = $ban_row['ban_inst_pid'];
-        //var_dump($inst_pid);exit;
-        //halt($member_houses);
+
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         if($inst_pid == 2){
@@ -391,41 +362,11 @@ class Index extends Common
      */
     public function createqrcode()
     {
-        // 调起支付
-        include EXTEND_PATH.'wechat/include.php';
-        // $mini = new WeMini\Qrcode($config);
-        $mini = \WeMini\Qrcode::instance($this->config_ziyang);
 
-        //echo '<pre>';
-        //try {
-            header('Content-type:image/jpeg'); //输出的类型
-        //    echo $mini->createDefault('pages/index?query=1');
-        //    echo $mini->createMiniScene('432432', 'pages/index/index');
-            $result = $mini->createMiniPath('pages/payment/payment?houseid=22');
-            $res = file_put_contents('./qrcode2.png',$result);
-            
-            halt($res);
-        // } catch (Exception $e) {
-        //     var_dump($e->getMessage());
-        // }
     }
 
     public function recharge()
     {
-        //halt($_SERVER['HTTP_USER_AGENT']);
-        // 生成后台订单
-        // $WeixinOrderModel = new WeixinOrderModel;
-        // $WeixinOrderModel->perpay_id = 'perpay_id';
-        // $WeixinOrderModel->out_trade_no = 'out_trade_no';
-        // $WeixinOrderModel->member_id = 'member_id';
-        // $WeixinOrderModel->rent_order_id = 1;
-        // $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
-        // $res = $WeixinOrderModel->save();
-        // if($res){
-        //     $result['code'] = 1;
-        //     $result['msg'] = '添加成功';
-        //     return json($result);
-        // }
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -735,7 +676,7 @@ class Index extends Common
     }
 
     /**
-     * 功能描述：支付结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
+     * 功能描述：紫阳所订单支付完成，结果通知（native或jsapi支付成功后微信根据支付提交的地址回调）
      * @author  Lucas 
      * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7&index=8
      * 创建时间: 2020-03-12 21:53:40
@@ -790,6 +731,8 @@ class Index extends Common
                 $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
                 $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
 
+                $house_id = '';
+
                 $RentModel = new RentModel;
                 foreach ($rent_order_ids as $rid) {
 
@@ -800,6 +743,8 @@ class Index extends Common
                     //$rent_order_info->pay_way = 4; 
                     $rent_order_info->is_deal = 1; 
                     $rent_order_info->save();
+
+                    $house_id = $rent_order_info['house_id'];
                     
                     // 缴纳欠租订单order_child
                     $RentOrderChildModel = new RentOrderChildModel;
@@ -832,6 +777,15 @@ class Index extends Common
                     $HouseTaiModel->save();
                 }
 
+                // 如果支付的人，并没有绑定当前房屋，则自动绑定当前房屋(非认证状态)
+                $member_house_info = WeixinMemberHouseModel::where([['member_id','eq',$row->member_id],['house_id','eq',$house_id],['dtime','eq',0]])->find();
+                if(!$member_house_info){
+                    WeixinMemberHouseModel::create([
+                        'member_id' => $row->member_id,
+                        'house_id' => $house_id,
+                    ]);
+                }
+               
                 // 开具电子发票
                 $InvoiceModel = new InvoiceModel;
                 $InvoiceModel->dpkj($row['order_id']);
@@ -880,6 +834,8 @@ class Index extends Common
                 $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
                 $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$data['out_trade_no']]])->column('rent_order_id');
 
+                $house_id = '';
+
                 $RentModel = new RentModel;
                 foreach ($rent_order_ids as $rid) {
                     $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
@@ -888,6 +844,8 @@ class Index extends Common
                     // $rent_order_info->pay_way = 4; //4是微信支付
                     $rent_order_info->is_deal = 1; 
                     $rent_order_info->save();
+
+                    $house_id = $rent_order_info['house_id'];
 
                     // 缴纳欠租订单order_child
                     $RentOrderChildModel = new RentOrderChildModel;
@@ -917,6 +875,15 @@ class Index extends Common
                     $HouseTaiModel->change_type = '';
                     $HouseTaiModel->change_id = '';
                     $HouseTaiModel->save();
+                }
+
+                // 如果支付的人，并没有绑定当前房屋，则自动绑定当前房屋(非认证状态)
+                $member_house_info = WeixinMemberHouseModel::where([['member_id','eq',$row->member_id],['house_id','eq',$house_id],['dtime','eq',0]])->find();
+                if(!$member_house_info){
+                    WeixinMemberHouseModel::create([
+                        'member_id' => $row->member_id,
+                        'house_id' => $house_id,
+                    ]);
                 }
 
                 // 开具电子发票
