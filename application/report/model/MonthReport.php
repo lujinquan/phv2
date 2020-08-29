@@ -84,12 +84,12 @@ class MonthReport extends Model
 
         //政策减免
         $changeZhengceData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-        ->where([['end_date','gt',$cacheDate],['cut_type','eq',5],['change_status','eq',1]])
+        ->where([['order_date','<',$nextDate],['end_date','gt',$cacheDate],['cut_type','eq',5],['change_status','eq',1]])
         ->select();
 
         //减免（除去政策减免）
         $changejianmianData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-        ->where([['end_date','gt',$cacheDate],['change_type','eq',1],['cut_type','neq',5],['change_status','eq',1]])
+        ->where([['order_date','<',$nextDate],['end_date','gt',$cacheDate],['change_type','eq',1],['cut_type','neq',5],['change_status','eq',1]])
         ->select();
 
         //重组为规定格式的租金数据
@@ -664,7 +664,7 @@ class MonthReport extends Model
                 array_unshift($result[$owners][$j][16],array_sum($result[$owners][$j][16]) - $result[$owners][$j][16][1] - $result[$owners][$j][16][2] - $result[$owners][$j][16][3]);
 
                 //陈欠核销ChangeType = 4
-                $result[$owners][$j][15][1] = $changeNoBasedata[$owners][2][$j][0]['change_rents'];
+                $result[$owners][$j][15][1] = $changeHeXiaodata[$owners][2][$j]['change_rents'];
                 $result[$owners][$j][15][2] = $changeHeXiaodata[$owners][2][$j]['change_month_rents'];
                 $result[$owners][$j][15][3] = $changeHeXiaodata[$owners][2][$j]['change_year_rents'];
                 $result[$owners][$j][15][4] = 0.4 * $result[$owners][$j][15][1];
@@ -673,10 +673,10 @@ class MonthReport extends Model
                 $result[$owners][$j][15][7] = 0.6 * $result[$owners][$j][15][1];
                 $result[$owners][$j][15][8] = 0.6 * $result[$owners][$j][15][2];
                 $result[$owners][$j][15][9] = 0.6 * $result[$owners][$j][15][3];
-                $result[$owners][$j][15][10] = $changeNoBasedata[$owners][3][$j][0]['change_rents'];
+                $result[$owners][$j][15][10] = $changeHeXiaodata[$owners][3][$j]['change_rents'];
                 $result[$owners][$j][15][11] = $changeHeXiaodata[$owners][3][$j]['change_month_rents'];
                 $result[$owners][$j][15][12] = $changeHeXiaodata[$owners][3][$j]['change_year_rents'];
-                $result[$owners][$j][15][13] = $changeNoBasedata[$owners][1][$j][0]['change_rents'];
+                $result[$owners][$j][15][13] = $changeHeXiaodata[$owners][1][$j]['change_rents'];
                 $result[$owners][$j][15][14] = $changeHeXiaodata[$owners][1][$j]['change_month_rents'];
                 $result[$owners][$j][15][15] = $changeHeXiaodata[$owners][1][$j]['change_year_rents'];
                 array_unshift($result[$owners][$j][15],array_sum($result[$owners][$j][15]) - $result[$owners][$j][15][1] - $result[$owners][$j][15][2] - $result[$owners][$j][15][3]);
