@@ -1384,6 +1384,7 @@ class Weixin extends Common
             $tenant = input('tenant_name');
             $status = input('house_status');
             $address = input('ban_address');
+            $house_is_pause = input('house_is_pause');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
 
@@ -1391,6 +1392,9 @@ class Weixin extends Common
             $where = [];
             $where[] = ['d.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
             
+            if($house_is_pause !== null){
+                $where[] = ['a.house_is_pause','eq',$house_is_pause];
+            }
             if($use){
                 $where[] = ['a.house_use_id','eq',$use];
             }
@@ -1544,6 +1548,8 @@ class Weixin extends Common
             //$result['data']['params'] = $params;
             $status = input('tenant_status');
             $tenant = input('tenant_name');
+            $tenant_tel = input('tenant_tel');
+            $tenant_card = input('tenant_card');
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
 
@@ -1551,6 +1557,12 @@ class Weixin extends Common
             $where[] = ['tenant_inst_id','in',config('inst_ids')[$row['inst_id']]];
             if($tenant){
                 $where[] = ['tenant_name','like','%'.$tenant.'%'];
+            }
+            if($tenant_tel){
+                $where[] = ['tenant_tel','like','%'.$tenant_tel.'%'];
+            }
+            if($tenant_card){
+                $where[] = ['tenant_card','like','%'.$tenant_card.'%'];
             }
             if($status !== null){
                 $where[] = ['tenant_status','eq',$status];
