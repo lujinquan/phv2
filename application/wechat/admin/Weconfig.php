@@ -79,7 +79,7 @@ class Weconfig extends Admin
             		break;
             	case 'service_conf':
                     $is_show = input('is_show');
-                    $value = input('value');
+                    $value = $_POST['value'];
                     if(!$value){
                         $this->error('内容不能为空');
                     }
@@ -135,7 +135,7 @@ class Weconfig extends Admin
             }
             $WeixinGuideModel = new WeixinGuideModel;
             $data['cuid'] = ADMIN_ID;
-            //$data['content'] = htmlspecialchars($data['content']);
+            $data['content'] = $_POST['content'];
             // 入库
             if (!$WeixinGuideModel->allowField(true)->create($data)) {
                 return $this->error('发布失败');
@@ -155,6 +155,7 @@ class Weconfig extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $data['content'] = $_POST['content'];
             // 入库
             if (!$WeixinGuideModel->allowField(true)->update($data)) {
                 return $this->error('编辑失败');

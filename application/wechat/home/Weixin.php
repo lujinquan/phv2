@@ -58,6 +58,8 @@ class Weixin extends Common
 {
     protected $debug = false;
 
+    protected $domain = 'https://procheck.ctnmit.com';
+
     public function index()
     {
         return $this->fetch();
@@ -375,7 +377,7 @@ class Weixin extends Common
         $all_process_columns = [];
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
-             $v['file'] = 'https://procheck.ctnmit.com'.$file;
+             $v['file'] = $this->domain.$file;
 
              if($checkData['role_type'] == 2){ // 2代表是后台管理员
                 if($v['auth_roles'] && !in_array($member_extra_info['role_id'],$v['auth_roles'])){
@@ -1021,6 +1023,33 @@ class Weixin extends Common
         $RentOrderChildModel = new RentOrderChildModel;
         $row = $RentOrderChildModel->detail($id);
 
+        $row['pdfurl'] = ''; 
+
+        // 如果是微信支付则显示微信支付的相关数据
+        if ($row['pay_way'] == 4) {
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+            $rent_order_trade_info = $WeixinOrderTradeModel->where([['rent_order_id','eq',$row['rent_order_id']]])->field('out_trade_no,pay_dan_money')->find();
+
+            $WeixinOrderModel = new WeixinOrderModel;
+            $order_info = $WeixinOrderModel->with('weixinMember')->where([['out_trade_no','eq',$rent_order_trade_info['out_trade_no']]])->find()->toArray();
+            if($order_info['order_status'] == 2){ //如果状态是已退款
+                $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+                $order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
+                $result['order_refund_info'] = $order_refund_info;
+            }
+            if($order_info['invoice_id']){
+              $InvoiceModel = new InvoiceModel;
+              $invoice_info = $InvoiceModel->find($order_info['invoice_id'])->toArray();
+              $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
+              $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
+              $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
+              $result['invoice_info'] = $invoice_info;
+              $order_info['invoice_id'] = '是';
+              $row['pdfurl'] = $invoice_info['pdfurl']; 
+            }
+        }
+        
+
         $params = ParamModel::getCparams();
 
         $row['ban_inst_id'] = $params['insts'][$row['ban_inst_id']];
@@ -1090,7 +1119,7 @@ class Weixin extends Common
         $banners = WeixinBannerModel::where([['dtime','eq',0],['is_show','eq',1]])->order('sort desc')->select()->toArray();
         foreach ($banners as &$b) {
             $banner = SystemAnnex::where([['id','eq',$b['banner_img']]])->value('file');
-            $b['banner_img'] = 'https://procheck.ctnmit.com'.$banner;
+            $b['banner_img'] = $this->domain.$banner;
         }
         $result['data']['app_user_index_banner'] = $banners;
         // 获取公告列表
@@ -1115,7 +1144,7 @@ class Weixin extends Common
         $columns = $WeixinColumnModel->field('col_id,col_name,auth_roles,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
-             $v['file'] = 'https://procheck.ctnmit.com'.$file;
+             $v['file'] = $this->domain.$file;
              if(!in_array($v['col_id'],$member_info['app_cols'])){
                 unset($columns[$k]);
              }
@@ -2870,7 +2899,7 @@ class Weixin extends Common
 
         $domain = get_domain();
 
-        $findFile = str_replace('https://pro.ctnmit.com',$_SERVER['DOCUMENT_ROOT'],$houseRow['house_share_img']);
+        $findFile = str_replace($this->domain,$_SERVER['DOCUMENT_ROOT'],$houseRow['house_share_img']);
         if($houseRow['house_share_img'] && is_file($findFile)){
 
         }else{
@@ -2881,8 +2910,8 @@ class Weixin extends Common
             $createMiniSceneData = $WeixinModel->createMiniScene($houseRow['house_id'] , $path,$width); //B方案生成二维码，
             file_put_contents('.'.$filename,$createMiniSceneData);
             $houseModel = new HouseModel;
-            $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>'https://pro.ctnmit.com'.$filename]);
-            $houseRow['house_share_img'] = 'https://pro.ctnmit.com'.$filename;
+            $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>$this->domain.$filename]);
+            $houseRow['house_share_img'] = $this->domain.$filename;
 
 
         }
