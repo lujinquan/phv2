@@ -82,7 +82,7 @@
 	</script>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
 	  {{# if(d.change_type == 18 && d.curr_role == 6 && d.is_process){ }}
-	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印</a>
+	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印({{ d.print_times }})</a>
 	  {{# } }}
 	  {if condition="$inst_level < 3"}
 	  {{# if((!d.is_process) || (d.is_process && d.change_type == 18 && d.curr_role == 6 && d.print_times == 0)){ }}
@@ -144,7 +144,7 @@
 				]
 			],
 			done: function(res, curr, count) {
-
+                   console.log("审批:",res);
 			}
 		},isShowInst)
 	});
