@@ -53,7 +53,7 @@
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 {{#  if (d.order_status == 1) { }}
-{{#  if (!d.invoice_id) { }}
+{{#  if (d.invoice_id <= 0) { }}
 	<a href="{:url('dpkj')}?id={{ d.order_id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
 {{# }else{ }}
 	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>

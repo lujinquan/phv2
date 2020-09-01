@@ -61,4 +61,22 @@ class WeixinGuide extends Model
 
         return $where;
     }
+
+    public function detail($id)
+    {
+        if(!$id){
+            $this->error = '办事指引编号不能为空';
+            return false;
+        }
+        $data = $this->find($id);
+        if(empty($data)){
+            $this->error = '办事指引编号不存在';
+            return false;
+        }
+        $content = htmlspecialchars_decode($data['content']);
+        $curr_domin = input('server.http_host');
+        $data['content'] = str_replace('/static/js/editor/kindeditor/file/image', 'https://'.$curr_domin.'/static/js/editor/kindeditor/file/image', $content);
+        $data['cuid'] = Db::name('system_user')->where([['id','eq',$data['cuid']]])->value('nick');
+        return $data;
+    }
 }

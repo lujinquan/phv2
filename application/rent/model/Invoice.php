@@ -168,7 +168,7 @@ class Invoice extends Model
         $dpkj = [];
         // 发票请求流水号 20 是 企业内部唯一请求开票流水 号，每个请求流水号只能开一 次 ,流水号前面以公司名称 前 缀 例 如 合 力 中 税 ： HLZS20171128094300001
         $dpkj['fpqqlsh'] = 'LUCAS201711280943001'; 
-        // 开票类型 1 是 0-蓝字发票；1-红字发票
+        // 开票类型 1 是 0-蓝字发票；1-红字发票 (冲红)
         $dpkj['kplx'] = 0;
         // 发票类型 10 是 026-增值税电子发票 032-区块链发票
         $dpkj['fplx'] = '026';
@@ -185,14 +185,14 @@ class Invoice extends Model
         //$dpkj['xsf_yhzh'] = '中信银行 1234567890';
         $dpkj['xsf_yhzh'] = '';
         // 购买方纳税人识 别号 20 否 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
-        $dpkj['gmf_nsrsbh'] = '91110133745594417B';
+        $dpkj['gmf_nsrsbh'] = '';
         // 购买方名称 100 是 如为非收购发票，此项可 选；如为收购发票， 此项必填，即开票方纳税人 识别号
-        $dpkj['gmf_mc'] = '测试购买方名称';
+        $dpkj['gmf_mc'] = '';
         // 购买方地址、电话 100 否 如为非收购发票，此项可 选；如为收购发票，此项必 填，即开票纳税人地址、电 话
-        $dpkj['gmf_dzdh'] = '测试购买方地址 120';
+        $dpkj['gmf_dzdh'] = '';
         // 购买方银行账号 100 否
         //$dpkj['gmf_yhzh'] = '测试银行 123456';
-        $dpkj['gmf_yhzh'] = '1';
+        $dpkj['gmf_yhzh'] = '';
         // 购买方手机号 11 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方手机号；如 收购发票则为销售方手机 号
         $dpkj['gmf_sjh'] = '';
         // 购买方电子邮箱 100 否 用于接收和归集电子发票 购买方手机号与电子邮箱 不能同时为空，如为非收购 发票则为购买方电子邮箱； 如为收购发票则为销货方 电子邮箱
@@ -232,12 +232,12 @@ class Invoice extends Model
         // 优惠政策标识 1 是 0：不使用，1：使用
         $dpkj['yhzcbs'] = 0;
         // 零税率标识 1 否 空：非零税率， 1：免税， 2：不征收，3：普通零税率
-        $dpkj['lslbs'] = '';
+        $dpkj['lslbs'] = 1;
         // 增值税特殊管理 50 否 若含有预售卡业务，税率为 0，零税率标示必须为不征 税，优惠政策标示为 1，增 值税特殊管理必须为不征 税
         $dpkj['zzstsgl'] = '';
         // 项目名称 90 是 如果为折扣行，商品名称须 与被折扣行的商品名称相 同，不能多行折扣
         $dpkj['xmmc'] = '租金';
-        // 项目数量 12 否 最多保留6位小数，总长度 包含小数点不能超过12位
+        // 项目数量 12 否 最多保留6位小数，总长度 包含小数点不能超过12位（冲红发票需填写负数）
         $dpkj['xmsl'] = 1;
         // 项目单价 12 否 不含税，最多保留6位小数， 总长度包含小数点不能超 过12位
         $dpkj['xmdj'] = 0;
@@ -262,9 +262,9 @@ class Invoice extends Model
             $dpkj['fpqqlsh'] = 'CZY'.$timestamp; // C代表武昌区，ZY代表紫阳所
             $dpkj['xsf_mc'] = '武汉市武昌区房地产公司紫阳房管所'; // 销售方名称
             $dpkj['xsf_nsrsbh'] = '12420106931266704D'; // 纳税人识别号
-            // $dpkj['xsf_dzdh'] = '武汉市武昌区黄鹤楼街办事处彭刘杨路103号'; // 销售方地址
-            // $dpkj['xsf_yhzh'] = '中信银行 1234567890'; // 销售方银行账号
-            $dpkj['fhr'] = '曹秀芳'; // 复核人
+            $dpkj['xsf_dzdh'] = '武汉市武昌区彭刘杨路103号 02750768218'; // 销售方地址
+            $dpkj['xsf_yhzh'] = '中信武昌支行 7381710182600033257'; // 销售方银行账号
+            $dpkj['fhr'] = '冯晖'; // 复核人
             //$dpkj['kpr'] = '冯晖'; // 开票人
             $this->appid = 'b3d3e0bf9221'; // 紫阳所的appid
             $this->appsecret = '33ed9898d7b779ff3804'; // 紫阳所的appsecret
@@ -273,9 +273,9 @@ class Invoice extends Model
             $dpkj['fpqqlsh'] = 'CLD'.$timestamp; // C代表武昌区，LD代表粮道所
             $dpkj['xsf_mc'] = '武汉市武昌区房地产公司粮道街房管所'; // 销售方名称
             $dpkj['xsf_nsrsbh'] = '12420106441363712E'; // 纳税人识别号
-            // $dpkj['xsf_dzdh'] = '武汉市武昌区三道街2号'; // 销售方地址
-            // $dpkj['xsf_yhzh'] = '农业银行 1234567890'; // 销售方银行账号
-            $dpkj['fhr'] = '张润'; // 复核人
+            $dpkj['xsf_dzdh'] = '武汉市武昌区后补街83号 88872619'; // 销售方地址
+            $dpkj['xsf_yhzh'] = '农行胭脂路支行 031401040000062'; // 销售方银行账号
+            $dpkj['fhr'] = '冯超'; // 复核人
             //$dpkj['kpr'] = '冯超'; // 开票人
             $this->appid = 'b6fba0d617c7'; // 粮道所的appid
             $this->appsecret = '30868888cbdf99f7b1e7'; // 粮道所的appsecret
@@ -286,11 +286,19 @@ class Invoice extends Model
         $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address']. ' ' .$RentOrderRow['tenant_tel'];
         $dpkj['skr'] = $SystemUserRow['nick']; // 收款人
         $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
+        
+        $dpkj['gmf_sjh'] = ''; // 购买方手机号（比如，发票开给张三的，就填写张三的手机号）
+        $dpkj['gmf_dzyx'] = '598936602@qq.com'; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
+
         $dpkj['xmmc'] = substr($RentOrderRow['rent_order_date'], 0,4).'年'.substr($RentOrderRow['rent_order_date'], 4,2).'月房屋租金'; // 项目名称
+        //$dpkj['xmmc'] = '房地产租赁'; // 项目名称
+        
+        //$WeixinOrderRow['pay_money'] = '-0.01';
+
         $dpkj['xmdj'] = $WeixinOrderRow['pay_money']; // 项目单价
-        $dpkj['xmje'] = $WeixinOrderRow['pay_money']; // 项目金额
-        $dpkj['jshj'] = $WeixinOrderRow['pay_money']; // 价税合计
-        $dpkj['hjje'] = $WeixinOrderRow['pay_money']; // 合计金额
+        $dpkj['xmje'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 项目金额
+        $dpkj['jshj'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 价税合计
+        $dpkj['hjje'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 合计金额
         $dpkj['bz'] = substr($RentOrderRow['rent_order_date'], 0,4).'年'.substr($RentOrderRow['rent_order_date'], 4,2).'月租金订单，支付订单号：'.$WeixinOrderTradeRow['out_trade_no']; // 备注
 
 
@@ -427,7 +435,7 @@ class Invoice extends Model
 //       </business>
 // EOF;
         // 打印请求开发票的所有数据，用作调试的
-        //dump($this->appid);dump($this->appsecret);halt($dpkj);
+        //dump($this->appid);dump($this->appsecret);dump($content);halt($dpkj);
         
         $base64Sign = base64_encode($content);
         //dump('base64加密>>>> '.$base64Sign);
@@ -445,7 +453,8 @@ class Invoice extends Model
 
         $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
         
-        //halt($result);
+        // dump($content);
+        // halt($result);
         
         // 这是一个错误的案例，用作调试的
         // $result = [

@@ -344,7 +344,7 @@ class Rent extends Model
             $where = [];
             $where[] = ['is_deal','eq',0];
             // $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
-            $where[] = ['b.house_number','eq','10600713206227'];
+            //$where[] = ['b.house_number','eq','10600713206227'];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[3]];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,a.house_id,a.tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->select()->toArray();
 
@@ -1094,7 +1094,7 @@ class Rent extends Model
             $where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
             //$where[] = ['rent_order_receive','eq',rent_order_paid];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-            $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
+            $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,b.house_share_img,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
             $result = $data = [];
             $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
             //dump($where);halt($baseData);
@@ -1109,6 +1109,7 @@ class Rent extends Model
                     continue;
                 }
                 $data[$b['house_id']]['house_id'] = $b['house_id'];
+                $data[$b['house_id']]['house_share_img'] = $b['house_share_img'];
                 $data[$b['house_id']]['house_number'] = $b['house_number'];
                 $data[$b['house_id']]['ban_number'] = $b['ban_number'];
                 $data[$b['house_id']]['ban_address'] = $b['ban_address'];
