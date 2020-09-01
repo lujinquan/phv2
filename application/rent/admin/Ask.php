@@ -62,7 +62,8 @@ class Ask extends Admin
 	        	$html .= bcaddMerge([$v['beforeMonthUnpaidRent'] + $v['beforeYearUnpaidRent']]);
 
 	        	$html .= ' 元</td><td rowspan="3"><img style="width: 100px;box-sizing: border-box;" src="';
-	        	$html .= 'https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png';
+	        	//$html .= 'https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png';
+                $html .= $v['house_share_img'];
 	        	$html .= '" /></td></tr><tr><td class="j-print-90" align="left">本期欠租</td><td class="j-print-120" align="left">';
 	        	$html .= $v['curMonthUnpaidRent'];
 	        	$html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
@@ -95,7 +96,8 @@ class Ask extends Admin
             $html .= bcaddMerge([$v['beforeMonthUnpaidRent'] + $v['beforeYearUnpaidRent']]);
 
             $html .= ' 元</td><td rowspan="3"><img style="width: 100px;box-sizing: border-box;" src="';
-            $html .= 'https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png';
+            //$html .= 'https://procheck.ctnmit.com/upload/wechat/qrcode/share_1_10020050010001.png';
+            $html .= $v['house_share_img'];
             $html .= '" /></td></tr><tr><td class="j-print-90" align="left">本期欠租</td><td class="j-print-120" align="left">';
             $html .= $v['curMonthUnpaidRent'];
             $html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';

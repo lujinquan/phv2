@@ -42,10 +42,10 @@ class MonthReport extends Model
 
 
         //从租金订单表中,获取规定、已缴、欠缴、应缴租金
-        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$cacheDate]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,count(a.house_id) as house_ids,sum(a.rent_order_cut) as rent_order_cuts,sum(a.rent_order_receive) as rent_order_receives,sum(a.rent_order_paid) as rent_order_paids,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids,sum(a.rent_order_diff) as rent_order_diffs,sum(a.rent_order_pump) as rent_order_pumps')->where([['a.rent_order_date','eq',$cacheDate],['a.rent_order_status','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 
         //从租金订单表中,欠缴租金
-        $rentUnpaidData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids')->where([['a.rent_order_date','eq',$cacheDate],['a.is_deal','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
+        $rentUnpaidData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaids')->where([['a.rent_order_date','eq',$cacheDate],['a.is_deal','eq',1],['a.rent_order_status','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
         
 
         //从房屋表中分组获取年度欠租、租差
@@ -695,7 +695,7 @@ class MonthReport extends Model
                 $result[$owners][$j][9][10] = $result[$owners][$j][10][10] + $result[$owners][$j][11][10] + $result[$owners][$j][12][10] + $result[$owners][$j][14][10] + $result[$owners][$j][15][10]- $result[$owners][$j][16][10];
                 $result[$owners][$j][9][11] = $result[$owners][$j][10][11] + $result[$owners][$j][11][11] + $result[$owners][$j][12][11] + $result[$owners][$j][14][11] + $result[$owners][$j][15][11]- $result[$owners][$j][16][11];
                 $result[$owners][$j][9][12] = $result[$owners][$j][10][12] + $result[$owners][$j][11][12] + $result[$owners][$j][12][12] + $result[$owners][$j][14][12] + $result[$owners][$j][15][12]- $result[$owners][$j][16][12];
-                $result[$owners][$j][9][13] = $result[$owners][$j][10][13] + $result[$owners][$j][11][13] + $result[$owners][$j][12][13] + $result[$owners][$j][14][13] - $result[$owners][$j][16][13];
+                $result[$owners][$j][9][13] = $result[$owners][$j][10][13] + $result[$owners][$j][11][13] + $result[$owners][$j][12][13] + $result[$owners][$j][14][13] + $result[$owners][$j][15][13]- $result[$owners][$j][16][13];
                 $result[$owners][$j][9][14] = $result[$owners][$j][10][14] + $result[$owners][$j][11][14] + $result[$owners][$j][12][14] + $result[$owners][$j][14][14] + $result[$owners][$j][15][14]- $result[$owners][$j][16][14];
                 $result[$owners][$j][9][15] = $result[$owners][$j][10][15] + $result[$owners][$j][11][15] + $result[$owners][$j][12][15] + $result[$owners][$j][14][15] + $result[$owners][$j][15][15]- $result[$owners][$j][16][15];
                 array_unshift($result[$owners][$j][9],array_sum($result[$owners][$j][9]) - $result[$owners][$j][9][1] - $result[$owners][$j][9][2] - $result[$owners][$j][9][3]);

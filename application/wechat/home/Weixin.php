@@ -59,7 +59,7 @@ class Weixin extends Common
 {
     protected $debug = false;
 
-    protected $domain = 'https://procheck.ctnmit.com';
+    protected $domain = 'https://pro.ctnmit.com';
 
     public function index()
     {
@@ -1660,11 +1660,11 @@ class Weixin extends Common
             return json($result);
         }else{ // 验证成功
             $member_info = $checkData['member_info']; //微信用户基础数据
-            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-                $result['code'] = '权限不足';
-                $result['msg'] = '20000';
-                return json($result);
-            }
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     $result['msg'] = '20000';
+            //     return json($result);
+            // }
             $row = $checkData['member_extra_info'];
         }
         $id = input('get.tenant_id');
@@ -1836,10 +1836,10 @@ class Weixin extends Common
             return json($result);
         }else{
             $member_info = $checkData['member_info']; //微信用户基础数据
-            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-                $result['code'] = '权限不足';
-                return json($result);
-            }
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     return json($result);
+            // }
         }
         // 获取办事指引详情
         $WeixinNoticeModel = new WeixinNoticeModel;
@@ -1878,10 +1878,10 @@ class Weixin extends Common
             return json($result);
         }else{
             $member_info = $checkData['member_info']; //微信用户基础数据
-            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-                $result['code'] = '权限不足';
-                return json($result);
-            }
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     return json($result);
+            // }
         } 
         // 获取办事指引详情
         $WeixinGuideModel = new WeixinGuideModel;
@@ -1912,10 +1912,10 @@ class Weixin extends Common
             return json($result);
         }else{
             $member_info = $checkData['member_info']; //微信用户基础数据
-            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-                $result['code'] = '权限不足';
-                return json($result);
-            }
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     return json($result);
+            // }
         } 
         $type = trim(input('type',''));  //查询的类型，1，手机号 2，身份证号 3，房屋编号
         $keywords = trim(input('keywords'));
@@ -2058,11 +2058,11 @@ class Weixin extends Common
             return json($result);
         }else{ // 验证成功
             $member_info = $checkData['member_info']; //微信用户基础数据
-            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-                $result['code'] = '权限不足';
-                $result['msg'] = '20000';
-                return json($result);
-            }
+            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+            //     $result['code'] = '权限不足';
+            //     $result['msg'] = '20000';
+            //     return json($result);
+            // }
         }
         $house_id = trim(input('house_id'));
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;

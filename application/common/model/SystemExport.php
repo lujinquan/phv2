@@ -40,7 +40,7 @@ class SystemExport extends Model
 	{
 		//ob_clean();
 
-		set_time_limit(0);
+		set_time_limit(3000);
 
 		if(empty($tableData)){
 			return $this->error('暂无数据导出！');

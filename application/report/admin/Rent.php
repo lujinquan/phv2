@@ -25,7 +25,7 @@ class Rent extends Admin
      */
     public function months()
     {
-        // //把所有月租金报表数据同步写入到文件中去
+        //把所有月租金报表数据同步写入到文件中去
         // $ReportModel = new ReportModel;
         // $tempData = $ReportModel->where([['type','eq','RentReport']])->column('date,data');
         // foreach ($tempData as $k => $v) {
