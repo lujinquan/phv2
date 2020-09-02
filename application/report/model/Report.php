@@ -7,7 +7,7 @@ use app\common\model\Cparam as ParamModel;
 
 class Report extends Model
 {
-	// 设置模型名称
+    // 设置模型名称
     protected $name = 'report';
 
     /**
@@ -23,7 +23,7 @@ class Report extends Model
      */
     public function getUnpaidRent()
     {
-    	$ownerid = input('param.owner_id'); //默认查询市属
+        $ownerid = input('param.owner_id'); //默认查询市属
         $instid = input('param.inst_id',INST); //默认查询当前机构
         $useid = input('param.use_id'); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
@@ -223,36 +223,42 @@ class Report extends Model
         $params = ParamModel::getCparams();
         $separate = substr($month,0,4).'00';
 
-        $ownerid = input('param.owner_id'); //默认查询市属
-        $instid = input('param.inst_id',INST); //默认查询当前机构
-        $useid = input('param.use_id'); //默认查询住宅
-        //$curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
-        //$month = str_replace('-','',$curMonth);
-        $params = ParamModel::getCparams();
-        //$separate = substr($month,0,4).'00';
+        // $ownerid = input('param.owner_id'); //默认查询市属
+        // $instid = input('param.inst_id',INST); //默认查询当前机构
+        // $useid = input('param.use_id'); //默认查询住宅
+        // $params = ParamModel::getCparams();
         $where = [];
-        //$where[] = ['a.rent_order_date','<=',$month];
-        //$where[] = ['a.is_deal','eq',1];
-        if($useid != 0){
-            $where[] = ['b.house_use_id','in',explode(',',$useid)];
-        }
-        if($ownerid != 0){
-            $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
-        }
-        //$where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
-        //$where[] = ['rent_order_receive','eq',rent_order_paid];
-        $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-        // $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
-        // $result = $data = [];
-        // $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select();
+        // if($useid != 0){
+        //     $where[] = ['b.house_use_id','in',explode(',',$useid)];
+        // }
+        // if($ownerid != 0){
+        //     $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
+        // }
+        // $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
 
-        //$where = [];
+        $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
+        // 获取有余额的房屋信息
+        $housesWithBalancesIDS = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where([['b.house_balance','>',0]])->column('b.house_id');
+        // 获取有余额的房屋id
+        //$housesWithBalancesIDS = array_keys($housesWithBalances);
+//halt($where);
         $where[] = ['a.recharge_status','eq',1]; //充值成功状态
         $where[] = ['a.ctime','between',[strtotime($curMonth),strtotime($nextMonth)]];
         
         $fields = 'a.house_id,b.house_number,b.house_balance,sum(a.pay_rent) as pay_rent,a.ctime,b.house_use_id,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];
         $baseData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('house_id')->where($where)->select();
+
+        $last_month = date('Ym',strtotime('- 1 month',strtotime($curMonth)));
+        $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$last_month.'.txt');
+        //halt($tempData);
+        if($tempData){ // 有缓存就读取缓存数据
+            $temps = json_decode($tempData,true);
+            $last_month_data_housearr = array_keys($temps);
+            //halt($last_month_data_housearr);
+        }
+        $houseids = array_unique(array_merge($housesWithBalancesIDS,$last_month_data_housearr));
+        //halt($houses);
 //halt(Db::name('rent_recharge')->getLastSql());
         $kouData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where(['pay_way'=>2])->column('a.house_id,sum(a.pay_rent) as pay_rent');
 
@@ -266,23 +272,54 @@ class Report extends Model
         $total_kou_rent = 0;
         // 合计本月余额
         $total_yue = 0;
-        foreach($baseData as $b){ 
-            if (isset($payData[$b['house_id']]) && abs($payData[$b['house_id']]) > 0) {
-                $data[$b['house_id']]['last_yue'] = 0;
-                $data[$b['house_id']]['kou_rent'] = isset($kouData[$b['house_id']])?abs($kouData[$b['house_id']]):0;
-                $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
-                $data[$b['house_id']]['house_balance'] = $b['house_balance'];
-                $data[$b['house_id']]['pay_rent'] = isset($payData[$b['house_id']])?abs($payData[$b['house_id']]):0;
-                $data[$b['house_id']]['number'] = $b['house_number'];
-                $data[$b['house_id']]['address'] = $b['ban_address'];
-                $data[$b['house_id']]['tenant'] = $b['tenant_name'];
-                $data[$b['house_id']]['use'] = $params['uses'][$b['house_use_id']];
-                $data[$b['house_id']]['owner'] = $params['owners'][$b['ban_owner_id']];
-                $data[$b['house_id']]['inst'] = $params['insts'][$b['ban_inst_id']];
-                $data[$b['house_id']]['remark'] = '';
-            }
-            
+        foreach ($houseids as $b) {
+            $data[$b]['last_yue'] = isset($temps[$b]['house_balance'])?abs($temps[$b]['house_balance']):0;
+            $data[$b]['kou_rent'] = isset($kouData[$b])?abs($kouData[$b]):0;
+            $data[$b]['house_pre_rent'] = $houses[$b]['house_pre_rent'];
+            $data[$b]['house_balance'] = $houses[$b]['house_balance'];
+            $data[$b]['pay_rent'] = isset($payData[$b])?abs($payData[$b]):0;
+            $data[$b]['number'] = $houses[$b]['house_number'];
+            $data[$b]['address'] = $houses[$b]['ban_address'];
+            $data[$b]['tenant'] = $houses[$b]['tenant_name'];
+            $data[$b]['use_id'] = $houses[$b]['house_use_id'];
+            $data[$b]['owner_id'] = $houses[$b]['ban_owner_id'];
+            $data[$b]['inst_id'] = $houses[$b]['ban_inst_id'];
+            $data[$b]['use'] = $params['uses'][$houses[$b]['house_use_id']];
+            $data[$b]['owner'] = $params['owners'][$houses[$b]['ban_owner_id']];
+            $data[$b]['inst'] = $params['insts'][$houses[$b]['ban_inst_id']];
+            $data[$b]['remark'] = '';
+
+            /*$data[$b['house_id']]['last_yue'] = isset($temps[$b['house_id']]['house_balance'])?abs($temps[$b['house_id']]['house_balance']):0;
+            $data[$b['house_id']]['kou_rent'] = isset($kouData[$b['house_id']])?abs($kouData[$b['house_id']]):0;
+            $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
+            $data[$b['house_id']]['house_balance'] = $b['house_balance'];
+            $data[$b['house_id']]['pay_rent'] = isset($payData[$b['house_id']])?abs($payData[$b['house_id']]):0;
+            $data[$b['house_id']]['number'] = $b['house_number'];
+            $data[$b['house_id']]['address'] = $b['ban_address'];
+            $data[$b['house_id']]['tenant'] = $b['tenant_name'];
+            $data[$b['house_id']]['use'] = $params['uses'][$b['house_use_id']];
+            $data[$b['house_id']]['owner'] = $params['owners'][$b['ban_owner_id']];
+            $data[$b['house_id']]['inst'] = $params['insts'][$b['ban_inst_id']];
+            $data[$b['house_id']]['remark'] = '';*/
         }
+        // foreach($baseData as $b){
+
+        //     if (isset($payData[$b['house_id']]) && abs($payData[$b['house_id']]) > 0) {
+        //         $data[$b['house_id']]['last_yue'] = 0;
+        //         $data[$b['house_id']]['kou_rent'] = isset($kouData[$b['house_id']])?abs($kouData[$b['house_id']]):0;
+        //         $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
+        //         $data[$b['house_id']]['house_balance'] = $b['house_balance'];
+        //         $data[$b['house_id']]['pay_rent'] = isset($payData[$b['house_id']])?abs($payData[$b['house_id']]):0;
+        //         $data[$b['house_id']]['number'] = $b['house_number'];
+        //         $data[$b['house_id']]['address'] = $b['ban_address'];
+        //         $data[$b['house_id']]['tenant'] = $b['tenant_name'];
+        //         $data[$b['house_id']]['use'] = $params['uses'][$b['house_use_id']];
+        //         $data[$b['house_id']]['owner'] = $params['owners'][$b['ban_owner_id']];
+        //         $data[$b['house_id']]['inst'] = $params['insts'][$b['ban_inst_id']];
+        //         $data[$b['house_id']]['remark'] = '';
+        //     }
+            
+        // }
         //$result['op'] = $params['insts'][$instid].'_'.$params['owners'][$ownerid].'_'.$params['uses'][$useid].'_';
         return $data;
     }

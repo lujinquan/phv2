@@ -1936,7 +1936,7 @@ class Weixin extends Common
             $TenantModel = new TenantModel;
             $tenant_ids = $TenantModel->where([['tenant_tel','eq', $keywords]])->column('tenant_id');
             if(!$tenant_ids){
-                $result['msg'] = '查询为空';
+                $result['msg'] = '手机号查询为空';
                 return json($result);
             }
             $HouseModel = new HouseModel;
@@ -1944,9 +1944,9 @@ class Weixin extends Common
 
         }else if($type == 2){ //2，身份证号
             $TenantModel = new TenantModel;
-            $tenant_ids = $TenantModel->where([['tenant_card','eq', $keywords]])->column('tenant_id');
+            $tenant_ids = $TenantModel->where([['tenant_card','eq', strtolower($keywords)]])->column('tenant_id');
             if(!$tenant_ids){
-                $result['msg'] = '查询为空';
+                $result['msg'] = '身份证号查询为空';
                 return json($result);
             }
             $HouseModel = new HouseModel;
@@ -1956,7 +1956,7 @@ class Weixin extends Common
             $houseArr = $HouseModel->with(['ban','tenant'])->where([['house_status','eq',1],['house_is_pause','eq',0],['house_number','eq',$keywords]])->select()->toArray();
         }
         if(!$houseArr){
-            $result['msg'] = '查询为空';
+            $result['msg'] = '房屋查询为空';
             return json($result);
         }
         $ar = [];

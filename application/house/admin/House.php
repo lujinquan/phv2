@@ -607,7 +607,7 @@ class House extends Admin
         set_time_limit(0);
 
         $houseModel = new HouseModel;
-        $houseNumberArr = $houseModel->where([['house_status','eq',1],['house_share_img','eq','']])->field('house_id,house_number')->limit(2000)->select();
+        $houseNumberArr = $houseModel->where([['house_status','>',0],['house_share_img','eq','']])->field('house_id,house_number')->limit(200)->select();
 
         //halt($houseNumberArr);
         $WeixinModel = new WeixinModel;

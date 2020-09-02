@@ -183,7 +183,7 @@ class SystemData extends Model
                     $where[] = ['house_is_pause','eq',0];
                     break;
                 case 4: //陈欠核销 【待优化】
-                    $houseids = RentOrderChildModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['rent_order_status','eq',1]])->group('house_id')->column('house_id');
+                    $houseids = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['rent_order_status','eq',1]])->group('house_id')->column('house_id');
                     $applyHouseidArr = Db::name('change_offset')->where([['change_status','>',1],['dtime','eq',0]])->column('house_id');  //在减免中的不能再次申请
                     $where[] = ['house_id','in',$houseids];
                     $where[] = ['house_status','eq',1];

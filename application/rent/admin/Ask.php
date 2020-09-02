@@ -68,7 +68,7 @@ class Ask extends Admin
 	        	$html .= $v['curMonthUnpaidRent'];
 	        	$html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
 	        	$html .= $v['total'];
-	        	$html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！</span></td></tr></table></div>';
+	        	$html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！</span></td></tr></table></div>';
 	        	$htmlArr[] = $html;
 	        }
 	        //halt($htmlArr);
@@ -102,7 +102,7 @@ class Ask extends Admin
             $html .= $v['curMonthUnpaidRent'];
             $html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
             $html .= $v['total'];
-            $html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">                 <span>尊敬的租户：</span>                 <span>可能是您的疏忽或者其它原因未来得及处理，请务必于2020年6月25日前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>                 <span>特此通知，谢谢合作！</span></td></tr></table></div>';
+            $html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">                 <span>尊敬的租户：</span>                 <span>可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>                 <span>特此通知，谢谢合作！</span></td></tr></table></div>';
             $htmlArr[] = $html;
         }
 

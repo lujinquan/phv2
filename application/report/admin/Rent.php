@@ -464,53 +464,74 @@ class Rent extends Admin
     public function prePaidRent()
     {
         if ($this->request->isAjax()) {
-
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
             $query_month = str_replace('-','',$curMonth);
             $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$query_month.'.txt');
-            if($tempData){ // 有缓存就读取缓存数据
-                $temps = json_decode($tempData,true);
-                
+            //halt($tempData);
+            // $ins = Db::name('base_inst')->column('inst_name,inst_id');
+            // $uses = ['住宅'=>1,'机关'=>3,'企事'=>2];
+            // $ows = ['市属'=>1,'区属'=>2,'代管'=>3,'自管'=>5,'生活'=>6,'托管'=>7];
+            // $tempData = json_decode($tempData,true);
+            // foreach ($tempData as $key => &$value) {
+            //     $value['owner_id'] = $ows[$value['owner']];
+            //     $value['use_id'] = $uses[$value['use']];
+            //     $value['inst_id'] = $ins[$value['inst']];
+            // }
+            // file_put_contents(ROOT_PATH.'file/report/paid/202010.txt', json_encode($tempData));exit;
+            
+            // 查询是否有缓存数据
+            if($tempData){ 
+                $temps = json_decode($tempData,true);   
             }else{
                 $ReportModel = new ReportModel;
-                $temps = $ReportModel->getPrePaidRent($curMonth);           
+                // 实时获取预收明细数据
+                $temps = $ReportModel->getPrePaidRent($curMonth);         
             }
-            //halt($temps);
-            $params = ParamModel::getCparams();
-            // $ownerid = input('param.owner_id'); //默认查询市属
-            // $instid = input('param.inst_id',INST); //默认查询当前机构
-            // $useid = input('param.use_id'); //默认查询住宅
-            // if($ownerid){
-            //     $owners = explode(',',$ownerid);
-            // }else{
-            //     $owners = [1,2,3,5,6,7];
-            // }
+            // 查询产别，默认查询所有产别，传过来如果是多产别用逗号隔开
+            $ownerids = input('param.owner_id'); //
+            if($ownerids){
+                $owners = explode(',',$ownerids);
+            }else{
+                $owners = [1,2,3,5,7];
+            }
+            // 查询使用性质，默认查询所有使用性质，传过来如果是多使用性质用逗号隔开
+            $useids = input('param.use_id'); //
+            if($useids){
+                $uses = explode(',',$useids);
+            }else{
+                $uses = [1,2,3];
+            }
+            // 查询机构，默认查询所当前机构
+            $instid = input('param.inst_id',INST); //默认查询当前机构
+            $insts =  config('inst_ids')[$instid];
 
-            // if($useid){
-            //     $uses = explode(',',$useid);
-            // }else{
-            //     $uses = [1,2,3];
-            // }
-            //dump($owners);halt($uses);
-            // 合计上期结转余额
-            $total_last_yue = 0;
-            // 合计本期预缴
-            $total_pay_rent = 0;
-            // 合计本月扣缴
-            $total_kou_rent = 0;
-            // 合计本月余额
-            $total_yue = 0;
+            // 将不满足当前查询条件的数据剔除   
+            foreach ($temps as $k => &$v) {//halt($v);
+                if(in_array($v['owner_id'], $owners) && in_array($v['use_id'], $uses) && in_array($v['inst_id'],$insts)){
+                    continue;
+                    // $v['use'] = $params['uses'][$v['use']];
+                    // $total_last_yue = bcaddMerge([$total_last_yue,$v['last_yue']]);
+                    // $total_pay_rent = bcaddMerge([$total_pay_rent,$v['pay_rent']]);
+                    // $total_kou_rent = bcaddMerge([$total_kou_rent,$v['kou_rent']]);
+                    // $total_yue = bcaddMerge([$total_yue,$v['house_balance']]);
+                }else{
+                    unset($temps[$k]);
+                }
+            }
+            
+            // 初始化数据
+            $params = ParamModel::getCparams();
+            $total_last_yue = 0; // 合计上期结转余额
+            $total_pay_rent = 0; // 合计本期预缴
+            $total_kou_rent = 0; // 合计本月扣缴
+            $total_yue = 0; // 合计本月余额
+            
+            // 将所得列表数据做统计
             foreach ($temps as $k => &$v) {
-                // if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
-                    //$v['use'] = $params['uses'][$v['use']];
-                    $total_last_yue = bcaddMerge([$total_last_yue,$v['last_yue']]);
-                    $total_pay_rent = bcaddMerge([$total_pay_rent,$v['pay_rent']]);
-                    $total_kou_rent = bcaddMerge([$total_kou_rent,$v['kou_rent']]);
-                    $total_yue = bcaddMerge([$total_yue,$v['house_balance']]);
-                // }else{
-                //     unset($temps[$k]);
-                // }
-                
+                $total_last_yue = bcaddMerge([$total_last_yue,$v['last_yue']]);
+                $total_pay_rent = bcaddMerge([$total_pay_rent,$v['pay_rent']]);
+                $total_kou_rent = bcaddMerge([$total_kou_rent,$v['kou_rent']]);
+                $total_yue = bcaddMerge([$total_yue,$v['house_balance']]);  
             }
             $data = [];
             $data['data'] = $temps;
@@ -558,6 +579,7 @@ class Rent extends Admin
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
             $type = input('type','unpaid');
 
+            // 导出欠缴明细表
             if($type == 'unpaid'){
                 $ReportModel = new ReportModel; 
                 $tableTemp =  $ReportModel->getUnpaidRent();
@@ -567,6 +589,7 @@ class Rent extends Admin
                 $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
                 $title = '欠租明细';
                 $table = $tableTemp['data'];
+            // 导出实收明细表
             }else if($type == 'paid'){
                 $ReportModel = new ReportModel; 
                 $tableTemp =  $ReportModel->getPaidRent();
@@ -576,9 +599,46 @@ class Rent extends Admin
                 $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月份','以前月份','以前年份','合计','备注'];
                 $title = '实收明细';
                 $table = $tableTemp['data'];
+            // 导出预收明细表
             }else if($type == 'prepaid'){
-                $ReportModel = new ReportModel; 
-                $tableTemp =  $ReportModel->getPrePaidRent($curMonth);
+
+                $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+                $query_month = str_replace('-','',$curMonth);
+                $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$query_month.'.txt');
+                // 查询是否有缓存数据
+                if($tempData){ 
+                    $tableTemp = json_decode($tempData,true);   
+                }else{
+                    $ReportModel = new ReportModel;
+                    // 实时获取预收明细数据
+                    $tableTemp = $ReportModel->getPrePaidRent($curMonth);         
+                }
+                // 查询产别，默认查询所有产别，传过来如果是多产别用逗号隔开
+                $ownerids = input('param.owner_id'); //
+                if($ownerids){
+                    $owners = explode(',',$ownerids);
+                }else{
+                    $owners = [1,2,3,5,7];
+                }
+                // 查询使用性质，默认查询所有使用性质，传过来如果是多使用性质用逗号隔开
+                $useids = input('param.use_id'); //
+                if($useids){
+                    $uses = explode(',',$useids);
+                }else{
+                    $uses = [1,2,3];
+                }
+                // 查询机构，默认查询所当前机构
+                $instid = input('param.inst_id',INST); //默认查询当前机构
+                $insts =  config('inst_ids')[$instid];
+
+                // 将不满足当前查询条件的数据剔除   
+                foreach ($tableTemp as $k => &$v) {//halt($v);
+                    if(in_array($v['owner_id'], $owners) && in_array($v['use_id'], $uses) && in_array($v['inst_id'],$insts)){
+                        continue;
+                    }else{
+                        unset($tableTemp[$k]);
+                    }
+                }
                 //设置字段的排序
                 $sort = ['number','address','tenant','inst','owner','use','house_pre_rent','last_yue','pay_rent','kou_rent','house_balance','remark'];
                 //标题
@@ -601,7 +661,9 @@ class Rent extends Admin
             $y = 0;//halt($table);
             foreach($table as $s){
                 foreach($s as $u => $o){
-                    $tableData[$y][$sortFlip[$u]] = $o;
+                    if(isset($sortFlip[$u])){
+                        $tableData[$y][$sortFlip[$u]] = $o;
+                    }
                 } 
                 ksort($tableData[$y]);
                 $y++;
