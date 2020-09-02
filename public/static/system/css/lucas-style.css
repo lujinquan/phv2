@@ -264,6 +264,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-difference td.on,.j-difference td.on input{color: red;}
 .j-difference #changes_rule_news{padding-left: 25px;}
 /*说明文字*/
+.j-tips-size{font-size: 12px; color: #666;}
 .j-details-box .layui-input.j-explain-input{ padding-right: 30px;}
 .j-details-box .layui-input.j-search-input{padding-right: 40px;}
 b.j-explain-name{ font-weight: 100; position: absolute;right: 8px; top:10px;cursor: pointer;}
