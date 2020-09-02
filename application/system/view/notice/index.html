@@ -10,7 +10,7 @@
     <a href="{:url('detail')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
 </script>
 <script type="text/html" title="排序模板" id="sortTpl">
-    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_notice&id={{ d.id }}">
+    <input type="text" class="layui-input hisi-ajax-input input-sort" onkeyup="value=value.replace(/[^\d]/g,'')" onblur="onblurs()" value="{{ d.sort }}" data-value="{{ d.id }}" data-href="{:url('sort')}?hisiTable=system_notice&id={{ d.id }}">
 </script>
 </div>
 <script type="text/javascript">
@@ -38,10 +38,15 @@
                 ,{title: '操作', minWidth: 260,Width: 260, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
-               
+               //公告指定颜色标注
+               var result = res.data;
+               for (var i = 0; i < result.length; i++) {
+					if(parseInt(result[i].sort) == 1){
+						$("[lay-id='dataTable'] tr[data-index="+i+"]").addClass("on");
+					}
+               }
             }
         });
-		
 		// $(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		
 		// //显示搜索框title属性值
@@ -49,5 +54,9 @@
 		//   var titles = $(this).val();
 		//   $(this).attr("title",titles)
 		// });
+		window.onblurs = function(){
+			// console.log("点击排序！");
+			$(".layui-laypage-btn")[0].click()
+		}
     });
 </script>
