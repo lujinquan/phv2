@@ -238,6 +238,19 @@ class ChangeLease extends SystemBase
         $processDescs = $this->processDesc;
         $data['change_desc'] = $processDescs[3];
         $data['curr_role'] = $processRoles[3];
+
+        // 如果是自动生成租约的，直接跳过中间环节，直接到会计审批
+        if($data['save_type'] === 'submit' && isset($data['id'])){
+            $process_id = self::where([['id','eq',$data['id']]])->value('process_id');
+            //halt($process_id);
+            // 如果是自动生成租约的，直接跳过中间环节，直接到会计审批
+            if($process_id == 2){ 
+                $data['change_status'] = 6;   
+                $data['change_desc'] = $processDescs[6];
+                $data['curr_role'] = $processRoles[6];
+            }
+
+        }
         
         return $data; 
     }
@@ -265,6 +278,7 @@ class ChangeLease extends SystemBase
         $form['cuid'] = $data['cuid'];
         $form['tenant_name'] = $data['tenant_name'];
         $form['change_status'] = 2;
+        $form['process_id'] = 2; //代表是自动生成租约的
 
         $val = Db::name('system_config')->where([['name','eq','szno']])->value('value');
 
