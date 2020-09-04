@@ -9,10 +9,12 @@
 	.j-print-table td.j-print-120{width: 120px;}
 	.j-print-con{border: 1px solid #333;border-collapse: collapse;background-color: #fff;padding: 5px;box-sizing: border-box;line-height: 20px;font-size: 12px;}
 	.j-buttom{text-align: center;padding: 20px 0;}
+	.j-datetime{text-align: right;font-size: 12px;margin-bottom: 5px;}
 </style>
   <div class="j-click-print">
 	<div class="PageNext">
 		<div class="j-print-title">缴费单</div>
+		<div class="j-datetime" style="width:310px; text-align: right;font-size: 12px;margin-bottom: 5px;">打印时间：{:date('Y-m-d')}</div>
 		<table class="j-print-table">
 			<tr>
 				<td class="j-print-90" align="left">
@@ -47,7 +49,7 @@
 					<br/>
 					  可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！
 					<br/>
-					  特此通知，谢谢合作！
+					  特此通知，谢谢合作！房管员手机号：{$data_info['system_user_mobile']}
 				</td>
 			</tr>
 		</table>

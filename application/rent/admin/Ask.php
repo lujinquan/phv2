@@ -53,8 +53,11 @@ class Ask extends Admin
 	        foreach ($data['data'] as $k => $v) {
 	        	//halt($v);
 	        	$html = '';
-	        	$html .= "<style>.PageNext{page-break-after:always;font-family:'Microsoft YaHei';width:310px}.j-print-title{width:310px;font-size:20px;padding:0 0 10px;font-weight:bold;display:inline-block;text-align:center}.j-print-table{border:1px solid #333;border-collapse:collapse;width:310px;font-size:14px;font-weight:200;box-sizing:border-box;display:inline-block;padding:6px}.j-print-table td{border:1px solid #333;border-collapse:collapse;background-color:#fff;box-sizing:border-box;height:20px;line-height:20px}.j-print-table td.j-print-90{width:90px}.j-print-table td.j-print-120{width:103px}.j-print-table td.j-print-con{border:1px solid #333;border-collapse:collapse;background-color:#fff;box-sizing:border-box;line-height:18px;font-size:12px}.j-print-table td.j-print-con span{line-height:18px;display:block}</style>";
-	        	$html .= '<div class="PageNext"><div class="j-print-title">缴费单<br/></div><table class="j-print-table"><tr><td class="j-print-90" align="left">租户名</td><td colspan="2" align="left">';
+	        	$html .= "<style>.PageNext{page-break-after:always;font-family:'Microsoft YaHei';margin: 0 auto;width:310px}.j-print-title{width:310px;font-size:20px;padding:0 0 10px;font-weight:bold;display:inline-block;text-align:center}.j-print-table{border:1px solid #333;border-collapse:collapse;width:310px;font-size:14px;font-weight:200;box-sizing:border-box;display:inline-block;padding:6px}.j-print-table td{border:1px solid #333;border-collapse:collapse;background-color:#fff;box-sizing:border-box;height:20px;line-height:20px}.j-print-table td.j-print-90{width:90px}.j-print-table td.j-print-120{width:103px}.j-print-table td.j-print-con{border:1px solid #333;border-collapse:collapse;background-color:#fff;box-sizing:border-box;line-height:18px;font-size:12px}.j-print-table td.j-print-con span{line-height:18px;display:block}.j-datetime{text-align: right;font-size: 12px;margin-bottom: 5px;}</style>";
+	        	
+                $html .= '<div class="PageNext"><div class="j-print-title">缴费单</div><div class="j-datetime" style="width:310px; text-align: right;font-size: 12px;margin-bottom: 5px;">打印时间：';
+                $html .= date('Y-m-d');
+                $html .= '</div><table class="j-print-table"><tr><td class="j-print-90" align="left">租户名</td><td colspan="2" align="left">';
 	        	$html .= $v['tenant_name'];
 	        	$html .= '</td></tr><tr><td class="j-print-90" align="left">租户地址</td><td colspan="2" align="left">';
 	        	$html .= $v['ban_address'];
@@ -68,7 +71,9 @@ class Ask extends Admin
 	        	$html .= $v['curMonthUnpaidRent'];
 	        	$html .= ' 元</td></tr><tr><td class="j-print-90" align="left">合计欠租</td><td class="j-print-120" align="left">';
 	        	$html .= $v['total'];
-	        	$html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！</span></td></tr></table></div>';
+	        	$html .= ' 元</td></tr><tr><td class="j-print-con" colspan="3" align="left">					<span>尊敬的租户：</span>					<span>可能是您的疏忽或者其它原因未来得及处理，请务必于当月25日之前到房管所或本单二维码在线支付。避免欠缴产生滞纳金，造成您不必要的损失！</span>					<span>特此通知，谢谢合作！房管员手机号：';
+                $html .= $v['system_user_mobile'];
+                $html .= '</span></td></tr></table></div>';
 	        	$htmlArr[] = $html;
 	        }
 	        //halt($htmlArr);
