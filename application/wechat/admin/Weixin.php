@@ -13,6 +13,7 @@
 namespace app\wechat\admin;
 
 use think\Db;
+use hisi\Dir;
 use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
 use app\wechat\model\Weixin as WeixinModel;
@@ -133,6 +134,38 @@ class Weixin extends Admin
         $id = input('param.id');
         $InvoiceModel = new InvoiceModel;
         return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
+    }
+
+    // 所有已开的发票，未下载到服务器的统一，一键下载
+    public function allVoiceDown()
+    {
+    	// 获取所有需要下载pdf的数据
+        $InvoiceModel = new InvoiceModel;
+        $allInvoice = $InvoiceModel->where([['pdfurl','neq',''],['local_pdfurl','eq','']])->select();
+
+        $i = 0;
+        foreach ($allInvoice as $v) {
+        	
+        	$url = $v['pdfurl'];
+        	$file = file_get_contents($url);
+        	if(strlen($file) < 10000){ // 请求的不是正常pdf文件
+        		continue;
+        	}else{
+        		$dir = $_SERVER['DOCUMENT_ROOT'].'/upload/invoice/'.date('Ym');
+        		if(!is_dir($dir)){
+        			Dir::create($dir);
+        			mkdir($dir, 0755, true);
+        		}
+        		file_put_contents($dir.'/'. $v['fpqqlsh'] .'.pdf', $file);
+        		$loacl_pdfurl = '/upload/invoice/'.date('Ym').'/'. $v['fpqqlsh'] .'.pdf';
+
+        		InvoiceModel::where([['invoice_id','eq',$v['invoice_id']]])->update(['local_pdfurl'=>$loacl_pdfurl]);
+        		$i++;
+        	}
+        }
+        $this->success('下载成功，本次下载'.$i.'张发票！') ;
+        //halt($allInvoice);
+        // return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
     }
 
 	/**

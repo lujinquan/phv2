@@ -1084,6 +1084,12 @@ class Rent extends Model
                 $where[] = ['d.ban_inst_id','in',config('inst_ids')[INST]];
             }
 
+            // 列表页多选
+            if(isset($getData['id']) && is_array($getData['id']) && $getData['id']){
+                $where[] = ['b.house_id','in',$getData['id']];
+            }
+
+            $systemUsers = Db::name('system_user')->where([['role_id','eq',4],['status','eq',1]])->column('inst_id,nick,mobile');
 
             // if($useid != 0){
             //     $where[] = ['b.house_use_id','eq',$useid];
@@ -1118,6 +1124,7 @@ class Rent extends Model
                 $data[$b['house_id']]['house_use_id'] = $params['uses'][$b['house_use_id']];
                 $data[$b['house_id']]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']];
                 $data[$b['house_id']]['ban_inst_id'] = $params['insts'][$b['ban_inst_id']];
+                $data[$b['house_id']]['system_user_mobile'] = $systemUsers[$b['ban_inst_id']]['mobile'];
                 if(!isset($data[$b['house_id']]['total'])){
                   $data[$b['house_id']]['total'] = 0;  
                 }
