@@ -33,7 +33,7 @@ class Filished extends Admin
             $OpOrderModel = new OpOrderModel;
             $where = $OpOrderModel->checkWhere($getData, 'filished');
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->order('ctime desc')->select()->toArray();
             $opTypeModel = new OpType;
             $opTypeArr = $opTypeModel->column('id,title');
             $i = 1;
@@ -79,7 +79,7 @@ class Filished extends Admin
             $temps = bubble_sort($temps,$a,'asc');//正序
             //halt($temps);
             $data['data'] = array_slice($temps , ($page - 1) * $limit, $limit);
-            $data['count'] = $OpOrderModel->where($where)->count('id');
+            $data['count'] = count($temps);
             $data['code'] = 0;
             $data['msg'] = '';
             //halt($data);
@@ -103,7 +103,8 @@ class Filished extends Admin
         $current_nick = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
         //halt($row);
         //$row['jsondata'] = json_decode($row['jsondata'], true);
-        $temp = $row['jsondata'];
+        $temp = json_decode($row['jsondata'],true);
+        //halt($temp);
         if ($temp) {
             foreach ($temp as & $v) {
                 if ($v['Img']) {

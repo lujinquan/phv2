@@ -222,7 +222,9 @@ class Index extends Common
             $result['en_msg'] = 'Order ID is empty';
             return json($result);
         }
-
+        // 获取前端传入的金额
+        $total_price = input('total_price');
+        
         $WeixinMemberModel = new WeixinMemberModel;
         $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
@@ -243,7 +245,7 @@ class Index extends Common
                 return json($result);
             }
             // 检查订单是否已经完成支付
-            if($rent_order_info['ptime']){
+            if($rent_order_info['rent_order_receive'] == $rent_order_info['rent_order_paid']){
                 $result['code'] = 10032;
                 $result['msg'] = '订单已支付，请勿重复支付';
                 $result['en_msg'] = 'Order has been paid, please do not pay repeatedly';
@@ -258,7 +260,12 @@ class Index extends Common
             // }
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
-
+        // 如果前端传过来的金额和后台计算的金额不相符
+        if (($pay_money / 100) != $total_price) {
+            $result['code'] = 10033;
+            $result['msg'] = '支付金额与约定金额'.($pay_money / 100).'不相符';
+            return json($result);
+        }
         $inst_pid = $ban_row['ban_inst_pid'];
 
         // 调起支付

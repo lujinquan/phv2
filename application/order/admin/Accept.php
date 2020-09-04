@@ -41,7 +41,7 @@ class Accept extends Admin
             $OpOrderModel = new OpOrderModel;
             $where        = $OpOrderModel->checkWhere($getData,'accept');
             $data  = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('ctime desc')->select()->toArray();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->order('ctime desc')->select()->toArray();
             $inst_ids = explode(',',session('admin_user.inst_ids'));
             $opTypeModel = new OpType;
             $opTypeArr = $opTypeModel->column('id,title');
@@ -90,7 +90,7 @@ class Accept extends Admin
             $temps = bubble_sort($temps,$a,'asc');//正序
 
             $data['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
-            $data['count'] = $OpOrderModel->where($where)->count('id');
+            $data['count'] = count($temps);
             $data['code']  = 0;
             $data['msg']   = '';
             //halt($data);
