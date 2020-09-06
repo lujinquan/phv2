@@ -28,6 +28,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\deal\model\Process as ProcessModel;
+use app\system\model\SystemConfig as ConfigModel;
 use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinGuide as WeixinGuideModel;
@@ -59,7 +60,14 @@ class Weixin extends Common
 {
     protected $debug = false;
 
-    protected $domain = 'https://pro.ctnmit.com';
+    protected $domain = '';
+
+    protected function initialize()
+    {
+        parent::initialize();
+        $site_domain = ConfigModel::where([['name','eq','site_domain']])->value('value');
+        $this->domain = 'https://'.$site_domain;
+    }
 
     public function index()
     {

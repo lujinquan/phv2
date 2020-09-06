@@ -29,55 +29,50 @@ use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
  */
 class Wechat extends Admin
 {
+
+    /**
+     * 订阅消息模板列表
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:54:52
+     * @return  返回值  
+     * @version 版本  1.0
+     */
 	public function index()
 	{
 		$group = input('group','index');
-
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
             // $result = $this->validate($data, 'WeixinNotice');
             // if($result !== true) {
             //     return $this->error($result);
-            // }
-            
+            // }   
             foreach ($data as $k => $v) {
                 if($v){
                     $WeixinTemplateModel = new WeixinTemplateModel;
                     $WeixinTemplateModel->where([['name','eq',$k]])->update(['value'=>$v]);
                 }
             }
-            //$data['cuid'] = ADMIN_ID;
-            //$data['content'] = htmlspecialchars($data['content']);
-            // 入库
-            // if (!$WeixinTemplateModel->save($data)) {
-            //     return $this->error('发布失败');
-            // }
             return $this->success('提交成功');
         }
-
-        // $tabData = [];
-        // $tabData['menu'] = [
-        //     [
-        //         'title' => '用户版小程序',
-        //         'url' => '?group=index',
-        //     ],
-        //     [
-        //         'title' => '房管版小程序',
-        //         'url' => '?group=base',
-        //     ],
-        //     [
-        //         'title' => '高管版小程序',
-        //         'url' => '?group=leader',
-        //     ]
-        // ];
-        // $tabData['current'] = url('?group='.$group);
-        // $this->assign('group',$group);
-        // $this->assign('hisiTabData', $tabData);
-        // $this->assign('hisiTabType', 3);
 		return $this->fetch($group);
 	}
 
+    /**
+     * 【列表】微信公告
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
+     */
 	public function noticeIndex()
 	{
 		if ($this->request->isAjax()) {
@@ -98,6 +93,17 @@ class Wechat extends Admin
 		return $this->fetch();
 	}
 
+    /**
+     * 【新增】微信公告
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
+     */
 	public function noticeAdd()
 	{
         if ($this->request->isPost()) {
@@ -120,6 +126,17 @@ class Wechat extends Admin
 		return $this->fetch();
 	}
 
+    /**
+     * 【编辑】微信公告
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
+     */
 	public function noticeEdit()
 	{
         $WeixinNoticeModel = new WeixinNoticeModel;
@@ -144,6 +161,17 @@ class Wechat extends Admin
 		return $this->fetch();
 	}
 
+    /**
+     * 【详情】微信公告
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
+     */
     public function noticeDetail()
     {
         $WeixinNoticeModel = new WeixinNoticeModel;
@@ -160,6 +188,17 @@ class Wechat extends Admin
         return $this->fetch();
     }
 
+    /**
+     * 【删除】微信公告
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
+     */
     public function noticeDel()
     {
         $ids = $this->request->param('id/a'); 
@@ -172,10 +211,16 @@ class Wechat extends Admin
         }
     }
 
-    /**
-     * 功能描述：启用禁用状态切换
+   /**
+     * 【启用禁用状态切换】微信公告
+     * =====================================
      * @author  Lucas 
-     * 创建时间: 2020-03-09 16:30:34
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-31 09:41:57
+     * @return  返回值  
+     * @version 版本  1.0
      */
     public function isShow()
     {
@@ -200,46 +245,15 @@ class Wechat extends Admin
 	public function configIndex()
 	{
 		$group = input('group','index');
-        // $tabData = [];
-        // $tabData['menu'] = [
-        //     [
-        //         'title' => '用户版小程序',
-        //         'url' => '?group=index',
-        //     ],
-        //     [
-        //         'title' => '房管版小程序',
-        //         'url' => '?group=base',
-        //     ],
-        //     [
-        //         'title' => '高管版小程序',
-        //         'url' => '?group=leader',
-        //     ]
-        // ];
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            //halt($data);
-            // 数据验证
-            // $result = $this->validate($data, 'Ban.edit');
-            // if($result !== true) {
-            //     return $this->error($result);
-            // }
-            // if(isset($data['file']) && $data['file']){
-            //     $data['ban_imgs'] = implode(',',$data['file']);
-            // }else{
-            //     $data['ban_imgs'] = '';
-            // }
             $WeixinConfigModel = new WeixinConfigModel();
             foreach ($data as $key => $value) {
-                // if(($key == 'app_ziyang_user_pay_key' || $key == 'app_liangdao_user_pay_key') && !$value){
-                //     continue;
-                // }
-                $WeixinConfigModel->where([['name','eq',$key]])->update(['value'=>$value]);
+                if(!empty($value)){
+                    $WeixinConfigModel->where([['name','eq',$key]])->update(['value'=>$value]);
+                }
+                
             }
-            //halt($data);
-            // 入库
-            // if (!$WeixinConfigModel->allowField(true)->update($data)) {
-            //     return $this->error('修改失败');
-            // }
             return $this->success('修改成功');
         }
         $data = WeixinConfigModel::column('name,value');

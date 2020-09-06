@@ -50,6 +50,7 @@ class Ask extends Admin
             $data = $RentModel->get_data($getData,$page = false);
             //halt($data);
             $htmlArr = [];
+
             foreach ($data['data'] as $k => $v) {
                 //halt($v);
                 $html = '';
@@ -80,6 +81,7 @@ class Ask extends Admin
             
             $SystemTcpdf = new SystemTcpdf;
             $data = $SystemTcpdf->example_000($htmlArr,[95,95]);
+
             return json($data);
         } 
 
