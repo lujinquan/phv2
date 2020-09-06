@@ -9,7 +9,7 @@
          <div class="layui-btn-container">
            <!-- <a href="{:url('print_out')}" target="_blank" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</a> -->
            <!-- <a href="{:url('print_out')}" data-id="house_id" title="提示：需要勾选催缴单" class="j-page-btns-extra"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button></a> -->
-           <button id="j-ajax-pdf" class="layui-btn layui-btn-warm" data-type="loading"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button>
+           <button id="j-ajax-pdf" data-id="house_id" class="layui-btn layui-btn-warm" data-type="loading"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button>
          </div>
      </div>
   <div class="page-toolbar j-page-toolbar clearfix">
@@ -168,8 +168,8 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-                //{type: 'checkbox',fixed: 'left'}
-                {field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
+                {type: 'checkbox',fixed: 'left'}
+                ,{field: 'ban_number',minWidth: 110,align:'center',title: '楼栋编号',totalRowText: '合计：'}
                 ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号'}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段'}
@@ -181,7 +181,7 @@
                 ,{field: 'beforeMonthUnpaidRent', minWidth: 100, align:'center', title: '以前月欠缴'}
                 ,{field: 'beforeYearUnpaidRent', minWidth: 100, align:'center', title: '以前年欠缴'}
 				,{field: 'total', minWidth: 100, align:'center', title: '总欠缴'}
-                ,{title: '操作', width: 120,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                 $(".layui-table-total td[data-field='curMonthUnpaidRent']").find("div").text(res.total_cur_month_unpaid_rent);
@@ -200,11 +200,39 @@
         },isShowInst)
 
         $('#j-ajax-pdf').on('click', function(){
-			$(".j-old").removeClass("hide");
+			
+
+            var that = $(this),
+            query = '';
+            var tableObj = that.attr('data-table') ? that.attr('data-table') : 'dataTable';
+            var witchid = that.attr('data-id') ? that.attr('data-id') : 'id';
+            console.log($('.checkbox-ids:checked'));
+            if ($('.checkbox-ids:checked').length <= 0) {
+                var checkStatus = table.checkStatus(tableObj);
+                if (checkStatus.data.length <= 0) {
+                    layer.msg('请选择要操作的数据');
+                    return false;
+                }
+                for (var i in checkStatus.data) {
+                    if (i > 0) {
+                        query += '&';
+                    }
+                    query += 'id[]='+checkStatus.data[i][witchid];
+                }
+            } else {
+                if (that.parents('form')[0]) {
+                    query = that.parents('form').serialize();
+                } else {
+                    query = $('#pageListForm').serialize();
+                }
+            }
+
+            $(".j-old").removeClass("hide");
 			$(".j-new").addClass("hide");
 			element.progress('demo','0%');
 			element.progress('newdemo','0%');
             var queryWhere = $('#hisi-table-search').serialize();
+
 			//触发进度条事件
 			var loops = $(".layui-laypage-count label").text();//获取数据条数
 			console.log(loops)
@@ -237,7 +265,7 @@
 			            	    url:"{:url('print_out')}",
 			            	    async:true,// 同步异步
 			            	    dataType:"json",
-			            	    data :queryWhere,//这里是前台传到后台的数据
+			            	    data :query,//这里是前台传到后台的数据
 			            	    //回调函数
 			            	    success:function(output){
 			            	        layer.msg(output.msg);
