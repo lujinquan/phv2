@@ -486,6 +486,27 @@ class Invoice extends Model
         return true;
     }
 
+    public function down_loacl_pdfurl($id)
+    {
+        $row = $this->find($id);
+        //$url = $row['pdf_url'];
+        $file = file_get_contents($row['pdfurl']);
+        if(strlen($file) < 10000){ // 请求的不是正常pdf文件
+            return false;
+        }else{
+            $dir = $_SERVER['DOCUMENT_ROOT'].'/upload/invoice/'.date('Ym');
+            if(!is_dir($dir)){
+                Dir::create($dir);
+                mkdir($dir, 0755, true);
+            }
+            file_put_contents($dir.'/'. $row['fpqqlsh'] .'.pdf', $file);
+            $loacl_pdfurl = '/upload/invoice/'.date('Ym').'/'. $row['fpqqlsh'] .'.pdf';
+            $row->local_pdfurl = $loacl_pdfurl;
+            $row->save();
+            return true;
+        }
+    }
+
     /**
      * 电子发票开票接口【案例】
      * =====================================

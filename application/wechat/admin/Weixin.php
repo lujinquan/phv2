@@ -187,6 +187,12 @@ class Weixin extends Admin
         if($order_info['invoice_id']){
           $InvoiceModel = new InvoiceModel;
           $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+          if(!$invoice_info['local_pdfurl']){
+          	$is_down = $InvoiceModel->down_loacl_pdfurl($order_info['invoice_id']);
+          	if($is_down){
+          		$invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+          	}
+          }
           $this->assign('invoice_info',$invoice_info);
         }
 		$WeixinOrderTradeModel = new WeixinOrderTradeModel;

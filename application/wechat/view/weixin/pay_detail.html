@@ -64,8 +64,12 @@
   <div class="layui-form-mid layui-word-aux">{$invoice_info['fpqqlsh']}</div>
  </div>
  <div class="layui-form-item">
-  <label class="layui-form-label">电子发票地址：</label>
+  <label class="layui-form-label">远程电子发票地址：</label>
   <div class="layui-form-mid layui-word-aux">{$invoice_info['pdfurl']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">本地电子发票地址：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['local_pdfurl']"}<a class="layui-btn layui-btn-xs layui-btn-normal" href="{$invoice_info['local_pdfurl']}" target="_blank">点此查看</a>{else /}未生成{/if}</div>
  </div>
  <div class="layui-form-item">
   <label class="layui-form-label">开票类型：</label>

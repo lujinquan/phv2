@@ -1037,7 +1037,7 @@ class Weixin extends Common
               $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
               $result['invoice_info'] = $invoice_info;
               $order_info['invoice_id'] = '是';
-              $row['pdfurl'] = $invoice_info['pdfurl']; 
+              $row['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl']; 
             }
         }
         
