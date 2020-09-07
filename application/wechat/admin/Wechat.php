@@ -250,6 +250,18 @@ class Wechat extends Admin
             $WeixinConfigModel = new WeixinConfigModel();
             foreach ($data as $key => $value) {
                 if(!empty($value)){
+                    if($key == 'app_ziyang_apiclient_cert_pem'){
+                        file_put_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/application/wechat/home/cert/ziyang/apiclient_cert.pem', $value);
+                    }
+                    if($key == 'app_ziyang_apiclient_key_pem'){
+                        file_put_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/application/wechat/home/cert/ziyang/apiclient_key.pem', $value);
+                    }
+                    if($key == 'app_liangdao_apiclient_cert_pem'){
+                        file_put_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/application/wechat/home/cert/liangdao/apiclient_cert.pem', $value);
+                    }
+                    if($key == 'app_liangdao_apiclient_key_pem'){
+                        file_put_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/application/wechat/home/cert/liangdao/apiclient_key.pem', $value);
+                    }
                     $WeixinConfigModel->where([['name','eq',$key]])->update(['value'=>$value]);
                 }
                 

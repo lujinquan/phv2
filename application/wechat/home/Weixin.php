@@ -1037,7 +1037,10 @@ class Weixin extends Common
               $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
               $result['invoice_info'] = $invoice_info;
               $order_info['invoice_id'] = '是';
-              $row['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl']; 
+              if ($invoice_info['local_pdfurl']) {
+                  $row['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl'];
+              }
+               
             }
         }
         
@@ -2501,6 +2504,10 @@ class Weixin extends Common
           $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
           $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
           $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
+          if($invoice_info['local_pdfurl']){
+                $invoice_info['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl'];
+          }
+          
           $result['invoice_info'] = $invoice_info;
           $order_info['invoice_id'] = '是';
         }else{

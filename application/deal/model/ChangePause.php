@@ -363,7 +363,7 @@ class ChangePause extends SystemBase
             $taiData[$key]['change_type'] = 3;
             $taiData[$key]['change_id'] = $finalRow['id'];
             // 3、如果有减免，则需要让减免失效
-            ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$h]])->update(['is_valid'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
+            ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$h]])->update(['change_status'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
             Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$h]])->update(['is_valid'=>1,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
 
             // 添加产权统计记录

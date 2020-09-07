@@ -3,17 +3,17 @@
 <form class="layui-form j-definition j-top-height" action="{:url()}?group=index">
  <div class="j-details-box floorWrap layui-form">
   <div class="layui-form-item">
-	<div class="j-form-label">小程序首页标题：</div>
-	<div class="j-input-inline">
-	  <input type="text" name="app_user_index_title" value="{$data_info['app_user_index_title']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序首页标题" class="layui-input">
-	</div>
+  <div class="j-form-label">小程序首页标题：</div>
+  <div class="j-input-inline">
+    <input type="text" name="app_user_index_title" value="{$data_info['app_user_index_title']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序首页标题" class="layui-input">
+  </div>
   </div>
   <div class="layui-form-item">
-  	<div class="j-form-label">小程序APPID：</div>
-  	<div class="j-input-inline">
-  	  <input type="text" name="app_user_appid" value="{$data_info['app_user_appid']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序APPID" class="layui-input">
-	  <!-- <div>mp.weixin.qq.com开发—开发配置</div> -->
-  	</div>
+    <div class="j-form-label">小程序APPID：</div>
+    <div class="j-input-inline">
+      <input type="text" name="app_user_appid" value="{$data_info['app_user_appid']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序APPID" class="layui-input">
+    <!-- <div>mp.weixin.qq.com开发—开发配置</div> -->
+    </div>
   </div>
   <div class="layui-form-item">
     <div class="j-form-label">小程序版本：</div>
@@ -22,10 +22,10 @@
     </div>
   </div>
   <div class="layui-form-item">
-  	<div class="j-form-label">APPSECRET：</div>
-  	<div class="j-input-inline">
-  	  <input type="text" name="app_user_appsecret" value="{$data_info['app_user_appsecret']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序APPSECRET" class="layui-input">
-  	</div>
+    <div class="j-form-label">APPSECRET：</div>
+    <div class="j-input-inline">
+      <input type="text" name="app_user_appsecret" value="{$data_info['app_user_appsecret']}" lay-verify="required"  autocomplete="off" placeholder="请输入小程序APPSECRET" class="layui-input">
+    </div>
   </div>
   <hr>
   <div class="layui-form-item">
@@ -37,60 +37,60 @@
   <div class="layui-form-item">
     <div class="j-form-label">紫阳所支付秘钥：</div>
     <div class="j-input-inline">
-      <input type="text" name="app_ziyang_user_pay_key" value=""  autocomplete="off" placeholder="请输入支付秘钥" class="layui-input">
+      <input type="text" name="app_ziyang_user_pay_key" value=""  autocomplete="off" placeholder="请输入支付秘钥，留空视为不作任何修改！" class="layui-input">
     <!-- <div>pay.weixin.qq.com账户中心—api安全</div> -->
     </div>
   </div>
   <div class="layui-form-item">
     <div class="j-form-label">紫阳cert_pem：</div>
     <div class="j-input-inline">
-      <input type="text" name="app_ziyang_apiclient_cert_pem" lay-verify="required" value="{$data_info['app_ziyang_apiclient_cert_pem']}"  autocomplete="off" placeholder="请输入粮道所支付证书cert_pem" class="layui-input">
+      <textarea placeholder="请输入紫阳所支付证书cert_pem" class="layui-textarea" name="app_ziyang_apiclient_cert_pem">{$data_info['app_ziyang_apiclient_cert_pem']}</textarea>
     </div>
   </div>
   <div class="layui-form-item">
     <div class="j-form-label">紫阳key_pem：</div>
     <div class="j-input-inline">
-      <input type="text" name="app_ziyang_apiclient_key_pem" lay-verify="required" value="{$data_info['app_ziyang_apiclient_key_pem']}"  autocomplete="off" placeholder="请输入证书key_pem" class="layui-input">
+      <textarea placeholder="请输入紫阳所支付证书key_pem" class="layui-textarea" name="app_ziyang_apiclient_key_pem">{$data_info['app_ziyang_apiclient_key_pem']}</textarea>
     </div>
   </div>
   <hr>
   <div class="layui-form-item">
-  	<div class="j-form-label">粮道支付商户ID：</div>
-  	<div class="j-input-inline">
-  	  <input type="text" name="app_liangdao_user_pay_mchid" value="{$data_info['app_liangdao_user_pay_mchid']}" lay-verify="required"  autocomplete="off" placeholder="请输入粮道所商户ID" class="layui-input">
-  	</div>
+    <div class="j-form-label">粮道支付商户ID：</div>
+    <div class="j-input-inline">
+      <input type="text" name="app_liangdao_user_pay_mchid" value="{$data_info['app_liangdao_user_pay_mchid']}" lay-verify="required"  autocomplete="off" placeholder="请输入粮道所商户ID" class="layui-input">
+    </div>
   </div>
   <div class="layui-form-item">
-  	<div class="j-form-label">粮道所支付秘钥：</div>
-  	<div class="j-input-inline">
-  	  <input type="text" name="app_liangdao_user_pay_key" value=""  autocomplete="off" placeholder="请输入支付秘钥" class="layui-input">
-  	</div>
+    <div class="j-form-label">粮道所支付秘钥：</div>
+    <div class="j-input-inline">
+      <input type="text" name="app_liangdao_user_pay_key" value=""  autocomplete="off" placeholder="请输入支付秘钥，留空视为不作任何修改！" class="layui-input">
+    </div>
   </div>
   <div class="layui-form-item">
     <div class="j-form-label">粮道cert_pem：</div>
     <div class="j-input-inline">
-      <input type="text" name="app_liangdao_apiclient_cert_pem" lay-verify="required" value="{$data_info['app_liangdao_apiclient_cert_pem']}"  autocomplete="off" placeholder="请输入粮道所支付证书cert_pem" class="layui-input">
+      <textarea placeholder="请输入粮道所支付证书cert_pem" class="layui-textarea" name="app_liangdao_apiclient_cert_pem">{$data_info['app_liangdao_apiclient_cert_pem']}</textarea>
     </div>
   </div>
   <div class="layui-form-item">
     <div class="j-form-label">粮道key_pem：</div>
     <div class="j-input-inline">
-      <input type="text" name="app_liangdao_apiclient_key_pem" lay-verify="required" value="{$data_info['app_liangdao_apiclient_key_pem']}"  autocomplete="off" placeholder="请输入证书key_pem" class="layui-input">
+      <textarea placeholder="请输入粮道所支付证书key_pem" class="layui-textarea" name="app_liangdao_apiclient_key_pem">{$data_info['app_liangdao_apiclient_key_pem']}</textarea>
     </div>
   </div>
   <hr>
   <div class="layui-form-item">
-  	<div class="j-form-label">平台公告：</div>
-  	<div class="j-input-inline">
-  	  <input type="text" name="app_user_index_message" value="{$data_info['app_user_index_message']}" maxlength="30" lay-verify=""  autocomplete="off" placeholder="请输入平台公告" class="layui-input">
-  	  <div>限制30字以内！</div>
-  	</div>
+    <div class="j-form-label">平台公告：</div>
+    <div class="j-input-inline">
+      <input type="text" name="app_user_index_message" value="{$data_info['app_user_index_message']}" maxlength="30" lay-verify=""  autocomplete="off" placeholder="请输入平台公告" class="layui-input">
+      <div>限制30字以内！</div>
+    </div>
   </div>
   <div class="layui-form-item">
-  	<div class="j-form-label">联系我们：</div>
-  	<div class="j-input-inline">
-  	  <input type="tel" name="app_user_concat_us" value="{$data_info['app_user_concat_us']}" maxlength="30" lay-verify="tellphone"  autocomplete="off" placeholder="请输入电话号码" class="layui-input">
-  	</div>
+    <div class="j-form-label">联系我们：</div>
+    <div class="j-input-inline">
+      <input type="tel" name="app_user_concat_us" value="{$data_info['app_user_concat_us']}" maxlength="30" lay-verify="tellphone"  autocomplete="off" placeholder="请输入电话号码" class="layui-input">
+    </div>
   </div>
   <div class="layui-form-item">
     <div class="layui-input-block">
@@ -98,24 +98,24 @@
     </div>
   </div>
  </div>
-</form>	
+</form> 
 {elseif($group == 'base')}
 {else /}
 {/if}
 {include file="system@block/layui" /}
 <script>
-	var formData = {:json_encode($formData)};
-	layui.use(['form', 'func','jquery','upload'], function() {
-		var $ = layui.jquery, form = layui.form,upload = layui.upload;
-		layui.func.assign(formData);
+  var formData = {:json_encode($formData)};
+  layui.use(['form', 'func','jquery','upload'], function() {
+    var $ = layui.jquery, form = layui.form,upload = layui.upload;
+    layui.func.assign(formData);
         var mobile = /^1[3|4|5|7|8]\d{9}$/,phone = /^0\d{2,3}-?\d{7,8}$/;
         form.verify({
             tellphone: function(value){
-            	var flag = mobile.test(value) || phone.test(value);
+              var flag = mobile.test(value) || phone.test(value);
                 if(!flag){
-                	return '请输入正确座机号码或手机号';
+                  return '请输入正确座机号码或手机号';
                 }
             }
         });
-	});
+  });
 </script>
