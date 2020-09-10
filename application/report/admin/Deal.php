@@ -94,7 +94,10 @@ class Deal extends Admin
             $data = [];
 
             $RadixReportModel = new RadixReportModel;
+
             $result = $RadixReportModel->radix($query_month);
+
+            $resultNoRadix = $RadixReportModel->noRadix($query_month);
 
             
             // $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
@@ -116,6 +119,7 @@ class Deal extends Admin
             //     $datas = json_decode($dataJson,true);
             // }   
             $data['data'] = $result[$owner_id][$inst_id];
+            $data['no_radix_data'] = $resultNoRadix[$owner_id][$inst_id];
             $data['msg'] = '';
             if($data['data']){
                 $data['code'] = 1;
