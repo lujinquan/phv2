@@ -76,7 +76,7 @@
 						  <td colspan="18" align="center">非基数异动统计表 <span class="j-size-color">（*生效时间为<label class="nexttime"></label>）</span></td>
 					  </tr>
 					  <tr>
-						  <th rowspan="2" colspan="2" class="j-bold-size">异动类别</th>
+						  <th rowspan="2" colspan="1" class="j-bold-size">异动类别</th>
 						  <th rowspan="1" colspan="4" class="j-bold-size">合计</th>
 						  <th rowspan="1" colspan="4" class="j-bold-size">(一)工商企事业用房</th>
 						  <th rowspan="1" colspan="4" class="j-bold-size">(二)党政机关用房</th>
@@ -100,7 +100,7 @@
 						  <td rowspan="1" colspan="1" >失效异动</td>
 						  <td rowspan="1" colspan="1" >有效异动</td>
 					  </tr>
-					  <tr class="Wsdj">
+					  <!-- <tr class="Wsdj">
 						  <td rowspan="1" colspan="2" ></td>
 						  <td rowspan="1" colspan="1" ></td>
 						  <td rowspan="1" colspan="1" ></td>
@@ -118,7 +118,7 @@
 						  <td rowspan="1" colspan="1" ></td>
 						  <td rowspan="1" colspan="1" ></td>
 						  <td rowspan="1" colspan="1" ></td>
-					  </tr>
+					  </tr> -->
 				  </tbody>      
 			  </table>
 			  <table class="layui-table">
@@ -249,17 +249,50 @@
 				success:function(result){
 					if(result.code == 1){
 						var data = result.data;//由JSON字符串转换为JSON对象
-						var trData = datajson(data)
+						var trData = datajson(data);
 						$('.two-remove').remove();
 						$('.two').append(trData);
+
+						var no_radix_data = result.no_radix_data;//由JSON字符串转换为JSON对象
+						var trDataNoRadix = datajson_no_radix(no_radix_data);
+						$('.one-remove').remove();
+						$('.one').append(trDataNoRadix);
 					}else{
-						$('.two-remove').remove();
+						$('.one-remove').remove();
 					}
 				}
 			});
 		}
 		
-		
+		function datajson_no_radix(data){
+			var html = '';
+			console.log(1);
+			for (i in data) {
+				console.log(data[i]);
+			
+			html += '<tr class="one-remove">\
+						  <td rowspan="1" colspan="1" >'+ data[i][0] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][1] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][2] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][3] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][4] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][5] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][6] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][7] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][8] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][9] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][10] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][11] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][12] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][13] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][14] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][15] +'</td>\
+						  <td rowspan="1" colspan="1" >'+ data[i][16] +'</td>\
+					  </tr>';
+				}
+			return html;
+		}
+
 		//搜索
 		function datajson(data){
 			var html = '';
