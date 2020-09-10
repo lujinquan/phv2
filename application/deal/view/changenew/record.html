@@ -18,6 +18,18 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{/if}
+				{if condition="in_array('ban_inst_id',$config['deal_changenew_record_search'])"}
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline j-width-130 j-select-width130 j-margin-10">
+					<select name="ban_inst_id" xm-select="ban_inst_id">
+						<option value="" disabled="disabled">申请机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{/if}
 				{if condition="in_array('ban_owner_id',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-width-90 j-margin-10">
 					<select name="ban_owner_id"  xm-select="ban_owner_id">
@@ -32,18 +44,6 @@
 				<div class="layui-input-inline j-input-margin j-width-90">
 					<input type="text" name="tenant_name"   placeholder="租户" autocomplete="off" class="layui-input">
 				</div>
-				{/if}
-				{if condition="in_array('ban_inst_id',$config['deal_changenew_record_search'])"}
-				{if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline j-width-130 j-select-width130 j-margin-10">
-					<select name="ban_inst_id" xm-select="ban_inst_id">
-						<option value="" disabled="disabled">申请机构</option>
-						{volist name=":config('inst_check_names')[INST]" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-				{/if}
 				{/if}
 				{if condition="in_array('house_pre_rent',$config['deal_changenew_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
@@ -150,7 +150,12 @@
 					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号',fixed: 'left', unresize: true, totalRowText: '合计'},
 					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
 					
-					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'},
+					 {field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构',
+					 	templet: function(d) {
+					         return params.insts[d.ban_inst_id];
+					     }
+					 },
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
@@ -161,8 +166,7 @@
 							return params.uses[d.house_use_id];
 						}
 					},
-					{field: 'tenant_name',minWidth: 120,align:'center',title: '租户'},  
-					{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构', 
+					{field: 'ban_struct_id', minWidth: 100, align:'center', title: '结构',
 						templet: function(d) {
 							return params.structs[d.ban_struct_id];
 						}
@@ -172,11 +176,7 @@
 							return params.damages[d.ban_damage_id];
 						}
 					},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构',
-						templet: function(d) {
-					        return params.insts[d.ban_inst_id];
-					    }
-					},
+					{field: 'tenant_name',minWidth: 120,align:'center',title: '租户'},  
 					{field: 'house_pre_rent',minWidth: 120,align:'center',title: '规定租金', totalRow: true},  
 					{field: 'house_oprice',minWidth: 120,align:'center',title: '原价', totalRow: true},  
 					{field: 'house_area',minWidth: 120,align:'center',title: '建筑面积', totalRow: true},  

@@ -32,21 +32,21 @@
 				</div>
 				{/if}
 				{/if}
-				{if condition="in_array('cancel_type',$config['deal_changecancel_index_search'])"}
-				<div class="layui-input-inline  j-width-115 j-margin-10">
-					<select name="cancel_type" class="field-cid" xm-select="cancel_type">
-						<option value="" disabled="disabled">注销类别</option>
-						{volist name="params['cancels']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-				{/if}
 				{if condition="in_array('ban_owner_id',$config['deal_changecancel_index_search'])"}
 				<div class="layui-input-inline  j-width-90 j-margin-10">
 					<select name="ban_owner_id" xm-select="ban_owner_id">
 						<option value="" disabled="disabled">产别</option>
 						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
+				{if condition="in_array('cancel_type',$config['deal_changecancel_index_search'])"}
+				<div class="layui-input-inline  j-width-115 j-margin-10">
+					<select name="cancel_type" class="field-cid" xm-select="cancel_type">
+						<option value="" disabled="disabled">注销类别</option>
+						{volist name="params['cancels']" id="v"}
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
@@ -126,7 +126,6 @@
 			  ,cols: [[ 
 			 		{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号',totalRowText: '合计'}, 
 					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'},
-					
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
 						templet: function(d) {
 		                    return params.insts[d.ban_inst_id];

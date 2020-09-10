@@ -24,6 +24,16 @@
 				</div>
 				{/if}
 				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_process_search'])"}
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
 				{if condition="in_array('change_type',$config['deal_process_search'])"}
 				<div class="layui-input-inline" style="width:120px;">
 					<select name="change_type">
@@ -34,14 +44,9 @@
 					</select>
 				</div>
 				{/if}
-				{if condition="in_array('ban_owner_id',$config['deal_process_search'])"}
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
-						{volist name="params['owners']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
+				{if condition="in_array('ctime',$config['deal_process_search'])"}
+				<div class="layui-input-inline j-input-margin" style="width:120px;">
+					<input type="text" name="ctime" id="date" placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 				{/if}
 				{if condition="in_array('change_desc',$config['deal_process_search'])"}
@@ -54,11 +59,6 @@
 						<option value="经管所长">经管所长</option>
 						<option value="经管科长">经管科长</option>
 					</select>
-				</div>
-				{/if}
-				{if condition="in_array('ctime',$config['deal_process_search'])"}
-				<div class="layui-input-inline j-input-margin" style="width:120px;">
-					<input type="text" name="ctime" id="date" placeholder="申请时间" autocomplete="off" class="layui-input">
 				</div>
 				{/if}
 			</div>

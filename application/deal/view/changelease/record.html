@@ -4,20 +4,32 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				{if condition="in_array('house_number',$config['deal_changelease_record_search'])"}
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
-					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
-				</div>
-				{/if}
 				{if condition="in_array('change_order_number',$config['deal_changelease_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
+				</div>
+				{/if}
+				{if condition="in_array('house_number',$config['deal_changelease_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-120">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				{/if}
 				{if condition="in_array('ban_address',$config['deal_changelease_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
+				{/if}
+				{if condition="in_array('ban_inst_id',$config['deal_changelease_record_search'])"}
+				{if condition="INST_LEVEL != 3"}
+				<div class="layui-input-inline layui-col-md2 j-width-130 j-margin-10 j-select-width130">
+					<select name="ban_inst_id" xm-select="ban_inst_id">
+						<option value="" disabled="disabled">申请机构</option>
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				{/if}
 				{/if}
 				{if condition="in_array('house_use_id',$config['deal_changelease_record_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-width-110 j-margin-10">
@@ -33,18 +45,6 @@
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-90">
 					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
-				{/if}
-				{if condition="in_array('ban_inst_id',$config['deal_changelease_record_search'])"}
-                {if condition="INST_LEVEL != 3"}
-				<div class="layui-input-inline layui-col-md2 j-width-130 j-margin-10 j-select-width130">
-					<select name="ban_inst_id" xm-select="ban_inst_id">
-						<option value="" disabled="disabled">申请机构</option>
-						{volist name=":config('inst_check_names')[INST]" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-				{/if}
 				{/if}
 				{if condition="in_array('ctime',$config['deal_changelease_record_search'])"}
 				<div class="layui-input-inline j-input-margin j-width-100">
@@ -156,6 +156,11 @@
 			  		{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'house_number',minWidth: 140,align:'center',title: '房屋编号'}, 
 					{field: 'ban_address',minWidth: 180,align:'center',title: '楼栋地址'},
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
+						templet: function(d) {
+					        return params.insts[d.ban_inst_id];
+					    }
+					}, 
 					{field: 'ban_owner_id',minWidth: 100,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
@@ -172,11 +177,6 @@
 					    }
 					}, 
 					{field: 'tenant_name',width: 100,align:'center',title: '租户'},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
-						templet: function(d) {
-		                    return params.insts[d.ban_inst_id];
-		                }
-					}, 
 					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'}, 
 					{field: 'fdate',align:'center',minWidth: 120,title: '完成时间', 
 						templet: function(d) {

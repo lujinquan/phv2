@@ -11,17 +11,7 @@
 				<div class="layui-input-inline layui-col-md2 j-input-margin" style="width:160px;">
 					<input type="text" name="ban_address" placeholder="地址" class="layui-input">
 				</div>
-				{/if}		
-				{if condition="in_array('ban_owner_id',$config['deal_process_record_search'])"}
-				<div class="layui-input-inline" style="width:120px;">
-					<select name="ban_owner_id">
-						<option value="">产别</option>
-						{volist name="params['owners']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
-					</select>
-				</div>
-				{/if}
+				{/if}	
 				{if condition="INST_LEVEL != 3"}
 				{if condition="in_array('inst_id',$config['deal_process_search'])"}
 				<div class="layui-input-inline layui-col-md2" style="width:160px;">
@@ -33,6 +23,16 @@
 					</select>
 				</div>
 				{/if}
+				{/if}
+				{if condition="in_array('ban_owner_id',$config['deal_process_record_search'])"}
+				<div class="layui-input-inline" style="width:120px;">
+					<select name="ban_owner_id">
+						<option value="">产别</option>
+						{volist name="params['owners']" id="v"}
+						<option value="{$key}">{$v}</option>
+						{/volist}
+					</select>
+				</div>
 				{/if}
 				{if condition="in_array('change_type',$config['deal_process_record_search'])"}
 				<div class="layui-input-inline" style="width:120px;">

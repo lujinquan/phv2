@@ -10,24 +10,14 @@
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
-				{if condition="in_array('house_number',$config['deal_changeuse_index_search'])"}
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
-					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
-				</div>
-				{/if}
 				{if condition="in_array('change_order_number',$config['deal_changeuse_index_search'])"}
 				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 					<input type="text" name="change_order_number" placeholder="异动单号" class="layui-input">
 				</div>
 				{/if}
-				{if condition="in_array('old_tenant_name',$config['deal_changeuse_index_search'])"}
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-80">
-					<input type="text" name="old_tenant_name" placeholder="原租户" class="layui-input">
-				</div>
-				{/if}
-				{if condition="in_array('new_tenant_name',$config['deal_changeuse_index_search'])"}
-				<div class="layui-input-inline layui-col-md2 j-input-margin  j-width-100">
-					<input type="text" name="new_tenant_name" placeholder="变更后租户" class="layui-input">
+				{if condition="in_array('house_number',$config['deal_changeuse_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+					<input type="text" name="house_number" placeholder="房屋编号" class="layui-input">
 				</div>
 				{/if}
 				{if condition="in_array('ban_inst_id',$config['deal_changeuse_index_search'])"}
@@ -50,6 +40,16 @@
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
+				</div>
+				{/if}
+				{if condition="in_array('old_tenant_name',$config['deal_changeuse_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-80">
+					<input type="text" name="old_tenant_name" placeholder="原租户" class="layui-input">
+				</div>
+				{/if}
+				{if condition="in_array('new_tenant_name',$config['deal_changeuse_index_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin  j-width-100">
+					<input type="text" name="new_tenant_name" placeholder="变更后租户" class="layui-input">
 				</div>
 				{/if}
 				{if condition="in_array('change_use_type',$config['deal_changeuse_index_search'])"}
@@ -141,6 +141,11 @@
 				[ 
 					{field: 'change_order_number',hide:false,align:'center',minWidth: 210,title: '异动单号'},
 					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'}, 
+					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构',
+						templet: function(d) {
+					        return params.insts[d.ban_inst_id];
+					    }
+					},
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别', 
 						templet: function(d) {
 		                    return params.owners[d.ban_owner_id];
@@ -151,19 +156,14 @@
 		                    return params.uses[d.house_use_id];
 		                }
 					},
-					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '申请机构', 
-						templet: function(d) {
-		                    return params.insts[d.ban_inst_id];
-		                }
-					},
+					{field: 'old_tenant_name',minWidth: 100,align:'center',title: '原租户姓名'},
+					{field: 'new_tenant_name',minWidth: 100,align:'center',title: '变更后租户'}, 
 					{field: 'change_use_type',minWidth: 100,align:'center',title: '转让形式', 
 						templet: function(d) {
 		                    return params.usetypes[d.change_use_type];
 		                }
 					}, 
 					{field: 'transfer_rent',hide: true,minWidth: 120,align:'center',title: '转让金额'},
-					{field: 'old_tenant_name',minWidth: 100,align:'center',title: '原租户姓名'},
-					{field: 'new_tenant_name',minWidth: 100,align:'center',title: '变更后租户'}, 
 					{field: 'ctime',align:'center',minWidth: 120,title: '申请时间'},
 					{field: 'change_status',align:'center',minWidth: 100,title: '审核状态', 
 						templet: function(d) {

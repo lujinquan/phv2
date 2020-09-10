@@ -18,11 +18,6 @@
 					<input type="text" name="ban_address" placeholder="楼栋地址" class="layui-input">
 				</div>
 				{/if}
-				{if condition="in_array('tenant_name',$config['deal_changehouse_record_search'])"}
-				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
-					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
-				</div>
-				{/if}
 				{if condition="in_array('ban_inst_id',$config['deal_changehouse_record_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline j-width-130 j-select-width130 j-margin-10">
@@ -53,6 +48,11 @@
 						<option value="{$key}">{$v}</option>
 						{/volist}
 					</select>
+				</div>
+				{/if}
+				{if condition="in_array('tenant_name',$config['deal_changehouse_record_search'])"}
+				<div class="layui-input-inline layui-col-md2 j-input-margin j-width-100">
+					<input type="text" name="tenant_name" placeholder="租户姓名" class="layui-input">
 				</div>
 				{/if}
 				{if condition="in_array('effecttime',$config['deal_changehouse_record_search'])"}
@@ -142,20 +142,20 @@
 				  	{field: 'house_number',hide:false,minWidth: 140,align:'center',title: '房屋编号'}, 
 				  
 					{field: 'ban_number',hide:true,minWidth: 120,align:'center',title: '楼栋编号'},
+					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'},
 					{field: 'ban_inst_id',hide: isShowInst,minWidth: 120,align:'center',title: '机构',
 						templet: function(d) {
 					        return params.insts[d.ban_inst_id];
 					    }
 					}, 
-					{field: 'ban_address',minWidth: 160,align:'center',title: '楼栋地址'},
-					{field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质',
-						templet: function(d) {
-					        return params.uses[d.house_use_id];
-					    }
-					}, 
 					{field: 'ban_owner_id',minWidth: 80,align:'center',title: '产别',
 						templet: function(d) {
 					        return params.owners[d.ban_owner_id];
+					    }
+					}, 
+					{field: 'house_use_id',minWidth: 100,align:'center',title: '使用性质',
+						templet: function(d) {
+					        return params.uses[d.house_use_id];
 					    }
 					}, 
 					{field: 'tenant_name',minWidth: 100,align:'center',title: '租户姓名'},
