@@ -65,6 +65,10 @@ class House extends Admin
 
     public function index()
     {
+        // $HouseModel = new HouseModel;
+        // $find = $HouseModel->get_unpaid_rents(8633);
+        // halt($find);
+
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);

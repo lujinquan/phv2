@@ -61,16 +61,34 @@ class Ban extends Admin
 
             // 注销
             if ($group == 'z') {
+
+                $cancel_type = input('cancel_type');
+
                 $banModel = new BanModel;
                 $where = $banModel->checkWhere($getData);
                 $fields = 'ban_id,ban_number,ban_area_three,ban_use_id,ban_inst_id,ban_owner_id,ban_address,ban_property_id,ban_build_year,ban_damage_id,ban_struct_id,from_unixtime(ban_dtime, \'%Y-%m-%d\') as ban_dtime,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_area+ban_party_area+ban_career_area) as ban_area,ban_use_area,(ban_civil_num+ban_party_num+ban_career_num) as ban_num,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,ban_property_source,ban_units,ban_floors,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
                 $data = [];
-                $data['data'] = $banModel->field($fields)->where($where)->page($page)->limit($limit)->order($order)->select();
-                foreach ($data['data'] as $key => &$value) {
+                //halt($cancel_type);
+                //->page($page)->limit($limit)
+                $temps = $banModel->field($fields)->where($where)->order($order)->select()->toArray();
+                foreach ($temps as $key => &$value) {
                      $cancelType = Db::name('change_cancel')->where([['ban_id','eq',$value['ban_id']],['change_status','eq',1]])->value('cancel_type');
-                     $value['cancel_type'] = $cancelType?$cancelType:1;
+                     if($cancel_type){
+                        if($cancel_type == $cancelType || !$cancelType){
+                            $value['cancel_type'] = $cancelType?$cancelType:1;
+                        }else{
+                            unset($temps[$key]);
+                        }
+                        
+                     }else{
+                        $value['cancel_type'] = $cancelType?$cancelType:1;
+                        
+                     }
+                     
                 }
-                $data['count'] = $banModel->where($where)->count('ban_id');
+                //halt($temps);
+                $data['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
+                $data['count'] = count($temps);
                 $totalRow = $banModel->where($where)->field('sum(ban_civil_area+ban_party_area+ban_career_area) as total_ban_area, sum(ban_civil_rent+ban_party_rent+ban_career_rent) as total_ban_rent, sum(ban_civil_holds+ban_party_holds+ban_career_holds) as total_ban_holds,sum(ban_civil_num+ban_party_num+ban_career_num) as total_ban_num, sum(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as total_ban_oprice, sum(ban_use_area) as total_ban_use_area')->find();
                 if($totalRow){
                     $data['total_ban_num'] = $totalRow['total_ban_num'];
