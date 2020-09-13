@@ -17,6 +17,7 @@ use app\system\admin\Admin;
 use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
+use app\rent\model\Invoice as InvoiceModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
@@ -156,6 +157,14 @@ class Recharge extends Admin
 
             return $this->success('撤销成功');
         }
+    }
+
+    // 开票
+    public function dpkj()
+    {
+        $id = input('param.id');
+        $InvoiceModel = new InvoiceModel;
+        return !$InvoiceModel->dpkj($id , $type = 2) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
     }
 
     public function export()
