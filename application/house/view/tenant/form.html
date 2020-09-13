@@ -120,9 +120,9 @@
 			form = layui.form;
 		form.verify({
 			identity_extra: function(value, item){ //value：表单的值、item：表单的DOM对象			    
-			    if(/(^\d{15}$)|(^\d{16}$)|(^\d{17}(x|X|\d)$)/.test(value) || value=='死亡'){    	
+			    if(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X)$)/.test(value) || value=='死亡'){    	
 			    }else{
-			    	return '身份证格式不正确';
+			    	return '请输入正确身份证号码,且X必须大写';
 			    }
 			}
 		});

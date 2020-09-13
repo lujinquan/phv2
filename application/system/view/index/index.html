@@ -433,6 +433,12 @@
 			  , btn:false
 			  ,content: '<div id="j-news-details" class="j-news-details j-viewer-img"><h1>'+ obj.data.title +'</h1><h2>作者：'+ obj.data.cuid +' 发布于：'+ obj.data.create_time +'</h2><div class="j-content-size">'+ htmlRestore(obj.data.content) +'</div></div>'
 			});
+			//添加编辑附件上传图片查看
+			$(".j-viewer-img").on("click",function(){
+			    $(this).viewer({
+			        url: 'data-original'
+			     });
+			})
 		});
 		
 	    /* 累计租金收租情况 */

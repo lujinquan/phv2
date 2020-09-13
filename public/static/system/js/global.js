@@ -888,7 +888,17 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
 			}
 		}
 	});
-
+    /**
+	 * 验证身份证号码
+	 */
+	form.verify({
+		identity: function(value){
+			if(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X)$)/.test(value) || value=='死亡'){
+			}else{
+				return '请输入正确身份证号码,且X必须大写';
+			}
+		}
+	});
       //点击tr选中对应的checkbox
       $(document).on("click",".layui-table-body table.layui-table tbody tr", function () {
           var index = $(this).attr('data-index');
