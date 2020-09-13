@@ -74,14 +74,16 @@ class Ban extends Admin
                 foreach ($temps as $key => &$value) {
                      $cancelType = Db::name('change_cancel')->where([['ban_id','eq',$value['ban_id']],['change_status','eq',1]])->value('cancel_type');
                      if($cancel_type){
-                        if($cancel_type == $cancelType || !$cancelType){
-                            $value['cancel_type'] = $cancelType?$cancelType:1;
+                        if($cancel_type == $cancelType){
+                        //if($cancel_type == $cancelType || !$cancelType){
+                            $value['cancel_type'] = $cancelType;
                         }else{
                             unset($temps[$key]);
                         }
                         
                      }else{
-                        $value['cancel_type'] = $cancelType?$cancelType:1;
+                        $value['cancel_type'] = $cancelType;
+                        //$value['cancel_type'] = $cancelType?$cancelType:1;
                         
                      }
                      

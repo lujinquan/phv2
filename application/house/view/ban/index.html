@@ -211,7 +211,12 @@
 							return params.structs[d.ban_struct_id];
 						}}
 						,{field: 'cancel_type', minWidth: 80, align:'center', hide: isHideCancelType , title:'注销类型', templet: function(d) {
-							return params.cancels[d.cancel_type];
+							if(d.cancel_type > 0){
+								return params.cancels[d.cancel_type];
+							}else{
+								return '';
+							}
+							
 						}}
 						,{field: 'ban_area', minWidth: 80, align:'center', title:'合建面'}
 						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'使用面积'}
