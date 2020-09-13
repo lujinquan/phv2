@@ -410,6 +410,8 @@ class Index extends Common
             $result['en_msg'] = 'Housing status error';
             return json($result);
         }
+        // 不能为欠租
+        //RentModel::where([['rent_order_paid','',],[]])
         // 检查支付金额是否为空
         $money = input('money');
         if(!$money){
@@ -740,11 +742,12 @@ class Index extends Common
 
                 $house_id = '';
 
-                $RentModel = new RentModel;
+
                 foreach ($rent_order_ids as $rid) {
 
                     // 缴纳欠租订单order
-                    $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+                    $rent_order_info = RentModel::where([['rent_order_id','eq',$rid]])->find();
+                    $child_rent_order_paid = bcsub($rent_order_info['rent_order_receive'], $rent_order_info['rent_order_paid'], 2);
                     $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
                     //$rent_order_info->ptime = strtotime($data['time_end']);
                     //$rent_order_info->pay_way = 4; 
@@ -766,7 +769,7 @@ class Index extends Common
                     $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
                     $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
                     $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
-                    $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+                    $RentOrderChildModel->rent_order_paid = $child_rent_order_paid;
                     $RentOrderChildModel->pay_way = 4; // 4是微信支付
                     $RentOrderChildModel->save();
 
@@ -777,7 +780,7 @@ class Index extends Common
                     $HouseTaiModel->tenant_id = $rent_order_info['tenant_id'];
                     $HouseTaiModel->cuid = 0;
                     $HouseTaiModel->house_tai_type = 2;
-                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$rent_order_info['rent_order_receive'].'元';
+                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$child_rent_order_paid.'元';
                     $HouseTaiModel->data_json = [];
                     $HouseTaiModel->change_type = '';
                     $HouseTaiModel->change_id = '';
@@ -794,8 +797,8 @@ class Index extends Common
                 }
                
                 // 开具电子发票
-                $InvoiceModel = new InvoiceModel;
-                $InvoiceModel->dpkj($row['order_id']);
+                // $InvoiceModel = new InvoiceModel;
+                // $InvoiceModel->dpkj($row['order_id']);
 
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{
@@ -843,9 +846,10 @@ class Index extends Common
 
                 $house_id = '';
 
-                $RentModel = new RentModel;
+                
                 foreach ($rent_order_ids as $rid) {
-                    $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+                    $rent_order_info = RentModel::where([['rent_order_id','eq',$rid]])->find();
+                    $child_rent_order_paid = bcsub($rent_order_info['rent_order_receive'], $rent_order_info['rent_order_paid'], 2);
                     $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
                     // $rent_order_info->ptime = strtotime($data['time_end']);
                     // $rent_order_info->pay_way = 4; //4是微信支付
@@ -867,7 +871,7 @@ class Index extends Common
                     $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
                     $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
                     $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
-                    $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+                    $RentOrderChildModel->rent_order_paid = $child_rent_order_paid;
                     $RentOrderChildModel->pay_way = 4; // 4是微信支付
                     $RentOrderChildModel->save();
 
@@ -877,7 +881,7 @@ class Index extends Common
                     $HouseTaiModel->tenant_id = $rent_order_info['tenant_id'];
                     $HouseTaiModel->cuid = 0;
                     $HouseTaiModel->house_tai_type = 2;
-                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$rent_order_info['rent_order_receive'].'元';
+                    $HouseTaiModel->house_tai_remark = '微信缴费：'.$child_rent_order_paid.'元';
                     $HouseTaiModel->data_json = [];
                     $HouseTaiModel->change_type = '';
                     $HouseTaiModel->change_id = '';
@@ -894,8 +898,8 @@ class Index extends Common
                 }
 
                 // 开具电子发票
-                $InvoiceModel = new InvoiceModel;
-                $InvoiceModel->dpkj($row['order_id']);
+                // $InvoiceModel = new InvoiceModel;
+                // $InvoiceModel->dpkj($row['order_id']);
                 
             // 如果通过out_trae_no无法找到预付订单，则抛出错误
             }else{

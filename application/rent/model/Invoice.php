@@ -249,10 +249,53 @@ class Invoice extends Model
         $dpkj['se'] = 0.0;
 
 
-        $WeixinOrderTradeRow = Db::name('weixin_order_trade')->where([['out_trade_no','eq',$WeixinOrderRow['out_trade_no']]])->find();
+        $WeixinOrderTradeArr = Db::name('weixin_order_trade')->where([['out_trade_no','eq',$WeixinOrderRow['out_trade_no']]])->select();
 
+        $rent_orders = [];
+        foreach ($WeixinOrderTradeArr as $k => $v) {
+            $rent_orders[$v['rent_order_id']] = $v['pay_dan_money'];
+        }
+//halt($rent_orders);
         $fields = 'a.rent_order_id,a.house_id,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_inst_pid';
-        $RentOrderRow = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','eq',$WeixinOrderTradeRow['rent_order_id']]])->find();
+        $RentOrderArr = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['rent_order_id','in',array_keys($rent_orders)]])->select();
+        //halt($RentOrderArr);
+        $bz = '';
+        $curr_date = date('Ym',$WeixinOrderRow->getData('ptime'));
+        $curr_year_date = date('Y',$WeixinOrderRow->getData('ptime')).'00';
+        $now_rent = 0;
+        $old_month = 0;
+        $old_year = 0;
+        foreach ($RentOrderArr as $u => $p) {
+            if ($p['rent_order_date'] == $curr_date) {
+                $now_rent = bcaddMerge([$now_rent,$rent_orders[$p['rent_order_id']]]);
+            }
+            if ($p['rent_order_date'] > $curr_year_date && $p['rent_order_date'] < $curr_date) {
+                $old_month = bcaddMerge([$old_month,$rent_orders[$p['rent_order_id']]]);
+            }
+            if ($p['rent_order_date'] < $curr_year_date) {
+                $old_year = bcaddMerge([$old_year,$rent_orders[$p['rent_order_id']]]);
+            }   
+        }
+        if($now_rent > 0){
+            $bz .= date('Y年m月',$WeixinOrderRow->getData('ptime')).',金额'.$now_rent.'元;';
+            $xmmc = date('Y年m月',$WeixinOrderRow->getData('ptime')).'房屋租金';
+        }
+        if($old_month > 0){
+            $bz .= '以前月订单,金额'.$old_month.'元;';
+            $xmmc = '房屋租金';
+        }
+        if($old_year > 0){
+            $bz .= '以前年订单,金额'.$old_year.'元;';
+            $xmmc = '房屋租金';
+        }
+        // 再次查验备注的金额是否与支付的金额一致，不一致则备注至空
+        $total_rent = bcaddMerge([$now_rent,$old_month,$old_year]);
+        if($total_rent != $WeixinOrderRow['pay_money']){
+            $bz = '';
+        }
+        $bz = trim($bz,';');
+        
+        $RentOrderRow = $RentOrderArr[0];
         $SystemUserRow = Db::name('system_user')->where([['inst_id','eq',$RentOrderRow['ban_inst_id']],['role_id','eq',4],['status','eq',1]])->find();
 
         // 获取毫秒级时间格式,例如：20200818155650612
@@ -290,7 +333,7 @@ class Invoice extends Model
         $dpkj['gmf_sjh'] = ''; // 购买方手机号（比如，发票开给张三的，就填写张三的手机号）
         $dpkj['gmf_dzyx'] = '598936602@qq.com'; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
 
-        $dpkj['xmmc'] = substr($RentOrderRow['rent_order_date'], 0,4).'年'.substr($RentOrderRow['rent_order_date'], 4,2).'月房屋租金'; // 项目名称
+        $dpkj['xmmc'] = $xmmc; // 项目名称
         //$dpkj['xmmc'] = '房地产租赁'; // 项目名称
         
         //$WeixinOrderRow['pay_money'] = '-0.01';
@@ -299,7 +342,7 @@ class Invoice extends Model
         $dpkj['xmje'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 项目金额
         $dpkj['jshj'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 价税合计
         $dpkj['hjje'] = $WeixinOrderRow['pay_money'] * $dpkj['xmsl']; // 合计金额
-        $dpkj['bz'] = substr($RentOrderRow['rent_order_date'], 0,4).'年'.substr($RentOrderRow['rent_order_date'], 4,2).'月租金订单，支付订单号：'.$WeixinOrderTradeRow['out_trade_no']; // 备注
+        $dpkj['bz'] = $bz; // 备注
 
 
         $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n";

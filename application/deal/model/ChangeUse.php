@@ -386,15 +386,15 @@ class ChangeUse extends SystemBase
         
         if ($finalRow['is_create_lease']) {
             // 5、自动生成租约异动
-            $ChangeLeaseModel = new ChangeLeaseModel;
-            $changeleaseData = [];
-            $changeleaseData['ban_id'] = $finalRow['ban_id'];
-            $changeleaseData['house_id'] = $finalRow['house_id'];
-            $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
-            $changeleaseData['cuid'] = $finalRow['cuid'];
-            $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
-            $changeleaseData['szno'] = $szno;
-            $ChangeLeaseModel->auto_create_changelease($changeleaseData);
+            // $ChangeLeaseModel = new ChangeLeaseModel;
+            // $changeleaseData = [];
+            // $changeleaseData['ban_id'] = $finalRow['ban_id'];
+            // $changeleaseData['house_id'] = $finalRow['house_id'];
+            // $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
+            // $changeleaseData['cuid'] = $finalRow['cuid'];
+            // $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
+            // $changeleaseData['szno'] = $szno;
+            // $ChangeLeaseModel->auto_create_changelease($changeleaseData);
         }
         
         // 6、检查微信会员是否绑定当前房屋
