@@ -38,7 +38,7 @@ class Recharge extends Admin
             $RechargeModel = new RechargeModel;
             $where = $RechargeModel->checkWhere($getData);
 
-            $fields = "a.id,a.house_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');

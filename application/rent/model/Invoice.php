@@ -328,7 +328,12 @@ class Invoice extends Model
             $dpkj['house_id'] = $RentOrderRow['house_id'];
             $dpkj['tenant_id'] = $RentOrderRow['tenant_id'];
             $dpkj['gmf_mc'] = $RentOrderRow['tenant_name']; // 购买方名称
-            $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address']. ' ' .$RentOrderRow['tenant_tel'];
+            if($RentOrderRow['tenant_tel']){
+                $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address']. ' ' .$RentOrderRow['tenant_tel'];
+            }else{
+                $dpkj['gmf_dzdh'] = $RentOrderRow['ban_address'];      
+            }
+            
             $dpkj['skr'] = $SystemUserRow['nick']; // 收款人
             $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
             
@@ -395,7 +400,11 @@ class Invoice extends Model
             $dpkj['house_id'] = $RechargeRow['house_id'];
             $dpkj['tenant_id'] = $RechargeRow['tenant_id'];
             $dpkj['gmf_mc'] = $RechargeRow['tenant_name']; // 购买方名称
-            $dpkj['gmf_dzdh'] = $RechargeRow['ban_address']. ' ' .$RechargeRow['tenant_tel'];
+            if($RechargeRow['tenant_tel']){
+                $dpkj['gmf_dzdh'] = $RechargeRow['ban_address']. ' ' .$RechargeRow['tenant_tel'];
+            }else{
+                $dpkj['gmf_dzdh'] = $RechargeRow['ban_address'];      
+            }
             $dpkj['skr'] = $SystemUserRow['nick']; // 收款人
             $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
             
