@@ -103,6 +103,13 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+    {{#  if (d.pay_way == 4) { }}
+    {{#  if (d.invoice_id <= 0) { }}
+        <a href="{:url('dpkj')}?id={{ d.id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
+    {{# }else{ }}
+        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
+    {{# } }}
+    {{# } }}
     <a href="{:url('detail')}?id={{ d.id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>

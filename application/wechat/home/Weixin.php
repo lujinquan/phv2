@@ -28,6 +28,7 @@ use app\wechat\model\Weixin as WeixinModel;
 use app\system\model\SystemUser as UserModel;
 use app\system\model\SystemRole as RoleModel;
 use app\deal\model\Process as ProcessModel;
+use app\rent\model\Recharge as RechargeModel;
 use app\system\model\SystemConfig as ConfigModel;
 use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\wechat\model\WeixinToken as WeixinTokenModel;
@@ -847,7 +848,7 @@ class Weixin extends Common
             $limit = input('param.limit/d', 10);
             $gpsx = input('param.gpsx', '114.307803');
             $gpsy = input('param.gpsy', '30.556853');
-//dump('gpsx：'.$gpsx);halt($gpsy);
+            //dump('gpsx：'.$gpsx);halt($gpsy);
             $insts = config('inst_ids');
             
             $keywords = input('keywords');
@@ -888,7 +889,7 @@ class Weixin extends Common
 
                 $fields = 'a.id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
                 $data = [];
-                $temps = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+                $temps = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->page($page)->limit($limit)->order('a.ptime desc')->select();
                
 
                 $result['data'] = [];
@@ -909,13 +910,13 @@ class Weixin extends Common
                 $result['count'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where($keywordsWhere)->count('a.rent_order_id');
 
             }else{ //如果是待缴，按照房屋来排列
-                $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
+                //$where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')]; 
                 
                 // 按照距离来排序
                 $is_distance_sort = false;
                 if ($is_distance_sort) {
                     $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
-                    $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
+                    $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->limit($limit)->select();
                     $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
 
                     $distances = array();
@@ -1595,7 +1596,7 @@ class Weixin extends Common
     }
 
     /**
-     * 缴费，可以缴纳部分（迭代2.0.3）
+     * 缴费，房管员充值可以缴纳部分（迭代2.0.3）
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
@@ -2144,6 +2145,10 @@ class Weixin extends Common
                     $HouseModel = new HouseModel;
                     $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
                     $row['is_auth'] = $v['is_auth'];
+
+                    $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+                    $row['rent_order_cut'] = $cut_row['rent_order_cut'];
+
                     // unset($systemHouseArr[$v['house_id']]);
                     
                     $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
@@ -2230,10 +2235,12 @@ class Weixin extends Common
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
             $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
-            if($row['rent_order_unpaids'] == 0){
-                unset($result['data']['house'][$k]);
-                continue;
-            }
+            // if($row['rent_order_unpaids'] == 0){
+            //     unset($result['data']['house'][$k]);
+            //     continue;
+            // }
+            $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+            $v['rent_order_cut'] = $cut_row['rent_order_cut'];
             $v['is_auth'] = 0;
             $v['house_use_id'] = $v['house_use_id'];
             if(in_array($v['house_id'], $is_auth_houses)){
@@ -2245,6 +2252,52 @@ class Weixin extends Common
         }
         $result['data']['house'] = array_values($result['data']['house']);
         $result['data']['yue'] = $yue;
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+        return json($result); 
+    }
+
+    public function pre_pay_detail()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/member_info';
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
+        }
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+
+        $house_id = input('house_id');
+
+        $house_info = HouseModel::with('ban,tenant')->where([['house_id','eq',$house_id],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_use_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->find()->toArray();
+
+        $row = Db::name('rent_order')->where([['house_id','eq',$house_id]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+
+        $cut_row = Db::name('rent_order')->where([['house_id','eq',$house_id]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+        $house_info['rent_order_cut'] = $cut_row['rent_order_cut'];
+        //$row['is_auth'] = 0;
+        //$house_info['house_use_id'] = $v['house_use_id'];
+        // if(in_array($house_id, $is_auth_houses)){
+        //     $yue += $v['house_balance'];
+        //     $v['is_auth'] = 1;
+        // }
+        $house_info['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
+        $house_info['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
+
+        $result['data'] = $house_info;
+        //$result['data']['yue'] = $yue;
         $result['code'] = 1;
         $result['msg'] = '获取成功！';
         return json($result); 
@@ -2425,7 +2478,7 @@ class Weixin extends Common
         foreach ($temp as $k => &$v) {
             // 每一个支付订单有可能对应多个月租金订单，但是由于都是一个房屋，所以只取一个即可
             $rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
-            $info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.rent_order_date,a.house_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
+            $info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.rent_order_date,a.house_id,a.pay_way,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
             if($house_id){
                 if($info['house_id'] != $house_id){
                     unset($temp[$k]);
@@ -2437,7 +2490,7 @@ class Weixin extends Common
                 $v['tenant_name'] = $info['tenant_name'];
                 $v['rent_order_date'] = $info['rent_order_date'];
                 $v['ban_address'] = $info['ban_address'];
-                $v['pay_way_name'] = $params['pay_way'][4]; // 只有微信支付，所以是4
+                $v['pay_way_name'] = $params['pay_way'][$info['pay_way']]; // 只有微信支付，所以是4
             }
         }
 
@@ -2449,6 +2502,204 @@ class Weixin extends Common
         $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houseIds]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
         
         $result['msg'] = '获取成功！';
+        return json($result); 
+    }
+
+    /**
+     * 功能描述： 获取我的订单列表数据 【待优化：两个搜索条件同时搜索有问题】
+     * 小程序使用页面：【 我的 -> 历史账单 】
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function my_charge_list() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 1;
+        $result['action'] = 'wechat/weixin/my_charge_list';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        //$member_info = $WeixinMemberModel->where([['member_id','eq',42]])->find();
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+
+        // 初始化参数
+        $where = $data = [];
+        $params = ParamModel::getCparams();
+        $where[] = ['a.ptime','>',0];
+        $where[] = ['member_id','eq',$member_info['member_id']];
+
+        // 支付时间搜索
+        $datasel = input('get.data_sel');
+
+        // 房屋id
+        $house_id = input('get.house_id');
+        if($datasel){
+            //halt($datasel);
+            $startDate = $datasel;
+            $endDate = date( "Y-m", strtotime( "first day of next month",strtotime($datasel) ) );
+            $where[] = ['a.ptime','between time',[$startDate,$endDate]];
+        }
+        if($house_id){
+            $where[] = ['a.house_id','eq',$house_id];
+        }
+
+        // 查找绑定的房屋
+        $RechargeModel = new RechargeModel;
+        
+        $fields = "a.id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_rent,a.pay_way,a.tenant_id,a.invoice_id,a.recharge_status,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+
+        $temp = $RechargeModel->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field($fields)->select()->toArray();
+
+        foreach ($temp as &$v) {
+            $v['pay_way_name'] = $params['pay_way'][$v['pay_way']]; // 只有微信支付，所以是4
+        }
+
+        $WeixinMemberHouseModel = new WeixinMemberHouseModel;
+
+        $houseIds = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->column('house_id');
+        if(!$houseIds){
+            $result['msg'] = '当前会员未绑定任何房屋';
+            return json($result);
+        }
+        // $houseIds = array_keys($houseArr);
+
+        // // 查询微信支付订单
+        // $temp = WeixinOrderModel::with('weixinMember')->where($where)->order('ctime desc')->select()->toArray();
+        // if(empty($temp)){
+        //     $result['code'] = 10051;
+        //     $result['msg'] = '暂无支付订单记录';
+        //     return json($result);
+        // }
+        // foreach ($temp as $k => &$v) {
+        //     // 每一个支付订单有可能对应多个月租金订单，但是由于都是一个房屋，所以只取一个即可
+        //     $rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
+        //     $info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('a.rent_order_date,a.house_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
+        //     if($house_id){
+        //         if($info['house_id'] != $house_id){
+        //             unset($temp[$k]);
+        //             continue;
+        //         }
+        //     }
+        //     if($info){
+        //         $v['house_number'] = $info['house_number'];
+        //         $v['tenant_name'] = $info['tenant_name'];
+        //         $v['rent_order_date'] = $info['rent_order_date'];
+        //         $v['ban_address'] = $info['ban_address'];
+        //         $v['pay_way_name'] = $params['pay_way'][4]; // 只有微信支付，所以是4
+        //     }
+        // }
+
+        
+        if(empty($temp)){
+            $result['code'] = 10051;
+        }
+        $result['data']['rent'] = $temp;
+        //$result['data']['tenant'] = TenantModel::where([['tenant_id','eq',$member_info['tenant_id']]])->find();
+        $result['data']['house'] = HouseModel::with('ban')->where([['house_id','in',$houseIds]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+        
+        $result['msg'] = '获取成功！';
+        //halt($result);
+        return json($result); 
+    }
+
+    /**
+     * 功能描述： 获取我的订单列表的详情
+     * 小程序使用页面：【 我的 -> 历史账单 】
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function my_charge_detail() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/my_charge_detail';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        //$member_info = $WeixinMemberModel->where([['member_id','eq',42]])->find();
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+        // 接收微信支付订单的id（即weixin_order的主键order_id）
+        $id = input('get.id');
+        
+        $fields = "a.id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.pay_rent,a.pay_way,a.tenant_id,a.invoice_id,a.transaction_id,a.out_trade_no,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,e.member_name";
+
+        $charge_info = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('weixin_member e','a.member_id = e.member_id','left')->field($fields)->where([['a.id','eq',$id]])->find();
+        // if($order_info['order_status'] == 2){ //如果状态是已退款
+        //     $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+        //     $order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
+        //     $result['order_refund_info'] = $order_refund_info;
+        // }else{
+        //     $result['order_refund_info'] = '';
+        // }
+        //halt($charge_info);
+        $result['order_refund_info'] = '';
+        if($charge_info['invoice_id']){
+          $InvoiceModel = new InvoiceModel;
+          $invoice_info = $InvoiceModel->find($charge_info['invoice_id'])->toArray();
+          $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
+          $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
+          $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
+          if($invoice_info['local_pdfurl']){
+                $invoice_info['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl'];
+          }
+          
+          $result['invoice_info'] = $invoice_info;
+          $charge_info['invoice_id'] = '是';
+        }else{
+           $result['invoice_info'] = ''; 
+        }
+        // $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+        // $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+        // $rent_order_ids = array_keys($rent_orders);
+        // $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+        // foreach ($houses as $k => &$v) {
+        //     $v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+        //     $v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
+        // }
+        // $result['houses'] = $houses;
+        
+        $result['charge_info'] = $charge_info;
+
+        $result['code'] = 1;
+        
+        $result['msg'] = '获取成功！';
+      
         return json($result); 
     }
 
@@ -2868,11 +3119,12 @@ class Weixin extends Common
 
         }
         // 判断是否允许支付，只开放部分管段（目前仅紫阳01、02），和部分使用性质（目前仅住宅）
-        if (in_array($houseRow['ban_inst_id'], [7,12,19,25]) && $houseRow['house_use_id'] == 1) {
-            $houseRow['is_allow_to_pay'] = 1;
-        }else{
-            $houseRow['is_allow_to_pay'] = 0;
-        }
+        // if (in_array($houseRow['ban_inst_id'], [7,12,19,25]) && $houseRow['house_use_id'] == 1) {
+        //     $houseRow['is_allow_to_pay'] = 1;
+        // }else{
+        //     $houseRow['is_allow_to_pay'] = 0;
+        // }
+        $houseRow['is_allow_to_pay'] = 1;
         //halt($houseRow);
         //$houseRow['is_allow_to_pay'] = 0;
         $result['data']['house'] = $houseRow;

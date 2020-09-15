@@ -101,6 +101,16 @@
 		        <input type="text" name="ban_dtime" class="layui-input" id="test6" placeholder="注销日期范围">
 		      </div>
 		      {/if}
+		      {if condition="in_array('cancel_type',$config['ban_info_search'])"}
+			  <div class="layui-input-inline j-width-110 j-margin-10">
+				  <select name="cancel_type">
+					  <option value="">注销类型</option>
+					  {volist name="params['cancels']" id="v"}
+					  <option value="{$key}">{$v}</option>
+					  {/volist}
+					</select>
+			  </div>
+			  {/if}
 		      {/if}
 		      {if condition="in_array('ban_ctime',$config['ban_info_search'])"}
 		        <div class="layui-input-inline j-input-margin" style="width:120px">
@@ -201,7 +211,12 @@
 							return params.structs[d.ban_struct_id];
 						}}
 						,{field: 'cancel_type', minWidth: 80, align:'center', hide: isHideCancelType , title:'注销类型', templet: function(d) {
-							return params.cancels[d.cancel_type];
+							if(d.cancel_type > 0){
+								return params.cancels[d.cancel_type];
+							}else{
+								return '';
+							}
+							
 						}}
 						,{field: 'ban_area', minWidth: 80, align:'center', title:'合建面'}
 						,{field: 'ban_use_area', minWidth: 100, align:'center', title:'使用面积'}

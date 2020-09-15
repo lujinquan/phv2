@@ -3,6 +3,7 @@ namespace app\house\model;
 
 use app\system\model\SystemBase;
 use app\house\model\Ban as BanModel;
+use app\rent\model\Rent as RentModel;
 use app\house\model\Room as RoomModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
@@ -366,5 +367,15 @@ class House extends SystemBase
         }
     }
 
-
+    // 获取房屋欠租金额
+    public function get_unpaid_rents($houseid)
+    {
+        $row = RentModel::where([['rent_order_status','eq',1],['house_id','eq',$houseid]])->field('sum(rent_order_paid) as rent_order_paids , sum(rent_order_receive) as rent_order_receives')->find();
+        if($row){
+            return bcsub($row['rent_order_receives'], $row['rent_order_paids'], 2);
+        }else{
+            return 0;
+        }
+        
+    }
 }
