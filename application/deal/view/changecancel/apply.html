@@ -67,7 +67,7 @@
 	    	  <td class="cancel_before_3" id="floor_builtuparea"><input type="hidden" name="floor_builtuparea" value=""><label></label></td>
 	    	  <td class="cancel_before_4" id="floor_original"><input type="hidden" name="floor_original" value=""><label></label></td>
 			  <td class="cancel_before_5" id="floor_bannumber"><input type="hidden" name="floor_bannumber" value=""><label></label></td>
-			  <td rowspan="3" align="center"><input type="checkbox" name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest"  lay-text="ON|OFF"></td>
+			  <td rowspan="3" align="center"><input type="checkbox"  name="cancel_ban" value="1" lay-skin="switch" lay-filter="switchTest"  lay-text="ON|OFF"></td>
 		    </tr>
 			<tr>
 			  <td></td>
@@ -388,7 +388,54 @@
 							layer.msg("请选择楼栋!");
 						}
 						else if(!rows){
-							layer.msg("请选择房屋!");
+						    $("input[name='cancel_ban']").attr({"checked":"checked","readonly":"readonly"})
+						    $("input[name='cancel_ban']").next().attr("disabled","disabled").addClass("layui-form-onswitch").css("pointer-events","none").find("em").text("ON");
+							console.log("没有房屋！")
+							if(row.ban_rent=="0.00" && row.ban_area=="0.00"){
+								$('.j-house-box tbody').html("");
+								$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
+								$("input[name='ban_id']").val(row.ban_id);//获取楼栋id
+								$("#ban_address").val(row.ban_address);//获取地址
+								//楼栋信息
+								$("#floor_number").text(row.ban_number);//获取表格楼栋编号
+								$("#floor_households label,.cancel_change_0 label").text(row.ban_holds);//获取户数
+								$("#floor_households input,.cancel_change_0 input").val(row.ban_holds);//获取隐藏域的户数
+								$("#floor_prescribed label,.cancel_change_1 label").text(row.ban_rent);//获取表格规定租金
+								$("#floor_prescribed input,.cancel_change_1 input").val(row.ban_rent);//获取隐藏域的值
+								$("#floor_areaofuse label,.cancel_change_2 label").text(row.ban_use_area);//获取表格使用面积
+								$("#floor_areaofuse input,.cancel_change_2 input").val(row.ban_use_area);//获取隐藏域的值
+								$("#floor_builtuparea label,.cancel_change_3 label").text(row.ban_area);//获取表格建筑面积
+								$("#floor_builtuparea input,.cancel_change_3 input").val(row.ban_area);//获取隐藏域的值
+								$("#floor_original label,.cancel_change_4 label").text(row.ban_oprice);//获取表格房屋原价
+								$("#floor_original input,.cancel_change_4 input").val(row.ban_oprice);//获取隐藏域的值
+								$("#floor_bannumber label,.cancel_change_5 label").text(row.ban_num);//获取栋数
+								$("#floor_bannumber input,.cancel_change_5 input").val(row.ban_num);//获取隐藏域的栋数
+								// 异动后户数
+								$('.cancel_after_0 label').text(0);
+								$('.cancel_after_0 input').val(0);
+								// 异动后规定租金
+								$('.cancel_after_1 label').text(0);
+								$('.cancel_after_1 input').val(0);
+								// 异动后使用面积
+								$('.cancel_after_2 label').text(0);
+								$('.cancel_after_2 input').val(0);
+								// 异动后建筑面积
+								$('.cancel_after_3 label').text(0);
+								$('.cancel_after_3 input').val(0);
+								// 异动后房屋原价
+								$('.cancel_after_4 label').text(0);
+								$('.cancel_after_4 input').val(0);
+								// 异动后栋数
+								$('.cancel_after_5 label').text(0);
+								$('.cancel_after_5 input').val(0);
+								initialvalue();
+								// computation();
+								layer.close(index);
+							}
+							else{
+								layer.msg("该楼栋无法注销,请选择房屋!");
+							}
+							
 						}
 						else if(!rows.length==0){
 						$('.j-house-box tbody').html("");
@@ -518,33 +565,10 @@
 							$('.cancel_after_5 label').text(sumbannumberold);
 							$('.cancel_after_5 input').val(sumbannumberold);//获取隐藏域的值
 							//判断规定租金、使用面积异动后数据是否为0，开启switch
-							if($("#changes_floor_prescribed label").text()==0 && $("#changes_floor_areaofuse label").text()==0){
-								$("input[name='cancel_ban']").removeAttr("disabled");
-							}
-							else{
-								$("input[name='cancel_ban']").attr("disabled","disabled");
-							}
-						}
-						//删除
-						$(".house_delete").click(function(){
-							var that=$(this);
-						   layer.confirm('确定要删除吗？', function(index){
-						     that.parents("tr").remove();
-						     computation();
-						     layer.close(index);
-						   });  
-						})
-						//输入框建筑面积改变重新计算
-						$(".house_builtuparea").bind("input propertychange",function(){
-							computation();
-						});
-						// //输入框房屋原价改变重新计算
-						// $(".house_original").bind("input propertychange",function(){
-						// 	computation();
-						// });
-						form.on('switch(switchTest)', function (data) {
-							console.log(data.elem.checked)
-							if(data.elem.checked==true){
+							if($("#changes_floor_prescribed label").text()==0 && $("#changes_floor_builtuparea label").text()==0){
+								console.log("为0")
+								$("input[name='cancel_ban']").attr({"checked":"checked","readonly":"readonly"})
+								$("input[name='cancel_ban']").next().attr("disabled","disabled").addClass("layui-form-onswitch").css("pointer-events","none").find("em").text("ON");
 								//注销楼栋计算
 								sumbannumber = $('.cancel_before_5 label').text();//栋数
 								$(".cancel_change_5 label").text(sumbannumber);
@@ -554,6 +578,8 @@
 								$('.cancel_after_5 input').val(sumbannumberold);//获取隐藏域的值
 							}
 							else{
+								$("input[name='cancel_ban']").attr({"checked":"false","disabled":"disabled"})
+								$("input[name='cancel_ban']").next().attr("disabled","disabled").removeClass("layui-form-onswitch").css("pointer-events","none").find("em").text("OFF");
 								//注销楼栋计算
 								sumbannumber = 0;//栋数
 								$(".cancel_change_5 label").text(sumbannumber);
@@ -562,7 +588,26 @@
 								$('.cancel_after_5 label').text(sumbannumberold);
 								$('.cancel_after_5 input').val(sumbannumberold);//获取隐藏域的值
 							}
-						});	
+						}
+						//删除
+						$(".house_delete").click(function(){
+							var that=$(this);
+							var trList = $(".j-house-box tbody").children("tr");
+							if(trList.length>1){
+								layer.confirm('确定要删除吗？', function(index){
+									that.parents("tr").remove();
+									computation();
+									layer.close(index);
+								});  
+							}
+							else{
+								layer.msg("最后一条房屋删除后无法注销!");
+							} 
+						})
+						//输入框建筑面积改变重新计算
+						$(".house_builtuparea").bind("input propertychange",function(){
+							computation();
+						});
 					},btn2: function(index, layero){
 						layer.close(index);
 					}

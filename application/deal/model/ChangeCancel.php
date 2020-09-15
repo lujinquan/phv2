@@ -204,20 +204,27 @@ class ChangeCancel extends SystemBase
             ],
         ];
         //halt($data);
-        $count = count($data['house_id']);
-        $houseDetail = [];
-        for ($i=0; $i < $count; $i++) { 
-            $houseDetail[$i]['house_id'] = $data['house_id'][$i];  //房屋id
-            $houseDetail[$i]['house_use_id'] = $data['house_use_id'][$i];  //房屋使用性质
-            $houseDetail[$i]['house_number'] = $data['house_number'][$i];  //房屋编号
-            $houseDetail[$i]['tenant_id'] = $data['tenant_id'][$i]; // 承租人
-            $houseDetail[$i]['tenant_name'] = $data['house_lessee'][$i]; // 承租人
-            $houseDetail[$i]['house_oprice'] = $data['house_original'][$i]; // 原价
-            $houseDetail[$i]['house_area'] = $data['house_builtuparea'][$i]; // 建筑面积
-            $houseDetail[$i]['house_pre_rent'] = $data['house_prescribed'][$i]; // 规租
-            $houseDetail[$i]['house_lease_area'] = $data['house_rentalarea'][$i]; // 计租面积
-        }
-        $data['data_json'] = $houseDetail;
+		$houseDetail = [];
+		if($data['house_id']){
+			$count = count($data['house_id']);
+			
+			for ($i=0; $i < $count; $i++) {
+				$houseDetail[$i]['house_id'] = $data['house_id'][$i];  //房屋id
+				$houseDetail[$i]['house_use_id'] = $data['house_use_id'][$i];  //房屋使用性质
+				$houseDetail[$i]['house_number'] = $data['house_number'][$i];  //房屋编号
+				$houseDetail[$i]['tenant_id'] = $data['tenant_id'][$i]; // 承租人
+				$houseDetail[$i]['tenant_name'] = $data['house_lessee'][$i]; // 承租人
+				$houseDetail[$i]['house_oprice'] = $data['house_original'][$i]; // 原价
+				$houseDetail[$i]['house_area'] = $data['house_builtuparea'][$i]; // 建筑面积
+				$houseDetail[$i]['house_pre_rent'] = $data['house_prescribed'][$i]; // 规租
+				$houseDetail[$i]['house_lease_area'] = $data['house_rentalarea'][$i]; // 计租面积
+			}
+			$data['data_json'] = $houseDetail;
+		}
+        
+		
+        
+        
 
         // 审批表数据
         $processRoles = $this->processRole;

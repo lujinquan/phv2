@@ -112,16 +112,22 @@
                     return params.owners[d.ban_owner_id];
                 }}
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+				,{field: 'ban_area', minWidth: 80, align:'center', title:'建筑面积'}
+				,{field: 'ban_use_area', minWidth: 100, align:'center', title:'使用面积'}
+				,{field: 'ban_num',minWidth: 80, align:'center',title:'栋数'}
+				,{field: 'ban_rent', minWidth: 80, align:'center',title:'规定租金'}
+				,{field: 'ban_oprice', minWidth: 100, align:'center', title: '原价'}
+				,{field: 'ban_holds',minWidth: 100, align:'center', title: '户数'}
             ]]
             ,done:function(res,curr,count){
-               
+               console.log("楼栋信息：",res);
             }
         },isShowInst);
 		  //监听行单击事件（单击事件为：rowDouble）
 			table.on('row(dataTable)',function(obj){
 				data = obj.data;
 				conId = data.id;
-				//console.log(data);
+				console.log("楼栋查询器选择：",data);
 				//标注选中样式
 				obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 				
@@ -224,6 +230,23 @@
 						]
 					],
 					done: function(res, curr, count) {
+						console.log("房屋数据：",res.data.length);
+						if(res.data.length>0){
+							table.on('checkbox(dataTable2)', function(obj){
+							    var checkStatus = table.checkStatus('dataTable2');
+							    datas = checkStatus.data;
+								  //console.log(table.checkStatus('dataTable2').data);
+								  console.log("房屋查询器选择：",datas);
+								 /* if(datas.length==0)
+								   {
+									alert("房屋必须选择！");
+								   } */
+										 
+							});
+						}
+						else{
+							datas = ''
+						}
 						var	result = res.data;
 						for (var i = 0; i < result.length; i++) {
 							$("[lay-id='dataTable2'] tr[data-index="+i+"]").attr('color-status',1);
@@ -240,18 +263,6 @@
 				}, isShowInst);
 				
 			});
-			table.on('checkbox(dataTable2)', function(obj){
-              var checkStatus = table.checkStatus('dataTable2');
-              datas = checkStatus.data;
-			  //console.log(table.checkStatus('dataTable2').data);
-			  console.log(datas);
-			 /* if(datas.length==0)
-			   {
-			  	alert("房屋必须选择！");
-			   } */
-			 
-          });
-		  
 		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
 		
     });
