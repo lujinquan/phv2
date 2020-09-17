@@ -87,13 +87,13 @@
             ,cols: [[ //表头
                {field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
                // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-			   ,{field: 'tenant_name', minWidth: 120, align:'center', title: '租户姓名'}
+			   ,{field: 'tenant_name', minWidth: 120, hide: true, align:'center', title: '租户姓名'}
                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '缴费用户',templet: function(d){
                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                }}
                 ,{field: 'openid',minWidth:260,hide:true,align:'center', title: 'OPENID'}
                 ,{field: 'pay_money', width:100, hide: false, align:'center', title: '交易金额'}
-                ,{field: 'house_number', minWidth: 160, align:'center', title: '房屋编号'}
+                ,{field: 'house_number', width: 160, align:'center', title: '房屋编号'}
 				,{field: 'ban_address', minWidth: 200, align:'center', title: '楼栋地址'}
 				,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
 				,{field: 'ptime', width: 160, align:'center', title: '交易时间'}
