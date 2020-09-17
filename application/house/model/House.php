@@ -220,7 +220,20 @@ class House extends SystemBase
             //halt($roomsSort);
             foreach($roomsSort as $ro){
                 foreach($ro as $r){
-                    $roomRow = RoomModel::with('ban')->where([['room_id','eq',$r]])->find();
+                   
+                    $roomRow = RoomModel::with('ban')->where([['room_id','eq',$r]])->find();    
+                    // if($row['house_status'] == 2) {
+                    //     $roomRow = RoomModel::with('ban')->where([['room_id','eq',$r],['room_status','eq',2]])->find();
+                    // } else {
+                    //     $roomRow = RoomModel::with('ban')->where([['room_id','eq',$r],['room_status','<',2]])->find();
+                    // }
+                    // if(!$roomRow){
+                    //     $roomTables[] = [
+                    //         'baseinfo' => [],
+                    //         'houseinfo' => [],
+                    //     ];
+                    //     continue;
+                    // }
                     //动态获取层次调解率
                     $flor_point = $FloorPointModel->get_floor_point($roomRow['room_floor_id'], $roomRow['ban_floors']);
                     $roomRow['floor_point'] = ($flor_point * 100).'%';

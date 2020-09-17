@@ -10,7 +10,7 @@
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">OPENID：</label>
- 	<div class="layui-form-mid layui-word-aux">{$data_info['openid']}</div>
+ 	<div class="layui-form-mid layui-word-aux">{:hide_str($data_info['openid'],8,12)}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">支付详情：</label>
@@ -43,8 +43,8 @@
  </div>
 
  <div class="layui-form-item">
- 	<label class="layui-form-label">用户手机：</label>
- 	<div class="layui-form-mid layui-word-aux">{$data_info['tel']}</div>
+ 	<label class="layui-form-label">用户微信手机：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['weixin_tel']}</div>
  </div>
  <div class="layui-form-item">
  	<label class="layui-form-label">交易编号：</label>
