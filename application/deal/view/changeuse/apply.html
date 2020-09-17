@@ -420,12 +420,12 @@
 					,area: ['70%', '60%']
 					, btn:false
 					,pageTabs: false
-					,content: '{:url('system/index/tenant')}?hisi_iframe=yes'
+					,content: '{:url('system/index/tenant')}?hisi_iframe=yes&change_type=13'
 					,btn: ['确定','关闭']
 					,yes: function(index, layero){
 						var row = window["layui-layer-iframe" + index].tenantdata();
 						//console.log(row);
-						href="{:url('house/tenant/index')}?tenant_number="
+						href="{:url('house/tenant/index')}?change_type=13&tenant_number="
 						layer.close(index);
 						$("#new_tenant_id").val(row.tenant_id);//获取租户id
 						$("#new_tenant_number").val(row.tenant_number);//获取租户编号

@@ -503,7 +503,7 @@ class House extends Admin
         $roomTables = $HouseModel->get_house_renttable($id);
         $this->assign('room_tables',$roomTables);
         //-------------- by lucas 【计租表】 End --------------------------
-
+        //halt($row);
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
