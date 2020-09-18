@@ -569,7 +569,7 @@
 				$('.cancel_after_5 label').text(sumbannumberold);
 				$('.cancel_after_5 input').val(sumbannumberold);//获取隐藏域的值
 				//判断规定租金、使用面积异动后数据是否为0，开启switch
-				if($("#changes_floor_prescribed label").text()==0 && $("#changes_floor_builtuparea label").text()==0){
+				if($("#changes_floor_prescribed label").text()==0 && $("#changes_floor_areaofuse label").text()==0){
 					console.log("为0")
 					$("input[name='cancel_ban']").attr({"checked":"checked","readonly":"readonly"})
 					$("input[name='cancel_ban']").next().attr("disabled","disabled").addClass("layui-form-onswitch").css("pointer-events","none").find("em").text("ON");
@@ -644,7 +644,7 @@
 						    $("input[name='cancel_ban']").attr({"checked":"checked","readonly":"readonly"})
 						    $("input[name='cancel_ban']").next().attr("disabled","disabled").addClass("layui-form-onswitch").css("pointer-events","none").find("em").text("ON");
 							console.log("没有房屋！")
-							if(row.ban_rent=="0.00" && row.ban_area=="0.00"){
+							if(row.ban_rent=="0.00" && row.ban_use_area=="0.00"){
 								$('.j-house-box tbody').html("");
 								$("input[name='ban_number']").val(row.ban_number);//获取楼栋编号
 								$("input[name='ban_id']").val(row.ban_id);//获取楼栋id

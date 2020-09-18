@@ -90,7 +90,7 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 5);
-        $where[] = ['tenant_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的租户
+        $where = [];
         if(isset($queryWhere['tenant_number']) && $queryWhere['tenant_number']){ //查询租户编号
             $where[] = ['tenant_number','like','%'.$queryWhere['tenant_number'].'%'];
         }
@@ -100,9 +100,21 @@ class SystemData extends Model
         if(isset($queryWhere['tenant_tel']) && $queryWhere['tenant_tel']){ //查询租户手机号
             $where[] = ['tenant_tel','like','%'.$queryWhere['tenant_tel'].'%'];
         }
-        if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
-            $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
+        // 使用权变更允许查询所有管段的租户
+        if(isset($queryWhere['change_type']) && $queryWhere['change_type'] == 13){
+            if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
+                $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
+            }else{
+                $where[] = ['tenant_inst_id','in',config('inst_ids')[1]]; // 默认查询当前机构下的租户
+            }
+        }else{
+            if(isset($queryWhere['tenant_inst_id']) && $queryWhere['tenant_inst_id']){ //查询机构
+                $where[] = ['tenant_inst_id','in',config('inst_ids')[$queryWhere['tenant_inst_id']]];
+            }else{
+                $where[] = ['tenant_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的租户
+            }
         }
+        
         if(isset($queryWhere['tenant_status'])){ //查询租户状态
             $where[] = ['tenant_status','eq',$queryWhere['tenant_status']];
         }
@@ -127,7 +139,7 @@ class SystemData extends Model
         }else{
             $where[] = ['tenant_status','<',2]; // 默认查询正常状态下的租户 
         }
-  
+
         $TenantModel = new TenantModel;
 
         $fields = 'tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card';
