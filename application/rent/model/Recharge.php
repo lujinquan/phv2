@@ -110,5 +110,57 @@ class Recharge extends Model
         $row = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['id','eq',$id]])->find();
         return $row;
     }
+
+    public function afterWeixinRecharge($data = array())
+    {
+        // 生成后台订单
+        $row = self::where([['out_trade_no','eq',$data['out_trade_no']]])->find();
+        // 更新预付订单
+        if($row){
+
+            if($row['recharge_status'] == 0){
+                $pay_rent = $data['total_fee'] / 100;
+
+                // 更新房屋余额
+                $HouseModel = new HouseModel;
+                $house_info = $HouseModel->where([['house_id','eq',$row['house_id']]])->find();
+                $yue = bcaddMerge([$house_info['house_balance'],$pay_rent]);
+                $house_info->house_balance = $yue;
+                $house_info->save();
+
+                // 更新预付订单
+                $row->transaction_id = $data['transaction_id'];
+                $row->ptime = strtotime($data['time_end']); //支付时间
+                $row->pay_rent = $pay_rent; //支付金额，单位：分
+                $row->yue = $yue;
+                $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
+                $row->recharge_status = 1; //充值状态，1充值成功
+                $row->save();
+                
+                
+                // 添加房屋台账【待测】
+                $HouseTaiModel = new HouseTaiModel;
+                $HouseTaiModel->house_id = $house_info['house_id'];
+                $HouseTaiModel->tenant_id = $house_info['tenant_id'];
+                $HouseTaiModel->cuid = 0;
+                $HouseTaiModel->house_tai_type = 2;
+                $HouseTaiModel->house_tai_remark = '微信充值：'. $pay_rent .'元，剩余余额：'.$yue.'元。';
+                $HouseTaiModel->data_json = [];
+                $HouseTaiModel->change_type = '';
+                $HouseTaiModel->change_id = '';
+                $HouseTaiModel->save();
+
+                
+            }
+
+            // 开具电子发票
+            // $InvoiceModel = new InvoiceModel;
+            // $InvoiceModel->dpkj($row['id'] , $type = 2);
+            
+        // 如果通过out_trae_no无法找到预付订单，则抛出错误
+        }else{
+            
+        }
+    }
     
 }

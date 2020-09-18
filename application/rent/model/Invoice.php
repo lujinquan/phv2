@@ -154,6 +154,11 @@ class Invoice extends Model
      */
     public function dpkj($id, $type = 1)
     {
+        // 测试平台暂不需要开发票      
+        if (get_domain(false) == 'procheck.ctnmit.com:443') {
+            $this->error = '测试平台，暂不开票';
+            return false;
+        }
         // 初始化数据
         $dpkj = [];
         // 发票请求流水号 20 是 企业内部唯一请求开票流水 号，每个请求流水号只能开一 次 ,流水号前面以公司名称 前 缀 例 如 合 力 中 税 ： HLZS20171128094300001
@@ -245,11 +250,11 @@ class Invoice extends Model
             $WeixinOrderRow = $WeixinOrderModel->find($id);
 
             if($WeixinOrderRow['invoice_id']){
-               $this->error('支付订单已开票');
+               $this->error = '支付订单已开票';
                return false;
             }
             if($WeixinOrderRow['order_status'] != 1){
-                $this->error('订单状态异常无法开票');
+                $this->error = '订单状态异常无法开票';
                 return false;
             }
             $WeixinOrderTradeArr = Db::name('weixin_order_trade')->where([['out_trade_no','eq',$WeixinOrderRow['out_trade_no']]])->select();
@@ -338,7 +343,7 @@ class Invoice extends Model
             $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
             
             $dpkj['gmf_sjh'] = ''; // 购买方手机号（比如，发票开给张三的，就填写张三的手机号）
-            $dpkj['gmf_dzyx'] = '598936602@qq.com'; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
+            $dpkj['gmf_dzyx'] = ''; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
 
             $dpkj['xmmc'] = $xmmc; // 项目名称
             //$dpkj['xmmc'] = '房地产租赁'; // 项目名称
@@ -359,11 +364,11 @@ class Invoice extends Model
 
             $RechargeRow = $RechargeModel->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['a.id','eq',$id]])->find();
             if($RechargeRow['invoice_id']){
-               $this->error('支付订单已开票');
+               $this->error = '支付订单已开票';
                return false;
             }
             if($RechargeRow['recharge_status'] != 1){
-                $this->error('充值订单状态异常无法开票');
+                $this->error = '充值订单状态异常无法开票';
                 return false;
             }
 
@@ -409,7 +414,7 @@ class Invoice extends Model
             $dpkj['kpr'] = $SystemUserRow['nick']; // 开票人
             
             $dpkj['gmf_sjh'] = ''; // 购买方手机号（比如，发票开给张三的，就填写张三的手机号）
-            $dpkj['gmf_dzyx'] = '598936602@qq.com'; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
+            $dpkj['gmf_dzyx'] = ''; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
 
             $dpkj['xmmc'] = $xmmc; // 项目名称
             //$dpkj['xmmc'] = '房地产租赁'; // 项目名称

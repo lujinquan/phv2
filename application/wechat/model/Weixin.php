@@ -14,7 +14,20 @@ namespace app\wechat\model;
 
 use think\Db;
 use think\Model;
+use app\rent\model\Rent as RentModel;
+use app\house\model\House as HouseModel;
+use app\rent\model\Invoice as InvoiceModel;
+use app\rent\model\Recharge as RechargeModel;
+use app\house\model\HouseTai as HouseTaiModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinToken as WeixinTokenModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
+use app\wechat\model\WeixinMember as WeixinMemberModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
+use app\wechat\model\WeixinTemplate as WeixinTemplateModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
+use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
+use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
 
 
 /**
@@ -56,8 +69,8 @@ class Weixin extends Model
             'mch_key'        => $configDatas['app_ziyang_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
-            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
-            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
+            'ssl_key'        => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'home'. DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+            'ssl_cer'        => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'home'. DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
             // 'ssl_key'        => $configDatas['app_ziyang_apiclient_key_pem'],
             // 'ssl_cer'        => $configDatas['app_ziyang_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限
@@ -280,6 +293,139 @@ class Weixin extends Model
 
 	}
 
+	/**
+     * 功能描述：查询支付订单
+     * @author  Lucas 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
+     * @param  transaction_id 交易单号
+     * @param  out_trade_no 订单号
+     * @param  type 查询类型 queryOrder（查询订单是否支付） 或者 queryRefund（查询是否退款）
+     * 创建时间: 2020-03-10 11:50:03
+     */
+    public function queryOrder($transaction_id , $out_trade_no ,$type = 'queryOrder')
+    {
+    	// 初始化数据
+    	$options = [];
+    	// 查询交易单号
+        if ($transaction_id) {
+            $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
+            $options = ['transaction_id' => $transaction_id, ];
+        // 查询订单号
+        }elseif ($out_trade_no) {
+            $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
+            $options = ['out_trade_no' => $out_trade_no,];
+        }
+        
+        // 查询属于紫阳或粮道
+        $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
+        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+        $inst_pid = $ban_row['ban_inst_pid'];
 
+        // 调用订单查询接口
+        include EXTEND_PATH.'wechat/include.php';
+        if($inst_pid == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($inst_pid == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }
+        $result = $wechat->queryOrder($options);
+        // 返回数据示例
+		/*array(21) {
+		  ["return_code"] => string(7) "SUCCESS"
+		  ["return_msg"] => string(2) "OK"
+		  ["appid"] => string(18) "wxaac82b178a3ef1d2"
+		  ["mch_id"] => string(10) "1600300531"
+		  ["nonce_str"] => string(16) "kXHGBCuWKVfSDyzD"
+		  ["sign"] => string(64) "19C95C47A2C78F3B3CBDD4531B693A314196778B1B0CBB6A9A7B75C37D9B43D1"
+		  ["result_code"] => string(7) "SUCCESS"
+		  ["openid"] => string(28) "oRqsn4624ol3tpa1JiBPQuY1toMY"
+		  ["is_subscribe"] => string(1) "N"
+		  ["trade_type"] => string(5) "JSAPI"
+		  ["bank_type"] => string(6) "OTHERS"
+		  ["total_fee"] => string(1) "1"
+		  ["fee_type"] => string(3) "CNY"
+		  ["transaction_id"] => string(28) "4200000773202009173931052445"
+		  ["out_trade_no"] => string(20) "20200917091232742529"
+		  ["attach"] => string(32) "451ae098bc00f669e70c9d7e97587285"
+		  ["time_end"] => string(14) "20200917091309"
+		  ["trade_state"] => string(7) "SUCCESS"
+		  ["cash_fee"] => string(1) "1"
+		  ["trade_state_desc"] => string(12) "支付成功"
+		  ["cash_fee_type"] => string(3) "CNY"
+		}*/
+        
+        //halt($result);
+        return $result;
+    }
+
+    /**
+     * 功能描述：查询缴费订单退款接口
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间:  2020-03-10 16:28:29
+     * @example 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function refundQuery($transaction_id , $out_trade_no ,$type = 'queryRefund')
+    {
+        // 初始化数据
+        $options = [];
+        // 查询交易单号
+        if ($transaction_id) {
+            $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
+            $options = ['transaction_id' => $transaction_id, ];
+        // 查询订单号
+        }elseif ($out_trade_no) {
+            $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
+            $options = ['out_trade_no' => $out_trade_no,];
+        }
+
+        // 查询属于紫阳或粮道
+        $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
+        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+        $inst_pid = $ban_row['ban_inst_pid'];
+
+        // 调用订单查询接口
+        include EXTEND_PATH.'wechat/include.php';
+        if($inst_pid == 2){
+            $wechat = \WeChat\Pay::instance($this->config_ziyang);
+        }else if($inst_pid == 3){
+            $wechat = \WeChat\Pay::instance($this->config_liangdao);
+        }else{
+            return $this->error('房屋所属机构异常');
+        }
+        $result = $wechat->queryRefund($options);
+        // 返回数据示例
+        /*array(21) {
+          ["appid"] => string(18) "wxaac82b178a3ef1d2"
+          ["cash_fee"] => string(1) "2"
+          ["mch_id"] => string(10) "1600300531"
+          ["nonce_str"] => string(16) "Y2131tqmiDodJ5DP"
+          ["out_refund_no_0"] => string(20) "20200827112643864884"
+          ["out_trade_no"] => string(20) "20200827112643864884"
+          ["refund_account_0"] => string(29) "REFUND_SOURCE_UNSETTLED_FUNDS"
+          ["refund_channel_0"] => string(8) "ORIGINAL"
+          ["refund_count"] => string(1) "1"
+          ["refund_fee"] => string(1) "2"
+          ["refund_fee_0"] => string(1) "2"
+          ["refund_id_0"] => string(29) "50300405742020090702549281988"
+          ["refund_recv_accout_0"] => string(21) "支付用户的零钱"
+          ["refund_status_0"] => string(7) "SUCCESS"
+          ["refund_success_time_0"] => string(19) "2020-09-07 11:25:46"
+          ["result_code"] => string(7) "SUCCESS"
+          ["return_code"] => string(7) "SUCCESS"
+          ["return_msg"] => string(2) "OK"
+          ["sign"] => string(64) "22D70B280B3961DDC8ED62F3673EB6769844972073B2C2E8351202C1FC3536EB"
+          ["total_fee"] => string(1) "2"
+          ["transaction_id"] => string(28) "4200000709202008272832156780"
+        }*/
+        //halt($result);
+        return $result;
+    }
 
 }
