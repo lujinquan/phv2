@@ -298,50 +298,50 @@
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>加计租金</legend>
 		</fieldset>
-        <div class="layui-row layui-form-item layui-col-space90">
-        	<div class="layui-col-md4">
+        <div class="layui-row layui-form-item layui-col-space90 j-exceed-width">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">墙布(纸)护墙板</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_wall_paper_area" readonly value="{$data_info['house_wall_paper_area']}元" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
-        		<label class="j-form-label">瓷砖，马赛克，地板砖</label>
+        	<div class="layui-col-md3">
+        		<label class="j-form-label">瓷砖,马赛克,地板砖</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_ceramic_title_area" readonly value="{$data_info['house_ceramic_title_area']}元" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">浴盆</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_bathtub_num" readonly value="{$data_info['house_bathtub_num']}元" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">面盆</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_basin_num" readonly value="{$data_info['house_basin_num']}元" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">空间1至1.7米(5m²以下)</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_below_five_num" readonly value="{$data_info['house_below_five_num']}元" placeholder="" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">空间1至1.7米(5m²以上)</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_more_five_num" readonly value="{$data_info['house_more_five_num']}元" placeholder="双击选择" autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
-        		<label class="j-form-label">无上下水，无厕所的房屋</label>
+        	<div class="layui-col-md3">
+        		<label class="j-form-label">无上下水,无厕所的房屋</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_is_water" readonly value={if condition="$data_info['house_is_water']"}是{else /}否{/if} autocomplete="off" class="layui-input">
         		</div>
         	</div>
-        	<div class="layui-col-md4">
+        	<div class="layui-col-md3">
         		<label class="j-form-label">居住第一层有架空层或木地板住房</label>
         		<div class="j-input-inline">
         			<input type="text" name="house_is_nonlife" readonly value={if condition="$data_info['house_is_nonlife']"}是{else /}否{/if} autocomplete="off" class="layui-input">
