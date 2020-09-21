@@ -25,7 +25,7 @@ class Index extends Common
 {
     private $config_ziyang;
     private $config_liangdao;
-    protected $debug = false;
+
     /**
      * 初始化方法
      */
@@ -34,15 +34,12 @@ class Index extends Common
         parent::initialize();
         $configDatas = WeixinConfigModel::column('name,value');
         $this->config_ziyang = [
-            // 支付AppID
-            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
-            // 公众号AppSecret
-            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
-            // 公众号消息加解密密钥
-            //'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
+            'appid'          => $configDatas['app_user_appid'], // 支付AppID
+            'appsecret'      =>  $configDatas['app_user_appsecret'], // 公众号AppSecret
+            //'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo', // 公众号消息加解密密钥
             // 配置商户支付参数
-            'mch_id'         => $configDatas['app_ziyang_user_pay_mchid'], //"1244050802",
-            'mch_key'        => $configDatas['app_ziyang_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
+            'mch_id'         => $configDatas['app_ziyang_user_pay_mchid'], //"124xxxx02",
+            'mch_key'        => $configDatas['app_ziyang_user_pay_key'], //'XC854SKIDxxxxxxxx7XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'ziyang'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
@@ -53,23 +50,12 @@ class Index extends Common
             //'cache_path'     => '',
         ];
         $this->config_liangdao = [
-            // 支付AppID
-            'appid'          => $configDatas['app_user_appid'], //'wxaac82b178a3ef1d2', //公房管理小程序
-            // 公众号AppSecret
-            'appsecret'      =>  $configDatas['app_user_appsecret'], //'2035d07676392ac121549f66384b04e4',
-            // 公众号消息加解密密钥
-            //'encodingaeskey' => 'VSFry92ZK486pfvv9lsITw1FpXjkBOGOXjeILzRnyFo',
-            // 配置商户支付参数
-            'mch_id'         => $configDatas['app_liangdao_user_pay_mchid'], //"1244050802",
-            'mch_key'        => $configDatas['app_liangdao_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
-            // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
-            //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
+            'appid'          => $configDatas['app_user_appid'], // 支付AppID
+            'appsecret'      =>  $configDatas['app_user_appsecret'], // 公众号AppSecret
+            'mch_id'         => $configDatas['app_liangdao_user_pay_mchid'], //"124xxxx02",
+            'mch_key'        => $configDatas['app_liangdao_user_pay_key'], //'XC854SKIDxxxxxxxx7XJS9XS',
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
-            // 'ssl_key'        => $configDatas['app_liangdao_apiclient_key_pem'],
-            // 'ssl_cer'        => $configDatas['app_liangdao_apiclient_cert_pem'],
-            // 配置缓存目录，需要拥有写权限
-            //'cache_path'     => '',
         ];
     }
     
@@ -80,7 +66,6 @@ class Index extends Common
      */
     public function index()
     {
-        //halt($this->config);
         return $this->fetch();
     }
 
@@ -113,8 +98,6 @@ class Index extends Common
          * 6、在支付成功通知中需要查单确认是否真正支付成功（见：notify.php）
          */
         $notify = new \NativePay();
-        //$notify
-        //halt($notify->appid);
         $url1 = $notify->GetPrePayUrl("123456789");
         $curr_domin = input('server.http_host');
         //模式二
@@ -139,14 +122,12 @@ class Index extends Common
         $input->SetTrade_type("NATIVE");
         $input->SetProduct_id("123456789");
         $result = $notify->GetPayUrl($input);
-        //halt($result);
         $url2 = $result["code_url"];
         $this->assign([
             'out_trade_no'=> $out_trade_no,
             'url1' => $url1,
             'url2' => $url2,
         ]);
-        //dump($url1);halt($url2);
         return $this->fetch('native');
     }
 
@@ -167,35 +148,25 @@ class Index extends Common
     public function native()
     {
         // 验证令牌
-        $result = [];
-        $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        $result = ['code' => 0];
+        if(!$this->check_token()){
+            $result['code'] = 10010;
+            $result['msg'] = '令牌失效';
+            return json($result);
         }
-        //$openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+
         // 检查订单id是否为空
         $rent_order_id = input('rent_order_id');
         if(!$rent_order_id){
-            $result['code'] = 10030;
             $result['msg'] = '订单编号不能为空';
-            $result['en_msg'] = 'Order ID is empty';
             return json($result);
         }
         // 获取前端传入的金额
         $total_price = input('total_price');
         
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        //$member_info = $WeixinMemberModel->where([['member_id','eq',42]])->find();
+        $member_info = WeixinMemberModel::where([['openid','eq',$openid]])->find();
         $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
 
         $RentModel = new RentModel;
@@ -208,16 +179,12 @@ class Index extends Common
             $ban_row = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','inner')->where([['a.house_id','eq',$rent_order_info['house_id']]])->field('b.ban_inst_pid')->find();
             // 检查订单是否存在
             if(!$rent_order_info){
-                $result['code'] = 10031;
                 $result['msg'] = '订单编号错误';
-                $result['en_msg'] = 'Order ID is error';
                 return json($result);
             }
             // 检查订单是否已经完成支付
             if($rent_order_info['rent_order_receive'] == $rent_order_info['rent_order_paid']){
-                $result['code'] = 10032;
                 $result['msg'] = '订单已支付，请勿重复支付';
-                $result['en_msg'] = 'Order has been paid, please do not pay repeatedly';
                 return json($result);
             }
             // 检查订单绑定的房屋是否以被当前会员绑定
@@ -236,7 +203,6 @@ class Index extends Common
             return json($result);
         }
         $inst_pid = $ban_row['ban_inst_pid'];
-        //$inst_pid = 2;$pay_money = 1;
         // 调起支付
         include EXTEND_PATH.'wechat/include.php';
         if($inst_pid == 2){
@@ -251,37 +217,26 @@ class Index extends Common
 
         //商户订单号的规则，年月日时分秒+6数字随机码
         $out_trade_no = date('YmdHis') . random(6);
-
-        //$out_trade_no = $rent_order_info['rent_order_number'];
         $attach = md5($out_trade_no);
-
         $curr_domin = input('server.http_host');
         // 下面的参数注意要换成动态的
         $options = [
             'body'             => '租金账单',
             'out_trade_no'     => $out_trade_no,
             'total_fee'        => $pay_money,
-            //'openid'           => $openid, //用世念的openid
+            //'openid'           => $openid, // 指定openid支付
             'trade_type'       => 'NATIVE',
             'receipt'          => 'Y', //传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效
-            //'notify_url'       => 'https://'.$curr_domin.'/wechat/index/payordernotify',
             'attach'           => $attach,
             'spbill_create_ip' => '127.0.0.1',
         ];
         if($inst_pid == 2){
-            //回调函数不能带参数
+            // 回调地址不能带参数
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payOrderNotifyZiyang';
-            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderqueryZiyang';
+            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderQuery';
         }else if($inst_pid == 3){
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payOrderNotifyLiangdao';
-            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderqueryLiangdao';
-            //$wechat = \WeChat\Pay::instance($this->config_liangdao);
-        }
-        if ($this->debug === true) {
-            $result['code'] = 1;
-            $result['msg'] = '获取成功，这是测试数据';
-            $result['data'] = $options;
-            return json($result);
+            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderQuery';
         }
 
         // 生成预支付码
@@ -292,20 +247,12 @@ class Index extends Common
             return json($result);
         }
         
-        // 创建JSAPI参数签名
-        //$options = $wechat->createParamsForJsApi($res['prepay_id']);
-        //halt($options);
-
-        //$this->assign('out_trade_no',$out_trade_no);
-        //$this->assign('url1',$res['code_url']);
-        
         // 生成后台订单
         $WeixinOrderModel = new WeixinOrderModel;
         $WeixinOrderModel->perpay_id = $res['prepay_id'];
         $WeixinOrderModel->attach = $attach;
         $WeixinOrderModel->out_trade_no = $out_trade_no;
         $WeixinOrderModel->member_id = $member_info->member_id;
-        //$WeixinOrderModel->rent_order_id = $rent_order_id;
         $WeixinOrderModel->agent = $_SERVER['HTTP_USER_AGENT'];
         $WeixinOrderModel->save();
 
@@ -319,10 +266,6 @@ class Index extends Common
             $WeixinOrderTradeModel->save();
         }
 
-        
-        // $WeixinTemplateModel = new WeixinTemplateModel;
-        // $template_info = $WeixinTemplateModel->where([['name','eq','app_user_payment_remind']])->find();
-        // $options['template_id'] = $template_info['value']; // 模板id
         $result['code_url'] = 'https://'.$curr_domin.'/wechat/index/qrcode?data='.$res['code_url']; // 模板id
         $result['out_trade_no'] = $out_trade_no;
         $result['rent_order_info'] = $rent_order_info;
@@ -364,24 +307,20 @@ class Index extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        
+        if(!$this->check_token()){
+            $result['code'] = 10010;
+            $result['msg'] = '令牌失效';
+            return json($result);
         }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        
         // 检查订单id是否为空
         $rent_order_id = input('rent_order_id');
         if(!$rent_order_id){
             $result['code'] = 10030;
             $result['msg'] = '订单编号不能为空';
-            $result['en_msg'] = 'Order ID is empty';
             return json($result);
         }
         // 获取前端传入的金额
@@ -403,14 +342,12 @@ class Index extends Common
             if(!$rent_order_info){
                 $result['code'] = 10031;
                 $result['msg'] = '订单编号错误';
-                $result['en_msg'] = 'Order ID is error';
                 return json($result);
             }
             // 检查订单是否已经完成支付
             if($rent_order_info['rent_order_receive'] == $rent_order_info['rent_order_paid']){
                 $result['code'] = 10032;
                 $result['msg'] = '订单已支付，请勿重复支付';
-                $result['en_msg'] = 'Order has been paid, please do not pay repeatedly';
                 return json($result);
             }
 
@@ -515,12 +452,7 @@ class Index extends Common
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/payOrderNotifyLiangdao';
             //$wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
-        if ($this->debug === true) {
-            $result['code'] = 1;
-            $result['msg'] = '获取成功，这是测试数据';
-            $result['data'] = $options;
-            return json($result);
-        }
+        
         // 生成预支付码
         $res = $wechat->createOrder($options);
         //halt($result);
@@ -586,18 +518,15 @@ class Index extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+  
+        if(!$this->check_token()){
+            $result['code'] = 10010;
+            $result['msg'] = '令牌失效';
+            return json($result);
         }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+       
         // 检查房屋id是否为空
         $house_id = trim(input('house_id'));
         
@@ -722,20 +651,15 @@ class Index extends Common
         if($inst_pid == 2){
             //$options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargeNotifyZiyang';
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargeNotifyZiyang';
-            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderquery';
+            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderQuery';
 
         }else if($inst_pid == 3){
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargeNotifyLiangdao';
-            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderquery';
+            $result['query_url'] = 'https://'.$curr_domin.'/wechat/index/orderQuery';
             //$options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargeNotifyLiangdao';
             //$wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
-        if ($this->debug === true) {
-            $result['code'] = 1;
-            $result['msg'] = '获取成功，这是测试数据';
-            $result['data'] = $options;
-            return json($result);
-        }
+        
         // 生成预支付码
         $res = $wechat->createOrder($options);
 
@@ -796,18 +720,15 @@ class Index extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        
+        if(!$this->check_token()){
+            $result['code'] = 10010;
+            $result['msg'] = '令牌失效';
+            return json($result);
         }
+        $token = input('token');
+        $openid = cache('weixin_openid_'.$token); //存储openid
+        
         // 检查房屋id是否为空
         $house_id = trim(input('house_id'));
         
@@ -855,7 +776,6 @@ class Index extends Common
         if(!in_array($house_id, $member_houses)){
             $result['code'] = 10075;
             $result['msg'] = '房屋未被绑定';
-            $result['en_msg'] = 'Member not bound to current house';
             return json($result);
         }
 
@@ -935,12 +855,6 @@ class Index extends Common
         }else if($inst_pid == 3){
             $options['notify_url'] = 'https://'.$curr_domin.'/wechat/index/rechargeNotifyLiangdao';
             //$wechat = \WeChat\Pay::instance($this->config_liangdao);
-        }
-        if ($this->debug === true) {
-            $result['code'] = 1;
-            $result['msg'] = '获取成功，这是测试数据';
-            $result['data'] = $options;
-            return json($result);
         }
         // 生成预支付码
         $res = $wechat->createOrder($options);
@@ -1106,21 +1020,19 @@ class Index extends Common
      * @author  Lucas 
      * 创建时间: 2020-03-19 16:56:06
      */
-    public function mini_login(){
+    public function mini_login()
+    {
         if($this->request->isPost()){
             $requestData = $this->request->post();
-            if($this->debug === false){ 
-                if(!$this->check_token()){
-                    $result['code'] = 10010;
-                    $result['msg'] = '令牌失效';
-                    $result['en_msg'] = 'Invalid token';
-                    return json($result);
-                }
-                $token = $requestData['token'];
-                $openid = cache('weixin_openid_'.$token); //存储openid
-            }else{
-                $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                return json($result);
             }
+            $token = $requestData['token'];
+            $openid = cache('weixin_openid_'.$token); //存储openid
+            
             // $WeixinMemberModel = new WeixinMemberModel;
             // $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
             // 解码数据
@@ -1141,7 +1053,6 @@ class Index extends Common
             if(!$data){
                 $result['code'] = 10060;
                 $result['msg'] = '微信内部错误';
-                $result['en_msg'] = 'Wechat internal error';
                 return json($result);
             }
             $WeixinMemberModel = new WeixinMemberModel;
@@ -1154,7 +1065,6 @@ class Index extends Common
         }else{
             $result['code'] = 10061;
             $result['msg'] = '请求方式错误';
-            $result['en_msg'] = 'Please request by post';
             return json($result);
         }
         
@@ -1325,7 +1235,6 @@ class Index extends Common
         ];
         $result = $wechat->billDownload($options);
         var_export($result);
-        //halt($result);
     }
 
     public function notify()
@@ -1348,6 +1257,16 @@ class Index extends Common
         $QRcode::png($url);
     }
 
+    /**
+     * 功能描述：支付成功弹出成功提示
+     * @author  Lucas 
+     * 创建时间: 2020-03-10 11:51:23
+     */
+    public function successcurl()
+    {
+        return $this->fetch();
+    }
+
     public function test()
     {
         $out_trade_no = input('out_trade_no');
@@ -1363,10 +1282,14 @@ class Index extends Common
      */
     public function orderQuery()
     {
+
         $out_trade_no = input('out_trade_no');
+        // table=recharge 表示充值查询 ， table=order 表示订单缴费查询
+        $table = input('table');
         // 查询支付订单
         $WeixinModel = new WeixinModel;
-        $res = $WeixinModel->queryOrder($transaction_id = '', $out_trade_no);
+
+        $res = $WeixinModel->queryOrder($transaction_id = '', $out_trade_no, $type = 'queryOrder', $table);
 
         $result = [];
         $result['code'] = 0;
@@ -1389,16 +1312,6 @@ class Index extends Common
             $result['msg'] = '支付失败';
         }
         return json($result);
-    }
-
-    /**
-     * 功能描述：支付成功弹出成功提示
-     * @author  Lucas 
-     * 创建时间: 2020-03-10 11:51:23
-     */
-    public function successcurl()
-    {
-        return $this->fetch();
     }
 
     /**

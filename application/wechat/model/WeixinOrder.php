@@ -90,8 +90,29 @@ class WeixinOrder extends Model
     {
         // 生成后台订单
         $row = self::where([['out_trade_no','eq',$data['out_trade_no']]])->find();
-        // 更新预付订单
+
         if($row){
+
+            // 如果当前状态是已支付状态，则跳过
+            if ($row['order_status'] == 1) {
+                return false;
+
+            // 如果当前状态不是已支付的状态，
+            }else{
+
+            }
+
+            // 使用openid检查支付用户是否存在于系统中，且member_id是否与预支付的member_id一致，若不一致，则将支付用户的信息绑定到系统中
+            $pay_member_info = WeixinMemberModel::where([['openid','eq',$data['openid']]])->field('member_id')->find();
+            // 如果支付用户在系统中不存在
+            if(!$pay_member_info){
+                $WeixinMemberModel           = new WeixinMemberModel;
+                $WeixinMemberModel->openid   = $data['openid'];
+                $WeixinMemberModel->save();
+                // 获取自增ID
+                $row->member_id = $WeixinMemberModel->member_id;
+            }
+
             // 更新预付订单
             $row->transaction_id = $data['transaction_id'];
             $row->ptime = strtotime($data['time_end']); //支付时间
@@ -111,6 +132,9 @@ class WeixinOrder extends Model
                 // 缴纳欠租订单order
                 $rent_order_info = RentModel::where([['rent_order_id','eq',$rid]])->find();
                 $child_rent_order_paid = bcsub($rent_order_info['rent_order_receive'], $rent_order_info['rent_order_paid'], 2);
+                if($child_rent_order_paid <= 0){
+                    continue;
+                }
                 $rent_order_info->rent_order_paid = Db::raw('rent_order_receive'); 
                 //$rent_order_info->ptime = strtotime($data['time_end']);
                 //$rent_order_info->pay_way = 4; 

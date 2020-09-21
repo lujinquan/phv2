@@ -36,6 +36,13 @@
 			</div>
 		</div>
 		<div class="layui-col-md4">
+			<label class="j-form-label"><i class="red"></i>应收租金</label>
+			<div class="j-input-inline">
+				<input type="number" id="rent_order_receive" readonly autocomplete="off" class="layui-input">
+				<b class="j-explain-search">元</b>
+			</div>
+		</div>
+		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red"></i>余额</label>
 			<div class="j-input-inline">
 				<input type="number" id="house_balance" readonly autocomplete="off" class="layui-input">
@@ -89,6 +96,7 @@ layui.use(['form', 'func'], function() {
 						$("input[name='house_number']").val(row.house_number);//房屋编号
 						$("#ban_address").val(row.ban_address);//楼栋地址
 						$("#house_pre_rent").val(row.house_pre_rent);//房屋规租
+						$("#rent_order_receive").val(row.rent_order_receive);//房屋规租
 						$("#tenant_name").val(row.tenant_name);//租户姓名
 						$("#house_balance").val(row.house_balance); // 账户余额
 					},btn2: function(index, layero){

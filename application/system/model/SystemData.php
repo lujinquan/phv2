@@ -271,6 +271,11 @@ class SystemData extends Model
         $temps = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id','inner')->join('ban c','a.ban_id = c.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->select();
       //halt($where);  
         foreach ($temps as $k => &$v) {
+            $cut_info = Db::name('change_cut')->where([['house_id','eq',$v['house_id']],['is_valid','eq',1],['tenant_id','eq',$v['tenant_id']]])->field('cut_rent')->find();
+
+            $v['rent_cut'] = $cut_info?$cut_info['cut_rent']:0;
+
+            $v['rent_order_receive'] = bcsub($v['house_pre_rent'], $v['rent_cut'], 2);
             
             $unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1],['tenant_id','eq',$v['tenant_id']],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->find();
             $v['color_status'] = 1; // 正常的
