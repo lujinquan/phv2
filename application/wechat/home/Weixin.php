@@ -1636,7 +1636,7 @@ class Weixin extends Common
 
         if($rent_order_ids){ // 方式：收欠，以订单为单位
             $RentModel = new RentModel;
-            $RentModel->whole_orders_to_pay(explode(',',$rent_order_ids),$row['id']); 
+            $RentModel->whole_orders_to_pay(explode(',',$rent_order_ids), $row['id'], $member_info['member_id']); 
         }else{ // 方式：缴费，缴费金额
             $RentModel = new RentModel; 
             $RentModel->pay_for_rent($house_id,$pay_rent,$row['id']);

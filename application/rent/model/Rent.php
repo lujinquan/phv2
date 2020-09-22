@@ -3,11 +3,12 @@ namespace app\rent\model;
 
 use think\Db;
 use think\Model;
-use app\common\model\Cparam as ParamModel;
 use app\house\model\House as HouseModel;
-use app\house\model\HouseTai as HouseTaiModel;
+use app\common\model\Cparam as ParamModel;
 use app\rent\model\Recharge as RechargeModel;
+use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\RentRecycle as RentRecycleModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\rent\model\RentOrderChild as RentOrderChildModel;
 
 class Rent extends Model
@@ -550,14 +551,32 @@ class Rent extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function whole_orders_to_pay($ids,$uid)
+    public function whole_orders_to_pay($ids, $uid, $member_id)
     {
         $ctime = time();
         foreach ($ids as $id) {
 
             $row = $this->find($id);
 
+            $out_trade_no = date('YmdHis') . random(6);
+
             $pay_rent = bcsub($row->rent_order_receive, $row->rent_order_paid , 2);
+            // 模拟生成一条微信支付记录，支付方式为现金支付
+            $WeixinOrderModel = new WeixinOrderModel;
+            $WeixinOrderModel->pay_money = $pay_rent;
+            $WeixinOrderModel->member_id = $member_id;
+            $WeixinOrderModel->trade_type = 'CASH';
+            $WeixinOrderModel->order_status = 1;
+            $WeixinOrderModel->out_trade_no = $out_trade_no;
+            $WeixinOrderModel->ptime = $ctime;
+            $WeixinOrderModel->save();
+
+            // 模拟生成一条微信支付关联记录
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+            $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            $WeixinOrderTradeModel->rent_order_id = $id;
+            $WeixinOrderTradeModel->pay_dan_money = $pay_rent;
+            $WeixinOrderTradeModel->save();
 
             // 缴费生成一条条子订单
             $RentOrderChildModel = new RentOrderChildModel;

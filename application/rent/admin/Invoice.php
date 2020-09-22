@@ -75,6 +75,12 @@ class Invoice extends Admin
     // 发票查询
     public function fpcx()
     {
+        // http://web.phv2.com/admin.php/rent/invoice/fpcx
+        $InvoiceModel = new InvoiceModel;
+        $res = json_decode($InvoiceModel->fpcx($sbh = '12420106441363712E' , $lsh = 'CLD20200917125422097'),true);
+        dump($res);
+        halt(json_decode($res['msg'],true));
+
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $InvoiceModel = new InvoiceModel;
