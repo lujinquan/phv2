@@ -184,8 +184,8 @@ class WeixinOrder extends Model
             }
            
             // 开具电子发票
-            // $InvoiceModel = new InvoiceModel;
-            // $InvoiceModel->dpkj($row['order_id']);
+            $InvoiceModel = new InvoiceModel;
+            $InvoiceModel->dpkj($row['order_id']);
 
         // 如果通过out_trae_no无法找到预付订单，则抛出错误
         }else{

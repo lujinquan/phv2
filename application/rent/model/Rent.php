@@ -10,6 +10,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\RentRecycle as RentRecycleModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\rent\model\RentOrderChild as RentOrderChildModel;
+use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 
 class Rent extends Model
 {
@@ -541,7 +542,7 @@ class Rent extends Model
     }
 
     /**
-     * 订单整体支付（迭代2.0.3）
+     * 订单整体缴费（迭代2.0.3）
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
@@ -559,7 +560,7 @@ class Rent extends Model
             $row = $this->find($id);
 
             $out_trade_no = date('YmdHis') . random(6);
-
+            $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
             $pay_rent = bcsub($row->rent_order_receive, $row->rent_order_paid , 2);
             // 模拟生成一条微信支付记录，支付方式为现金支付
             $WeixinOrderModel = new WeixinOrderModel;
@@ -568,12 +569,14 @@ class Rent extends Model
             $WeixinOrderModel->trade_type = 'CASH';
             $WeixinOrderModel->order_status = 1;
             $WeixinOrderModel->out_trade_no = $out_trade_no;
+            $WeixinOrderModel->transaction_id = $transaction_id;
             $WeixinOrderModel->ptime = $ctime;
             $WeixinOrderModel->save();
 
             // 模拟生成一条微信支付关联记录
             $WeixinOrderTradeModel = new WeixinOrderTradeModel;
             $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            $WeixinOrderTradeModel->transaction_id = $transaction_id;
             $WeixinOrderTradeModel->rent_order_id = $id;
             $WeixinOrderTradeModel->pay_dan_money = $pay_rent;
             $WeixinOrderTradeModel->save();
@@ -617,7 +620,7 @@ class Rent extends Model
     }
 
     /**
-     * 订单支付（迭代2.0.3）
+     * 充值（迭代2.0.3）
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
@@ -627,7 +630,7 @@ class Rent extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function pay_for_rent($house_id,$pay_rent,$uid)
+    public function pay_for_rent($house_id, $pay_rent, $uid)
     {
         $ctime = time();
         
