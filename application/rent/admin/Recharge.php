@@ -20,6 +20,7 @@ use app\house\model\House as HouseModel;
 use app\rent\model\Invoice as InvoiceModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\rent\model\Recharge as RechargeModel;
+use app\wechat\model\Weixin as WeixinModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 
@@ -38,7 +39,7 @@ class Recharge extends Admin
             $RechargeModel = new RechargeModel;
             $where = $RechargeModel->checkWhere($getData);
 
-            $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
             $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
@@ -58,7 +59,6 @@ class Recharge extends Admin
     {
         if ($this->request->isPost()) {
             $data = $this->request->post();
-            //halt($data);
             // 数据验证
             $result = $this->validate($data, 'Recharge.add');
             if($result !== true) {
@@ -98,7 +98,6 @@ class Recharge extends Admin
             $HouseTaiModel->change_type = '';
             $HouseTaiModel->change_id = '';
             $HouseTaiModel->save();
-            //HouseModel::where([['house_id','eq',$filData['house_id']]])->setInc('house_balance',$filData['pay_rent']);
             return $this->success('充值成功');
         }
         return $this->fetch();
@@ -109,22 +108,25 @@ class Recharge extends Admin
         $id = input('param.id/d');
         $RechargeModel = new RechargeModel;      
         $row = $RechargeModel->detail($id);
-        if($row['pay_way'] == 4){ //如果是微信支付，则显示充值的微信会员
-            $member_name = '测试账户，已被移除';
-            $weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$row['pay_number']]])->find();
+        // 如果是微信支付，则显示充值的微信会员
+        if($row['pay_way'] == 4){ 
+            $member_name = '未知会员';
+            $weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$row['pay_number']]])->field('member_id')->find();
             if($weixin_order_info){
-                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$weixin_order_info['member_id']]])->find();
+                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$weixin_order_info['member_id']]])->field('member_name')->find();
                 $member_name = $weixin_member_info['member_name'];
             }
-            
             $row['member_name'] = $member_name;
-            //halt($weixin_member_info);
         }
-        //halt($row);
         $this->assign('data_info',$row);
         return $this->fetch();
     }
 
+    /**
+     * 功能描述：撤销（非线上支付）
+     * @author  Lucas 
+     * 创建时间: 2020-09-18 16:09:51
+     */
     public function payBack()
     {
         if ($this->request->isPost()) {
@@ -142,6 +144,7 @@ class Recharge extends Admin
             RechargeModel::where([['id','eq',$id]])->update(['recharge_status'=>2]);
             // 将金额返还给房屋余额
             HouseModel::where([['house_id','eq',$row['house_id']]])->setInc('house_balance',abs($row['pay_rent']));
+
             // 添加撤销台账
             $taiHouseData = [];
             $taiHouseData['house_id'] = $row['house_id'];
@@ -159,7 +162,30 @@ class Recharge extends Admin
         }
     }
 
-    // 开票
+    /**
+     * 功能描述：退款
+     * @author  Lucas 
+     * 创建时间: 2020-09-18 16:09:51
+     */
+    public function payRefund()
+    {
+        $id = input('id');
+        if ($this->request->isAjax()) {
+            $ref_description = input('ref_description');
+            $WeixinModel = new WeixinModel;
+            $refund_result = $WeixinModel->refundCreate($id ,$ref_description, $table = 'recharge');
+            return $refund_result?$this->success($refund_result):$this->error($WeixinModel->getError());
+        }
+        $recharge_info = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->join('weixin_member d','a.member_id = d.member_id','inner')->where([['a.id','eq',$id]])->find();
+        $this->assign('data_info',$recharge_info);
+        return $this->fetch();
+    }
+
+    /**
+     * 功能描述：开票
+     * @author  Lucas 
+     * 创建时间: 2020-09-18 16:09:51
+     */
     public function dpkj()
     {
         $id = input('param.id');
@@ -167,6 +193,11 @@ class Recharge extends Admin
         return !$InvoiceModel->dpkj($id , $type = 2) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
     }
 
+    /**
+     * 功能描述：开票
+     * @author  Lucas 
+     * 创建时间: 2020-09-18 16:10:44
+     */
     public function export()
     {   
         if ($this->request->isAjax()) {

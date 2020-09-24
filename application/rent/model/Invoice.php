@@ -113,14 +113,38 @@ class Invoice extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function fpcx()
+    public function fpcx($sbh = '' , $lsh = '')
     {
     	$content = "<REQUEST_COMMON_FPCX>\n" .
                 "<YHLX>1</YHLX>\n" .
-                "<XSFNSRSBH>150000000001000</XSFNSRSBH>\n" .
-                "<FPQQLSH>HL15506462255RR7mH36</FPQQLSH>\n" .
+                "<XSFNSRSBH>" . $sbh . "</XSFNSRSBH>\n" .
+                "<FPQQLSH>" . $lsh . "</FPQQLSH>\n" .
                 "</REQUEST_COMMON_FPCX>";
         $base64Sign = base64_encode($content);
+        $RentOrderRow['ban_inst_pid'] = 3;
+        if($RentOrderRow['ban_inst_pid'] == 2){
+            // $dpkj['fpqqlsh'] = 'CZY'.$timestamp; // C代表武昌区，ZY代表紫阳所
+            // $dpkj['xsf_mc'] = '武汉市武昌区房地产公司紫阳房管所'; // 销售方名称
+            // $dpkj['xsf_nsrsbh'] = '12420106931266704D'; // 纳税人识别号
+            // $dpkj['xsf_dzdh'] = '武汉市武昌区彭刘杨路103号 02750768218'; // 销售方地址
+            // $dpkj['xsf_yhzh'] = '中信武昌支行 7381710182600033257'; // 销售方银行账号
+            // $dpkj['fhr'] = '冯晖'; // 复核人
+            //$dpkj['kpr'] = '冯晖'; // 开票人
+            $this->appid = 'b3d3e0bf9221'; // 紫阳所的appid
+            $this->appsecret = '33ed9898d7b779ff3804'; // 紫阳所的appsecret
+        // 粮道所的订单
+        }else{
+            // $dpkj['fpqqlsh'] = 'CLD'.$timestamp; // C代表武昌区，LD代表粮道所
+            // $dpkj['xsf_mc'] = '武汉市武昌区房地产公司粮道街房管所'; // 销售方名称
+            // $dpkj['xsf_nsrsbh'] = '12420106441363712E'; // 纳税人识别号
+            // $dpkj['xsf_dzdh'] = '武汉市武昌区后补街83号 88872619'; // 销售方地址
+            // $dpkj['xsf_yhzh'] = '农行胭脂路支行 031401040000062'; // 销售方银行账号
+            // $dpkj['fhr'] = '冯超'; // 复核人
+            //$dpkj['kpr'] = '冯超'; // 开票人
+            $this->appid = 'b6fba0d617c7'; // 粮道所的appid
+            $this->appsecret = '30868888cbdf99f7b1e7'; // 粮道所的appsecret
+        }
+
         //dump('base64加密>>>> '.$base64Sign);
     	$queryMap = [];
     	$queryMap['content'] = $base64Sign;

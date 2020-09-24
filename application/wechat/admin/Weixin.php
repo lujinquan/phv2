@@ -214,7 +214,7 @@ class Weixin extends Admin
 	}
 
 	/**
-	 * 功能描述：支付记录详情
+	 * 功能描述：支付退款
 	 * @author  Lucas 
 	 * 创建时间: 2020-03-09 16:31:01
 	 */
@@ -222,120 +222,15 @@ class Weixin extends Admin
 	{
 		$id = input('id');
 		if ($this->request->isPost()) {
-            //$data = $this->request->post();
-
-            //halt($id);
-	        $ref_description = input('ref_description');
-	        if(!$ref_description){
-	            return  $this->error('退款备注不能为空');
-	        }
-	        //exit;  
-	        $WeixinOrderModel = new WeixinOrderModel;
-	        $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
-
-	        $WeixinOrderTradeModel = new WeixinOrderTradeModel;
-	        $order_trade_info = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->find();
-
-	        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
-	        $inst_pid = $ban_row['ban_inst_pid'];
-	        include EXTEND_PATH.'wechat/include.php';
-	        if($inst_pid == 2){
-	            $wechat = \WeChat\Pay::instance($this->config_ziyang);
-	        }else if($inst_pid == 3){
-	            $wechat = \WeChat\Pay::instance($this->config_liangdao);
-	        }else{
-	            return  $this->error('房屋所属机构异常');
-	        }
-
-	        
-	        //$wechat = \WeChat\Pay::instance($this->config_ziyang);
-	        // 下面的参数注意要换成动态的
-	        $options = [
-	            'transaction_id' => $order_info['transaction_id'], //微信订单号 transaction_id
-	            'out_refund_no'  => $order_info['out_trade_no'], //
-	            'total_fee'      => $order_info['pay_money'] * 100,
-	            'refund_fee'     => $order_info['pay_money'] * 100,
-	        ];
-
-	        //halt($options);
-	        $result = $wechat->createRefund($options);
-	        if($result['result_code'] == 'FAIL'){
-	            return  $this->error($result['err_code_des']);
-	        }
-	        //halt($result);
-	        // $result = [
-	        //     'return_code' => "SUCCESS",
-	        //     'return_msg' => "OK",
-	        //     'appid' => "wxaac82b178a3ef1d2",
-	        //     'mch_id' => "1244050802",
-	        //     'nonce_str' => "LqJP9iBVC9ESsNgM",
-	        //     'sign' => "BAAE65616FE0AD3701AC2B199A3585DD0D9CD621E0D076E14797B4B66F91FC35",
-	        //     'result_code' => "SUCCESS",
-	        //     'transaction_id' => "4200000511202003139890551158",
-	        //     'out_trade_no' => "10600316847101202001",
-	        //     'out_refund_no' => "10600316847101202001",
-	        //     'refund_id' => "50300603632020031615181917068",
-	        //     'refund_channel' => [],
-	        //     'refund_fee' => "2",
-	        //     'coupon_refund_fee' => "0",
-	        //     'total_fee' => "2",
-	        //     'cash_fee' => "2",
-	        //     'coupon_refund_count' => "0",
-	        //     'cash_refund_fee' => "2",
-	        // ];
-	        $WeixinOrderRefundModel = new WeixinOrderRefundModel;
-	        $WeixinOrderRefundModel->order_id = $order_info['order_id'];
-	        $WeixinOrderRefundModel->out_trade_no = $order_info['out_trade_no'];
-	        $WeixinOrderRefundModel->ref_money = $result['refund_fee'] / 100;
-	        $WeixinOrderRefundModel->member_id = $order_info['member_id'];
-	        $WeixinOrderRefundModel->refund_id = $result['refund_id'];
-	        $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
-	        $WeixinOrderRefundModel->ref_description = $ref_description;
-	        $WeixinOrderRefundModel->ptime = $order_info->getData('ptime');
-	        $WeixinOrderRefundModel->save();
-
-	        // 更新租金订单表,将缴费记录回退
-	        $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
-	        $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id');
-
-	        $RentModel = new RentModel;
-	        foreach ($rent_order_ids as $rid) {
-	            $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
-	            $rent_order_info->rent_order_paid = 0; 
-	            $rent_order_info->ptime = 0;
-	            $rent_order_info->pay_way = 0; 
-	            $rent_order_info->is_deal = 0; 
-	            $rent_order_info->save();
-
-	            // 缴纳欠租订单order_child
-	            // $RentOrderChildModel = new RentOrderChildModel;
-	            // $RentOrderChildModel->house_id = $rent_order_info['house_id'];
-	            // $RentOrderChildModel->tenant_id = $rent_order_info['tenant_id'];
-	            // $RentOrderChildModel->rent_order_id = $rent_order_info['rent_order_id'];
-	            // $RentOrderChildModel->rent_order_number = $rent_order_info['rent_order_number'];
-	            // $RentOrderChildModel->rent_order_receive = $rent_order_info['rent_order_receive'];
-	            // $RentOrderChildModel->rent_order_pre_rent = $rent_order_info['rent_order_pre_rent'];
-	            // $RentOrderChildModel->rent_order_cou_rent = $rent_order_info['rent_order_cou_rent']; 
-	            // $RentOrderChildModel->rent_order_cut = $rent_order_info['rent_order_cut'];
-	            // $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
-	            // $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
-	            // $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
-	            // $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
-	            // $RentOrderChildModel->pay_way = 4; // 4是微信支付
-	            // $RentOrderChildModel->save();
-	        }
-
-	        $order_info->order_status = 2;
-	        $order_info->save();
-
-	        
-	        return  $this->success('退款成功，已退还至'.$order_info['member_name'].'，'. ($result['refund_fee']/100) .'元钱！');
-
+            $ref_description = input('ref_description');
+            $WeixinModel = new WeixinModel;
+            $refund_result = $WeixinModel->refundCreate($id ,$ref_description, $table = 'order');
+            return $refund_result?$this->success($refund_result):$this->error($WeixinModel->getError());
         }
-		// halt($id);
 		$WeixinOrderModel = new WeixinOrderModel;
 		$order_info = $WeixinOrderModel->with('weixinMember')->find($id);
-		if($order_info['order_status'] == 2){ //如果状态是已退款
+		// 如果状态是已退款
+		if($order_info['order_status'] == 2){ 
 			$WeixinOrderRefundModel = new WeixinOrderRefundModel;
 			$order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
 			$this->assign('order_refund_info',$order_refund_info);
@@ -349,12 +244,7 @@ class Weixin extends Admin
         	$v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
      	}
 		$this->assign('houses',$houses);
-		// halt($order_info);
 		$this->assign('data_info',$order_info);
-		// 获取绑定的房屋数量
-		// $WeixinMemberHouseModel = new WeixinMemberHouseModel;
-		// $houselist = $WeixinMemberHouseModel->house_list($id);
-		// $this->assign('houselist',$houselist);
 		return $this->fetch();
 	}
 

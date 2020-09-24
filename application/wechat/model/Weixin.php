@@ -300,27 +300,43 @@ class Weixin extends Model
      * @param  transaction_id 交易单号
      * @param  out_trade_no 订单号
      * @param  type 查询类型 queryOrder（查询订单是否支付） 或者 queryRefund（查询是否退款）
+     * @param  table recharge 表示充值查询 ， order 表示订单缴费查询queryRefund（查询是否退款）
      * 创建时间: 2020-03-10 11:50:03
      */
-    public function queryOrder($transaction_id , $out_trade_no ,$type = 'queryOrder')
+    public function queryOrder($transaction_id , $out_trade_no ,$type = 'queryOrder', $table = 'order')
     {
     	// 初始化数据
     	$options = [];
-    	// 查询交易单号
-        if ($transaction_id) {
-            $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
-            $options = ['transaction_id' => $transaction_id, ];
-        // 查询订单号
-        }elseif ($out_trade_no) {
-            $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
-            $options = ['out_trade_no' => $out_trade_no,];
-        }
-        
-        // 查询属于紫阳或粮道
-        $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
-        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
-        $inst_pid = $ban_row['ban_inst_pid'];
 
+        if ($table == 'order') {
+            // 查询交易单号
+            if ($transaction_id) {
+                $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
+                $options = ['transaction_id' => $transaction_id, ];
+            // 查询订单号
+            }elseif ($out_trade_no) {
+                $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
+                $options = ['out_trade_no' => $out_trade_no,];
+            }
+           //halt($order_info); 
+            // 查询属于紫阳或粮道
+            $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
+            $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+            $inst_pid = $ban_row['ban_inst_pid'];
+        } else if($table == 'recharge'){
+            // 查询交易单号
+            if ($transaction_id) {
+                $ban_row = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.transaction_id','eq',$transaction_id]])->field('c.ban_inst_pid')->find();
+                $options = ['transaction_id' => $transaction_id, ];
+            // 查询订单号
+            }elseif ($out_trade_no) {
+                $ban_row = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['a.out_trade_no','eq',$out_trade_no]])->field('c.ban_inst_pid')->find();
+                $options = ['out_trade_no' => $out_trade_no,];
+            }
+            // 查询属于紫阳或粮道
+            $inst_pid = $ban_row['ban_inst_pid'];
+        }
+    	
         // 调用订单查询接口
         include EXTEND_PATH.'wechat/include.php';
         if($inst_pid == 2){
@@ -328,7 +344,12 @@ class Weixin extends Model
         }else if($inst_pid == 3){
             $wechat = \WeChat\Pay::instance($this->config_liangdao);
         }
-        $result = $wechat->queryOrder($options);
+        if ($type == 'queryOrder') {
+            $result = $wechat->queryOrder($options);
+        }else if($type == 'queryRefund'){
+            $result = $wechat->queryRefund($options);
+        }
+        
         // 返回数据示例
 		/*array(21) {
 		  ["return_code"] => string(7) "SUCCESS"
@@ -371,61 +392,236 @@ class Weixin extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function refundQuery($transaction_id , $out_trade_no ,$type = 'queryRefund')
+    // public function refundQuery($transaction_id , $out_trade_no ,$type = 'queryRefund')
+    // {
+    //     // 初始化数据
+    //     $options = [];
+    //     // 查询交易单号
+    //     if ($transaction_id) {
+    //         $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
+    //         $options = ['transaction_id' => $transaction_id, ];
+    //     // 查询订单号
+    //     }elseif ($out_trade_no) {
+    //         $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
+    //         $options = ['out_trade_no' => $out_trade_no,];
+    //     }
+
+    //     // 查询属于紫阳或粮道
+    //     $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
+    //     $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+    //     $inst_pid = $ban_row['ban_inst_pid'];
+
+    //     // 调用订单查询接口
+    //     include EXTEND_PATH.'wechat/include.php';
+    //     if($inst_pid == 2){
+    //         $wechat = \WeChat\Pay::instance($this->config_ziyang);
+    //     }else if($inst_pid == 3){
+    //         $wechat = \WeChat\Pay::instance($this->config_liangdao);
+    //     }else{
+    //         return $this->error('房屋所属机构异常');
+    //     }
+    //     $result = $wechat->queryRefund($options);
+    //     // 返回数据示例
+    //     /*array(21) {
+    //       ["appid"] => string(18) "wxaac82b178a3ef1d2"
+    //       ["cash_fee"] => string(1) "2"
+    //       ["mch_id"] => string(10) "1600300531"
+    //       ["nonce_str"] => string(16) "Y2131tqmiDodJ5DP"
+    //       ["out_refund_no_0"] => string(20) "20200827112643864884"
+    //       ["out_trade_no"] => string(20) "20200827112643864884"
+    //       ["refund_account_0"] => string(29) "REFUND_SOURCE_UNSETTLED_FUNDS"
+    //       ["refund_channel_0"] => string(8) "ORIGINAL"
+    //       ["refund_count"] => string(1) "1"
+    //       ["refund_fee"] => string(1) "2"
+    //       ["refund_fee_0"] => string(1) "2"
+    //       ["refund_id_0"] => string(29) "50300405742020090702549281988"
+    //       ["refund_recv_accout_0"] => string(21) "支付用户的零钱"
+    //       ["refund_status_0"] => string(7) "SUCCESS"
+    //       ["refund_success_time_0"] => string(19) "2020-09-07 11:25:46"
+    //       ["result_code"] => string(7) "SUCCESS"
+    //       ["return_code"] => string(7) "SUCCESS"
+    //       ["return_msg"] => string(2) "OK"
+    //       ["sign"] => string(64) "22D70B280B3961DDC8ED62F3673EB6769844972073B2C2E8351202C1FC3536EB"
+    //       ["total_fee"] => string(1) "2"
+    //       ["transaction_id"] => string(28) "4200000709202008272832156780"
+    //     }*/
+    //     //halt($result);
+    //     return $result;
+    // }
+
+     /**
+     * 功能描述：申请退款接口
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间:  2020-03-10 16:28:29
+     * @example 
+     * @link    文档参考地址：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_4
+     * @param  $table recharge 表示充值查询 ， order 表示订单缴费查询queryRefund（查询是否退款）
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function refundCreate($id , $ref_description = '', $table = 'order')
     {
-        // 初始化数据
-        $options = [];
-        // 查询交易单号
-        if ($transaction_id) {
-            $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
-            $options = ['transaction_id' => $transaction_id, ];
-        // 查询订单号
-        }elseif ($out_trade_no) {
-            $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
-            $options = ['out_trade_no' => $out_trade_no,];
+
+        $id = input('id');
+        $ref_description = input('ref_description');
+        if(!$ref_description){
+            $this->error = '退款备注不能为空';
+            return false;
         }
 
-        // 查询属于紫阳或粮道
-        $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
-        $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
-        $inst_pid = $ban_row['ban_inst_pid'];
+        $is_online_pay = true; // 是否是微信支付
 
-        // 调用订单查询接口
-        include EXTEND_PATH.'wechat/include.php';
-        if($inst_pid == 2){
-            $wechat = \WeChat\Pay::instance($this->config_ziyang);
-        }else if($inst_pid == 3){
-            $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        }else{
-            return $this->error('房屋所属机构异常');
+        if ($table == 'order') {
+            $WeixinOrderModel = new WeixinOrderModel;
+            $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
+
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+            $order_trade_info = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->find();
+
+            $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
+            $inst_pid = $ban_row['ban_inst_pid'];
+            $options = [
+                'transaction_id' => $order_info['transaction_id'], //微信订单号 transaction_id
+                'out_refund_no'  => $order_info['out_trade_no'], //
+                'total_fee'      => $order_info['pay_money'] * 100,
+                'refund_fee'     => $order_info['pay_money'] * 100,
+            ];
+            $is_online_pay = ($order_info['trade_type'] == 'CASH')?false:true;
+        } else if($table == 'recharge'){
+            $recharge_info = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->join('weixin_member d','a.member_id = d.member_id','inner')->where([['a.id','eq',$id]])->find();
+            $inst_pid = $recharge_info['ban_inst_pid'];
+            $options = [
+                'transaction_id' => $recharge_info['transaction_id'], //微信订单号 transaction_id
+                'out_refund_no'  => $recharge_info['out_trade_no'], //
+                'total_fee'      => $recharge_info['pay_rent'] * 100,
+                'refund_fee'     => $recharge_info['pay_rent'] * 100,
+            ];
+            $is_online_pay = ($recharge_info['pay_way'] == 1)?false:true;
         }
-        $result = $wechat->queryRefund($options);
-        // 返回数据示例
-        /*array(21) {
-          ["appid"] => string(18) "wxaac82b178a3ef1d2"
-          ["cash_fee"] => string(1) "2"
-          ["mch_id"] => string(10) "1600300531"
-          ["nonce_str"] => string(16) "Y2131tqmiDodJ5DP"
-          ["out_refund_no_0"] => string(20) "20200827112643864884"
-          ["out_trade_no"] => string(20) "20200827112643864884"
-          ["refund_account_0"] => string(29) "REFUND_SOURCE_UNSETTLED_FUNDS"
-          ["refund_channel_0"] => string(8) "ORIGINAL"
-          ["refund_count"] => string(1) "1"
-          ["refund_fee"] => string(1) "2"
-          ["refund_fee_0"] => string(1) "2"
-          ["refund_id_0"] => string(29) "50300405742020090702549281988"
-          ["refund_recv_accout_0"] => string(21) "支付用户的零钱"
-          ["refund_status_0"] => string(7) "SUCCESS"
-          ["refund_success_time_0"] => string(19) "2020-09-07 11:25:46"
-          ["result_code"] => string(7) "SUCCESS"
-          ["return_code"] => string(7) "SUCCESS"
-          ["return_msg"] => string(2) "OK"
-          ["sign"] => string(64) "22D70B280B3961DDC8ED62F3673EB6769844972073B2C2E8351202C1FC3536EB"
-          ["total_fee"] => string(1) "2"
-          ["transaction_id"] => string(28) "4200000709202008272832156780"
-        }*/
+        
+        // 如果是线上支付，则执行微信退款流程
+        if($is_online_pay){
+            include EXTEND_PATH.'wechat/include.php';
+            if($inst_pid == 2){
+                $wechat = \WeChat\Pay::instance($this->config_ziyang);
+            }else if($inst_pid == 3){
+                $wechat = \WeChat\Pay::instance($this->config_liangdao);
+            }else{
+                return $this->error = '房屋所属机构异常';
+                return false;
+            }
+
+            $result = $wechat->createRefund($options);
+            if($result['result_code'] == 'FAIL'){
+                $this->error = $result['err_code_des'];
+                return false;
+            }
+            $refund_fee = $result['refund_fee'] / 100;
+            $refund_id = $result['refund_id'];
+            $out_refund_no = $result['out_refund_no'];
+        } else {
+            if ($table == 'order') {
+                $refund_fee = $order_info['pay_money'];
+                $out_refund_no = $order_info['out_trade_no'];
+            } else if($table == 'recharge'){
+                $refund_fee = $recharge_info['pay_rent'];
+                $out_refund_no = $recharge_info['out_trade_no'];
+            }
+            $refund_id = '';
+        }
+        
         //halt($result);
-        return $result;
+        // $result = [
+        //     'return_code' => "SUCCESS",
+        //     'return_msg' => "OK",
+        //     'appid' => "wxaac82b178a3ef1d2",
+        //     'mch_id' => "1244050802",
+        //     'nonce_str' => "LqJP9iBVC9ESsNgM",
+        //     'sign' => "BAAE65616FE0AD3701AC2B199A3585DD0D9CD621E0D076E14797B4B66F91FC35",
+        //     'result_code' => "SUCCESS",
+        //     'transaction_id' => "4200000511202003139890551158",
+        //     'out_trade_no' => "10600316847101202001",
+        //     'out_refund_no' => "10600316847101202001",
+        //     'refund_id' => "50300603632020031615181917068",
+        //     'refund_channel' => [],
+        //     'refund_fee' => "2",
+        //     'coupon_refund_fee' => "0",
+        //     'total_fee' => "2",
+        //     'cash_fee' => "2",
+        //     'coupon_refund_count' => "0",
+        //     'cash_refund_fee' => "2",
+        // ];
+        $WeixinOrderRefundModel = new WeixinOrderRefundModel;
+        if ($table == 'order') {
+            $WeixinOrderRefundModel->order_id = $order_info['order_id'];
+            $WeixinOrderRefundModel->out_trade_no = $order_info['out_trade_no'];
+            $WeixinOrderRefundModel->ptime = $order_info->getData('ptime');
+            $WeixinOrderRefundModel->member_id = $order_info['member_id'];
+        } else if($table == 'recharge'){
+            $WeixinOrderRefundModel->recharge_id = $recharge_info['id'];
+            $WeixinOrderRefundModel->out_trade_no = $recharge_info['out_trade_no'];
+            $WeixinOrderRefundModel->ptime = $recharge_info->getData('ptime');
+            $WeixinOrderRefundModel->member_id = $recharge_info['member_id'];
+        }
+        
+        
+        $WeixinOrderRefundModel->ref_money = $refund_fee;
+        
+        $WeixinOrderRefundModel->refund_id = $refund_id;
+        $WeixinOrderRefundModel->out_refund_no = $out_refund_no;
+        $WeixinOrderRefundModel->ref_description = $ref_description;
+        
+        $WeixinOrderRefundModel->save();
+
+        
+        if ($table == 'order') {
+            // 更新租金订单表,将缴费记录回退
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel; 
+            $rent_order_ids = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id');
+            // 待优化，如果一个订单多次付款，则会出现bug！！！
+            $RentModel = new RentModel;
+            foreach ($rent_order_ids as $rid) {
+                $rent_order_info = $RentModel->where([['rent_order_id','eq',$rid]])->find();
+                $rent_order_info->rent_order_paid = 0; 
+                // $rent_order_info->ptime = 0;
+                // $rent_order_info->pay_way = 0; 
+                $rent_order_info->is_deal = 0; 
+                $rent_order_info->save();
+
+                // 缴纳欠租订单order_child
+                // $RentOrderChildModel = new RentOrderChildModel;
+                RentOrderChildModel::where([['rent_order_id','eq',$rid]])->update(['rent_order_status'=>0]);
+                // $RentOrderChildModel->house_id = $rent_order_info['house_id'];
+                // $RentOrderChildModel->tenant_id = $rent_order_info['tenant_id'];
+                // $RentOrderChildModel->rent_order_id = $rent_order_info['rent_order_id'];
+                // $RentOrderChildModel->rent_order_number = $rent_order_info['rent_order_number'];
+                // $RentOrderChildModel->rent_order_receive = $rent_order_info['rent_order_receive'];
+                // $RentOrderChildModel->rent_order_pre_rent = $rent_order_info['rent_order_pre_rent'];
+                // $RentOrderChildModel->rent_order_cou_rent = $rent_order_info['rent_order_cou_rent']; 
+                // $RentOrderChildModel->rent_order_cut = $rent_order_info['rent_order_cut'];
+                // $RentOrderChildModel->rent_order_diff = $rent_order_info['rent_order_diff'];
+                // $RentOrderChildModel->rent_order_pump = $rent_order_info['rent_order_pump'];
+                // $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
+                // $RentOrderChildModel->rent_order_paid = $data['total_fee'] / 100;
+                // $RentOrderChildModel->pay_way = 4; // 4是微信支付
+                // $RentOrderChildModel->save();
+            }
+
+            $order_info->order_status = 2;
+            $order_info->save();
+            return '退款成功，已退还至'.$order_info['member_name'].'，'. $refund_fee .'元钱！';
+
+        } else if($table == 'recharge'){
+            RechargeModel::where([['id','eq',$id]])->update(['recharge_status'=>2]);
+            HouseModel::where([['house_id','eq',$recharge_info['house_id']]])->setDec('house_balance', $recharge_info['pay_rent']);
+            return '退款成功，已退还至'.$recharge_info['member_name'].'，'. $refund_fee .'元钱！';
+        }
+        
+
     }
 
 }
