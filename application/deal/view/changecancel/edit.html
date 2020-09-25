@@ -129,6 +129,8 @@
 					<th>计租面积</th>
 					<th>建筑面积</th>
 					<th>房屋原价</th>
+					<th>房屋余额</th>
+					<th>余额处理</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -141,6 +143,8 @@
 					<td class="house_rentalarea"><input type="hidden" name="house_rentalarea[{$key}]" value="{$v['house_lease_area']}">{$v['house_lease_area']}</td>
 					<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
 					<td class="house_original"><input type="number" class="layui-input" readonly name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
+					<td class="house_balance"><input type="hidden" name="house_balance[{$key}]" value="{$v['house_balance']}">{$v['house_balance']}</td>
+					<td class="house_balance_deal_type"><input type="radio" name="house_balance_deal_type[{$key}]"  {if condition="$v['house_balance_deal_type'][$key] == 1"}checked{/if} value="1" title="退款"><input type="radio" name="house_balance_deal_type[{$key}]" {if condition="$v['house_balance_deal_type'][$key] == 2"}checked{/if} value="2" title="追收"></td>
 					<td class="house_delete"><label class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>
 				</tr>
 				{/volist}
@@ -524,6 +528,17 @@
 					  sumoriginal += summoney;//输入框改变原价	
 					  $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney.toFixed(2) / 100);//注销明细房屋原价
 					  //console.log("计算结果:", $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney))
+					  // 判断余额处理单选框是否可点击
+					  if(tdArr.eq(6).find("input").val()<=0){
+						  console.log("小于0")
+						  tdArr.eq(7).find("input").attr('readonly','readonly');
+						  tdArr.eq(7).find("div").addClass("layui-radio-disbaled layui-disabled");
+						  tdArr.eq(7).find("input").val("0")
+					  }
+					  else{
+						  tdArr.eq(7).find("input").removeAttr("readonly");
+						  tdArr.eq(7).find("div").removeClass("layui-radio-disbaled layui-disabled");
+					  }
 					}
 				//户数计算
 				$(".cancel_change_0 label").text(sumhouseholds);

@@ -123,6 +123,8 @@
 		  	<th>计租面积</th>
 		  	<th>建筑面积</th>
 		    <th>房屋原价</th>
+			<th>房屋余额</th>
+			<th>余额处理</th>
 		  </tr>
 	  </thead>
 	  <tbody>
@@ -134,6 +136,8 @@
 	  		<td>{$v['house_lease_area']}</td>
 	  		<td>{$v['house_area']}</td>
 	  		<td>{$v['house_oprice']}</td>
+			<td>{$v['house_balance']}</td>
+			<td><input type="radio" disabled {if condition="$v['house_balance_deal_type'] == 1"}checked{/if} value="1" title="退款"><input type="radio" disabled  {if condition="$v['house_balance_deal_type'] == 2"}checked{/if} value="2" title="追收"></td>
 	  	</tr>
 	  	{/volist}
 	    <!-- <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr> -->

@@ -120,17 +120,19 @@
 	<table  class="layui-table j-house-box">
 	  <thead>
 		  <tr>
-		    <th>房屋编号</th>
-		    <th>承租人</th>
+			<th>房屋编号</th>
+			<th>承租人</th>
 			<th>规定租金</th>
 			<th>计租面积</th>
 			<th>建筑面积</th>
-		    <th>房屋原价</th>
+			<th>房屋原价</th>
+			<th>房屋余额</th>
+			<th>余额处理</th>
 			<th>操作</th>
 		  </tr>
 	  </thead>
 	  <tbody>
-	    <tr><td colspan='7'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
+		<tr><td colspan='9'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr>
 	 </tbody>
 	</table>
 	<div class="j-cancel-show hide">
@@ -473,10 +475,13 @@
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
 											<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_original"><input type="number" readonly min="0" class="layui-input" lay-verify="required" name="house_original['+i+']" value=""></td>\
+											<td class="house_balance"><input type="hidden" name="house_balance['+i+']" value="'+rows[i].house_balance+'">'+rows[i].house_balance+'</td>\
+											<td class="house_balance_deal_type"><input type="radio" name="house_balance_deal_type['+i+']"  value="1" title="退款" checked><input type="radio" name="house_balance_deal_type['+i+']" value="2" title="追收"></td>\
 											<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
 										</tr>';
 						    initialvalue();
 							$('.j-house-box tbody').append(trData);
+							form.render();
 							computation();
 						  }
 						 //  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
@@ -526,6 +531,17 @@
 								  sumoriginal += summoney;//输入框改变原价	
 								  $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney.toFixed(2) / 100);//注销明细房屋原价
 								  //console.log("计算结果:", $(".j-house-box").find("input[name='house_original["+j+"]']").val(summoney))
+								  // 判断余额处理单选框是否可点击
+								  if(tdArr.eq(6).find("input").val()<=0){
+									  console.log("小于0")
+									  tdArr.eq(7).find("input").attr('readonly','readonly');
+									  tdArr.eq(7).find("div").addClass("layui-radio-disbaled layui-disabled");
+									  tdArr.eq(7).find("input").val("0")
+								  }
+								  else{
+									  tdArr.eq(7).find("input").removeAttr("readonly");
+									  tdArr.eq(7).find("div").removeClass("layui-radio-disbaled layui-disabled");
+								  }
 							}
 							//户数计算
 							$(".cancel_change_0 label").text(sumhouseholds);
