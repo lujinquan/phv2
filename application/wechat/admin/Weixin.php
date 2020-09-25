@@ -14,6 +14,7 @@ namespace app\wechat\admin;
 
 use think\Db;
 use hisi\Dir;
+use hisi\PclZip;
 use app\system\admin\Admin;
 use app\rent\model\Rent as RentModel;
 use app\wechat\model\Weixin as WeixinModel;
@@ -70,7 +71,6 @@ class Weixin extends Admin
 		return $this->fetch();
 	}
 
-
 	/**
 	 * 功能描述： 支付记录列表
 	 * =====================================
@@ -85,7 +85,32 @@ class Weixin extends Admin
 	 * @version 版本  1.0
 	 */
 	public function payRecord()
-	{	
+	{
+		
+
+
+
+// 		$fileList = array(
+//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-27-15-05-47.pdf',
+//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-31-10-01-06.pdf',
+//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-31-10-03-00.pdf',
+// 		);
+		 
+// 		$filename = "D:/PHPTutorial/WWW/phv2/public/upload/pdf/test.zip";
+// $zip = new \ZipArchive();
+// halt($zip);
+// $archive = new PclZip('archive.zip');
+// $v_list = $archive->create(
+//     'D:/data/file.txt,D:/data/text.txt',
+//     PCLZIP_OPT_REMOVE_PATH, 'D:/data',
+//     PCLZIP_OPT_ADD_PATH, 'D:/install'
+// );
+// if ($v_list == 0) {
+//     die("Error : " . $archive->errorInfo(true));
+// }
+
+
+		
 		
 		if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
@@ -166,6 +191,76 @@ class Weixin extends Admin
         $this->success('下载成功，本次下载'.$i.'张发票！') ;
         //halt($allInvoice);
         // return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
+    }
+
+    // 所有已开的发票，未下载到服务器的统一，一键下载
+    public function allVoiceDownLoad()
+    {
+
+    	//$getData = $this->request->get();
+    	$ids = input('id');
+
+        $where[] = ['a.order_id','in',$ids];
+        $where[] = ['a.invoice_id','>',0];
+        $where[] = ['b.local_pdfurl','neq',''];
+        // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
+        $fileLists = [];
+        $temp = WeixinOrderModel::alias('a')->join('rent_invoice b','a.invoice_id = b.invoice_id','inner')->field('b.pdfurl,b.local_pdfurl')->where($where)->limit(10)->select()->toArray();
+        if (!$temp) {
+        	$this->error('未找到发票，下载失败！') ;
+        }
+        foreach ($temp as $k => $v) {
+        	$fileLists[] = $_SERVER['DOCUMENT_ROOT'] . $v['local_pdfurl'];
+        }
+
+        $random = date('YmdHis').random(10);
+//halt($fileLists);
+    	// 压缩的文件夹
+		// $path = 'D:/PHPTutorial/WWW/phv2/public/upload/pdf/';
+		// $fileLists = ['D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-27-15-05-47.pdf'];
+		// 压缩文件生成后所放的位置
+		$zipName = 'upload/'.$random.'.zip';
+		// 如果压缩文件不存在，就创建压缩文件
+        if (! is_file($zipName)) {
+            $fp = fopen($zipName, 'w');
+            fclose($fp);
+        }
+        $zip = new \ZipArchive();
+        // OVERWRITE选项表示每次压缩时都覆盖原有内容，但是如果没有那个压缩文件的话就会报错，所以事先要创建好压缩文件
+        // 也可以使用CREATE选项，此选项表示每次压缩时都是追加，不是覆盖，如果事先压缩文件不存在会自动创建
+        if ($zip->open($zipName, \ZipArchive::OVERWRITE) === true) {
+        	$current = 'pdf'; // 你要压缩的文件的主目录
+
+        	// 压缩多个文件
+        	if ($fileLists) {
+	    		foreach ($fileLists as $f) {
+	    			$filename = basename($f);
+	    			if (is_file($f)) {
+	    				$zip->addFile($f, $current.'/'.$filename);
+	    			}
+	    		}
+	    	}
+	    	// 压缩目录
+            //add_file_to_zip($path, $current, $zip);
+            $zip->close();
+        }else {
+            exit('下载失败！');
+        }
+        // 客户端下载时看到的文件名称
+        $showName = 'pdf.zip';
+
+        //echo 'sd';
+       	// $this->success('下载成功！'.$zipName) ;
+        if (! download_file($zipName, $showName, $isOutput = false)) {
+            return "<script>alert('下载失败！')</script>";
+        }else {
+        	$result = [];
+        	$result['url'] = get_domain().'/'.$zipName;
+        	$result['code'] = 0;
+        	$result['msg'] = '下载成功！';
+        	return json($result);
+            //@unlink($zipName);
+        }
     }
 
 	/**

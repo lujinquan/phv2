@@ -4,6 +4,8 @@
 		<div class="j-search-fl layui-col-md8  fl">
 			<!-- <button type="button" class="layui-btn layui-btn-warm j-btn-voice-down">一键下载发票</button> -->
 			  <a href="{:url('allVoiceDown')}" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键下载所有发票</a>
+			  <a href="{:url('allVoiceDownLoad')}" data-id="order_id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a>
+			  <!-- <button id="j-ajax-pdf" data-id="house_id" class="layui-btn layui-btn-warm" data-type="loading"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button> -->
 			  <div class="layui-input-inline j-input-margin j-width-300">
 				  <input type="text" name="out_trade_no" title="支付订单编号" placeholder="支付订单编号" class="layui-input">
 			  </div>
@@ -85,12 +87,13 @@
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
             }
             ,cols: [[ //表头
-               {field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
-               // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-			   ,{field: 'tenant_name', minWidth: 120, hide: true, align:'center', title: '租户姓名'}
-               ,{field: 'weixin_username', minWidth: 120, align:'center', title: '缴费用户',templet: function(d){
+                {type:'checkbox'}
+                ,{field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
+                // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
+			    ,{field: 'tenant_name', minWidth: 120, hide: true, align:'center', title: '租户姓名'}
+                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '缴费用户',templet: function(d){
                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
-               }}
+                }}
                 ,{field: 'openid',minWidth:260,hide:true,align:'center', title: 'OPENID'}
                 ,{field: 'pay_money', width:100, hide: false, align:'center', title: '交易金额'}
                 ,{field: 'house_number', width: 160, align:'center', title: '房屋编号'}

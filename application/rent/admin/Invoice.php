@@ -75,9 +75,10 @@ class Invoice extends Admin
     // 发票查询
     public function fpcx()
     {
+        //halt(get_msec_to_mescdate(get_msec_time()));
         // http://web.phv2.com/admin.php/rent/invoice/fpcx
         $InvoiceModel = new InvoiceModel;
-        $res = json_decode($InvoiceModel->fpcx($sbh = '12420106441363712E' , $lsh = 'CLD20200917125422097'),true);
+        $res = json_decode($InvoiceModel->fpcx($sbh = '12420106441363712E' , $lsh = 'CLD20200921113053507'),true);
         dump($res);
         halt(json_decode($res['msg'],true));
 

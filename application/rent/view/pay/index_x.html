@@ -1,0 +1,224 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
+<!-- 新增后台导出按钮 -->
+<button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
+ <div class="j-table-content j-no-tab">
+	 <div class="layui-btn-container j-container-margin">
+	     <div class="layui-btn-container"> 
+            {if condition="in_array(412,$auths) || $Think.ADMIN_ROLE == 1"}
+            <a href="{:url('allVoiceDownLoad')}?group=x" title="需要勾选订单" data-id="id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a>
+            {/if}
+            {if condition="in_array(411,$auths) || $Think.ADMIN_ROLE == 1"}
+            <a href="{:url('allDpkj')}?group=x" title="无需勾选订单" target="_blank" confirm="由于开票系统有离线延迟限制，若一次开票数量过多，会造成等待时间变长，确认一键开票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键开票</a>
+            {/if}
+            {if condition="in_array(413,$auths) || $Think.ADMIN_ROLE == 1"}
+            <a href="{:url('allVoiceDown')}?group=x" title="无需勾选订单" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键同步发票</a>
+            {/if}
+	     </div>
+	 </div>
+ <div class="page-toolbar j-page-toolbar clearfix">
+        <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+            <div class="j-search-fl layui-col-md8  fl">
+                {if condition="in_array('house_number',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-input-margin" style="width:160px;">
+                    <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
+                </div>
+                {/if}
+                {if condition="in_array('tenant_name',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
+                    <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
+                </div> 
+                {/if} 
+                {if condition="in_array('ban_address',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
+                    <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
+                </div>
+                {/if}
+                {if condition="in_array('ban_inst_id',$config['rent_recharge_info_search'])"}
+                {if condition="INST_LEVEL != 3"}
+                <div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+                    <select name="ban_inst_id" xm-select="ban_inst_id">
+                        <option value="" disabled="disabled">机构</option>
+                        {volist name=":config('inst_check_names')[INST]" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}
+                {/if}
+                {if condition="in_array('ban_owner_id',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-width-90 j-margin-10">
+                    <select name="ban_owner_id" xm-select="ban_owner_id">
+                        <option value="" disabled="disabled">产别</option>
+                        {volist name="params['owners']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}
+                {if condition="in_array('house_use_id',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-width-120 j-margin-10">
+                    <select name="house_use_id" xm-select="house_use_id">
+                        <option value="">使用性质</option>
+                        {volist name="params['uses']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}
+                {if condition="in_array('pay_way',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline" style="width:120px;">
+                    <select name="pay_way">
+                        <option value="">收支方式</option>
+                        {volist name="params['pay_way']" id="v"}
+                        <option value="{$key}">{$v}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if} 
+                {if condition="in_array('pay_rent',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-input-margin" style="width:120px;">
+                    <input type="text" name="pay_rent" title="金额" placeholder="金额" class="layui-input">
+                </div>
+                {/if}
+                {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
+                <div class="layui-input-inline j-input-margin" style="width:180px;">
+                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
+                </div> 
+                {/if}
+            </div>
+            <div class="j-search-fr layui-col-md4 fr">
+            	<div class="layui-input-inline fr">
+            		<div class="layui-input-inline" style="margin-left:10px;">
+                       <!-- <button type="button" class="layui-btn layui-btn-warm on" id="button_prints">
+                            <i class="layui-icon layui-icon-print"></i>
+                            导出
+                        </button> -->
+            			<button type="reset" class="layui-btn j-btn-reset">重置</button>
+            			<button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+            				<i class="layui-icon">&#xe615;</i>
+            				搜索
+            			</button>
+            			<button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+            		</div>
+            	</div>
+            </div>
+        </form>
+</div>
+{include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" id="toolbar">
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    {{#  if (parseFloat(d.pay_rent) > 0) { }}
+    {{#  if (d.invoice_id <= 0) { }}
+        <a href="{:url('dpkj')}?group=x&id={{ d.id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
+    {{# }else{ }}
+        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
+    {{# } }}
+    {{#  if (d.recharge_status == 1) { }}
+    {if condition="in_array(414,$auths) || $Think.ADMIN_ROLE == 1"}
+        <a href="{:url('payRefund')}?group=x&id={{ d.id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
+    {else /}
+        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+    {/if}
+    {{# }else{ }}
+        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+    {{# } }}
+    {{# } }}
+    <a href="{:url('detail')}?id={{ d.id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','laydate','formSelects'], function() {
+        var table = layui.table
+		    ,formSelects = layui.formSelects;
+        var laydate = layui.laydate;
+        table.render({
+            elem: '#dataTable'
+            //,height: 550
+            ,url: '{:url("index")}?group=x'
+			,toolbar: true
+			,defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
+            ,page: true 
+            ,totalRow:true
+            ,limit: 10
+            ,limits: [10,20,30,40,50,100]
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {type:'checkbox'}
+                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
+                ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
+                ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
+                    return params.insts[d.ban_inst_id];
+                }}
+                ,{field: 'ban_owner_id', minWidth: 80, align:'center', title: '产别', templet: function(d) {
+                    return params.owners[d.ban_owner_id];
+                }}
+                ,{field: 'house_use_id', minWidth: 100, align:'center', title: '使用性质', templet: function(d) {
+                    return params.uses[d.house_use_id];
+                }}
+                ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
+                
+                ,{field: 'pay_way', minWidth: 100, align:'center', title: '收支方式', templet: function(d) {
+                    return params.pay_way[d.pay_way];
+                }}
+                ,{field: 'pay_way', minWidth: 100, align:'center', title: '类型', templet: function(d) {
+                    if(parseInt(d.pay_way) == 2){
+                        return '<span style="color:red">支出</span>';
+                    }else{
+                        return '<span style="color:green">收入</span>';
+                    }
+                }}
+                ,{field: 'house_pre_rent', minWidth: 100, align:'center', totalRow: true ,title: '规定租金'}
+                ,{field: 'pay_rent', minWidth: 100, align:'center', totalRow: true ,title: '缴纳金额'}
+                ,{field: 'yue', minWidth: 100, align:'center',title: '当前余额'}
+                ,{field: 'ctime', minWidth: 160, align:'center', title: '创建时间'}
+                ,{title: '操作', minWidth: 180,align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+            ,done:function(res,curr,count){
+                $(".layui-table-total td[data-field='pay_rent']").find("div").text(res.total_pay_rent);
+                //导出转换后台数据
+				  var exportData=res.data;
+				  for(i in exportData){
+					 exportData[i].ban_inst_id = params.insts[exportData[i].ban_inst_id];//转化充值机构
+					 exportData[i].ban_owner_id = params.owners[exportData[i].ban_owner_id];//转化产别
+					 exportData[i].house_use_id = params.uses[exportData[i].house_use_id];//转化使用性质
+					 exportData[i].pay_way = params.pay_way[exportData[i].pay_way];//转化缴纳方式
+				  }
+            }
+        },isShowInst)
+
+        $('#button_prints').click(function(){
+            var queryWhere = $('#hisi-table-search').serialize();
+            console.log('导出的条件：',queryWhere);
+            $('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
+            $.ajax({
+                type:"post",// 请求方式
+                url:"{:url('recharge/export')}",
+                async:true,// 同步异步
+                dataType:"json",
+                data : queryWhere,//这里是前台传到后台的数据
+                //回调函数
+                success:function(output){
+                    layer.msg(output.msg);
+                    if(output.code){ //成功则直接下载      
+                        $('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                        document.location.href = output.data;
+                    }
+                    else{
+                    	$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
+                    }
+                }
+            });
+        })
+        //日期范围
+        laydate.render({
+            elem: '#test6'
+            //,range: true
+            ,range: '~'
+        });
+    });
+    
+</script>

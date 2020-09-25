@@ -431,3 +431,71 @@ if (!function_exists('deal_wechat_response')) {
       return $result;
     }
 }
+
+/**
+ * 下载
+ * @param $response 下载
+ * @return array 返回结果
+ */
+if (!function_exists('download_file')) {
+    function download_file($filePath, $showName, $isOutput){
+    	if (is_file($filePath)) {
+            //打开文件
+            $file = fopen($filePath,"r");
+
+            if($isOutput){
+            	//返回的文件类型
+	            Header("Content-type: application/octet-stream");
+	            //按照字节大小返回
+	            Header("Accept-Ranges: bytes");
+	            //返回文件的大小
+	            Header("Accept-Length: ".filesize($filePath));
+	            //这里设置客户端的弹出对话框显示的文件名
+            	Header("Content-Disposition: attachment; filename=".$showName);
+            }
+            //一次性将数据传输给客户端
+            //echo fread($file, filesize($filePath));
+            //一次只传输1024个字节的数据给客户端
+            //向客户端回送数据
+            $buffer=1024;//
+            //判断文件是否读完
+            while (!feof($file)) {
+                //将文件读入内存
+                $file_data = fread($file, $buffer);
+                if($isOutput){
+                	//每次向客户端回送1024个字节的数据
+                	echo $file_data;
+                }
+            }
+            return true;
+        }else {
+            return false;
+        }
+    }
+}
+
+/**
+ * 下载
+ * @param $response 下载
+ * @return array 返回结果
+ */
+if (!function_exists('add_file_to_zip')) {
+    function add_file_to_zip($path, $current, $zip){
+    	// 打开文件夹资源
+        $handler = opendir($path);
+        // 循环读取文件夹内容
+        while(($filename = readdir($handler)) !== false) {
+            // 过滤掉Linux系统下的.和..文件夹
+            if ($filename != '.' && $filename != '..') {
+                // 文件指针当前位置指向的如果是文件夹，就递归压缩
+                if (is_dir($path.'/'.$filename)) {
+                    add_file_to_zip($path.'/'.$filename, $filename, $zip);
+                }else {
+                    // 为了在压缩文件的同时也将文件夹压缩，可以设置第二个参数为文件夹/文件的形式，文件夹不存在自动创建压缩文件夹
+                    $zip->addFile($path.'/'.$filename, $current.'/'.$filename);
+                }
+            }
+        }
+        @closedir($handler);
+    }
+}

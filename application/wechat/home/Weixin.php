@@ -1628,8 +1628,6 @@ class Weixin extends Common
             $row = $checkData['member_extra_info'];
         }
 
-
-
         $rent_order_ids = trim(input('rent_order_ids')); //缴费的ids
         $pay_rent = trim(input('pay_rent')); //缴费的金额
         $house_id = trim(input('house_id')); //缴费的房屋
@@ -1639,7 +1637,7 @@ class Weixin extends Common
             $RentModel->whole_orders_to_pay(explode(',',$rent_order_ids), $row['id'], $member_info['member_id']); 
         }else{ // 方式：缴费，缴费金额
             $RentModel = new RentModel; 
-            $RentModel->pay_for_rent($house_id,$pay_rent,$row['id']);
+            $RentModel->pay_for_rent($house_id, $pay_rent, $row['id']);
         }
         
         $result['code'] = 1;

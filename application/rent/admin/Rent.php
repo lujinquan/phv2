@@ -164,7 +164,10 @@ class Rent extends Admin
             }
             // 执行缴费程序
             $RentModel = new RentModel;
-            $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
+            $res = $RentModel->pay($data['rent_order_id'],$data['pay_rent']);
+            if (!$res) {
+                $this->error($RentModel->getError());
+            }
             return $this->success('缴费成功');
         }
         $id = input('param.id/d');

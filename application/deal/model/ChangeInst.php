@@ -333,12 +333,12 @@ class ChangeInst extends SystemBase
      */
     private function finalDeal($finalRow)
     {
-    // 异动记录
+        // 异动记录
         $ChangeRecordModel = new ChangeRecordModel;
         $ChangeRecordModel->save([
             'change_type' => 10,
             'change_order_number' => $finalRow['change_order_number'],
-            'ban_id' => $finalRow['ban_id'],
+            //'ban_id' => $finalRow['ban_id'],
             'ctime' => $finalRow->getData('ctime'),
             'ftime' => time(),
             'change_status' => 1,
@@ -374,9 +374,8 @@ class ChangeInst extends SystemBase
             $tableData['inst_id'] = $finalRow['old_inst_id'];
             $tableData['new_inst_id'] = $finalRow['new_inst_id'];
             $tableData['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
-            $tableData['owner_id'] = $finalRow['ban_info']['ban_owner_id']; 
-            $tableData['order_date'] = date('Ym',$finalRow['ftime']);
-
+            $tableData['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
+            $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
             if($finalRow['ban_info']['ban_civil_rent'] > 0){ // 民用1
                 $tableData['use_id'] = 1;
                 $tableData['change_rent'] = $finalRow['ban_info']['ban_civil_rent'];

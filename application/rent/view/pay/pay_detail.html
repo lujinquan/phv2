@@ -1,0 +1,227 @@
+{if condition="$group == 'y'"}
+
+<!-- 支付记录详情 -->
+<form class="layui-form j-definition" action="">
+  <div class="layui-form-item">
+	<label class="layui-form-label">支付订单编号：</label>
+	<div class="layui-form-mid layui-word-aux">{$data_info['out_trade_no']}</div>
+ </div>
+ <div class="layui-form-item">
+	<label class="layui-form-label">用户：</label>
+	<div class="layui-form-mid layui-word-aux">{$data_info['member_name']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">OPENID：</label>
+ 	<div class="layui-form-mid layui-word-aux">{:hide_str($data_info['openid'],8,12)}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">支付详情：</label>
+ 	<div class="layui-form-mid layui-word-aux">
+ 	<table class="layui-table">
+  <colgroup>
+    <col width="150">
+    <col width="200">
+  </colgroup>
+  <thead>
+    <tr>
+      <th>房屋编号</th>
+      <th>租金订单编号</th>
+      <th>租金订单日期</th>
+      <th>支付金额/元</th>
+    </tr> 
+  </thead>
+  <tbody>
+  	{volist name="houses" id="v"}
+    <tr>
+      <td>{$v['house_number']}</td>
+      <td>{$v['rent_order_number']}</td>
+      <td>{$v['rent_order_date']}</td>
+      <td>{$v['pay_dan_money']}</td>
+    </tr>
+    {/volist}
+  </tbody>
+</table>
+</div>
+ </div>
+
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">用户微信手机：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['weixin_tel']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">交易编号：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['transaction_id']}</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">支付时间：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$data_info['ptime']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">是否开发票：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$data_info['invoice_id']"}已开发票{else /}未开发票{/if}</div>
+ </div>
+ {if condition="$data_info['invoice_id']"}
+ <div class="layui-form-item">
+  <label class="layui-form-label">发票流水号：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['fpqqlsh']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">远程电子发票地址：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['pdfurl']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">本地电子发票地址：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['local_pdfurl']"}<a class="layui-btn layui-btn-xs layui-btn-normal" href="{$invoice_info['local_pdfurl']}" target="_blank">点此查看</a>{else /}未生成{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">开票类型：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['kplx']"}红字发票{else /}蓝字发票{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">发票类型：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['fplx'] == '026'"}增值税电子发票{else /}区块链发票{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">征税方式：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['zsfs'] == 2"}差额征税{else /}普通征税{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">收款人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['skr']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">复核人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['fhr']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">开票人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['kpr']}</div>
+ </div>
+ {/if}
+ {if condition="isset($order_refund_info)"}
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">退款金额：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$order_refund_info['ref_money']}元</div>
+ </div>
+ <div class="layui-form-item">
+ 	<label class="layui-form-label">退款时间：</label>
+ 	<div class="layui-form-mid layui-word-aux">{$order_refund_info['ctime']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">退款备注：</label>
+  <div class="layui-form-mid layui-word-aux">{$order_refund_info['ref_description']}</div>
+ </div>
+ {/if}
+</form>	
+{include file="system@block/layui" /}
+
+{else /}
+
+<form class="layui-form" action="{:url('payBack')}" method="post">
+<div class="j-details-box j-no-border floorWrap layui-form">
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>租户信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+    <div class="layui-col-md4">
+      <label class="j-form-label">租户姓名</label> 
+      <div class="j-input-inline">
+      <input type="text" name="tenant_name" value="{$data_info['tenant_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">联系电话</label> 
+      <div class="j-input-inline">
+      <input type="text" name="tenant_tel" value="{$data_info['tenant_tel']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <label class="j-form-label">身份证号</label> 
+      <div class="j-input-inline">
+        <input type="text" name="tenant_card" value="{$data_info['tenant_card']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">楼栋地址</label> 
+      <div class="j-input-inline">
+      <input type="text" name="ban_address" value="{$data_info['ban_address']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <label class="j-form-label">楼栋产别</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_name" value="{$params['owners'][$data_info['ban_owner_id']]}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">使用性质</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="{$params['uses'][$data_info['house_use_id']]}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  </div>
+  <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+    <legend>账单信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+        <div class="layui-col-md4">
+      <label class="j-form-label">充值凭证单号</label> 
+      <div class="j-input-inline">
+        <input type="text" name="rent_order_number" value="{$data_info['pay_number']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">充值金额</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_name" value="{$data_info['pay_rent']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">余额</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_name" value="{$data_info['yue']}" disabled="disabled" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">充值时间</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="{$data_info['ctime']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+      
+    <div class="layui-col-md4">
+      <label class="j-form-label">充值方式</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_bodies" value="{$params['pay_way'][$data_info['pay_way']]}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    {if condition="$data_info['pay_way'] == 4"}
+    <div class="layui-col-md4">
+      <label class="j-form-label">充值会员</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_bodies" value="{$data_info['member_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    {/if}
+    <div class="layui-col-md4">
+      <label class="j-form-label">订单状态</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="充值成功" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  </div>
+  {if condition="$data_info['pay_way'] == 2"}
+  <input type="hidden" name="id" value="{$data_info['id']}">
+   <div class="pop-bottom-bar">
+        <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">撤销当前扣缴</button> 
+        <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10">取消</a>
+    </div>
+    {/if}
+</div>
+</form>
+{include file="system@block/layui" /}
+
+{/if}

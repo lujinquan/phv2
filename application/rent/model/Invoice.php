@@ -179,8 +179,8 @@ class Invoice extends Model
     public function dpkj($id, $type = 1)
     {
         // 测试平台暂不需要开发票      
-        if (get_domain(false) == 'procheck.ctnmit.com:443') {
-            $this->error = '测试平台，暂不开票';
+        if (get_domain(false) != 'pro.ctnmit.com:443') {
+            $this->error = '非正式平台，暂不开票';
             return false;
         }
         // 初始化数据
@@ -606,7 +606,7 @@ class Invoice extends Model
         //dump('报文签名>>>> '.$signature);
         $queryMap['signature'] = $signature;
 
-        $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
+        // $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
         
         // dump($content);
         // halt($result);
@@ -615,6 +615,11 @@ class Invoice extends Model
         // $result = [
         //     "msg" => "税控服务器调用异常,请稍后再试,异常码为302;发票同步出错:f0003,税控服务器调用异常,请稍后再试,异常码为302",
         //     "code" => "fpkj0007",
+        //     "requestid" => "976c9fda61b642efb74dc835bae3ed0e",
+        // ];
+        // $result = [
+        //     "msg" => "税控服务器调用异常,请稍后再试,异常码为302;发票同步出错:f0003,税控服务器调用异常,请稍后再试,异常码为302",
+        //     "code" => "0000",
         //     "requestid" => "976c9fda61b642efb74dc835bae3ed0e",
         // ];
 

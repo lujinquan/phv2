@@ -218,7 +218,7 @@ class Report extends Model
      */
     public function getPrePaidRent($curMonth)
     {
-        $nextMonth = date('Y-m',strtotime('1 month'));
+        $nextMonth = date('Y-m', strtotime( "first day of next month" ) );
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
         $separate = substr($month,0,4).'00';
@@ -277,7 +277,7 @@ class Report extends Model
             $data[$b]['kou_rent'] = isset($kouData[$b])?abs($kouData[$b]):0;
             $data[$b]['house_pre_rent'] = $houses[$b]['house_pre_rent'];
             $data[$b]['house_balance'] = $houses[$b]['house_balance'];
-            $data[$b]['pay_rent'] = isset($payData[$b])?abs($payData[$b]):0;
+            $data[$b]['pay_rent'] = isset($payData[$b])?$payData[$b]:0;
             $data[$b]['number'] = $houses[$b]['house_number'];
             $data[$b]['address'] = $houses[$b]['ban_address'];
             $data[$b]['tenant'] = $houses[$b]['tenant_name'];

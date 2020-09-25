@@ -1,0 +1,151 @@
+<div class="j-table-content j-no-title">
+	 <div class="j-table-content j-no-tab">
+	 <div class="layui-btn-container j-container-margin">
+	     <div class="layui-btn-container"> 
+	     	{if condition="in_array(412,$auths) || $Think.ADMIN_ROLE == 1"}
+	     	<a href="{:url('allVoiceDownLoad')}?group=y" title="需要勾选订单" data-id="order_id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a>
+	     	{/if}
+	     	{if condition="in_array(411,$auths) || $Think.ADMIN_ROLE == 1"}
+	     	<a href="{:url('allDpkj')}?group=y" title="无需勾选订单" target="_blank" confirm="由于开票系统有离线延迟限制，若一次开票数量过多，会造成等待时间变长，确认一键开票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键开票</a>
+	     	{/if}
+	     	{if condition="in_array(413,$auths) || $Think.ADMIN_ROLE == 1"}
+            <a href="{:url('allVoiceDown')}?group=y" title="无需勾选订单" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键同步发票</a>
+            {/if} 
+	     </div>       
+	 </div>
+<div class="page-toolbar j-page-toolbar clearfix">
+      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+		<div class="j-search-fl layui-col-md8  fl">
+			<!-- <button type="button" class="layui-btn layui-btn-warm j-btn-voice-down">一键下载发票</button> -->
+			  <!-- <a href="{:url('allVoiceDown')}" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键下载所有发票</a>
+			  <a href="{:url('allVoiceDownLoad')}" data-id="order_id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a> -->
+			  <!-- <button id="j-ajax-pdf" data-id="house_id" class="layui-btn layui-btn-warm" data-type="loading"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button> -->
+			  <div class="layui-input-inline j-input-margin j-width-300">
+				  <input type="text" name="out_trade_no" title="支付订单编号" placeholder="支付订单编号" class="layui-input">
+			  </div>
+			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="pay_openid" title="OPENID" placeholder="OPENID" class="layui-input">
+			  </div> -->
+			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
+			  	  <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
+			  </div> -->
+			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  	<input type="text" name="user_tel" title="用户手机号" placeholder="用户手机号" class="layui-input">
+			  </div>
+			  <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  	<input type="text" name="ban_address" title="楼栋地址" placeholder="楼栋地址" class="layui-input">
+			  </div> -->
+			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
+			  	<input type="text" name="tel" title="手机号" placeholder="手机号" class="layui-input">
+			  </div> -->
+			  <div class="layui-input-inline j-width-110">
+			  		<select name="order_status">
+						<option value="">支付状态</option>
+						{volist name="params['order_status']" id="v"}
+						{if condition="$key != 3"}
+						<option value="{$key}">{$v}</option>
+						{/if}
+						{/volist}
+					</select>
+				  <!-- <select name="pay_state">
+					  <option value="">支付状态</option>
+					  <option value="1">已支付</option>
+					  <option value="2">已退款</option>
+				  </select> -->
+			  </div>
+		</div>
+		<div class="j-search-fr layui-col-md4 fr">
+          <div class="layui-input-inline fr">
+			  <button type="reset" class="layui-btn j-btn-reset">重置</button>
+              <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">
+                  <i class="layui-icon">&#xe615;</i>
+                  搜索
+              </button>
+			  <button type="button" class="layui-btn layui-btn-warm"><i class="layui-icon iconfont j-icon-screen_icon"></i>标题筛选</button>
+			  
+          </div>
+		</div>
+      </form>
+  </div>
+{include file="system@block/layui" /}
+<table id="dataTable" lay-filter='dataTable'></table>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+{{#  if (d.order_status == 1) { }}
+{{#  if (d.invoice_id <= 0) { }}
+	<a href="{:url('dpkj')}?group=y&id={{ d.order_id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
+{{# }else{ }}
+	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
+{{# } }}
+{if condition="in_array(414,$auths) || $Think.ADMIN_ROLE == 1"}
+	<a href="{:url('payRefund')}?group=y&id={{ d.order_id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
+{else /}
+	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+{/if}
+{{# }else{ }}
+	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+{{# } }}
+	<a href="{:url('payDetail')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '532px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+</script>
+</div>
+<script type="text/javascript">
+    layui.use(['table','jquery','layer','laydate'], function() {
+        var table = layui.table
+		    ,$ = layui.$
+			,laydate = layui.laydate;
+       table.render({
+            elem: '#dataTable'
+			// ,height: 330
+            ,toolbar: true
+			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
+            ,url: '{:url()}?group=y' //数据接口
+            ,page: true //开启分页
+			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+            ,limit: 10
+            ,text: {
+                none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
+            }
+            ,cols: [[ //表头
+                {type:'checkbox'}
+                ,{field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
+                // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
+			    ,{field: 'tenant_name', minWidth: 120, hide: true, align:'center', title: '租户姓名'}
+                ,{field: 'weixin_username', minWidth: 120, align:'center', title: '缴费用户',templet: function(d){
+               		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
+                }}
+                ,{field: 'openid',minWidth:260,hide:true,align:'center', title: 'OPENID'}
+                ,{field: 'pay_money', width:100, hide: false, align:'center', title: '交易金额'}
+                ,{field: 'house_number', width: 160, align:'center', title: '房屋编号'}
+				,{field: 'ban_address', minWidth: 200, align:'center', title: '楼栋地址'}
+				,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
+				,{field: 'ptime', width: 160, align:'center', title: '交易时间'}
+                ,{field: 'order_status', align:'center',width:120, title: '支付状态', templet:function(d){
+                	//if(parseInt(d.order_status) == 1){
+                    	return '<div class="layui-table-cell">'+params.order_status[d.order_status]+'</div>';
+                  //   }else if(parseInt(d.order_status) == 2){
+                		// return '<div class="layui-table-cell">已退款</div>';
+                  //   }
+                    
+                }}
+                ,{title: '操作', width: 180, align:'center', templet: '#buttonTpl',fixed:'right'}
+            ]]
+   //          ,
+			// data: [{
+   //          'weixin_id': '10500335300299202002',
+   //          'weixin_url':'https://h.2345cdn.net/i/search190510/idx-1.png',
+   //          'weixin_username': 'lsn',
+			// 'weixin_openid': 'oH4X25ZJjygxqcgzcI5x18KQvzCc',
+   //          'weixin_number': '10500335300299',
+   //          "weixin_address": '沙湖明珠',
+			// "transaction_number": '4200000518202003030187224896',
+			// "weixin_time": '2020-03-03 15:25:26',
+   //          "weixin_type": 2,
+   //        }
+   //      ]
+            ,done:function(res,curr,count){
+				console.log("支付记录数据：",res)
+            }
+        },isShowInst);
+		$(".j-search-fr .layui-btn:last").addClass("on");//搜索最后按钮样式
+		
+    });
+</script>

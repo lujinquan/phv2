@@ -675,10 +675,14 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                 layer.msg('数据提交中...');
                 that.prop('disabled', true); //异动里面单独加的
                 $.post(href, query, function(res) {
+                    console.log(res);
                     layer.msg(res.msg, {time:5000}, function(){
                         if (res.code != 0) {
                             location.reload();
                         } 
+                        if (res.url) {
+                            document.location.href = res.url;
+                        }
                     });
                 });
             };

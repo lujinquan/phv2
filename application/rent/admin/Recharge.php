@@ -80,6 +80,7 @@ class Recharge extends Admin
             if($filData['yue'] < 0){
                 return $this->error('充值后余额不能为负');
             }
+            $filData['trade_type'] = 'CASH';
             //halt($filData['yue']);
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
