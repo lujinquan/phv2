@@ -56,10 +56,22 @@ class WeixinOrder extends Model
         if(isset($data['out_trade_no']) && $data['out_trade_no']){
             $where[] = ['out_trade_no','like','%'.$data['out_trade_no'].'%'];
         }
-        // // 检索产别
-        // if(isset($data['tel']) && $data['tel']){
-        //     $where[] = ['tel','like','%'.$data['tel'].'%'];
-        // }
+        // 检索产别
+        if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
+            $where[] = ['e.ban_owner_id','eq',$data['ban_owner_id']];
+        }
+        // 检索使用权变更
+        if(isset($data['house_use_id']) && $data['house_use_id']){
+            $where[] = ['d.house_use_id','eq',$data['house_use_id']];
+        }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['d.house_number','like','%'.$data['house_number'].'%'];
+        }
+        // 检索租户姓名
+        if(isset($data['tenant_name']) && $data['tenant_name']){
+            $where[] = ['f.tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
         // // 检索真实姓名
         // if(isset($data['real_name']) && $data['real_name']){
         //     $where[] = ['real_name','like','%'.$data['real_name'].'%'];
