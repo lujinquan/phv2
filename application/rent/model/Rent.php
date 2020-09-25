@@ -577,7 +577,11 @@ class Rent extends Model
     }
 
     /**
+<<<<<<< HEAD
      * 订单整体支付
+=======
+     * 订单整体缴费（迭代2.0.3）
+>>>>>>> 8b87815590836b71c3ec52014c680337001cd2da
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
@@ -596,7 +600,7 @@ class Rent extends Model
             $row = $this->find($id);
 
             $out_trade_no = date('YmdHis') . random(6);
-
+            $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
             $pay_rent = bcsub($row->rent_order_receive, $row->rent_order_paid , 2);
 
             if ($pay_rent <= 0) {
@@ -609,12 +613,14 @@ class Rent extends Model
             $WeixinOrderModel->trade_type = 'CASH';
             $WeixinOrderModel->order_status = 1;
             $WeixinOrderModel->out_trade_no = $out_trade_no;
+            $WeixinOrderModel->transaction_id = $transaction_id;
             $WeixinOrderModel->ptime = $ctime;
             $WeixinOrderModel->save();
 
             // 模拟生成一条微信支付关联记录
             $WeixinOrderTradeModel = new WeixinOrderTradeModel;
             $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            $WeixinOrderTradeModel->transaction_id = $transaction_id;
             $WeixinOrderTradeModel->rent_order_id = $id;
             $WeixinOrderTradeModel->pay_dan_money = $pay_rent;
             $WeixinOrderTradeModel->save();

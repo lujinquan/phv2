@@ -882,7 +882,7 @@ that.removeClass('layui-btn-disabled').html('<i class="layui-icon layui-icon-dow
 		
     //自定义验证规则
 	//验证手机和座机
-	var mobile = /^1[3|4|5|6|7|8]\d{9}$/,
+	var mobile = /^1[0-9]\d{9}$/,
 	phone = /^(0[0-9]{2,3}\-)([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/;
 	form.verify({
 		tellphone: function(value){

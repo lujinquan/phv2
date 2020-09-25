@@ -472,6 +472,9 @@ class Weixin extends Model
             $this->error = '退款备注不能为空';
             return false;
         }
+
+        $is_online_pay = true; // 是否是微信支付
+
         if ($table == 'order') {
             $WeixinOrderModel = new WeixinOrderModel;
             $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
@@ -487,6 +490,7 @@ class Weixin extends Model
                 'total_fee'      => $order_info['pay_money'] * 100,
                 'refund_fee'     => $order_info['pay_money'] * 100,
             ];
+            $is_online_pay = ($order_info['trade_type'] == 'CASH')?false:true;
         } else if($table == 'recharge'){
             $recharge_info = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->join('weixin_member d','a.member_id = d.member_id','inner')->where([['a.id','eq',$id]])->find();
             $inst_pid = $recharge_info['ban_inst_pid'];
@@ -496,23 +500,40 @@ class Weixin extends Model
                 'total_fee'      => $recharge_info['pay_rent'] * 100,
                 'refund_fee'     => $recharge_info['pay_rent'] * 100,
             ];
+            $is_online_pay = ($recharge_info['pay_way'] == 1)?false:true;
         }
-       
-        include EXTEND_PATH.'wechat/include.php';
-        if($inst_pid == 2){
-            $wechat = \WeChat\Pay::instance($this->config_ziyang);
-        }else if($inst_pid == 3){
-            $wechat = \WeChat\Pay::instance($this->config_liangdao);
-        }else{
-            return $this->error = '房屋所属机构异常';
-            return false;
-        }
+        
+        // 如果是线上支付，则执行微信退款流程
+        if($is_online_pay){
+            include EXTEND_PATH.'wechat/include.php';
+            if($inst_pid == 2){
+                $wechat = \WeChat\Pay::instance($this->config_ziyang);
+            }else if($inst_pid == 3){
+                $wechat = \WeChat\Pay::instance($this->config_liangdao);
+            }else{
+                return $this->error = '房屋所属机构异常';
+                return false;
+            }
 
-        $result = $wechat->createRefund($options);
-        if($result['result_code'] == 'FAIL'){
-            $this->error = $result['err_code_des'];
-            return false;
+            $result = $wechat->createRefund($options);
+            if($result['result_code'] == 'FAIL'){
+                $this->error = $result['err_code_des'];
+                return false;
+            }
+            $refund_fee = $result['refund_fee'] / 100;
+            $refund_id = $result['refund_id'];
+            $out_refund_no = $result['out_refund_no'];
+        } else {
+            if ($table == 'order') {
+                $refund_fee = $order_info['pay_money'];
+                $out_refund_no = $order_info['out_trade_no'];
+            } else if($table == 'recharge'){
+                $refund_fee = $recharge_info['pay_rent'];
+                $out_refund_no = $recharge_info['out_trade_no'];
+            }
+            $refund_id = '';
         }
+        
         //halt($result);
         // $result = [
         //     'return_code' => "SUCCESS",
@@ -548,10 +569,10 @@ class Weixin extends Model
         }
         
         
-        $WeixinOrderRefundModel->ref_money = $result['refund_fee'] / 100;
+        $WeixinOrderRefundModel->ref_money = $refund_fee;
         
-        $WeixinOrderRefundModel->refund_id = $result['refund_id'];
-        $WeixinOrderRefundModel->out_refund_no = $result['out_refund_no'];
+        $WeixinOrderRefundModel->refund_id = $refund_id;
+        $WeixinOrderRefundModel->out_refund_no = $out_refund_no;
         $WeixinOrderRefundModel->ref_description = $ref_description;
         
         $WeixinOrderRefundModel->save();
@@ -592,15 +613,15 @@ class Weixin extends Model
 
             $order_info->order_status = 2;
             $order_info->save();
-            return '退款成功，已退还至'.$order_info['member_name'].'，'. ($result['refund_fee']/100) .'元钱！';
+            return '退款成功，已退还至'.$order_info['member_name'].'，'. $refund_fee .'元钱！';
 
         } else if($table == 'recharge'){
             RechargeModel::where([['id','eq',$id]])->update(['recharge_status'=>2]);
             HouseModel::where([['house_id','eq',$recharge_info['house_id']]])->setDec('house_balance', $recharge_info['pay_rent']);
-            return '退款成功，已退还至'.$recharge_info['member_name'].'，'. ($result['refund_fee']/100) .'元钱！';
+            return '退款成功，已退还至'.$recharge_info['member_name'].'，'. $refund_fee .'元钱！';
         }
         
-        //return  $this->success('退款成功，已退还至'.$order_info['member_name'].'，'. ($result['refund_fee']/100) .'元钱！');
+
     }
 
 }

@@ -100,6 +100,16 @@
 				,{field: 'ban_address', minWidth: 200, align:'center', title: '楼栋地址'}
 				,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
 				,{field: 'ptime', width: 160, align:'center', title: '交易时间'}
+				,{field: 'trade_type', width: 160, align:'center', title: '支付类型', templet:function(d){
+                	if(d.trade_type == 'JSAPI'){
+                    	return 'JSAPI支付';
+                    }else if(d.trade_type == 'NATIVE'){
+                		return '扫码支付';
+                    }else if(d.trade_type == 'CASH'){
+                		return '现金支付';
+                    }
+                    
+                }}
                 ,{field: 'order_status', align:'center',width:120, title: '支付状态', templet:function(d){
                 	//if(parseInt(d.order_status) == 1){
                     	return '<div class="layui-table-cell">'+params.order_status[d.order_status]+'</div>';

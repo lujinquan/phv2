@@ -1607,7 +1607,25 @@ class Weixin extends Common
      * @version 版本  1.0
      */
     public function admin_pay()
-    {
+    {   
+        /*
+    
+        场景一：房管员微信现金缴费
+        传入参数：
+        array(
+            'token' => '2f6b2dd2e6fda2206d652fedeeced099',
+            'pay_rent' => '10504.30',
+            'rent_order_ids' => '824633,356203',
+        );
+        场景二：房管员微信现金充值
+        传入参数：
+        array(
+            'token' => '2f6b2dd2e6fda2206d652fedeeced099',
+            'pay_rent' => '63.4',
+            'house_id' => '6',
+        );
+        */
+        //halt(input('param.'));
         // 验证令牌
         $result = [];
         $result['code'] = 0;
@@ -1632,16 +1650,18 @@ class Weixin extends Common
         $pay_rent = trim(input('pay_rent')); //缴费的金额
         $house_id = trim(input('house_id')); //缴费的房屋
 
-        if($rent_order_ids){ // 方式：收欠，以订单为单位
+        // 场景一：缴费
+        if($rent_order_ids){ 
             $RentModel = new RentModel;
             $RentModel->whole_orders_to_pay(explode(',',$rent_order_ids), $row['id'], $member_info['member_id']); 
-        }else{ // 方式：缴费，缴费金额
+        // 场景二：充值
+        }else{ 
             $RentModel = new RentModel; 
             $RentModel->pay_for_rent($house_id, $pay_rent, $row['id']);
         }
         
         $result['code'] = 1;
-        $result['msg'] = '获取成功！';
+        $result['msg'] = '支付成功！';
         return json($result);    
     }
 
