@@ -64,24 +64,6 @@ class Pay extends Admin
                 $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
                 $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
-                //halt($temp);
-                // foreach ($temp as $k => &$v) {
-                //     //halt($v);
-                //     $rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
-                //     //dump($rent_order_id);
-                //     if ($rent_order_id) {
-                //         $info = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_number,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
-                //         if($info){
-                //             $v['house_number'] = $info['house_number'];
-                //             $v['ban_address'] = $info['ban_address'];
-                //         }
-                //     } else {
-                //         $v['house_number'] = '';
-                //         $v['ban_address'] = '';
-                //     }
-                        
-                    
-                // }
 
                 //halt($temp);
                 $data['data'] = $temp;
@@ -94,8 +76,8 @@ class Pay extends Admin
                 $limit = input('param.limit/d', 10);
 
                 $RechargeModel = new RechargeModel;
-                $where = $RechargeModel->checkWhere($getData);
-
+                $where = $RechargeModel->checkWhere($getData , $type = "pay");
+                //halt($where);
                 $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
@@ -353,12 +335,18 @@ class Pay extends Admin
             // 如果是微信支付，则显示充值的微信会员
             if($row['pay_way'] == 4){ 
                 $member_name = '未知会员';
-                $weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$row['pay_number']]])->field('member_id')->find();
-                if($weixin_order_info){
-                    $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$weixin_order_info['member_id']]])->field('member_name')->find();
+                $avatar = '';
+                $weixin_tel = '';
+                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$row['member_id']]])->field('member_name,avatar,weixin_tel')->find();
+                if($weixin_member_info){
                     $member_name = $weixin_member_info['member_name'];
+                    $avatar = $weixin_member_info['avatar'];
+                    $weixin_tel = $weixin_member_info['weixin_tel'];
                 }
+                //halt($weixin_order_info);
                 $row['member_name'] = $member_name;
+                $row['avatar'] = $avatar;
+                $row['weixin_tel'] = $weixin_tel;
             }
             $this->assign('group',$group);
             $this->assign('data_info',$row);

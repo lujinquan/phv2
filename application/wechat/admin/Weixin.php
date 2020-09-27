@@ -86,56 +86,21 @@ class Weixin extends Admin
 	 */
 	public function payRecord()
 	{
-		
-
-
-
-// 		$fileList = array(
-//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-27-15-05-47.pdf',
-//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-31-10-01-06.pdf',
-//  			'D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-31-10-03-00.pdf',
-// 		);
-		 
-// 		$filename = "D:/PHPTutorial/WWW/phv2/public/upload/pdf/test.zip";
-// $zip = new \ZipArchive();
-// halt($zip);
-// $archive = new PclZip('archive.zip');
-// $v_list = $archive->create(
-//     'D:/data/file.txt,D:/data/text.txt',
-//     PCLZIP_OPT_REMOVE_PATH, 'D:/data',
-//     PCLZIP_OPT_ADD_PATH, 'D:/install'
-// );
-// if ($v_list == 0) {
-//     die("Error : " . $archive->errorInfo(true));
-// }
-
-
-		
-		
 		if ($this->request->isAjax()) {
+            $getData = $this->request->get();
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
-            $getData = $this->request->get();
+            
             $WeixinOrderModel = new WeixinOrderModel;
             $where = $WeixinOrderModel->checkWhere($getData);
             //halt($where);
-            // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
+            $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
             $data = [];
-            $temp = WeixinOrderModel::with('weixinMember')->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
-            foreach ($temp as $k => &$v) {
-            	$rent_order_id = WeixinOrderTradeModel::where([['out_trade_no','eq',$v['out_trade_no']]])->value('rent_order_id');
-            	//halt($rent_order_id);
-      				$info = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_number,d.ban_address')->where([['a.rent_order_id','eq',$rent_order_id]])->find();
-      				if($info){
-      					$v['house_number'] = $info['house_number'];
-      					$v['ban_address'] = $info['ban_address'];
-      				}
-				
-            }
+            $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
 
             //halt($temp);
             $data['data'] = $temp;
-            $data['count'] = WeixinOrderModel::where($where)->count();//halt($data['data']);
+            $data['count'] = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->where($where)->count();//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);

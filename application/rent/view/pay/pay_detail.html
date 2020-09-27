@@ -166,7 +166,7 @@
     <legend>账单信息</legend>
   </fieldset>
   <div class="layui-row layui-form-item layui-col-space90">
-        <div class="layui-col-md4">
+    <div class="layui-col-md4">
       <label class="j-form-label">充值凭证单号</label> 
       <div class="j-input-inline">
         <input type="text" name="rent_order_number" value="{$data_info['pay_number']}" disabled="disabled" autocomplete="off" class="layui-input">
@@ -184,12 +184,7 @@
         <input type="text" name="register_name" value="{$data_info['yue']}" disabled="disabled" autocomplete="off" class="layui-input">
       </div>
     </div>
-    <div class="layui-col-md4">
-      <label class="j-form-label">充值时间</label> 
-      <div class="j-input-inline">
-      <input type="text" name="register_bodies" value="{$data_info['ctime']}" disabled="disabled"  autocomplete="off" class="layui-input">
-      </div>
-    </div>
+    
 
       
     <div class="layui-col-md4">
@@ -198,14 +193,27 @@
         <input type="text" name="register_bodies" value="{$params['pay_way'][$data_info['pay_way']]}" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
-    {if condition="$data_info['pay_way'] == 4"}
+    {if condition="$data_info['member_id']"}
     <div class="layui-col-md4">
-      <label class="j-form-label">充值会员</label> 
+      <label class="j-form-label">操作人</label> 
       <div class="j-input-inline">
-        <input type="text" name="register_bodies" value="{$data_info['member_name']}" disabled="disabled"  autocomplete="off" class="layui-input">
+        <img src="{$data_info['avatar']}" width="28px" height="28px"> {$data_info['member_name']}
+        <!-- <input type="text" name="register_bodies" value="" disabled="disabled"  autocomplete="off" class="layui-input"> -->
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <label class="j-form-label">操作人手机</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="{$data_info['weixin_tel']}" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
     {/if}
+    <div class="layui-col-md4">
+      <label class="j-form-label">操作时间</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="{$data_info['ctime']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
     <div class="layui-col-md4">
       <label class="j-form-label">订单状态</label> 
       <div class="j-input-inline">
@@ -213,13 +221,7 @@
       </div>
     </div>
   </div>
-  {if condition="$data_info['pay_way'] == 2"}
-  <input type="hidden" name="id" value="{$data_info['id']}">
-   <div class="pop-bottom-bar">
-        <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit" hisi-data="{pop: true, refresh: true}">撤销当前扣缴</button> 
-        <a href="javascript:parent.layui.layer.closeAll();" class="layui-btn layui-btn-primary ml10">取消</a>
-    </div>
-    {/if}
+  
 </div>
 </form>
 {include file="system@block/layui" /}

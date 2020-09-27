@@ -3,8 +3,8 @@
       <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
 		<div class="j-search-fl layui-col-md8  fl">
 			<!-- <button type="button" class="layui-btn layui-btn-warm j-btn-voice-down">一键下载发票</button> -->
-			  <a href="{:url('allVoiceDown')}" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键下载所有发票</a>
-			  <a href="{:url('allVoiceDownLoad')}" data-id="order_id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a>
+			  <!-- <a href="{:url('allVoiceDown')}" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键下载所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键下载所有发票</a> -->
+			  <!-- <a href="{:url('allVoiceDownLoad')}" data-id="order_id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a> -->
 			  <!-- <button id="j-ajax-pdf" data-id="house_id" class="layui-btn layui-btn-warm" data-type="loading"><i class="layui-icon layui-icon-add-1"></i>导出催缴单</button> -->
 			  <div class="layui-input-inline j-input-margin j-width-300">
 				  <input type="text" name="out_trade_no" title="支付订单编号" placeholder="支付订单编号" class="layui-input">
@@ -58,11 +58,11 @@
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
 {{#  if (d.order_status == 1) { }}
 {{#  if (d.invoice_id <= 0) { }}
-	<a href="{:url('dpkj')}?id={{ d.order_id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
+	<!-- <a href="{:url('dpkj')}?id={{ d.order_id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a> -->
 {{# }else{ }}
 	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
 {{# } }}
-	<a href="{:url('payRefund')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
+	<!-- <a href="{:url('payRefund')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a> -->
 {{# }else{ }}
 	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
 {{# } }}
@@ -81,7 +81,7 @@
 			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
             ,url: '{:url()}' //数据接口
             ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+			,limits: [10,20,30,40,50,100,200]
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"

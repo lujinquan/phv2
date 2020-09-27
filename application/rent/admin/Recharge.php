@@ -112,9 +112,8 @@ class Recharge extends Admin
         // 如果是微信支付，则显示充值的微信会员
         if($row['pay_way'] == 4){ 
             $member_name = '未知会员';
-            $weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$row['pay_number']]])->field('member_id')->find();
-            if($weixin_order_info){
-                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$weixin_order_info['member_id']]])->field('member_name')->find();
+            $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$row['member_id']]])->field('member_name')->find();
+            if($weixin_member_info){
                 $member_name = $weixin_member_info['member_name'];
             }
             $row['member_name'] = $member_name;

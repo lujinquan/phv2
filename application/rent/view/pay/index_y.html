@@ -24,61 +24,69 @@
 			  <div class="layui-input-inline j-input-margin j-width-300">
 				  <input type="text" name="out_trade_no" title="支付订单编号" placeholder="支付订单编号" class="layui-input">
 			  </div>
-			   <div class="layui-input-inline j-input-margin" style="width:160px;">
-                    <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
-              </div>
-              <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
-                </div>
-			         {if condition="INST_LEVEL != 3"}
-                <div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
-                    <select name="ban_inst_id" xm-select="ban_inst_id">
-                        <option value="" disabled="disabled">机构</option>
-                        {volist name=":config('inst_check_names')[INST]" id="v"}
-                        <option value="{$key}">{$v}</option>
-                        {/volist}
-                    </select>
-                </div>
-                {/if}
-                <div class="layui-input-inline j-input-margin j-width-300">
-                  <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
-                </div>
-                <div class="layui-input-inline j-width-90 j-margin-10">
-                    <select name="ban_owner_id" xm-select="ban_owner_id">
-                        <option value="" >产别</option>
-                        {volist name="params['owners']" id="v"}
-                        <option value="{$key}">{$v}</option>
-                        {/volist}
-                    </select>
-                </div>
+			  <div class="layui-input-inline j-input-margin" style="width:160px;">
+              <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
+        </div>
+        <div class="layui-input-inline j-input-margin" style="width:120px;">
+            <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
+        </div>
+         {if condition="INST_LEVEL != 3"}
+          <div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+              <select name="ban_inst_id" xm-select="ban_inst_id">
+                  <option value="" disabled="disabled">机构</option>
+                  {volist name=":config('inst_check_names')[INST]" id="v"}
+                  <option value="{$key}">{$v}</option>
+                  {/volist}
+              </select>
+          </div>
+          {/if}
+          <div class="layui-input-inline j-input-margin j-width-300">
+            <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
+          </div>
+          <div class="layui-input-inline j-width-90 j-margin-10">
+              <select name="ban_owner_id" xm-select="ban_owner_id">
+                  <option value="" >产别</option>
+                  {volist name="params['owners']" id="v"}
+                  <option value="{$key}">{$v}</option>
+                  {/volist}
+              </select>
+          </div>
 
-                <div class="layui-input-inline j-width-120 j-margin-10">
-                    <select name="house_use_id" xm-select="house_use_id">
-                        <option value="">使用性质</option>
-                        {volist name="params['uses']" id="v"}
-                        <option value="{$key}">{$v}</option>
-                        {/volist}
-                    </select>
-                </div>
-                <div class="layui-input-inline" style="width:120px;">
-                    <select name="invoice_id">
-                        <option value="">开票状态</option>
-                        <option value="1">已开票</option>
-                        <option value="2">未开票</option>
-                    </select>
-                </div>
-             
-                <div class="layui-input-inline" style="width:120px;">
-                    <select name="pay_way">
-                        <option value="">支付方式</option>
-                        <option value="1">现金支付</option>
-                        <option value="2">微信支付</option>
-                    </select>
-                </div>
-              
-                <div class="layui-input-inline j-input-margin" style="width:180px;">
-                    <input type="text" name="ptime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
-                </div> 
+          <div class="layui-input-inline j-width-120 j-margin-10">
+              <select name="house_use_id" xm-select="house_use_id">
+                  <option value="">使用性质</option>
+                  {volist name="params['uses']" id="v"}
+                  <option value="{$key}">{$v}</option>
+                  {/volist}
+              </select>
+          </div>
+          <div class="layui-input-inline" style="width:120px;">
+              <select name="invoice_id">
+                  <option value="">开票状态</option>
+                  <option value="1">已开票</option>
+                  <option value="2">未开票</option>
+              </select>
+          </div>
+       
+          <div class="layui-input-inline" style="width:120px;">
+              <select name="pay_way">
+                  <option value="">支付方式</option>
+                  <option value="1">现金支付</option>
+                  <option value="2">微信支付</option>
+              </select>
+          </div>
+          <div class="layui-input-inline j-width-110">
+            <select name="order_status">
+            <option value="">支付状态</option>
+            {volist name="params['order_status']" id="v"}
+            {if condition="$key != 3"}
+            <option value="{$key}">{$v}</option>
+            {/if}
+            {/volist}
+          </select>
+          <div class="layui-input-inline j-input-margin" style="width:180px;">
+              <input type="text" name="ptime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
+          </div> 
                
 			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="pay_openid" title="OPENID" placeholder="OPENID" class="layui-input">
@@ -95,15 +103,7 @@
 			  <!-- <div class="layui-input-inline layui-col-md2 j-input-margin j-width-110">
 			  	<input type="text" name="tel" title="手机号" placeholder="手机号" class="layui-input">
 			  </div> -->
-			  <div class="layui-input-inline j-width-110">
-			  		<select name="order_status">
-						<option value="">支付状态</option>
-						{volist name="params['order_status']" id="v"}
-						{if condition="$key != 3"}
-						<option value="{$key}">{$v}</option>
-						{/if}
-						{/volist}
-					</select>
+			  
 				  <!-- <select name="pay_state">
 					  <option value="">支付状态</option>
 					  <option value="1">已支付</option>
@@ -143,7 +143,7 @@
 	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
 {{# } }}
 {{# } }}
-	<a href="{:url('payDetail')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '532px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
+	<a href="{:url('payDetail')}?group=y&id={{ d.order_id }}" hisi-data="{width: '800px', height: '532px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
 <script type="text/javascript">
@@ -167,7 +167,7 @@
 			,defaultToolbar: ['filter'/*,'exports'*/,'print']//设置右边筛选，导出，打印显示
             ,url: '{:url()}?group=y' //数据接口
             ,page: true //开启分页
-			,limits: [10,20,30,40,50,100,300,500,1000,2000,5000]
+			,limits: [10,20,30,40,50,100,200]
             ,limit: 10
             ,text: {
                 none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
@@ -175,9 +175,9 @@
             ,cols: [[ //表头
                 {type:'checkbox'}
                 ,{field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
+                ,{field: 'tenant_name', minWidth: 160, hide: false, align:'center', title: '租户姓名'}
                 ,{field: 'house_number', width: 160, align:'center', title: '房屋编号'}
                 // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-			          ,{field: 'tenant_name', minWidth: 120, hide: false, align:'center', title: '租户姓名'}
                 
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
@@ -215,7 +215,7 @@
                     
                 }}
                 ,{field: 'ptime', width: 160, align:'center', title: '支付时间'}
-                ,{title: '操作', width: 180, align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', width: 180, align:'left', templet: '#buttonTpl',fixed:'right'}
             ]]
    //          ,
 			// data: [{

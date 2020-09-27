@@ -475,9 +475,9 @@ class ChangeCancel extends SystemBase
                         $HouseTaiModel->house_tai_type = 9;
                         $HouseTaiModel->cuid = $finalRow['cuid'];
                         if ($v['house_balance_deal_type'] == 1) {
-                            $HouseTaiModel->house_tai_remark = '注销后余额退款';
+                            $HouseTaiModel->house_tai_remark = '房屋注销，余额退款：-'.$v['house_balance'].'元';
                         } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
-                            $HouseTaiModel->house_tai_remark = '注销后余额追收';
+                            $HouseTaiModel->house_tai_remark = '房屋注销，余额追收：-'.$v['house_balance'].'元';
                         }
                         $HouseTaiModel->data_json = [];
                         $HouseTaiModel->change_type = 4;
