@@ -161,7 +161,7 @@
             }
             ,cols: [[ //表头
                 {type:'checkbox'}
-                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
+                
                 ,{field: 'ban_address', minWidth: 140, align:'center', title: '地址'}
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '充值机构', templet: function(d) {
                     return params.insts[d.ban_inst_id];
@@ -173,7 +173,7 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
-                
+                ,{field: 'house_number', minWidth: 140, align:'center', title: '房屋编号',  totalRowText: '合计'} 
                 ,{field: 'pay_way', minWidth: 100, align:'center', title: '收支方式', templet: function(d) {
                     return params.pay_way[d.pay_way];
                 }}

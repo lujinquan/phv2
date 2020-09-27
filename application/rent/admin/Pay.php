@@ -38,7 +38,7 @@ class Pay extends Admin
     {
         if ($this->request->isAjax()) {
             $getData = $this->request->get();
-            $group = isset($getData['group'])?$getData['group']:'y';
+            $group = isset($getData['group']) ? $getData['group'] : 'y';
 
             // switch ($group) {
             //     case 'y':
@@ -57,17 +57,17 @@ class Pay extends Admin
             if ($group == 'y') {
                 $page = input('param.page/d', 1);
                 $limit = input('param.limit/d', 10);
-                
+
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 //halt($where);
                 $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
-                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
 
                 //halt($temp);
                 $data['data'] = $temp;
-                $data['count'] = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->where($where)->count();//halt($data['data']);
+                $data['count'] = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->where($where)->count();//halt($data['data']);
                 $data['code'] = 0;
                 $data['msg'] = '';
                 return json($data);
@@ -76,15 +76,15 @@ class Pay extends Admin
                 $limit = input('param.limit/d', 10);
 
                 $RechargeModel = new RechargeModel;
-                $where = $RechargeModel->checkWhere($getData , $type = "pay");
+                $where = $RechargeModel->checkWhere($getData, $type = "pay");
                 //halt($where);
                 $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
-                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
-                $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
+                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
+                $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->count('a.id');
                 // 统计
-                $totalRow = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
-                if($totalRow){
+                $totalRow = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
+                if ($totalRow) {
                     $data['total_pay_rent'] = $totalRow['total_pay_rent'];
                 }
                 $data['code'] = 0;
@@ -92,9 +92,9 @@ class Pay extends Admin
                 //halt($data);
                 return json($data);
             }
-            
+
         }
-        $group = input('group','y');
+        $group = input('group', 'y');
         $tabData = [];
         $tabData['menu'] = [
             [
@@ -106,29 +106,29 @@ class Pay extends Admin
                 'url' => '?group=x',
             ]
         ];
-        $tabData['current'] = url('?group='.$group);
-        $this->assign('ban_number',input('param.ban_number',''));
-        $this->assign('group',$group);
+        $tabData['current'] = url('?group=' . $group);
+        $this->assign('ban_number', input('param.ban_number', ''));
+        $this->assign('group', $group);
         $this->assign('hisiTabData', $tabData);
         $this->assign('hisiTabType', 3);
 
-        $currExpirTime = time()-7200;
+        $currExpirTime = time() - 7200;
         // 删除过期的预支付订单
-        $prepay_orders = WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->field('out_trade_no')->select()->toArray();
-        if($prepay_orders){
+        $prepay_orders = WeixinOrderModel::where([['order_status', 'eq', 3], ['ctime', '<', $currExpirTime]])->field('out_trade_no')->select()->toArray();
+        if ($prepay_orders) {
             foreach ($prepay_orders as $key => $val) {
-                WeixinOrderTradeModel::where([['out_trade_no','eq',$val['out_trade_no']]])->delete();
+                WeixinOrderTradeModel::where([['out_trade_no', 'eq', $val['out_trade_no']]])->delete();
             }
-            WeixinOrderModel::where([['order_status','eq',3],['ctime','<',$currExpirTime]])->delete();
+            WeixinOrderModel::where([['order_status', 'eq', 3], ['ctime', '<', $currExpirTime]])->delete();
         }
-        
-        return $this->fetch('index_'.$group);
+
+        return $this->fetch('index_' . $group);
     }
 
     // 一键开票
     public function allDpkj()
     {
-        $weixin_id_undpkj = WeixinOrderModel::where([['order_status','eq',1],['invoice_id','eq',0]])->field('order_id')->select()->toArray();
+        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
         if (empty($weixin_id_undpkj)) {
             return $this->error('暂无需要开票的订单');
         }
@@ -140,14 +140,14 @@ class Pay extends Admin
             $InvoiceModel = new InvoiceModel;
             if (!$InvoiceModel->dpkj($id)) {
                 if ($i) {
-                    return $this->error($InvoiceModel->getError().',本次开具'.$i.'张发票！');
+                    return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
                 }
                 return $this->error($InvoiceModel->getError());
             } else {
                 $i++;
             }
         }
-        return $this->success('开票成功,本次开具'.$i.'张发票！') ;
+        return $this->success('开票成功,本次开具' . $i . '张发票！');
     }
 
     // 开票
@@ -156,12 +156,12 @@ class Pay extends Admin
         $group = input('group');
         $id = input('param.id');
         $InvoiceModel = new InvoiceModel;
-        if ($group == 'y') { 
-            return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
+        if ($group == 'y') {
+            return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功');
         } else {
-            return !$InvoiceModel->dpkj($id, $type = 2) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
+            return !$InvoiceModel->dpkj($id, $type = 2) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功');
         }
-                
+
     }
 
     // 一键同步发票，所有已开的发票，未下载到服务器的统一，一键下载
@@ -171,29 +171,29 @@ class Pay extends Admin
         //halt($group);
         // 获取所有需要下载pdf的数据
         $InvoiceModel = new InvoiceModel;
-        $allInvoice = $InvoiceModel->where([['pdfurl','neq',''],['local_pdfurl','eq','']])->select();
+        $allInvoice = $InvoiceModel->where([['pdfurl', 'neq', ''], ['local_pdfurl', 'eq', '']])->select();
 
         $i = 0;
         foreach ($allInvoice as $v) {
-            
+
             $url = $v['pdfurl'];
             $file = file_get_contents($url);
-            if(strlen($file) < 10000){ // 请求的不是正常pdf文件
+            if (strlen($file) < 10000) { // 请求的不是正常pdf文件
                 continue;
-            }else{
-                $dir = $_SERVER['DOCUMENT_ROOT'].'/upload/invoice/'.date('Ym');
-                if(!is_dir($dir)){
+            } else {
+                $dir = $_SERVER['DOCUMENT_ROOT'] . '/upload/invoice/' . date('Ym');
+                if (!is_dir($dir)) {
                     Dir::create($dir);
                     mkdir($dir, 0755, true);
                 }
-                file_put_contents($dir.'/'. $v['fpqqlsh'] .'.pdf', $file);
-                $loacl_pdfurl = '/upload/invoice/'.date('Ym').'/'. $v['fpqqlsh'] .'.pdf';
+                file_put_contents($dir . '/' . $v['fpqqlsh'] . '.pdf', $file);
+                $loacl_pdfurl = '/upload/invoice/' . date('Ym') . '/' . $v['fpqqlsh'] . '.pdf';
 
-                InvoiceModel::where([['invoice_id','eq',$v['invoice_id']]])->update(['local_pdfurl'=>$loacl_pdfurl]);
+                InvoiceModel::where([['invoice_id', 'eq', $v['invoice_id']]])->update(['local_pdfurl' => $loacl_pdfurl]);
                 $i++;
             }
         }
-        $this->success('下载成功，本次下载'.$i.'张发票！') ;
+        $this->success('下载成功，本次下载' . $i . '张发票！');
         //halt($allInvoice);
         // return !$InvoiceModel->dpkj($id) ? $this->error($InvoiceModel->getError()) : $this->success('开票成功') ;
     }
@@ -207,41 +207,41 @@ class Pay extends Admin
         //$getData = $this->request->get();
         $ids = input('id');
 
-        
+
         // $fields = 'member_id,tenant_id,member_name,real_name,tel,weixin_tel,avatar,openid,login_count,last_login_time,last_login_ip,is_show,create_time';
         $fileLists = [];
 
         // 下载缴费订单发票
-        if ($group == 'y') { 
-            $where[] = ['a.order_id','in',$ids];
-            $where[] = ['a.invoice_id','>',0];
-            $where[] = ['b.local_pdfurl','neq',''];
-            $temp = WeixinOrderModel::alias('a')->join('rent_invoice b','a.invoice_id = b.invoice_id','inner')->field('b.pdfurl,b.local_pdfurl')->where($where)->select()->toArray();
-        // 下载充值发票
+        if ($group == 'y') {
+            $where[] = ['a.order_id', 'in', $ids];
+            $where[] = ['a.invoice_id', '>', 0];
+            $where[] = ['b.local_pdfurl', 'neq', ''];
+            $temp = WeixinOrderModel::alias('a')->join('rent_invoice b', 'a.invoice_id = b.invoice_id', 'inner')->field('b.pdfurl,b.local_pdfurl')->where($where)->select()->toArray();
+            // 下载充值发票
         } else {
-            $where[] = ['a.id','in',$ids];
-            $where[] = ['a.invoice_id','>',0];
-            $where[] = ['b.local_pdfurl','neq',''];
-            $temp = RechargeModel::alias('a')->join('rent_invoice b','a.invoice_id = b.invoice_id','inner')->field('b.pdfurl,b.local_pdfurl')->where($where)->select()->toArray();
+            $where[] = ['a.id', 'in', $ids];
+            $where[] = ['a.invoice_id', '>', 0];
+            $where[] = ['b.local_pdfurl', 'neq', ''];
+            $temp = RechargeModel::alias('a')->join('rent_invoice b', 'a.invoice_id = b.invoice_id', 'inner')->field('b.pdfurl,b.local_pdfurl')->where($where)->select()->toArray();
         }
 
-        
+
         if (!$temp) {
-            $this->error('未找到发票，下载失败！') ;
+            $this->error('未找到发票，下载失败！');
         }
         foreach ($temp as $k => $v) {
             $fileLists[] = $_SERVER['DOCUMENT_ROOT'] . $v['local_pdfurl'];
         }
 
-        $random = date('YmdHis').random(10);
+        $random = date('YmdHis') . random(10);
 //halt($fileLists);
         // 压缩的文件夹
         // $path = 'D:/PHPTutorial/WWW/phv2/public/upload/pdf/';
         // $fileLists = ['D:/PHPTutorial/WWW/phv2/public/upload/pdf/2020-07-27-15-05-47.pdf'];
         // 压缩文件生成后所放的位置
-        $zipName = 'upload/'.$random.'.zip';
+        $zipName = 'upload/' . $random . '.zip';
         // 如果压缩文件不存在，就创建压缩文件
-        if (! is_file($zipName)) {
+        if (!is_file($zipName)) {
             $fp = fopen($zipName, 'w');
             fclose($fp);
         }
@@ -256,14 +256,14 @@ class Pay extends Admin
                 foreach ($fileLists as $f) {
                     $filename = basename($f);
                     if (is_file($f)) {
-                        $zip->addFile($f, $current.'/'.$filename);
+                        $zip->addFile($f, $current . '/' . $filename);
                     }
                 }
             }
             // 压缩目录
             //add_file_to_zip($path, $current, $zip);
             $zip->close();
-        }else {
+        } else {
             exit('下载失败！');
         }
         // 客户端下载时看到的文件名称
@@ -271,11 +271,11 @@ class Pay extends Admin
 
         //echo 'sd';
         // $this->success('下载成功！'.$zipName) ;
-        if (! download_file($zipName, $showName, $isOutput = false)) {
+        if (!download_file($zipName, $showName, $isOutput = false)) {
             return "<script>alert('下载失败！')</script>";
-        }else {
+        } else {
             $result = [];
-            $result['url'] = get_domain().'/'.$zipName;
+            $result['url'] = get_domain() . '/' . $zipName;
             $result['code'] = 0;
             $result['msg'] = '下载成功！';
             return json($result);
@@ -285,7 +285,7 @@ class Pay extends Admin
 
     /**
      * 功能描述：支付记录详情
-     * @author  Lucas 
+     * @author  Lucas
      * 创建时间: 2020-03-09 16:31:01
      */
     public function payDetail()
@@ -297,48 +297,48 @@ class Pay extends Admin
             //halt($id);
             $WeixinOrderModel = new WeixinOrderModel;
             $order_info = $WeixinOrderModel->with('weixinMember')->find($id)->toArray();
-            if($order_info['order_status'] == 2){ //如果状态是已退款
+            if ($order_info['order_status'] == 2) { //如果状态是已退款
                 $WeixinOrderRefundModel = new WeixinOrderRefundModel;
-                $order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
-                $this->assign('order_refund_info',$order_refund_info);
+                $order_refund_info = $WeixinOrderRefundModel->where([['order_id', 'eq', $id]])->find();
+                $this->assign('order_refund_info', $order_refund_info);
             }
-            if($order_info['invoice_id']){
-              $InvoiceModel = new InvoiceModel;
-              $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
-              if(!$invoice_info['local_pdfurl']){
-                $is_down = $InvoiceModel->down_loacl_pdfurl($order_info['invoice_id']);
-                if($is_down){
-                    $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+            if ($order_info['invoice_id']) {
+                $InvoiceModel = new InvoiceModel;
+                $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+                if (!$invoice_info['local_pdfurl']) {
+                    $is_down = $InvoiceModel->down_loacl_pdfurl($order_info['invoice_id']);
+                    if ($is_down) {
+                        $invoice_info = $InvoiceModel->find($order_info['invoice_id']);
+                    }
                 }
-              }
-              $this->assign('invoice_info',$invoice_info);
+                $this->assign('invoice_info', $invoice_info);
             }
             $WeixinOrderTradeModel = new WeixinOrderTradeModel;
-            $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+            $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no', 'eq', $order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
             $rent_order_ids = array_keys($rent_orders);
-            $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+            $houses = Db::name('rent_order')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->where([['a.rent_order_id', 'in', $rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
             foreach ($houses as $k => &$v) {
-                $v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+                $v['rent_order_date'] = substr($v['rent_order_date'], 0, 4) . '-' . substr($v['rent_order_date'], 4, 2);
                 $v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
             }
-            $this->assign('group',$group);
-            $this->assign('houses',$houses);
-            $this->assign('data_info',$order_info);
+            $this->assign('group', $group);
+            $this->assign('houses', $houses);
+            $this->assign('data_info', $order_info);
             //获取绑定的房屋数量
             // $WeixinMemberHouseModel = new WeixinMemberHouseModel;
             // $houselist = $WeixinMemberHouseModel->house_list($id);
             // $this->assign('houselist',$houselist);
         } else {
             $id = input('param.id/d');
-            $RechargeModel = new RechargeModel;      
+            $RechargeModel = new RechargeModel;
             $row = $RechargeModel->detail($id);
             // 如果是微信支付，则显示充值的微信会员
-            if($row['pay_way'] == 4){ 
+            if ($row['pay_way'] == 4) {
                 $member_name = '未知会员';
                 $avatar = '';
                 $weixin_tel = '';
-                $weixin_member_info = WeixinMemberModel::where([['member_id','eq',$row['member_id']]])->field('member_name,avatar,weixin_tel')->find();
-                if($weixin_member_info){
+                $weixin_member_info = WeixinMemberModel::where([['member_id', 'eq', $row['member_id']]])->field('member_name,avatar,weixin_tel')->find();
+                if ($weixin_member_info) {
                     $member_name = $weixin_member_info['member_name'];
                     $avatar = $weixin_member_info['avatar'];
                     $weixin_tel = $weixin_member_info['weixin_tel'];
@@ -348,15 +348,15 @@ class Pay extends Admin
                 $row['avatar'] = $avatar;
                 $row['weixin_tel'] = $weixin_tel;
             }
-            $this->assign('group',$group);
-            $this->assign('data_info',$row);
+            $this->assign('group', $group);
+            $this->assign('data_info', $row);
         }
         return $this->fetch();
     }
 
     /**
      * 功能描述：支付退款
-     * @author  Lucas 
+     * @author  Lucas
      * 创建时间: 2020-03-09 16:31:01
      */
     public function payRefund()
@@ -367,43 +367,43 @@ class Pay extends Admin
             if ($this->request->isPost()) {
                 $ref_description = input('ref_description');
                 $WeixinModel = new WeixinModel;
-                $refund_result = $WeixinModel->refundCreate($id ,$ref_description, $table = 'order');
-                return $refund_result?$this->success($refund_result):$this->error($WeixinModel->getError());
+                $refund_result = $WeixinModel->refundCreate($id, $ref_description, $table = 'order');
+                return $refund_result ? $this->success($refund_result) : $this->error($WeixinModel->getError());
             }
             $WeixinOrderModel = new WeixinOrderModel;
             $order_info = $WeixinOrderModel->with('weixinMember')->find($id);
             // 如果状态是已退款
-            if($order_info['order_status'] == 2){ 
+            if ($order_info['order_status'] == 2) {
                 $WeixinOrderRefundModel = new WeixinOrderRefundModel;
-                $order_refund_info = $WeixinOrderRefundModel->where([['order_id','eq',$id]])->find();
-                $this->assign('order_refund_info',$order_refund_info);
+                $order_refund_info = $WeixinOrderRefundModel->where([['order_id', 'eq', $id]])->find();
+                $this->assign('order_refund_info', $order_refund_info);
             }
             $WeixinOrderTradeModel = new WeixinOrderTradeModel;
-            $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
+            $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no', 'eq', $order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
             $rent_order_ids = array_keys($rent_orders);
-            $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+            $houses = Db::name('rent_order')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->where([['a.rent_order_id', 'in', $rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
             foreach ($houses as $k => &$v) {
-                $v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
+                $v['rent_order_date'] = substr($v['rent_order_date'], 0, 4) . '-' . substr($v['rent_order_date'], 4, 2);
                 $v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
             }
-            $this->assign('group',$group);
-            $this->assign('houses',$houses);
-            $this->assign('data_info',$order_info);
-            
+            $this->assign('group', $group);
+            $this->assign('houses', $houses);
+            $this->assign('data_info', $order_info);
+
         } else {
             $id = input('id');
             if ($this->request->isAjax()) {
                 $ref_description = input('ref_description');
                 $WeixinModel = new WeixinModel;
-                $refund_result = $WeixinModel->refundCreate($id ,$ref_description, $table = 'recharge');
-                return $refund_result?$this->success($refund_result):$this->error($WeixinModel->getError());
+                $refund_result = $WeixinModel->refundCreate($id, $ref_description, $table = 'recharge');
+                return $refund_result ? $this->success($refund_result) : $this->error($WeixinModel->getError());
             }
-            $recharge_info = RechargeModel::alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->join('weixin_member d','a.member_id = d.member_id','inner')->where([['a.id','eq',$id]])->find();
-            $this->assign('data_info',$recharge_info);
-            $this->assign('group',$group);
+            $recharge_info = RechargeModel::alias('a')->join('house b', 'a.house_id = b.house_id', 'inner')->join('ban c', 'b.ban_id = c.ban_id', 'inner')->join('weixin_member d', 'a.member_id = d.member_id', 'inner')->where([['a.id', 'eq', $id]])->find();
+            $this->assign('data_info', $recharge_info);
+            $this->assign('group', $group);
         }
         return $this->fetch();
-        
+
     }
 
 }
