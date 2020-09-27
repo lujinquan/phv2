@@ -427,7 +427,7 @@ class ChangeCancel extends SystemBase
                             $RechargeModel->tenant_id = $v['tenant_id'];
                             $RechargeModel->pay_rent = -$v['house_balance'];
                             $RechargeModel->yue = 0;
-                            $RechargeModel->pay_way = 2;
+                            $RechargeModel->pay_way = 1;
                             $RechargeModel->recharge_status = 1;
                             $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
@@ -440,7 +440,7 @@ class ChangeCancel extends SystemBase
                             $RechargeModel->tenant_id = $v['tenant_id'];
                             $RechargeModel->pay_rent = -$v['house_balance'];
                             $RechargeModel->yue = 0;
-                            $RechargeModel->pay_way = 2;
+                            $RechargeModel->pay_way = 1;
                             $RechargeModel->recharge_status = 1;
                             $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
@@ -474,9 +474,13 @@ class ChangeCancel extends SystemBase
                         $HouseTaiModel->tenant_id = $v['tenant_id'];
                         $HouseTaiModel->house_tai_type = 9;
                         $HouseTaiModel->cuid = $finalRow['cuid'];
-                        $HouseTaiModel->house_tai_remark = '注销余额生成的租金追加调整记录';
+                        if ($v['house_balance_deal_type'] == 1) {
+                            $HouseTaiModel->house_tai_remark = '注销后余额退款';
+                        } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
+                            $HouseTaiModel->house_tai_remark = '注销后余额追收';
+                        }
                         $HouseTaiModel->data_json = [];
-                        $HouseTaiModel->change_type = 11;
+                        $HouseTaiModel->change_type = 4;
                         $HouseTaiModel->change_id = $finalRow['id'];  
                         $HouseTaiModel->save();
                         # code...
@@ -566,7 +570,7 @@ class ChangeCancel extends SystemBase
                         $RechargeModel->tenant_id = $v['tenant_id'];
                         $RechargeModel->pay_rent = -$v['house_balance'];
                         $RechargeModel->yue = 0;
-                        $RechargeModel->pay_way = 2;
+                        $RechargeModel->pay_way = 1;
                         $RechargeModel->recharge_status = 1;
                         $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                         $RechargeModel->save();
@@ -579,7 +583,7 @@ class ChangeCancel extends SystemBase
                         $RechargeModel->tenant_id = $v['tenant_id'];
                         $RechargeModel->pay_rent = -$v['house_balance'];
                         $RechargeModel->yue = 0;
-                        $RechargeModel->pay_way = 2;
+                        $RechargeModel->pay_way = 1;
                         $RechargeModel->recharge_status = 1;
                         $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                         $RechargeModel->save();
@@ -607,15 +611,19 @@ class ChangeCancel extends SystemBase
                      
                     }
                  
-                    // 5、添加一条房屋余额注销台账
+                    // 5、添加一条房屋余额退款或追收台账
                     $HouseTaiModel = new HouseTaiModel;
                     $HouseTaiModel->house_id = $v['house_id'];
                     $HouseTaiModel->tenant_id = $v['tenant_id'];
                     $HouseTaiModel->house_tai_type = 9;
                     $HouseTaiModel->cuid = $finalRow['cuid'];
-                    $HouseTaiModel->house_tai_remark = '注销余额生成的租金追加调整记录';
+                    if ($v['house_balance_deal_type'] == 1) {
+                        $HouseTaiModel->house_tai_remark = '注销后余额退款';
+                    } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
+                        $HouseTaiModel->house_tai_remark = '注销后余额追收';
+                    }
                     $HouseTaiModel->data_json = [];
-                    $HouseTaiModel->change_type = 11;
+                    $HouseTaiModel->change_type = 4;
                     $HouseTaiModel->change_id = $finalRow['id'];  
                     $HouseTaiModel->save();
                     # code...
