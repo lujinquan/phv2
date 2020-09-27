@@ -2,10 +2,10 @@
 <div class="j-table-content j-no-tab">
 	<div class="layui-btn-container j-container-margin">
 	    <div class="layui-btn-container"> 
-	    {if condition="in_array(278,$auths) || $Think.ADMIN_ROLE == 1"}      
+	    	{if condition="in_array(278,$auths) || $Think.ADMIN_ROLE == 1"}      
 	        <a href="{:url('apply')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>注销申请</button></a>
+	        {/if}
 	    </div>
-	    {/if}
 	</div>
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url()}" method="get" id="hisi-table-search">

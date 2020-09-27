@@ -136,8 +136,8 @@
 	  		<td>{$v['house_lease_area']}</td>
 	  		<td>{$v['house_area']}</td>
 	  		<td>{$v['house_oprice']}</td>
-			<td>{$v['house_balance']}</td>
-			<td><input type="radio" disabled {if condition="$v['house_balance_deal_type'] == 1"}checked{/if} value="1" title="退款"><input type="radio" disabled  {if condition="$v['house_balance_deal_type'] == 2"}checked{/if} value="2" title="追收"></td>
+			<td>{if condition="isset($v['house_balance'])"}{$v['house_balance']}{/if}</td>
+			<td><input type="radio" disabled {if condition="isset($v['house_balance']) && $v['house_balance_deal_type'] == 1"}checked{/if} value="1" title="退款"><input type="radio" disabled  {if condition="isset($v['house_balance']) && $v['house_balance_deal_type'] == 2"}checked{/if} value="2" title="追收"></td>
 	  	</tr>
 	  	{/volist}
 	    <!-- <tr><td colspan='6'><div class='j-no-content'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无数据！</div></td></tr> -->

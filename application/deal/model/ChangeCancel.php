@@ -219,8 +219,8 @@ class ChangeCancel extends SystemBase
 				$houseDetail[$i]['house_area'] = $data['house_builtuparea'][$i]; // 建筑面积
 				$houseDetail[$i]['house_pre_rent'] = $data['house_prescribed'][$i]; // 规租
                 $houseDetail[$i]['house_lease_area'] = $data['house_rentalarea'][$i]; // 计租面积
-                $houseDetail[$i]['house_balance'] = $data['house_balance'][$i]; // 余额
-				$houseDetail[$i]['house_balance_deal_type'] = $data['house_balance_deal_type'][$i]; // 余额处理方式
+                $houseDetail[$i]['house_balance'] = isset($data['house_balance'][$i])?$data['house_balance'][$i]:0; // 余额
+				$houseDetail[$i]['house_balance_deal_type'] = isset($data['house_balance_deal_type'][$i])?$data['house_balance_deal_type'][$i]:0; // 余额处理方式
 			}
 			$data['data_json'] = $houseDetail;
 		}
@@ -416,55 +416,69 @@ class ChangeCancel extends SystemBase
                     ]);
 
                     // 如果房屋有余额，要处理房屋余额
-                    if ($v['house_balance'] > 0) {
+                    if (isset($v['house_balance']) && $v['house_balance'] > 0) {
+
                         // 退款
                         if ($v['house_balance_deal_type'] == 1) {
                             // 余额充负数
                             $RechargeModel = new RechargeModel;
-                            $RechargeModel->pay_number = $v['rent_order_number'];
+                            $RechargeModel->pay_number = date('YmdHis') . random(6);
                             $RechargeModel->house_id = $v['house_id'];
                             $RechargeModel->tenant_id = $v['tenant_id'];
                             $RechargeModel->pay_rent = -$v['house_balance'];
                             $RechargeModel->yue = 0;
                             $RechargeModel->pay_way = 2;
                             $RechargeModel->recharge_status = 1;
+                            $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
                         // 追收
-                        } else if ($v['house_balance_deal_type'] == 1) {
+                        } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
+                            // 余额充负数
+                            $RechargeModel = new RechargeModel;
+                            $RechargeModel->pay_number = date('YmdHis') . random(6);
+                            $RechargeModel->house_id = $v['house_id'];
+                            $RechargeModel->tenant_id = $v['tenant_id'];
+                            $RechargeModel->pay_rent = -$v['house_balance'];
+                            $RechargeModel->yue = 0;
+                            $RechargeModel->pay_way = 2;
+                            $RechargeModel->recharge_status = 1;
+                            $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
+                            $RechargeModel->save();
+
                             // 4、异动统计表中添加一条记录
                             $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
-                            $tableData = [];       
-                            $tableData['change_type'] = 12;
-                            $tableData['change_order_number'] = '';
-                            $tableData['house_id'] = $v['house_id'];;
-                            $tableData['ban_id'] = $finalRow['ban_id'];
-                            $tableData['inst_id'] = $banInfo['ban_inst_id'];
-                            $tableData['inst_pid'] = $banInfo['ban_inst_pid'];
-                            $tableData['owner_id'] = $banInfo['ban_owner_id'];
-                            $tableData['use_id'] = $houseInfo['house_use_id'];
-                            $tableData['change_month_rent'] = 0;
-                            $tableData['change_year_rent'] = $v['house_balance'];
-                            $tableData['change_rent'] = 0;
-                            $tableData['tenant_id'] = $v['tenant_id'];
-                            $tableData['cuid'] = $finalRow['cuid'];
-                            $tableData['order_date'] = date('Ym', strtotime( "first day of next month" ) ); 
-                            $ChangeTableModel = new ChangeTableModel;
-                            $ChangeTableModel->save($tableData);
-
                             
+                            $ChangeTableModel = new ChangeTableModel;   
+                            $ChangeTableModel->change_type = 12;
+                            $ChangeTableModel->change_order_number = '';
+                            $ChangeTableModel->house_id = $v['house_id'];
+                            $ChangeTableModel->ban_id = $finalRow['ban_id'];
+                            $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
+                            $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
+                            $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
+                            $ChangeTableModel->use_id = $v['house_use_id'];
+                            $ChangeTableModel->change_month_rent = 0;
+                            $ChangeTableModel->change_year_rent = $v['house_balance'];
+                            $ChangeTableModel->change_rent = 0;
+                            $ChangeTableModel->tenant_id = $v['tenant_id'];
+                            $ChangeTableModel->cuid = $finalRow['cuid'];
+                            $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
+                            $ChangeTableModel->save();
+
+                         
                         }
+                     
                         // 5、添加一条房屋余额注销台账
-                        $taiHouseData = [];
-                        $taiHouseData['house_id'] = $v['house_id'];
-                        $taiHouseData['tenant_id'] = $v['tenant_id'];
-                        $taiHouseData['house_tai_type'] = 9;
-                        $taiHouseData['cuid'] = $finalRow['cuid'];
-                        $taiHouseData['house_tai_remark'] = '注销余额生成的租金追加调整记录';
-                        $taiHouseData['data_json'] = [];
-                        $taiHouseData['change_type'] = 11;
-                        $taiHouseData['change_id'] = $finalRow['id'];
                         $HouseTaiModel = new HouseTaiModel;
-                        $HouseTaiModel->allowField(true)->create($taiHouseData);
+                        $HouseTaiModel->house_id = $v['house_id'];
+                        $HouseTaiModel->tenant_id = $v['tenant_id'];
+                        $HouseTaiModel->house_tai_type = 9;
+                        $HouseTaiModel->cuid = $finalRow['cuid'];
+                        $HouseTaiModel->house_tai_remark = '注销余额生成的租金追加调整记录';
+                        $HouseTaiModel->data_json = [];
+                        $HouseTaiModel->change_type = 11;
+                        $HouseTaiModel->change_id = $finalRow['id'];  
+                        $HouseTaiModel->save();
                         # code...
                     }
                     // 将涉及的所有房屋绑定的房间改成2
@@ -539,6 +553,74 @@ class ChangeCancel extends SystemBase
                     'house_status' => 2,
                     'house_dtime' => time(),
                 ]);
+
+                // 如果房屋有余额，要处理房屋余额
+                if (isset($v['house_balance']) && $v['house_balance'] > 0) {
+
+                    // 退款
+                    if ($v['house_balance_deal_type'] == 1) {
+                        // 余额充负数
+                        $RechargeModel = new RechargeModel;
+                        $RechargeModel->pay_number = date('YmdHis') . random(6);
+                        $RechargeModel->house_id = $v['house_id'];
+                        $RechargeModel->tenant_id = $v['tenant_id'];
+                        $RechargeModel->pay_rent = -$v['house_balance'];
+                        $RechargeModel->yue = 0;
+                        $RechargeModel->pay_way = 2;
+                        $RechargeModel->recharge_status = 1;
+                        $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
+                        $RechargeModel->save();
+                    // 追收
+                    } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
+                        // 余额充负数
+                        $RechargeModel = new RechargeModel;
+                        $RechargeModel->pay_number = date('YmdHis') . random(6);
+                        $RechargeModel->house_id = $v['house_id'];
+                        $RechargeModel->tenant_id = $v['tenant_id'];
+                        $RechargeModel->pay_rent = -$v['house_balance'];
+                        $RechargeModel->yue = 0;
+                        $RechargeModel->pay_way = 2;
+                        $RechargeModel->recharge_status = 1;
+                        $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
+                        $RechargeModel->save();
+
+                        // 4、异动统计表中添加一条记录
+                        $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
+                        
+                        $ChangeTableModel = new ChangeTableModel;   
+                        $ChangeTableModel->change_type = 12;
+                        $ChangeTableModel->change_order_number = '';
+                        $ChangeTableModel->house_id = $v['house_id'];
+                        $ChangeTableModel->ban_id = $finalRow['ban_id'];
+                        $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
+                        $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
+                        $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
+                        $ChangeTableModel->use_id = $v['house_use_id'];
+                        $ChangeTableModel->change_month_rent = 0;
+                        $ChangeTableModel->change_year_rent = $v['house_balance'];
+                        $ChangeTableModel->change_rent = 0;
+                        $ChangeTableModel->tenant_id = $v['tenant_id'];
+                        $ChangeTableModel->cuid = $finalRow['cuid'];
+                        $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
+                        $ChangeTableModel->save();
+
+                     
+                    }
+                 
+                    // 5、添加一条房屋余额注销台账
+                    $HouseTaiModel = new HouseTaiModel;
+                    $HouseTaiModel->house_id = $v['house_id'];
+                    $HouseTaiModel->tenant_id = $v['tenant_id'];
+                    $HouseTaiModel->house_tai_type = 9;
+                    $HouseTaiModel->cuid = $finalRow['cuid'];
+                    $HouseTaiModel->house_tai_remark = '注销余额生成的租金追加调整记录';
+                    $HouseTaiModel->data_json = [];
+                    $HouseTaiModel->change_type = 11;
+                    $HouseTaiModel->change_id = $finalRow['id'];  
+                    $HouseTaiModel->save();
+                    # code...
+                }
+
                 // 将涉及的所有房屋绑定的房间改成2
                 Db::name('house_room')->where([['house_id','eq',$v['house_id']]])->update(['house_room_status'=>2]);
                 //如果有暂停计租，则需要让暂停计租失效
@@ -556,24 +638,24 @@ class ChangeCancel extends SystemBase
                 $taiHouseData[$k]['change_type'] = 8;
                 $taiHouseData[$k]['change_id'] = $finalRow['id'];
 
-                if($v['house_use_id'] == 1){ // 住宅
-                    $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);
-                    $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
-                    $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
-                    $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
-                    $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
-                }else if($v['house_use_id'] == 2){ // 企业
-                    $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
-                    $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
-                    $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
-                    $changeBanData['ban_career_holds'] = Db::raw('ban_career_holds-1');
-                }else{ // 机关
-                    $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
-                    $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
-                    $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
-                    $changeBanData['ban_party_holds'] = Db::raw('ban_party_holds-1');
-                }
-                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
+                // if($v['house_use_id'] == 1){ // 住宅
+                //     $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);
+                //     $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
+                //     $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
+                //     $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
+                //     $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
+                // }else if($v['house_use_id'] == 2){ // 企业
+                //     $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
+                //     $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
+                //     $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
+                //     $changeBanData['ban_career_holds'] = Db::raw('ban_career_holds-1');
+                // }else{ // 机关
+                //     $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
+                //     $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
+                //     $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
+                //     $changeBanData['ban_party_holds'] = Db::raw('ban_party_holds-1');
+                // }
+                // BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
          
                 // 添加统计报表记录
                 $tableData[$k]['change_type'] = 8;

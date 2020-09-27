@@ -144,7 +144,7 @@
 					<td class="house_builtuparea"><input type="number" class="layui-input" name="house_builtuparea[{$key}]" value="{$v['house_area']}"></td>
 					<td class="house_original"><input type="number" class="layui-input" readonly name="house_original[{$key}]" value="{$v['house_oprice']}"></td>
 					<td class="house_balance"><input type="hidden" name="house_balance[{$key}]" value="{$v['house_balance']}">{$v['house_balance']}</td>
-					<td class="house_balance_deal_type"><input type="radio" name="house_balance_deal_type[{$key}]"  {if condition="$v['house_balance_deal_type'][$key] == 1"}checked{/if} value="1" title="退款"><input type="radio" name="house_balance_deal_type[{$key}]" {if condition="$v['house_balance_deal_type'][$key] == 2"}checked{/if} value="2" title="追收"></td>
+					<td class="house_balance_deal_type"><input type="radio" name="house_balance_deal_type[{$key}]"  {if condition="$v['house_balance_deal_type'] == 1"}checked{/if} value="1" title="退款"><input type="radio" name="house_balance_deal_type[{$key}]" {if condition="$v['house_balance_deal_type'] == 2"}checked{/if} value="2" title="追收"></td>
 					<td class="house_delete"><label class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>
 				</tr>
 				{/volist}
@@ -697,7 +697,7 @@
 								$('.cancel_after_5 label').text(0);
 								$('.cancel_after_5 input').val(0);
 								initialvalue();
-								// computation();
+								computation();
 								layer.close(index);
 							}
 							else{
@@ -744,10 +744,13 @@
 											<td class="house_rentalarea"><input type="hidden" name="house_rentalarea['+i+']" value="'+rows[i].house_lease_area+'">'+rows[i].house_lease_area+'</td>\
 											<td class="house_builtuparea"><input type="number" min="0" class="layui-input" lay-verify="required" name="house_builtuparea['+i+']" value="'+rows[i].house_area+'"></td>\
 											<td class="house_original"><input type="number" readonly min="0" class="layui-input" lay-verify="required" name="house_original['+i+']" value=""></td>\
+											<td class="house_balance"><input type="hidden" name="house_balance['+i+']" value="'+rows[i].house_balance+'">'+rows[i].house_balance+'</td>\
+											<td class="house_balance_deal_type"><input type="radio" name="house_balance_deal_type['+i+']"  value="1" title="退款" checked><input type="radio" name="house_balance_deal_type['+i+']" value="2" title="追收"></td>\
 											<td class="house_delete"><label  class="layui-btn layui-btn-xs layui-btn-danger">删除</label></td>\
 										</tr>';
 						    initialvalue();
 							$('.j-house-box tbody').append(trData);
+							form.render();
 							computation();
 						  }
 						 //  houseidData = houseidData.replace(/^(\s|,)+|(\s|,)+$/g, '');
