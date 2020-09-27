@@ -16,7 +16,7 @@
 	     </div>
 	 </div>
  <div class="page-toolbar j-page-toolbar clearfix">
-        <form class="layui-form layui-form-pane" action="{url('index')}" method="get" id="hisi-table-search">
+        <form class="layui-form layui-form-pane" action="{url('index')}?group=x" method="get" id="hisi-table-search">
             <div class="j-search-fl layui-col-md8  fl">
                 {if condition="in_array('house_number',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline j-input-margin" style="width:160px;">
@@ -65,6 +65,21 @@
                     </select>
                 </div>
                 {/if}
+                <div class="layui-input-inline" style="width:120px;">
+                    <select name="invoice_id">
+                        <option value="">开票状态</option>
+                        <option value="1">已开票</option>
+                        <option value="2">未开票</option>
+                    </select>
+                </div>
+             
+                <!-- <div class="layui-input-inline" style="width:120px;">
+                    <select name="pay_way">
+                        <option value="">支付方式</option>
+                        <option value="1">现金支付</option>
+                        <option value="2">微信支付</option>
+                    </select>
+                </div> -->
                 {if condition="in_array('pay_way',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline" style="width:120px;">
                     <select name="pay_way">
@@ -74,15 +89,10 @@
                         {/volist}
                     </select>
                 </div>
-                {/if} 
-                {if condition="in_array('pay_rent',$config['rent_recharge_info_search'])"}
-                <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="pay_rent" title="金额" placeholder="金额" class="layui-input">
-                </div>
                 {/if}
                 {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline j-input-margin" style="width:180px;">
-                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
+                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
                 </div> 
                 {/if}
             </div>
@@ -109,7 +119,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {{#  if (parseFloat(d.pay_rent) > 0) { }}
+    {{#  if (d.trade_type == 'JSAPI' || d.trade_type == 'NATIVE') { }}
     {{#  if (d.invoice_id <= 0) { }}
         <a href="{:url('dpkj')}?group=x&id={{ d.id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
     {{# }else{ }}

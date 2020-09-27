@@ -366,7 +366,7 @@ class Rent extends Model
                     if($yue >= 0){ //如果余额充足
 
                         // 模拟线上支付
-                        if ( true ) {
+                        if ( false ) {
                             $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
                             //halt($user_info);
                             if (empty($user_info['weixin_member_id'])) {
@@ -526,7 +526,7 @@ class Rent extends Model
         $row = $this->find($id);
 
         // 模拟线上支付
-        if ( true ) {
+        if ( false ) {
             $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
             //halt($user_info);
             if (empty($user_info['weixin_member_id'])) {
@@ -926,7 +926,7 @@ class Rent extends Model
         $now_date =  date('Ym');
 
         // 模拟线上支付
-        if ( true ) {
+        if ( false ) {
             $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
             //halt($user_info);
             if (empty($user_info['weixin_member_id'])) {

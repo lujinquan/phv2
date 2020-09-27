@@ -54,23 +54,63 @@ class WeixinOrder extends Model
         }
         // 检索订单编号
         if(isset($data['out_trade_no']) && $data['out_trade_no']){
-            $where[] = ['out_trade_no','like','%'.$data['out_trade_no'].'%'];
+            $where[] = ['a.out_trade_no','like','%'.$data['out_trade_no'].'%'];
         }
         // 检索产别
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
-            $where[] = ['e.ban_owner_id','eq',$data['ban_owner_id']];
+            $where[] = ['e.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
         // 检索使用权变更
         if(isset($data['house_use_id']) && $data['house_use_id']){
-            $where[] = ['d.house_use_id','eq',$data['house_use_id']];
+            $where[] = ['d.house_use_id','in',explode(',',$data['house_use_id'])];
         }
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['d.house_number','like','%'.$data['house_number'].'%'];
         }
+        // 检索房屋编号
+        if(isset($data['ban_address']) && $data['ban_address']){
+            $where[] = ['e.ban_address','like','%'.$data['ban_address'].'%'];
+        }
         // 检索租户姓名
         if(isset($data['tenant_name']) && $data['tenant_name']){
             $where[] = ['f.tenant_name','like','%'.$data['tenant_name'].'%'];
+        }
+        // 检索租户姓名
+        if(isset($data['pay_way']) && $data['pay_way']){
+            if ($data['pay_way'] == 1) { // 现金支付
+                $where[] = ['a.trade_type','in',['CASH']];
+            } else if($data['pay_way'] == 2){ // 微信支付
+                $where[] = ['a.trade_type','in',['JSAPI','NATIVE']];
+            }
+           
+        }
+        // 检索开票状态
+        if(isset($data['invoice_id']) && $data['invoice_id']){
+            if ($data['invoice_id'] == 1) { // 现金支付
+                $where[] = ['a.invoice_id','eq',0];
+            } else if($data['invoice_id'] == 2){ // 微信支付
+                $where[] = ['a.invoice_id','>',0];
+            }
+           
+        }
+        // 检索【收欠】支付时间
+        if(isset($data['ptime']) && $data['ptime']){
+            $startTime = strtotime(substr($data['ptime'],0,10));
+            $endTime = strtotime(substr($data['ptime'],-10));
+            $where[] = ['a.ptime','between',[$startTime,$endTime]];
+        }
+        if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
+            $insts = explode(',',$data['ban_inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['e.ban_inst_id','in',array_unique($instid_arr)];
+        }else{
+            $where[] = ['e.ban_inst_id','in',config('inst_ids')[INST]];
         }
         // // 检索真实姓名
         // if(isset($data['real_name']) && $data['real_name']){

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-title">
 	 <div class="j-table-content j-no-tab">
 	 <div class="layui-btn-container j-container-margin">
@@ -23,13 +24,13 @@
 			  <div class="layui-input-inline j-input-margin j-width-300">
 				  <input type="text" name="out_trade_no" title="支付订单编号" placeholder="支付订单编号" class="layui-input">
 			  </div>
-			  <div class="layui-input-inline j-input-margin" style="width:160px;">
+			   <div class="layui-input-inline j-input-margin" style="width:160px;">
                     <input type="text" name="house_number" title="房屋编号" placeholder="房屋编号" class="layui-input">
               </div>
               <div class="layui-input-inline j-input-margin" style="width:120px;">
                     <input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
                 </div>
-			  {if condition="INST_LEVEL != 3"}
+			         {if condition="INST_LEVEL != 3"}
                 <div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
                     <select name="ban_inst_id" xm-select="ban_inst_id">
                         <option value="" disabled="disabled">机构</option>
@@ -39,6 +40,9 @@
                     </select>
                 </div>
                 {/if}
+                <div class="layui-input-inline j-input-margin j-width-300">
+                  <input type="text" name="ban_address" title="地址" placeholder="地址" class="layui-input">
+                </div>
                 <div class="layui-input-inline j-width-90 j-margin-10">
                     <select name="ban_owner_id" xm-select="ban_owner_id">
                         <option value="" >产别</option>
@@ -47,7 +51,7 @@
                         {/volist}
                     </select>
                 </div>
-                {if condition="in_array('house_use_id',$config['rent_recharge_info_search'])"}
+
                 <div class="layui-input-inline j-width-120 j-margin-10">
                     <select name="house_use_id" xm-select="house_use_id">
                         <option value="">使用性质</option>
@@ -56,27 +60,26 @@
                         {/volist}
                     </select>
                 </div>
-                {/if}
-                {if condition="in_array('pay_way',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline" style="width:120px;">
-                    <select name="pay_way">
-                        <option value="">收支方式</option>
-                        {volist name="params['pay_way']" id="v"}
-                        <option value="{$key}">{$v}</option>
-                        {/volist}
+                    <select name="invoice_id">
+                        <option value="">开票状态</option>
+                        <option value="1">已开票</option>
+                        <option value="2">未开票</option>
                     </select>
                 </div>
-                {/if} 
-                {if condition="in_array('pay_rent',$config['rent_recharge_info_search'])"}
-                <div class="layui-input-inline j-input-margin" style="width:120px;">
-                    <input type="text" name="pay_rent" title="金额" placeholder="金额" class="layui-input">
+             
+                <div class="layui-input-inline" style="width:120px;">
+                    <select name="pay_way">
+                        <option value="">支付方式</option>
+                        <option value="1">现金支付</option>
+                        <option value="2">微信支付</option>
+                    </select>
                 </div>
-                {/if}
-                {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
+              
                 <div class="layui-input-inline j-input-margin" style="width:180px;">
-                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
+                    <input type="text" name="ptime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
                 </div> 
-                {/if}
+               
 			  <!-- <div class="layui-input-inline j-input-margin j-width-100">
 			  	  <input type="text" name="pay_openid" title="OPENID" placeholder="OPENID" class="layui-input">
 			  </div> -->
@@ -124,6 +127,7 @@
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
+{{#  if (d.trade_type != 'CASH') { }}
 {{#  if (d.order_status == 1) { }}
 {{#  if (d.invoice_id <= 0) { }}
 	<a href="{:url('dpkj')}?group=y&id={{ d.order_id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
@@ -138,14 +142,24 @@
 {{# }else{ }}
 	<a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
 {{# } }}
+{{# } }}
 	<a href="{:url('payDetail')}?id={{ d.order_id }}" hisi-data="{width: '800px', height: '532px',refresh: 2}" title="支付记录详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery','layer','laydate'], function() {
+    layui.use(['table','jquery','layer','formSelects','laydate'], function() {
         var table = layui.table
 		    ,$ = layui.$
-			,laydate = layui.laydate;
+			,laydate = layui.laydate
+      ,formSelects = layui.formSelects;
+
+      //日期范围
+        laydate.render({
+            elem: '#test6'
+            //,range: true
+            ,range: '~'
+        });
+
        table.render({
             elem: '#dataTable'
 			// ,height: 330
@@ -163,7 +177,7 @@
                 ,{field: 'out_trade_no', minWidth: 200, align:'center', title: '支付订单编号'}
                 ,{field: 'house_number', width: 160, align:'center', title: '房屋编号'}
                 // ,{field: 'weixin_url', minWidth: 110, align:'center', title: '图像地址',hide: true}
-			    ,{field: 'tenant_name', minWidth: 120, hide: false, align:'center', title: '租户姓名'}
+			          ,{field: 'tenant_name', minWidth: 120, hide: false, align:'center', title: '租户姓名'}
                 
                 ,{field: 'ban_inst_id', minWidth: 120, hide:isShowInst, align:'center', title: '管段', templet: function(d) {
                     return params.insts[d.ban_inst_id];
@@ -181,7 +195,16 @@
                 ,{field: 'weixin_username', minWidth: 120, align:'center', title: '支付用户',templet: function(d){
                		return '<div class="j-user"><img src="'+d.avatar+'" alt="" width="28px" height="28px"></a>  ' + d.member_name + '</div>';
                 }}
-                ,{field: 'trade_type', minWidth: 200, align:'center', title: '支付方式'}
+                ,{field: 'trade_type', minWidth: 200, align:'center', title: '支付方式', templet:function(d){
+                    if(d.trade_type == 'CASH'){
+                      return '现金支付';
+                    }else if(d.trade_type == 'JSAPI'){
+                      return '微信支付';
+                    }else if(d.trade_type == 'NATIVE'){
+                      return '微信支付';
+                    }
+                    
+                }}
 				//,{field: 'transaction_id', width: 260, align:'center', title: '交易编号'}
                 ,{field: 'order_status', align:'center',width:120, title: '支付状态', templet:function(d){
                 	//if(parseInt(d.order_status) == 1){

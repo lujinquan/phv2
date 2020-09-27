@@ -67,10 +67,32 @@ class Recharge extends Model
         if(isset($data['pay_way']) && $data['pay_way']){
             $where[] = ['a.pay_way','eq',$data['pay_way']];
         }
+        // 检索租户姓名
+        // if(isset($data['pay_way']) && $data['pay_way']){
+        //     if ($data['pay_way'] == 1) { // 现金支付
+        //         $where[] = ['a.trade_type','in',['CASH']];
+        //     } else if($data['pay_way'] == 2){ // 微信支付
+        //         $where[] = ['a.trade_type','in',['JSAPI','NATIVE']];
+        //     }
+           
+        // }
+        // 检索开票状态
+        if(isset($data['invoice_id']) && $data['invoice_id']){
+            if ($data['invoice_id'] == 1) { // 现金支付
+                $where[] = ['a.invoice_id','eq',0];
+            } else if($data['invoice_id'] == 2){ // 微信支付
+                $where[] = ['a.invoice_id','>',0];
+            }
+           
+        }
         // 检索【收欠】支付时间
         if(isset($data['ctime']) && $data['ctime']){
             $startTime = strtotime(substr($data['ctime'],0,10));
             $endTime = strtotime(substr($data['ctime'],-10));
+            $where[] = ['a.ctime','between',[$startTime,$endTime]];
+        }else{
+            $startTime = strtotime(date('Y-m'));
+            $endTime = strtotime(date('Y-m', strtotime( "first day of next month" ) ));
             $where[] = ['a.ctime','between',[$startTime,$endTime]];
         }
         // 检索机构

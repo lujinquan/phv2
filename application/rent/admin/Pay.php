@@ -61,7 +61,7 @@ class Pay extends Admin
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 //halt($where);
-                $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_re_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
                 $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b','a.out_trade_no = b.out_trade_no','left')->join('rent_order c','b.rent_order_id = c.rent_order_id','left')->join('house d','c.house_id = d.house_id','left')->join('ban e','d.ban_id = e.ban_id','left')->join('tenant f','c.tenant_id = f.tenant_id','left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
                 //halt($temp);
