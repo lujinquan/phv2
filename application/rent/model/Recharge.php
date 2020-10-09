@@ -67,7 +67,7 @@ class Recharge extends Model
             if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
             }else{
-                $where[] = ['a.pay_way','in',['1','3']];
+                $where[] = ['a.pay_way','in',['4']];
             }
             
         }else{
@@ -138,7 +138,7 @@ class Recharge extends Model
 
     public function detail($id)
     {
-        $fields = "a.id,a.house_id,a.tenant_id,a.pay_number,a.member_id,a.out_trade_no,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime,'%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,c.tenant_id,c.tenant_name,c.tenant_card,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $fields = "a.id,a.house_id,a.tenant_id,a.pay_number,a.member_id,a.out_trade_no,a.invoice_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime,'%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,c.tenant_id,c.tenant_name,c.tenant_card,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id";
         $row = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['id','eq',$id]])->find();
         return $row;
     }

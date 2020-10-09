@@ -337,7 +337,7 @@ class Rent extends Model
     public function autopayList($ids = '')
     {   
         // 暂不支持批量扣缴
-        return false;
+        // return false;
 
         $ji = 0;
         // 如果选择了多个房屋，就按照房屋处理租金订单
@@ -348,8 +348,10 @@ class Rent extends Model
             $date = date('Ym');
             $where = [];
             $where[] = ['is_deal','eq',0];
+            $where[] = ['rent_order_date','eq',$date];
+            $where[] = ['rent_order_status','eq',1];
             // $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
-            $where[] = ['b.house_number','eq','10050010140001'];
+            //$where[] = ['b.house_number','eq','10050010140001'];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[3]];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,a.house_id,a.tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->select()->toArray();
 

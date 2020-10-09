@@ -309,7 +309,7 @@ class Rent extends Admin
 
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
 
-            //$curMonth = '2020-08';
+            
 
             $query_month = str_replace('-','',$curMonth);
             $tempData = @file_get_contents(ROOT_PATH.'file/report/paid/'.$query_month.'.txt');
@@ -390,9 +390,10 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
             
-            //$curMonth = '2020-07'; // 自定义报表生成的月份
+            // $curMonth = '2020-09'; // 自定义报表生成的月份
             
             $nextMonth = date('Y-m',strtotime('1 month'));
+            // $nextMonth = '2020-10';
             $month = str_replace('-','',$curMonth);
             $params = ParamModel::getCparams();
             $separate = substr($month,0,4).'00';
@@ -556,7 +557,7 @@ class Rent extends Admin
     {
         if ($this->request->isAjax()) {
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
-            //$curMonth = '2020-08';
+            // $curMonth = '2020-09';
             $month = str_replace('-','',$curMonth);
             $ReportModel = new ReportModel;
             $data = $ReportModel->getPrePaidRent($curMonth);

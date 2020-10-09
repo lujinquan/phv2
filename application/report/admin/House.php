@@ -160,10 +160,10 @@ class House extends Admin
      */
     public function makeMonthPropertysReport()
     {
-        if ($this->request->isAjax()) {
+        // if ($this->request->isAjax()) {
 
             $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-            
+           
             $full_date = substr_replace($date,'-',4,0);
 
             //检查上月的报表是否生成
@@ -200,7 +200,7 @@ class House extends Admin
             $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
             $data['code'] = 1;
             return json($data);
-        }
+        // }
     }
 
     /**

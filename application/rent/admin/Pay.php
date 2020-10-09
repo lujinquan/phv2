@@ -63,11 +63,16 @@ class Pay extends Admin
                 //halt($where);
                 $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
-                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->distinct(true)->select()->toArray();
 
                 //halt($temp);
                 $data['data'] = $temp;
-                $data['count'] = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->where($where)->count();//halt($data['data']);
+
+                $all = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field('a.order_id')->where($where)->distinct(true)->column('a.pay_money');
+                $data['total_pay_money'] = array_sum($all);
+                $data['count'] = count($all);//halt($data['data']);
+
+                //$data['count'] = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->where($where)->count();//halt($data['data']);
                 $data['code'] = 0;
                 $data['msg'] = '';
                 return json($data);
@@ -78,7 +83,7 @@ class Pay extends Admin
                 $RechargeModel = new RechargeModel;
                 $where = $RechargeModel->checkWhere($getData, $type = "pay");
                 //halt($where);
-                $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
                 $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->count('a.id');
@@ -128,25 +133,53 @@ class Pay extends Admin
     // 一键开票
     public function allDpkj()
     {
-        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
-        if (empty($weixin_id_undpkj)) {
-            return $this->error('暂无需要开票的订单');
-        }
-        //halt($weixin_id_undpkj);
-        $i = 0;
-        foreach ($weixin_id_undpkj as $id) {
-            // 每5秒执行一次
-            // sleep(5);
-            $InvoiceModel = new InvoiceModel;
-            if (!$InvoiceModel->dpkj($id)) {
-                if ($i) {
-                    return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+        $group = input('group');
+        if ($group== 'y') {
+            $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
+
+            if (empty($weixin_id_undpkj)) {
+                return $this->error('暂无需要开票的订单');
+            }
+            $i = 0;
+            foreach ($weixin_id_undpkj as $v) {
+                // 每5秒执行一次
+                // sleep(5);
+                $InvoiceModel = new InvoiceModel;
+                if (!$InvoiceModel->dpkj($v['order_id'])) {
+                    if ($i) {
+                        return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+                    }
+                    return $this->error($InvoiceModel->getError());
+                } else {
+                    $i++;
                 }
-                return $this->error($InvoiceModel->getError());
-            } else {
-                $i++;
+            }
+        } else{
+            $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0]])->field('id')->select()->toArray();
+
+            if (empty($weixin_id_undpkj)) {
+                return $this->error('暂无需要开票的订单');
+            }
+            //halt($weixin_id_undpkj);
+            $i = 0;
+            foreach ($weixin_id_undpkj as $v) {
+                // 每5秒执行一次
+                // sleep(5);
+                $InvoiceModel = new InvoiceModel;
+                if (!$InvoiceModel->dpkj($v['id'] ,$type = 2)) {
+                    if ($i) {
+                        return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+                    }
+                    return $this->error($InvoiceModel->getError());
+                } else {
+                    $i++;
+                }
             }
         }
+        
+        
+        
+        
         return $this->success('开票成功,本次开具' . $i . '张发票！');
     }
 
@@ -347,6 +380,17 @@ class Pay extends Admin
                 $row['member_name'] = $member_name;
                 $row['avatar'] = $avatar;
                 $row['weixin_tel'] = $weixin_tel;
+            }
+            if ($row['invoice_id']) {
+                $InvoiceModel = new InvoiceModel;
+                $invoice_info = $InvoiceModel->find($row['invoice_id']);
+                if (!$invoice_info['local_pdfurl']) {
+                    $is_down = $InvoiceModel->down_loacl_pdfurl($row['invoice_id']);
+                    if ($is_down) {
+                        $invoice_info = $InvoiceModel->find($row['invoice_id']);
+                    }
+                }
+                $this->assign('invoice_info', $invoice_info);
             }
             $this->assign('group', $group);
             $this->assign('data_info', $row);

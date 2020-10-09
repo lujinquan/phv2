@@ -88,18 +88,25 @@ class WeixinOrder extends Model
         // 检索开票状态
         if(isset($data['invoice_id']) && $data['invoice_id']){
             if ($data['invoice_id'] == 1) { // 现金支付
-                $where[] = ['a.invoice_id','eq',0];
-            } else if($data['invoice_id'] == 2){ // 微信支付
                 $where[] = ['a.invoice_id','>',0];
+            } else if($data['invoice_id'] == 2){ // 微信支付
+                $where[] = ['a.invoice_id','eq',0];
             }
            
         }
+
         // 检索【收欠】支付时间
         if(isset($data['ptime']) && $data['ptime']){
             $startTime = strtotime(substr($data['ptime'],0,10));
             $endTime = strtotime(substr($data['ptime'],-10));
             $where[] = ['a.ptime','between',[$startTime,$endTime]];
         }
+        if(!isset($data['ptime'])){
+            $startTime = strtotime(date('Y-m').'-01');
+            $endTime = strtotime(date( "Y-m", strtotime( "first day of next month" ) ).'-01');
+            $where[] = ['a.ptime','between',[$startTime,$endTime]];
+        }
+
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);
             $instid_arr = [];

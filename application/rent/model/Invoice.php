@@ -2,6 +2,7 @@
 
 namespace app\rent\model;
 
+use hisi\Dir;
 use think\Db;
 use think\Model;
 use hisi\Http;
@@ -28,6 +29,7 @@ class Invoice extends Model
     // 接口地址
     //protected $url = "http://124.205.255.18:28500/api";
     //protected $url = "http://211.151.124.79:8500/api";
+    // protected $url = "https://dzfpapi.holytax.com/api";
     protected $url = "https://dzfpapi.holytax.com/api";
 	// 用户appid
     //protected $appid = '92edfcd96405';
@@ -606,8 +608,8 @@ class Invoice extends Model
         //dump('报文签名>>>> '.$signature);
         $queryMap['signature'] = $signature;
 
-        // $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
-        
+        $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
+        //halt($result);
         // dump($content);
         // halt($result);
         
@@ -664,7 +666,7 @@ class Invoice extends Model
             $dir = $_SERVER['DOCUMENT_ROOT'].'/upload/invoice/'.date('Ym');
             if(!is_dir($dir)){
                 Dir::create($dir);
-                mkdir($dir, 0755, true);
+                //mkdir($dir, 0755, true);
             }
             file_put_contents($dir.'/'. $row['fpqqlsh'] .'.pdf', $file);
             $loacl_pdfurl = '/upload/invoice/'.date('Ym').'/'. $row['fpqqlsh'] .'.pdf';

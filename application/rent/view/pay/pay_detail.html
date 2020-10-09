@@ -220,6 +220,44 @@
       <input type="text" name="register_bodies" value="充值成功" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
+    {if condition="$data_info['invoice_id']"}
+ <div class="layui-form-item">
+  <label class="layui-form-label">发票流水号：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['fpqqlsh']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">远程电子发票地址：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['pdfurl']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">本地电子发票地址：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['local_pdfurl']"}<a class="layui-btn layui-btn-xs layui-btn-normal" href="{$invoice_info['local_pdfurl']}" target="_blank">点此查看</a>{else /}未生成{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">开票类型：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['kplx']"}红字发票{else /}蓝字发票{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">发票类型：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['fplx'] == '026'"}增值税电子发票{else /}区块链发票{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">征税方式：</label>
+  <div class="layui-form-mid layui-word-aux">{if condition="$invoice_info['zsfs'] == 2"}差额征税{else /}普通征税{/if}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">收款人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['skr']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">复核人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['fhr']}</div>
+ </div>
+ <div class="layui-form-item">
+  <label class="layui-form-label">开票人：</label>
+  <div class="layui-form-mid layui-word-aux">{$invoice_info['kpr']}</div>
+ </div>
+ {/if}
   </div>
   
 </div>

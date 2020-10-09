@@ -25,6 +25,8 @@ class Index extends Common
 {
     private $config_ziyang;
     private $config_liangdao;
+    // 是否允许支付
+    protected $can_pay = true;
 
     /**
      * 初始化方法
@@ -149,6 +151,7 @@ class Index extends Common
     {
         // 验证令牌
         $result = ['code' => 0];
+
         if(!$this->check_token()){
             $result['code'] = 10010;
             $result['msg'] = '令牌失效';
@@ -157,10 +160,15 @@ class Index extends Common
         $token = input('token');
         $openid = cache('weixin_openid_'.$token); //存储openid
 
+        if(!$rent_order_info){
+            $result['msg'] = '订单编号错误';
+            return json($result);
+        }
+
         // 检查订单id是否为空
         $rent_order_id = input('rent_order_id');
-        if(!$rent_order_id){
-            $result['msg'] = '订单编号不能为空';
+        if(!$this->can_pay){
+            $result['msg'] = '月末对账期，付款通道已关闭';
             return json($result);
         }
         // 获取前端传入的金额
@@ -315,7 +323,10 @@ class Index extends Common
         }
         $token = input('token');
         $openid = cache('weixin_openid_'.$token); //存储openid
-        
+        if(!$this->can_pay){
+            $result['msg'] = '月末对账期，付款通道已关闭';
+            return json($result);
+        }
         // 检查订单id是否为空
         $rent_order_id = input('rent_order_id');
         if(!$rent_order_id){
@@ -526,7 +537,10 @@ class Index extends Common
         }
         $token = input('token');
         $openid = cache('weixin_openid_'.$token); //存储openid
-       
+        if(!$this->can_pay){
+            $result['msg'] = '月末对账期，付款通道已关闭';
+            return json($result);
+        }
         // 检查房屋id是否为空
         $house_id = trim(input('house_id'));
         
@@ -728,7 +742,10 @@ class Index extends Common
         }
         $token = input('token');
         $openid = cache('weixin_openid_'.$token); //存储openid
-        
+        if(!$this->can_pay){
+            $result['msg'] = '月末对账期，付款通道已关闭';
+            return json($result);
+        }
         // 检查房屋id是否为空
         $house_id = trim(input('house_id'));
         
