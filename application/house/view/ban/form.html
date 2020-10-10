@@ -33,34 +33,46 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>管段</label>
 			<div class="j-input-inline">
+				{if condition="$group == 'x'"}
 				<select id="mechanism" name="ban_inst_id" lay-verify="required" lay-search="">
 					<option value="">请选择</option>
 					{volist name=":config('inst_data_names')[INST]" id="v"}
 					<option value="{$key}" {if condition="$key == $data_info['ban_inst_id']"}selected{/if}>{$v}</option>
 					{/volist}
 				</select>
+				{else /}
+				<input type="text" value="{$params['insts'][$data_info['ban_inst_id']]}" autocomplete="off" readonly class="layui-input">
+				{/if}
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼栋产别</label>
 			<div class="j-input-inline">
+				{if condition="$group == 'x'"}
 				<select name="ban_owner_id" lay-verify="required" class="field-cid" type="select">
 				    <option value="">请选择</option>
 				    {volist name="params['owners']" id="v"}
 				    <option value="{$key}" {if condition="$key == $data_info['ban_owner_id']"}selected{/if}>{$v}</option>
 				    {/volist}
 				</select>
+				{else /}
+				<input type="text" value="{$params['owners'][$data_info['ban_owner_id']]}" autocomplete="off" readonly class="layui-input">
+				{/if}
 			</div>
 		</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>结构类别</label>
 			<div class="j-input-inline">
+				{if condition="$group == 'x'"}
 				<select name="ban_struct_id" lay-verify="required" class="field-cid" type="select">
 				    <option value="">请选择</option>
 				    {volist name="params['structs']" id="v"}
 				    <option value="{$key}" {if condition="$key == $data_info['ban_struct_id']"}selected{/if}>{$v}</option>
 				    {/volist}
 				</select>
+				{else /}
+				<input type="text" value="{$params['structs'][$data_info['ban_struct_id']]}" autocomplete="off" readonly class="layui-input">
+				{/if}
 			</div>
 		</div>
 		
@@ -69,24 +81,28 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>完损等级</label>
 			<div class="j-input-inline">
-				<select name="ban_damage_id" lay-verify="required" class="field-cid" type="select">
+				{if condition="$group == 'x'"}
+				<select name="ban_damage_id"  lay-verify="required" class="field-cid" type="select">
 				    <option value="">请选择</option>
 				    {volist name="params['damages']" id="v"}
 				    <option value="{$key}" {if condition="$key == $data_info['ban_damage_id']"}selected{/if}>{$v}</option>
 				    {/volist}
 				</select>
+				{else /}
+				<input type="text" value="{$params['damages'][$data_info['ban_damage_id']]}" autocomplete="off" readonly class="layui-input">
+				{/if}
 			</div>
 		</div>
 		<div class="layui-col-md4">
 				<label class="j-form-label">栋系数</label>
 				<div class="j-input-inline">
-					<input type="number" id="ban_ratio" name="ban_ratio" value="{$data_info['ban_ratio']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group != 'x'"}readonly{/if} id="ban_ratio" name="ban_ratio" value="{$data_info['ban_ratio']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>建成年份</label>
 			<div class="j-input-inline">
-				<input type="text" name="ban_build_year" lay-verify="required" readonly value="{$data_info['ban_build_year']}" id="ban_build_year" autocomplete="off" class="layui-input">
+				<input type="text" name="ban_build_year" lay-verify="required" readonly value="{$data_info['ban_build_year']}" {if condition="$group == 'x'"}id="ban_build_year"{/if} autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -106,7 +122,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>楼层数量</label>
 			<div class="j-input-inline">
-				<input type="number" name="ban_floors" lay-verify="required" value="{$data_info['ban_floors']}" autocomplete="off" class="layui-input">
+				<input type="number"  {if condition="$group != 'x'"}readonly{/if} name="ban_floors" lay-verify="required" value="{$data_info['ban_floors']}" autocomplete="off" class="layui-input">
 			</div>
 		</div>
 	</div>
@@ -141,12 +157,16 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>使用性质</label>
 				<div class="j-input-inline">
+					{if condition="$group == 'x'"}
 					<select name="ban_use_id" lay-verify="required" class="field-cid" type="select">
 					    <option value="">请选择</option>
 					    {volist name="params['uses']" id="v"}
 					    <option value="{$key}" {if condition="$key == $data_info['ban_use_id']"}selected{/if}>{$v}</option>
 					    {/volist}
 					</select>
+					{else /}
+					<input type="text" value="{$params['uses'][$data_info['ban_use_id']]}" autocomplete="off" readonly class="layui-input">
+					{/if}
 				</div>
 			</div>
 	</div>
@@ -239,19 +259,19 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>企业栋数</label>
 				<div class="j-input-inline">
-					<input type="number" id="enterprise_number" name="ban_career_num" lay-verify="required" value="{$data_info['ban_career_num']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group != 'x'"}readonly{/if} id="enterprise_number" name="ban_career_num" lay-verify="required" value="{$data_info['ban_career_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>机关栋数</label>
 				<div class="j-input-inline">
-					<input type="number" id="office_number" name="ban_party_num" lay-verify="required" value="{$data_info['ban_party_num']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group != 'x'"}readonly{/if} id="office_number" name="ban_party_num" lay-verify="required" value="{$data_info['ban_party_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>民用栋数</label>
 				<div class="j-input-inline">
-					<input type="number" id="civil_number" name="ban_civil_num" lay-verify="required" value="{$data_info['ban_civil_num']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group != 'x'"}readonly{/if} id="civil_number" name="ban_civil_num" lay-verify="required" value="{$data_info['ban_civil_num']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
