@@ -53,13 +53,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>单元号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_unit_id" min="1" max="{$data_info['ban_units']}" oninput="if(value>{$data_info['ban_units']})value={$data_info['ban_units']}"  name="house_unit_id" placeholder="总单元号：{$data_info['ban_units']}"  lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group == 'y'"} readonly {/if} id="house_unit_id" min="1" max="{$data_info['ban_units']}" oninput="if(value>{$data_info['ban_units']})value={$data_info['ban_units']}"  name="house_unit_id" placeholder="总单元号：{$data_info['ban_units']}"  lay-verify="required" value="{$data_info['house_unit_id']}"  autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>居住楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_floor_id" min="1" max="{$data_info['ban_floors']}" oninput="if(value>{$data_info['ban_floors']})value={$data_info['ban_floors']}" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group == 'y'"} readonly {/if} id="house_floor_id" min="1" max="{$data_info['ban_floors']}" oninput="if(value>{$data_info['ban_floors']})value={$data_info['ban_floors']}" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
@@ -79,21 +79,21 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label">房屋原价</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
+					<input type="number" {if condition="$group == 'y'"} readonly {/if} id="house_oprice" name="house_oprice" value="{$data_info['house_oprice']}"  autocomplete="off" class="layui-input j-explain-input">
 					<b class="j-explain-name">元</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label">建筑面积</label>
 				<div class="j-input-inline">
-					<input type="number" id="house_area" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input j-explain-input">
+					<input type="number" {if condition="$group == 'y'"} readonly {/if} id="house_area" name="house_area" value="{$data_info['house_area']}" autocomplete="off" class="layui-input j-explain-input">
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>门牌号</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_door" value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
+					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_door" value="{$data_info['house_door']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -115,13 +115,13 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>租差</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_diff_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
+					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_diff_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>泵费</label>
 				<div class="j-input-inline">
-					<input type="text" name="house_pump_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
+					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_pump_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 		</div>
@@ -156,12 +156,14 @@
 				<div class="j-map-height" style="width:100%;height:300px;" id="allmap"></div>
 			</div>
 		</div> -->
+		{if condition="$group == 'x'"}
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">取消</a>
 				<a  class="layui-btn" id="clickData">确定</a>
 			</div>
 		</div>
+		{/if}
   </div>
 </form>
 <div class="j-details-box floorWrap">
@@ -251,9 +253,9 @@
 		  $.ajax({
 		  	 type: "GET",//方法类型
 		  	 dataType: "json",//预期服务器返回的数据类型
-		  	 url: "{:url('renttable')}?id=" + house_id ,//url
+		  	 url: "{:url('renttable')}?group={$group}&id=" + house_id ,//url
 		  	 success: function (result) {
-		  		 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)	
+		  		 console.log("初始化计租表数据：",result);//打印服务端返回的数据(调试用)
 		  		 $('#j-table-data').html('');
 		  		 if (result.code == 1) {
 					 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
@@ -280,8 +282,8 @@
 		  							 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 		  							 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
 		  							 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
-		  							 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
-		  									<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+		  							 		<td><span data-href='/admin.php/house/room/edit?group={$group}&id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+		  									<a data-href='/admin.php/house/room/del?group={$group}&id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 		  									</td>\
 		  							 	</tr>";  
 		  						  }else{
@@ -374,7 +376,7 @@
 						 $.ajax({
 							 type: "POST",//方法类型
 							 dataType: "json",//预期服务器返回的数据类型
-							 url: "{url('add')}" ,//url
+							 url: "{url('add')}?group={$group}" ,//url
 							 data: $('#formdata').serialize(),
 							 success: function (result) {
 								 console.log("数据：",result);//打印服务端返回的数据(调试用)
@@ -408,7 +410,7 @@
 								,area: ['60%', '600px']
 								,btn:false
 								,pageTabs: false
-								,content: "{:url('room/add')}?hisi_iframe=yes&id=" + house_id
+								,content: "{:url('room/add')}?group={$group}&hisi_iframe=yes&id=" + house_id
 								,btn: ['确定','关闭']
 								,success: function(layero, index){
 									layero.find('.layui-layer-btn .layui-layer-btn0,.layui-layer-btn .layui-layer-btn1').addClass('layui-hide');
@@ -422,9 +424,9 @@
 									$.ajax({
 										 type: "GET",//方法类型
 										 dataType: "json",//预期服务器返回的数据类型
-										 url: "{:url('renttable')}?id=" + house_id ,//url
+										 url: "{:url('renttable')}?group={$group}&id=" + house_id ,//url
 										 success: function (result) {
-											 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+											 console.log("新增房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
 												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
@@ -451,8 +453,8 @@
 																 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
 																 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
-																 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
-																		<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+																 		<td><span data-href='/admin.php/house/room/edit?group={$group}&id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+																		<a data-href='/admin.php/house/room/del?group={$group}&id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																		</td>\
 																 	</tr>";  
 															  }else{
@@ -545,9 +547,9 @@
 									$.ajax({
 										 type: "GET",//方法类型
 										 dataType: "json",//预期服务器返回的数据类型
-										 url: "{:url('renttable')}?id=" + house_id ,//url
+										 url: "{:url('renttable')}?group={$group}&id=" + house_id ,//url
 										 success: function (result) {
-											 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+											 console.log("编辑房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
 												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
@@ -574,8 +576,8 @@
 																 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 																 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
 																 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
-																 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
-																		<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+																 		<td><span data-href='/admin.php/house/room/edit?group={$group}&id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+																		<a data-href='/admin.php/house/room/del?group={$group}&id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																		</td>\
 																 	</tr>";  
 															  }else{
@@ -651,16 +653,16 @@
 						 dataType: "json",//预期服务器返回的数据类型
 						 url: urls,//url
 						 success: function (result) {
-							 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+
 							 $('#j-table-data').html('');
 							 if (result.code == 1) {
 								 
 								$.ajax({
 									 type: "GET",//方法类型
 									 dataType: "json",//预期服务器返回的数据类型
-									 url: "{:url('renttable')}?id=" + house_id ,//url
+									 url: "{:url('renttable')}?group={$group}&id=" + house_id ,//url
 									 success: function (result) {
-										 console.log("添加完成数据：",result);//打印服务端返回的数据(调试用)
+										 console.log("删除房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 										 $('#j-table-data').html('');
 										 if (result.code == 1) {
 											 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
@@ -671,13 +673,13 @@
 													  for( var j = 0; j < result.data[i].houseinfo.length; j++){
 														  if(j == 0){
 															 str +=  "<tr>\
-															 		<td>" + result.data[i].baseinfo.room_type + "</td>\
+															 		<td>" + params.roomtypes[result.data[i].baseinfo.room_type] + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_number + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_door + "</td>\
 															 		<td>" + result.data[i].baseinfo.ban_number + "</td>\
 															 		<td>" + result.data[i].houseinfo[0].house_number + "</td>\
 															 		<td>" + result.data[i].houseinfo[0].tenant_name + "</td>\
-															 		<td>" + result.data[i].baseinfo.ban_owner_id+ "</td>\
+															 		<td>" + params.owners[result.data[i].baseinfo.ban_owner_id] + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_unit_id + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_floor_id + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_use_area + "</td>\
@@ -686,9 +688,9 @@
 															 		<td>" + result.data[i].baseinfo.floor_point + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_pre_rent + "</td>\
 															 		<td>" + result.data[i].baseinfo.room_cou_rent + "</td>\
-															 		<td>" + result.data[i].baseinfo.room_status + "</td>\
-															 		<td><span data-href='/admin.php/house/room/edit?id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
-																	<a data-href='/admin.php/house/room/del?id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
+															 		<td>" + params.house_status[result.data[i].baseinfo.room_status] + "</td>\
+															 		<td><span data-href='/admin.php/house/room/edit?group={$group}&id=" + result.data[i].baseinfo.room_id + "&house_id=" + house_id + "' class='j-iframe-edit' style='color:#1E9FFF;' hisi-data='{width: \"1200px\", height: \"550px\",refresh: \"0\"}' title='修改房间'><label class='layui-btn layui-btn-xs layui-btn-normal'>修改</label></span>\
+																	<a data-href='/admin.php/house/room/del?group={$group}&id=" + result.data[i].baseinfo.room_id + "' isreload='y' class='j-deal-tr'><label  class='layui-btn layui-btn-xs layui-btn-danger'>删除</label></a>\
 																	</td>\
 															 	</tr>";  
 														  }else{

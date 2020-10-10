@@ -1,4 +1,4 @@
-<form class="layui-form" {if condition="$flag === 'temp'"}action="{:url('RoomTemp/edit')}"{else /}action="{:url('Room/edit')}"{/if} method="post">
+<form class="layui-form" {if condition="$flag === 'temp'"}action="{:url('RoomTemp/edit')}?group={$group}"{else /}action="{:url('Room/edit')}?group={$group}"{/if} method="post">
     <div class="j-details-box floorWrap">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>

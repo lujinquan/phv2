@@ -210,7 +210,7 @@ layui.use(['form', 'func'], function() {
 			 //几个参数需要注意一下
 				 type: "POST",//方法类型
 				 dataType: "json",//预期服务器返回的数据类型
-				 url: "{:url('Room/add')}" ,//url
+				 url: "{:url('Room/add')}?group={$group}" ,//url
 				 data: $('#formdata').serialize(),
 				 success: function (result) {
 					 console.log("提交数据：",result);//打印服务端返回的数据(调试用)

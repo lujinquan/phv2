@@ -79,6 +79,7 @@ class Room extends Admin
     public function add()
     {   
         $id = input('param.id/d');
+        $group = input('group','x');
         $row = HouseModel::with(['ban','tenant'])->get($id);
     	if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -93,6 +94,9 @@ class Room extends Admin
             $RoomModel = new RoomModel();
             // 数据过滤
             $filData = $RoomModel->dataFilter($data);
+            if ($group == 'y'){
+                $filData['room_status'] = 1;
+            }
             if(!is_array($filData)){
                 return $this->error($filData);
             }
@@ -118,17 +122,18 @@ class Room extends Admin
             $HouseRoomModel->saveAll($filData['house_room']);
             // 4、更新房屋信息
             // halt($filData['house_id']);
-            $HouseModel->update_house_info($filData['house_id']);
+            $HouseModel->update_house_info($filData['house_id'],$group);
             return $this->success('新增成功');
         }
         $this->assign('data_info',$row);
+        $this->assign('group',$group);
         $this->assign('flag','normal');
     	return $this->fetch('add');
     }
 
     public function edit()
-    {   
-
+    {
+        $group = input('group','x');
         if ($this->request->isPost()) {
             $data = $this->request->post();
             // 数据验证
@@ -175,7 +180,7 @@ class Room extends Admin
                 }
             }
             $HouseRoomModel->saveAll($houseRoomArr);
-            $HouseModel->update_house_info($filData['house_id']);
+            $HouseModel->update_house_info($filData['house_id'],$group);
 
             return $this->success('修改成功');
         }
@@ -197,6 +202,7 @@ class Room extends Admin
         }
         //dump($house_number);
         //halt($houseArrs);
+        $this->assign('group',$group);
         $this->assign('data_info',$row);
         $this->assign('houseArrs',$houseArrs);
         $this->assign('flag','normal');
@@ -205,6 +211,7 @@ class Room extends Admin
 
     public function del(){
         $id = input('param.id/d');
+        $group = input('group','x');
         // 1、先获取要删除的房间绑定的房屋
         $HouseRoomModel = new HouseRoomModel; 
         $houseArr = $HouseRoomModel->where([['room_id','eq',$id]])->column('house_id');
@@ -220,8 +227,8 @@ class Room extends Admin
         }
         // 4、更新第一步获取的房屋的计算租金、计租面积、使用面积
         $HouseModel = new HouseModel;
-        $HouseModel->update_house_info($houseArr);
-
+        $HouseModel->update_house_info($houseArr,$group);
+        $this->assign('group',$group);
         return $this->success('删除成功');
     }
 

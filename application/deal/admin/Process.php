@@ -132,11 +132,9 @@ class Process extends Admin
         if($rowProcess['ftime'] > 0){
             return $this->error('异动已经完成，请刷新重试！');
         }
-  //halt($row);      
+        //halt($row);
         // 提交审批表单
         if($this->request->isPost()) {
-            $data = $this->request->post();
-            //halt($data);
             if($change_type == 18 && ADMIN_ROLE == 6){
                 $ChangeModel = new ChangeLeaseModel;
                 $changeRow = $ChangeModel->where([['id','eq',$id]])->find();

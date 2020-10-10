@@ -267,7 +267,7 @@ class House extends SystemBase
      * @param  [string | array] $houseid [房屋编号]
      * @return [错误信息]        
      */
-    public function update_house_info($houseid = ''){
+    public function update_house_info($houseid = '',$group = 'x'){
         if(!is_array($houseid)){ //如果是更新单个房屋的数据
             $houseidArr = [$houseid];
         }else{ // 如果是批量更新一个数组内的数据
@@ -281,12 +281,23 @@ class House extends SystemBase
         foreach ($houseidArr as $f) {
             // 获取计算租金
             $house_cou_rent = $HouseModel->count_house_rent($f); 
-            //$house_pre_rent = $HouseModel->count_house_pre_rent($f); 
+            // $house_pre_rent = $HouseModel->count_house_pre_rent($f);
             $roomids = $HouseRoomModel->where([['house_id','eq',$f]])->column('room_id');
+            foreach ($roomids as $k => $v) {
+                $row = $RoomModel->where([['room_id','eq',$v]])->field('room_pub_num')->find();
+                if($row['room_pub_num'] > 2){
+                    unset($roomids[$k]);
+                }
+            }
             // 获取房屋下使面合计、计租面积合计
             $roomRow = $RoomModel->where([['room_id','in',$roomids]])->field('sum(room_use_area) as room_use_area,sum(room_lease_area) as room_lease_area')->find();
             // 更新房屋的计算租金
-            $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            if ($group == 'x') {
+                $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            } else {
+                $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
+            }
+            // $res = $HouseModel->where([['house_id','eq',$f]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent,'house_use_area'=>$roomRow['room_use_area'],'house_lease_area'=>$roomRow['room_lease_area']]);
         }
         $diff = count($houseidArr) - $res;
         if($diff){

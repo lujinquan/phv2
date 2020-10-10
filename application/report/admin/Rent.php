@@ -82,12 +82,12 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
             
             $data = [];
-            $data['msg'] = '报表正在核对中，请勿生成本月报表！';
-            $data['code'] = 0;
-            return json($data);exit;
+            // $data['msg'] = '报表正在核对中，请勿生成本月报表！';
+            // $data['code'] = 0;
+            // return json($data);exit;
             
             $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-
+$date = '202009';
             $full_date = substr_replace($date,'-',4,0);
 
             //检查上月的报表是否生成

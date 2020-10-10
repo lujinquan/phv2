@@ -170,8 +170,8 @@
 	{include file="system@block/layui" /}
 	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	{if condition="$group == 'x'"}
-    <a href="{:url('edit')}?id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+	{if condition="$group == 'x' || $group == 'y'"}
+    <a href="{:url('edit')}?group={$group}&id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
 	{/if}
 	{if condition="$group == 'y' && $login['uid'] == 1"}
 	<!-- <a href="{:url('renttable')}?id={{ d.house_id }}&group=x" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a> -->
@@ -205,7 +205,7 @@
         if(group == 'x'){
 			templet_width = 240;
         }else if(group == 'y'){
-        	templet_width = 200;
+        	templet_width = 240;
         }else if(group == 'z'){
         	templet_width = 200;
         }
