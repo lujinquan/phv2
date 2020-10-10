@@ -16,7 +16,6 @@ use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
-use app\report\model\MonthReport as MonthReportModel;
 
 /**
  * 系统API控制器
@@ -42,21 +41,16 @@ class Api extends Common
                 //$where[] = ['date','eq',date('Ym')];
                 $query_month = date('Ym');
             }
-            
+            //$tempData = Db::name('report')->where($where)->value('data');
+            //halt($tempData);
             $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
-            if($tempData){
-                $temps = json_decode($tempData,true);
-            }else{
-                $MonthReportModel = new MonthReportModel;
-                $temps = $MonthReportModel->makeMonthReport($query_month);
-            }
             //halt($res);
             //$tempData = $ReportModel->where($where)->value('data');
 
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
             $ownerid = 12; //查询所有产别
-            if($temps){
-                // $temps = json_decode($tempData,true);
+            if($tempData){
+                $temps = json_decode($tempData,true);
                 $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             }else{
                 $data['data'] = [];
@@ -64,8 +58,8 @@ class Api extends Common
             
             $data = $result = [];
             $owners = [2,5,10,12];
-            if($temps){
-                // $temps = json_decode($tempData,true);
+            if($tempData){
+                $temps = json_decode($tempData,true);
                 foreach ($owners as $v) {
                     for ($i=1;$i<4;$i++ ) {
                         if($i == 1){
@@ -168,21 +162,14 @@ class Api extends Common
             // $tempData = Db::name('report')->where($where)->value('data');
             // $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
 
-            // $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
             $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
-            if($tempData){
-                $temps = json_decode($tempData,true);
-            }else{
-                $MonthReportModel = new MonthReportModel;
-                $temps = $MonthReportModel->makeMonthReport($query_month);
-            }
             //halt($res);
             //$tempData = $ReportModel->where($where)->value('data');
 
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
             $ownerid = 12; //查询所有产别
-            if($temps){
-                // $temps = json_decode($tempData,true);
+            if($tempData){
+                $temps = json_decode($tempData,true);
                 $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             }else{
                 $data['data'] = [];
@@ -190,8 +177,8 @@ class Api extends Common
 
             $data = $result = [];   
             $owners = [2,5,10,12];
-            if($temps){
-                // $temps = json_decode($tempData,true);
+            if($tempData){
+                $temps = json_decode($tempData,true);
                 foreach ($owners as $v) {
                     $data['data'][$v] = [
                         3 => bcaddMerge([$temps[$v][$instid][12][1], $temps[$v][$instid][12][10], $temps[$v][$instid][12][13]]), //统计暂停计租的合计（住宅+机关+企业）
@@ -236,19 +223,13 @@ class Api extends Common
             // $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
             
             $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
-            if($tempData){
-                $temps = json_decode($tempData,true);
-            }else{
-                $MonthReportModel = new MonthReportModel;
-                $temps = $MonthReportModel->makeMonthReport($query_month);
-            }
             //halt($res);
             //$tempData = $ReportModel->where($where)->value('data');
 
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:session('admin_user.inst_id');
             $ownerid = 12; //查询所有产别
-            if($temps){
-                // $temps = json_decode($tempData,true);
+            if($tempData){
+                $temps = json_decode($tempData,true);
                 $data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             }else{
                 $data['data'] = [];
@@ -257,7 +238,7 @@ class Api extends Common
             $data = $result = [];  
             $owners = [2,5,10,12];
             if($tempData){
-                // $temps = json_decode($tempData,true);
+                $temps = json_decode($tempData,true);
                 foreach ($owners as $v) {
                     $data['data'][$v] = [
                         'rent_unpaids' => bcaddMerge([$temps[$v][$instid][20][1], $temps[$v][$instid][20][10], $temps[$v][$instid][20][13]]), //统计暂停计租的合计（住宅+机关+企业）
