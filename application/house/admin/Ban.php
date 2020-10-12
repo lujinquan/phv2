@@ -263,6 +263,43 @@ class Ban extends Admin
         return $this->fetch('form');
     }
 
+    public function edity()
+    {
+        $group = input('param.group');
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            if($group == 'x'){
+                // 数据验证
+                $result = $this->validate($data, 'Ban.edit');
+                if($result !== true) {
+                    return $this->error($result);
+                }
+            } else {
+                
+            }
+            
+            if(isset($data['file']) && $data['file']){
+                $data['ban_imgs'] = implode(',',$data['file']);
+            }else{
+                $data['ban_imgs'] = '';
+            }
+            $BanModel = new BanModel();
+            //halt($data);
+            // 入库
+            if ($BanModel->allowField(true)->update($data) === false) {
+                return $this->error('修改失败');
+            }
+            return $this->success('修改成功');
+        }
+        $id = input('param.id/d');
+        
+        $this->assign('group',$group);
+        $row = BanModel::get($id);
+        $row['ban_imgs'] = SystemAnnex::changeFormat($row['ban_imgs']);
+        $this->assign('data_info',$row);
+        return $this->fetch('form');
+    }
+
     public function detail()
     {
         $id = input('param.id/d');

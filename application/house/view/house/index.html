@@ -27,8 +27,12 @@
 	<div class="layui-btn-container j-container-margin">
 		<div class="layui-btn-container">
 			{if condition="$group == 'x'"}
+			{if condition="in_array(150,$auths) || $Think.ADMIN_ROLE == 1"}
 			<a href="{:url('add')}"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>新增房屋</button></a>
+			{/if}
+			{if condition="in_array(152,$auths) || $Think.ADMIN_ROLE == 1"}
 			<button data-href="{:url('del')}" data-id="house_id" class="layui-btn layui-btn-danger j-page-btns"><i class="layui-icon layui-icon-close"></i>批量删除</button>
+			{/if}
 			{/if}
 		</div>
 	</div>
@@ -170,11 +174,19 @@
 	{include file="system@block/layui" /}
 	<table id="dataTable" lay-filter='dataTable'></table>
 	<script type="text/html" title="操作按钮模板" id="buttonTpl">
-	{if condition="$group == 'x' || $group == 'y'"}
+	{if condition="$group == 'x'"}
+	{if condition="in_array(151,$auths) || $Think.ADMIN_ROLE == 1"}
     <a href="{:url('edit')}?group={$group}&id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    {else /}
+    <button class="layui-btn layui-btn-xs layui-btn-disabled">编辑</button>
+    {/if}
 	{/if}
-	{if condition="$group == 'y' && $login['uid'] == 1"}
-	<!-- <a href="{:url('renttable')}?id={{ d.house_id }}&group=x" class="layui-btn layui-btn-xs layui-btn-primary">计租表</a> -->
+	{if condition="$group == 'y'"}
+	{if condition="in_array(420,$auths) || $Think.ADMIN_ROLE == 1"}
+    <a href="{:url('edity')}?group={$group}&id={{ d.house_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+	{else /}
+    <button class="layui-btn layui-btn-xs layui-btn-disabled">编辑</button>
+    {/if}
 	{/if}
 	{if condition="$group != 'x'"}
 	{{#  if (d.change_lease_id) { }}

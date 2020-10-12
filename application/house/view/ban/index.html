@@ -139,8 +139,19 @@
 {include file="system@block/layui" /}
 <table id="dataTable" lay-filter='dataTable'></table>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {if condition="$group == 'x' || $group == 'y'"}
-	<a href="{:url('edit')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    {if condition="$group == 'x'"}
+	{if condition="in_array(147,$auths) || $Think.ADMIN_ROLE == 1"}
+    <a href="{:url('edit')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    {else /}
+    <button class="layui-btn layui-btn-xs layui-btn-disabled">编辑</button>
+    {/if}
+    {/if}
+    {if condition="$group == 'y'"}
+	{if condition="in_array(421,$auths) || $Think.ADMIN_ROLE == 1"}
+    <a href="{:url('edity')}?group={$group}&id={{ d.ban_id }}" class="layui-btn layui-btn-xs layui-btn-primary">编辑</a>
+    {else /}
+    <button class="layui-btn layui-btn-xs layui-btn-disabled">编辑</button>
+    {/if}
     {/if}
     <a href="{:url('detail')}?id={{ d.ban_id }}" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal">详情</a>
     <a href="{:url('struct')}?group={$group}&id={{ d.ban_id }}" hisi-data="{width: '1000px', height: '760px',refresh: 2}" title="楼栋结构" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">结构表</a>

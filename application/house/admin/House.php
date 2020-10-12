@@ -369,6 +369,16 @@ class House extends Admin
         return $this->fetch('form');
     }
 
+    public function edity()
+    {
+        $id = input('param.id/d');
+        $row = HouseModel::with(['ban','tenant'])->get($id);
+        $group = input('param.group');
+        $this->assign('group',$group);
+        $this->assign('data_info',$row);
+        return $this->fetch('form');
+    }
+
     public function renttable()
     {
         $id = input('param.id/d');
