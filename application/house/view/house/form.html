@@ -105,13 +105,6 @@
 					<b class="j-explain-name">元</b>
 				</div>
 			</div>
-			<!-- <div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>计算租金</label>
-				<div class="j-input-inline">
-					<input type="number" id="house_cou_rent" readonly name="house_cou_rent" value="" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
-					<b class="j-explain-name">元</b>
-				</div>
-			</div> -->
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>租差</label>
 				<div class="j-input-inline">
@@ -135,24 +128,17 @@
 					<b class="j-explain-name">元</b>
 				</div>
 			</div>
-			<!-- <div class="layui-col-md4">
-				<label class="j-form-label"><i class="red">*</i>计算租金</label>
-				<div class="j-input-inline">
-					<input type="number" id="house_cou_rent" readonly name="house_cou_rent" value="" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
-					<b class="j-explain-name">元</b>
-				</div>
-			</div> -->
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>计租面积</label>
 				<div class="j-input-inline">
-					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_lease_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
+					<input type="text" id="house_lease_area" {if condition="$group == 'y'"} readonly {/if} name="house_lease_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>实有面积</label>
 				<div class="j-input-inline">
-					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_use_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
+					<input type="text" id="house_use_area" {if condition="$group == 'y'"} readonly {/if} name="house_use_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
 					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
@@ -461,7 +447,10 @@
 											 console.log("新增房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
-												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
+												 $("#house_pre_rent").val(result.house_info.house_pre_rent); 
+												 $("#house_cou_rent").val(result.house_info.house_cou_rent);
+												 $("#house_use_area").val(result.house_info.house_use_area);
+												 $("#house_lease_area").val(result.house_info.house_lease_area);
 												 var str = ``;
 												 //var strfirst = ``;
 												 for(var i in result.data) {
@@ -584,7 +573,10 @@
 											 console.log("编辑房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 											 $('#j-table-data').html('');
 											 if (result.code == 1) {
-												 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
+												 $("#house_pre_rent").val(result.house_info.house_pre_rent); 
+												 $("#house_cou_rent").val(result.house_info.house_cou_rent);
+												 $("#house_use_area").val(result.house_info.house_use_area);
+												 $("#house_lease_area").val(result.house_info.house_lease_area);
 												 var str = ``;
 												 //var strfirst = ``;
 												 for(var i in result.data) {
@@ -697,7 +689,10 @@
 										 console.log("删除房间后获取计租表数据：",result);//打印服务端返回的数据(调试用)
 										 $('#j-table-data').html('');
 										 if (result.code == 1) {
-											 $("input[name$='house_pre_rent']") .val(result.house_info.house_pre_rent); 
+											 $("#house_pre_rent").val(result.house_info.house_pre_rent); 
+											 $("#house_cou_rent").val(result.house_info.house_cou_rent);
+											 $("#house_use_area").val(result.house_info.house_use_area);
+											 $("#house_lease_area").val(result.house_info.house_lease_area);
 											 var str = ``;
 											 //var strfirst = ``;
 											 for(var i in result.data) {
