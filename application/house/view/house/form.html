@@ -116,12 +116,44 @@
 				<label class="j-form-label"><i class="red"></i>租差</label>
 				<div class="j-input-inline">
 					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_diff_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_diff_rent']}" autocomplete="off" class="layui-input">
+					<b class="j-explain-name">元</b>
 				</div>
 			</div>
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red"></i>泵费</label>
 				<div class="j-input-inline">
 					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_pump_rent" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_pump_rent']}" autocomplete="off" class="layui-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>计算租金</label>
+				<div class="j-input-inline">
+					<input type="number" id="house_pre_rent" readonly name="house_pre_rent" value="{$data_info['house_cou_rent']}" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div>
+			<!-- <div class="layui-col-md4">
+				<label class="j-form-label"><i class="red">*</i>计算租金</label>
+				<div class="j-input-inline">
+					<input type="number" id="house_cou_rent" readonly name="house_cou_rent" value="" lay-verify="required" autocomplete="off" class="layui-input j-explain-input">
+					<b class="j-explain-name">元</b>
+				</div>
+			</div> -->
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>计租面积</label>
+				<div class="j-input-inline">
+					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_lease_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_lease_area']}" autocomplete="off" class="layui-input">
+					<b class="j-explain-name">m²</b>
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label"><i class="red"></i>实有面积</label>
+				<div class="j-input-inline">
+					<input type="text" {if condition="$group == 'y'"} readonly {/if} name="house_use_area" min="0.01" onkeyup="onlyNumber(this)" value="{$data_info['house_use_area']}" autocomplete="off" class="layui-input">
+					<b class="j-explain-name">m²</b>
 				</div>
 			</div>
 		</div>
