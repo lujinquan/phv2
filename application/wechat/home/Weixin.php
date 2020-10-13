@@ -2801,6 +2801,97 @@ class Weixin extends Common
         return json($result); 
     }
 
+    /**
+     * 功能描述： 获取我的订单列表的详情
+     * 小程序使用页面：【 我的 -> 历史账单 】
+     * @author  Lucas 
+     * 创建时间: 2020-02-28 10:13:33
+     */
+    public function dpkj() 
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/dpkj';
+        if($this->debug === false){ 
+            if(!$this->check_token()){
+                $result['code'] = 10010;
+                $result['msg'] = '令牌失效';
+                $result['en_msg'] = 'Invalid token';
+                return json($result);
+            }
+            $token = input('token');
+            $openid = cache('weixin_openid_'.$token);
+        }else{
+            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        }
+
+        $WeixinMemberModel = new WeixinMemberModel;
+        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        if($member_info['is_show'] == 2){
+            $result['code'] = 10011;
+            $result['msg'] = '用户已被禁止访问';
+            $result['en_msg'] = 'The user has been denied access';
+            return json($result);
+        }
+        // 接收微信支付订单的id（即weixin_order的主键order_id）
+        $id = input('get.id');
+        $type = input('get.type');
+        if($type != 'order' && $type != 'charge'){
+             $result['msg'] = '参数错误';
+             return json($result);
+        }
+        // 开票
+        $InvoiceModel = new InvoiceModel;
+        if($type == 'order'){
+            $dpkj = $InvoiceModel->dpkj($id);
+            if(!$dpkj){
+                $result['msg'] = $InvoiceModel->getError(); // 开票失败
+                return json($result);
+            }
+            $WeixinOrderModel = new WeixinOrderModel;
+            $order_info = $WeixinOrderModel->find($id)->toArray();
+
+            $InvoiceModel = new InvoiceModel;
+            $invoice_info = $InvoiceModel->find($order_info['invoice_id'])->toArray();
+            $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
+            $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
+            $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
+            if($invoice_info['local_pdfurl']){
+                $invoice_info['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl'];
+            }
+        }else if($type == 'charge'){
+            $dpkj = $InvoiceModel->dpkj($id, 2);
+            if(!$dpkj){
+                $result['msg'] = $InvoiceModel->getError(); // 开票失败
+                return json($result);
+            }
+            $charge_info = Db::name('rent_recharge')->field('invoice_id')->where([['id','eq',$id]])->find();
+ 
+            
+            $InvoiceModel = new InvoiceModel;
+            $invoice_info = $InvoiceModel->find($charge_info['invoice_id'])->toArray();
+            $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
+            $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
+            $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
+            if($invoice_info['local_pdfurl']){
+                $invoice_info['pdfurl'] = ($this->domain).$invoice_info['local_pdfurl'];
+            }
+            
+        }
+        
+          
+        $result['invoice_info'] = $invoice_info;
+        
+        // $result['order_info'] = $order_info;
+
+        $result['code'] = 1;
+        
+        $result['msg'] = '获取成功！';
+      
+        return json($result); 
+    }
+
      /**
      * 功能描述： 获取某个订单的历史详情
      * @author  Lucas 
