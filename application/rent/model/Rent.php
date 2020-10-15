@@ -782,7 +782,8 @@ class Rent extends Model
         if($rent_order_ids){
             $rentOrderWhere[] = ['rent_order_id','in',$rent_order_ids];
         }
-        $all_unpaid_orders = $this->where($rentOrderWhere)->order('rent_order_date asc')->select();
+        $all_unpaid_orders = $this->where($rentOrderWhere)->order('rent_order_date asc')->select()->toArray();
+
         // 缴费
         if ($all_unpaid_orders) {
             foreach ($all_unpaid_orders as $row) {
@@ -827,6 +828,7 @@ class Rent extends Model
             } 
         // 充值
         } else {
+
             if($pay_rent > 0){ // 如果所有的钱都缴完了还有多的，那就充值
                 $RechargeModel = new RechargeModel;
                 $filData = [];
