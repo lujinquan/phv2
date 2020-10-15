@@ -12,6 +12,8 @@ use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
 use app\house\model\BanTai as BanTaiModel;
 use app\house\model\HouseTai as HouseTaiModel;
+use app\rent\model\Rent as RentModel;
+use app\rent\model\RentOrderChild as RentOrderChildModel;
 use app\rent\model\Recharge as RechargeModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
 use app\deal\model\ChangeRecord as ChangeRecordModel;
@@ -247,7 +249,7 @@ class ChangeCancel extends SystemBase
         }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
-        //$this->finalDeal($row);
+        // $this->finalDeal($row);
         return $row;
     }
 
@@ -375,7 +377,8 @@ class ChangeCancel extends SystemBase
      */
     private function finalDeal($finalRow)
     {//halt($finalRow);
-        
+       // $currMonth = date('Y',strtotime('last year')).'12';
+       // halt($currMonth); 
         $taiBanData = $taiHouseData = $tableData = [];
         
         // 异动记录
@@ -413,6 +416,7 @@ class ChangeCancel extends SystemBase
                         'house_status' => 2,
                         'house_dtime' => time(),
                         'house_is_pause' => 0,
+                        'house_balance' => 0,
                     ]);
 
                     // 如果房屋有余额，要处理房屋余额
@@ -444,6 +448,39 @@ class ChangeCancel extends SystemBase
                             $RechargeModel->recharge_status = 1;
                             $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
+
+                            // 生成一条租金订单，状态为已缴
+                            $currMonth = date('Y',strtotime('last year')).'12';
+                            $RentModel = new RentModel;
+                            $RentModel->rent_order_number = $v['house_number'].'0'.$currMonth;
+                            $RentModel->rent_order_date = $currMonth;
+                            $RentModel->rent_order_cut = 0;
+                            $RentModel->rent_order_pre_rent = $v['house_pre_rent'];
+                            $RentModel->rent_order_receive = $v['house_balance'];
+                            $RentModel->rent_order_paid = $v['house_balance'];
+                            $RentModel->house_id = $v['house_id'];
+                            $RentModel->tenant_id = $v['tenant_id'];
+                            $RentModel->ctime = time();
+                            $RentModel->is_deal = 1;
+                            $RentModel->save();
+
+                            // 生成一条租金子订单，状态为已缴
+                            $RentOrderChildModel = new RentOrderChildModel;
+                            $RentOrderChildModel->rent_order_number = $v['house_number'].'0'.$currMonth;
+                            $RentOrderChildModel->rent_order_date = $currMonth;
+                            $RentOrderChildModel->rent_order_cut = 0;
+                            $RentOrderChildModel->rent_order_id = $RentModel->rent_order_id;
+                            $RentOrderChildModel->rent_order_pre_rent = $v['house_pre_rent'];
+                            $RentOrderChildModel->rent_order_receive = $v['house_balance'];
+                            $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                            $RentOrderChildModel->pay_way = 1;
+                            $RentOrderChildModel->house_id = $v['house_id'];
+                            $RentOrderChildModel->tenant_id = $v['tenant_id'];
+                            $RentOrderChildModel->ptime = time();
+                            $RentOrderChildModel->is_deal = 1;
+                            $RentOrderChildModel->save();
+
+
 
                             // 4、异动统计表中添加一条记录
                             $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
@@ -547,6 +584,7 @@ class ChangeCancel extends SystemBase
 
         // 按户注销   
         }else{
+            // halt($finalRow);
             $changeBanData = [];
             $finalRow['ban_info'] = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
             // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
@@ -556,6 +594,8 @@ class ChangeCancel extends SystemBase
                     'house_area' => $v['house_area'],
                     'house_status' => 2,
                     'house_dtime' => time(),
+                    'house_balance' => 0,
+                    'house_is_pause' => 0,
                 ]);
 
                 // 如果房屋有余额，要处理房屋余额
@@ -587,6 +627,37 @@ class ChangeCancel extends SystemBase
                         $RechargeModel->recharge_status = 1;
                         $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                         $RechargeModel->save();
+
+                        // 生成一条租金订单，状态为已缴
+                        $currMonth = date('Y',strtotime('last year')).'12';
+                        $RentModel = new RentModel;
+                        $RentModel->rent_order_number = $v['house_number'].'0'.$currMonth;
+                        $RentModel->rent_order_date = $currMonth;
+                        $RentModel->rent_order_cut = 0;
+                        $RentModel->rent_order_pre_rent = $v['house_pre_rent'];
+                        $RentModel->rent_order_receive = $v['house_balance'];
+                        $RentModel->rent_order_paid = $v['house_balance'];
+                        $RentModel->house_id = $v['house_id'];
+                        $RentModel->tenant_id = $v['tenant_id'];
+                        $RentModel->ctime = time();
+                        $RentModel->is_deal = 1;
+                        $RentModel->save();
+
+                        // 生成一条租金子订单，状态为已缴
+                        $RentOrderChildModel = new RentOrderChildModel;
+                        $RentOrderChildModel->rent_order_number = $v['house_number'].'0'.$currMonth;
+                        $RentOrderChildModel->rent_order_date = $currMonth;
+                        $RentOrderChildModel->rent_order_cut = 0;
+                        $RentOrderChildModel->rent_order_id = $RentModel->rent_order_id;
+                        $RentOrderChildModel->rent_order_pre_rent = $v['house_pre_rent'];
+                        $RentOrderChildModel->rent_order_receive = $v['house_balance'];
+                        $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                        $RentOrderChildModel->pay_way = 1;
+                        $RentOrderChildModel->house_id = $v['house_id'];
+                        $RentOrderChildModel->tenant_id = $v['tenant_id'];
+                        $RentOrderChildModel->ptime = time();
+                        $RentOrderChildModel->is_deal = 1;
+                        $RentOrderChildModel->save();
 
                         // 4、异动统计表中添加一条记录
                         $banInfo = Db::name('ban')->where([['ban_id','eq',$finalRow['ban_id']]])->find();
