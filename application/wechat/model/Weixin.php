@@ -93,8 +93,9 @@ class Weixin extends Model
             'mch_key'        => $configDatas['app_liangdao_user_pay_key'], //'XC854SKIDHXJKSID87XUSHJD87XJS9XS',
             // 配置商户支付双向证书目录 （p12 | key,cert 二选一，两者都配置时p12优先）
             //'ssl_p12'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . '1332187001_20181030_cert.p12',
-            'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
-            'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            'ssl_key'        => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'home'. DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+            // 'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+            'ssl_cer'        => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'home'. DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR. 'apiclient_cert.pem',
             // 'ssl_key'        => $configDatas['app_liangdao_apiclient_key_pem'],
             // 'ssl_cer'        => $configDatas['app_liangdao_apiclient_cert_pem'],
             // 配置缓存目录，需要拥有写权限

@@ -160,10 +160,10 @@ class Index extends Common
         $token = input('token');
         $openid = cache('weixin_openid_'.$token); //存储openid
 
-        if(!$rent_order_info){
-            $result['msg'] = '订单编号错误';
-            return json($result);
-        }
+        // if(!$rent_order_info){
+        //     $result['msg'] = '订单编号错误';
+        //     return json($result);
+        // }
 
         // 检查订单id是否为空
         $rent_order_id = input('rent_order_id');

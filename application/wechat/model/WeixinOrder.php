@@ -174,7 +174,21 @@ class WeixinOrder extends Model
 
             // 更新预付订单
             $row->transaction_id = $data['transaction_id'];
-            $row->ptime = strtotime($data['time_end']); //支付时间
+
+            $act_ptime = strtotime($data['time_end']); //实际支付时间
+
+            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
+
+            if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
+                $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
+            }else{
+                $ptime = $act_ptime; // 不超过则按照真实支付时间来
+            }
+
+
+            $row->act_ptime = $act_ptime; //实际支付时间
+            $row->ptime = $ptime; //支付时间
+
             $row->pay_money = $data['total_fee'] / 100; //支付金额，单位：分
             $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
             $row->order_status = 1; //支付状态1，支付完成
@@ -217,6 +231,9 @@ class WeixinOrder extends Model
                 $RentOrderChildModel->rent_order_date = $rent_order_info['rent_order_date'];
                 $RentOrderChildModel->rent_order_paid = $child_rent_order_paid;
                 $RentOrderChildModel->pay_way = 4; // 4是微信支付
+                $RentOrderChildModel->act_ptime = $act_ptime; //实际支付时间
+                $RentOrderChildModel->ptime = $ptime; //支付时间
+
                 $RentOrderChildModel->save();
 
 
