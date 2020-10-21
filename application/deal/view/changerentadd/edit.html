@@ -96,6 +96,13 @@
 		</div>
 	</div>
 	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md4">
+			<label class="j-form-label">是否收回</label>
+			<div class="j-input-inline j-input-radio">
+				<input type="radio" name="is_take_back" value="1" {if condition="$data_info['is_take_back']"}checked{/if} title="是">
+				<input type="radio" name="is_take_back" value="0" title="否" {if condition="!$data_info['is_take_back']"}checked{/if}>
+			</div>
+		</div>
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
