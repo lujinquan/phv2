@@ -859,6 +859,7 @@ class Weixin extends Common
 
             $where = [];
             $where[] = ['d.ban_inst_id','in',$insts[$row['inst_id']]];
+            $where[] = ['b.house_status','eq',1];
             
             
             if($use){
