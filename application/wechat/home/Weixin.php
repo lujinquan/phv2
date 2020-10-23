@@ -2845,16 +2845,16 @@ class Weixin extends Common
         // 开票
         $InvoiceModel = new InvoiceModel;
         if($type == 'order'){
-            // $dpkj = $InvoiceModel->dpkj($id);
-            // if(!$dpkj){
-            //     $result['msg'] = $InvoiceModel->getError(); // 开票失败
-            //     return json($result);
-            // }
+            $dpkj = $InvoiceModel->dpkj($id);
+            if(!$dpkj){
+                $result['msg'] = $InvoiceModel->getError(); // 开票失败
+                return json($result);
+            }
             $WeixinOrderModel = new WeixinOrderModel;
             $order_info = $WeixinOrderModel->find($id)->toArray();
 
             $InvoiceModel = new InvoiceModel;
-            $invoice_info = $InvoiceModel->find(41)->toArray();
+            $invoice_info = $InvoiceModel->where([['id','eq',$order_info['invoice_id']]])->find()->toArray();
             $invoice_info['fplx'] = ($invoice_info['fplx'] == '026')?'增值税电子发票':'区块链发票';
             $invoice_info['zsfs'] = ($invoice_info['zsfs'] == 2)?'差额征税':'普通征税';
             $invoice_info['kplx'] = ($invoice_info['kplx'])?'红字发票':'蓝字发票';
