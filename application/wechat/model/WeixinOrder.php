@@ -177,7 +177,7 @@ class WeixinOrder extends Model
 
             $act_ptime = strtotime($data['time_end']); //实际支付时间
 
-            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
+            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-27');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
 
             if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
                 $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
@@ -260,8 +260,8 @@ class WeixinOrder extends Model
             }
            
             // 开具电子发票
-            $InvoiceModel = new InvoiceModel;
-            $InvoiceModel->dpkj($row['order_id']);
+            // $InvoiceModel = new InvoiceModel;
+            // $InvoiceModel->dpkj($row['order_id']);
 
         // 如果通过out_trae_no无法找到预付订单，则抛出错误
         }else{

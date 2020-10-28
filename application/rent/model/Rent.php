@@ -351,7 +351,7 @@ class Rent extends Model
             $where[] = ['rent_order_date','eq',$date];
             $where[] = ['rent_order_status','eq',1];
             // $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
-            // $where[] = ['b.house_number','eq','10101212576452'];
+            // $where[] = ['b.house_number','eq','10101221426271'];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[3]];
             $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,a.house_id,a.tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->select()->toArray();
 
@@ -1040,6 +1040,9 @@ class Rent extends Model
         $re = 0;
         if($type == 'unpaid'){ //欠缴列表里，点击的是order表
             foreach ($ids as $id) {
+                
+                $row = $this->find($id);
+                // halt($row);
                 $row->is_deal = 0;     
                 //如果是本月的订单，而且也没支付过，则直接回退订单状态            
                 $RentOrderChildModel = new RentOrderChildModel;
@@ -1063,7 +1066,7 @@ class Rent extends Model
                 }
 
                 $RentOrderChildModel = new RentOrderChildModel;
-                $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->update(['rent_order_status'=>0,'muid'=>ADMIN_ID]); //只删除本月处理的订单，且是现金缴纳方式的订单
+                $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->update(['rent_order_status'=>0]); //只删除本月处理的订单，且是现金缴纳方式的订单,'muid'=>ADMIN_ID
 
                 $re++;
             }
@@ -1071,6 +1074,7 @@ class Rent extends Model
             foreach ($ids as $id) {
                 $RentOrderChildModel = new RentOrderChildModel;
                 $row = $RentOrderChildModel->find($id);
+                // halt($row);
                 if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1 || $row->rent_order_status != 1){ //如果不是本月操作的实收订单，或者不是现金交的
                     continue;
                 }else{ //如果是本月收的订单
@@ -1086,7 +1090,7 @@ class Rent extends Model
                     $order_row->save(); //修改order表
 
                     $row->rent_order_status = 0;
-                    $row->muid = ADMIN_ID;
+                    // $row->muid = ADMIN_ID;
                     $row->save(); //删除时间记录
 
                     $re++;
