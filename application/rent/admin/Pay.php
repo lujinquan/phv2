@@ -16,6 +16,7 @@ use think\Db;
 use hisi\Dir;
 use hisi\PclZip;
 use app\system\admin\Admin;
+use app\common\model\SystemExport;
 use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\wechat\model\Weixin as WeixinModel;
@@ -86,6 +87,7 @@ class Pay extends Admin
                 $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
+
                 $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->count('a.id');
                 // 统计
                 $totalRow = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
@@ -128,6 +130,148 @@ class Pay extends Admin
         }
 
         return $this->fetch('index_' . $group);
+    }
+
+    public function export()
+    {
+        if ($this->request->isAjax()) {
+            $getData = $this->request->param();
+            $group = isset($getData['group']) ? $getData['group'] : 'y';
+            if ($group == 'y') {
+
+                $WeixinOrderModel = new WeixinOrderModel;
+                $where = $WeixinOrderModel->checkWhere($getData);
+                // halt($where);
+                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $data = [];
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->order('a.ctime desc')->select()->toArray();
+                // halt($temp);
+                $tableData = array();
+                foreach($temp as $k => $v){
+                    $tableData[$k]['out_trade_no'] = $v['out_trade_no'];
+                    $tableData[$k]['house_number'] = $v['house_number'];
+                    $tableData[$k]['tenant_name'] = $v['tenant_name'];
+                    $tableData[$k]['ban_inst_id'] = $v['ban_inst_id'];
+                    $tableData[$k]['ban_address'] = $v['ban_address'];
+                    $tableData[$k]['ban_owner_id'] = $v['ban_owner_id'];
+                    $tableData[$k]['house_use_id'] = $v['house_use_id'];
+                    $tableData[$k]['house_pre_rent'] = $v['house_pre_rent'];
+                    $tableData[$k]['pay_money'] = $v['pay_money'];
+                    $tableData[$k]['member_name'] = $v['member_name'];
+                    $tableData[$k]['trade_type'] = $v['trade_type'];
+                    $v['order_status'];
+                    if($v['order_status'] == 1){
+                        $tableData[$k]['order_status'] = '已成功';
+                    }else if($v['order_status'] == 2){
+                        $tableData[$k]['order_status'] = '已退款';
+                    }
+                    if ($v['trade_type'] == 'CASH') {
+                        $tableData[$k]['trade_type'] = '现金支付';
+                    } else if ($v['trade_type'] == 'JSAPI') {
+                        $tableData[$k]['trade_type'] = '微信支付';
+                    } else if ($v['trade_type'] == 'NATIVE') {
+                        $tableData[$k]['trade_type'] = '微信支付';
+                    }
+                    $tableData[$k]['ptime'] = $v['ptime'];
+
+                }
+                // halt($tableData);
+                if($tableData){
+
+                    $SystemExportModel = new SystemExport;
+
+                    $titleArr = array(
+                        array('title' => '支付订单号', 'field' => 'out_trade_no', 'width' => 24,'type' => 'string'),
+                        array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
+                        array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                        array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
+                        array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),   
+                        array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
+                        array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
+                        array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
+                        array('title' => '支付金额', 'field' => 'pay_money', 'width' => 12,'type' => 'number'),
+                        array('title' => '支付用户', 'field' => 'member_name', 'width' => 12,'type' => 'number'),
+                        array('title' => '支付方式', 'field' => 'trade_type', 'width' => 12,'type' => 'number'),
+                        array('title' => '支付状态', 'field' => 'order_status', 'width' => 12,'type' => 'number'),
+                        array('title' => '支付时间', 'field' => 'ptime', 'width' => 12,'type' => 'number'),
+                    );
+
+                    $tableInfo = [
+                        'FileName' => '支付记录数据',
+                        'Title' => '支付记录数据',
+                    ];
+
+                    return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+                }else{
+                    $result = [];
+                    $result['code'] = 0;
+                    $result['msg'] = '数据为空！';
+                    return json($result);
+                }
+                $data['code'] = 0;
+                $data['msg'] = '';
+                return json($data);
+            } else if ($group == 'x') {
+               
+               
+                $RechargeModel = new RechargeModel;
+                $where = $RechargeModel->checkWhere($getData, $type = "pay");
+                // halt($where);
+                $fields = "a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+
+                // $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+
+                $data = [];
+                $tableData = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->order('ctime desc')->select();
+
+                if($tableData){
+
+                    $SystemExportModel = new SystemExport;
+
+                    $titleArr = array(
+                        array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),
+                        array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),
+                        array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
+                        array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
+                        array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
+                        array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                        array('title' => '收支方式', 'field' => 'pay_way', 'width' => 12,'type' => 'number'),
+                        array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
+                        array('title' => '缴纳金额', 'field' => 'pay_rent', 'width' => 12,'type' => 'number'),
+                        array('title' => '当前余额', 'field' => 'yue', 'width' => 12,'type' => 'number'),
+                        array('title' => '创建时间', 'field' => 'ctime', 'width' => 24,'type' => 'number'),
+                    );
+
+                    $tableInfo = [
+                        'FileName' => '充值记录数据',
+                        'Title' => '充值记录数据',
+                    ];
+
+                    return $SystemExportModel->exportExcel($tableData, $titleArr, $sheetType = 1 , $tableInfo , $downloadType = 3);
+                }else{
+                    $result = [];
+                    $result['code'] = 0;
+                    $result['msg'] = '数据为空！';
+                    return json($result);
+                }
+                $data['code'] = 0;
+                $data['msg'] = '';
+                return json($data);
+            }
+
+            //ini_set('memory_limit', '300M');
+            $getData = $this->request->get();
+            $RentOrderChildModel = new RentOrderChildModel;
+            $where = $RentOrderChildModel->checkWhere($getData);
+            $fields = "a.pay_way,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,b.house_protocol_rent,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d %H-%i-%s') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $data = [];
+            $tableData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.ptime desc')->select();
+
+            //halt($tableData);
+           
+
+        }
+
     }
 
     // 一键开票
@@ -397,6 +541,8 @@ class Pay extends Admin
         }
         return $this->fetch();
     }
+
+
 
     /**
      * 功能描述：支付退款

@@ -28,8 +28,20 @@ class Rent extends Admin
 
     public function index()
     {
-        $RentModel = new RentModel;
+        // $RentModel = new RentModel;
 
+        // $data['time_end'] = '2020-10-28 8:00';
+
+        // $act_ptime = strtotime($data['time_end']); //实际支付时间
+
+        // $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28');// 用于统计的支付时间，如果超出本月28号零时零分则当成下月支付
+
+        // if ($act_ptime >= $stant_ptime) {
+        //     $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')));
+        // }else{
+        //     $ptime = date('Y-m-d H:i:s',$act_ptime);
+        // }
+        // dump($data['time_end']);halt($ptime);
         //$RentModel->where([['ptime','eq',0],['rent_order_date','<',date('Ym')]])->update(['is_deal'=>1]);
 
     	if ($this->request->isAjax()) {
