@@ -281,9 +281,10 @@ class Report extends Model
                 continue;
             }
             $data[$b]['last_yue'] = $last_yue;
-            $data[$b]['kou_rent'] = isset($kouData[$b])?abs($kouData[$b]):0;
+            $data[$b]['kou_rent'] = $kou_rent;
             $data[$b]['house_pre_rent'] = $houses[$b]['house_pre_rent'];
-            $data[$b]['house_balance'] = $houses[$b]['house_balance'];
+            //$data[$b]['house_balance'] = $houses[$b]['house_balance'];
+            $data[$b]['house_balance'] = bcadd(bcsub($last_yue, $kou_rent ,2), $pay_rent ,2);
             $data[$b]['pay_rent'] = $pay_rent;
             $data[$b]['number'] = $houses[$b]['house_number'];
             $data[$b]['address'] = $houses[$b]['ban_address'];

@@ -213,7 +213,7 @@ class Index extends Common
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
         // 如果前端传过来的金额和后台计算的金额不相符
-        if (($pay_money / 100) != $total_price) {
+        if ($pay_money != $total_price * 100) {
             $result['code'] = 10033;
             $result['msg'] = '支付金额'. $total_price .'与约定金额'.($pay_money / 100).'不相符';
             return json($result);
@@ -431,7 +431,7 @@ class Index extends Common
             $pay_money += $rent_order_info['rent_order_receive']*100;
         }
         // 如果前端传过来的金额和后台计算的金额不相符
-        if (($pay_money / 100) != $total_price) {
+        if ($pay_money != $total_price * 100) {
             $result['code'] = 10033;
             $result['msg'] = '支付金额'. $total_price .'与约定金额'.($pay_money / 100).'不相符';
             return json($result);
