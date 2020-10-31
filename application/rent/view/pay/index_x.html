@@ -95,7 +95,7 @@
                 {// /if}
                 {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline j-input-margin" style="width:180px;">
-                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
+                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('first day of next month'))}-01">
                 </div> 
                 {/if}
             </div>
@@ -187,7 +187,7 @@
                 ,{field: 'house_pre_rent', minWidth: 100, align:'center', totalRow: true ,title: '规定租金'}
                 ,{field: 'pay_rent', minWidth: 100, align:'center', totalRow: true ,title: '缴纳金额'}
                 ,{field: 'yue', minWidth: 100, align:'center',title: '当前余额'}
-                ,{field: 'ctime', minWidth: 160, align:'center', title: '创建时间'}
+                ,{field: 'act_ptime', minWidth: 160, align:'center', title: '实际支付时间'}
                 ,{title: '操作', width: 180,align:'left', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){

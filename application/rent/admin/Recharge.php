@@ -39,9 +39,9 @@ class Recharge extends Admin
             $RechargeModel = new RechargeModel;
             $where = $RechargeModel->checkWhere($getData);
 
-            $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%S') as ptime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
+            $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('ptime desc')->select();
             $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.id');
             // 统计
             $totalRow = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
@@ -81,13 +81,70 @@ class Recharge extends Admin
                 return $this->error('充值后余额不能为负');
             }
             $filData['trade_type'] = 'CASH';
-            //halt($filData['yue']);
+            // 模拟线上支付
+        
+            /*if ( true ) {
+                $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
+                //halt($user_info);
+                if (empty($user_info['weixin_member_id'])) {
+                    $this->error = '当前管理员未绑定微信会员！';
+                    return false;
+                }
+                $weixin_member_id = explode(',',$user_info['weixin_member_id']);
+                //$this->pay_for_rent($row['house_id'], $pay_rent, ADMIN_ID, [$id]);
+                $this->part_order_to_pay($id, ADMIN_ID, $weixin_member_id[0] ,$pay_rent);
+            } else {
+                // 缴费生成一条条子订单
+                $RentOrderChildModel = new RentOrderChildModel;
+                $RentOrderChildModel->rent_order_id = $id;
+                $RentOrderChildModel->house_id = $row['house_id'];
+                $RentOrderChildModel->tenant_id = $row['tenant_id'];
+                $RentOrderChildModel->rent_order_paid = $pay_rent;
+                $RentOrderChildModel->rent_order_number = $row->rent_order_number;
+                $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
+                $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
+                $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
+                $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
+                $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
+                $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
+                $RentOrderChildModel->rent_order_date = $row->rent_order_date;
+                $RentOrderChildModel->ptime = $ctime;
+                $RentOrderChildModel->save();
+
+
+                $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
+                $row->is_deal = 1;
+                $res = $row->save();
+
+                // 添加房屋台账，记录缴费状况
+                $HouseTaiModel = new HouseTaiModel;
+                $HouseTaiModel->house_id = $row['house_id'];
+                $HouseTaiModel->tenant_id = $row['tenant_id'];
+                $HouseTaiModel->cuid = ADMIN_ID;
+                $HouseTaiModel->house_tai_type = 2;
+                $HouseTaiModel->house_tai_remark = '现金缴费：'.$pay_rent.'元';
+                $HouseTaiModel->data_json = [];
+                $HouseTaiModel->change_type = '';
+                $HouseTaiModel->change_id = '';
+                $HouseTaiModel->save();
+            }*/  
+
+
+
             // 入库
             if (!$RechargeModel->allowField(true)->create($filData)) {
                 return $this->error('充值失败');
             }
             $house_info->house_balance = $filData['yue'];
             $house_info->save();
+
+            // // 模拟生成一条微信支付关联记录
+            // $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+            // $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            // $WeixinOrderTradeModel->rent_order_id = $id;
+            // $WeixinOrderTradeModel->pay_dan_money = $filData['pay_rent'];
+            // $WeixinOrderTradeModel->save();
+            
             //增加房屋台账记录
             $HouseTaiModel = new HouseTaiModel;
             $HouseTaiModel->house_id = $house_info['house_id'];

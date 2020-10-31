@@ -69,7 +69,7 @@
 				{/if}
 				{if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
 				<div class="layui-input-inline j-width-160 j-margin-10">
-				    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input">
+				    <input type="text" name="order_date" title="月份" placeholder="月份" id="query_month" class="layui-input">
 				</div> 
 				{/if}
 			</div>
@@ -102,12 +102,17 @@
 		var s = $('#dataTable').attr('params');
 		var params = JSON.parse(s);
 		var table = layui.table;
-		//日期范围
-		laydate.render({
-		    elem: '#test6'
-		    //,range: true
-		    ,range: '~'
-		});
+		//年选择器
+        laydate.render({
+            elem: '#query_month'
+            ,type: 'month'
+            ,isInitValue: true,
+            ready: function(date){
+                $('.layui-laydate li').click(function () {
+                   $('.laydate-btns-confirm').trigger('click');
+                });
+            }
+        });
 		table.render({
 			elem: '#dataTable',
 			/* height: 550, */
@@ -115,7 +120,7 @@
 				// ,defaultToolbar: ['print']
 				,
 				defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
-			,url: '{:url("Lease/index")}' //数据接口
+			,url: '{:url("deal/index")}' //数据接口
 			,page: true //开启分页
 			,limit: 10
 			,limits: [10,20,30,40,50,100,300,500,1000]
@@ -124,37 +129,30 @@
 			}
 			,cols: [
 				[ //表头
-				    {field:'zizeng', width:60, title: 'ID',fixed: 'center',type:'numbers'}
-					,{
-						field: 'change_type',
-						minWidth: 90,
-						align:'center',
-						title: '异动类型'
-					},{
-						field: 'ban_inst_id',
-						minWidth: 100,
-						align:'center',
-						title: '管段',
-						hide: isShowInst,
-						templet: function(d) {
+				    // {field:'zizeng', width:60, title: 'ID',fixed: 'center',type:'numbers'}
+					{field: 'change_type',minWidth: 90,align:'center',title: '异动类型',templet: function(d) {
+						return params.changes[d.change_type];
+					}}
+					,{field: 'ban_inst_id',minWidth: 100,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
 							return params.insts[d.ban_inst_id];
-						}
-					}
+					}}
 					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
 					,{field: 'house_number', minWidth: 110, align:'center', title: '房屋编号'}
 					,{field: 'ban_address',minWidth:120,align:'center', title: '地址'}
 					,{field: 'tenant_name',minWidth:80,align:'center', title: '租户姓名'}
-					,{field: 'ban_holds',minWidth:60,align:'center', title: '户数'}
-					,{field: 'house_pre_rent',minWidth:90,align:'center', title: '规定租金'}
-					,{field: 'house_lease_area',minWidth:90,align:'center', title: '计租面积'}
-					,{field: 'ban_area',minWidth:90,align:'center', title: '建筑面积'}
-					,{field: 'ban_oprice',minWidth:90,align:'center', title: '原价'}
-					,{field: 'ban_num',minWidth:60,align:'center', title: '栋数'}
-					,{field: 'fdate',minWidth:90,align:'center', title: '完成时间'}
+					,{field: 'ban_holds',minWidth:60,align:'center', title: '户数',templet: function(d) {
+						return 1;
+					}}
+					,{field: 'change_rent',minWidth:90,align:'center', title: '规定租金'}
+					,{field: 'change_use_area',minWidth:90,align:'center', title: '计租面积'}
+					,{field: 'change_area',minWidth:90,align:'center', title: '建筑面积'}
+					,{field: 'change_oprice',minWidth:90,align:'center', title: '原价'}
+					,{field: 'change_ban_num',minWidth:60,align:'center', title: '栋数'}
+					,{field: 'order_date',minWidth:90,align:'center', title: '完成时间'}
 					,{field: 'ban_owner_id',minWidth: 80,title: '产别',align:'center',templet: function(d) {
-						return params.owners[d.ban_owner_id];
+						return params.owners[d.owner_id];
 					}}, {field: 'house_use_id',minWidth: 80,align:'center',title: '使用性质',templet: function(d) {
-						return params.uses[d.house_use_id];
+						return params.uses[d.use_id];
 					}}
 					,{field: 'ban_damage_id',minWidth: 100, align:'center', title: '完损等级', templet: function(d) {
 						return params.damages[d.ban_damage_id];

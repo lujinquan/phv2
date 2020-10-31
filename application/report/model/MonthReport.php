@@ -23,17 +23,20 @@ class MonthReport extends Model
 
         $cacheFullDateToTime = strtotime($cacheFullDate);
         $nextFullDate = date('Y-m',strtotime('+1 month',$cacheFullDateToTime)); // 2020-09
+
+        // $currTrueFullDate = $cacheFullDate.'-27';
+
         $nextDate = str_replace('-', '', $nextFullDate); // 202009
         //dump($cacheDate);dump($cacheFullDate);dump($nextFullDate);halt($nextDate);
         //从往期欠租表中,获取当月收缴到的以前月的【以前月实收】租金
         $rentOldMonthData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','>',$cacheYearZeroMonth],['a.rent_order_date','<',$cacheDate],['a.rent_order_status','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
-
+        // halt(Db::name('rent_order_child')->getLastSql());
         //halt(Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','>',$cacheYearZeroMonth],['a.rent_order_date','<',$cacheDate],['a.rent_order_status','eq',1]])->select());
         // $xx = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,a.rent_order_paid')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','between',[$cacheYearZeroMonth,$cacheDate]]])->fetchSql(true)->select();
         // halt($xx);
         //从往期欠租表中,获取今年【以前月实收累计】收缴到的以前月的租金
         $rentOldTotalMonthData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheYearFirstMonth,$nextFullDate]],['a.rent_order_date','>',$cacheYearZeroMonth],['a.rent_order_date','<',$cacheDate],['a.rent_order_status','eq',1]])->where('a.rent_order_date != from_unixtime(a.ptime, \'%Y%m\')')->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
-//halt(Db::name('rent_order_child')->getLastSql());
+        //halt(Db::name('rent_order_child')->getLastSql());
         //从往期欠租表中,获取当月收缴到的【以前年度实收】的租金
         $rentOldYearData = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field('b.house_use_id,d.ban_owner_id,d.ban_inst_id,sum(a.rent_order_paid) as pay_rents')->where([['a.ptime','between time',[$cacheFullDate,$nextFullDate]],['a.rent_order_date','<',$cacheYearZeroMonth],['a.rent_order_status','eq',1]])->group('b.house_use_id,d.ban_owner_id,d.ban_inst_id')->select();
 

@@ -32,6 +32,7 @@ class Report extends Model
         $separate = substr($month,0,4).'00';
         $where = [];
         $where[] = ['a.rent_order_date','<=',$month];
+        $where[] = ['a.rent_order_status','eq',1];
         $where[] = ['a.is_deal','eq',1];
         if($useid != 0){
             $where[] = ['b.house_use_id','in',explode(',',$useid)];
@@ -273,11 +274,17 @@ class Report extends Model
         // 合计本月余额
         $total_yue = 0;
         foreach ($houseids as $b) {
-            $data[$b]['last_yue'] = isset($temps[$b]['house_balance'])?abs($temps[$b]['house_balance']):0;
+            $pay_rent = isset($payData[$b])?$payData[$b]:0;
+            $kou_rent = isset($kouData[$b])?abs($kouData[$b]):0;
+            $last_yue = isset($temps[$b]['house_balance'])?abs($temps[$b]['house_balance']):0;
+            if($last_yue == 0 && $pay_rent == 0 && $kou_rent == 0){
+                continue;
+            }
+            $data[$b]['last_yue'] = $last_yue;
             $data[$b]['kou_rent'] = isset($kouData[$b])?abs($kouData[$b]):0;
             $data[$b]['house_pre_rent'] = $houses[$b]['house_pre_rent'];
             $data[$b]['house_balance'] = $houses[$b]['house_balance'];
-            $data[$b]['pay_rent'] = isset($payData[$b])?$payData[$b]:0;
+            $data[$b]['pay_rent'] = $pay_rent;
             $data[$b]['number'] = $houses[$b]['house_number'];
             $data[$b]['address'] = $houses[$b]['ban_address'];
             $data[$b]['tenant'] = $houses[$b]['tenant_name'];

@@ -98,8 +98,17 @@ class Unpaid extends Admin
     public function payList()
     {
         $ids = $this->request->param('id/a'); 
+
+        $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
+        //halt($user_info);
+        if (empty($user_info['weixin_member_id'])) {
+            $this->error('当前管理员未绑定微信会员！');
+            return false;
+        }
+
         $RentModel = new RentModel;      
         $res = $RentModel->payList($ids);
+        // halt($res->getError());
         if($res){
             $this->success('缴费成功，本次缴费'.$res.'条账单！');
         }else{
@@ -110,7 +119,7 @@ class Unpaid extends Admin
     /**
      *  批量撤回
      */
-    public function payBackList()
+    /*public function payBackList()
     {
         $ids = $this->request->param('id/a'); 
         $RentModel = new RentModel;
@@ -120,7 +129,7 @@ class Unpaid extends Admin
         }else{
             $this->error('撤回失败，请检查账单支付日期是否为本月，是否为房管员现金支付订单');
         }
-    }
+    }*/
 
 
     public function detail()

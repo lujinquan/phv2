@@ -62,14 +62,18 @@ class Pay extends Admin
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 // halt($where);
-                $fields = 'a.*,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $fields = 'a.*,b.pay_dan_money,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
-                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
 
-                //halt($temp);distinct(true)->
+                // 子查询
+                $subsql = Db::name('weixin_order_trade')->field('*')->group('out_trade_no')->buildSql();
+
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join([$subsql =>' b'], 'a.out_trade_no = b.out_trade_no', 'right')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->page($page)->order('ctime desc')->limit($limit)->select()->toArray();
+
+                // halt($temp);
                 $data['data'] = $temp;
 
-                $all = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field('a.order_id')->where($where)->column('a.pay_money');
+                $all = WeixinOrderModel::with('weixinMember')->alias('a')->join([$subsql =>' b'], 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field('a.order_id')->where($where)->column('a.pay_money');
                 $data['total_pay_money'] = array_sum($all);
                 $data['count'] = count($all);//halt($data['data']);
 
@@ -84,9 +88,9 @@ class Pay extends Admin
                 $RechargeModel = new RechargeModel;
                 $where = $RechargeModel->checkWhere($getData, $type = "pay");
                 //halt($where);
-                $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.ctime, '%Y-%m-%d %H:%i:%S') as ctime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.act_ptime, '%Y-%m-%d %H:%i:%S') as act_ptime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
-                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('ctime desc')->select();
+                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('act_ptime desc')->select();
 
                 $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->count('a.id');
                 // 统计
@@ -144,7 +148,12 @@ class Pay extends Admin
                 // halt($where);
                 $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
-                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join('weixin_order_trade b', 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->order('a.ctime desc')->select()->toArray();
+
+                // 子查询
+                $subsql = Db::name('weixin_order_trade')->field('*')->group('out_trade_no')->buildSql();
+
+
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join([$subsql =>' b'], 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->order('a.ctime desc')->select()->toArray();
                 // halt($temp);
                 $tableData = array();
                 foreach($temp as $k => $v){

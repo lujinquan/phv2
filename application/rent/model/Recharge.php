@@ -96,14 +96,14 @@ class Recharge extends Model
            
         }
         // 检索【收欠】支付时间
-        if(isset($data['ctime']) && $data['ctime']){
-            $startTime = strtotime(substr($data['ctime'],0,10));
-            $endTime = strtotime(substr($data['ctime'],-10));
-            $where[] = ['a.ctime','between',[$startTime,$endTime]];
-        }else{
+        if(isset($data['ptime']) && $data['ptime']){
+            $startTime = strtotime(substr($data['ptime'],0,10));
+            $endTime = strtotime(substr($data['ptime'],-10));
+            $where[] = ['a.ptime','between',[$startTime,$endTime]];
+        }else if(!isset($data['ptime'])){
             $startTime = strtotime(date('Y-m'));
             $endTime = strtotime(date('Y-m', strtotime( "first day of next month" ) ));
-            $where[] = ['a.ctime','between',[$startTime,$endTime]];
+            $where[] = ['a.ptime','between',[$startTime,$endTime]];
         }
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){

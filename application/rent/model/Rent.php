@@ -528,7 +528,7 @@ class Rent extends Model
         $row = $this->find($id);
 
         // 模拟线上支付
-        if ( false ) {
+        if ( true ) {
             $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
             //halt($user_info);
             if (empty($user_info['weixin_member_id'])) {
@@ -579,11 +579,7 @@ class Rent extends Model
     }
 
     /**
-<<<<<<< HEAD
      * 订单整体支付
-=======
-     * 订单整体缴费（迭代2.0.3）
->>>>>>> 8b87815590836b71c3ec52014c680337001cd2da
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
@@ -593,9 +589,23 @@ class Rent extends Model
      * @return  返回值  
      * @version 版本  1.0
      */
-    public function whole_orders_to_pay($ids, $uid, $member_id)
+    public function whole_orders_to_pay($ids, $uid, $member_id,$is_need_act_time = true)
     {
-        $ctime = time();
+        $act_ptime = time();
+
+        if ($is_need_act_time) {
+            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-27');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
+
+            if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
+                $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
+            }else{
+                $ptime = $act_ptime; // 不超过则按照真实支付时间来
+            }
+        }else{
+            $ptime = $act_ptime;
+        }
+        
+
         $i = 0;
         foreach ($ids as $id) {
 
@@ -616,7 +626,8 @@ class Rent extends Model
             $WeixinOrderModel->order_status = 1;
             $WeixinOrderModel->out_trade_no = $out_trade_no;
             $WeixinOrderModel->transaction_id = $transaction_id;
-            $WeixinOrderModel->ptime = $ctime;
+            $WeixinOrderModel->ptime = $ptime;
+            $WeixinOrderModel->act_ptime = $act_ptime;
             $WeixinOrderModel->save();
 
             // 模拟生成一条微信支付关联记录
@@ -641,7 +652,8 @@ class Rent extends Model
             $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
             $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
             $RentOrderChildModel->rent_order_date = $row->rent_order_date;
-            $RentOrderChildModel->ptime = $ctime;
+            $RentOrderChildModel->ptime = $ptime;
+            $RentOrderChildModel->act_ptime = $act_ptime;
             $RentOrderChildModel->save();
 
 
@@ -930,7 +942,7 @@ class Rent extends Model
         $now_date =  date('Ym');
 
         // 模拟线上支付
-        if ( false ) {
+        if ( true ) {
             $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
             //halt($user_info);
             if (empty($user_info['weixin_member_id'])) {
@@ -939,7 +951,7 @@ class Rent extends Model
             }
             $weixin_member_id = explode(',',$user_info['weixin_member_id']);
             //$this->pay_for_rent($row['house_id'], $pay_rent, ADMIN_ID, [$id]);
-            $ji = $this->whole_orders_to_pay($ids, ADMIN_ID, $weixin_member_id[0]);
+            $ji = $this->whole_orders_to_pay($ids, ADMIN_ID, $weixin_member_id[0], $is_need_act_time = false);
             return $ji;
         } else {
             foreach($ids as $id){

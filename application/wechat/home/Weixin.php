@@ -91,18 +91,8 @@ class Weixin extends Common
             $result['en_msg'] = 'Code value cannot be empty';
         }
         $WeixinModel = new WeixinModel;
-        if($this->debug){
-            // 下面是一个模拟返回的数组，注释上一行
-            $resultOpenid = [
-                'openid' => 'debug_openid',
-                'session_key' => 'debug_session_key',
-                //'unionid' => 'debug_unionid', // 特定情况下才会返回unionid
-            ];
-        }else{
-            //halt($code);
-            $resultOpenid = $WeixinModel->getOpenid($code);
-            //halt($resultOpenid);
-        }
+        // echo $code;exit;
+        $resultOpenid = $WeixinModel->getOpenid($code);     
         
         if(is_array($resultOpenid)){
             if($this->debug){
@@ -112,21 +102,16 @@ class Weixin extends Common
                     'expires_in' => 7200,
                 ];
             }else{
-                //echo 2;exit;
                 $resultAccessToken = $WeixinModel->getAccessToken();
             }
 
             $expires_time = time() + $resultAccessToken['expires_in']; //设置过期时间
             $token = md5($resultOpenid['openid'].time()); //设置token
 
-            cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
-            cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
-            cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
-            //cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
+            // cache('weixin_openid_'.$token, $resultOpenid['openid'],7000); //存储openid
+            // cache('weixin_expires_time_'.$token, $expires_time,7000);  //存储过期时间
+            // cache('weixin_session_key_'.$token, $resultOpenid['session_key'],7000);  //存储session_key
             
-
-            
-            //cache('weixin_unionid_'.$token, $resultOpenid['unionid'],7000);  //存储unionid
             $result['code'] = 1;
             $result['data'] = [
                 'openid' => $resultOpenid['openid'],
@@ -137,10 +122,9 @@ class Weixin extends Common
 
             $WeixinMemberModel = new WeixinMemberModel;
             $member_info = $WeixinMemberModel->where([['openid','eq',$resultOpenid['openid']]])->find();
-            // if( empty($member_info) )
-            // {
-            //  $member_info = $WeixinMemberModel->where([['unionid','eq',$resultOpenid['unionid']]])->find();
-            // }
+  // halt($member_info);
+            // 添加微信Token记录
+            
             // 如果在系统中能查到微信会员信息
             if(!empty($member_info) )
             {
@@ -152,13 +136,24 @@ class Weixin extends Common
                 $member_info->last_login_ip = get_client_ip();
                 $member_info->login_count = Db::raw('login_count+1');
                 $member_info->save();   
-                // 添加微信Token记录
+
                 $WeixinTokenModel = new WeixinTokenModel;
-                $WeixinTokenModel->token = $token;
-                $WeixinTokenModel->member_id = $member_id;
-                $WeixinTokenModel->session_key = $resultOpenid['session_key'];
-                $WeixinTokenModel->expires_in = $expires_time;
-                $WeixinTokenModel->save();
+                $weixin_token_info = $WeixinTokenModel->where([['member_id','eq',$member_id]])->find();
+                if(empty($weixin_token_info)){
+                    // 添加微信Token记录
+                    $WeixinTokenModel = new WeixinTokenModel;
+                    $WeixinTokenModel->token = $token;
+                    $WeixinTokenModel->member_id = $member_id;
+                    $WeixinTokenModel->session_key = $resultOpenid['session_key'];
+                    $WeixinTokenModel->expires_in = $expires_time;
+                    $WeixinTokenModel->save();
+                }else{
+                    $weixin_token_info = $WeixinTokenModel->where([['member_id','eq',$member_id]])->update([
+                        'token'=>$token,
+                        'session_key'=>$resultOpenid['session_key'],
+                        'expires_in'=>$expires_time
+                    ]);
+                }
                 
             // 如果在系统中查不到微信会员信息
             }else{
@@ -180,18 +175,18 @@ class Weixin extends Common
             }
 
             // 清除该会员前所有的token失效
-            $member_house_id = $WeixinTokenModel->id;
-            $cache_token_dead = $WeixinTokenModel->where([['member_id','eq',$member_id],['id','neq',$member_house_id],['token_status','eq',1]])->select();
-            if($cache_token_dead){
-                foreach ($cache_token_dead as $k => $t) {
-                    cache('weixin_openid_'.$t['token'], NULL); //清除openid缓存
-                    cache('weixin_expires_time_'.$t['token'], NULL); //清除openid缓存
-                    cache('weixin_session_key_'.$t['token'], NULL); //清除openid缓存
-                    //cache('weixin_unionid_'.$t['token'], NULL); //清除openid缓存
-                    $t->token_status = 0; //token状态设置为失效
-                    $t->save();
-                }
-            }
+            // $member_house_id = $WeixinTokenModel->id;
+            // $cache_token_dead = $WeixinTokenModel->where([['member_id','eq',$member_id],['id','neq',$member_house_id],['token_status','eq',1]])->select();
+            // if($cache_token_dead){
+            //     foreach ($cache_token_dead as $k => $t) {
+            //         // cache('weixin_openid_'.$t['token'], NULL); //清除openid缓存
+            //         // cache('weixin_expires_time_'.$t['token'], NULL); //清除openid缓存
+            //         // cache('weixin_session_key_'.$t['token'], NULL); //清除openid缓存
+            //         //cache('weixin_unionid_'.$t['token'], NULL); //清除openid缓存
+            //         $t->token_status = 0; //token状态设置为失效
+            //         $t->save();
+            //     }
+            // }
             
         }else{
             $result['code'] = 0;
@@ -217,50 +212,28 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/applogin_do';
-        if(!$this->check_token()){
-            $result['msg'] = '令牌已失效！';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
             return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
        
         $token = input('token');
         
-        if($this->debug){
-            $data = [
-                'avatarUrl' => "https://wx.qlogo.cn/mmopen/vi_32/molOLezL8XLRnpH34rtdJrl1z0UE3PR55zv6axNbiaM6tWibmcOyLrm6ibAY4xIRLoAJ9fnOdzHcz1wl3N4fsMicYw/132",
-                'city' => '',
-                'country' => 'Egypt',
-                'gender' => 1,
-                'language' => 'zh_CN',
-                'nickName' => 'Lucas',
-                'province' => '',
-            ];
-        }else{
-            //$data = json_decode($data_json, true);
-            $data = [];
-            $data['nickName'] = input('nickName');
-            $data['avatarUrl'] = input('avatarUrl');
-            //halt($data);
-        }
-        //$user_info = $data['userinfo']; //获取授权的用户信息
-        //$share_id = $data['share_id']; //获取授权的分享id
-        
-        $openid = cache('weixin_openid_'.$token);
-        $expires_time = cache('weixin_expires_time_'.$token);
-        $session_key = cache('weixin_session_key_'.$token);
-        //$unionid = cache('weixin_unionid_'.$token);
-        
+
+        $data = [];
+        $data['nickName'] = input('nickName');
+        $data['avatarUrl'] = input('avatarUrl');
+   
         // 清除用户表情符号
         //$user_info['nickName'] = \Lib\Weixin\WeChatEmoji::clear($user_info['nickName']);
         $nickName = trim(emoji_encode($data['nickName']));
         
-        $WeixinMemberModel = new WeixinMemberModel;
-
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        
-        // if( !empty($unionid) && empty($member_info) )
-        // {
-        //  $member_info = $WeixinMemberModel->where([['unionid','eq',$unionid]])->find();
-        // }
         // 如果在系统中能查到微信会员信息
         if(!empty($member_info) )
         {
@@ -279,14 +252,6 @@ class Weixin extends Common
             $member_info->last_login_ip = get_client_ip();
             $member_info->login_count = Db::raw('login_count+1');
             $member_info->save();
-            
-            // 添加微信Token记录
-            // $WeixinTokenModel = new WeixinTokenModel;
-            // $WeixinTokenModel->token = $token;
-            // $WeixinTokenModel->member_id = $member_id;
-            // $WeixinTokenModel->session_key = $session_key;
-            // $WeixinTokenModel->expires_in = $expires_time;
-            // $WeixinTokenModel->save();
 
         // 如果在系统中查不到微信会员信息
         }else{
@@ -351,7 +316,7 @@ class Weixin extends Common
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/column_list';
 
-         // 验证用户
+        // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
             $result['code'] = $checkData['error_code'];
@@ -362,11 +327,11 @@ class Weixin extends Common
             $member_extra_info = $checkData['member_extra_info'];
         }
 
-        //halt($checkData['role_type']);
+        // halt($checkData['role_type']);
         // 获取所有业务列表
         $WeixinColumnModel = new WeixinColumnModel;
         $columns = $WeixinColumnModel->field('col_id,col_name,auth_roles,is_top,col_icon,app_page')->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->select()->toArray();
-        //halt($columns);
+        // halt($columns);
         $all_process_columns = [];
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
@@ -399,7 +364,7 @@ class Weixin extends Common
              }
              $all_process_columns[] = $v;  
         }
-   
+   // halt($all_process_columns);
         // 获取待缴费金额
         $WeixinMemberHouseModel = new WeixinMemberHouseModel;
         $houses = $WeixinMemberHouseModel->where([['member_id','eq',$member_info['member_id']],['dtime','eq',0]])->column('house_id');
@@ -438,20 +403,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/edit_my_column_list';
-        if($this->debug === false){
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -469,8 +431,7 @@ class Weixin extends Common
         $WeixinColumnModel = new WeixinColumnModel;
         $columns = $WeixinColumnModel->where([['is_show','eq',1],['dtime','eq',0]])->order('is_top desc,sort asc')->column('col_id');
         $colArr = explode(',',$cols);
-        // dump($columns);
-        // halt($colArr);
+
         foreach ($colArr as  $v) {
             if(!in_array($v,$columns)){
                 $result['code'] = 10041;
@@ -860,6 +821,8 @@ class Weixin extends Common
             $where = [];
             $where[] = ['d.ban_inst_id','in',$insts[$row['inst_id']]];
             $where[] = ['b.house_status','eq',1];
+            // 只展示住宅房子
+            $where[] = ['b.house_use_id','eq',1];
             
             
             if($use){
@@ -917,6 +880,7 @@ class Weixin extends Common
                 $is_distance_sort = false;
                 if ($is_distance_sort) {
                     $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,b.house_advance_rent,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
+
                     $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->group('a.house_id')->page($page)->limit($limit)->select();
                     $ban_arr = Db::name('ban')->where([['ban_status','eq',1],['ban_inst_id','in',$insts[$row['inst_id']]]])->column('ban_id,ban_gpsx,ban_gpsy');
 
@@ -954,10 +918,19 @@ class Weixin extends Common
                     $result['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
                     $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
                 }else{
-                    $fields = 'a.rent_order_receive,a.rent_order_paid,sum(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,b.house_advance_rent,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
-                    $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->page($page)->limit($limit)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
+                    $fields = 'a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,b.house_advance_rent,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
+                    
+                    // $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
 
+                    // 子查询
+                    $subsql = Db::name('rent_order')->field('*')->group('house_id')->buildSql();
+// dump($where);halt($keywordsWhere);
+                    // $temps = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->page($page)->limit($limit)->where($where)->where($keywordsWhere)->group('a.house_id')->select();
+                    $temps = Db::name('house')->alias('b')->join([$subsql =>' a'],'b.house_id = a.house_id','inner')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->page($page)->limit($limit)->where($where)->where($keywordsWhere)->select();
+                    // halt(Db::name('house')->getLastSql());
                     foreach ($temps as &$v) { 
+                        $order_info = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1]])->field('sum(rent_order_receive-rent_order_paid) as rent_order_unpaid')->find();
+                        $v['rent_order_unpaid'] = $order_info['rent_order_unpaid'];
                         $v['ban_inst_id'] = $params['insts'][$v['ban_inst_id']];
                         $v['house_use_id'] = $params['uses'][$v['house_use_id']];
                         $v['ban_owner_id'] = $params['owners'][$v['ban_owner_id']];
@@ -965,7 +938,8 @@ class Weixin extends Common
                         //$result['data'][] = $v;
                     }
                     $result['data'] = $temps;
-                    $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
+                    // $result['count'] = 1000;
+                    $result['count'] = Db::name('house')->alias('b')->join([$subsql =>' a'],'b.house_id = a.house_id','inner')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->page($page)->limit($limit)->where($where)->where($keywordsWhere)->count('a.house_id');
                 }
                 
             }
@@ -1735,27 +1709,19 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/notice_list';
-        if($this->debug === false){
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
-            $result['en_msg'] = 'The user has been denied access';
             return json($result);
         }
         $page = input('page',1);
@@ -1794,20 +1760,16 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/guide_list';
-        if($this->debug === false){
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -1836,14 +1798,16 @@ class Weixin extends Common
     {
         // 验证令牌
         $result = [];
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-        } 
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
+        }
         // 获取参数对照数据
         $result['data'] = ParamModel::getCparams();
         $result['code'] = 1;
@@ -2020,21 +1984,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/add_member_house';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
         $house_ids = trim(input('house_ids'));
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
  
         $HouseModel = new HouseModel;
         $houseArr = $HouseModel->where([['house_status','eq',1],['house_is_pause','eq',0],['house_id','in',explode(',',$house_ids)]])->select()->toArray();
@@ -2114,22 +2074,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/my_house_list';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token); //存储openid
-        }else{
-            $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         $result['is_auth'] = 0;
         if($member_info){
             $is_mine = input('is_mine');
@@ -2202,18 +2157,6 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/member_info';
-        // if($this->debug === false){ 
-        //     if(!$this->check_token()){
-        //         $result['code'] = 10010;
-        //         $result['msg'] = '令牌失效';
-        //         $result['en_msg'] = 'Invalid token';
-        //         return json($result);
-        //     }
-        //     $token = input('token');
-        //     $openid = cache('weixin_openid_'.$token);
-        // }else{
-        //     $openid = 'oRqsn4624ol3tpa1JiBPQuY1toMY';
-        // }
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
             $result['code'] = $checkData['error_code'];
@@ -2221,16 +2164,8 @@ class Weixin extends Common
             return json($result);
         }else{ // 验证成功
             $member_info = $checkData['member_info']; //微信用户基础数据
-            // if($checkData['role_type'] != 2){ //如果当前用户不是管理员
-            //     $result['code'] = '权限不足';
-            //     $result['msg'] = '20000';
-            //     return json($result);
-            // }
             $member_extra_info = $checkData['member_extra_info'];
         }
-        // 绑定手机号
-        //$WeixinMemberModel = new WeixinMemberModel;
-        //$member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2334,21 +2269,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/my_order_list';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2433,21 +2364,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 1;
         $result['action'] = 'wechat/weixin/my_order_list';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2536,22 +2463,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 1;
         $result['action'] = 'wechat/weixin/my_charge_list';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        //$member_info = $WeixinMemberModel->where([['member_id','eq',42]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2651,22 +2573,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/my_charge_detail';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
-        //$member_info = $WeixinMemberModel->where([['member_id','eq',42]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2734,21 +2651,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/my_order_detail';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2814,21 +2727,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/dpkj';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2904,20 +2813,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/order_history';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn47Ar-NOdj2pRjLp2P2Ela4g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -2979,26 +2885,17 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/house_detail';
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        // if(!$this->check_token()){
-        //     $result['msg'] = '令牌已失效！';
-        //     return json($result);
-        // }
-        
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -3048,25 +2945,19 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
 
         $template_id = input('template_id','2kL0FTh48uEpTgBcLAwp2siR7eTrKOgNiHZSdXA_r_k'); //接收template_id
         $order_id = input('order_id',39); //接收openid
-
-        // 绑定手机号
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
 
         $WeixinOrderModel = new WeixinOrderModel;
         $order_info = $WeixinOrderModel->where([['order_id','eq',$order_id]])->find();
@@ -3165,21 +3056,16 @@ class Weixin extends Common
             // 验证令牌
             $result = [];
             $result['code'] = 0;
-            if($this->debug === false){ 
-                if(!$this->check_token()){
-                    $result['code'] = 10010;
-                    $result['msg'] = '令牌失效';
-                    $result['en_msg'] = 'Invalid token';
-                    return json($result);
-                }
-                $token = input('token');
-                $openid = cache('weixin_openid_'.$token);
-            }else{
-                $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+            // 验证用户
+            $checkData = $this->check_user_token();
+            if($checkData['error_code']){ // 如果有错误码
+                $result['code'] = $checkData['error_code'];
+                $result['msg'] = $checkData['error_msg'];
+                return json($result);
+            }else{ // 验证成功
+                $member_info = $checkData['member_info']; //微信用户基础数据
+                $member_extra_info = $checkData['member_extra_info'];
             }
-            // 绑定手机号
-            $WeixinMemberModel = new WeixinMemberModel;
-            $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
             if($member_info['is_show'] == 2){
                 $result['code'] = 10011;
                 $result['msg'] = '用户已被禁止访问';
@@ -3269,20 +3155,16 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
-            $token = input('token');
-            $openid = cache('weixin_openid_'.$token);
-        }else{
-            $openid = 'oRqsn49gtDoiVPFcZ6luFjGwqT1g';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         if($member_info['is_show'] == 2){
             $result['code'] = 10011;
             $result['msg'] = '用户已被禁止访问';
@@ -3321,10 +3203,10 @@ class Weixin extends Common
         $res = json_decode($res);
         // 验证短信码是否正确
         if($res->code == '200'){
-            $WeixinMemberModel = new WeixinMemberModel;
-            $openid = cache('weixin_openid_'.$token);
+            // $WeixinMemberModel = new WeixinMemberModel;
+            // $openid = cache('weixin_openid_'.$token);
             // 绑定手机号
-            $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+            // $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
             if($member_info['tenant_id']){
                 $result['code'] = 10051;
                 $result['msg'] = '请勿重复认证';
@@ -3389,13 +3271,25 @@ class Weixin extends Common
         if(empty($token)){
             return ['error_code'=>10009,'error_msg'=>'令牌为空'];
         }
-        if(empty(cache('weixin_openid_'.$token))){
+        // halt($token);
+        // // 缓存验证token是否过期
+        // $token = cache('weixin_openid_'.$token);
+        // if(empty($token)){
+        //     return ['error_code'=>10010,'error_msg'=>'令牌失效'];
+        // }
+        // $weixin_token_info = $token;
+        // $member_info = WeixinMemberModel::where([['token','eq',$weixin_token_info['member_id']]])->find();
+        // 数据库验证token是否过期
+        $weixin_token_info = WeixinTokenModel::where([['token','eq',$token]])->field('member_id,expires_in')->find();
+        if(empty($weixin_token_info)){
             return ['error_code'=>10010,'error_msg'=>'令牌失效'];
         }
 
-        $openid = cache('weixin_openid_'.$token); //存储openid
-        $WeixinMemberModel = new WeixinMemberModel;
-        $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
+        if($weixin_token_info['expires_in'] < time()){
+            return ['error_code'=>10010,'error_msg'=>'令牌失效'];
+        }
+
+        $member_info = WeixinMemberModel::where([['member_id','eq',$weixin_token_info['member_id']]])->find();
         //检查用户是否允许被访问
         if($member_info['is_show'] == 2){
             return ['error_code'=>10011,'error_msg'=>'用户已被禁止访问'];
@@ -3404,11 +3298,9 @@ class Weixin extends Common
         $role_type = 0; //默认是游客或未认证的租户
         $member_extra_info = '';
 
-
         $TenantModel = new TenantModel;
         $tenant_info = $TenantModel->where([['tenant_id','eq',$member_info['tenant_id']]])->field('tenant_id,tenant_name')->find();
 
-        
         if($tenant_info){
             $role_type = 1; //已认证的租户
             $member_extra_info = $tenant_info;
@@ -3416,7 +3308,7 @@ class Weixin extends Common
 
         $UserModel = new UserModel;
         $user_info = $UserModel->where([['weixin_member_id','eq',$member_info['member_id']]])->find();
-        //halt($user_info);
+        // halt($weixin_token_info);
         //检查用户是管理员，还是租户，还是其他
         if($user_info){
             $RoleModel = new RoleModel;
@@ -3433,15 +3325,20 @@ class Weixin extends Common
      * @author   Lucas 
      * 创建时间:  2020-02-26 16:47:53
      */
-    protected function check_token()
-    {
-        $token = input('token');
-        $openid = cache('weixin_openid_'.$token);
-        if(!$openid){
-            return false;
-        }
-        return true;
-    }
+    // protected function check_token()
+    // {
+    //     // return ['error_code'=>10010,'error_msg'=>'令牌失效'];
+    //     $token = input('token');
+    //     $WeixinTokenModel = new WeixinTokenModel;
+    //     $weixin_token_info = $WeixinTokenModel->where([['token','eq',$token]])->field('member_id,expires_in')->find();
+    //     if(empty($weixin_token_info)){
+    //         return false;
+    //     }
+    //     if($weixin_token_info['expires_in'] < time()){
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     /**
      * 功能描述： 发送短信
@@ -3453,13 +3350,15 @@ class Weixin extends Common
         // 验证令牌
         $result = [];
         $result['code'] = 0;
-        if($this->debug === false){ 
-            if(!$this->check_token()){
-                $result['code'] = 10010;
-                $result['msg'] = '令牌失效';
-                $result['en_msg'] = 'Invalid token';
-                return json($result);
-            }
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $member_extra_info = $checkData['member_extra_info'];
         }
         $tel = input('tel');
         // 验证手机号
@@ -3492,11 +3391,6 @@ class Weixin extends Common
         return json($result);
         
     }
-
-    
-
-
-
 
 
 }
