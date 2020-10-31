@@ -146,7 +146,7 @@ class Pay extends Admin
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 // halt($where);
-                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.act_ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
 
                 // 子查询
@@ -181,7 +181,7 @@ class Pay extends Admin
                     } else if ($v['trade_type'] == 'NATIVE') {
                         $tableData[$k]['trade_type'] = '微信支付';
                     }
-                    $tableData[$k]['ptime'] = $v['ptime'];
+                    $tableData[$k]['act_ptime'] = $v['act_ptime'];
 
                 }
                 // halt($tableData);
@@ -202,7 +202,7 @@ class Pay extends Admin
                         array('title' => '支付用户', 'field' => 'member_name', 'width' => 12,'type' => 'number'),
                         array('title' => '支付方式', 'field' => 'trade_type', 'width' => 12,'type' => 'number'),
                         array('title' => '支付状态', 'field' => 'order_status', 'width' => 12,'type' => 'number'),
-                        array('title' => '支付时间', 'field' => 'ptime', 'width' => 12,'type' => 'number'),
+                        array('title' => '实际支付时间', 'field' => 'ptime', 'width' => 12,'type' => 'number'),
                     );
 
                     $tableInfo = [
@@ -248,7 +248,7 @@ class Pay extends Admin
                         array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
                         array('title' => '缴纳金额', 'field' => 'pay_rent', 'width' => 12,'type' => 'number'),
                         array('title' => '当前余额', 'field' => 'yue', 'width' => 12,'type' => 'number'),
-                        array('title' => '创建时间', 'field' => 'ctime', 'width' => 24,'type' => 'number'),
+                        array('title' => '实际支付时间', 'field' => 'act_ptime', 'width' => 24,'type' => 'number'),
                     );
 
                     $tableInfo = [

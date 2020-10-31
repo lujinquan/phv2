@@ -95,7 +95,7 @@
                 {// /if}
                 {if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
                 <div class="layui-input-inline j-input-margin" style="width:180px;">
-                    <input type="text" name="ctime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('first day of next month'))}-01">
+                    <input type="text" name="act_ptime" title="日期范围" placeholder="日期范围" id="test6" class="layui-input" value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('first day of next month'))}-01">
                 </div> 
                 {/if}
             </div>

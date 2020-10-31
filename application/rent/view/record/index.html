@@ -86,7 +86,7 @@
         </div>
         {/if}
          <div class="layui-input-inline j-input-margin" style="width:240px;">
-            <input type="text" name="ptime" class="layui-input" title="缴纳日期范围，默认为当月" placeholder="缴纳日期范围" id="test6" placeholder=" ~ " value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('1 month'))}-01">
+            <input type="text" name="ptime" class="layui-input" title="缴纳日期范围，默认为当月" placeholder="缴纳日期范围" id="test6" placeholder=" ~ " value="{:date('Y-m')}-01 ~ {:date('Y-m',strtotime('first day of next month'))}-01">
         </div>
 
 
