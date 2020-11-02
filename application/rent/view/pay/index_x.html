@@ -8,7 +8,7 @@
             <a href="{:url('allVoiceDownLoad')}?group=x" title="需要勾选订单" data-id="id" tips="此操作会将远程电子发票下载到本地服务器，确认下载吗？" class="layui-btn layui-btn-normal hisi-page-btns confirm j-page-btns">下载发票到本地</a>
             {/if}
             {if condition="in_array(415,$auths) || $Think.ADMIN_ROLE == 1"}
-            <!-- <a href="{:url('allDpkj')}?group=x" title="无需勾选订单" target="_blank" confirm="由于开票系统有离线延迟限制，若一次开票数量过多，会造成等待时间变长，确认一键开票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键开票</a> -->
+            <a href="{:url('allDpkj')}?group=x" title="无需勾选订单" target="_blank" confirm="由于开票系统有离线延迟限制，若一次开票数量过多，会造成等待时间变长，确认一键开票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键开票</a>
             {/if}
             {if condition="in_array(417,$auths) || $Think.ADMIN_ROLE == 1"}
             <a href="{:url('allVoiceDown')}?group=x" title="无需勾选订单" target="_blank" confirm="此操作会将远程电子发票下载到本地服务器，确认一键同步所有发票吗？" refresh="yes" class="layui-btn layui-btn-normal j-ajax">一键同步发票</a>

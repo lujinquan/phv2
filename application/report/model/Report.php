@@ -244,7 +244,7 @@ class Report extends Model
         //$housesWithBalancesIDS = array_keys($housesWithBalances);
 //halt($where);
         $where[] = ['a.recharge_status','eq',1]; //充值成功状态
-        $where[] = ['a.ctime','between',[strtotime($curMonth),strtotime($nextMonth)]];
+        $where[] = ['a.ptime','between',[strtotime($curMonth),strtotime($nextMonth)]];
         
         $fields = 'a.house_id,b.house_number,b.house_balance,sum(a.pay_rent) as pay_rent,a.ctime,b.house_use_id,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
         $result = $data = [];

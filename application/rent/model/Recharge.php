@@ -69,11 +69,30 @@ class Recharge extends Model
             }else{
                 $where[] = ['a.pay_way','in',['4']];
             }
-            
+             // 检索【收欠】支付时间
+            if(isset($data['act_ptime']) && $data['act_ptime']){
+                $startTime = strtotime(substr($data['act_ptime'],0,10));
+                $endTime = strtotime(substr($data['act_ptime'],-10));
+                $where[] = ['a.act_ptime','between',[$startTime,$endTime]];
+            }else if(!isset($data['act_ptime'])){
+                $startTime = strtotime(date('Y-m'));
+                $endTime = strtotime(date('Y-m', strtotime( "first day of next month" ) ));
+                $where[] = ['a.act_ptime','between',[$startTime,$endTime]];
+            }
         }else{
             // 检索【收欠】支付方式
             if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
+            }
+             // 检索【收欠】支付时间
+            if(isset($data['ptime']) && $data['ptime']){
+                $startTime = strtotime(substr($data['ptime'],0,10));
+                $endTime = strtotime(substr($data['ptime'],-10));
+                $where[] = ['a.ptime','between',[$startTime,$endTime]];
+            }else if(!isset($data['ptime'])){
+                $startTime = strtotime(date('Y-m'));
+                $endTime = strtotime(date('Y-m', strtotime( "first day of next month" ) ));
+                $where[] = ['a.ptime','between',[$startTime,$endTime]];
             }
         }
         
@@ -95,16 +114,7 @@ class Recharge extends Model
             }
            
         }
-        // 检索【收欠】支付时间
-        if(isset($data['act_ptime']) && $data['act_ptime']){
-            $startTime = strtotime(substr($data['act_ptime'],0,10));
-            $endTime = strtotime(substr($data['act_ptime'],-10));
-            $where[] = ['a.act_ptime','between',[$startTime,$endTime]];
-        }else if(!isset($data['act_ptime'])){
-            $startTime = strtotime(date('Y-m'));
-            $endTime = strtotime(date('Y-m', strtotime( "first day of next month" ) ));
-            $where[] = ['a.act_ptime','between',[$startTime,$endTime]];
-        }
+       
         // 检索机构
         if(isset($data['ban_inst_id']) && $data['ban_inst_id']){
             $insts = explode(',',$data['ban_inst_id']);
