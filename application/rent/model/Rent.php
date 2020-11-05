@@ -590,7 +590,7 @@ class Rent extends Model
      * @version 版本  1.0
      */
     public function whole_orders_to_pay($ids, $uid, $member_id,$is_need_act_time = true)
-    {
+    {   //halt($ids);
         $act_ptime = time();
 
         if ($is_need_act_time) {
@@ -850,12 +850,16 @@ class Rent extends Model
                     return $this->error('充值后余额不能为负');
                 }
 
-                
+                $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
+                $filData['transaction_id'] = $transaction_id;
                 $filData['recharge_status'] = 1;
                 $filData['house_id'] = $house_id;
                 $filData['pay_rent'] = $pay_rent;
                 $filData['pay_number'] = date('YmdHis') . random(6);
                 $filData['tenant_id'] = $house_info['tenant_id'];
+                $curr_time = time();
+                $filData['ptime'] = $curr_time;
+                $filData['act_ptime'] = $curr_time;
                 // 入库
                 if (!$RechargeModel->allowField(true)->create($filData)) {
                     return $this->error('充值失败');
@@ -950,7 +954,7 @@ class Rent extends Model
                 return false;
             }
             $weixin_member_id = explode(',',$user_info['weixin_member_id']);
-            //$this->pay_for_rent($row['house_id'], $pay_rent, ADMIN_ID, [$id]);
+            // halt($ids);
             $ji = $this->whole_orders_to_pay($ids, ADMIN_ID, $weixin_member_id[0], $is_need_act_time = false);
             return $ji;
         } else {

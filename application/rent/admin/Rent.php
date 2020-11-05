@@ -335,7 +335,8 @@ class Rent extends Admin
     {
         // ini_get('max_input_vars'); 最大表单变量提交数量，一般是1000
         $ids = $this->request->param('id/a'); 
-        $RentModel = new RentModel;      
+        $RentModel = new RentModel;   
+           
         $res = $RentModel->payList($ids);
         if($res){
 
