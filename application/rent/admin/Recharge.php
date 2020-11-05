@@ -81,6 +81,9 @@ class Recharge extends Admin
                 return $this->error('充值后余额不能为负');
             }
             $filData['trade_type'] = 'CASH';
+            $curr_time = time();
+            $filData['ptime'] = $curr_time;
+            $filData['act_ptime'] = $curr_time;
             // 模拟线上支付
         
             /*if ( true ) {
