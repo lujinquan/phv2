@@ -47,7 +47,7 @@ class ChangeCutYear extends SystemBase
 
     public function house()
     {
-        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_pre_rent,house_cou_rent,house_use_id');
+        return $this->hasOne('app\house\model\House', 'house_id', 'house_id')->bind('house_number,house_use_area,house_lease_area,house_pre_rent,house_cou_rent,house_use_id');
     }
 
     public function checkWhere($data,$type)

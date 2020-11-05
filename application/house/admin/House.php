@@ -370,7 +370,34 @@ class House extends Admin
     }
 
     public function edity()
-    {
+    {   
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            // 数据验证
+            // $result = $this->validate($data, 'House.edit');
+            // if($result !== true) {
+            //     return $this->error($result);
+            // }
+            // $HouseModel = new HouseModel();
+            // // 入库
+            // if ($HouseModel->allowField(true)->update($data) === false) {
+            //     return $this->error('修改失败');
+            // }
+            $ban_info = Db::name('ban')->where([['ban_id','eq',$data['ban_id']]])->field('ban_units')->find();
+            if ($ban_info['ban_units'] < $data['house_unit_id']) {
+                return $this->error('居住单元号不能大于楼栋总单元数');
+            }
+            // $HouseModel = new HouseModel();
+            //halt($HouseModel->count_house_pre_rent($data['house_id']));
+            //$house_pre_rent = $HouseModel->count_house_pre_rent($data['house_id']);
+            // $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+
+            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_unit_id'=>$data['house_unit_id']]);
+
+            $HouseModel = new HouseModel();
+            $row = $HouseModel->find($data['house_id']);
+            return $this->success('修改成功','', $row);
+        }
         $id = input('param.id/d');
         $row = HouseModel::with(['ban','tenant'])->get($id);
         $group = input('param.group');
