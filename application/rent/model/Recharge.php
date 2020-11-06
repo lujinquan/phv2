@@ -67,8 +67,9 @@ class Recharge extends Model
             if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
             }else{
-                $where[] = ['a.pay_way','in',['4']];
+                $where[] = ['a.pay_way','in',['1,4']];
             }
+            $where[] = ['a.transaction_id','>',0];
              // 检索【收欠】支付时间
             if(isset($data['act_ptime']) && $data['act_ptime']){
                 $startTime = strtotime(substr($data['act_ptime'],0,10));
@@ -132,7 +133,7 @@ class Recharge extends Model
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
         //$where[] = ['rent_order_date','eq',date('Ym')];
-        //halt($where);
+        // halt($where);
         return $where;
     }
 

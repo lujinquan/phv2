@@ -64,8 +64,11 @@ class Recharge extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
-            if(round($data['pay_rent'],2) == 0){
-                return $this->error('充值余额不能为零,或金额小于1分钱');
+            // if(round($data['pay_rent'],2) == 0){
+            //     return $this->error('充值余额不能为零,或金额小于1分钱');
+            // }
+            if(round($data['pay_rent'],2) <= 0){
+                return $this->error('充值余额不能为零,或为负数');
             }
             $RechargeModel = new RechargeModel;
             // 数据过滤
@@ -84,53 +87,55 @@ class Recharge extends Admin
             $curr_time = time();
             $filData['ptime'] = $curr_time;
             $filData['act_ptime'] = $curr_time;
+            $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
+            $filData['transaction_id'] = $transaction_id;
             // 模拟线上支付
         
-            /*if ( true ) {
-                $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
-                //halt($user_info);
-                if (empty($user_info['weixin_member_id'])) {
-                    $this->error = '当前管理员未绑定微信会员！';
-                    return false;
-                }
-                $weixin_member_id = explode(',',$user_info['weixin_member_id']);
-                //$this->pay_for_rent($row['house_id'], $pay_rent, ADMIN_ID, [$id]);
-                $this->part_order_to_pay($id, ADMIN_ID, $weixin_member_id[0] ,$pay_rent);
-            } else {
-                // 缴费生成一条条子订单
-                $RentOrderChildModel = new RentOrderChildModel;
-                $RentOrderChildModel->rent_order_id = $id;
-                $RentOrderChildModel->house_id = $row['house_id'];
-                $RentOrderChildModel->tenant_id = $row['tenant_id'];
-                $RentOrderChildModel->rent_order_paid = $pay_rent;
-                $RentOrderChildModel->rent_order_number = $row->rent_order_number;
-                $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
-                $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
-                $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
-                $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
-                $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
-                $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
-                $RentOrderChildModel->rent_order_date = $row->rent_order_date;
-                $RentOrderChildModel->ptime = $ctime;
-                $RentOrderChildModel->save();
+            // if ( true ) {
+            //     $user_info = Db::name('system_user')->where([['id','eq',ADMIN_ID]])->field('weixin_member_id')->find();
+            //     //halt($user_info);
+            //     if (empty($user_info['weixin_member_id'])) {
+            //         $this->error = '当前管理员未绑定微信会员！';
+            //         return false;
+            //     }
+            //     $weixin_member_id = explode(',',$user_info['weixin_member_id']);
+            //     //$this->pay_for_rent($row['house_id'], $pay_rent, ADMIN_ID, [$id]);
+            //     $this->part_order_to_pay($id, ADMIN_ID, $weixin_member_id[0] ,$pay_rent);
+            // } else {
+            //     // 缴费生成一条条子订单
+            //     $RentOrderChildModel = new RentOrderChildModel;
+            //     $RentOrderChildModel->rent_order_id = $id;
+            //     $RentOrderChildModel->house_id = $row['house_id'];
+            //     $RentOrderChildModel->tenant_id = $row['tenant_id'];
+            //     $RentOrderChildModel->rent_order_paid = $pay_rent;
+            //     $RentOrderChildModel->rent_order_number = $row->rent_order_number;
+            //     $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
+            //     $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
+            //     $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
+            //     $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
+            //     $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
+            //     $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
+            //     $RentOrderChildModel->rent_order_date = $row->rent_order_date;
+            //     $RentOrderChildModel->ptime = $ctime;
+            //     $RentOrderChildModel->save();
 
 
-                $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
-                $row->is_deal = 1;
-                $res = $row->save();
+            //     $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
+            //     $row->is_deal = 1;
+            //     $res = $row->save();
 
-                // 添加房屋台账，记录缴费状况
-                $HouseTaiModel = new HouseTaiModel;
-                $HouseTaiModel->house_id = $row['house_id'];
-                $HouseTaiModel->tenant_id = $row['tenant_id'];
-                $HouseTaiModel->cuid = ADMIN_ID;
-                $HouseTaiModel->house_tai_type = 2;
-                $HouseTaiModel->house_tai_remark = '现金缴费：'.$pay_rent.'元';
-                $HouseTaiModel->data_json = [];
-                $HouseTaiModel->change_type = '';
-                $HouseTaiModel->change_id = '';
-                $HouseTaiModel->save();
-            }*/  
+            //     // 添加房屋台账，记录缴费状况
+            //     $HouseTaiModel = new HouseTaiModel;
+            //     $HouseTaiModel->house_id = $row['house_id'];
+            //     $HouseTaiModel->tenant_id = $row['tenant_id'];
+            //     $HouseTaiModel->cuid = ADMIN_ID;
+            //     $HouseTaiModel->house_tai_type = 2;
+            //     $HouseTaiModel->house_tai_remark = '现金缴费：'.$pay_rent.'元';
+            //     $HouseTaiModel->data_json = [];
+            //     $HouseTaiModel->change_type = '';
+            //     $HouseTaiModel->change_id = '';
+            //     $HouseTaiModel->save();
+            // }  
 
 
 

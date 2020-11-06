@@ -88,7 +88,7 @@ class Pay extends Admin
                 $RechargeModel = new RechargeModel;
                 $where = $RechargeModel->checkWhere($getData, $type = "pay");
                 //halt($where);
-                $fields = "a.id,a.house_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.act_ptime, '%Y-%m-%d %H:%i:%S') as act_ptime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+                $fields = "a.id,a.house_id,a.transaction_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.act_ptime, '%Y-%m-%d %H:%i:%S') as act_ptime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
                 $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('act_ptime desc')->select();
 

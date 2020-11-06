@@ -73,13 +73,13 @@
                     </select>
                 </div>
              
-                <!-- <div class="layui-input-inline" style="width:120px;">
+                <div class="layui-input-inline" style="width:120px;">
                     <select name="pay_way">
                         <option value="">支付方式</option>
                         <option value="1">现金支付</option>
                         <option value="2">微信支付</option>
                     </select>
-                </div> -->
+                </div>
                 {// if condition="in_array('pay_way',$config['rent_recharge_info_search'])"}
                 <!-- <div class="layui-input-inline" style="width:120px;">
                     <select name="pay_way">
@@ -122,13 +122,13 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {{#  if (d.trade_type == 'JSAPI' || d.trade_type == 'NATIVE') { }}
+    {{#  if (d.transaction_id > 0) { }}
     {{#  if (d.invoice_id <= 0) { }}
         <a href="{:url('dpkj')}?group=x&id={{ d.id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
     {{# }else{ }}
         <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
     {{# } }}
-    {{#  if (d.recharge_status == 1) { }}
+    {{#  if (d.recharge_status == 1 && d.trade_type != 'CASH') { }}
     {if condition="in_array(418,$auths) || $Think.ADMIN_ROLE == 1"}
         <a href="{:url('payRefund')}?group=x&id={{ d.id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
     {else /}
