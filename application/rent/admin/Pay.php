@@ -90,11 +90,11 @@ class Pay extends Admin
                 //halt($where);
                 $fields = "a.id,a.house_id,a.transaction_id,a.invoice_id,a.tenant_id,a.pay_rent,a.yue,a.pay_way,a.trade_type,from_unixtime(a.act_ptime, '%Y-%m-%d %H:%i:%S') as act_ptime,a.recharge_status,b.house_use_id,b.house_number,b.house_pre_rent,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
                 $data = [];
-                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->page($page)->limit($limit)->order('act_ptime desc')->select();
-
-                $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->count('a.id');
+                $data['data'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->field($fields)->where($where)->where('a.transaction_id','not null')->page($page)->limit($limit)->order('act_ptime desc')->select();
+                // halt(Db::name('rent_recharge')->getLastSql());
+                $data['count'] = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->where('a.transaction_id','not null')->count('a.id');
                 // 统计
-                $totalRow = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->field('sum(a.pay_rent) as total_pay_rent')->find();
+                $totalRow = Db::name('rent_recharge')->alias('a')->join('house b', 'a.house_id = b.house_id', 'left')->join('tenant c', 'a.tenant_id = c.tenant_id', 'left')->join('ban d', 'b.ban_id = d.ban_id', 'left')->where($where)->where('a.transaction_id','not null')->field('sum(a.pay_rent) as total_pay_rent')->find();
                 if ($totalRow) {
                     $data['total_pay_rent'] = $totalRow['total_pay_rent'];
                 }
