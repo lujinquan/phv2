@@ -103,18 +103,7 @@
 <script type="text/html" id="toolbar">
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
-    {{#  if (d.pay_way == 4) { }}
-    {{#  if (d.invoice_id <= 0) { }}
-        <a href="{:url('dpkj')}?id={{ d.id }}" target="_blank" confirm="确认开票吗？开票后订单将无法退款" refresh="yes" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
-    {{# }else{ }}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
-    {{# } }}
-    {{#  if (d.recharge_status == 1) { }}
-        <a href="{:url('payRefund')}?id={{ d.id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
-    {{# }else{ }}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
-    {{# } }}
-    {{# } }}
+    
     <a href="{:url('detail')}?id={{ d.id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
 </script>
 </div>
@@ -164,7 +153,7 @@
                 ,{field: 'pay_rent', minWidth: 100, align:'center', totalRow: true ,title: '缴纳金额'}
                 ,{field: 'yue', minWidth: 100, align:'center',title: '当前余额'}
                 ,{field: 'ptime', minWidth: 160, align:'center', title: '缴纳时间'}
-                ,{title: '操作', minWidth: 180,align:'center', templet: '#buttonTpl',fixed:'right'}
+                ,{title: '操作', minWidth: 80,align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
                 $(".layui-table-total td[data-field='pay_rent']").find("div").text(res.total_pay_rent);

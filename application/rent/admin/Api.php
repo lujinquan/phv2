@@ -304,7 +304,11 @@ class Api extends Common
      */
     public function createMonthRentOrders(){
         $RentModel = new RentModel;
-        return json_encode($RentModel->configRentOrder($is_all_inst = 1));
+        // 生成每个月的账单
+        $rentOrderData = json_encode($RentModel->configRentOrder($is_all_inst = 1));
+        // 自动执行扣缴
+        $RentModel->autopayList();
+        return $rentOrderData;
     }
 
     /**
@@ -314,6 +318,8 @@ class Api extends Common
     public function changeOrderToUnpaid(){
         // $RentModel = new RentModel;
         // $RentModel->where([['rent_order_date','eq',date('Ym')],['rent_order_paid','<',Db::raw('rent_order_receive')]])->update(['is_deal'=>1]);
+        
+        // 1、把所有未处理的订单改成已处理状态
         RentModel::where([['is_deal','eq',0]])->update(['is_deal'=>1]);
     }
 

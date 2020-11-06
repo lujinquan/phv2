@@ -2486,6 +2486,9 @@ class Weixin extends Common
         $params = ParamModel::getCparams();
         $where[] = ['a.ptime','>',0];
         $where[] = ['member_id','eq',$member_info['member_id']];
+        $where[] = ['pay_way','eq',4];
+
+        $where[] = ['recharge_status','eq',1];
 
         // 支付时间搜索
         $datasel = input('get.data_sel');

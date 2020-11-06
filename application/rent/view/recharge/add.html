@@ -52,7 +52,7 @@
 		<div class="layui-col-md4">
 			<label class="j-form-label"><i class="red">*</i>充值金额</label>
 			<div class="j-input-inline">
-				<input type="number" name="pay_rent" value="" autocomplete="off" class="layui-input">
+				<input type="number" name="pay_rent" value="" onkeyup="this.value=this.value.replace('-','')"  autocomplete="off" class="layui-input">
 				<b class="j-explain-search">元</b>
 			</div>
 		</div>
@@ -70,6 +70,22 @@
 <script type="text/javascript">
 layui.use(['form', 'func'], function() {
     var $ = layui.jquery, form = layui.form;
+
+ //    form.verify({
+	//   pay_rent: function(value, item){ //value：表单的值、item：表单的DOM对象
+	//     if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+	//       return '用户名不能有特殊字符';
+	//     }
+	    
+	// }
+	  
+	  //我们既支持上述函数式的方式，也支持下述数组的形式
+	  //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+	//   ,pass: [
+	//     /^[\S]{6,12}$/
+	//     ,'密码必须6到12位，且不能出现空格'
+	//   ] 
+	// });      
 
 	//双击获取房屋查询器
 	 $(".j-house_number").click(function(){
