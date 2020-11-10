@@ -106,7 +106,9 @@ function archives_data(){
         }else{
           $('#below_thr').text(0);
         }
-
+         // 填报单位
+        $('#ban_inst_name').text(params.insts[res.inst]);
+        $('#create_date').text(res.date);
         for(var i in arr ){
            aIndex.push(i);
         }
