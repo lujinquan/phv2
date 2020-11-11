@@ -305,7 +305,7 @@ class Api extends Common
     public function createMonthRentOrders(){
         $RentModel = new RentModel;
         // 生成每个月的账单
-        $rentOrderData = json_encode($RentModel->configRentOrder($is_all_inst = 1));
+        // $rentOrderData = json_encode($RentModel->configRentOrder($is_all_inst = 1));
         // 自动执行扣缴
         $RentModel->autopayList();
         return $rentOrderData;

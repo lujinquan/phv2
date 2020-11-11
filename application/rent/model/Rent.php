@@ -338,7 +338,7 @@ class Rent extends Model
     {   
         // 暂不支持批量扣缴
         // return false;
-
+        set_time_limit(0);
         $ji = 0;
         // 如果选择了多个房屋，就按照房屋处理租金订单
         if($ids){
@@ -358,7 +358,10 @@ class Rent extends Model
             $HouseModel = new HouseModel;
             $houses = $HouseModel->where([['house_balance','>',0]])->column('house_id,house_balance');
 
-          //halt($rent_orders);
+            if (!defined('ADMIN_ID')) {
+                define('ADMIN_ID', 1);
+            }
+            //halt($rent_orders);
             foreach ($rent_orders as $k => $v) {
                 if(isset($houses[$v['house_id']])){
 
@@ -1049,73 +1052,94 @@ class Rent extends Model
      */
     public function payBackList($ids,$nowDate,$type = 'unpaid')
     {
-        // 验证可以撤回的订单有哪些
-        $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
-        $payStartTime = strtotime($nowDate);
-        $payEndTime = strtotime('1 month',strtotime($nowDate));
         $re = 0;
-        if($type == 'unpaid'){ //欠缴列表里，点击的是order表
-            foreach ($ids as $id) {
-                
-                $row = $this->find($id);
-                // halt($row);
-                $row->is_deal = 0;     
-                //如果是本月的订单，而且也没支付过，则直接回退订单状态            
-                $RentOrderChildModel = new RentOrderChildModel;
-                $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['pay_way','eq',1],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->sum('rent_order_paid');
 
-                if(floatval($rent_order_paid_total) > 0){ //如果有子订单
+        // 启动事务
+        Db::startTrans();
+        try {
+            // 验证可以撤回的订单有哪些
+            $nextDate = date('Y-m',strtotime('1 month',strtotime($nowDate)));
+            $payStartTime = strtotime($nowDate);
+            $payEndTime = strtotime('1 month',strtotime($nowDate));
+            
+            if($type == 'unpaid'){ //欠缴列表里，点击的是order表
+                foreach ($ids as $id) {
                     
-                    if($row->rent_order_paid > $rent_order_paid_total){ //如果够减
-                        $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_order_paid_total);
-                    }else{
+                    $row = $this->find($id);
+                    // halt($row);
+                    $row->is_deal = 0;     
+                    //如果是本月的订单，而且也没支付过，则直接回退订单状态            
+                    $RentOrderChildModel = new RentOrderChildModel;
+                    $rent_order_paid_total = $RentOrderChildModel->where([['rent_order_id','eq',$id],['pay_way','eq',1],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->sum('rent_order_paid');
+
+                    if(floatval($rent_order_paid_total) > 0){ //如果有子订单
+                        
+                        if($row->rent_order_paid > $rent_order_paid_total){ //如果够减
+                            $row->rent_order_paid = Db::raw('rent_order_paid-'.$rent_order_paid_total);
+                        }else{
+                            $row->rent_order_paid = 0;
+                            if($row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
+                                $row->is_deal = 0;
+                            }
+                        }
+                        $row->save();
+                    }else{ //如果没有子订单，直接修改主订单表
+                        $row->pay_way = 0;
                         $row->rent_order_paid = 0;
-                        if($row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
-                            $row->is_deal = 0;
-                        }
+                        $row->save();
                     }
-                    $row->save();
-                }else{ //如果没有子订单，直接修改主订单表
-                    $row->pay_way = 0;
-                    $row->rent_order_paid = 0;
-                    $row->save();
-                }
 
-                $RentOrderChildModel = new RentOrderChildModel;
-                $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->update(['rent_order_status'=>0]); //只删除本月处理的订单，且是现金缴纳方式的订单,'muid'=>ADMIN_ID
-
-                $re++;
-            }
-        }else{ //租金记录表里，点击的是order_child表
-            foreach ($ids as $id) {
-                $RentOrderChildModel = new RentOrderChildModel;
-                $row = $RentOrderChildModel->find($id);
-                // halt($row);
-                if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1 || $row->rent_order_status != 1){ //如果不是本月操作的实收订单，或者不是现金交的
-                    continue;
-                }else{ //如果是本月收的订单
-                    $order_row = $this->find($row['rent_order_id']);
-                    if($order_row->rent_order_paid > $row->rent_order_paid){ //如果够减
-                        $order_row->rent_order_paid = Db::raw('rent_order_paid-'.($row->rent_order_paid));
-                    }else{
-                        $order_row->rent_order_paid = 0;
-                        if($order_row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
-                            $order_row->is_deal = 0;
-                        }
-                    }
-                    $order_row->save(); //修改order表
-
-                    $row->rent_order_status = 0;
-                    // $row->muid = ADMIN_ID;
-                    $row->save(); //删除时间记录
+                    $RentOrderChildModel = new RentOrderChildModel;
+                    $RentOrderChildModel->where([['rent_order_id','eq',$id],['rent_order_status','eq',1],['ptime','between',[$payStartTime,$payEndTime]]])->update(['rent_order_status'=>0]); //只删除本月处理的订单，且是现金缴纳方式的订单,'muid'=>ADMIN_ID
 
                     $re++;
                 }
+            }else{ //租金记录表里，点击的是order_child表
+                foreach ($ids as $id) {
+                    $RentOrderChildModel = new RentOrderChildModel;
+                    $row = $RentOrderChildModel->find($id);
+                    // halt($row);
+                    if($row->getData('ptime') < $payStartTime || $row->getData('ptime') >= $payEndTime || $row->pay_way != 1 || $row->rent_order_status != 1){ //如果不是本月操作的实收订单，或者不是现金交的
+                        continue;
+                    }else{ //如果是本月收的订单
+                        $order_row = $this->find($row['rent_order_id']);
+                        if($order_row->rent_order_paid > $row->rent_order_paid){ //如果够减
+                            $order_row->rent_order_paid = Db::raw('rent_order_paid-'.($row->rent_order_paid));
+                        }else{
+                            $order_row->rent_order_paid = 0;
+                            if($order_row['rent_order_date'] == str_replace('-', '', $nowDate)){ //如果是本月订单
+                                $order_row->is_deal = 0;
+                            }
+                        }
+                        $order_row->save(); //修改order表
 
+                        $row->rent_order_status = 0;
+                        // $row->muid = ADMIN_ID;
+                        $row->save(); //删除时间记录
+
+                        // 修改weixin_order表对应模拟账单的状态为撤回状态
+                        $trade_row = Db::name('weixin_order_trade')->where([['rent_order_id','eq',$row['rent_order_id']],['pay_dan_money','eq',$row['rent_order_paid']]])->field('out_trade_no')->find();
+                        Db::name('weixin_order')->where([['out_trade_no','eq',$trade_row['out_trade_no']]])->update(['order_status'=>4]);
+
+                        $re++;
+                    }
+
+                }
             }
+            // 提交事务
+            Db::commit();
+            // throw new Exception("抛出异常");
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return array('error_code'=>1,'msg'=>'操作异常');
         }
-
-        return $re;
+        if($re){
+            return array('error_code'=>0,'msg'=>'撤回成功，本次撤回'.$re.'条账单！');
+        }else{
+            return array('error_code'=>1,'msg'=>'撤回失败，请检查账单支付日期是否为本月!');
+        }
+        
     }
 
     // /**

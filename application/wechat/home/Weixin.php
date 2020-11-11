@@ -767,6 +767,117 @@ class Weixin extends Common
     }
 
     /**
+     * 获取租金统计(web.phv2.com/wechat/weixin/admin_rent_statistics)
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-23 11:18:20
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_rent_statistics()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_rent_statistics';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            $row = $checkData['member_extra_info'];
+        }
+        // dump($member_info);halt($row);
+
+        $today_begin_time = strtotime(date('Y-m-d'));
+        $today_end_time = $today_begin_time + 86400;
+
+        
+        // halt($where);
+        $result = [];
+        $result['order_count'] = 0;
+        $result['order_rent_sum'] = 0;
+        $result['charge_count'] = 0;
+        $result['charge_rent_sum'] = 0;
+        $result['data']['order'] = [];
+        $result['data']['recharge'] = [];
+        if(isset($row['inst_id'])){
+            $where = [];
+            $where[] = ['pay_way','eq',4];
+            // $where[] = ['ptime','between',[$today_begin_time,$today_end_time]];
+            $where[] = ['rent_order_status','eq',1];
+            $where[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            $rent_order_paid_info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->join('weixin_order_trade d','a.rent_order_id = d.rent_order_id','left')->where($where)->field('rent_order_paid , id , a.rent_order_id , e.tenant_name, c.ban_address , d.out_trade_no')->select();
+            // $out_trade_no_arr = [];
+            // foreach ($rent_order_paid_info as $rent_info) {
+            //     $out_trade_no_arr[] = $rent_info['out_trade_no'];
+            // }
+            // $out_trade_no_arr = array_unique($out_trade_no_arr);
+            foreach ($rent_order_paid_info as $rent_info) {
+                $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->find();
+                $result['order_rent_sum'] = bcadd($result['order_rent_sum'], $order_row['pay_money'] , 2);
+                $result['data']['order'][] = [
+                    // 'out_trade_no' => $rent_info['out_trade_no'],
+                    'ptime' => $order_row['ptime'],
+                    'pay_money' => $order_row['pay_money'],
+                    'ban_address' => $rent_info['ban_address'],
+                    'tenant_name' => $rent_info['tenant_name'],
+                    'id' => $order_row['order_id'],
+                    'pay_way_name' => '微信支付',
+                ];
+            }
+            $result['order_count'] = count($rent_order_paid_info);
+            
+            // halt($result);
+            // if($rent_order_paid_info['ids']){
+            //     $result['order_rent_sum'] = floatval($rent_order_paid_info['rent_order_paids']);
+            //     $result['order_count'] = $rent_order_paid_info['ids'];
+            // }
+
+
+            // $recharge_rent_info = Db::name('weixin_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where($rechargewhere)->field('sum(pay_rent) pay_rents , count(id) ids')->find();
+
+            $rechargewhere = [];
+            $rechargewhere[] = ['pay_way','eq',4];
+            // $rechargewhere[] = ['act_ptime','between',[$today_begin_time,$today_end_time]];
+            $rechargewhere[] = ['recharge_status','eq',1];
+            $rechargewhere[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            // halt($rechargewhere);
+            $recharge_rent_info = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->where($rechargewhere)->field('pay_rent , a.id, e.tenant_name ,a.act_ptime , c.ban_address')->select();
+
+            foreach ($recharge_rent_info as $recharge_info) {
+                $result['charge_rent_sum'] = bcadd($result['charge_rent_sum'], $recharge_info['pay_rent'] , 2);
+                $result['data']['recharge'][] = [
+                    // 'out_trade_no' => $rent_info['out_trade_no'],
+                    'ptime' => $recharge_info['act_ptime'],
+                    'pay_money' => $recharge_info['pay_rent'],
+                    'ban_address' => $recharge_info['ban_address'],
+                    'tenant_name' => $recharge_info['tenant_name'],
+                    'id' => $recharge_info['id'],
+                    'pay_way_name' => '微信支付',
+                ];
+            }
+            $result['charge_count'] = count($recharge_rent_info);
+            // halt($recharge_rent_total);
+            // if($recharge_rent_info['ids']){
+            //     $result['charge_rent_sum'] = floatval($recharge_rent_info['pay_rents']);
+            //     $result['charge_count'] = $recharge_rent_info['ids'];
+            // }
+        }
+
+        $result['total_rent_sum'] = floatval(bcadd($result['order_rent_sum'], $result['charge_rent_sum'] , 2));
+        $result['code'] = 1;
+        $result['msg'] = '获取成功！';
+        return json($result);
+    }
+
+    /**
      * 获取租金列表
      * =====================================
      * @author  Lucas 

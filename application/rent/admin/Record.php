@@ -171,10 +171,12 @@ class Record extends Admin
         $ids = $this->request->param('id/a');
         $RentModel = new RentModel;
         $res = $RentModel->payBackList($ids,date('Y-m'), 'record');
-        if($res){
-            $this->success('撤回成功，本次撤回'.$res.'条账单！');
+        // halt($res);
+        if($res['error_code']){
+            $this->error($res['msg']);
         }else{
-            $this->error('撤回失败，请检查账单支付日期是否为本月!');
+            
+            $this->success($res['msg']);
         }
     }
 

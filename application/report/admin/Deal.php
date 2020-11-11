@@ -183,17 +183,40 @@ class Deal extends Admin
         if ($this->request->isAjax()) {
             $owner_id = input('owner_id');
             $query_month = input('query_month');
+            $next_month_time = strtotime('first day of next month',strtotime($query_month));
+            $next_month = date('Y-m',$next_month_time);
+            // halt($next_month);
             $inst_id = input('inst_id');
 
             $data = [];
+            $data['query_month_simple'] = $query_month;
+            $data['query_month'] = date('Y年m月',strtotime($query_month));
+            $data['next_month'] = date('Y年m月',$next_month_time);
+            $data['inst_id'] = $inst_id;
+            $data['owner_id'] = $owner_id;
 
             $RadixReportModel = new RadixReportModel;
 
-            $result = $RadixReportModel->radix($query_month);
+            // 查询当月时间1日零时
+            $query_month_begin_time = $query_month.'-01';
+            // 查询当月时间28日零时
+            $query_month_end_time = $query_month.'-28';
+            // 查询的下月时间1日零时
+            $next_month_begin_time = $next_month.'-01';
+            // 查询的下月时间28日零时
+            $next_month_end_time = $next_month.'-28';
 
-            $resultNoRadix = $RadixReportModel->noRadix($query_month);
-
-            
+            // dump($query_month_begin_time);dump($query_month_end_time);dump($next_month_begin_time);halt($next_month_end_time);
+            // 基数异动统计
+            $result = $RadixReportModel->radix($next_month);
+            // $result = $RadixReportModel->radix($next_month_begin_time , $next_month_end_time);
+            // 非基数异动统计
+            $resultNoRadix = $RadixReportModel->noRadix($next_month);
+            // $resultNoRadix = $RadixReportModel->noRadix($next_month_begin_time , $next_month_end_time);
+            // 租金异动统计
+            $resultRent = $RadixReportModel->rent($query_month);
+            // $resultRent = $RadixReportModel->rent($query_month_begin_time , $query_month_end_time);
+            // halt($resultRent);
             // $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
             // $dataJson = @file_get_contents(ROOT_PATH.'file/report/property/'.str_replace('-','',$date).'.txt');
             // // 如果没有缓存数据
@@ -214,6 +237,7 @@ class Deal extends Admin
             // }   
             $data['data'] = $result[$owner_id][$inst_id];
             $data['no_radix_data'] = $resultNoRadix[$owner_id][$inst_id];
+            $data['rent_data'] = $resultRent[$owner_id][$inst_id];
             $data['msg'] = '';
             if($data['data']){
                 $data['code'] = 1;
