@@ -336,6 +336,7 @@ class Weixin extends Common
         foreach ($columns as $k => &$v) {
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = $this->domain.$file;
+             // $v['file'] = 'https://procheck.ctnmit.com'.$file;
 
              if($checkData['role_type'] == 2){ // 2代表是后台管理员
                 if($v['auth_roles'] && !in_array($member_extra_info['role_id'],$v['auth_roles'])){
@@ -806,29 +807,42 @@ class Weixin extends Common
         $result['charge_count'] = 0;
         $result['charge_rent_sum'] = 0;
         $result['data']['order'] = [];
-        $result['data']['recharge'] = [];
+        $result['data']['charge'] = [];
+        // halt($result);
         if(isset($row['inst_id'])){
             $where = [];
-            $where[] = ['pay_way','eq',4];
-            // $where[] = ['ptime','between',[$today_begin_time,$today_end_time]];
-            $where[] = ['rent_order_status','eq',1];
+            $where[] = ['a.pay_way','eq',4];
+             $where[] = ['ptime','between',[$today_begin_time,$today_end_time]];
+            //            $where[] = ['a.rent_order_status','eq',1];
             $where[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
+            // halt($where);
             $rent_order_paid_info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->join('weixin_order_trade d','a.rent_order_id = d.rent_order_id','left')->where($where)->field('rent_order_paid , id , a.rent_order_id , e.tenant_name, c.ban_address , d.out_trade_no')->select();
+            // halt($where);
+
             // $out_trade_no_arr = [];
             // foreach ($rent_order_paid_info as $rent_info) {
             //     $out_trade_no_arr[] = $rent_info['out_trade_no'];
             // }
             // $out_trade_no_arr = array_unique($out_trade_no_arr);
             foreach ($rent_order_paid_info as $rent_info) {
+                // halt($rent_info);
+                if(empty($rent_info['out_trade_no'])){
+                    continue;
+                }
+                // dump($rent_info);
                 $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->find();
+                // $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->fetchSql(true)->find();
+                // halt($order_row);
+                // Db::name('weixin_order')->getLastSql();
                 $result['order_rent_sum'] = bcadd($result['order_rent_sum'], $order_row['pay_money'] , 2);
                 $result['data']['order'][] = [
-                    // 'out_trade_no' => $rent_info['out_trade_no'],
-                    'ptime' => $order_row['ptime'],
+                    'out_trade_no' => $rent_info['out_trade_no'],
+                    'ptime' => date('Y-m-d H:i:s',$order_row['ptime']),
+                    'month_ptime' => date('Y-m',$order_row['ptime']),
                     'pay_money' => $order_row['pay_money'],
                     'ban_address' => $rent_info['ban_address'],
                     'tenant_name' => $rent_info['tenant_name'],
-                    'id' => $order_row['order_id'],
+                    'order_id' => $order_row['order_id'],
                     'pay_way_name' => '微信支付',
                 ];
             }
@@ -845,7 +859,7 @@ class Weixin extends Common
 
             $rechargewhere = [];
             $rechargewhere[] = ['pay_way','eq',4];
-            // $rechargewhere[] = ['act_ptime','between',[$today_begin_time,$today_end_time]];
+            $rechargewhere[] = ['act_ptime','between',[$today_begin_time,$today_end_time]];
             $rechargewhere[] = ['recharge_status','eq',1];
             $rechargewhere[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
             // halt($rechargewhere);
@@ -853,9 +867,10 @@ class Weixin extends Common
 
             foreach ($recharge_rent_info as $recharge_info) {
                 $result['charge_rent_sum'] = bcadd($result['charge_rent_sum'], $recharge_info['pay_rent'] , 2);
-                $result['data']['recharge'][] = [
+                $result['data']['charge'][] = [
                     // 'out_trade_no' => $rent_info['out_trade_no'],
-                    'ptime' => $recharge_info['act_ptime'],
+                    'ptime' => date('Y-m-d H:i:s',$recharge_info['act_ptime']),
+                    'month_ptime' => date('Y-m',$recharge_info['act_ptime']),
                     'pay_money' => $recharge_info['pay_rent'],
                     'ban_address' => $recharge_info['ban_address'],
                     'tenant_name' => $recharge_info['tenant_name'],
@@ -3069,14 +3084,21 @@ class Weixin extends Common
             $member_info = $checkData['member_info']; //微信用户基础数据
             $member_extra_info = $checkData['member_extra_info'];
         }
-
-        $template_id = input('template_id','2kL0FTh48uEpTgBcLAwp2siR7eTrKOgNiHZSdXA_r_k'); //接收template_id
-        $order_id = input('order_id',39); //接收openid
+        $template_id = Db::name('weixin_template')->where([['name','eq','app_user_payment_remind']])->value('value');
+        if (empty($template_id)) {
+            $result['code'] = 0;
+            $result['msg'] = '未配置支付成功通知模板！';
+            return json($result);
+        }
+        // halt($template_id);
+        // dump($member_info);halt($member_extra_info);
+        // $template_id = input('template_id','97DuCx9ebLMBxJNBtCGELiZbPX1XcWXe_i97YJRxPIM'); //接收template_id
+        $order_id = input('order_id'); //接收openid
 
         $WeixinOrderModel = new WeixinOrderModel;
         $order_info = $WeixinOrderModel->where([['order_id','eq',$order_id]])->find();
         //$openid = input('openid','oxgVt5RZHUzam9oAHlJRGRlpDwFY'); //接收openid
-        
+        $openid = $member_info['openid'];
         // $action = input('action'); //接收action
         // $scene = input('scene'); //接收scene
        //halt($openid);
