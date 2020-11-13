@@ -209,6 +209,7 @@ class Deal extends Admin
             // dump($query_month_begin_time);dump($query_month_end_time);dump($next_month_begin_time);halt($next_month_end_time);
             // 基数异动统计
             $result = $RadixReportModel->radix($next_month);
+            // halt($result);
             // $result = $RadixReportModel->radix($next_month_begin_time , $next_month_end_time);
             // 非基数异动统计
             $resultNoRadix = $RadixReportModel->noRadix($next_month);

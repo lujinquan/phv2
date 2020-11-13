@@ -11,11 +11,15 @@ class RadixReport extends Model
 	public function radix($cacheDate)
 	{
 		$cacheDate = str_replace('-','',$cacheDate);
-
+//halt($cacheDate);
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
         ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$cacheDate],['change_status','eq',1]])
         ->select();
+        // 统计基数异动中的房屋出售的数据
+        $changeChushouData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
+            ->where([['change_cancel_type','eq',1],['change_type','eq',8],['order_date','eq',$cacheDate],['change_status','eq',1]])
+            ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums')->group('use_id,owner_id,inst_id')
@@ -38,6 +42,19 @@ class RadixReport extends Model
                 'change_oprices' => $v7['change_oprices'],
                 'change_ban_nums' => $v7['change_ban_nums'],
                 'change_house_nums' => $v7['change_house_nums'],
+            ];
+        }
+
+        foreach($changeChushouData as $k8 => $v8){
+            $changeChushoudata[$v8['owner_id']][$v8['use_id']][$v8['inst_id']][$v8['change_type']] = [
+                'change_rents' => $v8['change_rents'],
+                'change_month_rents' => $v8['change_month_rents'],
+                'change_year_rents' => $v8['change_year_rents'],
+                'change_areas' => $v8['change_areas'],
+                'change_use_areas' => $v8['change_use_areas'],
+                'change_oprices' => $v8['change_oprices'],
+                'change_ban_nums' => $v8['change_ban_nums'],
+                'change_house_nums' => $v8['change_house_nums'],
             ];
         }
 
@@ -65,6 +82,18 @@ class RadixReport extends Model
                     for($k=1;$k<16;$k++){
                         if(!isset($changedata[$owner][$i][$j][$k])){
                             $changedata[$owner][$i][$j][$k] = [ 
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                                'change_areas' => 0,
+                                'change_use_areas' => 0,
+                                'change_oprices' => 0,
+                                'change_ban_nums' => 0,
+                                'change_house_nums' => 0,
+                            ];
+                        }
+                        if(!isset($changeChushoudata[$owner][$i][$j][$k])){
+                            $changeChushoudata[$owner][$i][$j][$k] = [
                                 'change_rents' => 0,
                                 'change_month_rents' => 0,
                                 'change_year_rents' => 0,
@@ -226,6 +255,62 @@ class RadixReport extends Model
                 $result[$owners][$j][4][22] = $changeGuanduanIncdata[$owners][2][$j]['change_areas'] - $changeGuanduanDecdata[$owners][2][$j]['change_areas']; // 住宅【建筑面积】
                 $result[$owners][$j][4][23] = $changeGuanduanIncdata[$owners][2][$j]['change_oprices'] - $changeGuanduanDecdata[$owners][2][$j]['change_oprices']; // 住宅【原价】
                 $result[$owners][$j][4][24] = $changeGuanduanIncdata[$owners][2][$j]['change_house_nums'] - $changeGuanduanDecdata[$owners][2][$j]['change_house_nums']; // 住宅【户数】
+
+                $result[$owners][$j][5][1] = $changeChushoudata[$owners][2][$j][8]['change_ban_nums'] + $changeChushoudata[$owners][3][$j][8]['change_ban_nums'] + $changeChushoudata[$owners][1][$j][8]['change_ban_nums']; // 合计【栋数】
+                $result[$owners][$j][5][2] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_rents'],$changeChushoudata[$owners][3][$j][8]['change_rents'],$changeChushoudata[$owners][1][$j][8]['change_rents']]); // 合计【规定租金】
+                $result[$owners][$j][5][3] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_use_areas'],$changeChushoudata[$owners][3][$j][8]['change_use_areas'],$changeChushoudata[$owners][1][$j][8]['change_use_areas']]); // 合计【计租面积】
+                $result[$owners][$j][5][4] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_areas'],$changeChushoudata[$owners][3][$j][8]['change_areas'],$changeChushoudata[$owners][1][$j][8]['change_areas']]); // 合计【建筑面积】
+                $result[$owners][$j][5][5] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_oprices'],$changeChushoudata[$owners][3][$j][8]['change_oprices'],$changeChushoudata[$owners][1][$j][8]['change_oprices']]); // 合计【原价】
+                $result[$owners][$j][5][6] = $changeChushoudata[$owners][2][$j][8]['change_house_nums'] + $changeChushoudata[$owners][3][$j][8]['change_house_nums'] + $changeChushoudata[$owners][1][$j][8]['change_house_nums']; // 合计【户数】
+
+                $result[$owners][$j][5][7] = $changeChushoudata[$owners][2][$j][8]['change_ban_nums']; // 企业【栋数】
+                $result[$owners][$j][5][8] = $changeChushoudata[$owners][2][$j][8]['change_rents']; // 企业【规定租金】
+                $result[$owners][$j][5][9] = $changeChushoudata[$owners][2][$j][8]['change_use_areas']; // 企业【计租面积】
+                $result[$owners][$j][5][10] = $changeChushoudata[$owners][2][$j][8]['change_areas']; // 企业【建筑面积】
+                $result[$owners][$j][5][11] = $changeChushoudata[$owners][2][$j][8]['change_oprices']; // 企业【原价】
+                $result[$owners][$j][5][12] = $changeChushoudata[$owners][2][$j][8]['change_house_nums']; // 企业【户数】
+
+                $result[$owners][$j][5][13] = $changeChushoudata[$owners][3][$j][8]['change_ban_nums']; // 机关【栋数】
+                $result[$owners][$j][5][14] = $changeChushoudata[$owners][3][$j][8]['change_rents']; // 机关【规定租金】
+                $result[$owners][$j][5][15] = $changeChushoudata[$owners][3][$j][8]['change_use_areas']; // 机关【计租面积】
+                $result[$owners][$j][5][16] = $changeChushoudata[$owners][3][$j][8]['change_areas']; // 机关【建筑面积】
+                $result[$owners][$j][5][17] = $changeChushoudata[$owners][3][$j][8]['change_oprices']; // 机关【原价】
+                $result[$owners][$j][5][18] = $changeChushoudata[$owners][3][$j][8]['change_house_nums']; // 机关【户数】
+
+                $result[$owners][$j][5][19] = $changeChushoudata[$owners][1][$j][8]['change_ban_nums']; // 住宅【栋数】
+                $result[$owners][$j][5][20] = $changeChushoudata[$owners][1][$j][8]['change_rents']; // 住宅【规定租金】
+                $result[$owners][$j][5][21] = $changeChushoudata[$owners][1][$j][8]['change_use_areas']; // 住宅【计租面积】
+                $result[$owners][$j][5][22] = $changeChushoudata[$owners][1][$j][8]['change_areas']; // 住宅【建筑面积】
+                $result[$owners][$j][5][23] = $changeChushoudata[$owners][1][$j][8]['change_oprices']; // 住宅【原价】
+                $result[$owners][$j][5][24] = $changeChushoudata[$owners][1][$j][8]['change_house_nums']; // 住宅【户数】
+
+                $result[$owners][$j][6][1] = 0; // 合计【栋数】
+                $result[$owners][$j][6][2] = 0; // 合计【规定租金】
+                $result[$owners][$j][6][3] = 0; // 合计【计租面积】
+                $result[$owners][$j][6][4] = 0; // 合计【建筑面积】
+                $result[$owners][$j][6][5] = 0; // 合计【原价】
+                $result[$owners][$j][6][6] = 0; // 合计【户数】
+
+                $result[$owners][$j][6][7] = 0; // 企业【栋数】
+                $result[$owners][$j][6][8] = 0; // 企业【规定租金】
+                $result[$owners][$j][6][9] = 0; // 企业【计租面积】
+                $result[$owners][$j][6][10] = 0; // 企业【建筑面积】
+                $result[$owners][$j][6][11] = 0; // 企业【原价】
+                $result[$owners][$j][6][12] = 0; // 企业【户数】
+
+                $result[$owners][$j][6][13] = 0; // 机关【栋数】
+                $result[$owners][$j][6][14] = 0; // 机关【规定租金】
+                $result[$owners][$j][6][15] = 0; // 机关【计租面积】
+                $result[$owners][$j][6][16] = 0; // 机关【建筑面积】
+                $result[$owners][$j][6][17] = 0; // 机关【原价】
+                $result[$owners][$j][6][18] = 0; // 机关【户数】
+
+                $result[$owners][$j][6][19] = 0; // 住宅【栋数】
+                $result[$owners][$j][6][20] = 0; // 住宅【规定租金】
+                $result[$owners][$j][6][21] = 0; // 住宅【计租面积】
+                $result[$owners][$j][6][22] = 0; // 住宅【建筑面积】
+                $result[$owners][$j][6][23] = 0; // 住宅【原价】
+                $result[$owners][$j][6][24] = 0; // 住宅【户数】
             }
         }
         //halt($result[1][28]);
@@ -277,6 +362,10 @@ class RadixReport extends Model
                     	$l[0] = '调整';
                     }elseif($u == 4){
                     	$l[0] = '管段调整';
+                    }elseif($u == 5){
+                        $l[0] = '公房出售';
+                    }elseif($u == 6){
+                        $l[0] = '租差/泵费';
                     }
                     
                 }

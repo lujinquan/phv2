@@ -11,10 +11,10 @@ use app\report\model\YearPropertyReport as YearPropertyReportModel;
 class House extends Admin
 {
 
-	/**
-	 * 房屋统计报表
-	 * @return [type] [description]
-	 */
+    /**
+     * 房屋统计报表
+     * @return [type] [description]
+     */
     public function archives()
     {
         /*//把所有房屋统计报表数据同步写入到文件中去
@@ -23,7 +23,7 @@ class House extends Admin
         foreach ($tempData as $k => $v) {
             file_put_contents(ROOT_PATH.'file/report/house/'.$k.'.txt', $v);
         }*/
-    	$owerLst = [1 => '市属',2 => '区属',3 => '代管',5 => '自管', 6 => '生活', 7 => '托管', 10 => '市代托',11 => '市区代托', 12 => '所有产别'];     
+        $owerLst = [1 => '市属',2 => '区属',3 => '代管',5 => '自管', 6 => '生活', 7 => '托管', 10 => '市代托',11 => '市区代托', 12 => '所有产别'];
         if ($this->request->isAjax()) {
             $options = $this->request->post();
             //halt($options);
@@ -34,6 +34,8 @@ class House extends Admin
 
             $data = [];
             $data['data'] = [];
+            $data['date'] = $date;
+            $data['inst'] = $inst;
 
             //$dataJson = Db::name('report')->where([['type','eq','HouseReport'],['date','eq',str_replace('-','',$date)]])->value('data');
             // 先取缓存的数据
@@ -55,7 +57,7 @@ class House extends Admin
                 $data['msg'] = '获取成功！';
             }else{
                 $data['code'] = 0;
-                $data['msg'] = '暂无数据！';               
+                $data['msg'] = '暂无数据！';
             }
             //halt($data);
             return json($data);
@@ -83,9 +85,9 @@ class House extends Admin
     }
 
     /**
-	 * 房屋统计报表
-	 * @return [type] [description]
-	 */
+     * 房屋统计报表
+     * @return [type] [description]
+     */
     public function propertys()
     {
         // //把所有房屋统计报表数据同步写入到文件中去
@@ -94,8 +96,8 @@ class House extends Admin
         // foreach ($tempData as $k => $v) {
         //     file_put_contents(ROOT_PATH.'file/report/property/'.$k.'.txt', $v);
         // }
-        $owerLst = [1 => '市属',2 => '区属',5 => '自管',6 => '生活',10 => '市区自',11 => '所有产别',];     
-    	if ($this->request->isAjax()) {
+        $owerLst = [1 => '市属',2 => '区属',5 => '自管',6 => '生活',10 => '市区自',11 => '所有产别',];
+        if ($this->request->isAjax()) {
             $options = $this->request->get();
             $owner = $options['owner'];
             $date = $options['month'];
@@ -112,16 +114,16 @@ class House extends Admin
                 if($date == date('Y-m') || $date == date('Y')){
                     $MonthPropertyReportModel = new MonthPropertyReportModel;
                     $datas  = $MonthPropertyReportModel->makeMonthPropertyReport($date);
-                // 如果查的是不是当月或当年的数据，提示暂无数据
+                    // 如果查的是不是当月或当年的数据，提示暂无数据
                 }else{
                     $data['code'] = 0;
                     $data['msg'] = '暂无数据！';
-                    return json($data); 
-                }     
-            // 如果没有缓存数据         
+                    return json($data);
+                }
+                // 如果没有缓存数据
             }else{
                 $datas = json_decode($dataJson,true);
-            }   
+            }
             $data['data'] = $datas?$datas[$owner][$inst]:array();
             $data['msg'] = '';
             if($data['data']){
@@ -129,7 +131,7 @@ class House extends Admin
                 $data['msg'] = '获取成功！';
             }else{
                 $data['code'] = 0;
-                $data['msg'] = '暂无数据！';               
+                $data['msg'] = '暂无数据！';
             }
             return json($data);
         }
@@ -162,44 +164,44 @@ class House extends Admin
     {
         // if ($this->request->isAjax()) {
 
-            $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-           
-            $full_date = substr_replace($date,'-',4,0);
+        $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
 
-            //检查上月的报表是否生成
-            $last_month = date('Ym',strtotime('- 1 month',strtotime($full_date)));
+        $full_date = substr_replace($date,'-',4,0);
 
-            $tempData = @file_get_contents(ROOT_PATH.'file/report/property/'.$last_month.'.txt');
-            if(!$tempData){
-                return $this->error('未生成'.substr_replace($last_month,'-',4,0).'月报表');
-            }
+        //检查上月的报表是否生成
+        $last_month = date('Ym',strtotime('- 1 month',strtotime($full_date)));
 
-            //Debug::remark('begin');
-            $MonthPropertyReportModel = new MonthPropertyReportModel;
-            $HouseReportdata = $MonthPropertyReportModel->makeMonthPropertyReport($date);
-            //Debug::remark('end');
-            
-            file_put_contents(ROOT_PATH.'file/report/property/'.$date.'.txt', json_encode($HouseReportdata));
+        $tempData = @file_get_contents(ROOT_PATH.'file/report/property/'.$last_month.'.txt');
+        if(!$tempData){
+            return $this->error('未生成'.substr_replace($last_month,'-',4,0).'月报表');
+        }
 
-            // $where = [['type','eq','PropertyReport'],['date','eq',$date]];
+        //Debug::remark('begin');
+        $MonthPropertyReportModel = new MonthPropertyReportModel;
+        $HouseReportdata = $MonthPropertyReportModel->makeMonthPropertyReport($date);
+        //Debug::remark('end');
 
-            // $ReportModel = new ReportModel;
-            // $res = $ReportModel->where($where)->find();
+        file_put_contents(ROOT_PATH.'file/report/property/'.$date.'.txt', json_encode($HouseReportdata));
 
-            // if($res){
-            //     $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
-            // }else{
-            //     $re = $ReportModel->create([
-            //         'data'=>json_encode($HouseReportdata),
-            //         'type'=>'PropertyReport',
-            //         'date'=>$date,
-            //     ]);
-            // }
-            
-            $data = [];
-            $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
-            $data['code'] = 1;
-            return json($data);
+        // $where = [['type','eq','PropertyReport'],['date','eq',$date]];
+
+        // $ReportModel = new ReportModel;
+        // $res = $ReportModel->where($where)->find();
+
+        // if($res){
+        //     $re = $ReportModel->where($where)->update(['data'=>json_encode($HouseReportdata)]);
+        // }else{
+        //     $re = $ReportModel->create([
+        //         'data'=>json_encode($HouseReportdata),
+        //         'type'=>'PropertyReport',
+        //         'date'=>$date,
+        //     ]);
+        // }
+
+        $data = [];
+        $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
+        $data['code'] = 1;
+        return json($data);
         // }
     }
 
@@ -234,7 +236,7 @@ class House extends Admin
             //         'date'=>$date,
             //     ]);
             // }
-            
+
             $data = [];
             $data['msg'] = $date.'年报，保存成功！';
             $data['code'] = 1;
@@ -242,7 +244,7 @@ class House extends Admin
         }
     }
 
-    
+
 
 
 }
