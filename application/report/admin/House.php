@@ -34,6 +34,8 @@ class House extends Admin
 
             $data = [];
             $data['data'] = [];
+            $data['date'] = $date;
+            $data['inst'] = $inst;
 
             //$dataJson = Db::name('report')->where([['type','eq','HouseReport'],['date','eq',str_replace('-','',$date)]])->value('data');
             // 先取缓存的数据
