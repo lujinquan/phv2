@@ -55,15 +55,13 @@ class Recharge extends Model
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['d.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
-        // 检索【房屋】使用性质
-        if(isset($data['house_use_id']) && $data['house_use_id']){
-            $where[] = ['b.house_use_id','in',explode(',',$data['house_use_id'])];
-        }
+
         // 检索【房屋】支付金额
         if(isset($data['pay_rent']) && $data['pay_rent']){
             $where[] = ['a.pay_rent','eq',$data['pay_rent']];
         }
         if($type == "pay"){
+            $where[] = ['b.house_use_id','eq',1];
             if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
             }else{
@@ -81,6 +79,10 @@ class Recharge extends Model
                 $where[] = ['a.act_ptime','between',[$startTime,$endTime]];
             }
         }else{
+            // 检索【房屋】使用性质
+            if(isset($data['house_use_id']) && $data['house_use_id']){
+                $where[] = ['b.house_use_id','in',explode(',',$data['house_use_id'])];
+            }
            if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
             }else{

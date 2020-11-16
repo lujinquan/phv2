@@ -299,6 +299,10 @@ class Invoice extends Model
             $old_month = 0;
             $old_year = 0;
             foreach ($RentOrderArr as $u => $p) {
+                if($p['house_use_id'] != 1){
+                    $this->error = '非住宅订单无法开票';
+                    return false;
+                }
                 if ($p['rent_order_date'] == $curr_date) {
                     $now_rent = bcaddMerge([$now_rent,$rent_orders[$p['rent_order_id']]]);
                 }

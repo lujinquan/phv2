@@ -60,10 +60,11 @@ class WeixinOrder extends Model
         if(isset($data['ban_owner_id']) && $data['ban_owner_id']){
             $where[] = ['e.ban_owner_id','in',explode(',',$data['ban_owner_id'])];
         }
-        // 检索使用权变更
-        if(isset($data['house_use_id']) && $data['house_use_id']){
-            $where[] = ['d.house_use_id','in',explode(',',$data['house_use_id'])];
-        }
+        // 检索使用性质
+//        if(isset($data['house_use_id']) && $data['house_use_id']){
+//            $where[] = ['d.house_use_id','in',explode(',',$data['house_use_id'])];
+//        }
+        $where[] = ['d.house_use_id','eq',1];
         // 检索房屋编号
         if(isset($data['house_number']) && $data['house_number']){
             $where[] = ['d.house_number','like','%'.$data['house_number'].'%'];

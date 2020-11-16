@@ -1119,7 +1119,10 @@ class Rent extends Model
 
                         // 修改weixin_order表对应模拟账单的状态为撤回状态
                         $trade_row = Db::name('weixin_order_trade')->where([['rent_order_id','eq',$row['rent_order_id']],['pay_dan_money','eq',$row['rent_order_paid']]])->field('out_trade_no')->find();
-                        Db::name('weixin_order')->where([['out_trade_no','eq',$trade_row['out_trade_no']]])->update(['order_status'=>4]);
+                        if(!empty($trade_row)){
+                            Db::name('weixin_order')->where([['out_trade_no','eq',$trade_row['out_trade_no']]])->update(['order_status'=>4]);
+                        }
+
 
                         $re++;
                     }
