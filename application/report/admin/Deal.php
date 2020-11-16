@@ -188,54 +188,52 @@ class Deal extends Admin
             // halt($next_month);
             $inst_id = input('inst_id');
 
+            $date = str_replace('-','',$query_month);
+            $dataJson = @file_get_contents(ROOT_PATH.'file/report/change/'.str_replace('-','',$date).'.txt');
             $data = [];
-            $data['query_month_simple'] = $query_month;
-            $data['query_month'] = date('Y年m月',strtotime($query_month));
-            $data['next_month'] = date('Y年m月',$next_month_time);
-            $data['inst_id'] = $inst_id;
-            $data['owner_id'] = $owner_id;
+            if($dataJson){
+                $datas = json_decode($dataJson,true);
+//                halt($datas);
+                $result = $datas['radix'];
+                $resultNoRadix = $datas['noRadix'];
+                $resultRent = $datas['rent'];
+                $data['query_month_simple'] = $query_month;
+                $data['query_month'] = date('Y年m月',strtotime($query_month));
+                $data['next_month'] = date('Y年m月',$next_month_time);
+                $data['inst_id'] = $inst_id;
+                $data['owner_id'] = $owner_id;
+            }else{
+                $data['query_month_simple'] = $query_month;
+                $data['query_month'] = date('Y年m月',strtotime($query_month));
+                $data['next_month'] = date('Y年m月',$next_month_time);
+                $data['inst_id'] = $inst_id;
+                $data['owner_id'] = $owner_id;
 
-            $RadixReportModel = new RadixReportModel;
+                $RadixReportModel = new RadixReportModel;
 
-            // 查询当月时间1日零时
-            $query_month_begin_time = $query_month.'-01';
-            // 查询当月时间28日零时
-            $query_month_end_time = $query_month.'-28';
-            // 查询的下月时间1日零时
-            $next_month_begin_time = $next_month.'-01';
-            // 查询的下月时间28日零时
-            $next_month_end_time = $next_month.'-28';
+                // 查询当月时间1日零时
+                $query_month_begin_time = $query_month.'-01';
+                // 查询当月时间28日零时
+                $query_month_end_time = $query_month.'-28';
+                // 查询的下月时间1日零时
+                $next_month_begin_time = $next_month.'-01';
+                // 查询的下月时间28日零时
+                $next_month_end_time = $next_month.'-28';
 
-            // dump($query_month_begin_time);dump($query_month_end_time);dump($next_month_begin_time);halt($next_month_end_time);
-            // 基数异动统计
-            $result = $RadixReportModel->radix($next_month);
-            // halt($result);
-            // $result = $RadixReportModel->radix($next_month_begin_time , $next_month_end_time);
-            // 非基数异动统计
-            $resultNoRadix = $RadixReportModel->noRadix($next_month);
-            // $resultNoRadix = $RadixReportModel->noRadix($next_month_begin_time , $next_month_end_time);
-            // 租金异动统计
-            $resultRent = $RadixReportModel->rent($query_month);
-            // $resultRent = $RadixReportModel->rent($query_month_begin_time , $query_month_end_time);
-            // halt($resultRent);
-            // $dataJson = Db::name('report')->where([['type','eq','PropertyReport'],['date','eq',str_replace('-','',$date)]])->value('data');
-            // $dataJson = @file_get_contents(ROOT_PATH.'file/report/property/'.str_replace('-','',$date).'.txt');
-            // // 如果没有缓存数据
-            // if(!$dataJson){
-            //     // 如果查的是当月或当年的数据，实时显示
-            //     if($date == date('Y-m') || $date == date('Y')){
-            //         $MonthPropertyReportModel = new MonthPropertyReportModel;
-            //         $datas  = $MonthPropertyReportModel->makeMonthPropertyReport($date);
-            //     // 如果查的是不是当月或当年的数据，提示暂无数据
-            //     }else{
-            //         $data['code'] = 0;
-            //         $data['msg'] = '暂无数据！';
-            //         return json($data); 
-            //     }     
-            // // 如果没有缓存数据         
-            // }else{
-            //     $datas = json_decode($dataJson,true);
-            // }   
+                // dump($query_month_begin_time);dump($query_month_end_time);dump($next_month_begin_time);halt($next_month_end_time);
+                // 基数异动统计
+                $result = $RadixReportModel->radix($next_month);
+                // halt($result);
+                // $result = $RadixReportModel->radix($next_month_begin_time , $next_month_end_time);
+                // 非基数异动统计
+                $resultNoRadix = $RadixReportModel->noRadix($query_month,$next_month);
+                // $resultNoRadix = $RadixReportModel->noRadix($next_month_begin_time , $next_month_end_time);
+                // 租金异动统计
+                $resultRent = $RadixReportModel->rent($query_month);
+            }
+
+
+
             $data['data'] = $result[$owner_id][$inst_id];
             $data['no_radix_data'] = $resultNoRadix[$owner_id][$inst_id];
             $data['rent_data'] = $resultRent[$owner_id][$inst_id];
@@ -252,5 +250,32 @@ class Deal extends Admin
         
         $this->assign('owerLst',$owerLst);
         return $this->fetch();
+    }
+
+    /**
+     * 产权异动统计明细表
+     * @return [type] [description]
+     */
+    public function make_changes_statis_report()
+    {
+        set_time_limit(0);
+        $query_month = date('Y-m');
+        $date = str_replace('-','',$query_month);
+        $next_month_time = strtotime('first day of next month',strtotime($query_month));
+        $next_month = date('Y-m',$next_month_time);
+
+        $RadixReportModel = new RadixReportModel;
+        $result = [];
+        $result['radix'] = $RadixReportModel->radix($next_month);
+        $result['noRadix'] = $RadixReportModel->noRadix($query_month,$next_month);
+        $result['rent'] = $RadixReportModel->rent($query_month);
+
+//        $HouseReportdata = $HouseReportModel->makeHouseReport($date);
+        file_put_contents(ROOT_PATH.'file/report/change/'.$date.'.txt', json_encode($result));
+        $data = [];
+        $data['msg'] = substr($date,0,4).'-'.substr($date,4,2).'月报，保存成功！';
+        $data['code'] = 1;
+        return json($data);
+
     }
 }	
