@@ -3,43 +3,43 @@
   <div class="layui-form-item">
 	 <label class="layui-form-label">缴费成功通知：</label>
 	<div class="layui-input-block">
-	  <input type="text" name="pay_success" readonly autocomplete="off" placeholder="请输入缴费成功订阅消息模板ID" class="layui-input">
+	  <input type="text" name="pay_success" value="{if condition="isset($temlates['pay_success'])"}{$temlates['pay_success']}{/if}" readonly autocomplete="off" placeholder="请输入缴费成功订阅消息模板ID" class="layui-input">
 	</div>
   </div>
   <div class="layui-form-item">
   	<label class="layui-form-label">发票下载成功通知：</label>
   	<div class="layui-input-block">
-  	  <input type="text" name="invoice_success" readonly autocomplete="off" placeholder="请输入发票下载成功通知订阅消息模板ID" class="layui-input">
+  	  <input type="text" name="invoice_success" value="{if condition="isset($temlates['invoice_success'])"}{$temlates['invoice_success']}{/if}" readonly autocomplete="off" placeholder="请输入发票下载成功通知订阅消息模板ID" class="layui-input">
   	</div>
   </div>
   <div class="layui-form-item">
   	<label class="layui-form-label">充值成功通知：</label>
   	<div class="layui-input-block">
-  	  <input type="text" name="credit_success" readonly autocomplete="off" placeholder="请输入充值成功通知订阅消息模板ID" class="layui-input">
+  	  <input type="text" name="credit_success" value="{if condition="isset($temlates['credit_success'])"}{$temlates['credit_success']}{/if}" autocomplete="off" placeholder="请输入催缴通知订阅消息模板ID" readonly autocomplete="off" placeholder="请输入充值成功通知订阅消息模板ID" class="layui-input">
   	</div>
   </div>
   <div class="layui-form-item">
   	<label class="layui-form-label">余额扣缴通知：</label>
   	<div class="layui-input-block">
-  	  <input type="text" name="withholding" readonly autocomplete="off" placeholder="请输入余额扣缴通知订阅消息模板ID" class="layui-input">
+  	  <input type="text" name="withholding" readonly value="{if condition="isset($temlates['withholding'])"}{$temlates['withholding']}{/if}" autocomplete="off" placeholder="请输入催缴通知订阅消息模板ID" autocomplete="off" placeholder="请输入余额扣缴通知订阅消息模板ID" class="layui-input">
   	</div>
   </div>
   <div class="layui-form-item">
   	<label class="layui-form-label">催缴通知：</label>
   	<div class="layui-input-block">
-  	  <input type="text" name="withholding" readonly autocomplete="off" placeholder="请输入催缴通知订阅消息模板ID" class="layui-input">
+  	  <input type="text" name="withholding" readonly value="{if condition="isset($temlates['withholding'])"}{$temlates['withholding']}{/if}" autocomplete="off" placeholder="请输入催缴通知订阅消息模板ID" class="layui-input">
   	</div>
   </div>
   <div class="layui-form-item">
     <label class="layui-form-label">待支付提醒：</label>
     <div class="layui-input-block">
-      <input type="text" name="app_user_wait_payment_remind" readonly autocomplete="off" value="" placeholder="请输入待支付提醒订阅消息模板ID" class="layui-input">
+      <input type="text" name="app_user_wait_payment_remind" readonly autocomplete="off" value="{if condition="isset($temlates['app_user_wait_payment_remind'])"}{$temlates['app_user_wait_payment_remind']}{/if}" placeholder="请输入待支付提醒订阅消息模板ID" class="layui-input">
     </div>
   </div>
   <div class="layui-form-item">
     <label class="layui-form-label">订单支付成功通知：</label>
     <div class="layui-input-block">
-      <input type="text" name="app_user_payment_remind" readonly autocomplete="off" value="" placeholder="请输入订单支付成功通知订阅消息模板ID" class="layui-input">
+      <input type="text" name="app_user_payment_remind" readonly autocomplete="off" value="{if condition="isset($temlates['app_user_payment_remind'])"}{$temlates['app_user_payment_remind']}{/if}" placeholder="请输入订单支付成功通知订阅消息模板ID" class="layui-input">
     </div>
   </div>
   <div class="layui-form-item">
@@ -76,6 +76,7 @@
                     $("input[name='app_user_wait_payment_remind']").val(res.data[i].priTmplId);
                   }
                   if(res.data[i].title === '订单支付成功通知'){
+                  // if(res.data[i].title === '缴费成功通知'){
                     $("input[name='app_user_payment_remind']").val(res.data[i].priTmplId);
                   }
                   

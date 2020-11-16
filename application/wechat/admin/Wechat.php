@@ -59,6 +59,13 @@ class Wechat extends Admin
             }
             return $this->success('提交成功');
         }
+        $WeixinTemplateModel = new WeixinTemplateModel;
+        $temlates = $WeixinTemplateModel->column('name,value');
+        $this->assign('temlates',$temlates);
+        // foreach($temlates as $template){
+
+        // }
+        // halt($temlates);
 		return $this->fetch($group);
 	}
 

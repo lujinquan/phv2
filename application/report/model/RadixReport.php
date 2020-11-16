@@ -11,11 +11,15 @@ class RadixReport extends Model
 	public function radix($cacheDate)
 	{
 		$cacheDate = str_replace('-','',$cacheDate);
-
+//halt($cacheDate);
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
         ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$cacheDate],['change_status','eq',1]])
         ->select();
+        // 统计基数异动中的房屋出售的数据
+        $changeChushouData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
+            ->where([['change_cancel_type','eq',1],['change_type','eq',8],['order_date','eq',$cacheDate],['change_status','eq',1]])
+            ->select();
 
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums')->group('use_id,owner_id,inst_id')
@@ -38,6 +42,19 @@ class RadixReport extends Model
                 'change_oprices' => $v7['change_oprices'],
                 'change_ban_nums' => $v7['change_ban_nums'],
                 'change_house_nums' => $v7['change_house_nums'],
+            ];
+        }
+
+        foreach($changeChushouData as $k8 => $v8){
+            $changeChushoudata[$v8['owner_id']][$v8['use_id']][$v8['inst_id']][$v8['change_type']] = [
+                'change_rents' => $v8['change_rents'],
+                'change_month_rents' => $v8['change_month_rents'],
+                'change_year_rents' => $v8['change_year_rents'],
+                'change_areas' => $v8['change_areas'],
+                'change_use_areas' => $v8['change_use_areas'],
+                'change_oprices' => $v8['change_oprices'],
+                'change_ban_nums' => $v8['change_ban_nums'],
+                'change_house_nums' => $v8['change_house_nums'],
             ];
         }
 
@@ -65,6 +82,18 @@ class RadixReport extends Model
                     for($k=1;$k<16;$k++){
                         if(!isset($changedata[$owner][$i][$j][$k])){
                             $changedata[$owner][$i][$j][$k] = [ 
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                                'change_areas' => 0,
+                                'change_use_areas' => 0,
+                                'change_oprices' => 0,
+                                'change_ban_nums' => 0,
+                                'change_house_nums' => 0,
+                            ];
+                        }
+                        if(!isset($changeChushoudata[$owner][$i][$j][$k])){
+                            $changeChushoudata[$owner][$i][$j][$k] = [
                                 'change_rents' => 0,
                                 'change_month_rents' => 0,
                                 'change_year_rents' => 0,
@@ -226,6 +255,62 @@ class RadixReport extends Model
                 $result[$owners][$j][4][22] = $changeGuanduanIncdata[$owners][2][$j]['change_areas'] - $changeGuanduanDecdata[$owners][2][$j]['change_areas']; // 住宅【建筑面积】
                 $result[$owners][$j][4][23] = $changeGuanduanIncdata[$owners][2][$j]['change_oprices'] - $changeGuanduanDecdata[$owners][2][$j]['change_oprices']; // 住宅【原价】
                 $result[$owners][$j][4][24] = $changeGuanduanIncdata[$owners][2][$j]['change_house_nums'] - $changeGuanduanDecdata[$owners][2][$j]['change_house_nums']; // 住宅【户数】
+
+                $result[$owners][$j][5][1] = $changeChushoudata[$owners][2][$j][8]['change_ban_nums'] + $changeChushoudata[$owners][3][$j][8]['change_ban_nums'] + $changeChushoudata[$owners][1][$j][8]['change_ban_nums']; // 合计【栋数】
+                $result[$owners][$j][5][2] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_rents'],$changeChushoudata[$owners][3][$j][8]['change_rents'],$changeChushoudata[$owners][1][$j][8]['change_rents']]); // 合计【规定租金】
+                $result[$owners][$j][5][3] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_use_areas'],$changeChushoudata[$owners][3][$j][8]['change_use_areas'],$changeChushoudata[$owners][1][$j][8]['change_use_areas']]); // 合计【计租面积】
+                $result[$owners][$j][5][4] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_areas'],$changeChushoudata[$owners][3][$j][8]['change_areas'],$changeChushoudata[$owners][1][$j][8]['change_areas']]); // 合计【建筑面积】
+                $result[$owners][$j][5][5] = bcaddMerge([$changeChushoudata[$owners][2][$j][8]['change_oprices'],$changeChushoudata[$owners][3][$j][8]['change_oprices'],$changeChushoudata[$owners][1][$j][8]['change_oprices']]); // 合计【原价】
+                $result[$owners][$j][5][6] = $changeChushoudata[$owners][2][$j][8]['change_house_nums'] + $changeChushoudata[$owners][3][$j][8]['change_house_nums'] + $changeChushoudata[$owners][1][$j][8]['change_house_nums']; // 合计【户数】
+
+                $result[$owners][$j][5][7] = $changeChushoudata[$owners][2][$j][8]['change_ban_nums']; // 企业【栋数】
+                $result[$owners][$j][5][8] = $changeChushoudata[$owners][2][$j][8]['change_rents']; // 企业【规定租金】
+                $result[$owners][$j][5][9] = $changeChushoudata[$owners][2][$j][8]['change_use_areas']; // 企业【计租面积】
+                $result[$owners][$j][5][10] = $changeChushoudata[$owners][2][$j][8]['change_areas']; // 企业【建筑面积】
+                $result[$owners][$j][5][11] = $changeChushoudata[$owners][2][$j][8]['change_oprices']; // 企业【原价】
+                $result[$owners][$j][5][12] = $changeChushoudata[$owners][2][$j][8]['change_house_nums']; // 企业【户数】
+
+                $result[$owners][$j][5][13] = $changeChushoudata[$owners][3][$j][8]['change_ban_nums']; // 机关【栋数】
+                $result[$owners][$j][5][14] = $changeChushoudata[$owners][3][$j][8]['change_rents']; // 机关【规定租金】
+                $result[$owners][$j][5][15] = $changeChushoudata[$owners][3][$j][8]['change_use_areas']; // 机关【计租面积】
+                $result[$owners][$j][5][16] = $changeChushoudata[$owners][3][$j][8]['change_areas']; // 机关【建筑面积】
+                $result[$owners][$j][5][17] = $changeChushoudata[$owners][3][$j][8]['change_oprices']; // 机关【原价】
+                $result[$owners][$j][5][18] = $changeChushoudata[$owners][3][$j][8]['change_house_nums']; // 机关【户数】
+
+                $result[$owners][$j][5][19] = $changeChushoudata[$owners][1][$j][8]['change_ban_nums']; // 住宅【栋数】
+                $result[$owners][$j][5][20] = $changeChushoudata[$owners][1][$j][8]['change_rents']; // 住宅【规定租金】
+                $result[$owners][$j][5][21] = $changeChushoudata[$owners][1][$j][8]['change_use_areas']; // 住宅【计租面积】
+                $result[$owners][$j][5][22] = $changeChushoudata[$owners][1][$j][8]['change_areas']; // 住宅【建筑面积】
+                $result[$owners][$j][5][23] = $changeChushoudata[$owners][1][$j][8]['change_oprices']; // 住宅【原价】
+                $result[$owners][$j][5][24] = $changeChushoudata[$owners][1][$j][8]['change_house_nums']; // 住宅【户数】
+
+                $result[$owners][$j][6][1] = 0; // 合计【栋数】
+                $result[$owners][$j][6][2] = 0; // 合计【规定租金】
+                $result[$owners][$j][6][3] = 0; // 合计【计租面积】
+                $result[$owners][$j][6][4] = 0; // 合计【建筑面积】
+                $result[$owners][$j][6][5] = 0; // 合计【原价】
+                $result[$owners][$j][6][6] = 0; // 合计【户数】
+
+                $result[$owners][$j][6][7] = 0; // 企业【栋数】
+                $result[$owners][$j][6][8] = 0; // 企业【规定租金】
+                $result[$owners][$j][6][9] = 0; // 企业【计租面积】
+                $result[$owners][$j][6][10] = 0; // 企业【建筑面积】
+                $result[$owners][$j][6][11] = 0; // 企业【原价】
+                $result[$owners][$j][6][12] = 0; // 企业【户数】
+
+                $result[$owners][$j][6][13] = 0; // 机关【栋数】
+                $result[$owners][$j][6][14] = 0; // 机关【规定租金】
+                $result[$owners][$j][6][15] = 0; // 机关【计租面积】
+                $result[$owners][$j][6][16] = 0; // 机关【建筑面积】
+                $result[$owners][$j][6][17] = 0; // 机关【原价】
+                $result[$owners][$j][6][18] = 0; // 机关【户数】
+
+                $result[$owners][$j][6][19] = 0; // 住宅【栋数】
+                $result[$owners][$j][6][20] = 0; // 住宅【规定租金】
+                $result[$owners][$j][6][21] = 0; // 住宅【计租面积】
+                $result[$owners][$j][6][22] = 0; // 住宅【建筑面积】
+                $result[$owners][$j][6][23] = 0; // 住宅【原价】
+                $result[$owners][$j][6][24] = 0; // 住宅【户数】
             }
         }
         //halt($result[1][28]);
@@ -277,6 +362,10 @@ class RadixReport extends Model
                     	$l[0] = '调整';
                     }elseif($u == 4){
                     	$l[0] = '管段调整';
+                    }elseif($u == 5){
+                        $l[0] = '公房出售';
+                    }elseif($u == 6){
+                        $l[0] = '租差/泵费';
                     }
                     
                 }
@@ -324,7 +413,7 @@ class RadixReport extends Model
 
         // 本月新失效的
 
-//halt($changeNoBaseData);
+        //halt($changeNoBaseData);
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         // $changeGuanduanDecData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums')->group('use_id,owner_id,inst_id')
         // ->where([['change_type','eq',10],['order_date','eq',$cacheDate],['change_status','eq',1]])
@@ -509,4 +598,179 @@ class RadixReport extends Model
 
 
     }
+
+    
+
+    // 租金异动统计
+    public function rent($cacheDate)
+    {
+        $cacheDate = str_replace('-','',$cacheDate);
+
+        $cacheYear = substr($cacheDate,0,4); // 2020
+
+        $cacheYearFirstMonth = $cacheYear.'-01'; // 2020-01
+        $cacheYearZeroMonth = $cacheYear.'00';
+        // $arr5 = [substr($cacheDate,0,4) . '01', $cacheDate - 1]; // 201801~201804,包含201801和201804
+        // $arr6 = [substr($cacheDate,0,4) . '01', $cacheDate]; // 201801~201805,包含201801和201805
+        // $arr7 = substr($cacheDate,0,4); // 2018
+
+        $cacheFullDate = substr_replace($cacheDate,'-',4,0); // 2020-08
+
+        $cacheFullDateToTime = strtotime($cacheFullDate);
+        $nextFullDate = date('Y-m',strtotime('+1 month',$cacheFullDateToTime)); // 2020-09
+        $nextDate = str_replace('-', '', $nextFullDate); // 202009
+
+        // 陈欠核销
+        $chanqianhexiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents,sum(change_month_rent) as change_month_rents,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
+        ->where([['order_date','<',$nextDate],['end_date','gt',$cacheDate],['change_type','eq',4],['change_status','eq',1]])
+        ->select();
+
+        // 租金追加调整
+        $zujinzhuijiatiaozhengData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents,sum(change_month_rent) as change_month_rents,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
+        ->where([['order_date','eq',$cacheDate],['end_date','gt',$cacheDate],['change_type','eq',11],['change_status','eq',1]])
+        ->select();
+
+        //重组为规定格式的
+        foreach($chanqianhexiaoData as $k9 => $v9){
+            $chanqianhexiaodata[$v9['owner_id']][$v9['use_id']][$v9['inst_id']] = [
+                'change_rents' => $v9['change_rents'],
+                'change_month_rents' => $v9['change_month_rents'],
+                'change_year_rents' => $v9['change_year_rents'],
+            ];
+        }
+        //重组为规定格式的
+        foreach($zujinzhuijiatiaozhengData as $k8 => $v8){
+            $zujinzhuijiatiaozhengdata[$v8['owner_id']][$v8['use_id']][$v8['inst_id']] = [
+                'change_rents' => $v8['change_rents'],
+                'change_month_rents' => $v8['change_month_rents'],
+                'change_year_rents' => $v8['change_year_rents'],
+            ];
+        }
+
+        //保证每一个产别，机构，下的每一个字段都不缺失（没有的以0来补充）
+        $ownertypes = [1,2,3,5,7]; //市、区、代、自、托
+        foreach ($ownertypes as $owner) {
+            for ($i=1;$i<4;$i++ ) {
+                for ($j=4;$j<34;$j++) {
+                    // for($k=1;$k<16;$k++){
+                        if(!isset($chanqianhexiaodata[$owner][$i][$j])){
+                            $chanqianhexiaodata[$owner][$i][$j] = [ 
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                            ];
+
+                        }
+                        if(!isset($zujinzhuijiatiaozhengdata[$owner][$i][$j])){
+                            $zujinzhuijiatiaozhengdata[$owner][$i][$j] = [
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                            ];
+                        }
+
+                    // }
+                }
+            }
+        }
+        // halt($chanqianhexiaodata);
+        $result = [];
+        foreach ($ownertypes as $owners) { //处理市、区、代、自、托
+            for ($j = 4; $j < 34; $j++) { //每个管段，从4开始……
+            
+                // 租金追加调整吗
+                $result[$owners][$j][1][5] = $zujinzhuijiatiaozhengdata[$owners][2][$j]['change_rents']; // 企业【本月】
+                $result[$owners][$j][1][6] = $zujinzhuijiatiaozhengdata[$owners][2][$j]['change_month_rents']; // 企业【以前月】
+                $result[$owners][$j][1][7] = $zujinzhuijiatiaozhengdata[$owners][2][$j]['change_year_rents']; // 企业【以前年】
+                $result[$owners][$j][1][8] = bcaddMerge([$result[$owners][$j][1][5],$result[$owners][$j][1][6],$result[$owners][$j][1][7]]); // 企业【小计】
+                $result[$owners][$j][1][9] = $zujinzhuijiatiaozhengdata[$owners][3][$j]['change_rents']; // 机关【本月】
+                $result[$owners][$j][1][10] = $zujinzhuijiatiaozhengdata[$owners][3][$j]['change_month_rents']; // 机关【以前月】
+                $result[$owners][$j][1][11] = $zujinzhuijiatiaozhengdata[$owners][3][$j]['change_year_rents']; // 机关【以前年】
+                $result[$owners][$j][1][12] = bcaddMerge([$result[$owners][$j][1][9],$result[$owners][$j][1][10],$result[$owners][$j][1][11]]); // 机关【小计】
+                $result[$owners][$j][1][13] = $zujinzhuijiatiaozhengdata[$owners][1][$j]['change_rents']; // 住宅【本月】
+                $result[$owners][$j][1][14] = $zujinzhuijiatiaozhengdata[$owners][1][$j]['change_month_rents']; // 住宅【以前月】
+                $result[$owners][$j][1][15] = $zujinzhuijiatiaozhengdata[$owners][1][$j]['change_year_rents']; // 住宅【以前年】
+                $result[$owners][$j][1][16] = bcaddMerge([$result[$owners][$j][1][13],$result[$owners][$j][1][14],$result[$owners][$j][1][15]]); // 住宅【小计】
+                $result[$owners][$j][1][1] = bcaddMerge([$result[$owners][$j][1][5],$result[$owners][$j][1][9],$result[$owners][$j][1][13]]); // 合计【本月】
+                $result[$owners][$j][1][2] = bcaddMerge([$result[$owners][$j][1][6],$result[$owners][$j][1][10],$result[$owners][$j][1][14]]); // 合计【以前月】
+                $result[$owners][$j][1][3] = bcaddMerge([$result[$owners][$j][1][7],$result[$owners][$j][1][11],$result[$owners][$j][1][15]]); // 合计【以前年】
+                $result[$owners][$j][1][4] = bcaddMerge([$result[$owners][$j][1][8],$result[$owners][$j][1][12],$result[$owners][$j][1][16]]); // 合计【小计】
+                // halt($chanqianhexiaodata[$owners][2][$j]); 
+                // 陈欠核销
+                $result[$owners][$j][2][5] = $chanqianhexiaodata[$owners][2][$j]['change_rents']; // 企业【本月】
+                $result[$owners][$j][2][6] = $chanqianhexiaodata[$owners][2][$j]['change_month_rents']; // 企业【以前月】
+                $result[$owners][$j][2][7] = $chanqianhexiaodata[$owners][2][$j]['change_year_rents']; // 企业【以前年】
+                $result[$owners][$j][2][8] = bcaddMerge([$result[$owners][$j][2][5],$result[$owners][$j][2][6],$result[$owners][$j][2][7]]); // 企业【小计】
+                $result[$owners][$j][2][9] = $chanqianhexiaodata[$owners][3][$j]['change_rents']; // 机关【本月】
+                $result[$owners][$j][2][10] = $chanqianhexiaodata[$owners][3][$j]['change_month_rents']; // 机关【以前月】
+                $result[$owners][$j][2][11] = $chanqianhexiaodata[$owners][3][$j]['change_year_rents']; // 机关【以前年】
+                $result[$owners][$j][2][12] = bcaddMerge([$result[$owners][$j][2][9],$result[$owners][$j][2][10],$result[$owners][$j][2][11]]); // 机关【小计】
+                $result[$owners][$j][2][13] = $chanqianhexiaodata[$owners][1][$j]['change_rents']; // 住宅【本月】
+                $result[$owners][$j][2][14] = $chanqianhexiaodata[$owners][1][$j]['change_month_rents']; // 住宅【以前月】
+                $result[$owners][$j][2][15] = $chanqianhexiaodata[$owners][1][$j]['change_year_rents']; // 住宅【以前年】
+                $result[$owners][$j][2][16] = bcaddMerge([$result[$owners][$j][2][13],$result[$owners][$j][2][14],$result[$owners][$j][2][15]]); // 住宅【小计】
+                $result[$owners][$j][2][1] = bcaddMerge([$result[$owners][$j][2][5],$result[$owners][$j][2][9],$result[$owners][$j][2][13]]); // 合计【本月】
+                $result[$owners][$j][2][2] = bcaddMerge([$result[$owners][$j][2][6],$result[$owners][$j][2][10],$result[$owners][$j][2][14]]); // 合计【以前月】
+                $result[$owners][$j][2][3] = bcaddMerge([$result[$owners][$j][2][7],$result[$owners][$j][2][11],$result[$owners][$j][2][15]]); // 合计【以前年】
+                $result[$owners][$j][2][4] = bcaddMerge([$result[$owners][$j][2][8],$result[$owners][$j][2][12],$result[$owners][$j][2][16]]); // 合计【小计】
+                
+            }
+        }
+        //halt($result);
+        //$this->assign('data',$result[5][28]);
+        //halt($result);
+        //第二步：处理市代托，市区代托，全部下的公司，紫阳，粮道的数据（注意只有所和公司才有市代托、市区代托、全部）
+        $ownertypess = [1,2,3,5,7,10,11,12]; //市、区、代、自、托、市代托、市区代托、全部
+        foreach ($ownertypess as $own) {
+            for ($d = 3; $d >0; $d--) { //公司和所，从1到3（1公司，2紫阳，3粮道），注意顺序公司的数据由所加和得来，所以是3、2、1的顺序
+                if($own < 10 && $d ==3){
+                    $result[$own][$d] = array_merge_addss($result[$own][19],$result[$own][20],$result[$own][21],$result[$own][22],$result[$own][23],$result[$own][24],$result[$own][25],$result[$own][26],$result[$own][27],$result[$own][28],$result[$own][29],$result[$own][30],$result[$own][31],$result[$own][32],$result[$own][33]);
+                }elseif($own < 10 && $d ==2){
+                    $result[$own][$d] = array_merge_addss($result[$own][4],$result[$own][5],$result[$own][6],$result[$own][7],$result[$own][8],$result[$own][9],$result[$own][10],$result[$own][11],$result[$own][12],$result[$own][13],$result[$own][14],$result[$own][15],$result[$own][16],$result[$own][17],$result[$own][18]);
+                }elseif($own < 10 && $d == 1){
+                    $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
+                }elseif($own == 10 && $d > 1 && $d < 4){
+                    $result[$own][$d] = array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]);
+                }elseif($own == 10 && $d == 1){
+                    $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
+                    
+                }elseif($own == 11 && $d > 1 && $d < 4){
+                    $result[$own][$d] = array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]);
+                }elseif($own == 11 && $d == 1){
+                    $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
+                }elseif($own == 12 && $d > 1 && $d < 4){
+                    $result[$own][$d] = array_merge_add(array_merge_add(array_merge_add(array_merge_add($result[1][$d] ,$result[3][$d]),$result[7][$d]),$result[2][$d]),$result[5][$d]);
+                }elseif($own == 12 && $d == 1){
+                    $result[$own][$d] = array_merge_add($result[$own][2] ,$result[$own][3]);
+                }
+
+            }
+        }
+        //halt($result);
+        foreach ($result as &$s) {
+            foreach ($s as &$p) {
+                foreach ($p as $u => &$l) {
+            
+                    foreach ($l as &$t) {
+                        $t = floatval($t);
+                        if($t == 0){
+                            $t = '';
+                        }
+                    }
+                    if($u == 1){
+                        $l[0] = '租金追加调整';
+                    }elseif($u == 2){
+                        $l[0] = '陈欠核销';
+                    }
+                    
+                }
+            }
+        }
+
+        return $result;
+
+
+    }
+
+
 }

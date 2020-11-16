@@ -1,410 +1,410 @@
 <!-- 房屋统计报表 -->
 <div class="j-table-content j-no-title j-reportform">
 	<div class="page-toolbar j-page-toolbar clearfix">
-	      <form class="layui-form layui-form-pane" id="report-form">
+		<form class="layui-form layui-form-pane" id="report-form">
 			<div class="j-search-fl layui-col-md6  fl">
-		        {if condition="INST_LEVEL != 3"}
+				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline" style="width:140px;">
 					<select name="inst_id" id="TubulationI">
-					  {volist name=":config('inst_check_names')[INST]" id="v"}
-					  <option value="{$key}"{if condition="$key == $Think.INST"}selected{/if}>{$v}</option>
-					  {/volist}
+						{volist name=":config('inst_check_names')[INST]" id="v"}
+						<option value="{$key}"{if condition="$key == $Think.INST"}selected{/if}>{$v}</option>
+						{/volist}
 					</select>
 				</div>
 				{/if}
-	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
-	              <select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
-	                  {volist name="owerLst" id="v"}
-	                  <option value="{$key}" {if condition="$key == 12"}selected{/if}>{$v}</option>
-	                  {/volist}
-	              </select>
-	          </div>
-			  <div class="layui-input-inline" style="width:140px;padding-left:5px">
-			      <select name="owner_id" id="QueryTyp" lay-filter="owner_id">
-			          <option value="1">按完损等级</option>
-			          <option value="2">按使用性质</option>
-			          <option value="3">按所属机构</option>
-			          <option value="4">按建成年份</option>
-			          <option value="5" selected>按房屋价值</option>
-			      </select>
-			  </div>
-	          <div class="layui-input-inline" style="width:120px;padding-left:5px">
-	              <input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
-	          </div>
-	        </div>
-			
-	        <div class="j-search-fr layui-col-md6 fr">
-	          <div class="layui-input-inline fr">
-				<button type="reset" class="layui-btn j-btn-reset">重置</button>
-				<button type="button" class="layui-btn"  id="yueQuery" lay-submit lay-filter="formDemo">
-				    <i class="layui-icon">&#xe615;</i>
-				    搜索
-				</button>
-				<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
-				    <i class="layui-icon layui-icon-print"></i>
-				    打印
-				</button>
-				{if condition="in_array(350,$auths) || $Think.ADMIN_ROLE == 1"}
-				<!-- <button type="button" class="layui-btn layui-bg-green on" id="button_create">
-				    <i class="layui-icon layui-icon-chart"></i>
-				    生成本月报表
-				</button> -->
-				{/if}
-	          </div>
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<select name="owner_id" id="OwnerTyp" lay-filter="owner_id">
+						{volist name="owerLst" id="v"}
+						<option value="{$key}" {if condition="$key == 12"}selected{/if}>{$v}</option>
+						{/volist}
+					</select>
+				</div>
+				<div class="layui-input-inline" style="width:140px;padding-left:5px">
+					<select name="owner_id" id="QueryTyp" lay-filter="owner_id">
+						<option value="1">按完损等级</option>
+						<option value="2">按使用性质</option>
+						<option value="3">按所属机构</option>
+						<option value="4">按建成年份</option>
+						<option value="5" selected>按房屋价值</option>
+					</select>
+				</div>
+				<div class="layui-input-inline" style="width:120px;padding-left:5px">
+					<input type="text" name="query_month" value="{:date('Y-m')}" readonly placeholder="月份" id="timeYear" autocomplete="off" class="layui-input">
+				</div>
 			</div>
-	      </form>
-	  </div>
-	   <!--startprint1-->
-	  <div class="j-report-con">
-		  <h1 class="j-report-title">武汉市房地局经管房产统计（<span id="DOwnerTyp">市属</span>）报表</h1>
-		  <div class="j-report-table">
-			  <ul>
-				  <li><div class="DQueryType j-bold-size">按房屋价值</div></li>
-				  <li><div class="time j-bold-size"></div></li>
-				  <li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
-			  </ul>
-			  <table class="layui-table" id="PropertyForm">
-			          <!-- 完损等级分 -->
-			          <tbody class="one" style="display:none;">
-			              <tr>
-			                  <th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">合计</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">完好房</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">基本完好房</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">一般损坏房</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">严重损坏房</th>
-			                  <th rowspan="1" colspan="3" class="j-bold-size">危险房</th>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="1" >其中：</td>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >1</td>
-			                  <td rowspan="1" colspan="1" >2</td>
-			                  <td rowspan="1" colspan="1" >3</td>
-			                  <td rowspan="1" colspan="1" >4</td>
-			                  <td rowspan="1" colspan="1" >5</td>
-			                  <td rowspan="1" colspan="1" >6</td>
-			                  <td rowspan="1" colspan="1" >7</td>
-			                  <td rowspan="1" colspan="1" >8</td>
-			                  <td rowspan="1" colspan="1" >9</td>
-			                  <td rowspan="1" colspan="1" >10</td>
-			                  <td rowspan="1" colspan="1" >11</td>
-			                  <td rowspan="1" colspan="1" >12</td>
-			                  <td rowspan="1" colspan="1" >13</td>
-			                  <td rowspan="1" colspan="1" >14</td>
-			                  <td rowspan="1" colspan="1" >15</td>
-			                  <td rowspan="1" colspan="1" >16</td>
-			                  <td rowspan="1" colspan="1" >17</td>
-			                  <td rowspan="1" colspan="1" >18</td>
-			              </tr>
-			              <tr class="Wsdj" style="display:none">
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			              </tr>
-			              
-			          </tbody>
-			  <!-- 使用性质分 -->
-			          <tbody class="two" style="display:none;">
-			              <tr>
-			                  <th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">合计</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">(一)工商企业、事业(自收自支差额补贴)用房</th>
-			                  <th rowspan="1" colspan="7" class="j-bold-size">(二)民用住宅</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">(三)机关、事业预算内用房</th>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >规定租金（元）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >规定租金（元）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >使用面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >规定租金（元）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >规定租金（元）</td>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >1</td>
-			                  <td rowspan="1" colspan="2" >2</td>
-			                  <td rowspan="1" colspan="2" >3</td>
-			                  <td rowspan="1" colspan="1" >4</td>
-			                  <td rowspan="1" colspan="2" >5</td>
-			                  <td rowspan="1" colspan="2" >6</td>
-			                  <td rowspan="1" colspan="1" >7</td>
-			                  <td rowspan="1" colspan="2" >8</td>
-			                  <td rowspan="1" colspan="2" >9</td>
-			                  <td rowspan="1" colspan="2" >10</td>
-			                  <td rowspan="1" colspan="1" >11</td>
-			                  <td rowspan="1" colspan="2" >12</td>
-			                  <td rowspan="1" colspan="2" >13</td>
-			              </tr>
-			              <tr class="Syxz" style="display:none">
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			              </tr>
-			              
-			          </tbody>
-			          <!-- 按机构分 -->
-			          <tbody class="three" style="display:none;">
-			              <tr>
-			                  <th rowspan="2" colspan="2" class="j-bold-size j-width">机构</th>
-			                  <th rowspan="1" colspan="8" class="j-bold-size">合计</th>
-			                  <th rowspan="1" colspan="10" class="j-bold-size">(一)民用住宅</th>
-			                  <th rowspan="1" colspan="8" class="j-bold-size">(二)工商企业、事业(自收自支差额补贴)用房</th>
-			                  <th rowspan="1" colspan="8" class="j-bold-size">(三)机关、事业预算内用房</th>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1">栋数</td>
-			                  <td rowspan="1" colspan="1">户数</td>
-			                  <td rowspan="1" colspan="2">建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2">建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="2">规定租金（元）</td>
-			                  <td rowspan="1" colspan="1">栋数</td>
-			                  <td rowspan="1" colspan="1">户数</td>
-			                  <td rowspan="1" colspan="2">建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2">建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="2">使用面积（㎡）</td>
-			                  <td rowspan="1" colspan="2">规定租金（元）</td>
-			                  <td rowspan="1" colspan="1">栋数</td>
-			                  <td rowspan="1" colspan="1">户数</td>
-			                  <td rowspan="1" colspan="2">建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2">建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="2">规定租金（元）</td>
-			                  <td rowspan="1" colspan="1">栋数</td>
-			                  <td rowspan="1" colspan="1">户数</td>
-			                  <td rowspan="1" colspan="2">建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2">建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="2">规定租金（元）</td>
-			              </tr>
-			              
-			              <tr class="gig" style="display:none">
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="1"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			                  <td rowspan="1" colspan="2"></td>
-			              </tr>
-			              
-			          </tbody>
-			  <!-- 建成年份分 -->
-			          <tbody class="four" style="display:none;">
-			               <tr>
-			                  <th rowspan="3" colspan="2" class="j-bold-size">建设年代</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">合计</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">完好房</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">基本完好房</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">一般损坏房</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">严重损坏房</th>
-			                  <th rowspan="1" colspan="6" class="j-bold-size">危险房</th>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			                  <td rowspan="1" colspan="1" >栋数</td>
-			                  <td rowspan="1" colspan="1" >户数</td>
-			                  <td rowspan="1" colspan="2" >建筑面积（㎡）</td>
-			                  <td rowspan="1" colspan="2" >建面占比（㎡）</td>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >1</td>
-			                  <td rowspan="1" colspan="1" >2</td>
-			                  <td rowspan="1" colspan="2" >3</td>
-			                  <td rowspan="1" colspan="2" >4</td>
-			                  <td rowspan="1" colspan="1" >5</td>
-			                  <td rowspan="1" colspan="1" >6</td>
-			                  <td rowspan="1" colspan="2" >7</td>
-			                  <td rowspan="1" colspan="2" >8</td>
-			                  <td rowspan="1" colspan="1" >9</td>
-			                  <td rowspan="1" colspan="1" >10</td>
-			                  <td rowspan="1" colspan="2" >11</td>
-			                  <td rowspan="1" colspan="2" >12</td>
-			                  <td rowspan="1" colspan="1" >13</td>
-			                  <td rowspan="1" colspan="1" >14</td>
-			                  <td rowspan="1" colspan="2" >15</td>
-			                  <td rowspan="1" colspan="2" >16</td>
-			                  <td rowspan="1" colspan="1" >17</td>
-			                  <td rowspan="1" colspan="1" >18</td>
-			                  <td rowspan="1" colspan="2" >19</td>
-			                  <td rowspan="1" colspan="2" >20</td>
-			                  <td rowspan="1" colspan="1" >21</td>
-			                  <td rowspan="1" colspan="1" >22</td>
-			                  <td rowspan="1" colspan="2" >23</td>
-			                  <td rowspan="1" colspan="2" >24</td>
-			              </tr>
-			              <tr class="jsnd" style="display:none">
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="1" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			                  <td rowspan="1" colspan="2" ></td>
-			              </tr>
-			              
-			          </tbody>
-			          <!-- 按价值分 -->
-			          <tbody class="five">
-			              <tr>
-			                  <th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">合计</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">(一)工商企业、事业(自收自支差额补贴)用房</th>
-			                  <th rowspan="1" colspan="7" class="j-bold-size">(二)民用住宅</th>
-			                  <th rowspan="1" colspan="5" class="j-bold-size">(三)机关、事业预算内用房</th>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >栋</td>
-			                  <td rowspan="1" colspan="2" >建筑面积</td>
-			                  <td rowspan="1" colspan="2" >房屋原价</td>
-			                  <td rowspan="1" colspan="1" >栋</td>
-			                  <td rowspan="1" colspan="2" >建筑面积</td>
-			                  <td rowspan="1" colspan="2" >房屋原价</td>
-			                  <td rowspan="1" colspan="1" >栋</td>
-			                  <td rowspan="1" colspan="2" >建筑面积</td>
-			                  <td rowspan="1" colspan="2" >使用面积</td>
-			                  <td rowspan="1" colspan="2" >房屋原价</td>
-			                  <td rowspan="1" colspan="1" >栋</td>
-			                  <td rowspan="1" colspan="2" >建筑面积</td>
-			                  <td rowspan="1" colspan="2" >房屋原价</td>
-			              </tr>
-			              <tr>
-			                  <td rowspan="1" colspan="1" >1</td>
-			                  <td rowspan="1" colspan="2" >2</td>
-			                  <td rowspan="1" colspan="2" >3</td>
-			                  <td rowspan="1" colspan="1" >4</td>
-			                  <td rowspan="1" colspan="2" >5</td>
-			                  <td rowspan="1" colspan="2" >6</td>
-			                  <td rowspan="1" colspan="1" >7</td>
-			                  <td rowspan="1" colspan="2" >8</td>
-			                  <td rowspan="1" colspan="2" >9</td>
-			                  <td rowspan="1" colspan="2" >10</td>
-			                  <td rowspan="1" colspan="1" >11</td>
-			                  <td rowspan="1" colspan="2" >12</td>
-			                  <td rowspan="1" colspan="2" >13</td>
-			              </tr>
-			               <tr class="fwjz" style="display:none">
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="1" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="1" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="1" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="1" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			                   <td rowspan="1" colspan="2" ></td>
-			              </tr>
-			          </tbody>
-			  </table>
-			  <dl class="j-archives-box clearfix">
-				<dt class="j-archives-title clearfix">补充资料：</dt> 
+
+			<div class="j-search-fr layui-col-md6 fr">
+				<div class="layui-input-inline fr">
+					<button type="reset" class="layui-btn j-btn-reset">重置</button>
+					<button type="button" class="layui-btn"  id="yueQuery" lay-submit lay-filter="formDemo">
+						<i class="layui-icon">&#xe615;</i>
+						搜索
+					</button>
+					<button type="button" class="layui-btn layui-btn-warm on" onclick="click_print()" id="button_print">
+						<i class="layui-icon layui-icon-print"></i>
+						打印
+					</button>
+					{if condition="in_array(350,$auths) || $Think.ADMIN_ROLE == 1"}
+					 <!--<button type="button" class="layui-btn layui-bg-green on" id="button_create">
+                        <i class="layui-icon layui-icon-chart"></i>
+                        生成本月报表
+                    </button>-->
+					{/if}
+				</div>
+			</div>
+		</form>
+	</div>
+	<!--startprint1-->
+	<div class="j-report-con">
+		<h1 class="j-report-title">武汉市房地局经管房产统计（<span id="DOwnerTyp">市属</span>）报表</h1>
+		<div class="j-report-table">
+			<ul>
+				<li><div class="DQueryType j-bold-size">按房屋价值</div></li>
+				<li><div class="time j-bold-size"></div></li>
+				<li><div class="fontsize j-bold-size">单位：建筑面积：平方米 规定租金：元</div></li>
+			</ul>
+			<table class="layui-table" id="PropertyForm">
+				<!-- 完损等级分 -->
+				<tbody class="one" style="display:none;">
+				<tr>
+					<th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">合计</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">完好房</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">基本完好房</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">一般损坏房</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">严重损坏房</th>
+					<th rowspan="1" colspan="3" class="j-bold-size">危险房</th>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="1" >其中：</td>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >1</td>
+					<td rowspan="1" colspan="1" >2</td>
+					<td rowspan="1" colspan="1" >3</td>
+					<td rowspan="1" colspan="1" >4</td>
+					<td rowspan="1" colspan="1" >5</td>
+					<td rowspan="1" colspan="1" >6</td>
+					<td rowspan="1" colspan="1" >7</td>
+					<td rowspan="1" colspan="1" >8</td>
+					<td rowspan="1" colspan="1" >9</td>
+					<td rowspan="1" colspan="1" >10</td>
+					<td rowspan="1" colspan="1" >11</td>
+					<td rowspan="1" colspan="1" >12</td>
+					<td rowspan="1" colspan="1" >13</td>
+					<td rowspan="1" colspan="1" >14</td>
+					<td rowspan="1" colspan="1" >15</td>
+					<td rowspan="1" colspan="1" >16</td>
+					<td rowspan="1" colspan="1" >17</td>
+					<td rowspan="1" colspan="1" >18</td>
+				</tr>
+				<tr class="Wsdj" style="display:none">
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+				</tr>
+
+				</tbody>
+				<!-- 使用性质分 -->
+				<tbody class="two" style="display:none;">
+				<tr>
+					<th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">合计</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">(一)工商企业、事业(自收自支差额补贴)用房</th>
+					<th rowspan="1" colspan="7" class="j-bold-size">(二)民用住宅</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">(三)机关、事业预算内用房</th>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >规定租金（元）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >规定租金（元）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >使用面积（㎡）</td>
+					<td rowspan="1" colspan="2" >规定租金（元）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >规定租金（元）</td>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >1</td>
+					<td rowspan="1" colspan="2" >2</td>
+					<td rowspan="1" colspan="2" >3</td>
+					<td rowspan="1" colspan="1" >4</td>
+					<td rowspan="1" colspan="2" >5</td>
+					<td rowspan="1" colspan="2" >6</td>
+					<td rowspan="1" colspan="1" >7</td>
+					<td rowspan="1" colspan="2" >8</td>
+					<td rowspan="1" colspan="2" >9</td>
+					<td rowspan="1" colspan="2" >10</td>
+					<td rowspan="1" colspan="1" >11</td>
+					<td rowspan="1" colspan="2" >12</td>
+					<td rowspan="1" colspan="2" >13</td>
+				</tr>
+				<tr class="Syxz" style="display:none">
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+				</tr>
+
+				</tbody>
+				<!-- 按机构分 -->
+				<tbody class="three" style="display:none;">
+				<tr>
+					<th rowspan="2" colspan="2" class="j-bold-size j-width">机构</th>
+					<th rowspan="1" colspan="8" class="j-bold-size">合计</th>
+					<th rowspan="1" colspan="10" class="j-bold-size">(一)民用住宅</th>
+					<th rowspan="1" colspan="8" class="j-bold-size">(二)工商企业、事业(自收自支差额补贴)用房</th>
+					<th rowspan="1" colspan="8" class="j-bold-size">(三)机关、事业预算内用房</th>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1">栋数</td>
+					<td rowspan="1" colspan="1">户数</td>
+					<td rowspan="1" colspan="2">建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2">建面占比（㎡）</td>
+					<td rowspan="1" colspan="2">规定租金（元）</td>
+					<td rowspan="1" colspan="1">栋数</td>
+					<td rowspan="1" colspan="1">户数</td>
+					<td rowspan="1" colspan="2">建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2">建面占比（㎡）</td>
+					<td rowspan="1" colspan="2">使用面积（㎡）</td>
+					<td rowspan="1" colspan="2">规定租金（元）</td>
+					<td rowspan="1" colspan="1">栋数</td>
+					<td rowspan="1" colspan="1">户数</td>
+					<td rowspan="1" colspan="2">建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2">建面占比（㎡）</td>
+					<td rowspan="1" colspan="2">规定租金（元）</td>
+					<td rowspan="1" colspan="1">栋数</td>
+					<td rowspan="1" colspan="1">户数</td>
+					<td rowspan="1" colspan="2">建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2">建面占比（㎡）</td>
+					<td rowspan="1" colspan="2">规定租金（元）</td>
+				</tr>
+
+				<tr class="gig" style="display:none">
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="1"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+					<td rowspan="1" colspan="2"></td>
+				</tr>
+
+				</tbody>
+				<!-- 建成年份分 -->
+				<tbody class="four" style="display:none;">
+				<tr>
+					<th rowspan="3" colspan="2" class="j-bold-size">建设年代</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">合计</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">完好房</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">基本完好房</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">一般损坏房</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">严重损坏房</th>
+					<th rowspan="1" colspan="6" class="j-bold-size">危险房</th>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+					<td rowspan="1" colspan="1" >栋数</td>
+					<td rowspan="1" colspan="1" >户数</td>
+					<td rowspan="1" colspan="2" >建筑面积（㎡）</td>
+					<td rowspan="1" colspan="2" >建面占比（㎡）</td>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >1</td>
+					<td rowspan="1" colspan="1" >2</td>
+					<td rowspan="1" colspan="2" >3</td>
+					<td rowspan="1" colspan="2" >4</td>
+					<td rowspan="1" colspan="1" >5</td>
+					<td rowspan="1" colspan="1" >6</td>
+					<td rowspan="1" colspan="2" >7</td>
+					<td rowspan="1" colspan="2" >8</td>
+					<td rowspan="1" colspan="1" >9</td>
+					<td rowspan="1" colspan="1" >10</td>
+					<td rowspan="1" colspan="2" >11</td>
+					<td rowspan="1" colspan="2" >12</td>
+					<td rowspan="1" colspan="1" >13</td>
+					<td rowspan="1" colspan="1" >14</td>
+					<td rowspan="1" colspan="2" >15</td>
+					<td rowspan="1" colspan="2" >16</td>
+					<td rowspan="1" colspan="1" >17</td>
+					<td rowspan="1" colspan="1" >18</td>
+					<td rowspan="1" colspan="2" >19</td>
+					<td rowspan="1" colspan="2" >20</td>
+					<td rowspan="1" colspan="1" >21</td>
+					<td rowspan="1" colspan="1" >22</td>
+					<td rowspan="1" colspan="2" >23</td>
+					<td rowspan="1" colspan="2" >24</td>
+				</tr>
+				<tr class="jsnd" style="display:none">
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+				</tr>
+
+				</tbody>
+				<!-- 按价值分 -->
+				<tbody class="five">
+				<tr>
+					<th rowspan="3" colspan="2" class="j-bold-size">结构类别</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">合计</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">(一)工商企业、事业(自收自支差额补贴)用房</th>
+					<th rowspan="1" colspan="7" class="j-bold-size">(二)民用住宅</th>
+					<th rowspan="1" colspan="5" class="j-bold-size">(三)机关、事业预算内用房</th>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >栋</td>
+					<td rowspan="1" colspan="2" >建筑面积</td>
+					<td rowspan="1" colspan="2" >房屋原价</td>
+					<td rowspan="1" colspan="1" >栋</td>
+					<td rowspan="1" colspan="2" >建筑面积</td>
+					<td rowspan="1" colspan="2" >房屋原价</td>
+					<td rowspan="1" colspan="1" >栋</td>
+					<td rowspan="1" colspan="2" >建筑面积</td>
+					<td rowspan="1" colspan="2" >使用面积</td>
+					<td rowspan="1" colspan="2" >房屋原价</td>
+					<td rowspan="1" colspan="1" >栋</td>
+					<td rowspan="1" colspan="2" >建筑面积</td>
+					<td rowspan="1" colspan="2" >房屋原价</td>
+				</tr>
+				<tr>
+					<td rowspan="1" colspan="1" >1</td>
+					<td rowspan="1" colspan="2" >2</td>
+					<td rowspan="1" colspan="2" >3</td>
+					<td rowspan="1" colspan="1" >4</td>
+					<td rowspan="1" colspan="2" >5</td>
+					<td rowspan="1" colspan="2" >6</td>
+					<td rowspan="1" colspan="1" >7</td>
+					<td rowspan="1" colspan="2" >8</td>
+					<td rowspan="1" colspan="2" >9</td>
+					<td rowspan="1" colspan="2" >10</td>
+					<td rowspan="1" colspan="1" >11</td>
+					<td rowspan="1" colspan="2" >12</td>
+					<td rowspan="1" colspan="2" >13</td>
+				</tr>
+				<tr class="fwjz" style="display:none">
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="1" ></td>
+					<td rowspan="1" colspan="2" ></td>
+					<td rowspan="1" colspan="2" ></td>
+				</tr>
+				</tbody>
+			</table>
+			<dl class="j-archives-box clearfix">
+				<dt class="j-archives-title clearfix">补充资料：</dt>
 				<dd>
 					工商企业：<span id="below_one"></span>户
 				</dd>
@@ -423,10 +423,10 @@
 				<dd>
 					填报日期：<span id="create_date"></span>
 				</dd>
-			  </dl>
-		  </div>
-	  </div>
-	   <!--endprint1-->
+			</dl>
+		</div>
+	</div>
+	<!--endprint1-->
 </div>
 {include file="system@block/layui" /}
 <script type="text/javascript" src="__ADMIN_VIEWJS__/report_house_archives.js?v={:config('hisiphp.version')}"></script>
@@ -436,11 +436,11 @@
 <!-- 打印 E -->
 <script>
 
-    layui.use(['jquery', 'laydate', 'element','table'], function(){
-        var laydate = layui.laydate,
-		    $ = layui.$
-			,element = layui.element
-			,table = layui.table;
+	layui.use(['jquery', 'laydate', 'element','table'], function(){
+		var laydate = layui.laydate,
+				$ = layui.$
+				,element = layui.element
+				,table = layui.table;
 
 		$('#button_create').click(function(){
 			var that = $(this);
@@ -450,32 +450,32 @@
 			$.post('{:url('house/makeArchivesReport')}', function(res) {
 				that.prop('disabled', false);
 				that.removeClass('layui-btn-disabled').addClass('layui-bg-green').html('<i class="layui-icon layui-icon-chart"></i>生成本月报表');
-                layer.msg(res.msg, {time:5000},function(){
-                	archives_data();
-                	//location.reload();
-                });
-            });
+				layer.msg(res.msg, {time:5000},function(){
+					archives_data();
+					//location.reload();
+				});
+			});
 
 		})
 
-        //年选择器
-        laydate.render({
-            elem: '#timeYear'
-            ,btns: ['now', 'confirm']
-            ,type: 'month'
+		//年选择器
+		laydate.render({
+			elem: '#timeYear'
+			,btns: ['now', 'confirm']
+			,type: 'month'
 			//,value: new Date() 
-            ,isInitValue: true
-            //,showBottom: false
+			,isInitValue: true
+			//,showBottom: false
 			,ready: function(date){
-                $('.layui-laydate li').click(function () {
-                   $('.laydate-btns-confirm').trigger('click');
-                });
-            }
-        });
-		
-    });
+				$('.layui-laydate li').click(function () {
+					$('.laydate-btns-confirm').trigger('click');
+				});
+			}
+		});
+
+	});
 	//打印
 	function  click_print(){
-	 $(".j-report-con").jqprint();
+		$(".j-report-con").jqprint();
 	}
 </script>
