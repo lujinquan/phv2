@@ -863,7 +863,7 @@ class Weixin extends Common
             $rechargewhere[] = ['recharge_status','eq',1];
             $rechargewhere[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
             // halt($rechargewhere);
-            $recharge_rent_info = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->where($rechargewhere)->field('pay_rent , a.id, e.tenant_name ,a.act_ptime , c.ban_address')->select();
+            $recharge_rent_info = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->where($rechargewhere)->field('pay_rent , a.id, e.tenant_name ,a.act_ptime ,b.house_number, c.ban_address')->select();
 
             foreach ($recharge_rent_info as $recharge_info) {
                 $result['charge_rent_sum'] = bcadd($result['charge_rent_sum'], $recharge_info['pay_rent'] , 2);
@@ -874,6 +874,7 @@ class Weixin extends Common
                     'pay_money' => $recharge_info['pay_rent'],
                     'ban_address' => $recharge_info['ban_address'],
                     'tenant_name' => $recharge_info['tenant_name'],
+                    'house_number' => $recharge_info['house_number'],
                     'id' => $recharge_info['id'],
                     'pay_way_name' => '微信支付',
                 ];
