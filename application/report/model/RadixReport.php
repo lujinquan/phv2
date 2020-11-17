@@ -14,8 +14,9 @@ class RadixReport extends Model
 //halt($cacheDate);
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
-        ->where([['change_cancel_type','neq',1],['change_type','neq',1],['order_date','eq',$cacheDate],['change_status','eq',1]])
+        ->where([['change_type','not in','1,8'],['order_date','eq',$cacheDate],['change_status','eq',1]])
         ->select();
+//        halt($changeData);
         // 统计基数异动中的房屋出售的数据
         $changeChushouData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
             ->where([['change_cancel_type','eq',1],['change_type','eq',8],['order_date','eq',$cacheDate],['change_status','eq',1]])
@@ -709,14 +710,14 @@ class RadixReport extends Model
 
         // 陈欠核销
         $chanqianhexiaoData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents,sum(change_month_rent) as change_month_rents,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-        ->where([['order_date','<',$nextDate],['end_date','gt',$cacheDate],['change_type','eq',4],['change_status','eq',1]])
+        ->where([['order_date','eq',$cacheDate],['change_type','eq',4],['change_status','eq',1]])
         ->select();
 
         // 租金追加调整
         $zujinzhuijiatiaozhengData = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->field('b.house_use_id as use_id,c.ban_owner_id as owner_id,c.ban_inst_id as inst_id,sum(this_month_rent) as change_rents,sum(before_month_rent) as change_month_rents,sum(before_year_rent) as change_year_rents')->group('b.house_use_id,ban_owner_id,c.ban_inst_id')
         ->where([['entry_date','eq',$entry_date],['change_status','eq',1]])
         ->select();
-//halt($zujinzhuijiatiaozhengData);
+//halt($chanqianhexiaoData);
         //重组为规定格式的
         foreach($chanqianhexiaoData as $k9 => $v9){
             $chanqianhexiaodata[$v9['owner_id']][$v9['use_id']][$v9['inst_id']] = [
