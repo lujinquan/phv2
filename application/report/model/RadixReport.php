@@ -690,6 +690,7 @@ class RadixReport extends Model
     // 租金异动统计
     public function rent($cacheDate)
     {
+        $entry_date = $cacheDate;
         $cacheDate = str_replace('-','',$cacheDate);
 
         $cacheYear = substr($cacheDate,0,4); // 2020
@@ -712,10 +713,10 @@ class RadixReport extends Model
         ->select();
 
         // 租金追加调整
-        $zujinzhuijiatiaozhengData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents,sum(change_month_rent) as change_month_rents,sum(change_year_rent) as change_year_rents')->group('use_id,owner_id,inst_id')
-        ->where([['order_date','eq',$cacheDate],['end_date','gt',$cacheDate],['change_type','eq',11],['change_status','eq',1]])
+        $zujinzhuijiatiaozhengData = Db::name('change_rentadd')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->field('b.house_use_id as use_id,c.ban_owner_id as owner_id,c.ban_inst_id as inst_id,sum(this_month_rent) as change_rents,sum(before_month_rent) as change_month_rents,sum(before_year_rent) as change_year_rents')->group('b.house_use_id,ban_owner_id,c.ban_inst_id')
+        ->where([['entry_date','eq',$entry_date],['change_status','eq',1]])
         ->select();
-
+//halt($zujinzhuijiatiaozhengData);
         //重组为规定格式的
         foreach($chanqianhexiaoData as $k9 => $v9){
             $chanqianhexiaodata[$v9['owner_id']][$v9['use_id']][$v9['inst_id']] = [
