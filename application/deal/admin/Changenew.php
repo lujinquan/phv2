@@ -99,6 +99,11 @@ class Changenew extends Admin
             $data['file'] = $file;
             // 附件上传验证 E
 
+            $houseInfo = Db::name('house')->where([['house_id', 'eq', $data['house_id']]])->field('house_use_id')->find();
+            if($houseInfo['house_use_id'] != 1 && $data['is_create_lease']){
+                return $this->error('非住宅房屋无法自动发租约');
+            }
+
             $ChangeModel = new ChangeNewModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -185,6 +190,11 @@ class Changenew extends Admin
             }
             $data['file'] = $file;
             // 附件上传验证 E
+
+            $houseInfo = Db::name('house')->where([['house_id', 'eq', $data['house_id']]])->field('house_use_id')->find();
+            if($houseInfo['house_use_id'] != 1 && $data['is_create_lease']){
+                return $this->error('非住宅房屋无法自动发租约');
+            }
 
             $ChangeModel = new ChangeNewModel;
             // 数据过滤

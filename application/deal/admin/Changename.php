@@ -82,6 +82,11 @@ class Changename extends Admin
             }
             $data['file'] = $file;
 
+            $houseInfo = Db::name('house')->where([['house_id', 'eq', $data['house_id']]])->field('house_use_id')->find();
+            if($houseInfo['house_use_id'] != 1 && $data['is_create_lease']){
+                return $this->error('非住宅房屋无法自动发租约');
+            }
+
             $ChangeModel = new ChangeNameModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -118,7 +123,7 @@ class Changename extends Admin
             $data = $this->request->post();
             // 数据验证
             $result = $this->validate($data, 'Changename.edit');
-            if($result !== true) {
+            if ($result !== true) {
                 return $this->error($result);
             }
 
@@ -162,46 +167,52 @@ class Changename extends Admin
             }
             $data['file'] = $file;
 
-            $ChangeModel = new ChangeNameModel;
-            // 数据过滤
-            $filData = $ChangeModel->dataFilter($data,'edit');
-            if(!is_array($filData)){
-                return $this->error($filData);
-            }
-            // 入库使用权变更表
-            $row = $ChangeModel->allowField(true)->update($filData);
-            if ($row === false) {
-                return $this->error('申请失败');
-            }
-            if($data['save_type'] == 'submit'){
-                if(count($row['child_json']) == 1){
-                    // 入库审批表
-                    $ProcessModel = new ProcessModel;
-                    $filData['change_id'] = $row['id'];
-                    $filData['change_order_number'] = $row['change_order_number'];
-                    unset($filData['id']);
-                    if (!$ProcessModel->allowField(true)->create($filData)) {
-                        return $this->error('未知错误');
-                    }
-                }elseif(count($row['child_json']) > 1){
-                    // 入库审批表
-                    $ProcessModel = new ProcessModel;
-                    $process = $ProcessModel->where([['change_type','eq',17],['change_id','eq',$row['id']]])->update(['curr_role'=>6,'change_desc'=>'待经租会计初审']);
-                    if (!$process) {
-                        return $this->error('未知错误');
-                    }
+            $houseInfo = Db::name('house')->where([['house_id', 'eq', $data['house_id']]])->field('house_use_id')->find();
+            if ($houseInfo['house_use_id'] != 1 && $data['is_create_lease']) {
+                return $this->error('非住宅房屋无法自动发租约');
+
+
+                $ChangeModel = new ChangeNameModel;
+                // 数据过滤
+                $filData = $ChangeModel->dataFilter($data, 'edit');
+                if (!is_array($filData)) {
+                    return $this->error($filData);
                 }
-                $msg = '保存并提交成功';
-            }else{
-                $msg = '保存成功';
+                // 入库使用权变更表
+                $row = $ChangeModel->allowField(true)->update($filData);
+                if ($row === false) {
+                    return $this->error('申请失败');
+                }
+                if ($data['save_type'] == 'submit') {
+                    if (count($row['child_json']) == 1) {
+                        // 入库审批表
+                        $ProcessModel = new ProcessModel;
+                        $filData['change_id'] = $row['id'];
+                        $filData['change_order_number'] = $row['change_order_number'];
+                        unset($filData['id']);
+                        if (!$ProcessModel->allowField(true)->create($filData)) {
+                            return $this->error('未知错误');
+                        }
+                    } elseif (count($row['child_json']) > 1) {
+                        // 入库审批表
+                        $ProcessModel = new ProcessModel;
+                        $process = $ProcessModel->where([['change_type', 'eq', 17], ['change_id', 'eq', $row['id']]])->update(['curr_role' => 6, 'change_desc' => '待经租会计初审']);
+                        if (!$process) {
+                            return $this->error('未知错误');
+                        }
+                    }
+                    $msg = '保存并提交成功';
+                } else {
+                    $msg = '保存成功';
+                }
+                return $this->success($msg, url('index'));
             }
-            return $this->success($msg,url('index'));
+            $id = $this->request->param('id');
+            $ChangeModel = new ChangeNameModel;
+            $row = $ChangeModel->detail($id);
+            $this->assign('data_info', $row);
+            return $this->fetch();
         }
-        $id = $this->request->param('id');
-        $ChangeModel = new ChangeNameModel;
-        $row = $ChangeModel->detail($id);
-        $this->assign('data_info',$row);
-        return $this->fetch();
     }
 
     public function detail()

@@ -155,20 +155,30 @@
 			</div>
 		</div>
 	</div>
-	<div class="layui-row layui-form-item layui-col-space90">
-		<div class="layui-col-md4">
-			<label class="j-form-label">备案时间</label>
-			<div class="j-input-inline">
-				<input type="text" id="ctime" value="{$data_info['ctime']}" placeholder=""   readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-col-md8">
-			<label class="j-form-label">异动原因</label>
-			<div class="j-input-inline">
-				<input type="text" name="change_remark" value="{$data_info['change_remark']}" readonly autocomplete="off" class="layui-input">
-			</div>
-		</div>
-	</div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		  <div class="layui-col-md4">
+			  <label class="j-form-label">备案时间</label>
+			  <div class="j-input-inline">
+				  <input type="text" id="ctime" value="{$data_info['ctime']}" placeholder=""   readonly autocomplete="off" class="layui-input">
+			  </div>
+		  </div>
+
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		  <div class="layui-col-md8">
+			  <label class="j-form-label">异动原因</label>
+			  <div class="j-input-inline">
+				  <input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
+			  </div>
+		  </div>
+		  <div class="layui-col-md4">
+			  <label class="j-form-label">是否生成租约</label>
+			  <div class="j-input-inline j-input-radio">
+				  <input type="radio" name="is_create_lease" value="1" disabled="disabled" {if condition="$data_info['is_create_lease']"}checked{/if} title="是">
+				  <input type="radio" name="is_create_lease" value="0" disabled="disabled" title="否" {if condition="!$data_info['is_create_lease']"}checked{/if}>
+			  </div>
+		  </div>
+	  </div>
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>上传报告</legend>
 	</fieldset>

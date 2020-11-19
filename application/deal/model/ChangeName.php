@@ -5,12 +5,11 @@ namespace app\deal\model;
 use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
-use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\Tenant as TenantModel;
-use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeLease as ChangeLeaseModel;
 use app\house\model\TenantTai as TenantTaiModel;
 use app\deal\model\ChangeRecord as ChangeRecordModel;
 
@@ -193,12 +192,13 @@ class ChangeName extends SystemBase
         }else{
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
+        $this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['house_info'] = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
 		$row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
         $oldTenantRow = TenantModel::where([['tenant_id','eq',$row['tenant_id']]])->field('tenant_number,tenant_card')->find();
         $row['old_tenant_info'] = $oldTenantRow;
-        //$this->finalDeal($row);exit;
+
         return $row;
     }
 
@@ -360,6 +360,31 @@ class ChangeName extends SystemBase
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
         }
 
+        // 5、自动生成租约异动
+        if ($finalRow['is_create_lease']) {
+            $szno = HouseModel::where([['house_id','eq',$finalRow['house_id']]])->value('house_szno');
+            $change_imgs = SystemAnnex::changeFormat($finalRow['change_imgs']);
+            $changeleaseimgs = [];
+            if($change_imgs){
+                foreach($change_imgs as $img){
+                    if(in_array($img['file_type'],array('Houselease','HouseForm','TenantReIDCard'))){
+                        $changeleaseimgs[] = $img['id'];
+                    }
+                }
+            }
+            $ChangeLeaseModel = new ChangeLeaseModel;
+            $changeleaseData = [];
+            $changeleaseData['ban_id'] = $finalRow['ban_id'];
+            $changeleaseData['house_id'] = $finalRow['house_id'];
+            $changeleaseData['tenant_id'] = $finalRow['tenant_id'];
+            $changeleaseData['change_imgs'] = $changeleaseimgs?implode(',',$changeleaseimgs):'';
+            $changeleaseData['cuid'] = $finalRow['cuid'];
+            $changeleaseData['extra'] = 4;
+            $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
+            $changeleaseData['szno'] = $szno;
+//             halt($change_imgs);
+            $ChangeLeaseModel->auto_create_changelease($changeleaseData);
+        }
     }
 
 }

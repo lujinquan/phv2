@@ -5,11 +5,9 @@ namespace app\deal\model;
 use think\Db;
 use app\system\model\SystemBase;
 use app\common\model\SystemAnnex;
-use app\common\model\SystemAnnexType;
 use app\house\model\Ban as BanModel;
 use app\house\model\House as HouseModel;
 use app\house\model\Tenant as TenantModel;
-use app\deal\model\Process as ProcessModel;
 use app\common\model\Cparam as ParamModel;
 use app\house\model\HouseTai as HouseTaiModel;
 use app\deal\model\ChangeTable as ChangeTableModel;
@@ -383,10 +381,9 @@ class ChangeUse extends SystemBase
         if($qrcodeUrl){
             @unlink($_SERVER['DOCUMENT_ROOT'].$qrcodeUrl);
         }
-        $szno = HouseModel::where([['house_id','eq',$finalRow['house_id']]])->value('house_szno');
-        
-        if ($finalRow['is_create_lease']) {
 
+        if ($finalRow['is_create_lease']) {
+            $szno = HouseModel::where([['house_id','eq',$finalRow['house_id']]])->value('house_szno');
             // 5、自动生成租约异动
              $change_imgs = SystemAnnex::changeFormat($finalRow['change_imgs']);
              $changeleaseimgs = [];
@@ -402,7 +399,7 @@ class ChangeUse extends SystemBase
              $changeleaseData['ban_id'] = $finalRow['ban_id'];
              $changeleaseData['house_id'] = $finalRow['house_id'];
              $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
-             $changeleaseData['change_imgs'] = implode(',',$changeleaseimgs);
+             $changeleaseData['change_imgs'] = $changeleaseimgs?implode(',',$changeleaseimgs):'';
              $changeleaseData['cuid'] = $finalRow['cuid'];
              $changeleaseData['extra'] = 5;
              $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
