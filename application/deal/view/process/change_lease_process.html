@@ -515,28 +515,40 @@
 					¥<input readonly style="width: 150px; font-family: 微软雅黑; font-size: 13px;" type="text" name="applyRoom20_data5" id="applyRoom20_data5" value="" class="validate[custom[onlyNumberWide]] textinput"  truetype="textinput" yzid="80">元</td>
 			</tr>
 			<tr>
-				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" 
+				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type=""
+											{if condition="$data_info['extra'] > 0"}
+											value="{$data_info['ziliaoyuan']}"
+											{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist}
+					{/if}
 					name="applyRoom21_data1" id="applyRoom21_data1">
 					&nbsp;  &nbsp;  &nbsp;
-					经管所长：<input readonly style="width: 120px; margin-right: 30px;" type="" 
+					经管所长：<input readonly style="width: 120px; margin-right: 30px;" type=""
+								{if condition="$data_info['extra'] > 0"}
+								value="{$data_info['jingguansuozhang']}"
+								{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist}
+					{/if}
 					name="applyRoom21_data2" id="applyRoom21_data2">
 					&nbsp;  &nbsp;  &nbsp;
-					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type="" 
+					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type=""
+								{if condition="$data_info['extra'] > 0"}
+								value="{$data_info['jingguankezhang']}"
+								{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist}
+					{/if}
 					name="applyRoom21_data3" id="applyRoom21_data3" value="">
 				</td>
 			</tr>
@@ -662,6 +674,7 @@
 				</td>
 			</tr>
 		</tbody></table>
+		  {if condition="strtotime($data_info['ctime']) < strtotime(date('2020-11-19'))"}
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red"></i>换租原因</label>
@@ -670,6 +683,7 @@
 				</div>
 			</div>
 		</div>
+		  {/if}
 		<!-- 约定事项 -->
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>约定事项</legend>
@@ -795,15 +809,18 @@
 		</div>
 		<!-- <input type="hidden" name="id" value="{$data_info['id']}">
 		<span class="j-tip-danger">不通过：异动失效，申请人需要重新填写申请；</span><span class="j-tip-warm">打回：打回到申请人，申请人可修改资料重新提交申请；</span> -->
-		{include file="deal@common/process_submit" /}
-		<!-- <div class="layui-row layui-form-item layui-col-space90">
+		{// include file="deal@common/process_submit" /}
+		 <div class="layui-row layui-form-item layui-col-space90">
+			 <input type="hidden" name="id" value="{$data_info['id']}">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 				<a href="javascript:;" class="layui-btn layui-btn-danger" id="handover">不通过</a>
+				{if condition="$data_info['extra'] == 0"}
 				<a href="javascript:;" class="layui-btn layui-btn-warm" id="backover">打回</a>
+				{/if}
 				<button type="submit" class="layui-btn" j-data="{'flag':'passed'}" lay-submit lay-filter="formSubmit">通过</button>
 			</div>
-		</div> -->
+		</div>
 	  </div>
 	  {include file="deal@common/pop_part_one" /}
 	</form>

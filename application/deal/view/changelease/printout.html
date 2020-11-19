@@ -498,6 +498,9 @@
                         </tr>
                         <tr height="24px">
                             <td colspan="11" style="text-align: center">资料员：<span id="print_1_Room21_data1">
+                            {if condition="$data_info['extra'] > 0"}
+                                {$data_info['ziliaoyuan']}
+                            {else /}
                             <?php $a = 1; ?>
                             {volist name="$data_info['child_json']" id="v"}
                                 {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
@@ -507,10 +510,13 @@
                                 <?php }; ?>
                                 {/if} 
                             {/volist}    
-
+                            {/if}
                             </span>
                                 &nbsp;  &nbsp;
                         经管所长：<span id="print_1_Room21_data2">
+                            {if condition="$data_info['extra'] > 0"}
+                                {$data_info['jingguansuozhang']}
+                            {else /}
                             <?php $b = 1; ?>
                             {volist name="$data_info['child_json']" id="v"}
                                 {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
@@ -520,9 +526,12 @@
                                 <?php }; ?>
                                 {/if} 
                             {/volist}   
-
+                            {/if}
                         </span>
                                &nbsp;  &nbsp;经管科长：<span id="print_1_Room21_data3">
+                            {if condition="$data_info['extra'] > 0"}
+                                {$data_info['jingguankezhang']}
+                            {else /}
                         <?php $c = 1; ?>
                         {volist name="$data_info['child_json']" id="v"}
                             {if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
@@ -532,7 +541,7 @@
                             <?php }; ?>
                             {/if} 
                         {/volist}
-
+                            {/if}
                                 </span>
                             </td>
                         </tr>

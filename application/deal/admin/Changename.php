@@ -41,6 +41,47 @@ class Changename extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title', 'eq', 'changename_file_upload']])->value('value');
+            $file = [];
+            if (isset($data['Houselease']) && $data['Houselease']) { // 计租表
+                $file = array_merge($file, $data['Houselease']);
+            } else {
+                if (strpos($fileUploadConfig, 'Houselease') !== false) {
+                    return $this->error('请上传计租表');
+                }
+            }
+            if (isset($data['TenantReIDCard']) && $data['TenantReIDCard']) { // 身份证
+                $file = array_merge($file, $data['TenantReIDCard']);
+            } else {
+                if (strpos($fileUploadConfig, 'TenantReIDCard') !== false) {
+                    return $this->error('请上传身份证');
+                }
+            }
+            if (isset($data['HouseApplicationForm']) && $data['HouseApplicationForm']) { // 租约
+                $file = array_merge($file, $data['HouseApplicationForm']);
+            } else {
+                if (strpos($fileUploadConfig, 'HouseApplicationForm') !== false) {
+                    return $this->error('请上传租约');
+                }
+            }
+            if (isset($data['NameChangeApproval']) && $data['NameChangeApproval']) { // 审批表
+                $file = array_merge($file, $data['NameChangeApproval']);
+            } else {
+                if (strpos($fileUploadConfig, 'NameChangeApproval') !== false) {
+                    return $this->error('请上传审批表');
+                }
+            }
+            if (isset($data['NameChangeApplication']) && $data['NameChangeApplication']) { // 申请报告
+                $file = array_merge($file, $data['NameChangeApplication']);
+            } else {
+                if (strpos($fileUploadConfig, 'NameChangeApplication') !== false) {
+                    return $this->error('请上传申请报告');
+                }
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangeNameModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'add');
@@ -80,6 +121,47 @@ class Changename extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+
+            // 附件上传验证 S
+            $fileUploadConfig = Db::name('config')->where([['title', 'eq', 'changename_file_upload']])->value('value');
+            $file = [];
+            if (isset($data['Houselease']) && $data['Houselease']) { // 计租表
+                $file = array_merge($file, $data['Houselease']);
+            } else {
+                if (strpos($fileUploadConfig, 'Houselease') !== false) {
+                    return $this->error('请上传计租表');
+                }
+            }
+            if (isset($data['TenantReIDCard']) && $data['TenantReIDCard']) { // 身份证
+                $file = array_merge($file, $data['TenantReIDCard']);
+            } else {
+                if (strpos($fileUploadConfig, 'TenantReIDCard') !== false) {
+                    return $this->error('请上传身份证');
+                }
+            }
+            if (isset($data['HouseApplicationForm']) && $data['HouseApplicationForm']) { // 租约
+                $file = array_merge($file, $data['HouseApplicationForm']);
+            } else {
+                if (strpos($fileUploadConfig, 'HouseApplicationForm') !== false) {
+                    return $this->error('请上传租约');
+                }
+            }
+            if (isset($data['NameChangeApproval']) && $data['NameChangeApproval']) { // 审批表
+                $file = array_merge($file, $data['NameChangeApproval']);
+            } else {
+                if (strpos($fileUploadConfig, 'NameChangeApproval') !== false) {
+                    return $this->error('请上传审批表');
+                }
+            }
+            if (isset($data['NameChangeApplication']) && $data['NameChangeApplication']) { // 申请报告
+                $file = array_merge($file, $data['NameChangeApplication']);
+            } else {
+                if (strpos($fileUploadConfig, 'NameChangeApplication') !== false) {
+                    return $this->error('请上传申请报告');
+                }
+            }
+            $data['file'] = $file;
+
             $ChangeModel = new ChangeNameModel;
             // 数据过滤
             $filData = $ChangeModel->dataFilter($data,'edit');

@@ -199,7 +199,9 @@ class ChangeLease extends SystemBase
         // if($data['applyType'] < 7){
         //     $data['applyType'] = 
         // }
-        
+        if(!isset($data['applyReason'])){
+            $data['applyReason'] = '';
+        }
         $data['change_remark'] = date('Y年m月d日'). ' '.$data['applyType'].' '.$data['applyReason'].';'.$change_remark;
             
 //halt(date('Y年m月d日'). ' '.$data['applyType'].';'.$change_remark);
@@ -276,8 +278,10 @@ class ChangeLease extends SystemBase
         $form['house_id'] = $data['house_id'];
         $form['tenant_id'] = $data['tenant_id'];
         $form['cuid'] = $data['cuid'];
+        $form['change_imgs'] = $data['change_imgs'];
         $form['tenant_name'] = $data['tenant_name'];
         $form['change_status'] = 2;
+        $form['extra'] = $data['extra'];
         $form['process_id'] = 2; //代表是自动生成租约的
 
         $val = Db::name('system_config')->where([['name','eq','szno']])->value('value');
@@ -308,6 +312,17 @@ class ChangeLease extends SystemBase
         $row['ban_info'] = BanModel::get($row['ban_id']);
         $row['house_info'] = HouseModel::get($row['house_id']);
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
+        // halt($row['ban_info']['ban_inst_pid']);
+        if($row['ban_info']['ban_inst_pid'] == 2){
+            $row['ziliaoyuan'] = '曹秀芳';
+            $row['jingguansuozhang'] = '时莉';
+            $row['jingguankezhang'] = '魏斌成';
+        }
+        if($row['ban_info']['ban_inst_pid'] == 3){
+            $row['ziliaoyuan'] = '张润';
+            $row['jingguansuozhang'] = '袁玲';
+            $row['jingguankezhang'] = '魏斌成';
+        }
         return $row;
     }
 

@@ -193,76 +193,76 @@ class Rent extends Admin
      *  按上期欠缴处理（只处理全部已缴和全部未缴订单）
      *  
      */
-    public function dealAsLast()
-    {        
-        //验证合法性
-        if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
-        $lastDate = date('Ym',strtotime('last day of -1 month'));
-        $ptime = time();
-        
-        // 获取上期订单
-        $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive,a.rent_order_paid');
-
-        $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.is_deal','eq',0]])->column('a.house_id,a.rent_order_id,a.tenant_id,a.rent_order_paid,a.rent_order_receive,a.rent_order_cou_rent,a.rent_order_pre_rent,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,a.rent_order_number,a.rent_order_date');
-
-        $data = [];
-        $child_data = [];
-        foreach($nowRents as $k => $v){
-            // 过滤
-            if(isset($lastRents[$k])){
-                if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
-                    if($lastRents[$k]['rent_order_paid'] > 0){
-                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>$lastRents[$k]['rent_order_paid']];
-                        $child_data[] = [
-                            'is_deal'=>1,
-                            'rent_order_id'=>$v['rent_order_id'],
-                            'ptime'=>$ptime,
-                            'rent_order_paid'=>$lastRents[$k]['rent_order_paid'],
-                            'rent_order_id'=>$v['rent_order_id'],
-                            'rent_order_receive'=>$v['rent_order_receive'],
-                            'rent_order_cou_rent'=>$v['rent_order_cou_rent'],
-                            'rent_order_pre_rent'=>$v['rent_order_pre_rent'],
-                            'rent_order_diff'=>$v['rent_order_diff'],
-                            'rent_order_pump'=>$v['rent_order_pump'],
-                            'rent_order_cut'=>$v['rent_order_cut'],
-                            'rent_order_number'=>$v['rent_order_number'],
-                            'rent_order_date'=>$v['rent_order_date'],
-                            'house_id'=>$k,
-                            'tenant_id'=>$v['tenant_id'],
-                        ];
-
-                    }else{
-                        $data[] = ['is_deal'=>1,'pay_way'=>0,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
-                    } 
-                }
-                if($v['rent_order_receive'] != $lastRents[$k]['rent_order_receive']){
-                    if($lastRents[$k]['rent_order_paid'] == 0){
-                        $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
-                    }
-                }
-
-            }
-
-        }
-        //halt($data);
-        //halt($child_data);
-        if($data) {
-
-            $RentModel = new RentModel;
-            $bool = $RentModel->saveAll($data);
-            if($child_data){
-                $RentOrderChildModel = new RentOrderChildModel;
-                $RentOrderChildModel->saveAll($child_data);
-            } 
-            if($bool){
-                return $this->success('处理成功');
-            }else{
-                return $this->error('处理失败');
-            }
-        }else{
-            return $this->success('无匹配订单');
-        }
-    }
+//    public function dealAsLast()
+//    {
+//        //验证合法性
+//        if(INST_LEVEL != 3){return $this->error('该功能暂时只对房管员开放');}
+//        $lastDate = date('Ym',strtotime('last day of -1 month'));
+//        $ptime = time();
+//
+//        // 获取上期订单
+//        $lastRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['a.rent_order_date','eq',$lastDate],['c.ban_inst_id','eq',INST]])->column('a.house_id,a.rent_order_cut,a.rent_order_diff,a.rent_order_pump,a.rent_order_receive,a.rent_order_paid');
+//
+//        $nowRents = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id')->join('ban c','b.ban_id = c.ban_id')->where([['rent_order_date','eq',date('Ym')],['c.ban_inst_id','eq',INST],['a.is_deal','eq',0]])->column('a.house_id,a.rent_order_id,a.tenant_id,a.rent_order_paid,a.rent_order_receive,a.rent_order_cou_rent,a.rent_order_pre_rent,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,a.rent_order_number,a.rent_order_date');
+//
+//        $data = [];
+//        $child_data = [];
+//        foreach($nowRents as $k => $v){
+//            // 过滤
+//            if(isset($lastRents[$k])){
+//                if($v['rent_order_receive'] == $lastRents[$k]['rent_order_receive']){
+//                    if($lastRents[$k]['rent_order_paid'] > 0){
+//                        $data[] = ['is_deal'=>1,'pay_way'=>1,'rent_order_id'=>$v['rent_order_id'],'ptime'=>$ptime,'rent_order_paid'=>$lastRents[$k]['rent_order_paid']];
+//                        $child_data[] = [
+//                            'is_deal'=>1,
+//                            'rent_order_id'=>$v['rent_order_id'],
+//                            'ptime'=>$ptime,
+//                            'rent_order_paid'=>$lastRents[$k]['rent_order_paid'],
+//                            'rent_order_id'=>$v['rent_order_id'],
+//                            'rent_order_receive'=>$v['rent_order_receive'],
+//                            'rent_order_cou_rent'=>$v['rent_order_cou_rent'],
+//                            'rent_order_pre_rent'=>$v['rent_order_pre_rent'],
+//                            'rent_order_diff'=>$v['rent_order_diff'],
+//                            'rent_order_pump'=>$v['rent_order_pump'],
+//                            'rent_order_cut'=>$v['rent_order_cut'],
+//                            'rent_order_number'=>$v['rent_order_number'],
+//                            'rent_order_date'=>$v['rent_order_date'],
+//                            'house_id'=>$k,
+//                            'tenant_id'=>$v['tenant_id'],
+//                        ];
+//
+//                    }else{
+//                        $data[] = ['is_deal'=>1,'pay_way'=>0,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+//                    }
+//                }
+//                if($v['rent_order_receive'] != $lastRents[$k]['rent_order_receive']){
+//                    if($lastRents[$k]['rent_order_paid'] == 0){
+//                        $data[] = ['is_deal'=>1,'rent_order_id'=>$v['rent_order_id'],'rent_order_paid'=>0];
+//                    }
+//                }
+//
+//            }
+//
+//        }
+//        //halt($data);
+//        //halt($child_data);
+//        if($data) {
+//
+//            $RentModel = new RentModel;
+//            $bool = $RentModel->saveAll($data);
+//            if($child_data){
+//                $RentOrderChildModel = new RentOrderChildModel;
+//                $RentOrderChildModel->saveAll($child_data);
+//            }
+//            if($bool){
+//                return $this->success('处理成功');
+//            }else{
+//                return $this->error('处理失败');
+//            }
+//        }else{
+//            return $this->success('无匹配订单');
+//        }
+//    }
 
     /**
      *  按上期欠缴处理（只处理全部已缴和全部未缴订单）

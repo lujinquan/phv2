@@ -200,6 +200,7 @@ class ChangeUse extends SystemBase
         }else{
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
+//        $this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['house_info'] = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
         $row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();
@@ -209,7 +210,7 @@ class ChangeUse extends SystemBase
         $newTenantRow = TenantModel::where([['tenant_id','eq',$row['new_tenant_id']]])->field('tenant_number,tenant_card')->find();
         $row['new_tenant_number'] = $newTenantRow['tenant_number'];
         $row['new_tenant_card'] = $newTenantRow['tenant_card'];
-        //$this->finalDeal($row);
+
         return $row;
     }
 
@@ -385,16 +386,29 @@ class ChangeUse extends SystemBase
         $szno = HouseModel::where([['house_id','eq',$finalRow['house_id']]])->value('house_szno');
         
         if ($finalRow['is_create_lease']) {
+
             // 5、自动生成租约异动
-            // $ChangeLeaseModel = new ChangeLeaseModel;
-            // $changeleaseData = [];
-            // $changeleaseData['ban_id'] = $finalRow['ban_id'];
-            // $changeleaseData['house_id'] = $finalRow['house_id'];
-            // $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
-            // $changeleaseData['cuid'] = $finalRow['cuid'];
-            // $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
-            // $changeleaseData['szno'] = $szno;
-            // $ChangeLeaseModel->auto_create_changelease($changeleaseData);
+             $change_imgs = SystemAnnex::changeFormat($finalRow['change_imgs']);
+             $changeleaseimgs = [];
+             if($change_imgs){
+                 foreach($change_imgs as $img){
+                     if(in_array($img['file_type'],array('Houselease','HouseForm','TenantReIDCard'))){
+                         $changeleaseimgs[] = $img['id'];
+                     }
+                 }
+             }
+             $ChangeLeaseModel = new ChangeLeaseModel;
+             $changeleaseData = [];
+             $changeleaseData['ban_id'] = $finalRow['ban_id'];
+             $changeleaseData['house_id'] = $finalRow['house_id'];
+             $changeleaseData['tenant_id'] = $finalRow['new_tenant_id'];
+             $changeleaseData['change_imgs'] = implode(',',$changeleaseimgs);
+             $changeleaseData['cuid'] = $finalRow['cuid'];
+             $changeleaseData['extra'] = 5;
+             $changeleaseData['tenant_name'] = $finalRow['new_tenant_name'];
+             $changeleaseData['szno'] = $szno;
+//             halt($change_imgs);
+             $ChangeLeaseModel->auto_create_changelease($changeleaseData);
         }
         
         // 6、检查微信会员是否绑定当前房屋

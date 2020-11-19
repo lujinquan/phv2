@@ -301,6 +301,93 @@
 			<div class="layui-upload">
 			</div>
 		</div>
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>若勾选自动发租约，身份证附件必传</legend>
+		</fieldset>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">{if condition="in_array('Houselease',$config['changelease_file_upload'])"}<i class="red">*</i>{/if} 计租表</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img10">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制5M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list10" class="upload_img_list j-viewer-img">
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'Houselease'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="Houselease[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+					</div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">{if condition="in_array('HouseForm',$config['changelease_file_upload'])"}<i class="red">*</i>{/if} 租约</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img11">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制5M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list11" class="upload_img_list j-viewer-img">
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'HouseForm'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="HouseForm[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+					</div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-upload clearfix">
+					<div class="j-enclosure-label">{if condition="in_array('TenantReIDCard',$config['changelease_file_upload'])"}<i class="red">*</i>{/if} 身份证</div>
+					<div class="j-enclosure-label j-uplode-icon">
+						<i><img src="/static/system/image/Group8.png"></i>点击上传
+						<button type="button" class="layui-btn layui-btn-primary" id="upload_img12">上传图片</button>
+					</div>
+					<div class="layui-form-mid layui-word-aux">限制5M</div>
+				</div>
+				<div class="j-enclosure-imgs clearfix">
+					<div id="upload_img_list12" class="upload_img_list j-viewer-img">
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'TenantReIDCard'"}
+						<dd class="item_img" id="">
+							<div class="operate">
+								<i  class="layui-icon-close-fill layui-icon"></i>
+							</div>
+							<img src="{$v['file']}" class="img" ><input type="hidden" name="TenantReIDCard[]" value="{$v['id']}" />
+						</dd>
+						{/if}
+						{/volist}
+					</div>
+				</div>
+			</div>
+			<div class="layui-upload">
+			</div>
+		</div>
 		{include file="common/submit"}
   </div>
 </form>
@@ -313,6 +400,10 @@
 	var upurl = "{:url('system/Api/upload')}?input=UseChangeApproval&group=change&water=no"; //审批表
 	var upurl1 = "{:url('system/Api/upload')}?input=UseChangeOther&group=change&water=no"; //其他
 	var upurl2 = "{:url('system/Api/upload')}?input=UseChangeApplication&group=change&water=no"; //书面申请报告
+
+	var upurl10 = "{:url('system/Api/upload')}?input=Houselease&group=change&water=no"; //计租表
+	var upurl11 = "{:url('system/Api/upload')}?input=HouseForm&group=change&water=no"; //住宅租约
+	var upurl12 = "{:url('system/Api/upload')}?input=TenantReIDCard&group=change&water=no"; //身份证
 	var duotu = true; //是否为多图上传true false
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
 			var table = layui.table
@@ -404,6 +495,93 @@
 					}
 			  	});
 			})
+		//身份证
+		upload.render({
+			elem: '#upload_img12',
+			url: upurl12,
+			size: 1024*5,
+			multiple: duotu,
+			field: 'TenantReIDCard',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list12').append('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="TenantReIDCard[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list12').html('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="TenantReIDCard[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		//计租表
+		upload.render({
+			elem: '#upload_img10',
+			url: upurl10,
+			size: 1024*5,
+			multiple: duotu,
+			field: 'Houselease',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list10').append('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="Houselease[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list10').html('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="Houselease[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
+		//住宅租约
+		upload.render({
+			elem: '#upload_img11',
+			url: upurl11,
+			size: 1024*5,
+			multiple: duotu,
+			field: 'HouseForm',
+			before: function(obj) {
+				layer.msg('图片上传中...', {
+					icon: 16,
+					shade: 0.01,
+					time: 0
+				})
+			},
+			done: function(res) {
+				layer.close(layer.msg()); //关闭上传提示窗口
+				if (duotu == true) {
+					//调用多图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list11').append('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="HouseForm[]" value="' + res.data.id + '" /></dd>');
+				} else {
+					//调用单图上传方法,其中res.imgid为后台返回的一个随机数字
+					$('#upload_img_list11').html('<dd class="item_img" id="' + res.data.name +
+							'"><div class="operate"><i  class="layui-icon-close-fill layui-icon"></i></div><img src="' + res.data.file +
+							'" class="img" ><input type="hidden" name="HouseForm[]" value="' + res.data.id + '" /></dd>');
+				}
+			}
+		})
 		  //书面申请报告
 		  upload.render({
 		  	elem: '#upload_img3',

@@ -287,6 +287,8 @@ class User extends Admin
             }
             if (isset($data['inst_ids']) && $data['inst_ids']) {
                 $data['inst_ids'] = implode(',',$data['inst_ids']);
+            }else{
+                $data['inst_ids'] = '';
             }
             if($data['inst_id'] == 1){
                 $data['inst_level'] = 1;

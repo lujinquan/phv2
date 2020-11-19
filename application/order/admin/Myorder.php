@@ -157,7 +157,7 @@ class Myorder extends Admin
             $row = $OporderModel->get($data['id']);
             
             if(!isset($data['file'])){
-                return $this->error('请补充资料!');
+//                return $this->error('请补充资料!');
             }
             
             $filData = $OporderModel->dataFilter($data,'addfiles');

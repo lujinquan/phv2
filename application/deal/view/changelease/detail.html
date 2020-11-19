@@ -515,28 +515,40 @@
 			</tr>
 			<tr>
 				
-				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type="" 
+				<td colspan="11">资料员：<input readonly style="width: 120px; margin-right: 30px;" type=""
+					{if condition="$data_info['extra'] > 0"}
+						value="{$data_info['ziliaoyuan']}"
+					{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 5 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist}
+					{/if}
 					name="applyRoom21_data1" id="applyRoom21_data1">
 					&nbsp;  &nbsp;  &nbsp;
 					经管所长：<input readonly style="width: 120px; margin-right: 30px;"
+								{if condition="$data_info['extra'] > 0"}
+								value="{$data_info['jingguansuozhang']}"
+								{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 8 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
-					{/volist} 
+					{/volist}
+					{/if}
 					name="applyRoom21_data2" id="applyRoom21_data2">
 					&nbsp;  &nbsp;  &nbsp;
-					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type="" 
+					经管科长：<input readonly style="width: 120px; margin-right: 30px;" type=""
+								{if condition="$data_info['extra'] > 0"}
+								value="{$data_info['jingguankezhang']}"
+								{else /}
 					{volist name="$data_info['child_json']" id="v"}
 						{if condition="isset($systemusers[$v['uid']]['role_id']) && $systemusers[$v['uid']]['role_id'] == 9 && $v['success']"}
 							value="{$systemusers[$v['uid']]['nick']}"
 						{/if} 
 					{/volist} name="applyRoom21_data3" id="applyRoom21_data3" value="">
+					{/if}
 				</td>
 				
 			</tr>
@@ -661,6 +673,7 @@
 				</td>
 			</tr>
 		</tbody></table>
+		  {if condition="strtotime($data_info['ctime']) < strtotime(date('2020-11-19'))"}
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red"></i>换租原因</label>
@@ -669,6 +682,7 @@
 				</div>
 			</div>
 		</div>
+		  {/if}
 		<!-- 约定事项 -->
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>约定事项</legend>

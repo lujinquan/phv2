@@ -184,6 +184,7 @@ class Changelease extends Admin
         $id = $this->request->param('id');
         $ChangeModel = new ChangeLeaseModel;
         $row = $ChangeModel->detail($id);
+//        halt($row);
         $this->assign('data_info',$row);
         $this->assign('id',$id);
         return $this->fetch();

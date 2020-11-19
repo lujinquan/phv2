@@ -45,31 +45,35 @@ class Accept extends Admin
             $inst_ids = explode(',',session('admin_user.inst_ids'));
             $opTypeModel = new OpType;
             $opTypeArr = $opTypeModel->column('id,title');
-
+//halt($temps);
             //‘转交至’状态的数据排在前面,‘待处理’状态的数据排在后面，且同状态的按照创建时间倒序排列
             $i = 1;
             $j = 10000;
-            foreach ($temps as $k => &$v) {
+            $teamps_arr = [];
+            foreach ($temps as $k => $v) {
                 if(ADMIN_ROLE == 9 && $v['role_id'] == 9){
-                    unset($temps[$k]);
+//                    unset($temps[$k]);
+                    continue;
                 }
+//                dump($v['inst_id']);halt($inst_ids);
                 if (strpos($v['duid'], ',') === false) {
                     if (!in_array($v['inst_id'],$inst_ids)) {
-                        unset($temps[$k]);
+//                        unset($temps[$k]);
+                        continue;
                     } else {   
                         $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                         $v['status_info'] = '待处理';
                         $v['order_sort'] = $j;
                         $j++;
                     }
-
-                    
+                    $teamps_arr[] = $v;
                 } else {
                     $uids = explode(',', $v['duid']);
 
                     $current_uid = array_pop($uids);
                     if ($current_uid != ADMIN_ID) { //保证是待受理的工单
-                        unset($temps[$k]);
+//                        unset($temps[$k]);
+                        continue;
                     } else {
                         $v['op_order_type_name'] = $opTypeArr[$v['op_order_type']];
                         $current_nick     = UserModel::where([['id', 'eq', $current_uid]])->value('nick');
@@ -77,20 +81,22 @@ class Accept extends Admin
                         $v['order_sort'] = $i;
                         $i++;
                     }
+                    $teamps_arr[] = $v;
                 }
+//                dump($v);
             }
-
-            sort($temps);
+//            halt($teamps_arr);
+            sort($teamps_arr);
 
             //二维数组冒泡排序
             $a = [];
-            foreach($temps as $key=>$val){
+            foreach($teamps_arr as $key=>$val){
                 $a[] = $val['order_sort'];//$a是$sort的其中一个字段
             }
-            $temps = bubble_sort($temps,$a,'asc');//正序
+            $temps = bubble_sort($teamps_arr,$a,'asc');//正序
 
-            $data['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
-            $data['count'] = count($temps);
+            $data['data']  = array_slice($teamps_arr, ($page- 1) * $limit, $limit);
+            $data['count'] = count($teamps_arr);
             $data['code']  = 0;
             $data['msg']   = '';
             //halt($data);
@@ -155,6 +161,7 @@ class Accept extends Admin
 
             //halt($filData);
             $row     = $OporderModel->allowField(true)->create($filData);
+//            dump($row);
             if (!$row) {
                 return $this->error('提交失败');
             }
@@ -167,7 +174,8 @@ class Accept extends Admin
 
             //$userRow                     = UserModel::where([['role_id', 'eq', 11], ['inst_ids', 'like', '%,' . $row['inst_id'] . ',%']])->find();
             $systemAffiche               = new SystemAffiche;
-            $userArr                     = UserModel::where([['role_id', 'eq', 11]])->select();
+            $userArr                     = UserModel::where([['role_id', 'eq', 11],['status','eq',1]])->select();
+//            halt($userArr);
             foreach($userArr as $users){
                 $insts = explode(',',$users['inst_ids']);
                 if(in_array($row['inst_id'],$insts)){
@@ -324,9 +332,9 @@ class Accept extends Admin
             }
             $OporderModel = new OporderModel();
             $orderRow = $OporderModel->find($data['id']);
-            if($orderRow['back_times'] > 0){
-                return $this->error('您已退回过'.$orderRow['back_times'].'次！');
-            }else{
+//            if($orderRow['back_times'] > 0){
+//                return $this->error('您已退回过'.$orderRow['back_times'].'次！');
+//            }else{
                 $filData = $OporderModel->dataFilter($data,'back');
 
                 if (!$OporderModel->allowField(true)->update($filData)){
@@ -349,7 +357,7 @@ class Accept extends Admin
                 return $this->success('退回成功',url('index'));
             }
             
-        }
+//        }
     }
 
     

@@ -97,7 +97,7 @@
         		</div>
         		<div class="fr">
         			{if condition="ADMIN_ROLE == 11"}
-        			<button type="button" class="layui-btn layui-btn-normal {if condition="$data_info['back_times']"}on{/if}" id="initiator" {if condition="$data_info['back_times']"}disabled{/if}>退至发起人</button>
+        			<button type="button" title="{if condition="$data_info['back_times']"}已退回{$data_info['back_times']}次{/if}" class="layui-btn layui-btn-normal" id="initiator">退至发起人</button>
 					<button type="button" class="layui-btn layui-btn-orange j-iframe-po" hisi-data="{width: '470px', height: '500px'}" href="{:url('turnForm')}?id={$data_info['id']}" id="handover" title="转交工单">转交工单</button>
 					{/if}
 					<button type="button" class="layui-btn layui-btn-grass" id="complete" >完成工单</button>

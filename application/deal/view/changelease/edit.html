@@ -630,12 +630,23 @@
 						<div class="layui-col-md4 remark">
 							<label class="j-form-label"><span class="applyYear"></span>年<span class="applyMonth"></span>月<span class="applyDay"></span>日</label>
 							<div class="j-input-inline">
+								{if condition="!$data_info['data_json']"}
+								<input type="text" name="applyType" value="{$params['new_leasetypes'][$data_info['extra']]}" readonly autocomplete="off" class="layui-input">
+								{else /}
 								<select name="applyType" lay-verify="required" lay-filter="reason">
 									<option value="">请选择</option>
+									{if condition="strtotime($data_info['ctime']) < strtotime(date('2020-11-19'))"}
 									{volist name="params['leasetypes']" id="v"}
 									<option value="{$v}" {if condition="$data_info['data_json']['applyType'] == $v || $data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
 									{/volist}
+									{else /}
+									{volist name="params['new_leasetypes']" id="v"}
+									<option value="{$v}" {if condition="$data_info['data_json']['applyType'] == $v || $data_info['data_json']['applyType'] == $key"}selected{/if}>{$v}</option>
+									{/volist}
+									{/if}
 								</select>
+								{/if}
+
 							</div>
 						</div>
 						<div class="layui-col-md6">
@@ -651,6 +662,7 @@
 				</td>
 			</tr>
 		</tbody></table>
+		  {if condition="strtotime($data_info['ctime']) < strtotime(date('2020-11-19'))"}
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md8">
 				<label class="j-form-label"><i class="red"></i>换租原因</label>
@@ -659,6 +671,7 @@
 				</div>
 			</div>
 		</div>
+		  {/if}
 		<!-- 约定事项 -->
 		<fieldset class="layui-elem-field layui-field-title j-field-box">
 			<legend>约定事项</legend>
