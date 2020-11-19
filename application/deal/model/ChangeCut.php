@@ -176,6 +176,7 @@ class ChangeCut extends SystemBase
             }
             
         }
+        
         if($data['save_type'] == 'save'){ //保存
             $data['change_status'] = 2;
         }else{ //保存并提交

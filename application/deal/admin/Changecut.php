@@ -487,9 +487,12 @@ class Changecut extends Admin
         }
 
         if($row['change_status'] == 2){
+            if($row['member_id']){
+                $this->error('当前异动由微信用户提交，无法删除');
+            }
            if($row->delete()){
-                $row->dtime = time();
-                $row->save();
+                // $row->dtime = time();
+                // $row->save();
                 ProcessModel::where([['change_order_number','eq',$row['change_order_number']]])->delete();
                 $this->success('删除成功！');
             }else{
