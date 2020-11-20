@@ -287,6 +287,9 @@
   			</div>
   			<div class="j-status-result">
   				<ul>
+  					{if condition="$data_info['member_info']"}
+					<li>用户【{$data_info['member_info']['member_name']}】于{$data_info['ctime']}提交申请</li>
+  					{/if}
   					{volist name="$data_info['child_json']" id="v"}
 					<li>{$systemusers[$v['uid']]['role']['name']}［{$systemusers[$v['uid']]['nick']}］于 {$v['time']} {$v['action']}；</li>
 					{/volist}

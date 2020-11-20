@@ -812,31 +812,34 @@ class Weixin extends Common
         if(isset($row['inst_id'])){
             $where = [];
             $where[] = ['a.pay_way','eq',4];
-             $where[] = ['ptime','between',[$today_begin_time,$today_end_time]];
-            //            $where[] = ['a.rent_order_status','eq',1];
+            $where[] = ['ptime','between',[$today_begin_time,$today_end_time]];
+            $where[] = ['a.rent_order_status','eq',1];
             $where[] = ['c.ban_inst_id','in',config('inst_ids')[$row['inst_id']]];
             // halt($where);
-            $rent_order_paid_info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->join('weixin_order_trade d','a.rent_order_id = d.rent_order_id','left')->where($where)->field('rent_order_paid , id , a.rent_order_id , e.tenant_name, c.ban_address , d.out_trade_no')->select();
-            // halt($where);
+            $rent_order_paid_info = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id')->join('tenant e','a.tenant_id = e.tenant_id')->join('ban c','b.ban_id = c.ban_id')->where($where)->field('rent_order_paid , id , a.rent_order_id , e.tenant_name, c.ban_address ')->order('ptime desc')->select();
+            // halt($rent_order_paid_info);
 
-            // $out_trade_no_arr = [];
+            // $out_trade_no_arr = [];['out_trade_no','eq',$rent_info['out_trade_no']],
             // foreach ($rent_order_paid_info as $rent_info) {
             //     $out_trade_no_arr[] = $rent_info['out_trade_no'];
             // }
             // $out_trade_no_arr = array_unique($out_trade_no_arr);
             foreach ($rent_order_paid_info as $rent_info) {
                 // halt($rent_info);
-                if(empty($rent_info['out_trade_no'])){
+                // if(empty($rent_info['out_trade_no'])){
+                //     continue;
+                // }
+                // halt($rent_info);
+                $order_row = Db::name('weixin_order')->alias('a')->join('weixin_order_trade d','a.out_trade_no = d.out_trade_no','left')->where([['rent_order_id','eq',$rent_info['rent_order_id']],['order_status','eq',1]])->field('order_id,pay_money,ptime,a.out_trade_no')->find();
+                if(empty($order_row)){
                     continue;
                 }
-                // dump($rent_info);
-                $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->find();
                 // $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->fetchSql(true)->find();
                 // halt($order_row);
                 // Db::name('weixin_order')->getLastSql();
                 $result['order_rent_sum'] = bcadd($result['order_rent_sum'], $order_row['pay_money'] , 2);
                 $result['data']['order'][] = [
-                    'out_trade_no' => $rent_info['out_trade_no'],
+                    'out_trade_no' => $order_row['out_trade_no'],
                     'ptime' => date('Y-m-d H:i:s',$order_row['ptime']),
                     'month_ptime' => date('Y-m',$order_row['ptime']),
                     'pay_money' => $order_row['pay_money'],

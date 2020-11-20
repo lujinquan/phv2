@@ -64,6 +64,13 @@
 					<input type="text" id="reduction_nature" value="" placeholder=""   readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">计租表</label>
+				<div class="j-input-inline">
+					<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
+					<a id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search hide">查看</b></a>
+				</div>
+			</div>
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md6">
@@ -302,6 +309,8 @@
 				    layer.msg("当前不可选!");
 					return false;
 				}
+				$("#checktable").attr('href',"{:url('house/house/renttable')}?group=y&id="+row.house_id);//获取房屋编号
+				$("#check").removeClass('hide');
 				$("#ban_id").val(row.ban_id);//获取楼栋id
 				$("#house_id").val(row.house_id);//获取房屋id
 				$("#house_number").val(row.house_number);//获取楼栋编号

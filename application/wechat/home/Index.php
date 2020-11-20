@@ -378,10 +378,12 @@ class Index extends Common
             
 
             $last_trade_info = WeixinOrderTradeModel::where([['rent_order_id','eq',$rid]])->order('trade_id desc')->field('out_trade_no')->find();
+
             if ($last_trade_info) {
                 //$last_weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$last_trade_info['out_trade_no']]])->find();
                 $WeixinModel = new WeixinModel;
                 $query_order_result = $WeixinModel->queryOrder($transaction_id = '', $last_trade_info['out_trade_no']);
+                // halt($query_order_result['return_code']);
                 //if($res['trade_state'] == 'SUCCESS'){
                 //     $result['msg'] = '支付成功';
                 //     $result['code'] = 1;
@@ -398,10 +400,10 @@ class Index extends Common
                 // }else if($res['trade_state'] == 'PAYERROR'){
                 //     $result['msg'] = '支付失败';
                 // }
-                if($query_order_result['trade_state'] == 'SUCCESS'){
+                if(isset($query_order_result['trade_state']) && $query_order_result['trade_state'] == 'SUCCESS'){
                     $result['msg'] = '订单已支付，请勿重复支付';
                     return json($result);
-                }else if($query_order_result['trade_state'] == 'USERPAYING'){
+                }else if(isset($query_order_result['trade_state']) && $query_order_result['trade_state'] == 'USERPAYING'){
                     $result['msg'] = '订单正在支付中，请稍后';
                     return json($result);
                 }

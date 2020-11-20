@@ -212,6 +212,11 @@ class ChangeCut extends SystemBase
         }else{
             $row = self::with(['house','tenant'])->where([['change_order_number','eq',$change_order_number]])->find(); 
         }
+        if($row['member_id']){
+            $row['member_info'] = Db::name('weixin_member')->where([['member_id','eq',$row['member_id']]])->field('member_name')->find();
+        }else{
+            $row['member_info'] = '';  
+        }
         // $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);

@@ -210,35 +210,35 @@ class Deal extends Base
         $fileUploadConfig = Db::name('config')->where([['title','eq','changecut_file_upload']])->value('value');
         $file = [];
         if(isset($data['TenantReIDCard']) && $data['TenantReIDCard']){ // 身份证  
-            $file = array_merge($file,$data['TenantReIDCard']);
+            $file = array_merge($file,explode(',',$data['TenantReIDCard']));
         }else{
             if(strpos($fileUploadConfig, 'TenantReIDCard') !== false){
                 return json(array('code' => 10030, 'msg'=>'请上传身份证'));
             }
         }
         if(isset($data['Residence']) && $data['Residence']){ // 户口本
-            $file = array_merge($file,$data['Residence']);
+            $file = array_merge($file,explode(',',$data['Residence']));
         }else{
             if(strpos($fileUploadConfig, 'Residence') !== false){
             	return json(array('code' => 10030, 'msg'=>'请上传户口本'));
             }
         }
         if(isset($data['HouseForm']) && $data['HouseForm']){ // 租约
-            $file = array_merge($file,$data['HouseForm']);
+            $file = array_merge($file,explode(',',$data['HouseForm']));
         }else{
             if(strpos($fileUploadConfig, 'HouseForm') !== false){
             	return json(array('code' => 10030, 'msg'=>'请上传租约'));
             }
         }
         if(isset($data['Lowassurance']) && $data['Lowassurance']){ // 低保证
-            $file = array_merge($file,$data['Lowassurance']);
+            $file = array_merge($file,explode(',',$data['Lowassurance']));
         }else{
             if(strpos($fileUploadConfig, 'Lowassurance') !== false){
             	return json(array('code' => 10030, 'msg'=>'请上传低保证'));
             }
         }
         if(isset($data['Housingsecurity']) && $data['Housingsecurity']){ // 租房保障申请表
-            $file = array_merge($file,$data['Housingsecurity']);
+            $file = array_merge($file,explode(',',$data['Housingsecurity']));
         }else{
             if(strpos($fileUploadConfig, 'Housingsecurity') !== false){
             	return json(array('code' => 10030, 'msg'=>'请上传租房保障申请表'));

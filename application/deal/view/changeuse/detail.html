@@ -51,6 +51,7 @@
 					<input type="text" id="house_lease_area" readonly value="{$data_info['house_info']['house_lease_area']}" placeholder=""  autocomplete="off" class="layui-input">
 				</div>
 			</div>
+
 		</div>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md4">
@@ -69,6 +70,12 @@
 				<label class="j-form-label">使用性质</label>
 				<div class="j-input-inline">
 					<input type="text" id="reduction_nature" value="{$params['uses'][$data_info['house_info']['house_use_id']]}" placeholder=""   readonly autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md4">
+				<label class="j-form-label">计租表</label>
+				<div class="j-input-inline">
+					<a href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" id="checktable" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-searchs">查看</b></a>
 				</div>
 			</div>
 		</div>
@@ -267,7 +274,9 @@
 			    </div>
 			</div>
 		</div>
-
+		<fieldset class="layui-elem-field layui-field-title j-field-box">
+			<legend>租约附件</legend>
+		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md12">
 				<div class="j-enclosure-label clearfix">计租表</div>
