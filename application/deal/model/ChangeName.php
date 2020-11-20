@@ -192,7 +192,7 @@ class ChangeName extends SystemBase
         }else{
             $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
         }
-        $this->finalDeal($row);
+        // $this->finalDeal($row);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['house_info'] = HouseModel::where([['house_id','eq',$row['house_id']]])->find();
 		$row['ban_info'] = BanModel::where([['ban_id','eq',$row['ban_id']]])->find();

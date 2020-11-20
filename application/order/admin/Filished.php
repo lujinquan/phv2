@@ -104,10 +104,10 @@ class Filished extends Admin
         //halt($row);
         //$row['jsondata'] = json_decode($row['jsondata'], true);
 //        halt($row);
-        $temp = $row['jsondata'];
+        $temp =json_decode($row['jsondata'], true);
         //halt($temp);
         if ($temp) {
-            foreach ($temp as & $v) {
+            foreach ($temp as &$v) {
                 if ($v['Img']) {
                     $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }
