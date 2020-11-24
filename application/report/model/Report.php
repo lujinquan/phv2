@@ -239,7 +239,7 @@ class Report extends Model
 
         $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
         // 获取有余额的房屋信息
-        $housesWithBalancesIDS = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where([['b.house_balance','>',0]])->column('b.house_id');
+        $housesWithBalancesIDS = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where([['b.house_balance','>=',0]])->column('b.house_id');
         // 获取有余额的房屋id
         //$housesWithBalancesIDS = array_keys($housesWithBalances);
 //halt($where);

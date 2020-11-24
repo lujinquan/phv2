@@ -18,7 +18,7 @@
              <a data-href="{:url('unpayList')}" data-id="rent_order_id" title="提示：需要勾选订单" class="j-page-btns"><button class="layui-btn layui-btn-danger"><i class="layui-icon layui-icon-add-1"></i>批量欠缴</button></a>
              {/if}
              {if condition="in_array(315,$auths) || $Think.ADMIN_ROLE == 1"}
-             <a href="javascript:;" data-href="{:url('dealAsLast')}" title="提示：无需勾选订单" class="j-ajax"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>按上期缴纳</button></a>
+             <!-- <a href="javascript:;" data-href="{:url('dealAsLast')}" title="提示：无需勾选订单" class="j-ajax"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>按上期缴纳</button></a> -->
              {/if}
              {if condition="in_array(384,$auths) || $Think.ADMIN_ROLE == 1"}
              <a href="javascript:;" data-href="{:url('autopayList')}" title="提示：无需勾选订单" class="j-ajax"><button class="layui-btn"><i class="layui-icon layui-icon-add-1"></i>批量扣缴</button></a>
