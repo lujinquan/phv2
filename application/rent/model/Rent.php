@@ -350,6 +350,7 @@ class Rent extends Model
             $where[] = ['is_deal','eq',0];
             $where[] = ['rent_order_date','eq',$date];
             $where[] = ['rent_order_status','eq',1];
+            $where[] = ['b.house_number','in',array('10400119645150','10400119645151','10400119645152','10400119645153','10400119645154','10400119685144','10400119685145')];
             // $rent_orders = self::where($where)->field('rent_order_id,rent_order_number,house_id,tenant_id,rent_order_receive,rent_order_pre_rent,rent_order_cou_rent,rent_order_paid,rent_order_cut,rent_order_pump,rent_order_diff,rent_order_date')->select()->toArray();
             // $where[] = ['b.house_number','eq','10101221426271'];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[3]];

@@ -104,7 +104,13 @@ class Filished extends Admin
         //halt($row);
         //$row['jsondata'] = json_decode($row['jsondata'], true);
 //        halt($row);
-        $temp =json_decode($row['jsondata'], true);
+        if(is_array($row['jsondata'])){
+            $temp = $row['jsondata'];
+        }else{
+            $temp =json_decode($row['jsondata'], true);
+        }
+        // $temp =json_decode($row['jsondata'], true);
+        
         //halt($temp);
         if ($temp) {
             foreach ($temp as &$v) {
