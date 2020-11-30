@@ -103,14 +103,16 @@ class Deal extends Admin
             if(isset($data['change_type']) && $data['change_type']){
                 $where[] = ['a.change_type','in',explode(',',$data['change_type'])];
             }else{
-                $where[] = ['a.change_type','in',[5,7,8,9,10]];
+                $where[] = ['a.change_type','in',[7,8,9,10,12]];
             }
             
-            // 检索楼栋注销时间
+            // 检索异动时间
             if(isset($data['order_date']) && $data['order_date']){
                 $order_date = str_replace('-', '', $data['order_date']);
                
                 $where[] = ['order_date','eq',$order_date];
+            }else{
+                $where[] = ['order_date','eq',date('Ym')];
             }
             // // 检索楼栋创建日期
             // if(isset($data['ban_ctime']) && $data['ban_ctime']){

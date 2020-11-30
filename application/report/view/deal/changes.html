@@ -31,9 +31,15 @@
 				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
 					<select name="change_type" xm-select="change_type">
 						<option value="">异动类型</option>
-						{volist name="params['changes']" id="v"}
-						<option value="{$key}">{$v}</option>
-						{/volist}
+						<option value="7">新发租</option>
+						<option value="8">注销</option>
+						<option value="9">房屋调整</option>
+						<option value="10">管段调整</option>
+						<option value="12">租金调整</option>
+
+						{// volist name="params['changes']" id="v"}
+<!--						<option value="{// $key}">{// $v}</option>-->
+						{// /volist}
 					</select>
 				</div>
 				{/if}
@@ -69,7 +75,7 @@
 				{/if}
 				{if condition="in_array('ctime',$config['rent_recharge_info_search'])"}
 				<div class="layui-input-inline j-width-160 j-margin-10">
-				    <input type="text" name="order_date" title="月份" placeholder="月份" id="query_month" class="layui-input">
+				    <input type="text" name="order_date" value="{:date('Y-m')}" title="月份" placeholder="月份" id="query_month" class="layui-input">
 				</div> 
 				{/if}
 			</div>
