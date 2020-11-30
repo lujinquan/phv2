@@ -17,6 +17,9 @@ use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
 use app\report\model\MonthReport as MonthReportModel;
+use app\rent\model\Invoice as InvoiceModel;
+use app\rent\model\Recharge as RechargeModel;
+use app\wechat\model\WeixinOrder as WeixinOrderModel;
 
 /**
  * 系统API控制器
@@ -323,7 +326,62 @@ class Api extends Common
         RentModel::where([['is_deal','eq',0]])->update(['is_deal'=>1]);
     }
 
+    /**
+     * 月底把没开的发票全部开出来
+     * @return [type] [description]
+     */
+    public function autoAllDpkj(){
+        // return $this->success('执行成功');die();
 
+        // 开缴费发票
+        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
+
+        $i = 0;
+
+        if (!empty($weixin_id_undpkj)) {
+            
+            foreach ($weixin_id_undpkj as $v) {
+                // 每5秒执行一次
+                // sleep(5);
+                $InvoiceModel = new InvoiceModel;
+                if (!$InvoiceModel->dpkj($v['order_id'])) {
+                    if ($i) {
+                        // return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+                    }
+                    // return $this->error($InvoiceModel->getError());
+                } else {
+                    $i++;
+                }
+            }
+        }
+        
+        
+        // 开充值发票
+        $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0]])->field('id')->select()->toArray();
+
+        $k = 0;
+
+        if (!empty($weixin_id_undpkj)) {
+            //halt($weixin_id_undpkj);
+            
+            foreach ($weixin_id_undpkj as $v) {
+                // 每5秒执行一次
+                // sleep(5);
+                $InvoiceModel = new InvoiceModel;
+                if (!$InvoiceModel->dpkj($v['id'] ,$type = 2)) {
+                    if ($k) {
+                        // return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+                    }
+                    // return $this->error($InvoiceModel->getError());
+                } else {
+                    $k++;
+                }
+            }
+        }
+        return '缴费发票开具：'.$i.'张，充值发票开具：'.$k.'张';
+        // return $this->success('执行成功');
+        
+    }
 
 
 
