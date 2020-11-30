@@ -333,8 +333,13 @@ class Api extends Common
     public function autoAllDpkj(){
         // return $this->success('执行成功');die();
 
+        // 本月开始时间
+        $month_begin_time = strtotime(date('Y-m'));
+
+        $month_end_time = strtotime(date('Y-m',strtotime( "first day of next month" )));
+        //dump($month_begin_time);halt($month_end_time);
         // 开缴费发票
-        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
+        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->select()->toArray();
 
         $i = 0;
 
@@ -357,7 +362,7 @@ class Api extends Common
         
         
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0]])->field('id')->select()->toArray();
+        $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->select()->toArray();
 
         $k = 0;
 
