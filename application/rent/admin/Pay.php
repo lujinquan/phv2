@@ -146,7 +146,7 @@ class Pay extends Admin
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 // halt($where);
-                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.act_ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
                 $data = [];
 
                 // 子查询
@@ -181,7 +181,7 @@ class Pay extends Admin
                     } else if ($v['trade_type'] == 'NATIVE') {
                         $tableData[$k]['trade_type'] = '微信支付';
                     }
-                    $tableData[$k]['act_ptime'] = $v['act_ptime'];
+                    $tableData[$k]['ptime'] = $v['ptime'];
 
                 }
                 // halt($tableData);

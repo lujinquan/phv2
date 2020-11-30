@@ -289,7 +289,7 @@
                     success:function(output){
                         layer.msg(output.msg);
                         if(output.code){ //成功则直接下载
-                            $('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-print"></i> 导出');
+                            $('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export""></i>');
                             document.location.href = output.data;
                         }
                         else{
