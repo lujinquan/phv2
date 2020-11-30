@@ -103,7 +103,7 @@ class Deal extends Admin
             if(isset($data['change_type']) && $data['change_type']){
                 $where[] = ['a.change_type','in',explode(',',$data['change_type'])];
             }else{
-                $where[] = ['a.change_type','in',[7,8,9,10,12]];
+                $where[] = ['a.change_type','in',[7,8,9,10]];
             }
             
             // 检索异动时间
