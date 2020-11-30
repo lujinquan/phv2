@@ -852,9 +852,12 @@ class Rent extends Model
                 if($filData['yue'] < 0){
                     return $this->error('充值后余额不能为负');
                 }
-
-                $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
-                $filData['transaction_id'] = $transaction_id;
+                if($house_info['house_use_id'] == 1){
+                    $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
+                    $filData['transaction_id'] = $transaction_id;
+                }
+                // $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
+                // $filData['transaction_id'] = $transaction_id;
                 $filData['recharge_status'] = 1;
                 $filData['house_id'] = $house_id;
                 $filData['pay_rent'] = $pay_rent;
