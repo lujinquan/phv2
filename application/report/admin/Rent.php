@@ -315,53 +315,53 @@ class Rent extends Admin
             $tempData = @file_get_contents(ROOT_PATH.'file/report/paid/'.$query_month.'.txt');
 
             $params = ParamModel::getCparams();
-            if($tempData){ // 有缓存就读取缓存数据
-                $temps = json_decode($tempData,true);
-                //halt($temps);
-                $ownerid = input('param.owner_id'); //默认查询市属
-                $instid = input('param.inst_id',INST); //默认查询当前机构
-                $useid = input('param.use_id'); //默认查询住宅
-                
-                if($ownerid){
-                    $owners = explode(',',$ownerid);
-                }else{
-                    $owners = [1,2,3,5,6,7];
-                }
-
-                if($useid){
-                    $uses = explode(',',$useid);
-                }else{
-                    $uses = [1,2,3];
-                }
-
-                //dump($owners);dump($instid);halt($uses);
-                $data = $result = [];
-                $total_cur_month_paid_rent = 0;
-                $total_before_month_paid_rent = 0;
-                $total_before_year_paid_rent = 0;
-                foreach ($temps as $k => $v) {
-                    if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
-                        $v['use'] = $params['uses'][$v['use']];
-                        if($v['curMonthPaidRent'] > 0){
-                            $total_cur_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['curMonthPaidRent'],2);
-                        }
-                        if($v['beforeMonthPaidRent'] > 0){
-                            $total_before_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeMonthPaidRent'],2);
-                        }
-                        if($v['beforeYearPaidRent'] > 0){
-                            $total_before_year_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeYearPaidRent'],2);
-                        }
-                        $result[$k] = $v;
-                    }
-                    
-                }
-
-                $data['data'] = $result;
-                $data['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
-                $data['total_before_month_paid_rent'] = $total_before_month_paid_rent;
-                $data['total_before_year_paid_rent'] = $total_before_year_paid_rent;
-                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
-            }else{
+//            if($tempData){ // 有缓存就读取缓存数据
+//                $temps = json_decode($tempData,true);
+//                //halt($temps);
+//                $ownerid = input('param.owner_id'); //默认查询市属
+//                $instid = input('param.inst_id',INST); //默认查询当前机构
+//                $useid = input('param.use_id'); //默认查询住宅
+//
+//                if($ownerid){
+//                    $owners = explode(',',$ownerid);
+//                }else{
+//                    $owners = [1,2,3,5,6,7];
+//                }
+//
+//                if($useid){
+//                    $uses = explode(',',$useid);
+//                }else{
+//                    $uses = [1,2,3];
+//                }
+//
+//                //dump($owners);dump($instid);halt($uses);
+//                $data = $result = [];
+//                $total_cur_month_paid_rent = 0;
+//                $total_before_month_paid_rent = 0;
+//                $total_before_year_paid_rent = 0;
+//                foreach ($temps as $k => $v) {
+//                    if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
+//                        $v['use'] = $params['uses'][$v['use']];
+//                        if($v['curMonthPaidRent'] > 0){
+//                            $total_cur_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['curMonthPaidRent'],2);
+//                        }
+//                        if($v['beforeMonthPaidRent'] > 0){
+//                            $total_before_month_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeMonthPaidRent'],2);
+//                        }
+//                        if($v['beforeYearPaidRent'] > 0){
+//                            $total_before_year_paid_rent = bcadd($total_cur_month_paid_rent,$v['beforeYearPaidRent'],2);
+//                        }
+//                        $result[$k] = $v;
+//                    }
+//
+//                }
+//
+//                $data['data'] = $result;
+//                $data['total_cur_month_paid_rent'] = $total_cur_month_paid_rent;
+//                $data['total_before_month_paid_rent'] = $total_before_month_paid_rent;
+//                $data['total_before_year_paid_rent'] = $total_before_year_paid_rent;
+//                $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']]);
+//            }else{
                 $ReportModel = new ReportModel;
                 $result = $ReportModel->getPaidRent();//halt($result);
                 $data = [];
@@ -370,7 +370,7 @@ class Rent extends Admin
                 $data['total_before_month_paid_rent'] = $result['total_before_month_paid_rent'];
                 $data['total_before_year_paid_rent'] = $result['total_before_year_paid_rent'];
                 $data['total_paid_rent'] = bcaddMerge([$data['total_cur_month_paid_rent'],$data['total_before_month_paid_rent'],$data['total_before_year_paid_rent']],2);
-            }
+//            }
 
             $data['count'] = count($data['data']);
             $data['code'] = 0;
@@ -386,6 +386,28 @@ class Rent extends Admin
      * @return [type] [description]
      */
     public function makePaidReport()
+    {
+        if ($this->request->isAjax()) {
+
+            $curMonth = date('Y-m');
+            $month = date('Ym');
+            $ReportModel = new ReportModel;
+            $data = $ReportModel->getPaidRent();//halt($result);
+
+            file_put_contents(ROOT_PATH.'file/report/paid/'.$month.'.txt', json_encode($data));
+
+            $result = [];
+            $result['msg'] = $curMonth.'月实收明细报表，保存成功！';
+            $result['code'] = 1;
+            return json($result);
+        }
+    }
+
+    /**
+     * [months 生成实收明细报表]
+     * @return [type] [description]
+     */
+    public function makePaidReport_old()
     {
         if ($this->request->isAjax()) {
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
