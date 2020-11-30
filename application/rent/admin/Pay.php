@@ -173,6 +173,10 @@ class Pay extends Admin
                         $tableData[$k]['order_status'] = '已成功';
                     }else if($v['order_status'] == 2){
                         $tableData[$k]['order_status'] = '已退款';
+                    }else if($v['order_status'] == 3){
+                        $tableData[$k]['order_status'] = '预支付';
+                    }else if($v['order_status'] == 4){
+                        $tableData[$k]['order_status'] = '已撤回';
                     }
                     if ($v['trade_type'] == 'CASH') {
                         $tableData[$k]['trade_type'] = '现金支付';
