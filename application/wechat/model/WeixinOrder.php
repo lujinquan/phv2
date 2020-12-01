@@ -187,7 +187,7 @@ class WeixinOrder extends Model
             }
 
 
-            $row->act_ptime = $act_ptime; //实际支付时间
+            // $row->act_ptime = $act_ptime; //实际支付时间
             $row->ptime = $ptime; //支付时间
 
             $row->pay_money = $data['total_fee'] / 100; //支付金额，单位：分

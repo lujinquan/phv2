@@ -337,7 +337,8 @@ class Api extends Common
         $month_begin_time = strtotime(date('Y-m'));
 
         $month_end_time = strtotime(date('Y-m',strtotime( "first day of next month" )));
-        //dump($month_begin_time);halt($month_end_time);
+
+        // dump($month_begin_time);halt($month_end_time);
         // 开缴费发票
         $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->select()->toArray();
 
@@ -360,12 +361,12 @@ class Api extends Common
             }
         }
         
-        
+        // halt($i);
         // 开充值发票
         $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->select()->toArray();
 
         $k = 0;
-
+        // halt($weixin_id_undpkj);
         if (!empty($weixin_id_undpkj)) {
             //halt($weixin_id_undpkj);
             
@@ -383,6 +384,7 @@ class Api extends Common
                 }
             }
         }
+        // halt($k);
         return '缴费发票开具：'.$i.'张，充值发票开具：'.$k.'张';
         // return $this->success('执行成功');
         
