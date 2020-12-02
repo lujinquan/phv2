@@ -247,7 +247,7 @@ class ChangeCancel extends SystemBase
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
 //        halt($row);
-        // $this->finalDeal($row);
+//         $this->finalDeal($row);
         return $row;
     }
 
@@ -390,6 +390,7 @@ class ChangeCancel extends SystemBase
             'change_status' => 1,
         ]);
 
+        $curr_time = time();
         // 按栋注销
         if ($finalRow['cancel_ban']) {
             // 将楼栋状态改成注销(注销楼，是否意味着四元素全部为0)
@@ -474,7 +475,8 @@ class ChangeCancel extends SystemBase
                             $RentOrderChildModel->pay_way = 1;
                             $RentOrderChildModel->house_id = $v['house_id'];
                             $RentOrderChildModel->tenant_id = $v['tenant_id'];
-                            $RentOrderChildModel->ptime = time();
+                            $RentOrderChildModel->ptime = $curr_time;
+                            $RentOrderChildModel->act_ptime = $curr_time;
                             $RentOrderChildModel->is_deal = 1;
                             $RentOrderChildModel->save();
 
@@ -652,7 +654,8 @@ class ChangeCancel extends SystemBase
                         $RentOrderChildModel->pay_way = 1;
                         $RentOrderChildModel->house_id = $v['house_id'];
                         $RentOrderChildModel->tenant_id = $v['tenant_id'];
-                        $RentOrderChildModel->ptime = time();
+                        $RentOrderChildModel->ptime = $curr_time;
+                        $RentOrderChildModel->act_ptime = $curr_time;
                         $RentOrderChildModel->is_deal = 1;
                         $RentOrderChildModel->save();
 

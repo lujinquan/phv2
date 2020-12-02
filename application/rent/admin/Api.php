@@ -306,6 +306,8 @@ class Api extends Common
      * @return [type] [description]
      */
     public function createMonthRentOrders(){
+        // 检查当前月的租金减免异动记录是有有效
+        Db::name('change_cut')->where([['is_valid','eq',1],['end_date','eq',date('Ym')]]])->update(['is_valid'=>0]);
         $RentModel = new RentModel;
         // 生成每个月的账单
         $rentOrderData = json_encode($RentModel->configRentOrder($is_all_inst = 1));

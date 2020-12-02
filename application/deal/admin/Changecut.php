@@ -395,14 +395,14 @@ class Changecut extends Admin
             // 将减免异动的减免结束时间改成当月
             $ChangeCutModel = new ChangeCutModel;
             $row = $ChangeCutModel->get($data['id']);
-            $row->end_date = date('Ym');
-            $row->is_valid = 0;
+            $row->end_date = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
+//            $row->is_valid = 0;
             $row->save();
             //$ChangeCutModel->where([['id','eq',$data['id']]])->update(['end_date'=>date('Ym')]);
             // 将异动统计表的该减免结束时间改成当月
             Db::name('change_table')->where([['change_order_number','eq',$row['change_order_number']]])->update(['end_date'=>date('Ym')]);
             //halt($data);
-            return $this->success('取消成功！',url('index'));
+            return $this->success('取消成功！',url('record'));
         }
         $id = $this->request->param('id');
         $ChangeCutModel = new ChangeCutModel;
@@ -414,6 +414,10 @@ class Changecut extends Admin
 
     public function record()
     {
+        // 检测租金减免是否过期
+        Db::name('change_cut')->where([['is_valid','eq',1],['end_date','eq',date('Ym')]])->update(['is_valid'=>0]);
+//        $cuts = Db::name('change_cut')->where([['is_valid','eq',1],['end_date','eq',date('Ym')]])->select();
+//        halt($cuts);
         $group = input('group','x');
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
