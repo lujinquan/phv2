@@ -86,7 +86,7 @@ class Recharge extends Model
            if(isset($data['pay_way']) && $data['pay_way']){
                 $where[] = ['a.pay_way','eq',$data['pay_way']];
             }else{
-                $where[] = ['a.pay_way','in',[1,4]];
+                $where[] = ['a.pay_way','in',[1,2,4]];
             }
              // 检索【收欠】支付时间
             if(isset($data['ptime']) && $data['ptime']){

@@ -824,6 +824,7 @@ class Weixin extends Common
             //     $out_trade_no_arr[] = $rent_info['out_trade_no'];
             // }
             // $out_trade_no_arr = array_unique($out_trade_no_arr);
+            $out_trade_no_arr = [];
             foreach ($rent_order_paid_info as $rent_info) {
                 // halt($rent_info);
                 // if(empty($rent_info['out_trade_no'])){
@@ -834,6 +835,10 @@ class Weixin extends Common
                 if(empty($order_row)){
                     continue;
                 }
+                if(in_array($order_row['out_trade_no'],$out_trade_no_arr)){
+                    continue;
+                }
+                $out_trade_no_arr[] = $order_row['out_trade_no'];
                 // $order_row = Db::name('weixin_order')->where([['out_trade_no','eq',$rent_info['out_trade_no']],['order_status','eq',1]])->field('order_id,pay_money,ptime')->fetchSql(true)->find();
                 // halt($order_row);
                 // Db::name('weixin_order')->getLastSql();
@@ -1648,7 +1653,7 @@ class Weixin extends Common
             $params = ParamModel::getCparams();
             //$result['data']['params'] = $params;
             $status = input('tenant_status');
-            $tenant = input('tenant_name');
+            $tenant = input('tenant_name','');
             $tenant_tel = input('tenant_tel');
             $tenant_card = input('tenant_card');
             $page = input('param.page/d', 1);
@@ -1665,10 +1670,10 @@ class Weixin extends Common
             if($tenant_card){
                 $where[] = ['tenant_card','like','%'.$tenant_card.'%'];
             }
-            if($status !== null){
+            if($status !== ''){
                 $where[] = ['tenant_status','eq',$status];
             }else{
-                $where[] = ['tenant_status','eq',1];   
+                $where[] = ['tenant_status','eq',1];
             }
             //,sum(house_balance) as tenant_balance
             $fields = 'tenant_id,tenant_inst_id,tenant_inst_pid,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_status';
