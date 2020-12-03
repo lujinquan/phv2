@@ -91,6 +91,11 @@ class Recharge extends Admin
                 $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
                 $filData['transaction_id'] = $transaction_id;
             }
+
+            /*       生成预充发票备注   Start      */ 
+            $filData['pay_remark'] = $RechargeModel->createPayMark($house_info,$filData['house_id'],$filData['pay_rent']);
+            /*       生成预充发票备注   End      */ 
+
             // 模拟线上支付
         
             // if ( true ) {

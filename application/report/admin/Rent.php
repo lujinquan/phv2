@@ -13,7 +13,7 @@ class Rent extends Admin
     public function index()
     {
 
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             
         }
         return $this->fetch();
@@ -31,7 +31,7 @@ class Rent extends Admin
         // foreach ($tempData as $k => $v) {
         //     file_put_contents(ROOT_PATH.'file/report/rent/'.$k.'.txt', $v);
         // }
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             $ReportModel = new ReportModel;
             $where = [['type','eq','RentReport']];
             $getData = $this->request->post();
@@ -132,7 +132,7 @@ class Rent extends Admin
      */
     public function analyze()
     {
-    	if ($this->request->isAjax()) {
+        if ($this->request->isAjax()) {
 
         }
         return $this->fetch();
@@ -604,14 +604,55 @@ class Rent extends Admin
 
             // 导出欠缴明细表
             if($type == 'unpaid'){
-                $ReportModel = new ReportModel; 
-                $tableTemp =  $ReportModel->getUnpaidRent();
+                $query_month = str_replace('-','',$curMonth);
+                $tempData = @file_get_contents(ROOT_PATH.'file/report/unpaid/'.$query_month.'.txt');
+                if(empty($tempData) && $curMonth == date('Y-m')){
+                    $this->error('未保存'.$curMonth.'月，欠租明细报表，数据为空');
+                }
+                // 查询是否有缓存数据
+                if($tempData){ 
+                    $tableTemp = json_decode($tempData,true);   
+                    
+                    // 查询产别，默认查询所有产别，传过来如果是多产别用逗号隔开
+                    $ownerids = input('param.owner_id'); //
+                    if($ownerids){
+                        $owners = explode(',',$ownerids);
+                    }else{
+                        $owners = [1,2,3,5,6,7];
+                    }
+                    // 查询使用性质，默认查询所有使用性质，传过来如果是多使用性质用逗号隔开
+                    $useids = input('param.use_id'); //
+                    if($useids){
+                        $uses = explode(',',$useids);
+                    }else{
+                        $uses = [1,2,3];
+                    }
+                    // 查询机构，默认查询所当前机构
+                    $instid = input('param.inst_id',INST); //默认查询当前机构
+                    $insts =  config('inst_ids')[$instid];
+
+                    // 将不满足当前查询条件的数据剔除   
+                    foreach ($tableTemp as $k => &$v) {
+                    // halt($v);
+                        if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],$insts)){
+                            continue;
+                        }else{
+                            unset($tableTemp[$k]);
+                        }
+                    }
+                    $table = $tableTemp;
+                }else{
+
+                    $ReportModel = new ReportModel; 
+                    $tableTemp =  $ReportModel->getUnpaidRent();  
+                    $table = $tableTemp['data'];       
+                }
                 //设置字段的排序
                 $sort = ['number','address','tenant','inst','owner','use','curMonthUnpaidRent','beforeMonthUnpaidRent','beforeYearUnpaidRent','total','remark'];
                 //标题
                 $values = ['房屋编号','地址','户名','管段','产别','使用性质','本月欠租','以前月欠租','以前年欠租','合计欠租','备注'];
                 $title = '欠租明细';
-                $table = $tableTemp['data'];
+                
             // 导出实收明细表
             }else if($type == 'paid'){
                 $ReportModel = new ReportModel; 
@@ -641,7 +682,7 @@ class Rent extends Admin
                 if($ownerids){
                     $owners = explode(',',$ownerids);
                 }else{
-                    $owners = [1,2,3,5,7];
+                    $owners = [1,2,3,5,6,7];
                 }
                 // 查询使用性质，默认查询所有使用性质，传过来如果是多使用性质用逗号隔开
                 $useids = input('param.use_id'); //

@@ -94,6 +94,12 @@
   	  </div>
   	</div>
   </div>
+  <div class="layui-col-md8">
+      <label class="j-form-label">预充发票备注</label> 
+      <div class="j-input-inline">
+        <input type="text" name="register_bodies" value="{$data_info['pay_remark']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
   {if condition="$data_info['pay_way'] == 2"}
   <input type="hidden" name="id" value="{$data_info['id']}">
    <div class="pop-bottom-bar">

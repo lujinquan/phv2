@@ -340,6 +340,8 @@ class Rent extends Model
         // return false;
         set_time_limit(0);
         $ji = 0;
+
+        $curr_time = time();
         // 如果选择了多个房屋，就按照房屋处理租金订单
         if($ids){
             
@@ -407,7 +409,7 @@ class Rent extends Model
                             $RentOrderChildModel->rent_order_diff = $v['rent_order_diff'];
                             $RentOrderChildModel->rent_order_pump = $v['rent_order_pump'];
                             $RentOrderChildModel->rent_order_date = $v['rent_order_date'];
-                            $RentOrderChildModel->ptime = time();
+                            $RentOrderChildModel->ptime = $curr_time;
                             $RentOrderChildModel->pay_way = 2;
                             $RentOrderChildModel->save();
 
@@ -432,6 +434,8 @@ class Rent extends Model
                             $RechargeModel->pay_rent = -$unpaid_rent;
                             $RechargeModel->yue = $yue;
                             $RechargeModel->pay_way = 2;
+                            $RechargeModel->ptime = $curr_time;
+                            $RechargeModel->act_ptime = $curr_time;
                             $RechargeModel->recharge_status = 1;
                             $RechargeModel->save();
 
@@ -855,6 +859,7 @@ class Rent extends Model
                 if($house_info['house_use_id'] == 1){
                     $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
                     $filData['transaction_id'] = $transaction_id;
+                    $filData['trade_type'] = 'CASH';
                 }
                 // $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
                 // $filData['transaction_id'] = $transaction_id;
@@ -866,6 +871,13 @@ class Rent extends Model
                 $curr_time = time();
                 $filData['ptime'] = $curr_time;
                 $filData['act_ptime'] = $curr_time;
+                
+                /*       生成预充发票备注   Start      */ 
+                $filData['pay_remark'] = $RechargeModel->createPayMark($house_info,$house_id,$pay_rent);
+                /*       生成预充发票备注   End      */ 
+
+                
+
                 // 入库
                 if (!$RechargeModel->allowField(true)->create($filData)) {
                     return $this->error('充值失败');

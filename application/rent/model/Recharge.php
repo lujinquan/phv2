@@ -152,9 +152,59 @@ class Recharge extends Model
 
     public function detail($id)
     {
-        $fields = "a.id,a.house_id,a.tenant_id,a.pay_number,a.member_id,a.out_trade_no,a.invoice_id,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime,'%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,c.tenant_id,c.tenant_name,c.tenant_card,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+        $fields = "a.id,a.house_id,a.tenant_id,a.pay_number,a.member_id,a.out_trade_no,a.invoice_id,a.pay_remark,a.pay_rent,a.yue,a.pay_way,from_unixtime(a.ctime,'%Y-%m-%d %H:%i:%S') as ctime,b.house_use_id,c.tenant_id,c.tenant_name,c.tenant_card,c.tenant_tel,d.ban_address,d.ban_owner_id,d.ban_inst_id";
         $row = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['id','eq',$id]])->find();
         return $row;
+    }
+
+    public function createPayMark($house_info = array() , $house_id = '' , $pay_rent = 0)
+    {
+        $before_recharge_balance = $house_info['house_balance'];
+        $rent = Db::name('rent_order')->where([['house_id','eq',$house_id],['rent_order_status','eq',1]])->order('rent_order_date desc')->field('rent_order_receive,rent_order_date')->find();
+        // 如果当前房屋一条订单都没有生成过，说明该房屋是新发的
+        if(empty($rent)){
+            $receive = $house_info['house_pre_rent'];
+        }else{
+            $receive = $rent['rent_order_receive'];
+        }
+        $number = bcdiv($before_recharge_balance, $receive);
+        $new_number = bcdiv($pay_rent, $receive);
+        if($new_number == 0){
+            return '房屋租金';
+        }
+        if($house_info['house_invoice_count']){ // 如果有计数
+            $last_rent_date = $house_info['house_invoice_count'];
+        }else{
+            $last_rent_date = substr_replace($rent['rent_order_date'], '-', 4,0);
+        }
+
+        $start_date = date( "Y-m", strtotime( "first day of next month",strtotime($last_rent_date) ) );
+        if($new_number == 1){
+            $end_date = $start_date;
+            $start_date_front = substr($start_date,0,4);
+            $start_date_behind = substr($start_date,5,2);
+        }else{
+            $n = $new_number - 1;
+            $end_date = date( "Y-m", strtotime( "+ ".$n." month",strtotime($start_date) ) );
+            $start_date_front = substr($start_date,0,4);
+            $start_date_behind = substr($start_date,5,2);
+            $end_date_front = substr($end_date,0,4);
+            $end_date_behind = substr($end_date,5,2);
+        }
+        
+        if($new_number == 1){
+            $remark = $start_date_front.'.'.ltrim($start_date_behind,'0').'月房租'.$receive.'*'.$new_number;
+        }else{
+            if($start_date_front == $end_date_front){
+                $remark = $start_date_front.'.'.ltrim($start_date_behind,'0').'-'.ltrim($end_date_behind,'0').'月房租'.$receive.'*'.$new_number;
+            }else{
+                $remark = $start_date_front.'.'.ltrim($start_date_behind,'0').'-'.$end_date_front.'.'.ltrim($end_date_behind,'0').'月房租'.$receive.'*'.$new_number;
+            }
+        }
+        
+        Db::name('house')->where([['house_id','eq',$house_id]])->update(['house_invoice_count'=>$end_date]);
+
+        return $remark;
     }
 
     public function afterWeixinRecharge($data = array())
@@ -189,8 +239,8 @@ class Recharge extends Model
 
                 $row->act_ptime = $act_ptime; //实际支付时间
                 $row->ptime = $ptime; //支付时间
-
-                $row->pay_rent = $pay_rent; //支付金额，单位：分
+                $row->pay_remark = $this->createPayMark($house_info,$row['house_id'],$pay_rent);
+                $row->pay_rent = $pay_rent; //支付金额
                 $row->yue = $yue;
                 $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
                 $row->recharge_status = 1; //充值状态，1充值成功

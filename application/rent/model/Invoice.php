@@ -402,7 +402,7 @@ class Invoice extends Model
                 return false;
             }
 
-            $bz = '房屋租金'.$RechargeRow['pay_remark'];
+            $bz = $RechargeRow['pay_remark'];
             $xmmc = '房屋租金';
             
             $SystemUserRow = Db::name('system_user')->where([['inst_id','eq',$RechargeRow['ban_inst_id']],['role_id','eq',4],['status','eq',1]])->find();
@@ -460,7 +460,7 @@ class Invoice extends Model
         
 
        
-        //halt($dpkj);    
+        // halt($dpkj);    
 
 
         $content = "<REQUEST_COMMON_FPKJ class=\"REQUEST_COMMON_FPKJ\">\n";
