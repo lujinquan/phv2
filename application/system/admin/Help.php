@@ -35,7 +35,7 @@ class Help extends Admin
             $limit = input('param.limit/d', 10);
             $SystemHelp = new SystemHelp;
             $data = [];
-            $data['data'] = $SystemHelp->page($page)->order('sort asc')->limit($limit)->select();
+            $data['data'] = $SystemHelp->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
             $data['count'] = $SystemHelp->count();
             $data['code'] = 0;
             $data['msg'] = '';
@@ -60,7 +60,7 @@ class Help extends Admin
             }
             $SystemHelp = new SystemHelp;
             $data['cuid'] = ADMIN_ID;
-            
+            // $data['content'] = $_POST['content'];
             $data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$SystemHelp->allowField(true)->create($data)) {
@@ -86,6 +86,7 @@ class Help extends Admin
             if($result !== true) {
                 return $this->error($result);
             }
+            $data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$SystemHelp->allowField(true)->update($data)) {
                 return $this->error('编辑失败');

@@ -39,7 +39,7 @@ class Notice extends Admin
             $where = $SystemNotice->checkWhere($getData);
             $data = [];
             $data['data'] = $SystemNotice->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
-            //halt($data['data']);
+            // halt($SystemNotice->getLastSql());
             $data['count'] = $SystemNotice->count();
             $data['code'] = 0;
             $data['msg'] = '';
@@ -65,6 +65,7 @@ class Notice extends Admin
             }
             $systemNotice = new SystemNotice;
             $data['cuid'] = ADMIN_ID;
+            // $data['content'] = $_POST['content'];
             $data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$systemNotice->allowField(true)->create($data)) {
@@ -85,11 +86,13 @@ class Notice extends Admin
         $systemNotice = new SystemNotice;
         if ($this->request->isPost()) {
             $data = $this->request->post();
+
             // 数据验证
             $result = $this->validate($data, 'SystemNotice');
             if($result !== true) {
                 return $this->error($result);
             }
+            $data['content'] = htmlspecialchars($data['content']);
             // 入库
             if (!$systemNotice->allowField(true)->update($data)) {
                 return $this->error('编辑失败');
