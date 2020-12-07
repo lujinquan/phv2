@@ -901,17 +901,17 @@ class Weixin extends Common
         return json($result);
     }
 
-    /**
-     * 获取租金列表
-     * =====================================
-     * @author  Lucas 
-     * email:   598936602@qq.com 
-     * Website  address:  www.mylucas.com.cn
-     * =====================================
-     * 创建时间: 2020-06-23 11:18:20
-     * @return  返回值  
-     * @version 版本  1.0
-     */
+//         /**
+//      * 获取租金列表
+//      * =====================================
+//      * @author  Lucas 
+//      * email:   598936602@qq.com 
+//      * Website  address:  www.mylucas.com.cn
+//      * =====================================
+//      * 创建时间: 2020-06-23 11:18:20
+//      * @return  返回值  
+//      * @version 版本  1.0
+//      */
 //     public function admin_rent_list()
 //     {
 //         // 验证令牌
@@ -933,7 +933,6 @@ class Weixin extends Common
 //             $params = ParamModel::getCparams();
 //             $result['data']['params'] = $params;
 //             $type = input('type');
-//             $is_pay = input('is_pay',0);
 //             $use = input('house_use_id');
 //             $owner = input('ban_owner_id');
 //             $tenant = input('tenant_name');
@@ -1054,12 +1053,6 @@ class Weixin extends Common
 //                     $result['data']  = array_slice($temps, ($page- 1) * $limit, $limit);
 //                     $result['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->where($keywordsWhere)->count('a.house_id');
 //                 }else{
-
-//                     // if($is_pay == 1){
-
-//                     // }else{
-
-//                     // }
 //                     $fields = 'a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.pay_way,a.ptime,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_id,b.house_number,b.house_use_id,b.house_unit_id,b.house_floor_id,b.house_share_img,b.house_advance_rent,c.tenant_name,d.ban_address,d.ban_id,d.ban_gpsx,d.ban_gpsy,d.ban_owner_id,d.ban_inst_id';
                     
 //                     // $where[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];

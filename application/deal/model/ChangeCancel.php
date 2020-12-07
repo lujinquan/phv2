@@ -484,22 +484,22 @@ class ChangeCancel extends SystemBase
                             // 4、异动统计表中添加一条记录
                             $banInfo = Db::name('ban')->where([['ban_id', 'eq', $finalRow['ban_id']]])->find();
 
-                            // $ChangeTableModel = new ChangeTableModel;   
-                            // $ChangeTableModel->change_type = 12;
-                            // $ChangeTableModel->change_order_number = '';
-                            // $ChangeTableModel->house_id = $v['house_id'];
-                            // $ChangeTableModel->ban_id = $finalRow['ban_id'];
-                            // $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
-                            // $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
-                            // $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
-                            // $ChangeTableModel->use_id = $v['house_use_id'];
-                            // $ChangeTableModel->change_month_rent = 0;
-                            // $ChangeTableModel->change_year_rent = $v['house_balance'];
-                            // $ChangeTableModel->change_rent = 0;
-                            // $ChangeTableModel->tenant_id = $v['tenant_id'];
-                            // $ChangeTableModel->cuid = $finalRow['cuid'];
-                            // $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
-                            // $ChangeTableModel->save();
+                            $ChangeTableModel = new ChangeTableModel;   
+                            $ChangeTableModel->change_type = 12;
+                            $ChangeTableModel->change_order_number = '';
+                            $ChangeTableModel->house_id = $v['house_id'];
+                            $ChangeTableModel->ban_id = $finalRow['ban_id'];
+                            $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
+                            $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
+                            $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
+                            $ChangeTableModel->use_id = $v['house_use_id'];
+                            $ChangeTableModel->change_month_rent = 0;
+                            $ChangeTableModel->change_year_rent = $v['house_balance'];
+                            $ChangeTableModel->change_rent = 0;
+                            $ChangeTableModel->tenant_id = $v['tenant_id'];
+                            $ChangeTableModel->cuid = $finalRow['cuid'];
+                            $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
+                            $ChangeTableModel->save();
 
 
                         }
@@ -662,22 +662,22 @@ class ChangeCancel extends SystemBase
                         // 4、异动统计表中添加一条记录
                         $banInfo = Db::name('ban')->where([['ban_id', 'eq', $finalRow['ban_id']]])->find();
 
-                        // $ChangeTableModel = new ChangeTableModel;   
-                        // $ChangeTableModel->change_type = 12;
-                        // $ChangeTableModel->change_order_number = '';
-                        // $ChangeTableModel->house_id = $v['house_id'];
-                        // $ChangeTableModel->ban_id = $finalRow['ban_id'];
-                        // $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
-                        // $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
-                        // $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
-                        // $ChangeTableModel->use_id = $v['house_use_id'];
-                        // $ChangeTableModel->change_month_rent = 0;
-                        // $ChangeTableModel->change_year_rent = $v['house_balance'];
-                        // $ChangeTableModel->change_rent = 0;
-                        // $ChangeTableModel->tenant_id = $v['tenant_id'];
-                        // $ChangeTableModel->cuid = $finalRow['cuid'];
-                        // $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
-                        // $ChangeTableModel->save();
+                        $ChangeTableModel = new ChangeTableModel;   
+                        $ChangeTableModel->change_type = 12;
+                        $ChangeTableModel->change_order_number = '';
+                        $ChangeTableModel->house_id = $v['house_id'];
+                        $ChangeTableModel->ban_id = $finalRow['ban_id'];
+                        $ChangeTableModel->inst_id = $banInfo['ban_inst_id'];
+                        $ChangeTableModel->inst_pid = $banInfo['ban_inst_pid'];
+                        $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
+                        $ChangeTableModel->use_id = $v['house_use_id'];
+                        $ChangeTableModel->change_month_rent = 0;
+                        $ChangeTableModel->change_year_rent = $v['house_balance'];
+                        $ChangeTableModel->change_rent = 0;
+                        $ChangeTableModel->tenant_id = $v['tenant_id'];
+                        $ChangeTableModel->cuid = $finalRow['cuid'];
+                        $ChangeTableModel->order_date = date('Ym', strtotime( "first day of next month" ) ); 
+                        $ChangeTableModel->save();
 
 
                     }
