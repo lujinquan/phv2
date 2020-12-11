@@ -415,7 +415,7 @@ class Changecut extends Admin
     public function record()
     {
         // 检测租金减免是否过期
-        Db::name('change_cut')->where([['is_valid','eq',1],['end_date','eq',date('Ym')]])->update(['is_valid'=>0]);
+        Db::name('change_cut')->where([['is_valid','eq',1],['end_date','<=',date('Ym')]])->update(['is_valid'=>0]);
 //        $cuts = Db::name('change_cut')->where([['is_valid','eq',1],['end_date','eq',date('Ym')]])->select();
 //        halt($cuts);
         $group = input('group','x');
