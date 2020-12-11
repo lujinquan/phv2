@@ -717,24 +717,24 @@ class ChangeCancel extends SystemBase
                 $taiHouseData[$k]['change_type'] = 8;
                 $taiHouseData[$k]['change_id'] = $finalRow['id'];
 
-                // if($v['house_use_id'] == 1){ // 住宅
-                //     $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);
-                //     $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
-                //     $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
-                //     $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
-                //     $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
-                // }else if($v['house_use_id'] == 2){ // 企业
-                //     $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
-                //     $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
-                //     $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
-                //     $changeBanData['ban_career_holds'] = Db::raw('ban_career_holds-1');
-                // }else{ // 机关
-                //     $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
-                //     $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
-                //     $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
-                //     $changeBanData['ban_party_holds'] = Db::raw('ban_party_holds-1');
-                // }
-                // BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
+                if($v['house_use_id'] == 1){ // 住宅
+                    $changeBanData['ban_civil_rent'] = Db::raw('ban_civil_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
+                    $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
+                    $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
+                }else if($v['house_use_id'] == 2){ // 企业
+                    $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_career_area'] = Db::raw('ban_career_area-'.$v['house_area']);
+                    $changeBanData['ban_career_holds'] = Db::raw('ban_career_holds-1');
+                }else{ // 机关
+                    $changeBanData['ban_party_rent'] = Db::raw('ban_party_rent-'.$v['house_pre_rent']);
+                    $changeBanData['ban_party_oprice'] = Db::raw('ban_party_oprice-'.$v['house_oprice']);
+                    $changeBanData['ban_party_area'] = Db::raw('ban_party_area-'.$v['house_area']);
+                    $changeBanData['ban_party_holds'] = Db::raw('ban_party_holds-1');
+                }
+                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update($changeBanData);
 
                 // 添加统计报表记录
                 $tableData[$k]['change_type'] = 8;
@@ -760,7 +760,7 @@ class ChangeCancel extends SystemBase
             // 添加楼栋台账
 
         }
-//dump($taiHouseData);dump($taiBanData);halt($tableData);
+
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->saveAll($taiHouseData);
 
