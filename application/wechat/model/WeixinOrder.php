@@ -92,6 +92,9 @@ class WeixinOrder extends Model
                 $where[] = ['a.invoice_id','>',0];
             } else if($data['invoice_id'] == 2){ // 微信支付
                 $where[] = ['a.invoice_id','eq',0];
+                $where[] = ['a.is_need_dpkj','eq',1];
+            } else if($data['invoice_id'] == 3){ // 微信支付
+                $where[] = ['a.is_need_dpkj','eq',0];
             }
            
         }

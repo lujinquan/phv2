@@ -375,6 +375,30 @@ class Pay extends Admin
 
     }
 
+    // 标记为不开票
+    public function is_need_dpkj()
+    {
+        // return $this->success('开票失败');
+        $group = input('group');
+        $id = input('param.id');
+        $val = input('param.val');
+        
+        if ($group == 'y') {
+            $WeixinOrderModel = new WeixinOrderModel;
+            $row = $WeixinOrderModel->where([['order_id','eq',$id]])->find();
+            if($val == 0 && $row['invoice_id']){
+                return $this->error('已开票无法切换');
+            }
+            $res = $WeixinOrderModel->where([['order_id','eq',$id]])->update(['is_need_dpkj'=>$val]);
+            return $this->success('标记成功');
+        } else {
+            $RechargeModel = new RechargeModel;
+            $res = $RechargeModel->where([['id','eq',$id]])->update(['is_need_dpkj'=>$val]);
+            return $this->success('标记成功');
+        }
+
+    }
+
     // 一键同步发票，所有已开的发票，未下载到服务器的统一，一键下载
     public function allVoiceDown()
     {

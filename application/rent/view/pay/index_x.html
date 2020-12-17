@@ -114,25 +114,25 @@
 </script>
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     {{#  if (d.transaction_id > 0) { }}
-    {{#  if (d.invoice_id <= 0) { }}
+    {{#  if (d.invoice_id <= 0 && d.is_need_dpkj == 1) { }}
         <a href="{:url('dpkj')}?group=x&id={{ d.id }}" confirm="确认开票吗？开票后订单将无法退款" refresh="no" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
     {{# }else{ }}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a>
+        <!-- <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a> -->
     {{# } }}
     {{#  if (d.transaction_id > 0 && d.recharge_status == 1 && d.is_need_dpkj == 1 && d.invoice_id <= 0 && d.trade_type == 'CASH') { }}
-    <a href="{:url('undpkj')}?group=x&id={{ d.id }}" confirm="确认标记为不开票吗？标记后将无法开票"
-       refresh="no" data-value="不开票" class="layui-btn layui-btn-xs layui-btn-normal j-ajax-pay">不开票</a>
+    <a data-href="{:url('undpkj')}?group=x&id={{ d.id }}" confirm="确认标记为不开票吗？标记后将无法开票"
+       refresh="no" data-value="不开票" class="layui-btn layui-btn-xs layui-btn-normal j-ajax-pay"  lay-event="undpkj">不开票</a>
     {{# }else{ }}
-    <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">不开票</a>
+    <!-- <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">不开票</a> -->
     {{# } }}
     {{#  if (d.recharge_status == 1 && d.trade_type != 'CASH') { }}
     {if condition="in_array(418,$auths) || $Think.ADMIN_ROLE == 1"}
         <a href="{:url('payRefund')}?group=x&id={{ d.id }}" hisi-data="{width: '800px', height: '640px',refresh: 2}" title="退款信息" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">退款</a>
     {else /}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+       <!--  <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a> -->
     {/if}
     {{# }else{ }}
-        <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a>
+       <!--  <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">退款</a> -->
     {{# } }}
     {{# } }}
     <a href="{:url('payDetail')}?group=x&id={{ d.id }}" hisi-data="{width: '1200px', height: '500px',refresh: 2}" title="详情" class="layui-btn layui-btn-xs layui-btn-normal j-iframe-pop">详情</a>
@@ -185,6 +185,18 @@
                 ,{field: 'pay_rent', minWidth: 100, align:'center', totalRow: true ,title: '缴纳金额'}
                 ,{field: 'yue', minWidth: 100, align:'center',title: '当前余额'}
                 ,{field: 'act_ptime', minWidth: 160, align:'center', title: '实际支付时间'}
+                , {
+                        field: 'is_need_dpkj', minWidth: 200, align: 'center', title: '开票状态', templet: function (d) {
+                            if (d.is_need_dpkj == 0) {
+                                return '不开票';
+                            } else if (d.is_need_dpkj == 1 && d.invoice_id > 0) {
+                                return '开票';
+                            } else if (d.is_need_dpkj == 1 && d.invoice_id == 0) {
+                                return '未开票';
+                            }   
+
+                        }
+                    }
                 ,{title: '操作', width: 240,align:'left', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){
@@ -235,74 +247,166 @@
             //,range: true
             ,range: '~'
         });
+        table.on('tool(dataTable)', function(obj) {
+                console.log(this);
+                if(obj.event === 'undpkj') {
+                    var that = $(this), 
+                    href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href'),
+                    data_value = !that.attr('data-value') ? '' : that.attr('data-value'),
+                    refresh = !that.attr('refresh') ? 'yes' : that.attr('refresh');
+                    if (!href) {
+                        layer.msg('请设置data-href参数');
+                        return false;
+                    }
+                    // var item1 = $("td[data-field='is_need_dpkj']")[0];
+                    //
+     
+                    
+                    // return false;
+
+                    // console.log('data_value',data_value);
+                    if (!that.attr('confirm')) {
+                        $.get(href, {}, function(res) {
+                            // layer.msg(res.msg, {time:2000}, function() {
+                                if(res.data.refresh === undefined || res.data.refresh){
+                                    if (refresh == 'yes') {
+                                        if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+                                            location.href = res.url;
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }else{
+                                        if(res.code){
+                                            that.siblings("a:contains('开票')").remove();
+                                            obj.update({
+                                                'is_need_dpkj': 0
+                                            });
+                                            // console.log('试一下');
+                                            // that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+                                            // that.html(data_value);
+
+                                            // that.siblings("a:contains('开票')").remove();
+                                            // 
+                                            // 
+                                            // table.reload(1000);
+                                            // 
+                                            // 
+                                            // console.log($("td[data-field='is_need_dpkj']").html());
+                                        }
+                                    }
+                                }
+                            // });
+                        });
+                        layer.close(index);
+                    } else {
+                        layer.confirm(that.attr('confirm'), {title:false, closeBtn:0}, function(index){  
+                            $.get(href, {}, function(res) {
+                                layer.msg(res.msg, {time:2000}, function() {
+                                    if(res.data.refresh === undefined || res.data.refresh){
+                                        if (refresh == 'yes') {
+                                            if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+                                                location.href = res.url;
+                                            } else {
+                                                location.reload();
+                                            }
+                                        }else{
+                                            if(res.code){
+                                                that.siblings("a:contains('开票')").remove();
+                                                obj.update({
+                                                    'is_need_dpkj': 0
+                                                });
+                                                // console.log('试一下');
+                                                // that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+                                                // that.html(data_value);
+
+                                                // that.siblings("a:contains('开票')").remove();
+                                                // 
+                                                // 
+                                                // table.reload(1000);
+                                                // 
+                                                // 
+                                                // console.log($("td[data-field='is_need_dpkj']").html());
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                            layer.close(index);
+                        });
+                            
+                     
+                    }
+                    return false;
+                }
+            });
         /**
          * ajax请求操作
          * @attr href或data-href 请求地址
          * @attr refresh 操作完成后是否自动刷新
          * @class confirm confirm提示内容
          */
-        $(document).on('click','.j-ajax-pay', function() {
-            var that = $(this), 
-                href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href'),
-                data_value = !that.attr('data-value') ? '' : that.attr('data-value'),
-                refresh = !that.attr('refresh') ? 'yes' : that.attr('refresh');
-            if (!href) {
-                layer.msg('请设置data-href参数');
-                return false;
-            }
-            console.log('data_value',data_value);
-            if (!that.attr('confirm')) {
-                layer.msg('数据提交中...', {time:2000});
-                $.get(href, {}, function(res) {
-                    layer.msg(res.msg, {time:5000}, function() {
-                        if(res.data.refresh === undefined || res.data.refresh){
-                            if (refresh == 'yes') {
-                                if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
-                                    location.href = res.url;
-                                } else {
-                                    location.reload();
-                                }
-                            }else{
-                                if(res.code){
-                                    that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
-                                    that.html(data_value);
-                                    that.siblings("a:contains('开票')").remove();
-                                }
+        // $(document).on('click','.j-ajax-pay', function() {
+        //     var that = $(this), 
+        //         href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href'),
+        //         data_value = !that.attr('data-value') ? '' : that.attr('data-value'),
+        //         refresh = !that.attr('refresh') ? 'yes' : that.attr('refresh');
+        //     if (!href) {
+        //         layer.msg('请设置data-href参数');
+        //         return false;
+        //     }
+        //     console.log('data_value',data_value);
+        //     if (!that.attr('confirm')) {
+        //         layer.msg('数据提交中...', {time:2000});
+        //         $.get(href, {}, function(res) {
+        //             layer.msg(res.msg, {time:5000}, function() {
+        //                 if(res.data.refresh === undefined || res.data.refresh){
+        //                     if (refresh == 'yes') {
+        //                         if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+        //                             location.href = res.url;
+        //                         } else {
+        //                             location.reload();
+        //                         }
+        //                     }else{
+        //                         if(res.code){
+        //                             that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+        //                             that.html(data_value);
+        //                             that.siblings("a:contains('开票')").remove();
+        //                         }
                                 
-                            }
-                        }
-                    });
-                });
-                layer.close();
-            } else {
-                layer.confirm(that.attr('confirm'), {title:false, closeBtn:0}, function(index){
-                    layer.msg('数据提交中...', {time:2000});
-                    $.get(href, {}, function(res) {
-                        layer.msg(res.msg, {time:5000}, function() {
-                            if(res.data.refresh === undefined || res.data.refresh){
-                                if (refresh == 'yes') {
-                                    if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
-                                        location.href = res.url;
-                                    } else {
-                                        location.reload();
-                                    }
-                                }else{
-                                    if(res.code){
-                                        console.log('试一下');
-                                        that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
-                                        that.html(data_value);
+        //                     }
+        //                 }
+        //             });
+        //         });
+        //         layer.close();
+        //     } else {
+        //         layer.confirm(that.attr('confirm'), {title:false, closeBtn:0}, function(index){
+        //             layer.msg('数据提交中...', {time:2000});
+        //             $.get(href, {}, function(res) {
+        //                 layer.msg(res.msg, {time:5000}, function() {
+        //                     if(res.data.refresh === undefined || res.data.refresh){
+        //                         if (refresh == 'yes') {
+        //                             if (typeof(res.url) != 'undefined' && res.url != null && res.url != '') {
+        //                                 location.href = res.url;
+        //                             } else {
+        //                                 location.reload();
+        //                             }
+        //                         }else{
+        //                             if(res.code){
+        //                                 console.log('试一下');
+        //                                 that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+        //                                 that.html(data_value);
 
-                                        that.siblings("a:contains('开票')").remove();
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    layer.close(index);
-                });
-            }
-            return false;
-        });
+        //                                 that.siblings("a:contains('开票')").remove();
+        //                             }
+        //                         }
+        //                     }
+        //                 });
+        //             });
+        //             layer.close(index);
+        //         });
+        //     }
+        //     return false;
+        // });
     });
     
 </script>
