@@ -181,10 +181,10 @@ class Invoice extends Model
     public function dpkj($id, $type = 1)
     {
         // 测试平台暂不需要开发票      
-        if (get_domain(false) != 'pro.ctnmit.com:443') {
-            $this->error = '非正式平台，暂不开票';
-            return false;
-        }
+        // if (get_domain(false) != 'pro.ctnmit.com:443') {
+        //     $this->error = '非正式平台，暂不开票';
+        //     return false;
+        // }
         // 初始化数据
         $dpkj = [];
         // 发票请求流水号 20 是 企业内部唯一请求开票流水 号，每个请求流水号只能开一 次 ,流水号前面以公司名称 前 缀 例 如 合 力 中 税 ： HLZS20171128094300001
@@ -612,7 +612,23 @@ class Invoice extends Model
         //dump('报文签名>>>> '.$signature);
         $queryMap['signature'] = $signature;
 
-        $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
+        // 测试平台暂不需要开发票      
+        if (get_domain(false) != 'pro.ctnmit.com:443') {
+            $dpkj['pdfurl'] = 'http://xz.holytax.com/pdf/d/385c0a542ed44e62';
+            $dpkj['xmmc'] = '测试数据'; // 项目名称
+        }else{
+            
+            $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
+            // 解析xml
+            $xml = simplexml_load_string($result['msg'], null, LIBXML_NOCDATA);
+            if($result['code'] !== '0000'){
+                $this->error = $result['msg'];
+                return false;
+            } 
+            // 将成功开票的数据写入到invoice表
+            $dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
+        }
+        
         //halt($result);
         // dump($content);
         // halt($result);
@@ -629,16 +645,7 @@ class Invoice extends Model
         //     "requestid" => "976c9fda61b642efb74dc835bae3ed0e",
         // ];
 
-        if($result['code'] !== '0000'){
-            $this->error = $result['msg'];
-            return false;
-        }
-
-        // 解析xml
-        $xml = simplexml_load_string($result['msg'], null, LIBXML_NOCDATA);
-
-        // 将成功开票的数据写入到invoice表
-        $dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
+        
         $row = $this->allowField(true)->create($dpkj);
         if(!$row){
             $this->error = '开票失败';

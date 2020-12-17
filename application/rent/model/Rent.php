@@ -615,7 +615,7 @@ class Rent extends Model
         $pay_rent = 0;
         foreach ($ids as $d) {
             $rent_row = $this->find($d);
-            $pay_rent = bcsub($pay_rent , bcsub($rent_row->rent_order_receive, $rent_row->rent_order_paid , 2) , 2);
+            $pay_rent = bcadd($pay_rent , bcsub($rent_row->rent_order_receive, $rent_row->rent_order_paid , 2) , 2);
         }
 
         $out_trade_no = date('YmdHis') . random(6);
