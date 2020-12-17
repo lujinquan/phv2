@@ -612,6 +612,110 @@ class Rent extends Model
             $ptime = $act_ptime;
         }
         
+        $pay_rent = 0;
+        foreach ($ids as $d) {
+            $rent_row = $this->find($d);
+            $pay_rent = bcsub($pay_rent , bcsub($rent_row->rent_order_receive, $rent_row->rent_order_paid , 2) , 2);
+        }
+
+        $out_trade_no = date('YmdHis') . random(6);
+        $transaction_id = '5000000000' . get_msec_to_mescdate(get_msec_time()) . random(1);
+
+        // 模拟生成一条微信支付记录，支付方式为现金支付
+        $WeixinOrderModel = new WeixinOrderModel;
+        $WeixinOrderModel->pay_money = $pay_rent;
+        $WeixinOrderModel->member_id = $member_id;
+        $WeixinOrderModel->trade_type = 'CASH';
+        $WeixinOrderModel->order_status = 1;
+        $WeixinOrderModel->out_trade_no = $out_trade_no;
+        $WeixinOrderModel->transaction_id = $transaction_id;
+        $WeixinOrderModel->ptime = $ptime;
+        $WeixinOrderModel->act_ptime = $act_ptime;
+        $WeixinOrderModel->save();
+// halt($ids);
+            
+        $i = 0;
+        foreach ($ids as $id) {
+
+            $row = $this->find($id);
+
+            $pay_rent = bcsub($row->rent_order_receive, $row->rent_order_paid , 2);
+
+            // 模拟生成一条微信支付关联记录
+            $WeixinOrderTradeModel = new WeixinOrderTradeModel;
+            $WeixinOrderTradeModel->out_trade_no = $out_trade_no;
+            $WeixinOrderTradeModel->transaction_id = $transaction_id;
+            $WeixinOrderTradeModel->rent_order_id = $id;
+            $WeixinOrderTradeModel->pay_dan_money = $pay_rent;
+            $WeixinOrderTradeModel->save();
+
+            // 缴费生成一条条子订单
+            $RentOrderChildModel = new RentOrderChildModel;
+            $RentOrderChildModel->rent_order_id = $id;
+            $RentOrderChildModel->house_id = $row['house_id'];
+            $RentOrderChildModel->tenant_id = $row['tenant_id'];
+            $RentOrderChildModel->rent_order_paid = $pay_rent;
+            $RentOrderChildModel->rent_order_number = $row->rent_order_number;
+            $RentOrderChildModel->rent_order_receive = $row->rent_order_receive;
+            $RentOrderChildModel->rent_order_pre_rent = $row->rent_order_pre_rent;
+            $RentOrderChildModel->rent_order_cou_rent = $row->rent_order_cou_rent;
+            $RentOrderChildModel->rent_order_cut = $row->rent_order_cut;
+            $RentOrderChildModel->rent_order_diff = $row->rent_order_diff;
+            $RentOrderChildModel->rent_order_pump = $row->rent_order_pump;
+            $RentOrderChildModel->rent_order_date = $row->rent_order_date;
+            $RentOrderChildModel->ptime = $ptime;
+            $RentOrderChildModel->act_ptime = $act_ptime;
+            $RentOrderChildModel->save();
+
+
+            $row->rent_order_paid = Db::raw('rent_order_paid+'.$pay_rent);
+            $row->is_deal = 1;
+            $res = $row->save();
+
+            // 添加房屋台账，记录缴费状况
+            $HouseTaiModel = new HouseTaiModel;
+            $HouseTaiModel->house_id = $row['house_id'];
+            $HouseTaiModel->tenant_id = $row['tenant_id'];
+            $HouseTaiModel->cuid = $uid;
+            $HouseTaiModel->house_tai_type = 2;
+            $HouseTaiModel->house_tai_remark = '现金缴费：'.$pay_rent.'元';
+            $HouseTaiModel->data_json = [];
+            $HouseTaiModel->change_type = '';
+            $HouseTaiModel->change_id = '';
+            $HouseTaiModel->save();
+
+            $i++;
+        }
+        
+        return $i;
+    }
+
+    /**
+     * 订单整体支付
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-08-24 11:37:54 
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function whole_orders_to_pay_old($ids, $uid, $member_id,$is_need_act_time = true)
+    {   //halt($ids);
+        $act_ptime = time();
+
+        if ($is_need_act_time) {
+            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28 23:59:59');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
+            if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
+                $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
+            }else{
+                $ptime = $act_ptime; // 不超过则按照真实支付时间来
+            }
+        }else{
+            $ptime = $act_ptime;
+        }
+        
 
         $i = 0;
         foreach ($ids as $id) {

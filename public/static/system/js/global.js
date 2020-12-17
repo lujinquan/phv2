@@ -498,12 +498,13 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
     $(document).on('click', '.j-ajax,.hisi-ajax', function() {
         var that = $(this), 
             href = !that.attr('data-href') ? that.attr('href') : that.attr('data-href'),
+            data_value = !that.attr('data-value') ? '' : that.attr('data-value'),
             refresh = !that.attr('refresh') ? 'yes' : that.attr('refresh');
         if (!href) {
             layer.msg('请设置data-href参数');
             return false;
         }
-
+        console.log('data_value',data_value);
         if (!that.attr('confirm')) {
             layer.msg('数据提交中...', {time:2000});
             $.get(href, {}, function(res) {
@@ -515,6 +516,12 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                             } else {
                                 location.reload();
                             }
+                        }else{
+                            if(res.code){
+                                that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+                                that.html(data_value);
+                            }
+                            
                         }
                     }
                 });
@@ -531,6 +538,11 @@ layui.define(['jquery','element', 'form', 'table', 'md5'], function(exports) {
                                     location.href = res.url;
                                 } else {
                                     location.reload();
+                                }
+                            }else{
+                                if(res.code){
+                                    that.removeClass('j-ajax layui-btn-normal').addClass('layui-btn-disabled').attr('href','javascript:;');
+                                    that.html(data_value);
                                 }
                             }
                         }
