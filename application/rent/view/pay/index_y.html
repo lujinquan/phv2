@@ -328,6 +328,7 @@
                                     }else{
                                         if(res.code){
                                             that.siblings("a:contains('开票')").remove();
+                                            that.remove();
                                             obj.update({
                                                 'is_need_dpkj': 0
                                             });
@@ -362,6 +363,7 @@
                                         }else{
                                             if(res.code){
                                                 that.siblings("a:contains('开票')").remove();
+                                                that.remove();
                                                 obj.update({
                                                     'is_need_dpkj': 0
                                                 });
