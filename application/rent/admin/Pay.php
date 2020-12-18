@@ -293,7 +293,7 @@ class Pay extends Admin
     {
         $group = input('group');
         if ($group== 'y') {
-            $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
+            $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1], ['invoice_id', 'eq', 0]])->field('order_id')->select()->toArray();
 
             if (empty($weixin_id_undpkj)) {
                 return $this->error('暂无需要开票的订单');
@@ -313,7 +313,7 @@ class Pay extends Admin
                 }
             }
         } else{
-            $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0]])->field('id')->select()->toArray();
+            $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0]])->field('id')->select()->toArray();
 
             if (empty($weixin_id_undpkj)) {
                 return $this->error('暂无需要开票的订单');

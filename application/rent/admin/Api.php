@@ -342,7 +342,7 @@ class Api extends Common
 
         // dump($month_begin_time);halt($month_end_time);
         // 开缴费发票
-        $weixin_id_undpkj = WeixinOrderModel::where([['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->select()->toArray();
+        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->select()->toArray();
 
         $i = 0;
 
@@ -365,7 +365,7 @@ class Api extends Common
         
         // halt($i);
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->select()->toArray();
+        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->select()->toArray();
 
         $k = 0;
         // halt($weixin_id_undpkj);
