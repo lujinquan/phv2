@@ -85,6 +85,10 @@ class ChangeUse extends SystemBase
         if(isset($data['new_tenant_name']) && $data['new_tenant_name']){
             $where[] = ['a.new_tenant_name','like','%'.$data['new_tenant_name'].'%'];
         }
+        // 检索房屋编号
+        if(isset($data['house_number']) && $data['house_number']){
+            $where[] = ['b.house_number','like','%'.$data['house_number'].'%'];
+        }
         // 检索楼栋地址
         if(isset($data['ban_address']) && $data['ban_address']){
             $where[] = ['d.ban_address','like','%'.$data['ban_address'].'%'];

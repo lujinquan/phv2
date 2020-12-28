@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="__ADMIN_JS__/select/formSelects-v4.css">
 <div class="j-table-content j-no-title">
 <div class="page-toolbar j-page-toolbar clearfix">
     <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
@@ -13,9 +14,19 @@
                 {/volist}
               </select>
         </div>
+        {if condition="INST_LEVEL != 3"}
+        <div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+          <select name="inst_id" xm-select="ban_inst_id">
+            <option value="">机构</option>
+            {volist name=":config('inst_check_names')[INST]" id="v"}
+            <option value="{$key}">{$v}</option>
+            {/volist}
+          </select>
+        </div>
+        {/if}
         <div class="layui-inline">
           <div class="layui-input-inline">
-            <input type="text" name="ctime" class="layui-input" id="test3" placeholder="请选择月份">
+            <input type="text" name="ctime" value="{:date('Y-m')}" class="layui-input" id="test3" placeholder="请选择月份">
           </div>
     </div>
       </div>
@@ -45,9 +56,10 @@
 </script>
 </div>
 <script type="text/javascript">
-    layui.use(['table','jquery','laydate'], function() {
+    layui.use(['table','jquery','laydate','formSelects'], function() {
         var table = layui.table;
         var laydate = layui.laydate;
+        var formSelects = layui.formSelects;
           //年月选择器
   laydate.render({
     elem: '#test3'
