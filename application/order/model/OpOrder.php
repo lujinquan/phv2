@@ -83,7 +83,10 @@ class OpOrder extends SystemBase
                 break;
             // 已受理工单
             case 'filished':
-                $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                if(ADMIN_ID != 1){
+                    $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                }
+                
                 
                 break;
             // 组内待受理工单[只有运营中心]
@@ -97,7 +100,7 @@ class OpOrder extends SystemBase
         }
         
         //未完成的工单
-        $where[] = [['status','eq',0]];
+        // $where[] = [['status','eq',0]];
         // 检索工单编号
         if(isset($data['op_order_number']) && $data['op_order_number']){
             $where[] = ['op_order_number','like','%'.$data['op_order_number'].'%'];
@@ -111,8 +114,27 @@ class OpOrder extends SystemBase
             $startDate = $data['ctime'].'-01';
             $endDate = strtotime('+1 month',strtotime($data['ctime']));
             $where[] = ['ctime','between time',[$startDate,$endDate]];
+        }else{
+            if(!isset($data['ctime']) && $type == 'filished'){
+                $startDate = date('Y-m').'-01';
+                $endDate = strtotime('+1 month',strtotime(date('Y-m')));
+                $where[] = ['ctime','between time',[$startDate,$endDate]];
+            }
         }
         //检索管段
+        // 检索机构
+        if(isset($data['inst_id']) && $data['inst_id']){
+            $insts = explode(',',$data['inst_id']);
+            $instid_arr = [];
+            foreach ($insts as $inst) {
+                foreach (config('inst_ids')[$inst] as $instid) {
+                    $instid_arr[] = $instid;
+                }
+            }
+            $where[] = ['inst_id','in',array_unique($instid_arr)];
+        }else{
+            $where[] = ['inst_id','in',config('inst_ids')[INST]];
+        }
         // $insts = config('inst_ids');
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];

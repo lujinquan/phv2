@@ -34,6 +34,7 @@ class Filished extends Admin
             $where = $OpOrderModel->checkWhere($getData, 'filished');
             $data = [];
             $temps = $OpOrderModel->with('SystemUser')->where($where)->order('ctime desc')->select()->toArray();
+            // halt($temps);
             $opTypeModel = new OpType;
             $opTypeArr = $opTypeModel->column('id,title');
             $i = 1;

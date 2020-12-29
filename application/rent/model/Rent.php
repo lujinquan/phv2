@@ -1077,7 +1077,7 @@ class Rent extends Model
             }
             $weixin_member_id = explode(',',$user_info['weixin_member_id']);
             // halt($ids);
-            $ji = $this->whole_orders_to_pay($ids, ADMIN_ID, $weixin_member_id[0], $is_need_act_time = false);
+            $ji = $this->whole_orders_to_pay_old($ids, ADMIN_ID, $weixin_member_id[0], $is_need_act_time = false);
             return $ji;
         } else {
             foreach($ids as $id){
