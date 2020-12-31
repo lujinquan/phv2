@@ -392,7 +392,7 @@ class House extends Admin
             //$house_pre_rent = $HouseModel->count_house_pre_rent($data['house_id']);
             // $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
 
-            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_unit_id'=>$data['house_unit_id']]);
+            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_unit_id'=>$data['house_unit_id'],'house_floor_id'=>$data['house_floor_id']]);
 
             $HouseModel = new HouseModel();
             $row = $HouseModel->find($data['house_id']);
@@ -771,7 +771,7 @@ class House extends Admin
         }
     }
 
-    public function print()
+    public function print_out()
     {
         $html = <<<EOF
     <style>

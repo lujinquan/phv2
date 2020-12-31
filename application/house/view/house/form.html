@@ -59,7 +59,7 @@
 			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>居住楼层号</label>
 				<div class="j-input-inline">
-					<input type="number" {if condition="$group == 'y'"} readonly {/if} id="house_floor_id" min="1" max="{$data_info['ban_floors']}" oninput="if(value>{$data_info['ban_floors']})value={$data_info['ban_floors']}" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
+					<input type="number" {if condition="$group == 'z'"} readonly {/if} id="house_floor_id" min="1" max="{$data_info['ban_floors']}" oninput="if(value>{$data_info['ban_floors']})value={$data_info['ban_floors']}" name="house_floor_id" placeholder="总楼层：{$data_info['ban_floors']}" lay-verify="required" value="{$data_info['house_floor_id']}" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-col-md4">
