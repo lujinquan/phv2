@@ -617,14 +617,16 @@ class Invoice extends Model
             $dpkj['pdfurl'] = 'http://xz.holytax.com/pdf/d/385c0a542ed44e62';
             $dpkj['xmmc'] = '测试数据'; // 项目名称
         }else{
-            
+          
             $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
-            // 解析xml
-            $xml = simplexml_load_string($result['msg'], null, LIBXML_NOCDATA);
             if($result['code'] !== '0000'){
                 $this->error = $result['msg'];
                 return false;
             } 
+            // halt($result);
+            // 解析xml
+            $xml = simplexml_load_string($result['msg'], null, LIBXML_NOCDATA);
+            
             // 将成功开票的数据写入到invoice表
             $dpkj['pdfurl'] = $xml->body->returndata->pdfUrl[0];
         }
