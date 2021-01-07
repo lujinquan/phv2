@@ -339,9 +339,12 @@ class Api extends Common
         $month_begin_time = strtotime(date('Y-m'));
 
         $month_end_time = strtotime(date('Y-m',strtotime( "first day of next month" )));
+$month_begin_time = strtotime('2020-12');
+$month_end_time = strtotime('2021-01');
+// dump($month_begin_time);halt($month_end_time);
 
         // // 开缴费发票
-        // $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id desc')->select()->toArray();
+        // $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id desc')->limit(400)->select()->toArray();
 
         // $i = 0;
 
@@ -361,11 +364,11 @@ class Api extends Common
         //         }
         //     }
         // }
-        // halt($i);   
+        // dump($i);halt($weixin_id_undpkj); 
 
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(200,300)->select()->toArray();
-//halt($weixin_id_undpkj);
+        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(100)->select()->toArray();
+		// halt($weixin_id_undpkj);
         $k = 0;
         // halt($weixin_id_undpkj);
         if (!empty($weixin_id_undpkj)) {

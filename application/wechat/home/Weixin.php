@@ -3441,7 +3441,7 @@ class Weixin extends Common
             return json($result);
         }
  
-        $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID]])->order('rent_order_id desc')->select();
+        $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['rent_order_status','eq',1]])->order('rent_order_id desc')->select();
         foreach ($result['data']['rent'] as $key => &$value) {
             $value['id'] = $key + 1;
             // $value['rent_order_date'] = $scence;
@@ -3490,7 +3490,7 @@ class Weixin extends Common
         //$result['data']['house']['house_share_img'] = 'https://procheck.ctnmit.com/static/wechat/image/share/20200616180247.jpg';
          // 统计当前租户的欠租情况
         $RentModel = new RentModel;
-        $rentOrderInfo = $RentModel->where([['house_id','eq',$houseID]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $rentOrderInfo = $RentModel->where([['house_id','eq',$houseID],['rent_order_status','eq',1]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
         $result['data']['house']['rent_order_unpaids'] = $rentOrderInfo['total_rent_order_unpaid']?$rentOrderInfo['total_rent_order_unpaid']:'0.00';
 
         $result['code'] = 1;
