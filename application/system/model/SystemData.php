@@ -158,7 +158,7 @@ class SystemData extends Model
     {
     	$page = input('param.page/d', 1);
         $limit = input('param.limit/d', 5);
-        
+        // halt($queryWhere);
         $where[] = ['c.ban_inst_id','in',config('inst_ids')[INST]]; // 默认查询当前机构下的房屋
         if(isset($queryWhere['house_number']) && $queryWhere['house_number']){ //查询房屋编号
             $where[] = ['a.house_number','like','%'.$queryWhere['house_number'].'%'];
@@ -244,13 +244,19 @@ class SystemData extends Model
                     break;
                 
                 default:
+
                     $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
                     
                     break;
             }
             
         }else{
-            $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋
+            if($queryWhere['group'] == 'x'){
+                $where[] = ['a.house_status','in',[0,1]]; // 默认查询正常状态下的房屋
+            }else{
+                $where[] = ['a.house_status','eq',1]; // 默认查询正常状态下的房屋 
+            }
+            
         }
 
         $HouseModel = new HouseModel;

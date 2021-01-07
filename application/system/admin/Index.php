@@ -101,6 +101,7 @@ class Index extends Admin
             return json($data);
         }
         //$changeType = input('param.change_type');
+        $this->assign('group',input('param.group','y'));
         $this->assign('changeType',input('param.change_type'));
         $this->assign('msg',input('param.msg'));
 		return $this->fetch('block/queriers/house');
