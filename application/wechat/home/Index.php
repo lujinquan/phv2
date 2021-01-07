@@ -228,11 +228,13 @@ class Index extends Common
             //     return json($result);
             // }
             $pay_money = bcadd($pay_money, $rent_order_info['rent_order_receive'] * 100);
+            $pay_money = bcsub($pay_money, $rent_order_info['rent_order_paid'] * 100);
         }
         // 如果前端传过来的金额和后台计算的金额不相符
         if ($pay_money != (string)($total_price * 100)) {
             $result['code'] = 10033;
-            $result['msg'] = '支付金额'. $total_price .'与约定金额'.$pay_money.'不相符';
+            $pay_money_bcdiv = bcdiv($pay_money,100,2);
+            $result['msg'] = '支付金额'. $total_price .'与约定金额'.$pay_money_bcdiv.'不相符';
             return json($result);
         }
         $inst_pid = $ban_row['ban_inst_pid'];
@@ -448,11 +450,13 @@ class Index extends Common
             //     return json($result);
             // }
             $pay_money = bcadd($pay_money, $rent_order_info['rent_order_receive'] * 100);
+            $pay_money = bcsub($pay_money, $rent_order_info['rent_order_paid'] * 100);
         }
         // 如果前端传过来的金额和后台计算的金额不相符
         if ($pay_money != (string)($total_price * 100)) {
             $result['code'] = 10033;
-            $result['msg'] = '支付金额'. $total_price .'与约定金额'.$pay_money.'不相符';
+            $pay_money_bcdiv = bcdiv($pay_money,100,2);
+            $result['msg'] = '支付金额'. $total_price .'与约定金额'.$pay_money_bcdiv.'不相符';
             return json($result);
         }
         $inst_pid = $ban_row['ban_inst_pid'];

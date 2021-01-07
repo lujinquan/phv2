@@ -280,7 +280,8 @@ class ChangeCut extends SystemBase
                     //     $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['file']));
                     // }
                     if(isset($data['ChangeCutForm']) && $data['ChangeCutForm']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeCutForm']),',');
+                        $changeCutForm = is_array($data['ChangeCutForm'])?implode(',',$data['ChangeCutForm']):$data['ChangeCutForm'];
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.$changeCutForm,',');
                     }else{
                         $fileUploadConfig = Db::name('config')->where([['title','eq','changecut_file_upload']])->value('value');
                         if(strpos($fileUploadConfig, 'ChangeCutForm') !== false){

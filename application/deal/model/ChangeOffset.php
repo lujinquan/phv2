@@ -200,9 +200,9 @@ class ChangeOffset extends SystemBase
     public function detail($id,$change_order_number = '')
     {
         if($id){
-            $row = self::get($id);
+            $row = self::get($id)->toArray();
         }else{
-            $row = self::where([['change_order_number','eq',$change_order_number]])->find(); 
+            $row = self::where([['change_order_number','eq',$change_order_number]])->find()->toArray(); 
         }
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
@@ -269,7 +269,8 @@ class ChangeOffset extends SystemBase
                 // }
                 if($changeRow['change_status'] == 3){ 
                     if(isset($data['ChangeOffsetUpload']) && $data['ChangeOffsetUpload']){
-                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.implode(',',$data['ChangeOffsetUpload']));
+                        $changeOffsetUpload = is_array($data['ChangeOffsetUpload'])?implode(',',$data['ChangeOffsetUpload']):$data['ChangeOffsetUpload'];
+                        $changeUpdateData['change_imgs'] = trim($changeRow['change_imgs'] . ','.$changeOffsetUpload);
                     }else{
                         $fileUploadConfig = Db::name('config')->where([['title','eq','changeoffset_file_upload']])->value('value');
                         if(strpos($fileUploadConfig, 'ChangeOffsetUpload') !== false){

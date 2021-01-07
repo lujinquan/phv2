@@ -600,7 +600,7 @@ class Weixin extends Common
         }
 
         $data = $this->request->get();
-        //halt($data);
+        // halt($data);
         if($change_type == 18 && ADMIN_ROLE == 6){
             $ChangeModel = new ChangeLeaseModel;
             $changeRow = $ChangeModel->where([['id','eq',$id]])->find();
@@ -666,7 +666,7 @@ class Weixin extends Common
             $PorcessModel = new ProcessModel;
             $result = [];
             $temps = $PorcessModel->detail($change_type,$id);
-            $temps['row'] = $temps['row']->toArray();
+            // $temps['row'] = $temps['row']->toArray();
             switch ($change_type) {
                 case 1: // 租金减免
                     $temps['row']['cut_type'] = $params['cuttypes'][$temps['row']['cut_type']];
@@ -674,6 +674,7 @@ class Weixin extends Common
                     $temps['row']['house_use_id'] = $params['uses'][$temps['row']['house_use_id']];
                     break;
                 case 3: // 暂停计租
+                    $temps['row'] = $temps['row']->toArray();
                     if($temps['row']['data_json']){
                         foreach ($temps['row']['data_json'] as $a => $b) {
                             $temps['row']['data_json'][$a]['house_use_id'] = $params['uses'][$b['house_use_id']];
@@ -695,17 +696,20 @@ class Weixin extends Common
                     }
                     break;
                 case 7: // 新发租
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['new_type'] = $params['news'][$temps['row']['new_type']];
                     $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
                     $temps['row']['house_info']['house_use_id'] = $params['uses'][$temps['row']['house_info']['house_use_id']];
                     break;
                 case 8: // 注销
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['cancel_type'] = $params['cancels'][$temps['row']['cancel_type']];
                     break;
                 case 9: // 房屋调整
-                    
+                    $temps['row'] = $temps['row']->toArray();
                     break;
                 case 10: // 管段调整
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['old_inst_id'] = $params['insts'][$temps['row']['old_inst_id']];
                     $temps['row']['new_inst_id'] = $params['insts'][$temps['row']['new_inst_id']];
                     if($temps['row']['data_json']){
@@ -715,14 +719,17 @@ class Weixin extends Common
                     }
                     break;
                 case 11: // 租金追加调整
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['ban_info']['ban_owner_id'] = $params['owners'][$temps['row']['ban_info']['ban_owner_id']];
 
                     $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
                     break;
                 case 13: // 使用权变更
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['change_use_type'] = $params['usetypes'][$temps['row']['change_use_type']];
                     break;
                 case 14: // 楼栋调整
+                    $temps['row'] = $temps['row']->toArray();
                     $temps['row']['ban_change_id_name'] = $params['ban_change_ids'][$temps['row']['ban_change_id']];
                     if($temps['row']['old_damage']){
                         $temps['row']['old_damage'] = $params['damages'][$temps['row']['old_damage']];
@@ -739,9 +746,10 @@ class Weixin extends Common
                     $temps['row']['ban_info']['ban_inst_id'] = $params['insts'][$temps['row']['ban_info']['ban_inst_id']];
                     break;
                 case 17: // 别字更正
-                    
+                    $temps['row'] = $temps['row']->toArray();
                     break;
                 default:
+                    $temps['row'] = $temps['row']->toArray();
                     break;
             }
             
