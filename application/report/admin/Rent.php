@@ -38,7 +38,7 @@ class Rent extends Admin
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:12;
             $query_month = (isset($getData['query_month']) && $getData['query_month'])?str_replace('-','',$getData['query_month']):date('Ym');
-
+//$query_month = '202011';
             $where[] = [['date','eq',$query_month]];
 
             $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
@@ -56,6 +56,20 @@ class Rent extends Admin
                 // $data['data'] = [];
             }
             $params = ParamModel::getCparams();
+            foreach($data['data'] as $k1 => &$v1){
+
+                foreach ($v1 as $k2 => &$v2) {
+                    if(in_array($k1,[4,6,9,10,11,12,14,15,16])){
+                        if($v2 <> 0){
+                            $v2 = '-'.abs($v2);
+                        }
+                        
+                        // halt($v2);
+                    }
+                }
+
+            }
+            // halt($data['data']);
             //$temps = json_decode($tempData,true);
             //$data['data'] = isset($temps[$ownerid][$instid])?$temps[$ownerid][$instid]:[];
             $data['msg'] = '';

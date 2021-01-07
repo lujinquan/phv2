@@ -59,7 +59,7 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-no-contents{/* line-height: 450px; *//* position: absolute;left: 50%;top: 50%;margin-left: -70px;margin-top: -100px; */margin-top: 80px;}/* 表格无数据行高 */
 .j-details-box input[readonly]{  background-color: #F4F4F5;} /*input不能输入框背景颜色*/
 .layui-select-title input[readonly]{ background: #fff;}
-.j-reportform .layui-table td,.j-reportform .layui-table th,.j-reportform .report td{font-size: 12px!important;color: #333!important;/*word-wrap:break-word;word-break:break-all;*/padding:0.5rem!important;text-align: center;}/* 报表管理table字体大小 */
+.j-reportform .layui-table td,.j-reportform .layui-table th,.j-reportform .report td{font-size: 12px!important;/*word-wrap:break-word;word-break:break-all;*/padding:0.5rem!important;text-align: center;}/* 报表管理table字体大小 */
 /* 登录 S */
 .layadmin-user-login{position: absolute; left:50%; top: 50%;width: 700px; height:450px; margin-top: -225px; margin-left: -350px; box-sizing: border-box;background-color:#fff;border-radius:5px;box-shadow: 5px 5px 15px #999;overflow: hidden;}
 .layadmin-user-login .j-back-img{ width: 260px;height:450px; background:url(../image/j-login-back.png) no-repeat;}

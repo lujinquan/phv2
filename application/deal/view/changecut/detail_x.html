@@ -135,6 +135,48 @@
 			</div>
 		</div>
 	</div>
+	{if condition="$data_info['change_cut_cancel']"}
+<fieldset class="layui-elem-field layui-field-title j-field-box">
+  	<legend>取消减免信息</legend>
+  </fieldset>
+  <div class="layui-row layui-form-item layui-col-space90">
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">申请时间</label>
+  		<div class="j-input-inline">
+			<input type="text" value="{:date('Y-m',$data_info['change_cut_cancel']['ctime'])}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">减免到期时间</label>
+  		<div class="j-input-inline">
+  			<input type="text" value="{:date('Y-m',$data_info['change_cut_cancel']['entry_time'])}" readonly placeholder="" autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  	<div class="layui-col-md4">
+  		<label class="j-form-label">取消原因</label>
+  		<div class="j-input-inline">
+  			<input type="text" value="{$data_info['change_cut_cancel']['change_remark']}" placeholder="" readonly autocomplete="off" class="layui-input">
+  		</div>
+  	</div>
+  </div>
+  <div class="layui-row layui-form-item layui-col-space90">
+	    <div class="layui-col-md12">
+	  		<div class="j-enclosure-label clearfix">取消报告</div>
+	  		<div class="j-enclosure-img j-viewer-img clearfix">
+	  			<ul>
+					{volist name="$data_info['change_cut_cancel']['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'CalloffForm'"}
+					<li>
+	  					<img src="{$v['file']}" class="img">
+	  				</li>
+					{/if}
+					{/volist}
+	  			</ul>
+	  	    </div>
+	  	</div>
+		
+	</div>
+	{/if}
   <fieldset class="layui-elem-field layui-field-title j-field-box">
   	<legend>资料上传</legend>
   </fieldset>

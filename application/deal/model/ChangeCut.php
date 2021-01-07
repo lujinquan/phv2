@@ -208,9 +208,15 @@ class ChangeCut extends SystemBase
     public function detail($id,$change_order_number = '')
     {
         if($id){
-            $row = self::with(['house','tenant'])->find($id);
+            $row = self::with(['house','tenant'])->find($id)->toArray();
         }else{
-            $row = self::with(['house','tenant'])->where([['change_order_number','eq',$change_order_number]])->find(); 
+            $row = self::with(['house','tenant'])->where([['change_order_number','eq',$change_order_number]])->find()->toArray(); 
+        }
+        $row['change_cut_cancel'] = Db::name('change_cut_cancel')->where([['change_cut_id','eq',$row['id']]])->field('ctime,change_imgs,change_remark')->find();
+        if(!empty($row['change_cut_cancel'])){
+            $row['change_cut_cancel']['change_imgs'] = SystemAnnex::changeFormat($row['change_cut_cancel']['change_imgs']);
+            $row['change_cut_cancel']['entry_time'] = strtotime('first day of next month',$row['change_cut_cancel']['ctime']);
+            // halt($row['change_cut_cancel']['entry_time']);
         }
         if($row['member_id']){
             $row['member_info'] = Db::name('weixin_member')->where([['member_id','eq',$row['member_id']]])->field('member_name')->find();
@@ -219,7 +225,7 @@ class ChangeCut extends SystemBase
         }
         // $row = self::with(['house','tenant'])->get($id);
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
-        $row['ban_info'] = BanModel::get($row['ban_id']);
+        $row['ban_info'] = BanModel::get($row['ban_id']);//halt($row);
         //$this->finalDeal($row);
         return $row;
     }
