@@ -318,6 +318,7 @@ class User extends Admin
             if (!UserModel::update($data)) {
                 return $this->error('修改失败');
             }
+            runtime_clear();
             return $this->success('修改成功');
         }
 

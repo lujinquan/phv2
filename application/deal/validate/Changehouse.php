@@ -26,7 +26,7 @@ class Changehouse extends Validate
     protected $rule = [	
         'id|异动单号' => 'require',
         'ban_id|楼栋编号' => 'require',
-        'house_id|房屋编号' => 'require|isAllow|checkData',
+        'house_id|房屋编号' => 'require|isAllow',
         // 'ban_change_id|异动类别' => 'require|checkChange',
         // 'new_floors|异动后楼层' => 'checkFloor',    
         // 'ban_damage_id|异动后完损等级' => 'checkDamage',    
@@ -49,9 +49,25 @@ class Changehouse extends Validate
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
-        if($data['Ban'][0]['HARent'] == 0 && $data['Ban'][0]['HABanArea'] == 0 && $data['Ban'][0]['HAPrice'] == 0 && $data['Ban'][0]['HALeasedArea'] == 0 ){
+
+        $flag = true;
+        foreach ($data['Ban'] as $k1 => $v1) {
+            foreach($v1 as $k2 => $v2){
+                if(in_array($k2,['HARent','HABanArea','HAPrice','HALeasedArea'])){
+                    if($v2 != 0){
+                        $flag = false;
+                        break;
+                    }
+                }
+                //halt($v2);
+            }
+        }
+        if($flag){
             $msg = '调整数据不能均为空！';
         }
+        // if($data['Ban'][0]['HARent'] == 0 && $data['Ban'][0]['HABanArea'] == 0 && $data['Ban'][0]['HAPrice'] == 0 && $data['Ban'][0]['HALeasedArea'] == 0 ){
+        //     $msg = '调整数据不能均为空！';
+        // }
         
       	return $msg?$msg:true;
   	}
@@ -59,12 +75,19 @@ class Changehouse extends Validate
     // 判断当前房屋是否可以申请
     protected function checkData($value, $rule='', $data)
     {
-        $msg = '';
-        if($data['Ban'][0]['HARent'] == 0 && $data['Ban'][0]['HABanArea'] == 0 && $data['Ban'][0]['HAPrice'] == 0 && $data['Ban'][0]['HALeasedArea'] == 0 ){
-            $msg = '调整数据不能均为空！';
-        }
+        // // halt($data);
+        // $msg = '';
+        // $flag = false;
+        // foreach ($data['Ban'] as $k1 => $v1) {
+        //     foreach($v1 as $k2 => $v2){
+        //         halt($v2);
+        //     }
+        // }
+        // if($data['Ban'][0]['HARent'] == 0 && $data['Ban'][0]['HABanArea'] == 0 && $data['Ban'][0]['HAPrice'] == 0 && $data['Ban'][0]['HALeasedArea'] == 0 ){
+        //     $msg = '调整数据不能均为空！';
+        // }
         
-        return $msg?$msg:true;
+        // return $msg?$msg:true;
     }
 
     //添加

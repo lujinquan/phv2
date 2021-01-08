@@ -12,6 +12,7 @@
 // 应用公共函数库
 use think\exception\HttpException;
 use think\facade\Env;
+use hisi\Dir;
 
 // 加载自定义函数库
 include Env::get('app_path').'function.php';
@@ -27,6 +28,38 @@ if (!function_exists('hs_array_filter_callback')) {
         if ($val === '' || $val === 'NULL' || $val === null || $val === ' ') {
             return false;
         }
+        return true;
+    }
+}
+
+if (!function_exists('runtime_clear')) {
+    /**
+     * array_filter 回调函数，只过滤空值
+     * @param mixed $val 需要过滤的值
+     * @return bool
+     */
+    function runtime_clear()
+    {
+        $path   = Env::get('runtime_path');
+        // $cache  = $this->request->param('cache/d', 0);
+        // $log    = $this->request->param('log/d', 0);
+        // $temp   = $this->request->param('temp/d', 0);
+
+        // if ($cache == 1) {
+        //     Dir::delDir($path.'cache');
+        // }
+
+        // if ($temp == 1) {
+        //     Dir::delDir($path.'temp');
+        // }
+
+        // if ($log == 1) {
+        //     Dir::delDir($path.'log');
+        // }
+
+        Dir::delDir($path.'cache');
+        Dir::delDir($path.'temp');
+        Dir::delDir($path.'log');
         return true;
     }
 }
