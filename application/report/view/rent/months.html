@@ -245,6 +245,14 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 					arr_3[i] = '';
 				}
 			}
+			var arr_7 = [];
+			for(i in data[7]){
+				if(data[7][i] < 0){
+					arr_7[i] = 'red';
+				}else{
+					arr_7[i] = '';
+				}
+			}
 			
 
 			var html = '<tr>\
@@ -409,22 +417,22 @@ layui.use(['jquery', 'laydate', 'element'], function(){
 			</tr>\
 			<tr>\
 				<td rowspan="1" colspan="2">管段调整</td>\
-				<td rowspan="1" colspan="1" class="some_hide_8">'+ data[7][0] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][1] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][2] + '</td>\
+				<td rowspan="1" colspan="1" class="some_hide_8 '+ arr_7[0] +'">'+ data[7][0] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[1] +'">'+ data[7][1] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[2] +'">'+ data[7][2] + '</td>\
 				<td rowspan="1" colspan="1">'+ data[7][3] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][4] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][5] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][6] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][7] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][8] + '</td>\
-				<td rowspan="1" colspan="1" class="once_hide">'+ data[7][9] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][10] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][11] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][12] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][13] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][14] + '</td>\
-				<td rowspan="1" colspan="1">'+ data[7][15] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[4] +'">'+ data[7][4] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[5] +'">'+ data[7][5] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[6] +'">'+ data[7][6] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[7] +'">'+ data[7][7] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[8] +'">'+ data[7][8] + '</td>\
+				<td rowspan="1" colspan="1" class="once_hide '+ arr_7[9] +'">'+ data[7][9] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[10] +'">'+ data[7][10] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[11] +'">'+ data[7][11] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[12] +'">'+ data[7][12] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[13] +'">'+ data[7][13] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[14] +'">'+ data[7][14] + '</td>\
+				<td rowspan="1" colspan="1" class="'+ arr_7[15] +'">'+ data[7][15] + '</td>\
 			</tr>\
 			<tr>\
 				<td rowspan="1" colspan="3">规定租金</td>\

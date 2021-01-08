@@ -375,7 +375,7 @@ class ChangeInst extends SystemBase
             $tableData['new_inst_id'] = $finalRow['new_inst_id'];
             $tableData['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
             $tableData['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
-            $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
+            $tableData['order_date'] = date( "Ym");  // 当月生效
             if($finalRow['ban_info']['ban_civil_rent'] > 0){ // 民用1
                 $tableData['use_id'] = 1;
                 $tableData['change_rent'] = $finalRow['ban_info']['ban_civil_rent'];
