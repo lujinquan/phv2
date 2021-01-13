@@ -509,8 +509,8 @@ opacity: .8color: #333;}
 	top:-80px;
 }
 .j-buttom-print{
-	text-align: center;
-	padding-bottom: 20px;
+	text-align: right;
+	padding: 20px 20px 0 0;
 }
 .j-detail-text{line-height: 36px;color: #333333;}
 /* ----------小程序后台管理样式------------- */

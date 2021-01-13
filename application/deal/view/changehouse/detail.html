@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
 <link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
 <link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
 <form class="layui-form" action="{url('add')}" method="post">
   <div class="j-details-box j-no-border floorWrap j-click-print">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
@@ -70,8 +75,8 @@
 		    <td rowspan="1" colspan="1">调整后</td>
 		  </tr>
 		  <tr>
-		    <td rowspan="4" colspan="2" class="HABanID"><input type="tetx" readonly name="Ban[{$key}][HABanID]" value="{$v['HABanID']}" class="layui-input" /></td>
-		    <td rowspan="4" colspan="2" class="HAAddress"><input type="tetx" readonly name="Ban[{$key}][HAAddress]" value="{$v['HAAddress']}" class="layui-input" /></td>
+		    <td rowspan="4" colspan="2" class="HABanID">{$v['HABanID']}</td>
+		    <td rowspan="4" colspan="2" class="HAAddress">{$v['HAAddress']}</td>
 		    <td rowspan="1" colspan="1" class="HABeforeRent"><input type="tetx" readonly name="Ban[{$key}][HABeforeRent]" value="{$v['HABeforeRent']}" class="layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly name="Ban[{$key}][HARent]" value="{$v['HARent']}" class="HARent layui-input" /></td>
 		    <td rowspan="1" colspan="1"><input type="number" readonly class="HAAfterRent layui-input" name="Ban[{$key}][HAAfterRent]" value="{$v['HAAfterRent']}"/></td>
@@ -207,11 +212,6 @@
 			</div>
 		</div>
 </div>
-</form>
-<form>
-    <div class="j-buttom j-buttom-print">
-        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
-    </div>
 </form>
 {include file="system@block/layui" /}
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
