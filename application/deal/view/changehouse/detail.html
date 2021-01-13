@@ -1,12 +1,17 @@
+<link rel="stylesheet" href="__ADMIN_CSS__/business-print.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/layui.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
 <form class="layui-form" action="{url('add')}" method="post">
-  <div class="j-details-box  floorWrap">
+  <div class="j-details-box j-no-border floorWrap j-click-print">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>基本信息</legend>
 		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md8">
+			<div class="layui-col-md4">
 				<label class="j-form-label"><i class="red">*</i>房屋编号</label>
-				<div class="j-input-inline j-tips">
+				<div class="j-input-inline">
 					<input type="text" id="house_number" name="house_number" lay-verify="required" readonly value="{$data_info['house_info']['house_number']}" placeholder="点击查询" autocomplete="off" class="layui-input">
 					<input type="hidden" name="id" value="{$data_info['id']}">
 					<input type="hidden" id="house_id" name="house_id" value="{$data_info['house_id']}">
@@ -17,30 +22,30 @@
 				<div class="layui-form-mid layui-word-aux j-size-class"></div>
 			</div>
 			<div class="layui-col-md4">
-			<label class="j-form-label">异动编号</label>
-			<div class="j-input-inline">
-				<input type="text" value="{$data_info['change_order_number']}" class="layui-input">
-			</div>
-		</div>
-		</div>
-		<div class="layui-row layui-form-item layui-col-space90">
-			<div class="layui-col-md3">
 				<label class="j-form-label">计租表</label>
 				<div class="j-input-inline">
 					<input type="text" value="" placeholder="" readonly autocomplete="off" class="layui-input">
-					<a id="checktable" href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" class="j-iframe-pop" hisi-data="{width: '1300px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
+					<a id="checktable" href="{:url('house/house/renttable')}?group=y&id={$data_info['house_id']}" class="j-iframe-pop" hisi-data="{width: '1500px', height: '700px',refresh: 2}" title="计租表"><b id="check" class="j-explain-search">查看</b></a>
 				</div>
 			</div>
-			<div class="layui-col-md3">
+			<div class="layui-col-md4">
 				<label class="j-form-label">租户</label>
 				<div class="j-input-inline">
 					<input type="text" id="tenant_name" value="{$data_info['house_info']['tenant_name']}" placeholder="" readonly autocomplete="off" class="layui-input">
 				</div>
 			</div>
-			<div class="layui-col-md6">
+		</div>
+		<div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md4">
+				<label class="j-form-label">异动编号</label>
+				<div class="j-input-inline">
+					<input type="text" value="{$data_info['change_order_number']}" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-col-md8">
 				<label class="j-form-label">异动原因</label>
 				<div class="j-input-inline">
-					<input type="text" id="tenant_reason" name="change_remark" value="{$data_info['change_remark']}" readonly autocomplete="off" class="layui-input">
+					<div class="j-detail-text">{$data_info['change_remark']}</div>
 				</div>
 			</div>
 		</div>
@@ -115,7 +120,7 @@
 		  
 		 
 		</table>
-
+        <div class="j-print-hide">
 		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>填报信息</legend>
 		</fieldset>
@@ -167,6 +172,7 @@
 			    </div>
 			</div>
 		</div>
+	</div>
     <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>审批状态</legend>
 		</fieldset>
@@ -202,9 +208,17 @@
 		</div>
 </div>
 </form>
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
 {include file="system@block/layui" /}
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
   var table = layui.table
@@ -393,4 +407,8 @@ layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
 	}
 	
 })
+//打印
+function  click_print(){
+    $(".j-click-print").jqprint();
+}
 </script>

@@ -1,0 +1,27 @@
+.j-print-hide{display:none!important;}
+.layui-col-md4{width: 50%; float: left;}
+.layui-col-md8{width: 50%; float: left;}
+.layui-col-md6{width: 50%; float: left;}
+.j-details-box .layui-form-item .j-input-inline.j-tips{width: 80%;}
+.j-status-bar li i{ 
+	width: 20px;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    left: 50%;
+    margin-left: -10px;
+    top: -6px;
+    color: #fff;
+    background: rgba(198,210,223,1);
+    border-radius: 50%;
+	}
+.layui-col-xs2 {width: 25%;}
+/* .j-details-box .layui-form-item .j-input-inline.j-input-radio input{display: none!important;} */
+input[type=checkbox], input[type=radio]{
+    display: none!important;
+}
+.j-details-box .layui-form-item .j-input-inline.j-tips{
+	display: table-cell!important;
+    float: initial!important;
+}
+.layui-table.j-floor-box th.j-floor-width{width:100px!important;}

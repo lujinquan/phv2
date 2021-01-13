@@ -1,6 +1,11 @@
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
+<link rel="stylesheet" href="__ADMIN_CSS__/business-print.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/layui.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box j-no-border floorWrap">
+  <div class="j-details-box j-no-border floorWrap j-click-print">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -36,7 +41,7 @@
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
-				<input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input" readonly>
+				<div class="j-detail-text">{$data_info['change_remark']}</div>
 			</div>
 		</div>
 	</div>
@@ -177,184 +182,186 @@
 		</div>
 	</div> -->
 	</div>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>补充附件</legend>
-	</fieldset>
+	<div class="j-print-hide">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>补充附件</legend>
+		</fieldset>
+		  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">售房专用票据</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelOne'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
 	  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">售房专用票据</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelOne'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">审批表</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelTwo'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">危改批文</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelThree'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">翻新计划</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelRetread'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">发还批文</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelApproval'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">注销报告</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelReport'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">危改批文</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelThree'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">政府文件</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelPaper'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">发票</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelInvoice'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">征收明细表</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelDetail'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">划转公文</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'ChangeCancelOfficial'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">审批表</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelTwo'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">危改批文</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelThree'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">翻新计划</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelRetread'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">发还批文</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelApproval'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">注销报告</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelReport'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">危改批文</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelThree'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">政府文件</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelPaper'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">发票</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelInvoice'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">征收明细表</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelDetail'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">划转公文</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeCancelOfficial'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
   </div>
   <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 	 <legend>审批状态</legend>
@@ -391,9 +398,17 @@
   	<input type="hidden" name="id" value="{$data_info['id']}">
   </div>
 </form>
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
 {include file="system@block/layui" /}
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript" src="__ADMIN_VIEWJS__/deal_cancel_apply.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	layui.use(['jquery','laydate','form'], function() {
 		var laydate = layui.laydate,
@@ -455,4 +470,8 @@
 			});
 	    })
 	});
+	//打印
+	function  click_print(){
+	    $(".j-click-print").jqprint();
+	}
 </script>

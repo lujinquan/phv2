@@ -502,7 +502,17 @@ opacity: .8color: #333;}
 /* #Statistics{position:absolute; bottom:0px;left:0; width: 100%;} */
 #Statistics{background-color: #f2f2f2;}
 /* 报表管理 E */
-
+/* 业务记录打印 */
+.j-print-position{
+	position: absolute;
+	right: 20px;
+	top:-80px;
+}
+.j-buttom-print{
+	text-align: center;
+	padding-bottom: 20px;
+}
+.j-detail-text{line-height: 36px;color: #333333;}
 /* ----------小程序后台管理样式------------- */
 .j-definition{padding-bottom: 40px;}
 .j-definition .layui-form-item{margin-bottom: 10px!important;}

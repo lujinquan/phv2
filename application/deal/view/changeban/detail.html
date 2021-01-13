@@ -1,5 +1,10 @@
+<link rel="stylesheet" href="__ADMIN_CSS__/business-print.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/layui.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box j-no-border floorWrap">
+  <div class="j-details-box j-no-border floorWrap j-click-print">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -108,7 +113,7 @@
 	  <table class="layui-table j-hides j-floor-box">
 		  <thead>
 			  <tr>
-				<th>基本情况</th>
+				<th class="j-floor-width">基本情况</th>
 				<th>户数</th>
 				<th>建筑面积</th>
 				<th>规定租金</th>
@@ -119,7 +124,7 @@
 		  </thead>
 		  <tbody>
 			<tr>
-			  <td>异动前</td>
+			  <td class="j-floor-width">异动前</td>
 			  <td><input type="text"  id="floor_household" name="floor_household" readonly  value="{$data_info['data_json']['changeDetail']['floor_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_prescribed" name="floor_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['floor_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text"  id="floor_areaofuse" name="floor_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['floor_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -128,7 +133,7 @@
 			  <td><input type="text"  id="floor_tung" name="floor_tung" readonly  value="{$data_info['data_json']['changeDetail']['floor_tung']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 			<tr>
-			  <td>异动</td>
+			  <td class="j-floor-width">异动</td>
 			  <td><input type="text" id="cancel_before_0edit" name="floor_before_0edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_0edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_1edit" name="floor_before_1edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_1edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="cancel_before_2edit" name="floor_before_2edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_2edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -137,7 +142,7 @@
 			  <td><input type="text" id="cancel_before_5edit" name="floor_before_5edit" readonly  value="{$data_info['data_json']['changeDetail']['floor_before_5edit']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			</tr>
 			<tr>
-			  <td>异动后</td>
+			  <td class="j-floor-width">异动后</td>
 			  <td><input type="text" id="changes_floor_household" name="floor_changes_household" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_household']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_prescribed" name="floor_changes_prescribed" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_prescribed']}" placeholder="" autocomplete="off" class="layui-input"></td>
 			  <td><input type="text" id="changes_floor_areaofuse" name="floor_changes_areaofuse" readonly  value="{$data_info['data_json']['changeDetail']['floor_changes_areaofuse']}" placeholder="" autocomplete="off" class="layui-input"></td>
@@ -294,61 +299,63 @@
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
-				<input type="text" name="change_remark" readonly value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
+				<div class="j-detail-text">{$data_info['change_remark']}</div>
 			</div>
 		</div>
 	</div>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-		<legend>补充附件</legend>
-	</fieldset>
+	<div class="j-print-hide">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+			<legend>补充附件</legend>
+		</fieldset>
+		  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">产权清册</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'BanPropertyID'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
 	  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">产权清册</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'BanPropertyID'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">产权证及其他</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'BanPropertyIDExtra'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
-  <div class="layui-row layui-form-item layui-col-space90">
-  	<div class="layui-col-md12">
-  		<div class="j-enclosure-label clearfix">楼栋调整其他</div>
-  		<div class="j-enclosure-img j-viewer-img clearfix">
-  			<ul>
-				{volist name="$data_info['change_imgs']" id="v"}
-				{if condition="$v['file_type'] == 'BanChangeExtra'"}
-				<li>
-  					<img src="{$v['file']}" class="img">
-  				</li>
-				{/if}
-				{/volist}
-  			</ul>
-  	    </div>
-  	</div>
-  </div>
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">产权证及其他</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'BanPropertyIDExtra'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	  <div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">楼栋调整其他</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'BanChangeExtra'"}
+					<li>
+						<img src="{$v['file']}" class="img">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
+			</div>
+		</div>
+	  </div>
+	</div>
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>审批状态</legend>
 	</fieldset>
@@ -388,16 +395,28 @@
   <input type="hidden" id="j_structure_hidden" value="" />
   <input type="hidden" id="j_nature_hidden" value="" />
   <input type="hidden" id="j_yield_hidden" value="" />
-  <div class="layui-row layui-form-item layui-col-space90">
+  <!-- <div class="j-print-hide">
+		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="j-margin-btn">
 				<a href="javascript:history.go(-1)" class="layui-btn layui-btn-primary">返回</a>
 			</div>
 		</div>
+    </div> -->
   </div>
 </form>
+<div class="j-print-hide">
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
+</div>
 {include file="system@block/layui" /}
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 <script type="text/javascript">
 	/*上传参数设定*/
 	layui.use(['jquery','table','layer', 'upload','form'], function() {
@@ -412,4 +431,8 @@
 	$('.j-viewer-img').viewer({
 	   	url: 'data-original',
 	 });
+	 //打印
+	 function  click_print(){
+	     $(".j-click-print").jqprint();
+	 }
 </script>
