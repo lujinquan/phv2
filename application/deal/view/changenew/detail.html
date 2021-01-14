@@ -1,5 +1,15 @@
+<link rel="stylesheet" href="__ADMIN_CSS__/business-print.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/layui.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box j-no-border floorWrap">
+  <div class="j-details-box j-no-border floorWrap j-click-print">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -168,7 +178,7 @@
 		  <div class="layui-col-md8">
 			  <label class="j-form-label">异动原因</label>
 			  <div class="j-input-inline">
-				  <input type="text" name="change_remark" value="{$data_info['change_remark']}" autocomplete="off" class="layui-input">
+				  <div class="j-detail-text">{$data_info['change_remark']}</div>
 			  </div>
 		  </div>
 		  <div class="layui-col-md4">
@@ -179,122 +189,123 @@
 			  </div>
 		  </div>
 	  </div>
-	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
-	 <legend>上传报告</legend>
-	</fieldset>
-	<div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">计租表</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'Houselease'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
-	  <div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">租约</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'HouseForm'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
-	  <div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">身份证</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'TenantReIDCard'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
-	  <div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">收欠票据</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangenewPaper'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
-	  <div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">图卡</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'BanCard'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
-	  <div class="layui-row layui-form-item layui-col-space90">
-	  	<div class="layui-col-md12">
-	  		<div class="j-enclosure-label clearfix">其他</div>
-	  		<div class="j-enclosure-img j-viewer-img clearfix">
-	  			<ul>
-					{volist name="$data_info['change_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'ChangenewOther'"}
-					<li>
-	  					<img src="{$v['file']}" class="img">
-	  				</li>
-					{/if}
-					{/volist}
-	  			</ul>
-	  	    </div>
-	  	</div>
-	  </div>
+	<div class="j-print-hide">
+		<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
+		 <legend>上传报告</legend>
+		</fieldset>
 		<div class="layui-row layui-form-item layui-col-space90">
 			<div class="layui-col-md12">
-				<div class="j-enclosure-label clearfix">资料上传</div>
+				<div class="j-enclosure-label clearfix">计租表</div>
 				<div class="j-enclosure-img j-viewer-img clearfix">
 					<ul>
 						{volist name="$data_info['change_imgs']" id="v"}
-						{if condition="$v['file_type'] == 'ChangeNewUpload'"}
+						{if condition="$v['file_type'] == 'Houselease'"}
 						<li>
-							<img src="{$v['file']}">
+							<img src="{$v['file']}" class="img">
 						</li>
 						{/if}
 						{/volist}
 					</ul>
-			    </div>
+				</div>
+			</div>
+		  </div>
+		  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">租约</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'HouseForm'"}
+						<li>
+							<img src="{$v['file']}" class="img">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+				</div>
+			</div>
+		  </div>
+		  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">身份证</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'TenantReIDCard'"}
+						<li>
+							<img src="{$v['file']}" class="img">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+				</div>
+			</div>
+		  </div>
+		  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">收欠票据</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'ChangenewPaper'"}
+						<li>
+							<img src="{$v['file']}" class="img">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+				</div>
+			</div>
+		  </div>
+		  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">图卡</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'BanCard'"}
+						<li>
+							<img src="{$v['file']}" class="img">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+				</div>
+			</div>
+		  </div>
+		  <div class="layui-row layui-form-item layui-col-space90">
+			<div class="layui-col-md12">
+				<div class="j-enclosure-label clearfix">其他</div>
+				<div class="j-enclosure-img j-viewer-img clearfix">
+					<ul>
+						{volist name="$data_info['change_imgs']" id="v"}
+						{if condition="$v['file_type'] == 'ChangenewOther'"}
+						<li>
+							<img src="{$v['file']}" class="img">
+						</li>
+						{/if}
+						{/volist}
+					</ul>
+				</div>
+			</div>
+	 </div>
+	<div class="layui-row layui-form-item layui-col-space90">
+		<div class="layui-col-md12">
+			<div class="j-enclosure-label clearfix">资料上传</div>
+			<div class="j-enclosure-img j-viewer-img clearfix">
+				<ul>
+					{volist name="$data_info['change_imgs']" id="v"}
+					{if condition="$v['file_type'] == 'ChangeNewUpload'"}
+					<li>
+						<img src="{$v['file']}">
+					</li>
+					{/if}
+					{/volist}
+				</ul>
 			</div>
 		</div>
-
+	</div>
+</div>
 <fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 			<legend>审批状态</legend>
 		</fieldset>
@@ -332,10 +343,17 @@
 </form>
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 {include file="system@block/layui" /}
 <script type="text/javascript">
 	//图片查看
 	$('.j-viewer-img').viewer({
 	   	url: 'data-original',
 	 });
+	 //打印
+	 function  click_print(){
+	     $(".j-click-print").jqprint();
+	 }
 </script>

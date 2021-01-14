@@ -1,5 +1,15 @@
+<link rel="stylesheet" href="__ADMIN_CSS__/business-print.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/layui.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__PUBLIC_JS__/layui/css/modules/layui-icon-extend/iconfont.css?v={:config('hisiphp.version')}" media="print">
+<link rel="stylesheet" href="__ADMIN_CSS__/lucas-style.css?v={:config('hisiphp.version')}" media="print">
+<form>
+    <div class="j-buttom j-buttom-print">
+        <button type="button" onclick="click_print()" class="layui-btn">打印</button>
+    </div>
+</form>
 <form class="layui-form" action="" method="post" >
-  <div class="j-details-box j-no-border floorWrap">
+  <div class="j-details-box j-no-border floorWrap j-click-print">
 	<fieldset class="layui-elem-field layui-field-title j-field-box">
 		<legend>基本信息</legend>
 	</fieldset>
@@ -25,7 +35,7 @@
 		<div class="layui-col-md8">
 			<label class="j-form-label">异动原因</label>
 			<div class="j-input-inline">
-				<input type="text" id="tenant_reason" value="{$data_info['change_remark']}" readonly  autocomplete="off" class="layui-input">
+				<div class="j-detail-text">{$data_info['change_remark']}</div>
 			</div>
 		</div>
 	</div>
@@ -143,6 +153,9 @@
 </form>
 <link rel="stylesheet" href="__PUBLIC_JS__/viewer/viewer.min.css?v={:config('hisiphp.version')}">
 <script type="text/javascript" src="__PUBLIC_JS__/viewer/viewer-jquery.min.js?v={:config('hisiphp.version')}"></script>
+<!-- 打印 S -->
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery-pool.js?v={:config('hisiphp.version')}"></script>
+<script type="text/javascript" src="__PUBLIC_JS__/print/jquery.jqprint-0.3.js?v={:config('hisiphp.version')}"></script>
 {include file="system@block/layui" /}
 <script type="text/javascript">
 	layui.use(['jquery', 'laydate', 'upload', 'form','table'], function() {
@@ -152,4 +165,8 @@
 			,upload = layui.upload
 			,layer = layui.layer;
 	});
+	//打印
+	function  click_print(){
+	    $(".j-click-print").jqprint();
+	}
 </script>
