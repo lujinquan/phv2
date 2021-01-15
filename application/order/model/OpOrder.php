@@ -60,6 +60,7 @@ class OpOrder extends SystemBase
         switch ($type) {
             // 待受理工单
             case 'accept':
+                // $where[] = [['status','eq',0]];
                 // if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                 //     $inst_ids = explode(',',session('admin_user.inst_ids'));
                 //     $where[] = [['inst_id','in',$inst_ids]];
@@ -133,12 +134,16 @@ class OpOrder extends SystemBase
             }
             $where[] = ['inst_id','in',array_unique($instid_arr)];
         }else{
-            $where[] = ['inst_id','in',config('inst_ids')[INST]];
+            $inst_ids = explode(',',session('admin_user.inst_ids'));
+            if($inst_ids){
+                $inst_all = array_merge($inst_ids,config('inst_ids')[INST]);
+            }
+            $where[] = ['inst_id','in',$inst_all];
         }
         // $insts = config('inst_ids');
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
         // $where['ban'][] = ['ban_inst_id','in',$insts[$instid]];
-//halt($where);
+        // halt($where);
         return $where;
     }
 
