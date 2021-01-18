@@ -468,12 +468,13 @@
 				</ul>
 			</div>
 		</div>
+		<?php for($i=1; $i<=$data_info['ban_floors']; $i++){ ?>
 		<div class="layui-col-md6">
-			<div class="j-enclosure-label clearfix">图卡</div>
+			<div class="j-enclosure-label clearfix">图卡{$i}层</div>
 			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
 					{volist name="$data_info['ban_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'BanCard'"}
+					{if condition="$v['file_type'] == 'BanCard_'.$i"}
 					<li>
 						<img src="{$v['file']}" />
 					</li>
@@ -482,6 +483,7 @@
 				</ul>
 			</div>
 		</div>
+		<?php }; ?>
 	</div>
   </div>
 	<div class="layui-row layui-form-item layui-col-space90">
