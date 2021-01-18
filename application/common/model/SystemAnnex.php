@@ -197,6 +197,7 @@ class SystemAnnex extends Model
             'size'      => $fileSize,
             'group'     => $group,
             'ctime'     => request()->time(),
+            'agent_type'=> client_os(),
             //待解决的问题
             //dump(config('upload.upload_clear_time'));halt(request()->time() + config('upload.upload_clear_time'));
             'etime'     => request()->time() + 3600*24*7,
