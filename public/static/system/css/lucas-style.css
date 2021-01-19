@@ -47,6 +47,16 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-margin-10{margin-right: 10px;}
 .layui-table-click{background: #ccc!important;}
 /*-----------搜索输入框宽度 E-------------*/
+/* 提示信息 */
+.layui-btn-container .j-tips{
+	display: inline-block;
+	font-size: 14px;
+	color: #ff0000;
+	min-height: 38px;
+	line-height: 28px;
+	position: relative;
+	top:4px;
+}
 .report{min-height:350px;}
 .j-no-data{ line-height: 350px; color: #757575;}
 .j-no-data i{ margin-right: 10px;}
