@@ -314,8 +314,8 @@ class ChangeLease extends SystemBase
         $row['tenant_info'] = TenantModel::get($row['tenant_id']);
         // halt($row['ban_info']['ban_inst_pid']);
         if($row['ban_info']['ban_inst_pid'] == 2){
-            $row['ziliaoyuan'] = '曹秀芳';
-            $row['jingguansuozhang'] = '时莉';
+            $row['ziliaoyuan'] = '段芸菲';
+            $row['jingguansuozhang'] = '冯霞';
             $row['jingguankezhang'] = '魏斌成';
         }
         if($row['ban_info']['ban_inst_pid'] == 3){
