@@ -372,7 +372,7 @@ class Weixin extends Common
         $unpaid_rent = 0;
         if($houses){
             // 获取待缴费的金额（已认证和未认证的欠租合计）
-            $rent_order_row = Db::name('rent_order')->where([['house_id','in',$houses]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            $rent_order_row = Db::name('rent_order')->where([['house_id','in',$houses],['rent_order_status','eq',1]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
             if($rent_order_row){
                 $unpaid_rent = $rent_order_row['rent_order_unpaids'];
             }
@@ -1666,6 +1666,96 @@ class Weixin extends Common
     }
 
     /**
+     * 编辑楼栋（场景：管理员点击楼栋详情）
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2020-06-22 11:07:43
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function admin_edit_ban()
+    {
+        // 验证令牌
+        $result = [];
+        $result['code'] = 0;
+        $result['action'] = 'wechat/weixin/admin_edit_ban';
+        // 验证用户
+        $checkData = $this->check_user_token();
+        if($checkData['error_code']){ // 如果有错误码
+            $result['code'] = $checkData['error_code'];
+            $result['msg'] = $checkData['error_msg'];
+            return json($result);
+        }else{ // 验证成功
+            $member_info = $checkData['member_info']; //微信用户基础数据
+            if($checkData['role_type'] != 2){ //如果当前用户不是管理员
+                $result['code'] = '权限不足';
+                $result['msg'] = '20000';
+                return json($result);
+            }
+            $row = $checkData['member_extra_info'];
+        }
+        $data = $this->request->param();
+        
+// halt($data);
+        $id = $data['ban_id'];
+        //halt($data);
+        $ban_info = Db::name('ban')->where([['ban_id','eq',$id]])->field('ban_imgs,ban_floors')->find();
+        if(empty($id) || empty($ban_info)){
+            $result['code'] = '参数错误';
+            $result['msg'] = '0';
+            return json($result);
+        }
+        
+
+        if($row){
+            
+
+            $file = [];
+            if(isset($data['LandCard']) && $data['LandCard']){ // 土地证电子版  
+                $file = array_merge($file,explode(',',$data['LandCard']));
+            }else{
+                
+            }
+            if(isset($data['RealestateCard']) && $data['RealestateCard']){ // 不动产电子版
+                $file = array_merge($file,$data['RealestateCard']);
+            }else{
+                
+            }
+            if(isset($data['ImagingData']) && $data['ImagingData']){ // 影像资料
+                $file = array_merge($file,$data['ImagingData']);
+            }else{
+                
+            }
+            for($i = 1; $i <= $ban_info['ban_floors']; $i++){
+                if(isset($data['BanCard_'.$i]) && $data['BanCard_'.$i]){ // 图卡
+                    // dump($data['BanCard_'.$i]);
+                    $file = array_merge($file,explode(',',$data['BanCard_'.$i]));
+                }
+            }
+            // exit;
+            
+            if(empty($file)){
+                $result['code'] = 1;
+                $result['msg'] = '修改成功！';
+            }else{
+                $ban_imgs = implode(',',$file);
+                $BanModel = new BanModel;
+                $BanModel->where([['ban_id','eq',$id]])->update(['ban_imgs'=>$ban_imgs]);
+            }
+            
+                      
+            $result['code'] = 1;
+            $result['msg'] = '修改成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
+        return json($result);  
+    }
+
+    /**
      * 房管员版
      * 房屋列表（场景：管理员点击业务的“房屋档案”）
      * =====================================
@@ -2468,20 +2558,23 @@ class Weixin extends Common
             if($member_houses){
                 $houses = [];
                 foreach ($member_houses as $k => $v) {
-                    $HouseModel = new HouseModel;
-                    $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
-                    $row['is_auth'] = $v['is_auth'];
+                    if(isset($v['house_id']) && !empty($v['house_id'])){
+                        $HouseModel = new HouseModel;
+                        $row = $HouseModel->with(['ban','tenant'])->where([['house_id','eq',$v['house_id']]])->find();
+                        $row['is_auth'] = $v['is_auth'];
 
-                    $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
-                    $row['rent_order_cut'] = $cut_row['rent_order_cut'];
+                        $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1]])->field('rent_order_cut')->order('rent_order_id desc')->find();
+                        $row['rent_order_cut'] = $cut_row['rent_order_cut'];
 
-                    // unset($systemHouseArr[$v['house_id']]);
+                        // unset($systemHouseArr[$v['house_id']]);
+                        
+                        $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
+
+                        $row['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
+                        
+                        $houses[] = $row;
+                    }
                     
-                    $rent_order_unpaids = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->value('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids');
-
-                    $row['rent_order_unpaids'] = $rent_order_unpaids?$rent_order_unpaids:0;
-                    
-                    $houses[] = $row;
                     
                 }
                 $result['data'] = $houses;
@@ -2540,12 +2633,12 @@ class Weixin extends Common
         $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_use_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
-            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
             // if($row['rent_order_unpaids'] == 0){
             //     unset($result['data']['house'][$k]);
             //     continue;
             // }
-            $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+            $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['rent_order_status','eq',1]])->field('rent_order_cut')->order('rent_order_date desc')->find();
             $v['rent_order_cut'] = $cut_row['rent_order_cut'];
             $v['is_auth'] = 0;
             $v['house_use_id'] = $v['house_use_id'];
@@ -2589,9 +2682,9 @@ class Weixin extends Common
 
         $house_info = HouseModel::with('ban,tenant')->where([['house_id','eq',$house_id],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_use_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->find()->toArray();
 
-        $row = Db::name('rent_order')->where([['house_id','eq',$house_id]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+        $row = Db::name('rent_order')->where([['house_id','eq',$house_id],['rent_order_status','eq',1]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
 
-        $cut_row = Db::name('rent_order')->where([['house_id','eq',$house_id]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+        $cut_row = Db::name('rent_order')->where([['house_id','eq',$house_id],['rent_order_status','eq',1]])->field('rent_order_cut')->order('rent_order_date desc')->find();
         $house_info['rent_order_cut'] = $cut_row['rent_order_cut'];
         //$row['is_auth'] = 0;
         //$house_info['house_use_id'] = $v['house_use_id'];
@@ -3054,7 +3147,7 @@ class Weixin extends Common
         $WeixinOrderTradeModel = new WeixinOrderTradeModel;
         $rent_orders = $WeixinOrderTradeModel->where([['out_trade_no','eq',$order_info['out_trade_no']]])->column('rent_order_id,pay_dan_money');
         $rent_order_ids = array_keys($rent_orders);
-        $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
+        $houses = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->where([['a.rent_order_id','in',$rent_order_ids],['rent_order_status','eq',1]])->field('b.house_number,a.rent_order_id,a.rent_order_number,a.rent_order_date')->select();
         foreach ($houses as $k => &$v) {
             $v['rent_order_date'] = substr($v['rent_order_date'], 0,4).'-'.substr($v['rent_order_date'], 4,2);
             $v['pay_dan_money'] = $rent_orders[$v['rent_order_id']];
