@@ -220,11 +220,11 @@
       <input type="text" name="register_bodies" value="充值成功" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
-    {if condition="$data_info['invoice_remark']"}
+    {if condition="$data_info['pay_remark']"}
     <div class="layui-col-md4">
       <label class="j-form-label">开票备注</label> 
       <div class="j-input-inline">
-      <input type="text" name="register_bodies" value="{$data_info['invoice_remark']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      <input type="text" name="register_bodies" value="{$data_info['pay_remark']}" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
     {/if}
