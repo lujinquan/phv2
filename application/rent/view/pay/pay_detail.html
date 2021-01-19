@@ -220,7 +220,20 @@
       <input type="text" name="register_bodies" value="充值成功" disabled="disabled"  autocomplete="off" class="layui-input">
       </div>
     </div>
+    {if condition="$data_info['invoice_remark']"}
+    <div class="layui-col-md4">
+      <label class="j-form-label">开票备注</label> 
+      <div class="j-input-inline">
+      <input type="text" name="register_bodies" value="{$data_info['invoice_remark']}" disabled="disabled"  autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    {/if}
+  </div>
     {if condition="$data_info['invoice_id']"}
+   
+  <fieldset id="item2" class="layui-elem-field layui-field-title j-field-box">
+    <legend>发票信息</legend>
+  </fieldset>
  <div class="layui-form-item">
   <label class="layui-form-label">发票流水号：</label>
   <div class="layui-form-mid layui-word-aux">{$invoice_info['fpqqlsh']}</div>
