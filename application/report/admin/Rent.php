@@ -38,7 +38,7 @@ class Rent extends Admin
             $instid = (isset($getData['inst_id']) && $getData['inst_id'])?$getData['inst_id']:INST;
             $ownerid = (isset($getData['owner_id']) && $getData['owner_id'])?$getData['owner_id']:12;
             $query_month = (isset($getData['query_month']) && $getData['query_month'])?str_replace('-','',$getData['query_month']):date('Ym');
-//$query_month = '202011';
+            //$query_month = '202011';
             $where[] = [['date','eq',$query_month]];
 
             $tempData = @file_get_contents(ROOT_PATH.'file/report/rent/'.$query_month.'.txt');
@@ -163,7 +163,7 @@ class Rent extends Admin
 
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
             $query_month = str_replace('-','',$curMonth);
-            $tempData = @file_get_contents(ROOT_PATH.'file/report/unpaid/'.$query_month.'.txt');
+            $tempData = @file_get_contents(ROOT_PATH.'file/report/unpaid/'.$query_month.'.txt');//halt($tempData);
             if($tempData){ // 有缓存就读取缓存数据
                 $temps = json_decode($tempData,true);
                 $ownerid = input('param.owner_id'); //默认查询所有产别
@@ -238,16 +238,19 @@ class Rent extends Admin
      */
     public function makeUnpaidReport()
     {
+        set_time_limit(0);
         if ($this->request->isAjax()) {
             
             $date = date('Ym');
 
-            //$date = 202006;
+            // $date = 202012;
 
             $full_date = substr_replace($date,'-',4,0);
 
             //Debug::remark('end');
             $where = [['a.rent_order_paid','<',Db::raw('a.rent_order_receive')]];
+            $where = [['a.rent_order_status','eq',1]];
+            // $where = [['a.rent_order_date','<=','202012']];
             $separate = substr($date,0,4).'00';
             $params = ParamModel::getCparams();
             $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
@@ -259,6 +262,7 @@ class Rent extends Admin
             $total_before_year_unpaid_rent = 0;
             foreach($baseData as $b){
                 // if($b['rent_order_unpaid'] == 0){
+                //     halt($b);
                 //     continue;
                 // }
                 $data[$b['house_id']]['number'] = $b['house_number'];
@@ -294,7 +298,11 @@ class Rent extends Admin
                 }else if($b['rent_order_date'] < $separate){ //统计以前年欠租
                     $data[$b['house_id']]['beforeYearUnpaidRent'] = bcaddMerge([$data[$b['house_id']]['beforeYearUnpaidRent'],$b['rent_order_unpaid']]);
                     $total_before_year_unpaid_rent = bcaddMerge([$total_before_year_unpaid_rent,$b['rent_order_unpaid']]);
+                }else{
+                    // 如果时间不是本月，以前月，以前年，数据就过滤掉
+                    continue;
                 }
+                
                 //halt($data[$b['house_id']]);
                 //$data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
                 $data[$b['house_id']]['total'] = bcaddMerge([$data[$b['house_id']]['total'],$b['rent_order_unpaid']]);
@@ -302,8 +310,12 @@ class Rent extends Admin
             }
 
             //json_encode($data);
-            //halt($data);
-
+            // halt($data);
+            foreach ($data as $key => $value) {
+                if($value['total'] + $value['curMonthUnpaidRent'] + $value['beforeMonthUnpaidRent'] + $value['beforeYearUnpaidRent'] == 0){
+                    unset($data[$key]);
+                }
+            }
             file_put_contents(ROOT_PATH.'file/report/unpaid/'.$date.'.txt', json_encode($data));
             
             $data = [];

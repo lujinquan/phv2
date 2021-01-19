@@ -116,7 +116,7 @@
 <script type="text/html" title="操作按钮模板" id="buttonTpl">
     {{#  if (d.transaction_id > 0) { }}
     {{#  if (d.invoice_id <= 0 && d.is_need_dpkj == 1) { }}
-        <a href="{:url('dpkj')}?group=x&id={{ d.id }}" confirm="确认开票吗？开票后订单将无法退款" refresh="no" class="layui-btn layui-btn-xs layui-btn-normal j-ajax">开票</a>
+        
     {{# }else{ }}
         <!-- <a href="javascript:;" class="layui-btn layui-btn-xs layui-btn-disabled">已开票</a> -->
     {{# } }}
