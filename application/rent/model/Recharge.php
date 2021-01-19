@@ -175,11 +175,17 @@ class Recharge extends Model
         if($new_number == 0){
             return '房屋租金';
         }
-        if($house_info['house_invoice_count']){ // 如果有计数
-            $last_rent_date = $house_info['house_invoice_count'];
+        // if($house_info['house_invoice_count']){ // 如果有计数
+        //     $last_rent_date = $house_info['house_invoice_count']; 
+        // }else{
+        //     $last_rent_date = substr_replace($rent['rent_order_date'], '-', 4,0);
+        // }
+        if($number > 0){
+            $last_rent_date = date('Y-m',strtotime('+ '.$number.' month'));
         }else{
             $last_rent_date = substr_replace($rent['rent_order_date'], '-', 4,0);
         }
+        
 
         $start_date = date( "Y-m", strtotime( "first day of next month",strtotime($last_rent_date) ) );
         if($new_number == 1){
@@ -205,7 +211,7 @@ class Recharge extends Model
             }
         }
         
-        Db::name('house')->where([['house_id','eq',$house_id]])->update(['house_invoice_count'=>$end_date]);
+        // Db::name('house')->where([['house_id','eq',$house_id]])->update(['house_invoice_count'=>$end_date]);
 
         return $remark;
     }
