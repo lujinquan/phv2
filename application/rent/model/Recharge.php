@@ -8,7 +8,7 @@ use app\house\model\HouseTai as HouseTaiModel;
 
 class Recharge extends Model
 {
-	// 设置模型名称
+    // 设置模型名称
     protected $name = 'rent_recharge';
     // 设置主键
     protected $pk = 'id';
@@ -170,7 +170,7 @@ class Recharge extends Model
         }else{
             $receive = $rent['rent_order_receive'];
         }
-        $number = bcdiv($before_recharge_balance, $receive);
+        $number = bcdiv($before_recharge_balance, $receive);//dump($before_recharge_balance);dump($receive);dump($number);
         $new_number = bcdiv($pay_rent, $receive);
         if($new_number == 0){
             return '房屋租金';
@@ -229,6 +229,7 @@ class Recharge extends Model
                 // 更新房屋余额
                 $HouseModel = new HouseModel;
                 $house_info = $HouseModel->where([['house_id','eq',$row['house_id']]])->find();
+                $old_house_info = Db::name('house')->where([['house_id','eq',$row['house_id']]])->find();
                 $yue = bcaddMerge([$house_info['house_balance'],$pay_rent]);
                 $house_info->house_balance = $yue;
                 $house_info->save();
@@ -248,7 +249,7 @@ class Recharge extends Model
 
                 $row->act_ptime = $act_ptime; //实际支付时间
                 $row->ptime = $ptime; //支付时间
-                $row->pay_remark = $this->createPayMark($house_info,$row['house_id'],$pay_rent);
+                $row->pay_remark = $this->createPayMark($old_house_info,$row['house_id'],$pay_rent);
                 $row->pay_rent = $pay_rent; //支付金额
                 $row->yue = $yue;
                 $row->trade_type = $data['trade_type']; //支付类型，如：JSAPI
