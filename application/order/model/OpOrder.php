@@ -134,11 +134,14 @@ class OpOrder extends SystemBase
             }
             $where[] = ['inst_id','in',array_unique($instid_arr)];
         }else{
-            $inst_ids = explode(',',session('admin_user.inst_ids'));
-            if($inst_ids){
-                $inst_all = array_merge($inst_ids,config('inst_ids')[INST]);
+            if(INST_LEVEL != 1){
+                $inst_ids = explode(',',session('admin_user.inst_ids'));
+
+                if($inst_ids){
+                    $inst_all = array_merge($inst_ids,config('inst_ids')[INST]);
+                }
+                $where[] = ['inst_id','in',$inst_all];
             }
-            $where[] = ['inst_id','in',$inst_all];
         }
         // $insts = config('inst_ids');
         // $instid = (isset($data['ban_inst_id']) && $data['ban_inst_id'])?$data['ban_inst_id']:INST;
