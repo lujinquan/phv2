@@ -363,11 +363,26 @@ class Pay extends Admin
         $group = input('group');
         $id = input('param.id');
         
+        
+
         if ($group == 'y') {
+            $WeixinOrderModel = new WeixinOrderModel;
+            $invoice_info = $WeixinOrderModel->where([['order_id','eq',$id]])->field('invoice_id')->find();
+            if($invoice_info['invoice_id']){
+                return $this->error('已开票无法标记');
+            }
+
             $WeixinOrderModel = new WeixinOrderModel;
             $res = $WeixinOrderModel->where([['order_id','eq',$id]])->update(['is_need_dpkj'=>0]);
             return $this->success('标记成功');
         } else {
+
+            $RechargeModel = new RechargeModel;
+            $invoice_info = $RechargeModel->where([['id','eq',$id]])->field('invoice_id')->find();
+            if($invoice_info['invoice_id']){
+                return $this->error('已开票无法标记');
+            }
+
             $RechargeModel = new RechargeModel;
             $res = $RechargeModel->where([['id','eq',$id]])->update(['is_need_dpkj'=>0]);
             return $this->success('标记成功');

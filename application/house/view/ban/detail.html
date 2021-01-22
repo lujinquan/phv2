@@ -473,13 +473,15 @@
 			<div class="j-enclosure-label clearfix">图卡{$i}层</div>
 			<div class="j-enclosure-img j-viewer-img clearfix">
 				<ul>
-					{volist name="$data_info['ban_imgs']" id="v"}
-					{if condition="$v['file_type'] == 'BanCard_'.$i"}
+					<?php if(isset($data_info['ban_imgs']) && $data_info['ban_imgs']){foreach($data_info['ban_imgs'] as $v){ ?>
+					
+					<?php if($v['file_type'] == ('BanCard_'.$i)){ ?>
 					<li>
 						<img src="{$v['file']}" />
 					</li>
-					{/if}
-					{/volist}
+					<?php }; ?>
+					
+					<?php }}; ?>
 				</ul>
 			</div>
 		</div>

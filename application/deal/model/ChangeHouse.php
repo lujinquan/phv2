@@ -447,30 +447,33 @@ class ChangeHouse extends SystemBase
         $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();
 
         foreach ($finalRow['data_json']['ban'] as $k => $v) {
+            $curr_ban_info = Db::name('ban')->where([['ban_number','eq',$v['HABanID']]])->field('ban_id')->find();
+            // dump($curr_ban_info);
             // 1、调整楼栋信息
             if($houseInfo['house_use_id'] == 1){
-                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                BanModel::where([['ban_id','eq',$curr_ban_info['ban_id']]])->update([
                     'ban_civil_rent'=>Db::raw('ban_civil_rent+'.$v['HARent']),
                     'ban_civil_area'=>Db::raw('ban_civil_area+'.$v['HABanArea']),
                     'ban_civil_oprice'=>Db::raw('ban_civil_oprice+'.$v['HAPrice']),
                     'ban_use_area'=>Db::raw('ban_use_area+'.$v['HALeasedArea']),
                 ]);
             }elseif($houseInfo['house_use_id'] == 2){
-                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                BanModel::where([['ban_id','eq',$curr_ban_info['ban_id']]])->update([
                     'ban_career_rent'=>Db::raw('ban_career_rent+'.$v['HARent']),
                     'ban_career_area'=>Db::raw('ban_career_area+'.$v['HABanArea']),
                     'ban_career_oprice'=>Db::raw('ban_career_oprice+'.$v['HAPrice']),
                 ]);
             }else{
-                BanModel::where([['ban_id','eq',$finalRow['ban_id']]])->update([
+                BanModel::where([['ban_id','eq',$curr_ban_info['ban_id']]])->update([
                     'ban_party_rent'=>Db::raw('ban_party_rent+'.$v['HARent']),
                     'ban_party_area'=>Db::raw('ban_party_area+'.$v['HABanArea']),
                     'ban_party_oprice'=>Db::raw('ban_party_oprice+'.$v['HAPrice']),
                 ]);
             }
+            // halt(1);
             // 3、添加楼栋调整
             $taiBanData = [];
-            $taiBanData['ban_id'] = $finalRow['ban_id'];
+            $taiBanData['ban_id'] = $curr_ban_info['ban_id'];
             $taiBanData['ban_tai_type'] = 7;
             $taiBanData['cuid'] = $finalRow['cuid'];
             $taiBanData['ban_tai_remark'] = '房屋调整异动单号：'.$finalRow['change_order_number'];
@@ -492,7 +495,7 @@ class ChangeHouse extends SystemBase
             $tableData['change_type'] = 12;
             $tableData['change_order_number'] = $finalRow['change_order_number'];
             $tableData['house_id'] = $finalRow['house_id'];
-            $tableData['ban_id'] = $finalRow['ban_id'];
+            $tableData['ban_id'] = $curr_ban_info['ban_id'];
             $tableData['inst_id'] = $houseInfo['ban_inst_id'];
             $tableData['inst_pid'] = $houseInfo['ban_inst_pid'];
             $tableData['owner_id'] = $houseInfo['ban_owner_id'];
