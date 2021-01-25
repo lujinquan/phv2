@@ -168,12 +168,14 @@
 					var forData = datas.data;
 					/* console.log(forData); */
 					var str = '';
+					var statistics = 0;
 					for (var item in forData) {
 						str += '<dl class="clearfix"><dt>' + item + '</dt><dd><ul>';
 						/* console.log(forData[item]); */
 						for (var i in forData[item]) {
+							statistics = Number(i)+Number('1')
 							// console.log(forData[item][i]);
-							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + i + '</li>';
+							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + statistics + '</li>';
 						}
 						str += '</ul></dd></dl>';
 					}
@@ -190,12 +192,14 @@
 					var forData = datas.data;
 					/* console.log(forData); */
 					var str = '';
+					var statistics = 0;
 					for (var item in forData) {
 						str += '<dl class="clearfix"><dt>' + item + '</dt><dd><ul>';
 						/* console.log(forData[item]); */
 						for (var i in forData[item]) {
 							// console.log(forData[item][i]);
-							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + i + '</li>';
+							statistics =  Number(i)+Number('1')
+							str += '<li info=' + JSON.stringify(forData[item][i]) + '>' + statistics + '</li>';
 						}
 						str += '</ul></dd></dl>';
 					}
