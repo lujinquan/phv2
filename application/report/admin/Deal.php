@@ -169,7 +169,7 @@ class Deal extends Admin
      */
     public function changes_statis()
     {
-        $cacheDate = 202007;
+        // $cacheDate = 202007;
 
         //halt($result);
         //$this->assign('data',$result[12][1]);
