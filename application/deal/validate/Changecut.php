@@ -54,7 +54,7 @@ class Changecut extends Validate
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
         // 房屋必须没有欠租 
-        $rentOrderNumber = RentModel::where([['house_id','eq',$value],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->value('rent_order_number');
+        $rentOrderNumber = RentModel::where([['rent_order_status','eq',1],['house_id','eq',$value],['rent_order_receive','exp',Db::raw('!=rent_order_paid')]])->value('rent_order_number');
         if($rentOrderNumber){
             $msg = '房屋有欠缴订单未处理！';
         }
