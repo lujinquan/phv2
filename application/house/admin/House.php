@@ -425,7 +425,7 @@ class House extends Admin
 
          // 统计当前租户的欠租情况
         $RentModel = new RentModel;
-        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $rentOrderInfo = $RentModel->where([['rent_order_status','eq',1],['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
         $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
         
         // $roomTables = [];
@@ -525,7 +525,7 @@ class House extends Admin
 
         // 统计当前租户的欠租情况
         $RentModel = new RentModel;
-        $rentOrderInfo = $RentModel->where([['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
+        $rentOrderInfo = $RentModel->where([['rent_order_status','eq',1],['house_id','eq',$id],['tenant_id','eq',$row['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) total_rent_order_unpaid')->find();
         $row['total_rent_order_unpaid'] = $rentOrderInfo['total_rent_order_unpaid'];
         //halt($total_rent_order_unpaid);
 

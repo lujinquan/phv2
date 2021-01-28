@@ -901,6 +901,7 @@ class Rent extends Model
 
         $rentOrderWhere = [];
         $rentOrderWhere[] = ['house_id','eq',$house_id];
+        $rentOrderWhere[] = ['rent_order_status','eq',1];
         $rentOrderWhere[] = ['rent_order_paid','exp',Db::raw('<rent_order_receive')];
         if($rent_order_ids){
             $rentOrderWhere[] = ['rent_order_id','in',$rent_order_ids];
