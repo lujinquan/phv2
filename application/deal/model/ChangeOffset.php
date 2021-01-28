@@ -184,7 +184,7 @@ class ChangeOffset extends SystemBase
         
             //$rentorderdates = explode(',',$data['rent_order_date']);
         $fields = 'a.rent_order_number,d.ban_owner_id,b.house_use_id,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.rent_order_date,d.ban_address,c.tenant_name';
-        $data['data_json'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['a.house_id','eq',$data['house_id']],['a.rent_order_date','in',$data['rent_order_date']]])->select();
+        $data['data_json'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where([['a.rent_order_status','eq',1],['a.house_id','eq',$data['house_id']],['a.rent_order_date','in',$data['rent_order_date']]])->select();
             //$data['data_json'] = RentModel::with(['tenant'])->where([['house_id','in',$houseids]])->field('house_number,tenant_id,house_use_id,house_pre_rent,house_pump_rent,house_diff_rent')->select()->toArray();
         
 

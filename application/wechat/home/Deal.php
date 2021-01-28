@@ -113,7 +113,7 @@ class Deal extends Base
         $result['data']['house'] = HouseModel::with('ban,tenant')->where([['house_id','in',$houses],['house_is_pause','eq',0],['house_status','eq',1]])->field('house_id,house_use_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id,house_balance')->select()->toArray();
         $yue = 0;
         foreach ($result['data']['house'] as $k => &$v) {
-            $row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+            $row = Db::name('rent_order')->where([['rent_order_status','eq',1],['house_id','eq',$v['house_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
             // if($row['rent_order_unpaids'] == 0){
             //     unset($result['data']['house'][$k]);
             //     continue;
@@ -139,7 +139,7 @@ class Deal extends Base
             	// }
             }
 
-            $cut_row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
+            $cut_row = Db::name('rent_order')->where([['rent_order_status','eq',1],['house_id','eq',$v['house_id']]])->field('rent_order_cut')->order('rent_order_date desc')->find();
             $v['rent_order_cut'] = $cut_row['rent_order_cut'];
             $v['is_auth'] = 0;
             $v['house_use_id'] = $v['house_use_id'];

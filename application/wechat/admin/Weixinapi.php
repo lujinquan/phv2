@@ -30,11 +30,11 @@ use app\wechat\model\Weixin as WeixinModel;
  */
 class Weixinapi extends Controller 
 {
-	
-	/**
-	 * [signin 用户版小程序登录]
-	 * @return [type] [description]
-	 */
+    
+    /**
+     * [signin 用户版小程序登录]
+     * @return [type] [description]
+     */
     public function signin()
     {
         if($this->request->isPost()){
@@ -84,11 +84,11 @@ class Weixinapi extends Controller
     }
 
 
-	public function getWeixinBaseInfo()
-	{
-	    $code = input('code');//小程序传来的code值
-	    $WeixinModel = new WeixinModel;
-	    $resultOpenid = $WeixinModel->getOpenid($code); 
+    public function getWeixinBaseInfo()
+    {
+        $code = input('code');//小程序传来的code值
+        $WeixinModel = new WeixinModel;
+        $resultOpenid = $WeixinModel->getOpenid($code); 
         $result = [];
         if(is_array($resultOpenid)){
             $resultAccessToken = $WeixinModel->getAccessToken();
@@ -101,7 +101,7 @@ class Weixinapi extends Controller
             $result['msg'] = $resultOpenid;
         }
         return json($result);  
-	}
+    }
 
 
     public function getAccessToken()
@@ -111,7 +111,7 @@ class Weixinapi extends Controller
 
         halt($res); 
     }
-	
+    
 
     public function sendMessage()
     {
@@ -217,35 +217,35 @@ class Weixinapi extends Controller
      */
     public function tenantInfo() 
     {
-    	$key = input('get.key');
+        $key = input('get.key');
         $result = [];
         $result['code'] = 0;
         if(!$key){
             $result['msg'] = '参数错误！';
             return json($result);
         }
-    	$key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
-    	//$id = str_coding($key,'DECODE');
-    	$tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        //$id = str_coding($key,'DECODE');
+        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
     
-    	if($tenantInfo){
-    		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
-    		foreach ($result['data']['house'] as $k => &$v) {
-    			//halt($v);
-    			$row = Db::name('rent_order')->where([['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
+        if($tenantInfo){
+            $result['data']['tenant'] = $tenantInfo;
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_id,house_balance,ban_id,tenant_id,house_unit_id,house_is_pause,house_pre_rent,house_status,house_floor_id')->select()->toArray();
+            foreach ($result['data']['house'] as $k => &$v) {
+                //halt($v);
+                $row = Db::name('rent_order')->where([['rent_order_status','eq',1],['house_id','eq',$v['house_id']],['tenant_id','eq',$v['tenant_id']]])->field('sum(rent_order_receive - rent_order_paid) as rent_order_unpaids,sum(rent_order_paid) as rent_order_paids')->find();
 
-    			$v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
-    			$v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
+                $v['rent_order_unpaids'] = $row['rent_order_unpaids']?$row['rent_order_unpaids']:0;
+                $v['rent_order_paids'] = $row['rent_order_paids']?$row['rent_order_paids']:0;
                 //$value['id'] = $key + 1;
             }
-    		$result['code'] = 1;
-    		$result['msg'] = '获取成功！';
-    	}else{
-    		$result['msg'] = '参数错误！';
-    	}
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
 
-    	return json($result); 
+        return json($result); 
     }
 
 
@@ -256,7 +256,7 @@ class Weixinapi extends Controller
      */
     public function rentOrderInfo() 
     {
-    	$key = input('get.key');
+        $key = input('get.key');
         $result = [];
         $result['code'] = 0;
         if(!$key){
@@ -264,25 +264,25 @@ class Weixinapi extends Controller
             return json($result);
         }
 
-    	$key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
-    	$houseID = input('get.house_id'); //获取房屋id
-    	$tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        $houseID = input('get.house_id'); //获取房屋id
+        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
 
-    	if($tenantInfo){
-    		//dump($tenantInfo['tenant_id']);halt($houseID);
-    		$result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['tenant_id','eq',$tenantInfo['tenant_id']]])->order('rent_order_id desc')->select();
+        if($tenantInfo){
+            //dump($tenantInfo['tenant_id']);halt($houseID);
+            $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['house_id','eq',$houseID],['tenant_id','eq',$tenantInfo['tenant_id']]])->order('rent_order_id desc')->select();
             foreach ($result['data']['rent'] as $key => &$value) {
                 $value['id'] = $key + 1;
             }
-    		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
-    		$result['code'] = 1;
-    		$result['msg'] = '获取成功！';
-    	}else{
-    		$result['msg'] = '参数错误！';
-    	}
+            $result['data']['tenant'] = $tenantInfo;
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,ban_id,house_id,house_pre_rent,house_unit_id,house_floor_id')->select();
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
 
-    	return json($result); 
+        return json($result); 
     }
 
     /**
@@ -292,50 +292,51 @@ class Weixinapi extends Controller
      */
     public function myOrderInfo() 
     {
-    	$key = input('get.key');
+        $key = input('get.key');
         $result = [];
         $result['code'] = 0;
         if(!$key){
             $result['msg'] = '参数错误！';
             return json($result);
         }
-    	$key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
+        $key = str_replace(" ","+",$key); //加密过程中可能出现“+”号，在接收时接收到的是空格，需要先将空格替换成“+”号
         $houseID = input('get.house_id');
-    	$datasel = input('get.data_sel'); //
-    	$tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
-    	$where = [];
+        $datasel = input('get.data_sel'); //
+        $tenantInfo = TenantModel::where([['tenant_key','eq',$key]])->field('tenant_id,tenant_inst_id,tenant_number,tenant_name,tenant_tel,tenant_card,tenant_imgs')->find();
+        $where = [];
 
 
-    	if($tenantInfo){
+        if($tenantInfo){
 
-    		$fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
-         
-         	$where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
-         	$where[] = ['a.tenant_id','eq',$tenantInfo['tenant_id']];
-         	if($houseID){
-         		$where[] = ['a.house_id','eq',$houseID];
-         	}
+            $fields = "a.rent_order_id,a.house_id,from_unixtime(a.ptime, '%Y-%m-%d %H:%i:%s') as ptime,a.tenant_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_floor_id,b.house_door,b.house_unit_id,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            
+            $where[] = ['a.rent_order_status','eq',1],
+            $where[] = ['rent_order_paid','exp',Db::raw('=rent_order_receive')];
+            $where[] = ['a.tenant_id','eq',$tenantInfo['tenant_id']];
+            if($houseID){
+                $where[] = ['a.house_id','eq',$houseID];
+            }
             if($datasel){
                 $startDate = substr($datasel,0,4);
                 $endDate = substr($datasel,5,2);
                 $where[] = ['a.rent_order_date','eq',$startDate.$endDate];
             }
-//halt($where);
+            //halt($where);
             $result['data']['rent'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_id desc')->select();
 
-    		// $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
+            // $result['data']['rent'] = RentModel::where([['rent_order_paid','exp',Db::raw('=rent_order_receive')],['tenant_id','eq',$tenantInfo['tenant_id']]])->select()->toArray();
             // foreach ($result['data']['rent'] as $key => &$value) {
             //     $value['id'] = $key + 1;
             // }
-    		$result['data']['tenant'] = $tenantInfo;
-    		$result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
-    		$result['code'] = 1;
-    		$result['msg'] = '获取成功！';
-    	}else{
-    		$result['msg'] = '参数错误！';
-    	}
+            $result['data']['tenant'] = $tenantInfo;
+            $result['data']['house'] = HouseModel::with('ban')->where([['tenant_id','eq',$tenantInfo['tenant_id']]])->field('house_balance,house_id,house_pre_rent,ban_id,house_unit_id,house_floor_id')->select();
+            $result['code'] = 1;
+            $result['msg'] = '获取成功！';
+        }else{
+            $result['msg'] = '参数错误！';
+        }
 //halt($result);
-    	return json($result); 
+        return json($result); 
     }
 
 
