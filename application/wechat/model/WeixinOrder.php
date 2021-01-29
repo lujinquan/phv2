@@ -181,13 +181,13 @@ class WeixinOrder extends Model
 
             $act_ptime = strtotime($data['time_end']); //实际支付时间
 
-            $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28 23:59:59');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
+            // $stant_ptime = strtotime(date('Y-m',$act_ptime).'-28 23:59:59');// 用于统计的支付时间，如果超出本月28号零时零分零秒则当成下月支付
 
-            if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
-                $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
-            }else{
+            // if ($act_ptime > $stant_ptime) { //超过或等于28号零时零分零秒，则取下个月零时零分零秒作为支付时间
+            //     $ptime = strtotime(date('Y-m-d',strtotime('first day of next month')).' 00:00:01');
+            // }else{
                 $ptime = $act_ptime; // 不超过则按照真实支付时间来
-            }
+            // }
 
 
             // $row->act_ptime = $act_ptime; //实际支付时间
