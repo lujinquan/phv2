@@ -45,6 +45,9 @@ class Changelease extends Validate
         if($row){
             $msg = '房屋已在该异动中，请勿重复申请！';
         }
+        if(empty($data['applyAddress'])){
+            $msg = '提交数据为空，请点击查询获取按钮！';
+        }
         return $msg?$msg:true;
     }
 
@@ -54,6 +57,9 @@ class Changelease extends Validate
         $row = ChangeLeaseModel::where([['id','eq',$value]])->field('change_status')->find();
         if($row['change_status'] == 3){
             $msg = '请勿重复提交！';
+        }
+        if(empty($data['applyAddress'])){
+            $msg = '提交数据为空，请点击查询获取按钮！';
         }
         return $msg?$msg:true;
     }

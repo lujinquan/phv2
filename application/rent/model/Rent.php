@@ -1401,10 +1401,12 @@ class Rent extends Model
             if(isset($getData['house_lease_area']) && $getData['house_lease_area']){
                 $where[] = ['b.house_lease_area','eq',$getData['house_lease_area']];
             }
-            // 检索【房屋】使用性质
-            if(isset($getData['house_use_id']) && $getData['house_use_id']){
-                $where[] = ['b.house_use_id','in',explode(',',$getData['house_use_id'])];
-            }
+            // // 检索【房屋】使用性质
+            // if(isset($getData['house_use_id']) && $getData['house_use_id']){
+            //     $where[] = ['b.house_use_id','in',explode(',',$getData['house_use_id'])];
+            // }
+            // 只显示使用性质是住宅的房子
+            $where[] = ['b.house_use_id','eq',1];
             // 检索【租户】姓名
             if(isset($getData['tenant_name']) && $getData['tenant_name']){
                 $where[] = ['c.tenant_name','like','%'.$getData['tenant_name'].'%'];
@@ -1443,11 +1445,11 @@ class Rent extends Model
                 $where[] = ['d.ban_inst_id','in',config('inst_ids')[INST]];
             }
 
-            // 列表页多选
+            // // 列表页多选
             if(isset($getData['id']) && is_array($getData['id']) && $getData['id']){
                 $where[] = ['b.house_id','in',$getData['id']];
             }
-
+            
             $systemUsers = Db::name('system_user')->where([['role_id','eq',4],['status','eq',1]])->column('inst_id,nick,mobile');
 
             // if($useid != 0){

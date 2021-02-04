@@ -79,7 +79,7 @@ class Changelease extends Admin
             if(!is_array($filData)){
                 return $this->error($filData);
             }
-//halt($filData);
+
             // 入库
             unset($filData['id']);
             $row = $ChangeModel->allowField(true)->create($filData);
