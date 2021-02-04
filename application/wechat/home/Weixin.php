@@ -1654,7 +1654,8 @@ class Weixin extends Common
             $temp['ban_damage_id'] = $params['damages'][$temp['ban_damage_id']];
             $temp['ban_imgs'] = SystemAnnex::changeFormat($temp['ban_imgs'],$complete = true);
             $temp['cuid'] = Db::name('system_user')->where([['id','eq',$temp['ban_cuid']]])->value('nick');
-
+            $temp['max_upload_file_size'] = 8;
+            
             $result['data'] = $temp;
                       
             $result['code'] = 1;
@@ -1740,6 +1741,8 @@ class Weixin extends Common
             if(empty($file)){
                 $result['code'] = 1;
                 $result['msg'] = '修改成功！';
+                $BanModel = new BanModel;
+                $BanModel->where([['ban_id','eq',$id]])->update(['ban_imgs'=>'']);
             }else{
                 $ban_imgs = implode(',',$file);
                 $BanModel = new BanModel;

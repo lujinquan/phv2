@@ -339,35 +339,35 @@ class Api extends Common
         $month_begin_time = strtotime(date('Y-m'));
 
         $month_end_time = strtotime(date('Y-m',strtotime( "first day of next month" )));
-$month_begin_time = strtotime('2020-12');
-$month_end_time = strtotime('2021-01');
-// dump($month_begin_time);halt($month_end_time);
+		// $month_begin_time = strtotime('2021-01');
+		// $month_end_time = strtotime('2021-02');
+		//dump($month_begin_time);halt($month_end_time);
 
-        // // 开缴费发票
-        // $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id desc')->limit(400)->select()->toArray();
+        // 开缴费发票
+        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1],['pay_money', 'neq', 0],['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id asc')->limit(500)->select()->toArray();
 
-        // $i = 0;
+        $i = 0;
 
-        // if (!empty($weixin_id_undpkj)) {
+        if (!empty($weixin_id_undpkj)) {
             
-        //     foreach ($weixin_id_undpkj as $v) {
-        //         // 每5秒执行一次
-        //         // sleep(5);
-        //         $InvoiceModel = new InvoiceModel;
-        //         if (!$InvoiceModel->dpkj($v['order_id'])) {
-        //             if ($i) {
-        //                 // return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
-        //             }
-        //             // return $this->error($InvoiceModel->getError());
-        //         } else {
-        //             $i++;
-        //         }
-        //     }
-        // }
+            foreach ($weixin_id_undpkj as $v) {
+                // 每5秒执行一次
+                // sleep(5);
+                $InvoiceModel = new InvoiceModel;
+                if (!$InvoiceModel->dpkj($v['order_id'])) {
+                    if ($i) {
+                        // return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
+                    }
+                    // return $this->error($InvoiceModel->getError());
+                } else {
+                    $i++;
+                }
+            }
+        }
         // dump($i);halt($weixin_id_undpkj); 
 
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(100)->select()->toArray();
+        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(500)->order('id desc')->select()->toArray();
 		// halt($weixin_id_undpkj);
         $k = 0;
         // halt($weixin_id_undpkj);
@@ -378,7 +378,9 @@ $month_end_time = strtotime('2021-01');
                 // 每5秒执行一次
                 // sleep(5);
                 $InvoiceModel = new InvoiceModel;
-                if (!$InvoiceModel->dpkj($v['id'] ,$type = 2)) {
+                $res = $InvoiceModel->dpkj($v['id'] ,$type = 2);
+                if (!$res) {
+                    // dump($v);halt($InvoiceModel->getError());
                     if ($k) {
                         // return $this->error($InvoiceModel->getError() . ',本次开具' . $i . '张发票！');
                     }
@@ -388,7 +390,7 @@ $month_end_time = strtotime('2021-01');
                 }
             }
         }
-dump($k);halt($weixin_id_undpkj);
+// dump($k);halt($weixin_id_undpkj);
         return '缴费发票开具：'.$i.'张，充值发票开具：'.$k.'张';
         // return $this->success('执行成功');
         

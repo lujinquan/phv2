@@ -374,7 +374,9 @@ class Invoice extends Model
             
             $dpkj['gmf_sjh'] = ''; // 购买方手机号（比如，发票开给张三的，就填写张三的手机号）
             $dpkj['gmf_dzyx'] = ''; // 购买方电子邮箱（比如，发票开给张三的，就填写张三的邮箱号）
-
+            if(!isset($xmmc)){
+                halt($WeixinOrderRow);
+            }
             $dpkj['xmmc'] = $xmmc; // 项目名称
             //$dpkj['xmmc'] = '房地产租赁'; // 项目名称
             
