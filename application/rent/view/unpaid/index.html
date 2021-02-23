@@ -162,6 +162,14 @@
                     return params.uses[d.house_use_id];
                 }}
                 ,{field: 'tenant_name', minWidth: 140, align:'center', title: '租户姓名'}
+                ,{field: 'member_id', minWidth: 140, align:'center', title: '是否绑定微信', templet: function(d) {
+                    if(d.member_id){
+                        return '是';
+                    }else{
+                        return '否';
+                    }
+                    // return params.uses[d.house_use_id];
+                }}
                 ,{field: 'rent_order_diff', minWidth: 80, align:'center', title: '租差',totalRow: true}
                 ,{field: 'rent_order_pump', minWidth: 80, align:'center', title: '泵费',totalRow: true}
                 ,{field: 'rent_order_cut', minWidth: 120, align:'center', title: '减免',totalRow: true}

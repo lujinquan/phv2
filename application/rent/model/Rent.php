@@ -1502,14 +1502,17 @@ class Rent extends Model
                 //dump($month);dump($separate);dump($b['rent_order_date']);exit;
                 if($b['rent_order_date'] == $month){ // 统计本月欠租
                     $data[$b['house_id']]['curMonthUnpaidRent'] = $b['rent_order_unpaid'];
-                    $total_cur_month_unpaid_rent += $b['rent_order_unpaid'];
+                    // $total_cur_month_unpaid_rent += $b['rent_order_unpaid'];
+                    $total_cur_month_unpaid_rent = bcsub($total_cur_month_unpaid_rent , $b['rent_order_unpaid'],2);
                 }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $month){ // 统计以前月欠租
                     
-                    $data[$b['house_id']]['beforeMonthUnpaidRent'] += $b['rent_order_unpaid'];
-                    $total_before_month_unpaid_rent += $b['rent_order_unpaid'];
+                    // $data[$b['house_id']]['beforeMonthUnpaidRent'] += $b['rent_order_unpaid'];
+                    $data[$b['house_id']]['beforeMonthUnpaidRent'] = bcsub($data[$b['house_id']]['beforeMonthUnpaidRent'] , $b['rent_order_unpaid'],2);
+                    // $total_before_month_unpaid_rent += $b['rent_order_unpaid'];
+                    $total_before_year_unpaid_rent = bcsub($total_before_year_unpaid_rent , $b['rent_order_unpaid'],2);
                 }else if($b['rent_order_date'] < $separate){ //统计以前年欠租
-                    $data[$b['house_id']]['beforeYearUnpaidRent'] += $b['rent_order_unpaid'];
-                    $total_before_year_unpaid_rent += $b['rent_order_unpaid'];
+                    $data[$b['house_id']]['beforeYearUnpaidRent'] = bcsub($data[$b['house_id']]['beforeYearUnpaidRent'] , $b['rent_order_unpaid'],2);
+                    $total_before_year_unpaid_rent = bcsub($total_before_year_unpaid_rent , $b['rent_order_unpaid'],2);
 
                 }
 

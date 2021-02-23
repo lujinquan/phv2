@@ -50,9 +50,7 @@
             }
             ,cols: [[ //表头
                 {field: 'op_order_number', minWidth: 180, align:'center', title: '工单编号'}
-                ,{field: 'op_order_type', minWidth: 140, align:'center', title: '工单类型', templet: function(d) {
-                    return params.op_order_type[d.op_order_type];
-                }} 
+                ,{field: 'op_order_type_name', minWidth: 140, align:'center', title: '工单类型'}
                 ,{field: 'inst_id', minWidth: 120, align:'center', title: '机构', templet: function(d) {
                     return params.insts[d.inst_id];
                 }}

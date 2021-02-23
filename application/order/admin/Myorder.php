@@ -34,7 +34,7 @@ class Myorder extends Admin
             $opTypeModel = new OpType;
             $opTypeArr = $opTypeModel->column('id,title');
             $data = [];
-            $temps = $OpOrderModel->with('SystemUser')->where($where)->page($page)->order('dtime desc,ctime desc')->limit($limit)->select();
+            $temps = $OpOrderModel->with('SystemUser')->where($where)->order('dtime desc,ctime desc')->select();
             if($getData['group'] == 'j'){
             	foreach($temps as &$v){
 	            	if($v['dtime'] && !$v['ftime']){
@@ -66,7 +66,7 @@ class Myorder extends Admin
             
 
             //halt($temps);
-            //halt($temps);
+            // halt($temps);
             $data['data'] = array_slice($temps->toArray(), ($page - 1) * $limit, $limit);
             $data['count'] = $OpOrderModel->where($where)->count('id');
             $data['code'] = 0;
@@ -103,7 +103,11 @@ class Myorder extends Admin
 
         $temp = $row['jsondata'];
         if($temp){
-           foreach($temp as &$v){
+            if(is_string($temp)){
+                $temp = json_decode($temp,true);
+            }
+            foreach($temp as &$v){
+
                 if($v['Img']){
                     $v['Img'] = SystemAnnex::changeFormat($v['Img']);
                 }

@@ -297,7 +297,7 @@ class ChangeHouse extends SystemBase
         //halt($row);
         //$row['new_house_info'] = HouseTempModel::with('tenant')->where([['house_id','eq',$row['house_id']]])->find();
         //halt($row);
-//        $this->finalDeal($row);
+        //$this->finalDeal($row);
         return $row;
     }
 
@@ -433,6 +433,7 @@ class ChangeHouse extends SystemBase
      */
     private function finalDeal($finalRow)
     {
+        $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
         // 异动记录
         $ChangeRecordModel = new ChangeRecordModel;
         $ChangeRecordModel->save([
@@ -444,7 +445,7 @@ class ChangeHouse extends SystemBase
             'change_status' => 1,
         ]);
 
-        $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();
+        $houseInfo = Db::name('house')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where([['house_id','eq',$finalRow['house_id']]])->field('house_pre_rent,house_use_id,ban_owner_id,ban_inst_id,ban_inst_pid')->find();
 
         foreach ($finalRow['data_json']['ban'] as $k => $v) {
             $curr_ban_info = Db::name('ban')->where([['ban_number','eq',$v['HABanID']]])->field('ban_id')->find();
@@ -490,6 +491,7 @@ class ChangeHouse extends SystemBase
                 'house_oprice'=>Db::raw('house_oprice+'.$v['HAPrice']),
             ]);
 
+
             // 5、写入到table表
             $tableData = [];       
             $tableData['change_type'] = 12;
@@ -508,10 +510,37 @@ class ChangeHouse extends SystemBase
 
             $tableData['tenant_id'] = $finalRow['tenant_id']; 
             $tableData['cuid'] = $finalRow['cuid'];
-            $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 次月生效
+            $tableData['order_date'] = $nextMonth;  // 次月生效
             $ChangeTableModel = new ChangeTableModel;
             $ChangeTableModel->save($tableData);
         }
+        // 如果调整了租金，检查是否调整的房屋是暂停计租的房子，如果是的，则将暂停计租的房子失效，失效日期为次月，同时生成一条新的暂停计租的记录，生效时间是下月。
+        $newHouseInfo = Db::name('house')->where([['house_id','eq',$finalRow['house_id']]])->field('house_pre_rent')->find();
+        if($houseInfo['house_pre_rent'] != $newHouseInfo['house_pre_rent']){ // 规租发生了变化
+            // 判断是否有正在生效的暂停计租
+            $change_pause_info = Db::name('change_table')->where([['change_type','eq',3],['change_status','eq',1],['house_id','eq',$finalRow['house_id']],['end_date','eq',0]])->find();
+            if(!empty($change_pause_info)){
+
+                Db::name('change_table')->where([['change_type','eq',3],['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['end_date'=>$nextMonth]);
+                // 再生成一条暂停计租的记录
+                $tableData = [];       
+                $tableData['change_type'] = 3;
+                $tableData['cut_type'] = 0;
+                $tableData['change_order_number'] = $change_pause_info['change_order_number'];
+                $tableData['house_id'] = $change_pause_info['house_id'];
+                $tableData['ban_id'] = $change_pause_info['ban_id'];
+                $tableData['inst_id'] = $change_pause_info['inst_id'];
+                $tableData['inst_pid'] = $change_pause_info['inst_pid'];
+                $tableData['owner_id'] = $change_pause_info['owner_id'];
+                $tableData['use_id'] = $change_pause_info['use_id'];
+                $tableData['change_rent'] = $newHouseInfo['house_pre_rent']; 
+                $tableData['tenant_id'] = $change_pause_info['tenant_id']; 
+                $tableData['order_date'] = $nextMonth;  // 次月生效
+                $ChangeTableModel = new ChangeTableModel;
+                $ChangeTableModel->save($tableData);
+            }
+        }
+
         // 4、添加房屋台账
         $taiHouseData = [];
         $taiHouseData['house_id'] = $finalRow['house_id'];

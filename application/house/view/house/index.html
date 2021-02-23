@@ -284,6 +284,14 @@
 					, {field: 'house_is_pause',hide: false,width: 140,align:'center',title: '是否暂停计租',templet: function(d) {
 						return parseInt(d.house_is_pause)?'是':'否';
 					}}
+					,{field: 'member_id', minWidth: 140, align:'center', title: '是否绑定微信', templet: function(d) {
+	                    if(d.member_id){
+	                        return '是';
+	                    }else{
+	                        return '否';
+	                    }
+	                    // return params.uses[d.house_use_id];
+	                }}
 					, {field: 'house_unit_id',width: 80,hide: false,align:'center',title: '单元',templet: function(d) {
 						return d.house_unit_id + '/' + d.ban_units;
 					}}

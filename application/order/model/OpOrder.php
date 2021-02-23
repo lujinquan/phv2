@@ -76,9 +76,23 @@ class OpOrder extends SystemBase
                     $where[] = [['cuid','in',$inst_ids]];
                 }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的                    
                     if($data['group'] == 'j'){
-                        $where[] = [['cuid','eq',ADMIN_ID],['ftime','eq',0]];
+                        // 判断当前用户是否是经租会计，如果是，展示所有底下管段的数据
+                        if(ADMIN_ROLE == 6){
+                            $where[] = [['ftime','eq',0]];
+                        // 否则就只能展示当前自己提交的数据
+                        }else{
+                            $where[] = [['cuid','eq',ADMIN_ID],['ftime','eq',0]];
+                        }
+                        
                     }else{
-                        $where[] = [['cuid','eq',ADMIN_ID],['ftime','>',0]];
+                        // 判断当前用户是否是经租会计，如果是，展示所有底下管段的数据
+                        if(ADMIN_ROLE == 6){
+                            $where[] = [['ftime','>',0]];
+                        // 否则就只能展示当前自己提交的数据
+                        }else{
+                            $where[] = [['cuid','eq',ADMIN_ID],['ftime','>',0]];
+                        }
+                        
                     }
                 }
                 break;

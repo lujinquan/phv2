@@ -100,7 +100,14 @@ class House extends Admin
             $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order($order)->select();
 
             foreach ($data['data'] as $k => &$v) {
+                $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
+                if(empty($member_id)){
+                    $v['member_id'] = '';
+                }else{
+                    $v['member_id'] = $member_id;
+                }
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
+                    
                     $leaseInfo = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->field("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time,id as change_lease_id")->find();
                     $v['last_print_time'] = $leaseInfo['last_print_time'];
                     $v['change_lease_id'] = $leaseInfo['change_lease_id'];
