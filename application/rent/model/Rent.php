@@ -1503,22 +1503,23 @@ class Rent extends Model
                 if($b['rent_order_date'] == $month){ // 统计本月欠租
                     $data[$b['house_id']]['curMonthUnpaidRent'] = $b['rent_order_unpaid'];
                     // $total_cur_month_unpaid_rent += $b['rent_order_unpaid'];
-                    $total_cur_month_unpaid_rent = bcsub($total_cur_month_unpaid_rent , $b['rent_order_unpaid'],2);
+                    $total_cur_month_unpaid_rent = bcadd($total_cur_month_unpaid_rent , $b['rent_order_unpaid'],2);
                 }else if($b['rent_order_date'] > $separate && $b['rent_order_date'] < $month){ // 统计以前月欠租
                     
                     // $data[$b['house_id']]['beforeMonthUnpaidRent'] += $b['rent_order_unpaid'];
-                    $data[$b['house_id']]['beforeMonthUnpaidRent'] = bcsub($data[$b['house_id']]['beforeMonthUnpaidRent'] , $b['rent_order_unpaid'],2);
+                    $data[$b['house_id']]['beforeMonthUnpaidRent'] = bcadd($data[$b['house_id']]['beforeMonthUnpaidRent'] , $b['rent_order_unpaid'],2);
                     // $total_before_month_unpaid_rent += $b['rent_order_unpaid'];
-                    $total_before_year_unpaid_rent = bcsub($total_before_year_unpaid_rent , $b['rent_order_unpaid'],2);
+                    $total_before_month_unpaid_rent = bcadd($total_before_month_unpaid_rent , $b['rent_order_unpaid'],2);
                 }else if($b['rent_order_date'] < $separate){ //统计以前年欠租
-                    $data[$b['house_id']]['beforeYearUnpaidRent'] = bcsub($data[$b['house_id']]['beforeYearUnpaidRent'] , $b['rent_order_unpaid'],2);
-                    $total_before_year_unpaid_rent = bcsub($total_before_year_unpaid_rent , $b['rent_order_unpaid'],2);
+                    $data[$b['house_id']]['beforeYearUnpaidRent'] = bcadd($data[$b['house_id']]['beforeYearUnpaidRent'] , $b['rent_order_unpaid'],2);
+                    $total_before_year_unpaid_rent = bcadd($total_before_year_unpaid_rent , $b['rent_order_unpaid'],2);
 
                 }
-
+                $data[$b['house_id']]['total'] = bcadd($data[$b['house_id']]['total'] , $b['rent_order_unpaid'],2);
+                $total_unpaid_rent = bcadd($total_unpaid_rent , $b['rent_order_unpaid'],2);
                 //halt($data[$b['house_id']]);
-                $data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
-                $total_unpaid_rent += $b['rent_order_unpaid'];
+                // $data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
+                // $total_unpaid_rent += $b['rent_order_unpaid'];
                 $data[$b['house_id']]['remark'] = '';
             }
 
