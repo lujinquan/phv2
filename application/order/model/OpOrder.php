@@ -77,28 +77,28 @@ class OpOrder extends SystemBase
                 }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的                    
                     if($data['group'] == 'j'){
                         // 判断当前用户是否是经租会计，如果是，展示所有底下管段的数据
-                        if(ADMIN_ROLE == 6 || ADMIN_ROLE == 5){
-                            $where[] = [['ftime','eq',0]];
-                        // 否则就只能展示当前自己提交的数据
-                        }else{
+                        // if(ADMIN_ROLE == 6 || ADMIN_ROLE == 5){
+                        //     $where[] = [['ftime','eq',0]];
+                        // // 否则就只能展示当前自己提交的数据
+                        // }else{
                             $where[] = [['cuid','eq',ADMIN_ID],['ftime','eq',0]];
-                        }
+                        // }
                         
                     }else{
                         // 判断当前用户是否是经租会计，如果是，展示所有底下管段的数据
-                        if(ADMIN_ROLE == 6 || ADMIN_ROLE == 5){
-                            $where[] = [['ftime','>',0]];
-                        // 否则就只能展示当前自己提交的数据
-                        }else{
+                        // if(ADMIN_ROLE == 6 || ADMIN_ROLE == 5){
+                        //     $where[] = [['ftime','>',0]];
+                        // // 否则就只能展示当前自己提交的数据
+                        // }else{
                             $where[] = [['cuid','eq',ADMIN_ID],['ftime','>',0]];
-                        }
+                        // }
                         
                     }
                 }
                 break;
             // 已受理工单
             case 'filished':
-                if(ADMIN_ID != 1){
+                if(ADMIN_ID != 1 && ADMIN_ROLE != 6 && ADMIN_ROLE != 5){
                     $where[] = [['duid','like','%'.ADMIN_ID.'%']];
                 }
                 
@@ -153,6 +153,7 @@ class OpOrder extends SystemBase
 
                 if($inst_ids){
                     $inst_all = array_merge($inst_ids,config('inst_ids')[INST]);
+                    $inst_all[] = INST;
                 }
                 $where[] = ['inst_id','in',$inst_all];
             }
