@@ -79,6 +79,10 @@
                   // if(res.data[i].title === '缴费成功通知'){
                     $("input[name='app_user_payment_remind']").val(res.data[i].priTmplId);
                   }
+                  if(res.data[i].title === '房租逾期催缴提醒'){
+                  // if(res.data[i].title === '缴费成功通知'){
+                    $("input[name='app_user_wx_tips_remind']").val(res.data[i].priTmplId);
+                  }
                   
                   //$("input[name='aaa']").val(res.data[0].priTmplId);
                   //res.data[i].title

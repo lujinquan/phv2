@@ -19,7 +19,9 @@ use app\rent\model\Rent as RentModel;
 use app\house\model\House as HouseModel;
 use app\report\model\Report as ReportModel;
 use app\house\model\HouseTai as HouseTaiModel;
-
+use app\wechat\model\Weixin as WeixinModel;
+use app\wechat\model\WeixinMemberHouse as WeixinMemberHouseModel;
+use app\system\model\Sms as SmsModel;
 use app\common\model\SystemTcpdf;
 
 /**
@@ -40,6 +42,193 @@ class Ask extends Admin
         }
         return $this->fetch();
     }
+
+    /**
+     * 催缴短信提示
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-03 11:32:51 
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function send_tips_tel_sms()
+    {
+        if(date('d') < 10){
+            return $this->error('每月10号前，无法发送催缴信息'); 
+        }
+        if ($this->request->isAjax()) {
+
+            $getData = $this->request->post();
+
+            // 需要发送的总短信数量
+            $count = count($getData['id']);
+            $houseData = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id')->join('ban c','a.ban_id = c.ban_id')->where([['house_id','in',$getData['id']]])->field('house_number,house_curr_month_send_tel_sms,house_curr_month_send_wx_sms,b.tenant_tel,c.ban_address,c.ban_inst_pid')->select();
+            $ziyangHouses = [];
+            $liangdaoHouses = [];
+            $success_count = 0;
+            foreach($houseData as $v){
+                if($v['house_curr_month_send_tel_sms'] >= 2){
+                    continue;
+                }
+                $SmsModel = new SmsModel;
+                
+                if($v['ban_inst_pid'] == 2){
+                    $tempid = ''; //紫阳所的催缴短信模板
+                    $resData = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'ziyang');
+                }elseif($v['ban_inst_pid'] == 3){
+                    $tempid = '879573'; //粮道所的催缴短信模板
+                    $resData = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'liangdao');
+                }
+                
+
+                foreach($resData['SendStatusSet'] as $row){
+                    if($row['Code'] === 'Ok'){
+                        $row['PhoneNumber'] = substr($row['PhoneNumber'],3);
+                        //session('sms_verification_', $login,);
+                        $SmsModel = new SmsModel;
+                        $ji = $SmsModel->save(['serial_no'=>$row['SerialNo'],'phone'=>$row['PhoneNumber'],'session_context'=>$row['SessionContext'],'content'=>json_encode($tempdata)]);
+                        if($ji){
+                            $success_count++;
+                        }
+                    }else{
+                        // return $this->error('发送失败,错误码：'.$row['Message']);
+                    }
+                }
+            }
+            $error_count = $count - $success_count;
+            if($success_count){
+                if($error_count){
+                    return $this->success('发送成功，共计发送'.$success_count.'条短信！发送失败'.$error_count.'条短信！');
+                }else{
+                    return $this->success('发送成功，共计发送'.$success_count.'条短信！');
+                }
+                
+            }else{
+                return $this->error('发送失败'); 
+            }
+            
+          
+        }
+  
+    }
+
+    /**
+     * 发送微信催缴信息提示
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-03 11:32:51 
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function send_tips_wx_sms()
+    {
+        if(date('d') < 10){
+            return $this->error('每月10号前，无法发送催缴信息'); 
+        }
+        if ($this->request->isAjax()) {
+            // 检测是否配置微信公众平台订阅模板
+            $template_id = Db::name('weixin_template')->where([['name','eq','app_user_wx_tips_remind']])->value('value');
+            if (empty($template_id)) {
+                $result['code'] = 0;
+                $result['msg'] = '未配置房租逾期催缴提醒模板！';
+                return json($result);
+            }
+
+            // 获取表单提交的数据
+            $getData = $this->request->post();
+            $RentModel = new RentModel;
+            $filterData = $RentModel->get_data($getData,$page = false);
+            // halt($filterData);
+            // 需要发送的总信息数量
+            $count = count($getData['id']);
+            // 成功发送的信息数量
+            $success_count = 0;
+            // 获取
+            // $houseData = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id')->join('ban c','a.ban_id = c.ban_id')->where([['house_id','in',$getData['id']]])->field('house_number,house_curr_month_send_tel_sms,house_curr_month_send_wx_sms,b.tenant_name,b.tenant_tel,c.ban_address,c.ban_inst_pid')->select();
+            foreach ($filterData['data'] as $v) {
+                $house_info = Db::name('house')->where([['house_id','eq',$v['house_id']]])->field('house_curr_month_send_tel_sms,house_curr_month_send_wx_sms')->find();
+                // 如果超出每月的微信发送数量限制，则无法再次发送
+                if($house_info['house_curr_month_send_wx_sms'] >= 2){
+                    continue;
+                }
+                $members = Db::name('weixin_member_house')->alias('a')->join('weixin_member b','a.member_id = b.member_id')->where([['dtime','eq',0],['house_id','eq',$v['house_id']]])->field('b.openid')->select();
+
+                // 开始发送订阅消息
+                if(!empty($members)){
+                    foreach($members as $m){
+                        // 模板信息
+                        $data = [
+                            'touser' => 'oaUZL5Ocoqr6EEnXN7nDBpcQUxXg', //要发送给用户的openId
+                            // 'touser' => $m['openid'], //要发送给用户的openId
+                            //改成自己的模板id，在微信接口权限里一次性订阅消息的查看模板id
+                            'template_id' => $template_id,
+                            'data'=>array(
+                                // 租户名
+                                'thing7'=>array(
+                                    'value'=>$v['tenant_name'],
+                                ),
+                                // 房屋地址
+                                'thing5'=>array(
+                                    'value'=>$v['ban_address'],
+                                ),
+                                // 历史欠租
+                                'amount9'=>array(
+                                    'value'=>"￥".bcadd($v['beforeMonthUnpaidRent'],$v['beforeYearUnpaidRent'],2),
+                                ),
+                                // 本期欠租
+                                'amount8'=>array(
+                                    'value'=>"￥".$v['curMonthUnpaidRent'],
+                                ),
+                                // 温馨提示
+                                'thing6'=>array(
+                                    'value'=>"请于2日内缴纳，以免影响使用",
+                                ),
+                            )
+                        ];
+                        $WeixinModel = new WeixinModel;
+                        $res = $WeixinModel->sendSubscribeTemplate($data);
+                        halt($res);
+                        if(is_array($res)){
+                            if($res['errcode'] == 0){
+                                // 房屋本月微信订阅催缴信息数量+1
+                                Db::name('house')->where([['house_id','eq',$v['house_id']]])->setInc('house_curr_month_send_wx_sms');
+                                $success_count++;
+                            }else{
+                                // $result['code'] = 0;
+                                // $result['msg'] = '发送失败！';
+                            }
+                        }else{
+                            // $result['code'] = 0;
+                            // $result['msg'] = $res;
+                        }
+                    }
+                }
+                
+            }
+
+
+            $error_count = $count - $success_count;
+            if($success_count){
+                if($error_count){
+                    return $this->success('发送成功，共计发送'.$success_count.'条信息！发送失败'.$error_count.'条信息！');
+                }else{
+                    return $this->success('发送成功，共计发送'.$success_count.'条信息！');
+                }
+                
+            }else{
+                return $this->error('发送失败'); 
+            }
+
+        }
+
+    }
+
 
     public function print_out()
     {

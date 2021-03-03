@@ -53,6 +53,48 @@ class Sms extends Admin
     }
 
     /**
+     * 催缴短信提示
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-03 11:32:51 
+     * @return  返回值  
+     * @version 版本  1.0
+     */
+    public function send_tips_sms_demo()
+    {
+        $SmsModel = new SmsModel;
+        //发送短信验证
+        $tempid = '879573'; //短信模板
+       
+        $tempdata = ['测试路xx号','xx小程序']; //模板参数
+        $phone = ['+8618674012767']; //手机号
+        $data = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'liangdao');
+        $count = 0;
+        foreach($data['SendStatusSet'] as $row){
+            if($row['Code'] === 'Ok'){
+                $row['PhoneNumber'] = substr($row['PhoneNumber'],3);
+                //session('sms_verification_', $login,);
+                $SmsModel = new SmsModel;
+                $ji = $SmsModel->save(['serial_no'=>$row['SerialNo'],'phone'=>$row['PhoneNumber'],'session_context'=>$row['SessionContext'],'content'=>json_encode($tempdata)]);
+                if($ji){
+                    $count++;
+                }
+            }else{
+                return $this->error('发送失败,错误码：'.$row['Message']);
+            }
+        }
+        if($count){
+            return json(['code'=>0,'msg'=>'发送成功','count'=>$count]);
+        }else{
+            return $this->error('发送失败');
+        }
+        
+    }
+
+    /**
      * 发送手机登录或注册验证码
      * =====================================
      * @author  Lucas 
