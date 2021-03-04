@@ -534,12 +534,12 @@
 								  // 判断余额处理单选框是否可点击
 								  if(tdArr.eq(6).find("input").val()<=0){
 									  console.log("小于0")
-									  tdArr.eq(7).find("input").attr('readonly','readonly');
+									  tdArr.eq(7).find("input").attr('disabled','disabled');
 									  tdArr.eq(7).find("div").addClass("layui-radio-disbaled layui-disabled");
 									  tdArr.eq(7).find("input").val("0")
 								  }
 								  else{
-									  tdArr.eq(7).find("input").removeAttr("readonly");
+									  tdArr.eq(7).find("input").removeAttr("disabled");
 									  tdArr.eq(7).find("div").removeClass("layui-radio-disbaled layui-disabled");
 								  }
 							}
