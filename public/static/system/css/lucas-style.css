@@ -115,6 +115,14 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-table-content.j-no-tab .layui-table-tool .layui-inline[lay-event="LAYTABLE_COLS"] .layui-table-tool-panel{top:55px;}
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_EXPORT"]{position: absolute;top:2px; right:44px;}
 .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_PRINT"]{position: absolute;top:2px; right:10px;}
+.j-table-content.j-no-tab .j-container-margin.layui-btn-container .j-tips-txt{
+	font-size: 14px;
+	line-height: 38px;
+	display: inline-block;
+	position: relative;
+	top:8px;
+	color: red;
+}
 /* 新建后台导出样式 S */
 /* .j-table-content .layui-table-tool .layui-inline[lay-event="LAYTABLE_DATAPRINT"]{position: absolute;top:2px; right:44px;} */
 #button_prints{position: absolute;top:12px; right:50px;margin: 0 0 0 10px;
