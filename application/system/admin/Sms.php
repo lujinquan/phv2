@@ -43,7 +43,20 @@ class Sms extends Admin
             if($content){
                 $where[] = ['content','like','%'.$content.'%'];
             }
-            $data['data'] = $SmsModel->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            $temp = $SmsModel->where($where)->page($page)->order('ctime desc')->limit($limit)->select();
+            foreach ($temp as &$v) {
+                $row = json_decode($v['content']);
+                if (is_array($row)) {
+                    $v['content'] = implode(' | ', $row);
+                }else{
+                    $v['content'] = $row;
+                }
+                // json_decode($v['content']);
+
+                // halt($v);
+            }
+            // halt($temp);
+            $data['data'] = $temp;
             $data['count'] = $SmsModel->where($where)->count('id');//halt($data['data']);
             $data['code'] = 0;
             $data['msg'] = '';
@@ -65,13 +78,15 @@ class Sms extends Admin
      */
     public function send_tips_sms_demo()
     {
+        die();
+        // halt(str_coding('MUMVP2OT4PbWFkzyd3IZpNfotjXPccic','ENCODE'));
         $SmsModel = new SmsModel;
         //发送短信验证
-        $tempid = '879573'; //短信模板
+        $tempid = '879554'; //短信模板
        
-        $tempdata = ['测试路xx号','xx小程序']; //模板参数
+        $tempdata = ['测试路xx号','智慧公房小程序']; //模板参数
         $phone = ['+8618674012767']; //手机号
-        $data = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'liangdao');
+        $data = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'ziyang');
         $count = 0;
         foreach($data['SendStatusSet'] as $row){
             if($row['Code'] === 'Ok'){

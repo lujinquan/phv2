@@ -32,6 +32,8 @@ class Ask extends Admin
 
     public function index()
     {
+        // $template_info = Db::name('weixin_template')->where([['name','in',['app_user_payment_remind','app_user_wx_tips_remind']]])->column('value');
+        // halt(implode(',',$template_info)); // 模板id
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
@@ -62,21 +64,32 @@ class Ask extends Admin
         if ($this->request->isAjax()) {
 
             $getData = $this->request->post();
-
+            // 模拟前端传过来的房屋id数组
+            $getData['id'] = ['1446'];
             // 需要发送的总短信数量
             $count = count($getData['id']);
-            $houseData = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id')->join('ban c','a.ban_id = c.ban_id')->where([['house_id','in',$getData['id']]])->field('house_number,house_curr_month_send_tel_sms,house_curr_month_send_wx_sms,b.tenant_tel,c.ban_address,c.ban_inst_pid')->select();
+            $houseData = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id')->join('ban c','a.ban_id = c.ban_id')->where([['house_id','in',$getData['id']]])->field('house_id,house_number,house_curr_month_send_tel_sms,house_curr_month_send_wx_sms,b.tenant_tel,c.ban_address,c.ban_inst_pid')->select();
+            // halt($houseData);
             $ziyangHouses = [];
             $liangdaoHouses = [];
             $success_count = 0;
+            // halt($houseData);
             foreach($houseData as $v){
+                // halt($v);
                 if($v['house_curr_month_send_tel_sms'] >= 2){
                     continue;
                 }
                 $SmsModel = new SmsModel;
-                
+                // 发送的手机号
+                $phone = ['+86'.$v['tenant_tel']];
+
+                $paramsSet1 = $v['ban_address'];
+
+                $paramsSet2 = '智慧公房小程序';
+                // 模板信息
+                $tempdata = [$paramsSet1 , $paramsSet2];
                 if($v['ban_inst_pid'] == 2){
-                    $tempid = ''; //紫阳所的催缴短信模板
+                    $tempid = '879554'; //紫阳所的催缴短信模板
                     $resData = $SmsModel->sendSmsOfInst($tempid , $tempdata , $phone ,$insttype = 'ziyang');
                 }elseif($v['ban_inst_pid'] == 3){
                     $tempid = '879573'; //粮道所的催缴短信模板

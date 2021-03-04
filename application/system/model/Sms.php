@@ -47,23 +47,17 @@ class Sms extends Model
     protected $Sign ;
     protected $TemplateID ;
 
-    protected $liangdaosuo_tencent_sms_signid = '350938';
-    protected $liangdaosuo_tencent_sms_tempid = '879573';
-    protected $liangdaosuo_tencent_sms_tempdata = array('测试路xx号','xx小程序');
-
-  	protected $liangdao_tencent_app_id = '1304765952';
-  	protected $liangdao_tencent_secret_id = 'AKIDSgfPyOMkbFgpj3cGWUHLM8k9H9k4K0iB';
-  	protected $liangdao_tencent_secret_key = 'kKhssgCSCTWHn10NUO1PWP4S2Kbb9QRA';
+    
 
 	protected function initialize()
     {
         parent::initialize();
-        $configDatas = WeixinConfigModel::column('name,value');
-    	$this->SecretId = $configDatas['tencent_secret_id'];
-    	$this->SecretKey = str_coding($configDatas['tencent_secret_key'],'DECODE');
-    	$this->SmsSdkAppid = $configDatas['tencent_sms_sdk_appid'];
-    	$this->Sign = $configDatas['tencent_sms_sign'];
-    	$this->TemplateID = $configDatas['tencent_sms_template_id'];
+        // $configDatas = WeixinConfigModel::column('name,value');
+    	// $this->SecretId = $configDatas['tencent_secret_id'];
+    	// $this->SecretKey = str_coding($configDatas['tencent_secret_key'],'DECODE');
+    	// $this->SmsSdkAppid = $configDatas['tencent_sms_sdk_appid'];
+    	// $this->Sign = $configDatas['tencent_sms_sign'];
+    	// $this->TemplateID = $configDatas['tencent_sms_template_id'];
     	// halt($this->SecretKey);
     }
 
@@ -85,17 +79,18 @@ class Sms extends Model
     	if($insttype == 'ziyang' || $insttype == 'liangdao'){
 		    $configDatas = WeixinConfigModel::column('name,value');
 	    	$this->SecretId = $configDatas[$insttype.'_tencent_secret_id'];
+	    	// 自行通过系统加密后的
 	    	$this->SecretKey = str_coding($configDatas[$insttype.'_tencent_secret_key'],'DECODE');
 	    	$this->SmsSdkAppid = $configDatas[$insttype.'_tencent_sms_sdk_appid'];
 	    	$this->Sign = $configDatas[$insttype.'_tencent_sms_sign'];
 	    	// $this->TemplateID = $configDatas[$insttype.'_tencent_sms_template_id'];
-	    	dump($this->SecretId);dump($this->SecretKey);dump($this->SmsSdkAppid);halt($this->Sign);
+	    	
 	    	// halt($configDatas);
     	}else{
     		// 没有配置，其他选项
     		return false;
     	}
-
+		// dump($this->SecretId);dump($this->SecretKey);dump($this->SmsSdkAppid);halt($this->Sign);
         $cred = new Credential($this->SecretId, $this->SecretKey);
 	    //$cred = new Credential(getenv("TENCENTCLOUD_SECRET_ID"), getenv("TENCENTCLOUD_SECRET_KEY"));
 
@@ -145,6 +140,7 @@ class Sms extends Model
 	    $req->TemplateParamSet = $tempdata;
 	    // 通过client对象调用DescribeInstances方法发起请求。注意请求方法名与请求对象是对应的
 	    // 返回的resp是一个DescribeInstancesResponse类的实例，与请求对象对应
+	    // halt($req);
 	    $resp = $client->SendSms($req);
 
 	    //halt(json_decode($resp->toJsonString(),true));
