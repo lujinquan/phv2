@@ -59,13 +59,13 @@ class Ask extends Admin
     public function send_tips_tel_sms()
     {
         if(date('d') < 10){
-            return $this->error('每月10号前，无法发送催缴信息'); 
+            // return $this->error('每月10号前，无法发送催缴信息'); 
         }
         if ($this->request->isAjax()) {
 
             $getData = $this->request->post();
             // 模拟前端传过来的房屋id数组
-            $getData['id'] = ['1446'];
+            // $getData['id'] = ['1446'];
             // 需要发送的总短信数量
             $count = count($getData['id']);
             $houseData = Db::name('house')->alias('a')->join('tenant b','a.tenant_id = b.tenant_id')->join('ban c','a.ban_id = c.ban_id')->where([['house_id','in',$getData['id']]])->field('house_id,house_number,house_curr_month_send_tel_sms,house_curr_month_send_wx_sms,b.tenant_tel,c.ban_address,c.ban_inst_pid')->select();
@@ -104,6 +104,7 @@ class Ask extends Admin
                         $SmsModel = new SmsModel;
                         $ji = $SmsModel->save(['serial_no'=>$row['SerialNo'],'phone'=>$row['PhoneNumber'],'session_context'=>$row['SessionContext'],'content'=>json_encode($tempdata)]);
                         if($ji){
+                            Db::name('house')->where([['house_id','eq',$v['house_id']]])->setInc('house_curr_month_send_tel_sms');
                             $success_count++;
                         }
                     }else{
@@ -206,7 +207,7 @@ class Ask extends Admin
                         ];
                         $WeixinModel = new WeixinModel;
                         $res = $WeixinModel->sendSubscribeTemplate($data);
-                        halt($res);
+                        // halt($res);
                         if(is_array($res)){
                             if($res['errcode'] == 0){
                                 // 房屋本月微信订阅催缴信息数量+1

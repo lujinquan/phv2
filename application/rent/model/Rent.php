@@ -1461,9 +1461,9 @@ class Rent extends Model
             $where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
             //$where[] = ['rent_order_receive','eq',rent_order_paid];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
-            $fields = 'a.house_id,b.house_number,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,b.house_share_img,c.tenant_name,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
+            $fields = 'a.house_id,b.house_number,b.house_curr_month_send_tel_sms,b.house_curr_month_send_wx_sms,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,b.house_share_img,c.tenant_name,c.tenant_tel,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
             $result = $data = [];
-            $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->select(); //->limit(1000)
+            $baseData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->limit(10000)->where($where)->select(); //->limit(1000)
             //dump($where);halt($baseData);
             //dump($month);dump($separate);
             $total_cur_month_unpaid_rent = 0;
@@ -1478,9 +1478,12 @@ class Rent extends Model
                 $data[$b['house_id']]['house_id'] = $b['house_id'];
                 $data[$b['house_id']]['house_share_img'] = $b['house_share_img'];
                 $data[$b['house_id']]['house_number'] = $b['house_number'];
+                $data[$b['house_id']]['house_curr_month_send_wx_sms'] = $b['house_curr_month_send_wx_sms'];
+                $data[$b['house_id']]['house_curr_month_send_tel_sms'] = $b['house_curr_month_send_tel_sms'];
                 $data[$b['house_id']]['ban_number'] = $b['ban_number'];
                 $data[$b['house_id']]['ban_address'] = $b['ban_address'];
                 $data[$b['house_id']]['tenant_name'] = $b['tenant_name'];
+                $data[$b['house_id']]['tenant_tel'] = $b['tenant_tel'];
                 $data[$b['house_id']]['house_pre_rent'] = $b['house_pre_rent'];
                 $data[$b['house_id']]['house_use_id'] = $params['uses'][$b['house_use_id']];
                 $data[$b['house_id']]['ban_owner_id'] = $params['owners'][$b['ban_owner_id']];
