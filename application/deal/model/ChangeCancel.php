@@ -247,7 +247,7 @@ class ChangeCancel extends SystemBase
         $row['change_imgs'] = SystemAnnex::changeFormat($row['change_imgs']);
         $row['ban_info'] = BanModel::get($row['ban_id']);
 //        halt($row);
-//         $this->finalDeal($row);
+        // $this->finalDeal($row);
         return $row;
     }
 
@@ -409,6 +409,7 @@ class ChangeCancel extends SystemBase
                 $finalRow['ban_info'] = Db::name('ban')->where([['ban_id', 'eq', $finalRow['ban_id']]])->find();
                 // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
                 foreach ($finalRow['data_json'] as $k => $v) {
+                    $oldHouseInfo = HouseModel::where([['house_number', 'eq', $v['house_number']]])->field('house_balance')->find();
                     HouseModel::where([['house_number', 'eq', $v['house_number']]])->update([
                         'house_oprice' => $v['house_oprice'],
                         'house_area' => $v['house_area'],
@@ -428,10 +429,14 @@ class ChangeCancel extends SystemBase
                             $RechargeModel->pay_number = date('YmdHis') . random(6);
                             $RechargeModel->house_id = $v['house_id'];
                             $RechargeModel->tenant_id = $v['tenant_id'];
-                            $RechargeModel->pay_rent = -$v['house_balance'];
+                            // 充负的余额不能直接去原表单的房屋余额，应该要去当前实时的房屋表的余额
+                            // $RechargeModel->pay_rent = -$v['house_balance'];
+                            $RechargeModel->pay_rent = $oldHouseInfo['house_balance'];
                             $RechargeModel->yue = 0;
                             $RechargeModel->pay_way = 1;
                             $RechargeModel->recharge_status = 1;
+                            $RechargeModel->ptime = $curr_time;
+                            $RechargeModel->act_ptime = $curr_time;
                             $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
                             // 追收
@@ -441,10 +446,14 @@ class ChangeCancel extends SystemBase
                             $RechargeModel->pay_number = date('YmdHis') . random(6);
                             $RechargeModel->house_id = $v['house_id'];
                             $RechargeModel->tenant_id = $v['tenant_id'];
-                            $RechargeModel->pay_rent = -$v['house_balance'];
+                            // 充负的余额不能直接去原表单的房屋余额，应该要去当前实时的房屋表的余额
+                            // $RechargeModel->pay_rent = -$v['house_balance'];
+                            $RechargeModel->pay_rent = $oldHouseInfo['house_balance'];
                             $RechargeModel->yue = 0;
                             $RechargeModel->pay_way = 1;
                             $RechargeModel->recharge_status = 1;
+                            $RechargeModel->ptime = $curr_time;
+                            $RechargeModel->act_ptime = $curr_time;
                             $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                             $RechargeModel->save();
 
@@ -455,11 +464,13 @@ class ChangeCancel extends SystemBase
                             $RentModel->rent_order_date = $currMonth;
                             $RentModel->rent_order_cut = 0;
                             $RentModel->rent_order_pre_rent = $v['house_pre_rent'];
-                            $RentModel->rent_order_receive = $v['house_balance'];
-                            $RentModel->rent_order_paid = $v['house_balance'];
+                            // $RentModel->rent_order_receive = $v['house_balance'];
+                            $RentModel->rent_order_receive = $oldHouseInfo['house_balance'];
+                            // $RentModel->rent_order_paid = $v['house_balance'];
+                            $RentModel->rent_order_paid = $oldHouseInfo['house_balance'];
                             $RentModel->house_id = $v['house_id'];
                             $RentModel->tenant_id = $v['tenant_id'];
-                            $RentModel->ctime = time();
+                            $RentModel->ctime = $curr_time;
                             $RentModel->is_deal = 1;
                             $RentModel->save();
 
@@ -470,8 +481,10 @@ class ChangeCancel extends SystemBase
                             $RentOrderChildModel->rent_order_cut = 0;
                             $RentOrderChildModel->rent_order_id = $RentModel->rent_order_id;
                             $RentOrderChildModel->rent_order_pre_rent = $v['house_pre_rent'];
-                            $RentOrderChildModel->rent_order_receive = $v['house_balance'];
-                            $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                            // $RentOrderChildModel->rent_order_receive = $v['house_balance'];
+                            $RentOrderChildModel->rent_order_receive = $oldHouseInfo['house_balance'];
+                            // $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                            $RentOrderChildModel->rent_order_paid = $oldHouseInfo['house_balance'];
                             $RentOrderChildModel->pay_way = 1;
                             $RentOrderChildModel->house_id = $v['house_id'];
                             $RentOrderChildModel->tenant_id = $v['tenant_id'];
@@ -494,7 +507,8 @@ class ChangeCancel extends SystemBase
                             $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
                             $ChangeTableModel->use_id = $v['house_use_id'];
                             $ChangeTableModel->change_month_rent = 0;
-                            $ChangeTableModel->change_year_rent = $v['house_balance'];
+                            // $ChangeTableModel->change_year_rent = $v['house_balance'];
+                            $ChangeTableModel->change_year_rent = $oldHouseInfo['house_balance'];
                             $ChangeTableModel->change_rent = 0;
                             $ChangeTableModel->tenant_id = $v['tenant_id'];
                             $ChangeTableModel->cuid = $finalRow['cuid'];
@@ -511,9 +525,9 @@ class ChangeCancel extends SystemBase
                         $HouseTaiModel->house_tai_type = 9;
                         $HouseTaiModel->cuid = $finalRow['cuid'];
                         if ($v['house_balance_deal_type'] == 1) {
-                            $HouseTaiModel->house_tai_remark = '房屋注销，余额退款：-' . $v['house_balance'] . '元';
+                            $HouseTaiModel->house_tai_remark = '房屋注销，余额退款：-' . $oldHouseInfo['house_balance'] . '元';
                         } else if ($v['house_balance_deal_type'] == 2) {//halt($v);
-                            $HouseTaiModel->house_tai_remark = '房屋注销，余额追收：-' . $v['house_balance'] . '元';
+                            $HouseTaiModel->house_tai_remark = '房屋注销，余额追收：-' . $oldHouseInfo['house_balance'] . '元';
                         }
                         $HouseTaiModel->data_json = [];
                         $HouseTaiModel->change_type = 4;
@@ -588,6 +602,7 @@ class ChangeCancel extends SystemBase
             $finalRow['ban_info'] = Db::name('ban')->where([['ban_id', 'eq', $finalRow['ban_id']]])->find();
             // 1、将涉及的所有房屋，设置成注销状态,并修改房屋的原价和房屋的建面
             foreach ($finalRow['data_json'] as $k => $v) {
+                $oldHouseInfo = HouseModel::where([['house_number', 'eq', $v['house_number']]])->field('house_balance')->find();
                 HouseModel::where([['house_number', 'eq', $v['house_number']]])->update([
                     'house_oprice' => $v['house_oprice'],
                     'house_area' => $v['house_area'],
@@ -607,10 +622,13 @@ class ChangeCancel extends SystemBase
                         $RechargeModel->pay_number = date('YmdHis') . random(6);
                         $RechargeModel->house_id = $v['house_id'];
                         $RechargeModel->tenant_id = $v['tenant_id'];
-                        $RechargeModel->pay_rent = -$v['house_balance'];
+                        // $RechargeModel->pay_rent = -$v['house_balance'];
+                        $RechargeModel->pay_rent = -$oldHouseInfo['house_balance'];
                         $RechargeModel->yue = 0;
                         $RechargeModel->pay_way = 1;
                         $RechargeModel->recharge_status = 1;
+                        $RechargeModel->ptime = $curr_time;
+                        $RechargeModel->act_ptime = $curr_time;
                         $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                         $RechargeModel->save();
                         // 追收
@@ -620,10 +638,13 @@ class ChangeCancel extends SystemBase
                         $RechargeModel->pay_number = date('YmdHis') . random(6);
                         $RechargeModel->house_id = $v['house_id'];
                         $RechargeModel->tenant_id = $v['tenant_id'];
-                        $RechargeModel->pay_rent = -$v['house_balance'];
+                        // $RechargeModel->pay_rent = -$v['house_balance'];
+                        $RechargeModel->pay_rent = -$oldHouseInfo['house_balance'];
                         $RechargeModel->yue = 0;
                         $RechargeModel->pay_way = 1;
                         $RechargeModel->recharge_status = 1;
+                        $RechargeModel->ptime = $curr_time;
+                        $RechargeModel->act_ptime = $curr_time;
                         $RechargeModel->pay_remark = '房屋注销退款系统自动生成的冲红记录';
                         $RechargeModel->save();
 
@@ -634,11 +655,13 @@ class ChangeCancel extends SystemBase
                         $RentModel->rent_order_date = $currMonth;
                         $RentModel->rent_order_cut = 0;
                         $RentModel->rent_order_pre_rent = $v['house_pre_rent'];
-                        $RentModel->rent_order_receive = $v['house_balance'];
-                        $RentModel->rent_order_paid = $v['house_balance'];
+                        // $RentModel->rent_order_receive = $v['house_balance'];
+                        $RentModel->rent_order_receive = $oldHouseInfo['house_balance'];
+                        // $RentModel->rent_order_paid = $v['house_balance'];
+                        $RentModel->rent_order_paid = $oldHouseInfo['house_balance'];
                         $RentModel->house_id = $v['house_id'];
                         $RentModel->tenant_id = $v['tenant_id'];
-                        $RentModel->ctime = time();
+                        $RentModel->ctime = $curr_time;
                         $RentModel->is_deal = 1;
                         $RentModel->save();
 
@@ -649,8 +672,10 @@ class ChangeCancel extends SystemBase
                         $RentOrderChildModel->rent_order_cut = 0;
                         $RentOrderChildModel->rent_order_id = $RentModel->rent_order_id;
                         $RentOrderChildModel->rent_order_pre_rent = $v['house_pre_rent'];
-                        $RentOrderChildModel->rent_order_receive = $v['house_balance'];
-                        $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                        // $RentOrderChildModel->rent_order_receive = $v['house_balance'];
+                        $RentOrderChildModel->rent_order_receive = $oldHouseInfo['house_balance'];
+                        // $RentOrderChildModel->rent_order_paid = $v['house_balance'];
+                        $RentOrderChildModel->rent_order_paid = $oldHouseInfo['house_balance'];
                         $RentOrderChildModel->pay_way = 1;
                         $RentOrderChildModel->house_id = $v['house_id'];
                         $RentOrderChildModel->tenant_id = $v['tenant_id'];
@@ -672,7 +697,8 @@ class ChangeCancel extends SystemBase
                         $ChangeTableModel->owner_id = $banInfo['ban_owner_id'];
                         $ChangeTableModel->use_id = $v['house_use_id'];
                         $ChangeTableModel->change_month_rent = 0;
-                        $ChangeTableModel->change_year_rent = $v['house_balance'];
+                        // $ChangeTableModel->change_year_rent = $v['house_balance'];
+                        $ChangeTableModel->change_year_rent = $oldHouseInfo['house_balance'];
                         $ChangeTableModel->change_rent = 0;
                         $ChangeTableModel->tenant_id = $v['tenant_id'];
                         $ChangeTableModel->cuid = $finalRow['cuid'];
@@ -722,7 +748,7 @@ class ChangeCancel extends SystemBase
                     $changeBanData['ban_civil_oprice'] = Db::raw('ban_civil_oprice-'.$v['house_oprice']);
                     $changeBanData['ban_civil_area'] = Db::raw('ban_civil_area-'.$v['house_area']);
                     $changeBanData['ban_use_area'] = Db::raw('ban_use_area-'.$v['house_lease_area']);
-                    $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
+                    // $changeBanData['ban_civil_holds'] = Db::raw('ban_civil_holds-1');
                 }else if($v['house_use_id'] == 2){ // 企业
                     $changeBanData['ban_career_rent'] = Db::raw('ban_career_rent-'.$v['house_pre_rent']);
                     $changeBanData['ban_career_oprice'] = Db::raw('ban_career_oprice-'.$v['house_oprice']);
