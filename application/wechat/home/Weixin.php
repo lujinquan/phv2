@@ -3565,7 +3565,7 @@ class Weixin extends Common
             $path = 'pages/payment/payment'; //注意路径格式，这个路径不能带参数！
             $filename = '/upload/wechat/qrcode/share_'.$houseRow['house_id'].'_'.$houseRow['house_number'].'.png';
             $createMiniSceneData = $WeixinModel->createMiniScene($houseRow['house_id'] , $path,$width); //B方案生成二维码，
-            file_put_contents('.'.$filename,$createMiniSceneData);
+            @file_put_contents('.'.$filename,$createMiniSceneData);
             $houseModel = new HouseModel;
             $res = $houseModel->where([['house_id','eq',$houseID]])->update(['house_share_img'=>$this->domain.$filename]);
             $houseRow['house_share_img'] = $this->domain.$filename;

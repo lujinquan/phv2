@@ -362,39 +362,39 @@
                 }
             }
 
-            $(".j-old").removeClass("hide");
-			$(".j-new").addClass("hide");
-			element.progress('demo','0%');
-			element.progress('newdemo','0%');
+   //          $(".j-old").removeClass("hide");
+			// $(".j-new").addClass("hide");
+			// element.progress('demo','0%');
+			// element.progress('newdemo','0%');
             var queryWhere = $('#hisi-table-search').serialize();
-
+			$('#j-ajax-tel-sms').addClass("layui-btn-disabled");
 			//触发进度条事件
-			var loops = $(".layui-laypage-count label").text();//获取数据条数
-			console.log(loops)
-			  var active = {
-			    loading: function(othis){
-			      var disabled = 'layui-btn-disabled';
-			      if(othis.hasClass(disabled)) return;
-					$(".j-old").removeClass("hide");
-					var n = 0, timer = setInterval(function(){
-					  n = n + Math.random()*5|0;  
-					  if(n>95){
-					    n = 95;
-					    clearInterval(timer);
-					    //othis.removeClass(disabled);
-						//$(".j-old").addClass("hide");
-					  }
-					  element.progress('demo', n+'%');
-					}, 5*loops + Math.random()*1000);
-					othis.addClass(disabled);
-				  }
-			  };
+			// var loops = $(".layui-laypage-count label").text();//获取数据条数
+			// console.log(loops)
+			  // var active = {
+			  //   loading: function(othis){
+			  //     var disabled = 'layui-btn-disabled';
+			  //     if(othis.hasClass(disabled)) return;
+					// $(".j-old").removeClass("hide");
+					// var n = 0, timer = setInterval(function(){
+					//   n = n + Math.random()*5|0;  
+					//   if(n>95){
+					//     n = 95;
+					//     clearInterval(timer);
+					//     //othis.removeClass(disabled);
+					// 	//$(".j-old").addClass("hide");
+					//   }
+					//   element.progress('demo', n+'%');
+					// }, 5*loops + Math.random()*1000);
+					// othis.addClass(disabled);
+				 //  }
+			  // };
 			var othis = $(this), type = $(this).data('type');
             //console.log('导出的条件：',queryWhere);
 			layer.confirm("确认批量发送催缴短信吗？", {
 		            btn: ["确定","取消"] //按钮
 		        }, function(index){
-		                active[type] ? active[type].call(this, othis) : '';
+		                // active[type] ? active[type].call(this, othis) : '';
 		            	$.ajax({
 		            	    type:"post",// 请求方式
 		            	    url:"{:url('send_tips_tel_sms')}",
@@ -403,24 +403,29 @@
 		            	    data :query,//这里是前台传到后台的数据
 		            	    //回调函数
 		            	    success:function(output){
-		            	        layer.msg(output.msg);
-		            	        if(!output.code){ //成功则直接下载  
-								$(".j-old").addClass("hide");
-								$(".j-new").removeClass("hide");
-								$('#j-ajax-pdf').removeClass("layui-btn-disabled");
-								element.progress('newdemo', '100%')
-								setTimeout(function(){
-								  $(".j-old").addClass("hide");
-								  $(".j-new").addClass("hide");
-								  // window.open(output.data); 
-								},2000);
+		            	        layer.msg(output.msg,{
+									time: 6000 //2秒关闭（如果不配置，默认是3秒）
+								},function(){
+									$('#j-ajax-tel-sms').removeClass("layui-btn-disabled");
+									// element.progress('newdemo', '100%')
+									setTimeout(function(){
+									  // $(".j-old").addClass("hide");
+									  // $(".j-new").addClass("hide");
+									  location.reload();
+									},3000);
+								});
+		            	        console.log('output.code:',output.code);
+		            	        // if(output.code){ //成功则直接下载  
+									// $(".j-old").addClass("hide");
+									// $(".j-new").removeClass("hide");
+									
 								//$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');       
 								//window.open(output.data, "B_page", "width=1000,height=500,menubar=yes,location=yes,resizable=yes,scrollbars=true,status=true")          
 								//document.location.href = output.data;
-		            	        }
-		            	        else{
+		            	        // }
+		            	        // else{
 		            	            //$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');  
-		            	        }
+		            	        // }
 		            	    }
 		            	});
 		            layer.close(index);
@@ -458,39 +463,39 @@
                 }
             }
 
-            $(".j-old").removeClass("hide");
-			$(".j-new").addClass("hide");
-			element.progress('demo','0%');
-			element.progress('newdemo','0%');
+   //          $(".j-old").removeClass("hide");
+			// $(".j-new").addClass("hide");
+			// element.progress('demo','0%');
+			// element.progress('newdemo','0%');
             var queryWhere = $('#hisi-table-search').serialize();
 
 			//触发进度条事件
 			var loops = $(".layui-laypage-count label").text();//获取数据条数
 			console.log(loops)
-			  var active = {
-			    loading: function(othis){
-			      var disabled = 'layui-btn-disabled';
-			      if(othis.hasClass(disabled)) return;
-					$(".j-old").removeClass("hide");
-					var n = 0, timer = setInterval(function(){
-					  n = n + Math.random()*5|0;  
-					  if(n>95){
-					    n = 95;
-					    clearInterval(timer);
-					    //othis.removeClass(disabled);
-						//$(".j-old").addClass("hide");
-					  }
-					  element.progress('demo', n+'%');
-					}, 5*loops + Math.random()*1000);
-					othis.addClass(disabled);
-				  }
-			  };
+			  // var active = {
+			  //   loading: function(othis){
+			  //     var disabled = 'layui-btn-disabled';
+			  //     if(othis.hasClass(disabled)) return;
+					// $(".j-old").removeClass("hide");
+					// var n = 0, timer = setInterval(function(){
+					//   n = n + Math.random()*5|0;  
+					//   if(n>95){
+					//     n = 95;
+					//     clearInterval(timer);
+					//     //othis.removeClass(disabled);
+					// 	//$(".j-old").addClass("hide");
+					//   }
+					//   element.progress('demo', n+'%');
+					// }, 5*loops + Math.random()*1000);
+					// othis.addClass(disabled);
+				 //  }
+			  // };
 			var othis = $(this), type = $(this).data('type');
             //console.log('导出的条件：',queryWhere);
 			layer.confirm("确认批量发送微信催缴信息吗？", {
 		            btn: ["确定","取消"] //按钮
 		        }, function(index){
-		                active[type] ? active[type].call(this, othis) : '';
+		                // active[type] ? active[type].call(this, othis) : '';
 		            	$.ajax({
 		            	    type:"post",// 请求方式
 		            	    url:"{:url('send_tips_wx_sms')}",
@@ -500,16 +505,16 @@
 		            	    //回调函数
 		            	    success:function(output){
 		            	        layer.msg(output.msg);
-		            	        if(!output.code){ //成功则直接下载  
-								$(".j-old").addClass("hide");
-								$(".j-new").removeClass("hide");
-								$('#j-ajax-pdf').removeClass("layui-btn-disabled");
-								element.progress('newdemo', '100%')
+		            	        if(output.code){ //成功则直接下载  
+								// $(".j-old").addClass("hide");
+								// $(".j-new").removeClass("hide");
+								$('#j-ajax-wx-sms').removeClass("layui-btn-disabled");
+								// element.progress('newdemo', '100%')
 								setTimeout(function(){
-								  $(".j-old").addClass("hide");
-								  $(".j-new").addClass("hide");
-								  // window.open(output.data); 
-								},2000);
+								  // $(".j-old").addClass("hide");
+								  // $(".j-new").addClass("hide");
+								  location.reload(); 
+								},5000);
 								//$('#button_prints').prop('disabled', false).removeClass('layui-bg-gray').addClass('layui-btn-warm').html('<i class="layui-icon layui-icon-export"></i>');       
 								//window.open(output.data, "B_page", "width=1000,height=500,menubar=yes,location=yes,resizable=yes,scrollbars=true,status=true")          
 								//document.location.href = output.data;

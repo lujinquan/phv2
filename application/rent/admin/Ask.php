@@ -58,6 +58,8 @@ class Ask extends Admin
      */
     public function send_tips_tel_sms()
     {
+        // return $this->success('发送成功，共计发送1条短信！');exit;
+        // return $this->error('发送失败，请检查手机号是否正确或该房屋是否已达到短信催缴次数');exit;
         if(date('d') < 10){
             // return $this->error('每月10号前，无法发送催缴信息'); 
         }
@@ -115,13 +117,13 @@ class Ask extends Admin
             $error_count = $count - $success_count;
             if($success_count){
                 if($error_count){
-                    return $this->success('发送成功，共计发送'.$success_count.'条短信！发送失败'.$error_count.'条短信！');
+                    return $this->success('发送成功，共计发送'.$success_count.'条短信！发送失败'.$error_count.'条短信！请检查手机号是否正确或该房屋是否已达到短信催缴次数');
                 }else{
                     return $this->success('发送成功，共计发送'.$success_count.'条短信！');
                 }
                 
             }else{
-                return $this->error('发送失败'); 
+                return $this->error('发送失败，请检查手机号是否正确或该房屋是否已达到短信催缴次数'); 
             }
             
           
