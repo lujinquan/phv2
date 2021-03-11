@@ -366,6 +366,23 @@ class Index extends Common
             $result['msg'] = '订单编号不能为空';
             return json($result);
         }
+        // 同一个微信会员操作，每次调起支付需要距离上次调起间隔时间 > 30s
+        $last_member_weixin_order_info = Db::name('weixin_order')->where([['member_id','eq',$member_info->member_id]])->order('order_id desc')->field('ctime,order_status')->find();
+        // $last_member_weixin_order_info = Db::name('weixin_order')->where([['member_id','eq',$member_info->member_id],['order_status','eq',3]])->order('order_id desc')->field('ctime')->find();
+        if(!empty($last_member_weixin_order_info)){
+            $allow_interval_time = 30;
+            $diff_time = time() - $last_member_weixin_order_info['ctime'];
+            if($diff_time < $allow_interval_time){
+                $result['code'] = 10033;
+                if($last_member_weixin_order_info['order_status'] == 3){
+                    $result['msg'] = '请勿频繁操作，请于'.($allow_interval_time - $diff_time).'秒后重试';
+                }else{
+                    $result['msg'] = '您有订单正在处理中，请于'.($allow_interval_time - $diff_time).'秒后重试';
+                }
+                return json($result);
+            }
+        }
+
         // 获取前端传入的金额
         $total_price = input('total_price');
         
@@ -381,6 +398,7 @@ class Index extends Common
             $rent_order_info = $RentModel->find($rid);
 
             $ban_row = Db::name('house')->alias('a')->join('ban b','a.ban_id = b.ban_id','inner')->where([['a.house_id','eq',$rent_order_info['house_id']]])->field('b.ban_inst_pid')->find();
+
             // 检查订单是否存在
             if(!$rent_order_info){
                 $result['code'] = 10031;
@@ -394,14 +412,13 @@ class Index extends Common
                 return json($result);
             }
 
-            
-
             $last_trade_info = WeixinOrderTradeModel::where([['rent_order_id','eq',$rid]])->order('trade_id desc')->field('out_trade_no')->find();
 
             if ($last_trade_info) {
                 //$last_weixin_order_info = WeixinOrderModel::where([['out_trade_no','eq',$last_trade_info['out_trade_no']]])->find();
                 $WeixinModel = new WeixinModel;
-                $query_order_result = $WeixinModel->queryOrder($transaction_id = '', $last_trade_info['out_trade_no']);
+                $query_order_result = $WeixinModel->queryOrder($transaction_id = '', $last_trade_info['out_trade_no']);  
+                 
                 // halt($query_order_result['return_code']);
                 //if($res['trade_state'] == 'SUCCESS'){
                 //     $result['msg'] = '支付成功';
@@ -427,7 +444,7 @@ class Index extends Common
                     return json($result);
                 }
             }
-            
+        
             // else if($query_order_result['trade_state'] == 'NOTPAY'){
             //     $result['msg'] = '订单未支付';
             //     return json($result);
@@ -842,7 +859,22 @@ class Index extends Common
             return json($result);
         }
 
-        
+        // 同一个微信会员操作，每次调起支付需要距离上次调起间隔时间 > 30s
+        $last_member_weixin_order_info = Db::name('rent_recharge')->where([['member_id','eq',$member_info->member_id]])->order('id desc')->field('ctime,recharge_status')->find();
+        // $last_member_weixin_order_info = Db::name('weixin_order')->where([['member_id','eq',$member_info->member_id],['order_status','eq',3]])->order('order_id desc')->field('ctime')->find();
+        if(!empty($last_member_weixin_order_info)){
+            $allow_interval_time = 30;
+            $diff_time = time() - $last_member_weixin_order_info['ctime'];
+            if($diff_time < $allow_interval_time){
+                $result['code'] = 10033;
+                if($last_member_weixin_order_info['recharge_status'] == 0){
+                    $result['msg'] = '请勿频繁操作，请于'.($allow_interval_time - $diff_time).'秒后重试';
+                }else{
+                    $result['msg'] = '您有订单正在处理中，请于'.($allow_interval_time - $diff_time).'秒后重试';
+                }
+                return json($result);
+            }
+        }
         // $RentModel = new RentModel;
         // $rentOrderIDS = explode(',',$rent_order_id);
         // //halt($rentOrderIDS);

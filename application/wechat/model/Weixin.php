@@ -313,13 +313,19 @@ class Weixin extends Model
             // 查询交易单号
             if ($transaction_id) {
                 $order_info = WeixinOrderModel::with('weixinMember')->where([['transaction_id','eq',$transaction_id]])->find();
+                if(empty($order_info)){
+                    return false;
+                }
                 $options = ['transaction_id' => $transaction_id, ];
             // 查询订单号
             }elseif ($out_trade_no) {
                 $order_info = WeixinOrderModel::with('weixinMember')->where([['out_trade_no','eq',$out_trade_no]])->find();
+                if(empty($order_info)){
+                    return false;
+                }
                 $options = ['out_trade_no' => $out_trade_no,];
             }
-           //halt($order_info); 
+            
             // 查询属于紫阳或粮道
             $order_trade_info = WeixinOrderTradeModel::where([['out_trade_no','eq',$order_info['out_trade_no']]])->field('rent_order_id')->find();
             $ban_row = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','inner')->join('ban c','b.ban_id = c.ban_id','inner')->where([['rent_order_id','eq',$order_trade_info['rent_order_id']]])->field('c.ban_inst_pid')->find();
