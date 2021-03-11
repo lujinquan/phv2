@@ -534,8 +534,8 @@ class Index extends Common
 
         $options['order_id'] = $WeixinOrderModel->order_id; //需要支付的支付订单号
         $WeixinTemplateModel = new WeixinTemplateModel;
-        $template_info = $WeixinTemplateModel->where([['name','in',['app_user_payment_remind','app_user_wx_tips_remind']]])->column('name');
-        $options['template_id'] = $template_info; // 模板id
+        $template_info = $WeixinTemplateModel->where([['name','in',['app_user_payment_remind','app_user_wx_tips_remind']]])->column('value');
+        $result['template_id'] = $template_info; // 模板id
         $result['code'] = 1;
         $result['msg'] = '获取成功';
         $result['data'] = $options;

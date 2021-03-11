@@ -61,7 +61,7 @@ class Ask extends Admin
         // return $this->success('发送成功，共计发送1条短信！');exit;
         // return $this->error('发送失败，请检查手机号是否正确或该房屋是否已达到短信催缴次数');exit;
         if(date('d') < 10){
-            // return $this->error('每月10号前，无法发送催缴信息'); 
+            return $this->error('每月10号前，无法发送催缴信息'); 
         }
         if ($this->request->isAjax()) {
 
@@ -180,8 +180,8 @@ class Ask extends Admin
                     foreach($members as $m){
                         // 模板信息
                         $data = [
-                            'touser' => 'oaUZL5Ocoqr6EEnXN7nDBpcQUxXg', //要发送给用户的openId
-                            // 'touser' => $m['openid'], //要发送给用户的openId
+                            // 'touser' => 'oaUZL5Ocoqr6EEnXN7nDBpcQUxXg', //要发送给用户的openId
+                            'touser' => $m['openid'], //要发送给用户的openId
                             //改成自己的模板id，在微信接口权限里一次性订阅消息的查看模板id
                             'template_id' => $template_id,
                             'data'=>array(

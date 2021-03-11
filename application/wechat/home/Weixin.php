@@ -39,6 +39,7 @@ use app\wechat\model\WeixinBanner as WeixinBannerModel;
 use app\wechat\model\WeixinConfig as WeixinConfigModel;
 use app\wechat\model\WeixinMember as WeixinMemberModel;
 use app\wechat\model\WeixinOrder as WeixinOrderModel;
+use app\wechat\model\WeixinTemplate as WeixinTemplateModel;
 use app\wechat\model\WeixinReadRecord as WeixinReadRecordModel;
 use app\wechat\model\WeixinOrderTrade as WeixinOrderTradeModel;
 use app\wechat\model\WeixinOrderRefund as WeixinOrderRefundModel;
@@ -2253,6 +2254,9 @@ class Weixin extends Common
             $member_info = $checkData['member_info']; //微信用户基础数据
             $member_extra_info = $checkData['member_extra_info'];
         }
+        $WeixinTemplateModel = new WeixinTemplateModel;
+        $template_info = $WeixinTemplateModel->where([['name','in',['app_user_payment_remind','app_user_wx_tips_remind']]])->column('value');
+        $result['template_id'] = $template_info; // 模板id
         // 获取参数对照数据
         $result['data'] = ParamModel::getCparams();
         $result['code'] = 1;

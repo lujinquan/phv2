@@ -344,7 +344,7 @@ class Api extends Common
 		//dump($month_begin_time);halt($month_end_time);
 
         // 开缴费发票
-        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1],['pay_money', 'neq', 0],['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id asc')->limit(500)->select()->toArray();
+        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1],['pay_money', 'neq', 0],['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id asc')->limit(300)->select()->toArray();
 
         $i = 0;
 
@@ -364,10 +364,10 @@ class Api extends Common
                 }
             }
         }
-        // dump($i);halt($weixin_id_undpkj); 
+        dump($i);halt($weixin_id_undpkj); 
 
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(500)->order('id desc')->select()->toArray();
+        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(100)->order('id desc')->select()->toArray();
 		// halt($weixin_id_undpkj);
         $k = 0;
         // halt($weixin_id_undpkj);
@@ -390,7 +390,7 @@ class Api extends Common
                 }
             }
         }
-// dump($k);halt($weixin_id_undpkj);
+dump($k);halt($weixin_id_undpkj);
         return '缴费发票开具：'.$i.'张，充值发票开具：'.$k.'张';
         // return $this->success('执行成功');
         
