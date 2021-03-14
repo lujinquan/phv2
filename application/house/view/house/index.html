@@ -81,6 +81,13 @@
 					</select>
 				</div>
 				{/if}
+				<div class="layui-input-inline j-width-130 j-margin-10 j-select-width130">
+		            <select name="is_bind_weixin" >
+		                <option value="" >是否绑定微信</option>
+		                <option value="1">是</option>
+		                <option value="0">否</option>
+		              </select>
+		        </div>
 				{if condition="in_array('house_use_id',$config['house_info_search'])"}
 				<div class="layui-input-inline  j-width-115 j-margin-10">
 					<select name="house_use_id" xm-select="house_use_id">

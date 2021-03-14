@@ -148,6 +148,17 @@ class Rent extends Model
                 if(isset($data['house_use_id']) && $data['house_use_id']){
                     $where[] = ['house_use_id','in',explode(',',$data['house_use_id'])];
                 }
+                // // $where[] = ['e.member_id','=','not null'];
+                // if(isset($data['is_bind_weixin'])){
+                //     if($data['is_bind_weixin']){
+                //         $where[] = ['e.member_id','>',0];
+                //     }else{
+                //         $where[] = ['e.member_id','=','not null'];
+                //     }
+
+                // }else{
+
+                // }
                 // 检索以前年或以前月
                 if(isset($data['unpaid_date_type']) && $data['unpaid_date_type']){
                     $start = date('Y').'00';

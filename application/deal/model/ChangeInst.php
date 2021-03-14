@@ -276,7 +276,7 @@ class ChangeInst extends SystemBase
             }else if(($data['flag'] === 'passed') && ($changeRow['change_status'] == $finalStep)){
                 $changeUpdateData['change_status'] = 1;
                 $changeUpdateData['ftime'] = time();
-                $changeUpdateData['entry_date'] = date('Y-m');
+                $changeUpdateData['entry_date'] = date( "Y-m", strtotime( "first day of next month" ) );
                 $changeUpdateData['child_json'] = $changeRow['child_json'];
                 $changeUpdateData['child_json'][] = [
                     'success' => 1,
@@ -344,8 +344,8 @@ class ChangeInst extends SystemBase
             'change_status' => 1,
         ]);
         
-        // 1、将楼栋机构改成变更后的机构
-        BanModel::where([['ban_id','in',$finalRow['ban_ids']]])->update(['ban_inst_id'=>$finalRow['new_inst_id']]);
+        // 1、将楼栋机构改成变更后的机构(改成月底修改)
+        //BanModel::where([['ban_id','in',$finalRow['ban_ids']]])->update(['ban_inst_id'=>$finalRow['new_inst_id']]);
         // 2、添加楼栋台账记录
         $taiBanData = [];
         $bans = explode(',', $finalRow['ban_ids']);
@@ -375,7 +375,7 @@ class ChangeInst extends SystemBase
             $tableData['new_inst_id'] = $finalRow['new_inst_id'];
             $tableData['inst_pid'] = $finalRow['ban_info']['ban_inst_pid'];
             $tableData['owner_id'] = $finalRow['ban_info']['ban_owner_id'];
-            $tableData['order_date'] = date( "Ym");  // 当月生效
+            $tableData['order_date'] = date( "Ym", strtotime( "first day of next month" ) );  // 当月生效
             if($finalRow['ban_info']['ban_civil_rent'] > 0){ // 民用1
                 $tableData['use_id'] = 1;
                 $tableData['change_rent'] = $finalRow['ban_info']['ban_civil_rent'];
@@ -398,6 +398,54 @@ class ChangeInst extends SystemBase
         }  
         $BanTaiModel = new BanTaiModel;
         $BanTaiModel->saveAll($taiBanData);
+    }
+
+    /**
+     * 异动审批成功后，显示的审批记录生效月份显示为次月
+     * 楼栋在（本月最后一天中午十二点 至 次月零点，注意不能是次月零点再触发）期限内变更到新管段；同时充楼栋以前年欠租、以前月欠租到异动记录中
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-12 17:33:09
+     * @return  返回值  
+     * @version 版本  2.0.27
+     */
+    public function nextMonthDeal()
+    {
+        // 1、查询生效日期是这个月的所有管段调整异动
+        $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
+        $change_table_data = Db::name('change_table')->where([['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
+        
+        if(!empty($change_table_data)){
+            // 2、把生效日期是这个月的这些管段调整异动，楼所属的管段调整过来
+            foreach ($change_table_data as $v) {
+                Db::name('ban')->where([['ban_id','eq',$v['ban_id']]])->update(['ban_inst_id'=>$v['new_inst_id']]);
+            }
+            // 3、把生效日期是这个月的这些管段调整异动，楼下面的所有欠租调整过来
+            $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$v['ban_id']]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
+
+            $change_month_rent = 0;
+            $change_year_rent = 0;
+            if(!empty($unpaidRent)){
+                // 小于本年度1月份的时间，就是以前年；大于这个时间，就是以前月
+                $before_month = date('Y').'00';
+                foreach ($unpaidRent as $u) {
+                    if($u['rent_order_date'] < $before_month){
+                        $change_year_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+                    }else{
+                        $change_month_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+                    }
+                }
+
+            }
+
+            Db::name('change_table')->where([['id','eq',$v['id']]])->update(['change_month_rent'=>$change_month_rent,'change_year_rent'=>$change_year_rent]);
+            // dump($unpaidRent);halt($v);
+            
+        }
+        
     }
 
 }

@@ -94,17 +94,32 @@ class House extends Admin
             $HouseModel = new HouseModel;
             $where = $HouseModel->checkWhere($getData);
             //halt($where);
-            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_advance_rent,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,from_unixtime(a.house_ctime, \'%Y-%m-%d\') as house_ctime,from_unixtime(a.house_dtime, \'%Y-%m-%d\') as house_dtime,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_advance_rent,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,from_unixtime(a.house_ctime, \'%Y-%m-%d\') as house_ctime,from_unixtime(a.house_dtime, \'%Y-%m-%d\') as house_dtime,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id,e.member_id';
             //halt($where);
             $data = [];
-            $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order($order)->select();
+            
+            $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->where($where);
+            if(isset($getData['is_bind_weixin'])){
+                if($getData['is_bind_weixin'] == 1){
+                    $temp_data->whereNotNull('e.member_id');
+                    // $temp_data->where('e.dtime',0)->whereNotNull('e.member_id');
+
+                }elseif($getData['is_bind_weixin'] === ''){
+                    // halt($getData['is_bind_weixin']);
+                    
+                }else{
+                    $temp_data->whereNull('e.member_id');
+                    // $temp_data->whereOr('e.dtime','>',0)->whereNull('e.member_id');
+                }
+            }
+
+            $data['data'] = $temp_data->field($fields)->page($page)->limit($limit)->order($order)->select();
+            // $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->page($page)->limit($limit)->order($order)->select();
 
             foreach ($data['data'] as $k => &$v) {
-                $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
-                if(empty($member_id)){
+                // $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
+                if(empty($v['member_id'])){
                     $v['member_id'] = '';
-                }else{
-                    $v['member_id'] = $member_id;
                 }
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
                     
@@ -118,7 +133,7 @@ class House extends Admin
                 //halt($v);
             }
             // 统计房屋建面、计租面积、规租
-            $totalRow =  Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(house_lease_area) as total_house_lease_area, sum(house_area) as total_house_area, sum(house_pre_rent) as total_house_pre_rent , sum(house_cou_rent) as total_house_cou_rent, sum(house_diff_rent) as total_house_diff_rent, sum(house_pump_rent) as total_house_pump_rent, sum(house_advance_rent) as total_house_advance_rent')->find();
+            $totalRow =  $temp_data->field('sum(house_lease_area) as total_house_lease_area, sum(house_area) as total_house_area, sum(house_pre_rent) as total_house_pre_rent , sum(house_cou_rent) as total_house_cou_rent, sum(house_diff_rent) as total_house_diff_rent, sum(house_pump_rent) as total_house_pump_rent, sum(house_advance_rent) as total_house_advance_rent')->find();
             if($totalRow){
                 $data['total_house_lease_area'] = $totalRow['total_house_lease_area'];
                 $data['total_house_area'] = $totalRow['total_house_area'];
@@ -129,7 +144,7 @@ class House extends Admin
                 $data['total_house_advance_rent'] = $totalRow['total_house_advance_rent'];
             }
 
-            $data['count'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->count('a.house_id');
+            $data['count'] = $temp_data->field($fields)->count('a.house_id');
 
             // //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）
             // $data['data'] = $HouseModel->withJoin([
@@ -705,18 +720,52 @@ class House extends Admin
             $getData = $this->request->post();
             $houseModel = new HouseModel;
             $where = $houseModel->checkWhere($getData);
-            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,a.house_status,c.tenant_id,c.tenant_name,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id,e.member_id';
 
-            $tableData = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('house_ctime desc')->select();
+            // $tableData = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('house_ctime desc')->select();
+
+            $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->where($where);
+            if(isset($getData['is_bind_weixin'])){
+                if($getData['is_bind_weixin'] == 1){
+                    $temp_data->whereNotNull('e.member_id');
+                    // $temp_data->where('e.dtime',0)->whereNotNull('e.member_id');
+
+                }elseif($getData['is_bind_weixin'] === ''){
+                    // halt($getData['is_bind_weixin']);
+                    
+                }else{
+                    $temp_data->whereNull('e.member_id');
+                    // $temp_data->whereOr('e.dtime','>',0)->whereNull('e.member_id');
+                }
+            }
+
+            $tableData = $temp_data->field($fields)->order('house_ctime desc')->select();
+            // $data['data'] = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field($fields)->page($page)->limit($limit)->order($order)->select();
 
             foreach ($tableData as $k => &$v) {
+                // $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
+                if(empty($v['member_id'])){
+                    $v['is_bind_weixin'] = '否';
+                }else{
+                    $v['is_bind_weixin'] = '是';
+                }
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
-                    $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                    $last_print_time = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                    $v['last_print_time'] = $last_print_time?$last_print_time:'';
                 }else{
                     $v['last_print_time'] = '';
-                }  
-                unset($v['house_id'],$v['tenant_id']);
+                }   
+                unset($v['house_id'],$v['tenant_id'],$v['member_id']);
             }
+
+            // foreach ($tableData as $k => &$v) {
+                // if($v['tenant_id']){ //如果当前房屋已经绑定租户
+                //     $v['last_print_time'] = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                // }else{
+                //     $v['last_print_time'] = '';
+                // }  
+            //     unset($v['house_id'],$v['tenant_id']);
+            // }
             // halt($tableData);
             if($tableData){
 
@@ -740,6 +789,7 @@ class House extends Admin
                     array('title' => '房屋建面', 'field' => 'house_area', 'width' => 12,'type' => 'number'),
                     array('title' => '房屋原价', 'field' => 'house_oprice', 'width' => 12,'type' => 'number'),
                     array('title' => '是否已暂停计租', 'field' => 'house_is_pause', 'width' => 24,'type' => 'string'),
+                    array('title' => '是否绑定微信', 'field' => 'is_bind_weixin', 'width' => 24,'type' => 'string'),
                     array('title' => '居住单元', 'field' => 'house_unit_id', 'width' => 12,'type' => 'number'),
                     array('title' => '居住层', 'field' => 'house_floor_id', 'width' => 12,'type' => 'number'),
                     array('title' => '门牌号', 'field' => 'house_door', 'width' => 12,'type' => 'string'),

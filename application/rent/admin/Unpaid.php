@@ -31,22 +31,44 @@ class Unpaid extends Admin
             $getData = $this->request->get();
             $RentModel = new RentModel;
             $where = $RentModel->checkWhere($getData,'unpaid');
-            $fields = 'a.house_id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
+            $fields = 'a.house_id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,e.member_id';
             $data = [];
-            $data['data'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
-            // ->join('weixin_member_house e','a.house_id = e.house_id','left')
-            foreach($data['data'] as &$v){
-                $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
-                if(empty($member_id)){
-                    $v['member_id'] = '';
+            
+
+            $temp_data = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->field($fields)->where($where);
+
+            if(isset($getData['is_bind_weixin'])){
+                if($getData['is_bind_weixin'] == 1){
+                    $temp_data->whereNotNull('e.member_id');
+                    // $temp_data->where('e.dtime',0)->whereNotNull('e.member_id');
+
+                }elseif($getData['is_bind_weixin'] === ''){
+                    // halt($getData['is_bind_weixin']);
+                    
                 }else{
-                    $v['member_id'] = $member_id;
+                    $temp_data->whereNull('e.member_id');
+                    // $temp_data->whereOr('e.dtime','>',0)->whereNull('e.member_id');
                 }
             }
+            
+            $data['data'] = $temp_data->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+            // $data['data'] = ->whereNull('e.member_id')->page($page)->limit($limit)->order('a.rent_order_date desc')->select();
+            // $last_sql = Db::name('rent_order')->getLastSql();
+            // halt($last_sql);
+            // ->join('weixin_member_house e','a.house_id = e.house_id','left')
+            // foreach($data['data'] as &$v){
+            //     $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
+            //     if(empty($member_id)){
+            //         $v['member_id'] = '';
+            //     }else{
+            //         $v['member_id'] = $member_id;
+            //     }
+            // }
             // halt($data['data']);
-            $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
+            $data['count'] = $temp_data->count('a.rent_order_id');
+            // $data['count'] = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->where($where)->count('a.rent_order_id');
             // 统计
-            $totalRow = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->field('sum(a.rent_order_receive) as total_rent_order_receive, sum(a.rent_order_paid) as total_rent_order_paid, sum(a.rent_order_receive - a.rent_order_paid) as total_rent_order_unpaid, sum(a.rent_order_diff) as total_rent_order_diff, sum(a.rent_order_pump) as total_rent_order_pump, sum(a.rent_order_cut) as total_rent_order_cut, sum(b.house_pre_rent) as total_house_pre_rent, sum(b.house_cou_rent) as total_house_cou_rent')->find();
+            $totalRow = $temp_data->field('sum(a.rent_order_receive) as total_rent_order_receive, sum(a.rent_order_paid) as total_rent_order_paid, sum(a.rent_order_receive - a.rent_order_paid) as total_rent_order_unpaid, sum(a.rent_order_diff) as total_rent_order_diff, sum(a.rent_order_pump) as total_rent_order_pump, sum(a.rent_order_cut) as total_rent_order_cut, sum(b.house_pre_rent) as total_house_pre_rent, sum(b.house_cou_rent) as total_house_cou_rent')->find();
             if($totalRow){
                 $data['total_rent_order_receive'] = $totalRow['total_rent_order_receive'];
                 $data['total_rent_order_paid'] = $totalRow['total_rent_order_paid'];

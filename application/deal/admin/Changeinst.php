@@ -14,8 +14,9 @@ class Changeinst extends Admin
 {
 
     public function index()
-    {
+    {   
         if ($this->request->isAjax()) {
+            // $ChangeModel = new ChangeInstModel; $ChangeModel->nextMonthDeal();
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
