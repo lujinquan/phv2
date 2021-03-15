@@ -34,8 +34,11 @@ class Unpaid extends Admin
             $fields = 'a.house_id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,e.member_id';
             $data = [];
             
+            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->having('count(house_id) > 1')->buildSql();
 
-            $temp_data = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->field($fields)->where($where);
+            // $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->where($where);
+
+            $temp_data = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->field($fields)->where($where);
 
             if(isset($getData['is_bind_weixin'])){
                 if($getData['is_bind_weixin'] == 1){
@@ -179,9 +182,45 @@ class Unpaid extends Admin
             $getData = $this->request->post();
             $rentModel = new RentModel;
             $where = $rentModel->checkWhere($getData,'unpaid');
-            $fields = 'a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id';
-          
-            $tableData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_date desc')->select();
+            $fields = 'a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,e.member_id';
+            
+            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->having('count(house_id) > 1')->buildSql();
+
+            // $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->where($where);
+
+            $temp_data = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->field($fields)->where($where);
+
+            if(isset($getData['is_bind_weixin'])){
+                if($getData['is_bind_weixin'] == 1){
+                    $temp_data->whereNotNull('e.member_id');
+                    // $temp_data->where('e.dtime',0)->whereNotNull('e.member_id');
+
+                }elseif($getData['is_bind_weixin'] === ''){
+                    // halt($getData['is_bind_weixin']);
+                    
+                }else{
+                    $temp_data->whereNull('e.member_id');
+                    // $temp_data->whereOr('e.dtime','>',0)->whereNull('e.member_id');
+                }
+            }
+            
+            $tableData = $temp_data->field($fields)->order('a.rent_order_date desc')->select();
+            foreach ($tableData as $k => &$v) {
+                // $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
+                if(empty($v['member_id'])){
+                    $v['is_bind_weixin'] = '否';
+                }else{
+                    $v['is_bind_weixin'] = '是';
+                }
+                // if($v['tenant_id']){ //如果当前房屋已经绑定租户
+                //     $last_print_time = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
+                //     $v['last_print_time'] = $last_print_time?$last_print_time:'';
+                // }else{
+                //     $v['last_print_time'] = '';
+                // }   
+                unset($v['member_id']);
+            }
+            // $tableData = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.rent_order_date desc')->select();
 
             if($tableData){
 
@@ -197,6 +236,8 @@ class Unpaid extends Admin
                     array('title' => '产别', 'field' => 'ban_owner_id', 'width' => 12,'type' => 'number'),
                     
                     array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
+                    array('title' => '是否绑定微信', 'field' => 'is_bind_weixin', 'width' => 12,'type' => 'string'),
+
                     array('title' => '使用性质', 'field' => 'house_use_id', 'width' => 12,'type' => 'string'),
                     array('title' => '规定租金', 'field' => 'house_pre_rent', 'width' => 12,'type' => 'number'),
                     array('title' => '计算租金', 'field' => 'house_cou_rent', 'width' => 12,'type' => 'number'),
