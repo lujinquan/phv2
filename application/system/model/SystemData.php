@@ -46,14 +46,14 @@ class SystemData extends Model
                     break;
                 case 10: //管段调整
                     $where[] = ['ban_status','eq',1];
-                    $tempApplyBanidArr = Db::name('change_inst')->where([['change_status','>',1]])->column('ban_ids');
+                    $tempApplyBanidArr = Db::name('change_inst')->where([['change_status','>',1],['dtime','eq',1]])->column('ban_ids');
                     if($tempApplyBanidArr){
                         $applyBanidArr = explode(',',implode(',',$tempApplyBanidArr));
                     }
                     break;
                 case 14: //楼栋调整
                     $where[] = ['ban_status','eq',1];
-                    $applyBanidArr = Db::name('change_ban')->where([['change_status','>',1]])->column('ban_id');
+                    $applyBanidArr = Db::name('change_ban')->where([['change_status','>',1],['dtime','eq',1]])->column('ban_id');
                     break;
                 case 17: //别字更正
                     break;
