@@ -3,7 +3,7 @@
 <button id="button_prints"><i class="layui-icon layui-icon-export"></i></button>
 <div class="j-table-content  j-no-title">
 	<div class="page-toolbar j-page-toolbar clearfix">
-		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
+		<form class="layui-form layui-form-pane" action="{:url('changes')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md8  fl">
 				{if condition="in_array('ban_inst_id',$config['szno_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
@@ -121,10 +121,9 @@
 			elem: '#dataTable',
 			/* height: 550, */
 			toolbar: '#toolbar'
-				// ,defaultToolbar: ['print']
-				,
-				defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
-			,url: '{:url("deal/index")}' //数据接口
+			// ,defaultToolbar: ['print']
+			,defaultToolbar: ['filter',/*'exports',*/'print'] //设置右边筛选，导出，打印显示
+			,url: '{:url("deal/changes")}' //数据接口
 			,page: true //开启分页
 			,limit: 10
 			,limits: [10,20,30,40,50,100,300,500,1000]
@@ -138,7 +137,7 @@
 						return params.changes[d.change_type];
 					}}
 					,{field: 'ban_inst_id',minWidth: 100,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
-							return params.insts[d.ban_inst_id];
+						return params.insts[d.ban_inst_id];
 					}}
 					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
 					,{field: 'house_number', minWidth: 110, align:'center', title: '房屋编号'}
@@ -190,7 +189,7 @@
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({
 				type:"post",// 请求方式
-				url:"{:url('lease/export')}",
+				url:"{:url('deal/export')}",
 				async:true,// 同步异步
 				dataType:"json",
 				data : queryWhere,//这里是前台传到后台的数据

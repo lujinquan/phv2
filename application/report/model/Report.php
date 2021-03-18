@@ -27,6 +27,8 @@ class Report extends Model
         $instid = input('param.inst_id',INST); //默认查询当前机构
         $useid = input('param.use_id'); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+        $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
+
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
         $separate = substr($month,0,4).'00';
@@ -39,6 +41,9 @@ class Report extends Model
         }
         if($ownerid != 0){
             $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
+        }
+        if($tenant_name){
+            $where[] = ['c.tenant_name','like','%'.$tenant_name.'%'];
         }
         //$where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
         //$where[] = ['rent_order_receive','eq',rent_order_paid];
@@ -117,6 +122,7 @@ class Report extends Model
         $instid = input('param.inst_id/d',INST); //默认查询当前机构
         $useid = input('param.use_id/d'); //默认查询住宅
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
+        $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
         
         // $curMonth = '2020-12';
 
@@ -134,6 +140,9 @@ class Report extends Model
         }
         if($ownerid != 0){
             $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
+        }
+        if($tenant_name){
+            $where[] = ['c.tenant_name','like','%'.$tenant_name.'%'];
         }
         $where[] = ['ptime','between',[strtotime($curMonth),strtotime($nextMonth)]];
         //$where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
@@ -231,6 +240,7 @@ class Report extends Model
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
         $separate = substr($month,0,4).'00';
+        $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
 
         // $ownerid = input('param.owner_id'); //默认查询市属
         // $instid = input('param.inst_id',INST); //默认查询当前机构
@@ -244,8 +254,12 @@ class Report extends Model
         //     $where[] = ['d.ban_owner_id','in',explode(',',$ownerid)];
         // }
         // $where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
+        if($tenant_name){
+            $where[] = ['c.tenant_name','like','%'.$tenant_name.'%'];
+        }
 
-        $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
+        $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
+        // halt($houses);
         // 获取有余额的房屋信息
         $housesWithBalancesIDS = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where([['b.house_balance','>=',0]])->column('b.house_id');
         // 获取有余额的房屋id
@@ -266,8 +280,13 @@ class Report extends Model
             $last_month_data_housearr = array_keys($temps);
             //halt($last_month_data_housearr);
         }
-        $houseids = array_unique(array_merge($housesWithBalancesIDS,$last_month_data_housearr));
-        //halt($houses);
+        if($tenant_name){
+            $houseids = $housesWithBalancesIDS;
+        }else{
+            $houseids = array_unique(array_merge($housesWithBalancesIDS,$last_month_data_housearr));
+        }
+        
+        // halt($houseids);
         //halt(Db::name('rent_recharge')->getLastSql());
         $kouData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where(['pay_way'=>2])->column('a.house_id,sum(a.pay_rent) as pay_rent');
 

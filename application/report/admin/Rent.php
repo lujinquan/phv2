@@ -169,6 +169,7 @@ class Rent extends Admin
                 $ownerid = input('param.owner_id'); //默认查询所有产别
                 $instid = input('param.inst_id',INST); //默认查询当前机构
                 $useid = input('param.use_id'); //默认查询所有使用性质
+                $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
             
                 $data = $result = [];
                 $total_cur_month_unpaid_rent = 0;
@@ -188,8 +189,12 @@ class Rent extends Admin
                 }
                 //halt($uses);
                 foreach ($temps as $k => $v) {
-                    //halt($v);
-                    //halt(in_array($v['inst'],config('inst_ids')[$instid]));
+                    if($tenant_name){
+                        if(strpos($v['tenant'], $tenant_name) === false){
+                            continue;
+                        }
+                    }
+
                     if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],config('inst_ids')[$instid])){
                         
                         $v['use'] = $params['uses'][$v['use']];
@@ -347,6 +352,7 @@ class Rent extends Admin
                $ownerid = input('param.owner_id'); //默认查询市属
                $instid = input('param.inst_id',INST); //默认查询当前机构
                $useid = input('param.use_id'); //默认查询住宅
+               $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
 
                if($ownerid){
                    $owners = explode(',',$ownerid);
@@ -367,6 +373,11 @@ class Rent extends Admin
                $total_before_year_paid_rent = 0;
 
                foreach ($temps['data'] as $k => $v) {
+                    if($tenant_name){
+                        if(strpos($v['tenant'], $tenant_name) === false){
+                            continue;
+                        }
+                    }
 
                    if(in_array($v['owner_id'], $owners) && in_array($v['use_id'], $uses) && in_array($v['inst_id'],config('inst_ids')[$instid])){
                        // $v['use'] = $params['uses'][$v['use_id']];
@@ -554,12 +565,20 @@ class Rent extends Admin
             }else{
                 $uses = [1,2,3];
             }
+            $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
+
             // 查询机构，默认查询所当前机构
             $instid = input('param.inst_id',INST); //默认查询当前机构
             $insts =  config('inst_ids')[$instid];
 
             // 将不满足当前查询条件的数据剔除   
-            foreach ($temps as $k => &$v) {//halt($v);
+            foreach ($temps as $k => &$v) {
+                if($tenant_name){
+                    if(strpos($v['tenant'], $tenant_name) === false){
+                        unset($temps[$k]);
+                    }
+                }
+
                 if(in_array($v['owner_id'], $owners) && in_array($v['use_id'], $uses) && in_array($v['inst_id'],$insts)){
                     continue;
                     // $v['use'] = $params['uses'][$v['use']];
@@ -661,9 +680,16 @@ class Rent extends Admin
                     $instid = input('param.inst_id',INST); //默认查询当前机构
                     $insts =  config('inst_ids')[$instid];
 
+                    $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
+
                     // 将不满足当前查询条件的数据剔除   
                     foreach ($tableTemp as $k => &$v) {
-                    // halt($v);
+                        if($tenant_name){
+                            if(strpos($v['tenant'], $tenant_name) === false){
+                                continue;
+                            }
+                        }
+
                         if(in_array($v['owner'], $owners) && in_array($v['use'], $uses) && in_array($v['inst'],$insts)){
                             continue;
                         }else{
@@ -697,6 +723,7 @@ class Rent extends Admin
                    $ownerid = input('param.owner_id'); //默认查询市属
                    $instid = input('param.inst_id',INST); //默认查询当前机构
                    $useid = input('param.use_id'); //默认查询住宅
+                   $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
 
                    if($ownerid){
                        $owners = explode(',',$ownerid);
@@ -717,6 +744,13 @@ class Rent extends Admin
                    $total_before_year_paid_rent = 0;
 
                    foreach ($temps['data'] as $k => $v) {
+
+                        if($tenant_name){
+                            if(strpos($v['tenant'], $tenant_name) === false){
+                                continue;
+                            }
+                        }
+
 
                        if(in_array($v['owner_id'], $owners) && in_array($v['use_id'], $uses) && in_array($v['inst_id'],config('inst_ids')[$instid])){
                            // $v['use'] = $params['uses'][$v['use_id']];

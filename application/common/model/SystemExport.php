@@ -86,8 +86,8 @@ class SystemExport extends Model
         if($sheetType == 1){ 
 
         	//主体数据的数据过滤
-	        $tableData = $this->dataFormat($tableData);
-			//halt($tableData);
+	        $tableData = $this->dataFormat($tableData, $titleArr);
+			// halt($tableData);
 			//dump(memory_get_usage() / 1024 / 1024); //46M
 			
         	$objPHPExcel->setActiveSheetIndex(0);
@@ -182,9 +182,21 @@ class SystemExport extends Model
 	   
 	}
 
-	public function dataFormat($data){
+	public function dataFormat($data , $titleArr){
+
+		$validFields = array_column($titleArr,'field');
+
 		$params = ParamModel::getCparams();
-		foreach($data as &$d){
+
+		// $result = [];
+		foreach($data as $key => &$d){
+			// dump($d);
+			foreach ($d as $k => $v) {
+				if (!in_array($k, $validFields)) {
+					unset($data[$key][$k]);
+				}
+			}
+			// halt($d);
 			if(isset($d['ban_owner_id'])){
 				$d['ban_owner_id'] = $params['owners'][$d['ban_owner_id']];
 			}
@@ -224,12 +236,15 @@ class SystemExport extends Model
 			if(isset($d['is_invoice'])){
 				$d['is_invoice'] = $params['is_invoice'][$d['is_invoice']];
 			}
+			if(isset($d['change_type'])){
+				$d['change_type'] = $params['changes'][$d['change_type']];
+			}
 			if(isset($d['pay_way'])){
 				$d['pay_way'] = $params['pay_way'][$d['pay_way']];
 			}
 			
 		}
-		//halt($params);
+		// halt($data);
 		return $data;
 	}
 }

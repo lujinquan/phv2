@@ -27,6 +27,9 @@
 						{/volist}
 					</select>
 				</div>
+				<div class="layui-input-inline j-width-115 j-margin-10">
+					<input type="text" name="tenant_name" title="租户姓名" placeholder="租户姓名" class="layui-input">
+				</div>
 	          <div class="layui-input-inline  j-width-115 j-margin-10">
 					<select name="use_id" xm-select="house_use_id">
 						<option value="" disabled="disabled">使用性质</option>
@@ -95,8 +98,8 @@
 				,url: '{:url('rent/prePaidRent')}' //数据接口
 				,totalRow: true
 				,page: false //开启分页
-				,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
-				,limit: 10
+				// ,limits: [10,20,30,40,50,100,300,500,1000,2000,5000,'全部']
+				// ,limit: 10
 				,text: {
 					none : "<div class='j-no-contents'><i class='layui-icon iconfont j-icon-wushuju'></i>暂无相关数据！</div>"
 				},

@@ -303,10 +303,11 @@ class Changecancel extends Admin
             $ChangeModel = new ChangeCancelModel;
             $where = $ChangeModel->checkWhere($getData,'record');
             $fields = "a.id,a.is_back,a.change_order_number,a.cancel_type,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as fdate,a.ftime,a.change_status,a.entry_date,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            // halt($where);
             $data = [];
             $data['data'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
             foreach($data['data'] as &$s){
-                $table_data = Db::name('change_table')->where([['change_type','eq',8],['change_order_number','eq',$s['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->group('change_order_number')->having('count(change_order_number) > 1')->find();
+                $table_data = Db::name('change_table')->where([['change_status','eq',1],['change_type','eq',8],['change_order_number','eq',$s['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->group('change_order_number')->having('count(change_order_number) > 1')->find();
                 if(!empty($table_data)){
                     $s['cancel_rent'] = $table_data['total_change_rent'];
                     $s['cancel_area'] = $table_data['total_change_area'];
@@ -315,12 +316,15 @@ class Changecancel extends Admin
                     
                 }
             }
+
             $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
 
             $total_data = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.change_status desc,ftime desc')->select();
             $total_cancel_rent = $total_cancel_area = $total_cancel_use_area = $total_cancel_oprice = 0;
+            // halt($total_data); //->group('change_order_number')->having('count(change_order_number) > 1')
             foreach($total_data as &$a){
-                $table_data = Db::name('change_table')->where([['change_type','eq',8],['change_order_number','eq',$s['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->group('change_order_number')->having('count(change_order_number) > 1')->find();
+                $table_data = Db::name('change_table')->where([['change_type','eq',8],['change_order_number','eq',$a['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->find();
+                // halt($table_data);
                 if(!empty($table_data)){
                     $a['cancel_rent'] = $table_data['total_change_rent'];
                     $a['cancel_area'] = $table_data['total_change_area'];
