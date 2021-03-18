@@ -619,7 +619,13 @@ class Invoice extends Model
             $dpkj['pdfurl'] = 'http://xz.holytax.com/pdf/d/385c0a542ed44e62';
             $dpkj['xmmc'] = '测试数据'; // 项目名称
         }else{
-          
+          // halt(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []));
+            // $httpPost = Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []);
+
+            // if(){
+
+            // }
+// halt($queryMap);
             $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
             if($result['code'] !== '0000'){
                 $this->error = $result['msg'];

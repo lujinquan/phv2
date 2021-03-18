@@ -1470,6 +1470,7 @@ class Rent extends Model
             //     $where[] = ['d.ban_owner_id','eq',$ownerid];
             // }
             $where[] = ['a.rent_order_receive','>','a.rent_order_paid'];
+            $where[] = ['a.rent_order_status','eq',1];
             //$where[] = ['rent_order_receive','eq',rent_order_paid];
             //$where[] = ['d.ban_inst_id','in',config('inst_ids')[$instid]];
             $fields = 'a.house_id,b.house_number,b.house_curr_month_send_tel_sms,b.house_curr_month_send_wx_sms,a.rent_order_date,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive - a.rent_order_paid) as rent_order_unpaid,b.house_use_id,b.house_pre_rent,b.house_share_img,c.tenant_name,c.tenant_tel,d.ban_number,d.ban_address,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id';
