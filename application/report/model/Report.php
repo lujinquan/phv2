@@ -96,6 +96,11 @@ class Report extends Model
             $data[$b['house_id']]['total'] += $b['rent_order_unpaid'];
             $data[$b['house_id']]['remark'] = '';
         }
+        foreach ($data as $k => $d) {
+            if($d['total'] == 0){
+                unset($data[$k]);
+            }
+        }
 
         $result['data'] = $data;
         $result['total_cur_month_unpaid_rent'] = $total_cur_month_unpaid_rent;
