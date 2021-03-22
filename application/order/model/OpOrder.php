@@ -99,7 +99,7 @@ class OpOrder extends SystemBase
             // 已受理工单
             case 'filished':
                 // ADMIN_ID != 1 && ADMIN_ROLE != 6 && ADMIN_ROLE != 5 &&  ADMIN_ROLE != 10 
-                if(!in_array(ADMIN_ID,[1,5,6,10])){
+                if(!in_array(ADMIN_ID,[1,5,6])){
                     $where[] = [['duid','like','%'.ADMIN_ID.'%']];
                 }
                 
