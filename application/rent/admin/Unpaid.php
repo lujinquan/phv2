@@ -34,7 +34,7 @@ class Unpaid extends Admin
             $fields = 'a.house_id,a.rent_order_id,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,(a.rent_order_receive-a.rent_order_paid) as rent_order_unpaid,a.is_invoice,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id,e.member_id';
             $data = [];
             
-            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->having('count(house_id) > 1')->buildSql();
+            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->buildSql();
 
             // $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->where($where);
 

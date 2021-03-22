@@ -96,11 +96,9 @@ class House extends Admin
             //halt($where);
             $fields = 'a.house_id,a.house_number,a.house_cou_rent,a.house_use_id,a.house_advance_rent,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_area,a.house_diff_rent,a.house_pump_rent,a.house_pre_rent,a.house_oprice,a.house_door,a.house_is_pause,from_unixtime(a.house_ctime, \'%Y-%m-%d\') as house_ctime,from_unixtime(a.house_dtime, \'%Y-%m-%d\') as house_dtime,c.tenant_id,c.tenant_name,d.ban_units,d.ban_floors,d.ban_number,d.ban_address,d.ban_damage_id,d.ban_struct_id,d.ban_owner_id,d.ban_inst_id,e.member_id';
             //halt($where);
-            $data = [];
-            
-
+            $data = [];        
             // 子查询
-            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->having('count(house_id) > 1')->buildSql();
+            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->buildSql();
 
             $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->where($where);
             // $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join('weixin_member_house e','a.house_id = e.house_id','left')->where($where);
