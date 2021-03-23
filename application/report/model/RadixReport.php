@@ -488,11 +488,13 @@ class RadixReport extends Model
             ->where([['order_date','<',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
         //        halt(Db::name('change_table')->getLastSql());
         //新增暂停计租
+        // $changeAddNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
+        //     ->where([['order_date','eq',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
         $changeAddNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['order_date','eq',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
+            ->where([['order_date','eq',$nextDate],['change_status','eq',1],['change_type','eq',3]])->select();
         //新增失效暂停计租
         $changeReduceNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
-            ->where([['end_date','eq',$cacheDate],['change_type','eq',3],['change_status','eq',1]])->select();
+            ->where([['end_date','eq',$nextDate],['change_type','eq',3],['change_status','eq',1]])->select();
 
         //政策减免
         $changeZhengcejianmianData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
