@@ -854,9 +854,9 @@ class Index extends Common
         // $member_info = $WeixinMemberModel->where([['openid','eq',$openid]])->find();
         $member_houses = WeixinMemberHouseModel::where([['member_id','eq',$member_info->member_id]])->column('house_id');
         if(!in_array($house_id, $member_houses)){
-            $result['code'] = 10075;
-            $result['msg'] = '房屋未被绑定';
-            return json($result);
+            // $result['code'] = 10075;
+            // $result['msg'] = '房屋未被绑定';
+            // return json($result);
         }
 
         // 同一个微信会员操作，每次调起支付需要距离上次调起间隔时间 > 30s
