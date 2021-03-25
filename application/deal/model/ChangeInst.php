@@ -416,13 +416,25 @@ class ChangeInst extends SystemBase
     {
         // 1、查询生效日期是这个月的所有管段调整异动
         $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
-        $change_table_data = Db::name('change_table')->where([['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
-        
+        $change_table_data = Db::name('change_table')->where([['change_type','eq',10],['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
+        // halt($change_table_data);
         if(!empty($change_table_data)){
             // 2、把生效日期是这个月的这些管段调整异动，楼所属的管段调整过来
             foreach ($change_table_data as $v) {
                 Db::name('ban')->where([['ban_id','eq',$v['ban_id']]])->update(['ban_inst_id'=>$v['new_inst_id']]);
+                $houses = Db::name('house')->where([['ban_id','eq',$v['ban_id']]])->column('house_id');
+                if($houses){
+                    foreach($houses as $houseid){
+                        $tenants = Db::name('rent_order')->where([['house_id','eq',$houseid]])->group('tenant_id')->column('tenant_id');
+                        if($tenants){
+                            // dump($v);halt($tenants);
+                            Db::name('tenant')->where([['tenant_id','in',$tenants]])->update(['tenant_inst_id'=>$v['new_inst_id']]);
+                        }
+                    }
+
+                }
             }
+            // halt(1);
             // 3、把生效日期是这个月的这些管段调整异动，楼下面的所有欠租调整过来
             $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$v['ban_id']]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
 

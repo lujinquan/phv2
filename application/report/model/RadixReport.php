@@ -8,9 +8,9 @@ use app\common\model\Cparam as ParamModel;
 class RadixReport extends Model
 {
     // 基数异动统计
-	public function radix($cacheDate)
-	{   //$cacheDate = '2021-03';
-		$cacheDate = str_replace('-','',$cacheDate);
+    public function radix($cacheDate)
+    {   //$cacheDate = '2021-03';
+        $cacheDate = str_replace('-','',$cacheDate);
 //halt($cacheDate);
         //获取基数异动//房屋出售的挑出去,减免的挑出去
         $changeData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents ,sum(change_month_rent) as change_month_rents ,sum(change_year_rent) as change_year_rents ,sum(change_area) as change_areas ,sum(change_use_area) as change_use_areas ,sum(change_oprice) as change_oprices ,sum(change_ban_num) as change_ban_nums ,sum(change_house_num) as change_house_nums ,change_type')->group('use_id,owner_id,inst_id,change_type')
@@ -84,6 +84,11 @@ class RadixReport extends Model
                 'change_rents' => $v12['change_rents'],
                 'change_month_rents' => $v12['change_month_rents'],
                 'change_year_rents' => $v12['change_year_rents'],
+                'change_areas' => $v12['change_areas'],
+                'change_use_areas' => $v12['change_use_areas'],
+                'change_oprices' => $v12['change_oprices'],
+                'change_ban_nums' => $v12['change_ban_nums'],
+                'change_house_nums' => $v12['change_house_nums'],
             ];
         }
 
@@ -92,6 +97,11 @@ class RadixReport extends Model
                 'change_rents' => $v13['change_rents'],
                 'change_month_rents' => $v13['change_month_rents'],
                 'change_year_rents' => $v13['change_year_rents'],
+                'change_areas' => $v13['change_areas'],
+                'change_use_areas' => $v13['change_use_areas'],
+                'change_oprices' => $v13['change_oprices'],
+                'change_ban_nums' => $v13['change_ban_nums'],
+                'change_house_nums' => $v13['change_house_nums'],
             ];
         }
 
@@ -138,34 +148,35 @@ class RadixReport extends Model
                             ];
                         }
                         if(!isset($changeGuanduanDecdata[$owner][$i][$j])){
-	                        $changeGuanduanDecdata[$owner][$i][$j] = [
-	                            'change_rents' => 0,
-	                            'change_month_rents' => 0,
-	                            'change_year_rents' => 0,
-	                            'change_areas' => 0,
+                            $changeGuanduanDecdata[$owner][$i][$j] = [
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                                'change_areas' => 0,
                                 'change_use_areas' => 0,
                                 'change_oprices' => 0,
                                 'change_ban_nums' => 0,
                                 'change_house_nums' => 0,
-	                        ];
-	                    }
-	                    if(!isset($changeGuanduanIncdata[$owner][$i][$j])){
-	                        $changeGuanduanIncdata[$owner][$i][$j] = [
-	                            'change_rents' => 0,
-	                            'change_month_rents' => 0,
-	                            'change_year_rents' => 0,
-	                            'change_areas' => 0,
+                            ];
+                        }
+                        if(!isset($changeGuanduanIncdata[$owner][$i][$j])){
+                            $changeGuanduanIncdata[$owner][$i][$j] = [
+                                'change_rents' => 0,
+                                'change_month_rents' => 0,
+                                'change_year_rents' => 0,
+                                'change_areas' => 0,
                                 'change_use_areas' => 0,
                                 'change_oprices' => 0,
                                 'change_ban_nums' => 0,
                                 'change_house_nums' => 0,
-	                        ];
-	                    }
+                            ];
+                        }
 
                     }
                 }
             }
         }
+        // halt($changeGuanduanIncdata);
         $result = [];
         foreach ($ownertypes as $owners) { //处理市、区、代、自、托
             for ($j = 4; $j < 34; $j++) { //每个管段，从4开始……
@@ -431,13 +442,13 @@ class RadixReport extends Model
                         }
                     }
                     if($u == 1){
-                    	$l[0] = '新发租';
+                        $l[0] = '新发租';
                     }elseif($u == 2){
-                    	$l[0] = '注销';
+                        $l[0] = '注销';
                     }elseif($u == 3){
-                    	$l[0] = '调整';
+                        $l[0] = '调整';
                     }elseif($u == 4){
-                    	$l[0] = '管段调整';
+                        $l[0] = '管段调整';
                     }elseif($u == 5){
                         $l[0] = '公房出售';
                     }elseif($u == 6){
@@ -451,7 +462,7 @@ class RadixReport extends Model
         return $result;
 
 
-	}
+    }
 
     // 非基数异动统计
     public function noRadix($cacheDate,$nextDate)
@@ -486,7 +497,7 @@ class RadixReport extends Model
         //暂停计租
         $changeNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
             ->where([['order_date','<',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
-               // halt(Db::name('change_table')->getLastSql());
+               halt(Db::name('change_table')->getLastSql());
         //新增暂停计租
         // $changeAddNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
         //     ->where([['order_date','eq',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();

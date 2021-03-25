@@ -538,7 +538,7 @@ class ChangeCancel extends SystemBase
                     // 将涉及的所有房屋绑定的房间改成2
                     Db::name('house_room')->where([['house_id', 'eq', $v['house_id']]])->update(['house_room_status' => 2]);
                     //如果有暂停计租，则需要让暂停计租失效
-                    ChangeTableModel::where([['change_type', 'eq', 3], ['house_id', 'eq', $v['house_id']]])->update(['change_status' => 1, 'end_date' => date("Ym", strtotime("first day of next month"))]);
+                    ChangeTableModel::where([['change_status', 'eq', 1],['change_type', 'eq', 3], ['house_id', 'eq', $v['house_id']]])->update(['change_status' => 1, 'end_date' => date("Ym", strtotime("first day of next month"))]);
                     //如果有减免，则需要让减免失效
                     ChangeTableModel::where([['change_status', 'eq', 1], ['change_type', 'eq', 1], ['house_id', 'eq', $v['house_id']],['end_date','>',date('Ym')]])->update(['end_date' => date("Ym", strtotime("first day of next month"))]);
                     Db::name('change_cut')->where([['change_status', 'eq', 1], ['house_id', 'eq', $v['house_id']],['is_valid','eq',1]])->update(['is_valid' => 0, 'end_date' => date("Ym", strtotime("first day of next month"))]);
@@ -729,7 +729,7 @@ class ChangeCancel extends SystemBase
                 // 将涉及的所有房屋绑定的房间改成2
                 Db::name('house_room')->where([['house_id', 'eq', $v['house_id']]])->update(['house_room_status' => 2]);
                 //如果有暂停计租，则需要让暂停计租失效
-                ChangeTableModel::where([['change_status', 'eq', 1], ['change_type', 'eq', 3], ['house_id', 'eq', $v['house_id']],['end_date','>',date('Ym')]])->update(['end_date' => date("Ym", strtotime("first day of next month"))]);
+                ChangeTableModel::where([['change_status', 'eq', 1], ['change_type', 'eq', 3], ['house_id', 'eq', $v['house_id']]])->update(['end_date' => date("Ym", strtotime("first day of next month"))]);
                 //如果有减免，则需要让减免失效
                 ChangeTableModel::where([['change_status', 'eq', 1], ['change_type', 'eq', 1], ['house_id', 'eq', $v['house_id']],['end_date','>',date('Ym')]])->update(['end_date' => date("Ym", strtotime("first day of next month"))]);
                 Db::name('change_cut')->where([['change_status', 'eq', 1], ['house_id', 'eq', $v['house_id']],['is_valid','eq',1]])->update(['is_valid' => 0, 'end_date' => date("Ym", strtotime("first day of next month"))]);
