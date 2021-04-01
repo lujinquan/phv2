@@ -10,7 +10,7 @@
             <div  class="j-list-box j-list1">
 				<h1 class="j-title">待受理工单</h1>
 				<div class="j-Statistics">
-					{:isset($data['partOne'][ADMIN_ID]['accept'])?$data['partOne'][ADMIN_ID]['accept']:($data['partOne'][81]['accept'] + $data['partOne'][82]['accept'])}<i>个</i>
+					{:isset($data['partOne'][ADMIN_ID]['accept'])?$data['partOne'][ADMIN_ID]['accept']:$data['partOneExtra']['total_accept']}<i>个</i>
 				</div>
 				<img src="__ADMIN_IMG__/j-Clip.png" />
 			</div>
@@ -28,25 +28,25 @@
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待运行管理中心处理">待运行管理中心处理</h1>
-						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['yunxin'])?$data['partOne'][ADMIN_ID]['yunxin']:($data['partOne'][81]['yunxin'] + $data['partOne'][82]['yunxin'])}<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['yunxin'])?$data['partOne'][ADMIN_ID]['yunxin']:$data['partOneExtra']['total_yunxin']}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待技术服务中心处理">待技术服务中心处理</h1>
-						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jishu'])?$data['partOne'][ADMIN_ID]['jishu']:($data['partOne'][81]['jishu'] + $data['partOne'][82]['jishu'])}<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jishu'])?$data['partOne'][ADMIN_ID]['jishu']:$data['partOneExtra']['total_jishu']}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待经管科处理">待经管科处理</h1>
-						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jinguan'])?$data['partOne'][ADMIN_ID]['jinguan']:($data['partOne'][81]['jinguan'] + $data['partOne'][82]['jinguan'])}<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['jinguan'])?$data['partOne'][ADMIN_ID]['jinguan']:$data['partOneExtra']['total_jinguan']}<i>个</i></div>
 					  </div>
 					</li>
 					<li  class="layui-col-md6">
 					  <div class="j-seized-box">
 						<h1 title="待发起人确认">待发起人确认</h1>
-						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['faqi'])?$data['partOne'][ADMIN_ID]['yunxin']:($data['partOne'][81]['faqi'] + $data['partOne'][82]['faqi'])}<i>个</i></div>
+						<div class="j-number">{:isset($data['partOne'][ADMIN_ID]['faqi'])?$data['partOne'][ADMIN_ID]['yunxin']:$data['partOneExtra']['total_faqi']}<i>个</i></div>
 					  </div>
 					</li>
 				</ul>
@@ -58,7 +58,7 @@
 		      <div  class="j-list-box j-list3">
 		      	<h1 class="j-title">已完结工单</h1>
 		      	<div class="j-Statistics">
-		      		{:isset($data['partOne'][ADMIN_ID]['end'])?$data['partOne'][ADMIN_ID]['end']:($data['partOne'][81]['end'] + $data['partOne'][82]['end'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['end'])?$data['partOne'][ADMIN_ID]['end']:$data['partOneExtra']['total_end']}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-chenggonganli.png" />
 		      </div>
@@ -67,7 +67,7 @@
 		      <div  class="j-list-box j-list4">
 		      	<h1 class="j-title">全部工单</h1>
 		      	<div class="j-Statistics">
-		      		{:isset($data['partOne'][ADMIN_ID]['all'])?$data['partOne'][ADMIN_ID]['all']:($data['partOne'][81]['all'] + $data['partOne'][82]['all'])}<i>个</i>
+		      		{:isset($data['partOne'][ADMIN_ID]['all'])?$data['partOne'][ADMIN_ID]['all']:$data['partOneExtra']['total_all']}<i>个</i>
 		      	</div>
 		      	<img src="__ADMIN_IMG__/j-Fill.png" />
 		      </div>
@@ -84,7 +84,7 @@
 				  <!-- <li class="cur">全部</li>
 				  <li class="">郑湾</li>
 				  <li class="">刘丹</li> -->
-				  <li class="{if condition="ADMIN_ID != 81 && ADMIN_ID != 82"}cur{/if} product-li">全部</li>
+				  <li class="cur product-li">全部</li>
 				  {volist name="operateAdmins" id='vo'}
 
 				  <li class="{if condition="$vo['id'] == ADMIN_ID"}cur{/if} product-li">{$vo['nick']}</li>
@@ -166,9 +166,11 @@
   <!-- 工单类别统计 E-->
 <script type="text/javascript">
 		var data = {:json_encode($data['partOne'])};
-		//console.log(data);
+		var operateAdmins = {:json_encode($operateAdmins)};
+		var dataExtra = {:json_encode($data['partOneExtra'])};
+		console.log('operateAdmins:',operateAdmins);
 		var curAdminId = {:session('admin_user.uid')};
-		myChartPie(data,curAdminId);
+		myChartPie(data,dataExtra,curAdminId);
 		//工单类别统计E
 		//tab切换
 		$(function(){
@@ -183,7 +185,7 @@
 				// var data = {:json_encode($data['partOne'])};
 				//console.log(data);
 				//console.log(adminID);
-				myChartPie(data,adminID);
+				myChartPie(data,dataExtra,adminID);
 			})
 		});
 		layui.use(['form', 'func'], function() {
@@ -209,7 +211,7 @@
 			      		values[i].push(z[j]);
 			      	}
 			    }
-			    myChartLine(keys,values);
+			    myChartLine(keys,values,operateAdmins);
 		    });
 		    for(var a in dataTwo){
 		      	var b = dataTwo[a][ob[1]];
@@ -221,7 +223,9 @@
 		      		values[a].push(b[c]);
 		      	}
 		    }
-		    myChartLine(keys,values);
+		    console.log('所有的管理员:',data);
+		    console.log('values:',values);
+		    myChartLine(keys,values,operateAdmins);
 
 		    //柱状图数据
 		    var dataThree = {:json_encode($data['partThree'])};
@@ -331,7 +335,26 @@
 
 
 		// 折线图渲染函数
-	    function myChartLine(keys,values){
+	    function myChartLine(keys,values,operateAdmins){
+	    	console.log('operateAdmins1:',operateAdmins);
+	    // 	{
+					// 	name:'刘丹',
+					// 	type:'line',
+					// 	data:values[81],
+					// 	symbol:'emptyCircle',
+					// 	symbolSize:10
+					// },
+	    	var series = new Array();
+	    	for(var i in operateAdmins){
+	    		console.log(operateAdmins[i]);
+	    		series[i] = new Object();
+	    		series[i].name = operateAdmins[i].nick;
+	    		series[i].type = 'line';
+	    		series[i].data = values[operateAdmins[i].id];
+	    		series[i].symbol = 'emptyCircle';
+	    		series[i].symbolSize = 10;
+	    	}
+	    	console.log('series:',series);
 	    	//工程完结量统计 S
 			var myChart4 = echarts.init(document.getElementById('main4'));
 			  // 指定图表的配置项和数据
@@ -409,29 +432,30 @@
 					},	
 				},
 				color : [ '#7860E9', '#7ACE4C', '#FAB844'],
-				series: [
-					// {
-					// 	name:'全部',
-					// 	type:'line',
-					// 	data:[11, 11, 14, 11, 21, 25, 21],
-					// 	symbol:'emptyCircle',
-					// 	symbolSize:10
-					// },
-					{
-						name:'刘丹',
-						type:'line',
-						data:values[81],
-						symbol:'emptyCircle',
-						symbolSize:10
-					},
-					{
-						name:'郑湾',
-						type:'line',
-						data:values[82],
-						symbol:'emptyCircle',
-						symbolSize:10
-					}
-				]
+				series: series
+				// series: [
+				// 	// {
+				// 	// 	name:'全部',
+				// 	// 	type:'line',
+				// 	// 	data:[11, 11, 14, 11, 21, 25, 21],
+				// 	// 	symbol:'emptyCircle',
+				// 	// 	symbolSize:10
+				// 	// },
+				// 	{
+				// 		name:'刘丹',
+				// 		type:'line',
+				// 		data:values[81],
+				// 		symbol:'emptyCircle',
+				// 		symbolSize:10
+				// 	},
+				// 	{
+				// 		name:'郑湾',
+				// 		type:'line',
+				// 		data:values[82],
+				// 		symbol:'emptyCircle',
+				// 		symbolSize:10
+				// 	}
+				// ]
 			};
 
 			// 使用刚指定的配置项和数据显示图表。
@@ -441,25 +465,41 @@
 
 
 		// 饼状图渲染函数
-		function myChartPie(data,adminID){
+		function myChartPie(data,dataExtra,adminID){
 			var myChart = echarts.init(document.getElementById('mainPie'));
-			 
-			if(adminID != 81 && adminID != 82){
-				var main1Value = data[81].accept + data[82].accept;
-				var main2Value = data[81].acceptIng + data[82].acceptIng;
-				var main3Value = data[81].end + data[82].end;
+			// var arr = new Array();
+			// for(var i in data){
+			// 	arr.push(i);
+			// }
+			// console.log(typeof(data[adminID]));
+			// if(adminID != 81 && adminID != 82){ typeof(data[adminID])==undefined
+			if(typeof(data[adminID])=='undefined'){
+				var main1Value = dataExtra.total_accept;
+				var main2Value = dataExtra.total_acceptIng;
+				var main3Value = dataExtra.total_end;
 			}else{
 				var main1Value = data[adminID].accept;
-			    var main2Value = data[adminID].acceptIng;
-			    var main3Value = data[adminID].end;
-			} 
+				var main2Value = data[adminID].acceptIng;
+				var main3Value = data[adminID].end;
+			}
+			// console.log();
+			var totalMainValue = parseInt(main1Value) + parseInt(main2Value) + parseInt(main3Value);
+			console.log('totalMainValue',totalMainValue);
+				// var main1Value = (typeof(data[adminID].accept)!==undefined)?data[adminID].accept:dataExtra.total_accept;
+				// var main2Value = (typeof(data[adminID].acceptIng)!==undefined)?data[adminID].acceptIng:dataExtra.total_acceptIng;
+				// var main3Value = (typeof(data[adminID].acceptend)!==undefined)?data[adminID].acceptend:dataExtra.total_acceptend;
+			// }else{
+			// 	var main1Value = data[adminID].accept;
+			//     var main2Value = data[adminID].acceptIng;
+			//     var main3Value = data[adminID].end;
+			// } 
 		    
 
 		    // 指定图表的配置项和数据
 		    var option = {
 				 title: {
 					text: '总计',
-					subtext: (parseInt(main1Value) + parseInt(main2Value) + parseInt(main3Value))+'个',
+					subtext: totalMainValue+'个',
 					align: 'center',
 					x: '38%',
 					y: '40%',

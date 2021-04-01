@@ -23,9 +23,12 @@
                 ,{field: 'orderTotal', width: 100, align:'center', title: '工单总量'} 
                 ,{field: 'orderEndTotal', minWidth: 120, align:'center', title: '完结量'}
                 ,{field: 'orderEndPercent', width: 180, align:'center', title: '完结率'}
-                ,{field: 'orderTurnTotal', width: 100, align:'center', title: '转接量'}
-                ,{field: 'orderTimePercent', width: 180, align:'center', title: '平均处理时长'}
+                ,{field: 'orderTimeTotal', width: 180, align:'center', title: '总处理时长 /h'}
+                ,{field: 'orderTimePercent', width: 180, align:'center', title: '平均处理时长 /h'}
+                ,{field: 'orderPointTotal', width: 100, align:'center', title: '总流转节点'}
                 ,{field: 'orderTurnPercent', width: 180, align:'center', title: '平均流转节点'}
+               
+                
                 //,{title: '操作', minWidth: 80, align:'center', templet: '#buttonTpl',fixed:'right'}
             ]]
             ,done:function(res,curr,count){

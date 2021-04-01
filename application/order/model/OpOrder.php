@@ -421,7 +421,14 @@ class OpOrder extends SystemBase
 
         $opOrderAll = self::field('id,cuid,inst_id,duid,op_order_type,ctime,ftime')->select();
 
-
+        $result['partOneExtra']['total_accept'] = 0;
+        $result['partOneExtra']['total_acceptIng'] = 0;
+        $result['partOneExtra']['total_yunxin'] = 0;
+        $result['partOneExtra']['total_jishu'] = 0;
+        $result['partOneExtra']['total_jinguan'] = 0;
+        $result['partOneExtra']['total_faqi'] = 0;
+        $result['partOneExtra']['total_end'] = 0;
+        $result['partOneExtra']['total_all'] = 0;
         foreach($operateAdmins as $key => $v){ //遍历运营人员
 
             $result['partOne'][$v['id']]['accept'] = 0;
@@ -432,7 +439,7 @@ class OpOrder extends SystemBase
             $result['partOne'][$v['id']]['faqi'] = 0;
             $result['partOne'][$v['id']]['end'] = 0;
             $result['partOne'][$v['id']]['all'] = 0;
-
+            // halt($opOrderAll);
             foreach($opOrderAll as $op){ //遍历有效工单
                 $uids = explode(',',$op['duid']);
                 $inst = in_array($op['inst_id'],explode(',',$v['inst_ids'])); //判断每条记录是否属于某运营人员
@@ -486,19 +493,24 @@ class OpOrder extends SystemBase
                             if(!isset($result['partTwo'][$v['id']]['year'][$nowYearTime])){
                                 $result['partTwo'][$v['id']]['year'][$nowYearTime] = 0;
                             }
-
+                            // dump($nowDayTime);halt($ftime);
                             //dump($v);dump($ftime);dump($nowDayTime);dump($nowMonthTime);dump($nowYearTime);halt(strtotime($year.$nowDayTime));
-                            
+                            // 
                             // 完结时间>当天0时0分0秒 ，且<次天0时0分0秒
                             if($ftime > strtotime($year.'-'.$nowDayTime) && $ftime < (strtotime($year.'-'.$nowDayTime) + 3600*24)){
                                 $result['partTwo'][$v['id']]['day'][$nowDayTime]++;
                             }
+
                             // 完结时间>当月1日0时0分0秒 ，且<当月1日0时0分0秒
-                            if($ftime > strtotime($nowMonthTime.'-01') && $ftime < (strtotime($nowMonthTime.'-01') + 3600*24*30)){
+                            $startMonthTime = strtotime($nowMonthTime.'-01');
+                            $endMonthTime = strtotime(date('Y-m',strtotime( "first day of next month", $startMonthTime)));
+                            if($ftime >= $startMonthTime && $ftime < $endMonthTime){
                                 $result['partTwo'][$v['id']]['month'][$nowMonthTime]++;
                             }
-                            // 完结时间>当年1月1日0时0分0秒 ，且<当年1月1日0时0分0秒
-                            if($ftime > strtotime($nowYearTime.'-01-01') && $ftime < (strtotime($nowYearTime.'-01-01') + 3600*24*30*12)){
+                            // 完结时间>当年1月1日0时0分0秒 ，且<当年1月1日0时0分0秒 // dump($startYearTime);halt($endYearTime);
+                            $startYearTime = strtotime($nowYearTime.'-01-01');
+                            $endYearTime = strtotime(date('Y-m-d',strtotime( "first day of next year", $startYearTime)));
+                            if($ftime > $startYearTime && $ftime < $endYearTime){
                                 $result['partTwo'][$v['id']]['year'][$nowYearTime]++;
                             }   
                         }
@@ -507,7 +519,8 @@ class OpOrder extends SystemBase
 
                 
                 // 第三部分（柱状图）    
-                if($key == 0){//halt($opTypeArr);
+                if($key == 0){
+                    // dump($op);dump($opTypeArr);
                     //dump($inZys);dump($inLds);
                     foreach($opTypeArr as $o){
                         if(!isset($result['partThree']['zy'][$o['id']])){
@@ -520,8 +533,7 @@ class OpOrder extends SystemBase
                             if(in_array($op['op_order_type'],$o['children'])){
                                 if(in_array($op['inst_id'],$inZys)){ //紫阳所
                                     $result['partThree']['zy'][$o['id']]++;
-                                }
-                                if(in_array($op['inst_id'],$inLds)){ //粮道所
+                                }elseif(in_array($op['inst_id'],$inLds)){ //粮道所
                                     $result['partThree']['ld'][$o['id']]++;
                                 } 
                             }
@@ -531,6 +543,15 @@ class OpOrder extends SystemBase
                     }
                 }
             }
+
+            $result['partOneExtra']['total_accept'] += $result['partOne'][$v['id']]['accept'];
+            $result['partOneExtra']['total_acceptIng'] += $result['partOne'][$v['id']]['acceptIng'];
+            $result['partOneExtra']['total_yunxin'] += $result['partOne'][$v['id']]['yunxin'];
+            $result['partOneExtra']['total_jishu'] += $result['partOne'][$v['id']]['jishu'];
+            $result['partOneExtra']['total_jinguan'] += $result['partOne'][$v['id']]['jinguan'];
+            $result['partOneExtra']['total_faqi'] += $result['partOne'][$v['id']]['faqi'];
+            $result['partOneExtra']['total_end'] += $result['partOne'][$v['id']]['end'];
+            $result['partOneExtra']['total_all'] += $result['partOne'][$v['id']]['all'];
         } //halt($result);
         return $result;
     }

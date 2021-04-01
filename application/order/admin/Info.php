@@ -26,76 +26,59 @@ class Info extends Admin
 	    	$OpOrderModel = new OpOrderModel;
 	    	$temps = $OpOrderModel->with('SystemUser')->where([['duid','like','%,%']])->select();
 
-	    	$liudanInstIds = explode(',',session('39inst_ids'));
-	    	$zhengwanInstIds = explode(',',session('40inst_ids'));
+	    	$data = [];
 
-	    	$data['data'][0] = [
-	    		'name' => '刘丹',
-				'orderTotal' => 0, //工单总量
-				'orderEndTotal' => 0, //完结量
-				'orderTurnTotal' => 0,  //转接量
-				'orderPointTotal' => 0, //总流转节点
-				'orderTimeTotal' => 0, //总登录时间
-	    	];
-	    	$data['data'][1] = [
-	    		'name' => '郑湾',
-				'orderTotal' => 0, //工单总量
-				'orderEndTotal' => 0, //完结量
-				'orderTurnTotal' => 0,  //转接量
-				'orderPointTotal' => 0, //总流转节点
-				'orderTimeTotal' => 0, //总登录时间
-	    	];
-	    	
+	    	$operateAdmins = UserModel::where([['role_id','eq',11],['status','eq',1]])->field('id,nick')->select();
+	    	foreach ($operateAdmins as $k => $v) {
+	    		$data['data'][$k] = [
+	    			'id' => $v['id'],
+		    		'name' => $v['nick'],
+					'orderTotal' => 0, //工单总量
+					'orderEndTotal' => 0, //完结量
+					// 'orderTurnTotal' => 0,  //转接量
+					'orderPointTotal' => 0, //总流转节点
+					'orderTimeTotal' => 0, //总登录时间
+		    	];
+	    	}
+	   		// halt($temps); 		
 	    	foreach($temps as $k => &$v){
 	    		$uids = explode(',',$v['duid']);
-	    		if($uids[1] == 81){ //刘丹
-	    			$data['data'][0]['orderTotal']++;
+	    		foreach ($data['data'] as $k1 => $v1) {
+	    			// $data['data'][$k1]['orderTotal']++;
 	    			if($v['ftime']){
-						$data['data'][0]['orderEndTotal']++;
-						$data['data'][0]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
+	    				if(in_array($v1['id'],$uids)){
+		    				$data['data'][$k1]['orderEndTotal']++;
+		    				$data['data'][$k1]['orderTimeTotal'] += $v['dtime'] - strtotime($v['ctime']);
+		    			}
+						// $data['data'][$k1]['orderEndTotal']++;
+						
 	    			}
-	    			if(in_array($v['inst_id'],$zhengwanInstIds)){
-	    				$data['data'][1]['orderTurnTotal']++;
+	    			if(in_array($v1['id'],$uids)){
+	    				$data['data'][$k1]['orderTotal']++;
+	    				$data['data'][$k1]['orderPointTotal'] += count($uids);
 	    			}
-	    			$data['data'][0]['orderTurnTotal'] += count($uids);
 	    			
 	    		}
-	    		if($uids[1] == 82){ //郑湾
-	    			$data['data'][1]['orderTotal']++;
-	    			if($v['ftime']){
-						$data['data'][0]['orderEndTotal']++;
-						$data['data'][1]['orderTimeTotal'] += ($v['ftime'] - $v['ctime']);
-	    			}
-	    			if(in_array($v['inst_id'],$liudanInstIds)){
-						$data['data'][1]['orderTurnTotal']++;
-	    			}
-	    			$data['data'][1]['orderTurnTotal'] += count($uids);
-	    			
-	    		}
+	    	
 	        }
-	        if($data['data'][0]['orderTotal'] == 0){
-	        	$data['data'][0]['orderEndPercent'] = 0; //完结率
-		        $data['data'][0]['orderTurnPercent'] = 0; //平均流转节点
-		        $data['data'][0]['orderTimePercent'] = 0; //平均处理时长
-	        }else{
-				$data['data'][0]['orderEndPercent'] = round($data['data'][0]['orderEndTotal'] / $data['data'][0]['orderTotal'],2)*100 .'%'; //完结率
-		        $data['data'][0]['orderTurnPercent'] = round($data['data'][0]['orderPointTotal'] / $data['data'][0]['orderTotal']); //平均流转节点
-		        $data['data'][0]['orderTimePercent'] = round($data['data'][0]['orderTimeTotal'] / $data['data'][0]['orderTotal']); //平均处理时长
-	        }
-	        if($data['data'][1]['orderTotal'] == 0){
-				$data['data'][1]['orderEndPercent'] = 0;
-				$data['data'][1]['orderTurnPercent'] = 0;
-				$data['data'][1]['orderTimePercent'] = 0; //平均处理时长
-	        }else{
-		        $data['data'][1]['orderEndPercent'] = ($data['data'][1]['orderEndTotal'] / $data['data'][1]['orderTotal'])*100 .'%';	
-		        $data['data'][1]['orderTurnPercent'] = round($data['data'][1]['orderPointTotal'] / $data['data'][1]['orderTotal']);
-		        $data['data'][1]['orderTimePercent'] = round($data['data'][1]['orderTimeTotal'] / $data['data'][1]['orderTotal']); //平均处理时长
-	        }
+	        // halt($data['data']);
 	        
+	        foreach ($data['data'] as $k2 => $v2) {
+	        	if($data['data'][$k2]['orderTotal'] == 0){
+		        	$data['data'][$k2]['orderEndPercent'] = 0; //完结率
+			        $data['data'][$k2]['orderTurnPercent'] = 0; //平均流转节点
+			        $data['data'][$k2]['orderTimePercent'] = 0; //平均处理时长
+		        }else{
+					$data['data'][$k2]['orderEndPercent'] = round($data['data'][$k2]['orderEndTotal'] / $data['data'][$k2]['orderTotal'],2)*100 .'%'; //完结率
+			        $data['data'][$k2]['orderTurnPercent'] = round($data['data'][$k2]['orderPointTotal'] / $data['data'][$k2]['orderTotal']); //平均流转节点
+			        $data['data'][$k2]['orderTimePercent'] = round($data['data'][$k2]['orderTimeTotal'] / $data['data'][$k2]['orderTotal'] / 3600); //平均处理时长
+			        $data['data'][$k2]['orderTimeTotal'] = round($data['data'][$k2]['orderTimeTotal'] / 3600); //总处理时长
+		        }
+	        }	
+
 	        $data['code'] = 0;
 	        $data['msg'] = '';
-	        
-	    	//halt($data);
+
 	    	return json($data);
 	    }
     	return $this->fetch();
