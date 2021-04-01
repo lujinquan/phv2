@@ -62,9 +62,13 @@ class Index extends Common
             'ssl_key'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR  . 'apiclient_key.pem',
             'ssl_cer'        => __DIR__ . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'liangdao'. DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
         ];
-        // // 读取后台是否可支付的配置
+        // 读取后台是否可支付的配置
         $curr_time = time();
-        if($curr_time > 1612065600 && $curr_time < 1612108800){
+
+        // 每个月最后一天的12点以后不能支付
+        $endTime = strtotime(date('Y-m',strtotime( "first day of next month" )));
+        $beginTime = $endTime - 12 * 60 * 60;
+        if($curr_time > $beginTime && $curr_time < $endTime){
         	$this->can_pay = false;
         }
         // if($configDatas['can_not_pay_time']){
