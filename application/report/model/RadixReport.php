@@ -497,7 +497,7 @@ class RadixReport extends Model
         //暂停计租
         $changeNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
             ->where([['order_date','<',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
-               halt(Db::name('change_table')->getLastSql());
+               // halt(Db::name('change_table')->getLastSql());
         //新增暂停计租
         // $changeAddNoBaseData = Db::name('change_table')->field('use_id,owner_id,inst_id ,sum(change_rent) as change_rents')->group('use_id,owner_id,inst_id')
         //     ->where([['order_date','eq',$nextDate],['change_status','eq',1],['change_type','eq',3]])->where('(end_date > '.$cacheDate.' or end_date = 0)')->select();
