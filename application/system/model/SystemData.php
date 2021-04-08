@@ -261,7 +261,7 @@ class SystemData extends Model
 
         $HouseModel = new HouseModel;
 
-        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_use_area,a.house_area,a.house_is_pause,b.*,c.*,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds';
+        $fields = 'a.house_id,a.house_number,a.house_door,a.house_balance,a.house_pump_rent,a.house_oprice,a.house_diff_rent,a.house_pre_rent,a.house_protocol_rent,a.house_cou_rent,a.house_use_id,a.house_unit_id,a.house_floor_id,a.house_lease_area,a.house_use_area,a.house_area,a.house_is_pause,b.*,c.*,(ban_civil_area + ban_party_area + ban_career_area) as ban_area,(ban_civil_rent+ban_party_rent+ban_career_rent) as ban_rent,(ban_civil_oprice+ban_party_oprice+ban_career_oprice) as ban_oprice,(ban_civil_holds+ban_party_holds+ban_career_holds) as ban_holds,(ban_civil_num+ban_party_num+ban_career_num) as ban_num';
 
         $data = [];
         //一、这种可以实现关联模型查询，并只保留查询的结果【无法关联的数据剔除掉】）

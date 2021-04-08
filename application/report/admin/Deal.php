@@ -56,7 +56,7 @@ class Deal extends Admin
             if(isset($data['change_type']) && $data['change_type']){
                 $where[] = ['a.change_type','in',explode(',',$data['change_type'])];
             }else{
-                $where[] = ['a.change_type','in',[7,8,9,10]];
+                $where[] = ['a.change_type','in',[7,8,9,10,14]];
             }
             
             // 检索异动时间
@@ -96,8 +96,9 @@ class Deal extends Admin
 
             // halt($where);
             $where[] = ['a.change_status','eq',1];
-            $fields = 'a.change_order_number,a.change_type,a.change_rent,a.change_area,a.change_use_area,a.change_oprice,a.change_ban_num,a.tenant_id,a.house_id,a.ban_id,a.order_date,a.owner_id,a.use_id,b.ban_number,b.ban_address,b.ban_damage_id,b.ban_struct_id,b.ban_inst_id,c.tenant_name,d.house_number';
-            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id')->where($where)->field($fields)->page($page)->limit($limit)->select();
+            $fields = 'a.change_order_number,a.change_type,a.change_rent,a.change_area,a.change_use_area,a.change_oprice,a.change_ban_num,a.tenant_id,a.house_id,a.ban_id,a.order_date,a.owner_id,a.use_id,a.change_month_rent,a.change_year_rent,b.ban_number,b.ban_address,b.ban_damage_id,b.ban_struct_id,b.ban_inst_id,c.tenant_name,d.house_number';
+            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->field($fields)->page($page)->limit($limit)->select();
+            // halt($temp);
             foreach ($temp as $k => &$v) {
                 $v['order_date'] = substr_replace($v['order_date'], '-', 4,0);
                 if(empty($v['tenant_id'])){

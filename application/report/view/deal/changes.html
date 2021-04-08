@@ -38,6 +38,7 @@
 						<option value="8">注销</option>
 						<option value="9">房屋调整</option>
 						<option value="10">管段调整</option>
+						<option value="14">楼栋调整</option>
 						{// volist name="params['changes']" id="v"}
 <!--						<option value="{// $key}">{// $v}</option>-->
 						{// /volist}
@@ -139,11 +140,11 @@
 					{field: 'change_type',minWidth: 90,align:'center',title: '异动类型',templet: function(d) {
 						return params.changes[d.change_type];
 					}}
-					,{field: 'ban_inst_id',minWidth: 100,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
+					,{field: 'ban_inst_id',minWidth: 120,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
 						return params.insts[d.ban_inst_id];
 					}}
 					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
-					,{field: 'house_number', minWidth: 110, align:'center', title: '房屋编号'}
+					,{field: 'house_number', minWidth: 120, align:'center', title: '房屋编号'}
 					,{field: 'ban_address',minWidth:120,align:'center', title: '地址'}
 					,{field: 'tenant_name',minWidth:80,align:'center', title: '租户姓名'}
 					,{field: 'ban_holds',minWidth:60,align:'center', title: '户数',templet: function(d) {
@@ -153,6 +154,8 @@
 					,{field: 'change_use_area',minWidth:90,align:'center', title: '计租面积'}
 					,{field: 'change_area',minWidth:90,align:'center', title: '建筑面积'}
 					,{field: 'change_oprice',minWidth:90,align:'center', title: '原价'}
+					,{field: 'change_month_rent',minWidth:100,align:'center', title: '以前月租金'}
+					,{field: 'change_year_rent',minWidth:100,align:'center', title: '以前年租金'}
 					,{field: 'change_ban_num',minWidth:60,align:'center', title: '栋数'}
 					,{field: 'order_date',minWidth:90,align:'center', title: '完成时间'}
 					,{field: 'ban_owner_id',minWidth: 80,title: '产别',align:'center',templet: function(d) {

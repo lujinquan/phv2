@@ -31,6 +31,7 @@ class ChangeNew extends SystemBase
         'ctime' => 'timestamp:Y-m-d H:i:s',
         'etime' => 'timestamp:Y-m-d H:i:s',
         'child_json' => 'json',
+        'change_json' => 'json',
         'data_json' => 'json',
     ];
 
@@ -184,12 +185,41 @@ class ChangeNew extends SystemBase
             $data['change_order_number'] = date('Ym') . '07' . random(14);
         }
 
+        if($flag === 'add' && isset($data['floor_households'])){
+            $data['change_json'] = [
+                'before' => [
+                    'ban_total_holds' => $data['floor_households'],
+                    'ban_total_rent' => $data['floor_prescribed'],
+                    'ban_total_use_area' => $data['floor_areaofuse'],
+                    'ban_total_area' => $data['floor_builtuparea'],
+                    'ban_total_oprice' => $data['floor_original'],
+                    'ban_total_num' => $data['floor_bannumber'],
+                ],
+                'change' => [
+                    'ban_total_holds' => $data['cancel_change_0'],
+                    'ban_total_rent' => $data['cancel_change_1'],
+                    'ban_total_use_area' => $data['cancel_change_2'],
+                    'ban_total_area' => $data['cancel_change_3'],
+                    'ban_total_oprice' => $data['cancel_change_4'],
+                    'ban_total_num' => $data['cancel_change_5'],
+                ],
+                'after' => [
+                    'ban_total_holds' => $data['changes_floor_households'],
+                    'ban_total_rent' => $data['changes_floor_prescribed'],
+                    'ban_total_use_area' => $data['changes_floor_areaofuse'],
+                    'ban_total_area' => $data['changes_floor_builtuparea'],
+                    'ban_total_oprice' => $data['changes_floor_original'],
+                    'ban_total_num' => $data['changes_floor_bannumber'],
+                ],
+            ];
+        }
+
         // 审批表数据
         $processRoles = $this->processRole;
         $processDescs = $this->processDesc;
         $data['change_desc'] = $processDescs[3];
         $data['curr_role'] = $processRoles[3];
-        //halt($data);
+        // halt($data);
         return $data;
     }
 

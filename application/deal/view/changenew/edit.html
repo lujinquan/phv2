@@ -187,6 +187,57 @@
 			  </div>
 		  </div>
 	  </div>
+	  <fieldset  class="layui-elem-field layui-field-title j-field-box">
+		<legend>基数异动</legend>
+	</fieldset>
+		<table  class="layui-table">
+		  <thead>
+			  <tr>
+			    <th>楼栋编号</th>
+			    <th>异动状态</th>
+				<th class="cancel">户数</th>
+			    <th class="cancel">规定租金</th>
+			    <th class="cancel">使用面积</th>
+			    <th class="cancel">建筑面积</th>
+			    <th class="cancel">房屋原价</th>
+				<th class="cancel">栋数</th>
+			    
+			  </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		  	  <td id="floor_number">{$data_info['ban_info']['ban_number']}</td>
+			  <td>异动前</td>
+			  <td class="cancel_before_0" id="floor_households">{$data_info['change_json']['before']['ban_total_holds']}</td>
+			  <td class="cancel_before_1" id="floor_prescribed">{$data_info['change_json']['before']['ban_total_rent']}</td>
+	    	  <td class="cancel_before_2" id="floor_areaofuse">{$data_info['change_json']['before']['ban_total_use_area']}</td>
+	    	  <td class="cancel_before_3" id="floor_builtuparea">{$data_info['change_json']['before']['ban_total_area']}</td>
+	    	  <td class="cancel_before_4" id="floor_original">{$data_info['change_json']['before']['ban_total_oprice']}</td>
+			  <td class="cancel_before_5" id="floor_bannumber">{$data_info['change_json']['before']['ban_total_num']}</td>
+			  
+		    </tr>
+			<tr>
+			  <td></td>
+			  <td>异动</td>
+			  <td>{$data_info['change_json']['change']['ban_total_holds']}</td>
+			  <td>{$data_info['change_json']['change']['ban_total_rent']}</td>
+			  <td>{$data_info['change_json']['change']['ban_total_use_area']}</td>
+			  <td>{$data_info['change_json']['change']['ban_total_area']}</td>
+			  <td>{$data_info['change_json']['change']['ban_total_oprice']}</td>
+			  <td>{$data_info['change_json']['change']['ban_total_num']}</td>
+			</tr>
+			<tr>
+			  <td></td>
+			  <td>异动后</td>
+			  <td class="cancel_after_0" id="changes_floor_households">{$data_info['change_json']['after']['ban_total_holds']}</td>
+			  <td class="cancel_after_1" id="changes_floor_prescribed">{$data_info['change_json']['after']['ban_total_rent']}</td>
+			  <td class="cancel_after_2" id="changes_floor_areaofuse">{$data_info['change_json']['after']['ban_total_use_area']}</td>
+			  <td class="cancel_after_3" id="changes_floor_builtuparea">{$data_info['change_json']['after']['ban_total_area']}</td>
+			  <td class="cancel_after_4" id="changes_floor_original">{$data_info['change_json']['after']['ban_total_oprice']}</td>
+			  <td class="cancel_after_5" id="changes_floor_bannumber">{$data_info['change_json']['after']['ban_total_num']}</td>
+			</tr>
+		  </tbody>
+		</table>
 	<fieldset id="item1" class="layui-elem-field layui-field-title j-field-box">
 		<legend>填报信息</legend>
 	</fieldset>
