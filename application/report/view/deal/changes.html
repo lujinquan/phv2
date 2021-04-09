@@ -8,7 +8,7 @@
 				{if condition="in_array('ban_inst_id',$config['szno_info_search'])"}
 				{if condition="INST_LEVEL != 3"}
 				<div class="layui-input-inline layui-col-md2 j-width-130 j-select-width130 j-margin-10">
-					<select name="ban_inst_id"  xm-select="ban_inst_id">
+					<select name="inst_id"  xm-select="ban_inst_id">
 						<option value=""  disabled="disabled">机构</option>
 						{volist name=":config('inst_check_names')[INST]" id="v"}
 						<option value="{$key}">{$v}</option>
@@ -36,7 +36,7 @@
 						<option value="">异动类型</option>
 						<option value="7">新发租</option>
 						<option value="8">注销</option>
-						<option value="9">房屋调整</option>
+						<option value="12">房屋调整</option>
 						<option value="10">管段调整</option>
 						<option value="14">楼栋调整</option>
 						{// volist name="params['changes']" id="v"}
@@ -140,11 +140,20 @@
 					{field: 'change_type',minWidth: 90,align:'center',title: '异动类型',templet: function(d) {
 						return params.changes[d.change_type];
 					}}
-					,{field: 'ban_inst_id',minWidth: 120,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
-						return params.insts[d.ban_inst_id];
+					,{field: 'change_order_number', minWidth: 240, align:'center', title: '异动编号'}
+					,{field: 'inst_id',minWidth: 120,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
+						return params.insts[d.inst_id];
+					}}
+					,{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段',hide: isShowInst,templet: function(d) {
+						if(d.new_inst_id){
+							return params.insts[d.new_inst_id];
+						}else{
+							return '';
+						}
+						
 					}}
 					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
-					,{field: 'house_number', minWidth: 120, align:'center', title: '房屋编号'}
+					,{field: 'house_number', minWidth: 160, align:'center', title: '房屋编号'}
 					,{field: 'ban_address',minWidth:120,align:'center', title: '地址'}
 					,{field: 'tenant_name',minWidth:80,align:'center', title: '租户姓名'}
 					,{field: 'ban_holds',minWidth:60,align:'center', title: '户数',templet: function(d) {
@@ -157,7 +166,7 @@
 					,{field: 'change_month_rent',minWidth:100,align:'center', title: '以前月租金'}
 					,{field: 'change_year_rent',minWidth:100,align:'center', title: '以前年租金'}
 					,{field: 'change_ban_num',minWidth:60,align:'center', title: '栋数'}
-					,{field: 'order_date',minWidth:90,align:'center', title: '完成时间'}
+					,{field: 'order_date',minWidth:90,align:'center', title: '生效时间'}
 					,{field: 'ban_owner_id',minWidth: 80,title: '产别',align:'center',templet: function(d) {
 						return params.owners[d.owner_id];
 					}}, {field: 'house_use_id',minWidth: 80,align:'center',title: '使用性质',templet: function(d) {

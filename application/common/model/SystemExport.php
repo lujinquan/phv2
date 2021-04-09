@@ -200,6 +200,9 @@ class SystemExport extends Model
 			if(isset($d['ban_owner_id'])){
 				$d['ban_owner_id'] = $params['owners'][$d['ban_owner_id']];
 			}
+			if(isset($d['owner_id'])){
+				$d['owner_id'] = $params['owners'][$d['owner_id']];
+			}
 			if(isset($d['ban_damage_id'])){
 				$d['ban_damage_id'] = $params['damages'][$d['ban_damage_id']];
 			}
@@ -208,6 +211,12 @@ class SystemExport extends Model
 			}
 			if(isset($d['ban_inst_id'])){
 				$d['ban_inst_id'] = $params['insts'][$d['ban_inst_id']];
+			}
+			if(isset($d['inst_id']) && $d['inst_id']){
+				$d['inst_id'] = $params['insts'][$d['inst_id']];
+			}
+			if(isset($d['new_inst_id']) && $d['new_inst_id']){
+				$d['new_inst_id'] = $params['insts'][$d['new_inst_id']];
 			}
 			if(isset($d['tenant_inst_id'])){
 				$d['tenant_inst_id'] = $params['insts'][$d['tenant_inst_id']];
@@ -229,6 +238,9 @@ class SystemExport extends Model
 			}
 			if(isset($d['house_use_id'])){
 				$d['house_use_id'] = $params['uses'][$d['house_use_id']];
+			}
+			if(isset($d['use_id'])){
+				$d['use_id'] = $params['uses'][$d['use_id']];
 			}
 			if(isset($d['house_is_pause'])){
 				$d['house_is_pause'] = $params['is_status'][$d['house_is_pause']];

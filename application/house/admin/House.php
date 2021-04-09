@@ -727,7 +727,7 @@ class House extends Admin
 
             // $tableData = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('house_ctime desc')->select();
              // 子查询
-            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->having('count(house_id) > 1')->buildSql();
+            $subsql = Db::name('weixin_member_house')->field('house_id,member_id')->group('house_id')->buildSql();
 
             $temp_data = Db::name('house')->alias('a')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','a.ban_id = d.ban_id','left')->join([$subsql =>'e'],'a.house_id = e.house_id','left')->where($where);
             
@@ -752,17 +752,20 @@ class House extends Admin
             foreach ($tableData as $k => &$v) {
                 // $member_id = Db::name('weixin_member_house')->where([['house_id','eq',$v['house_id']],['dtime','eq',0]])->value('member_id');
                 if(empty($v['member_id'])){
+                    $v['member_id'] = '';
                     $v['is_bind_weixin'] = '否';
                 }else{
                     $v['is_bind_weixin'] = '是';
                 }
                 if($v['tenant_id']){ //如果当前房屋已经绑定租户
-                    $last_print_time = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->value("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time");
-                    $v['last_print_time'] = $last_print_time?$last_print_time:'';
+                    
+                    $leaseInfo = Db::name('change_lease')->where([['house_id','eq',$v['house_id']],['change_status','eq',1],['tenant_id','eq',$v['tenant_id']]])->order('id desc')->field("from_unixtime(last_print_time, '%Y-%m-%d %H:%i:%s') as last_print_time,id as change_lease_id")->find();
+                    $v['last_print_time'] = $leaseInfo['last_print_time'];
+                    $v['change_lease_id'] = $leaseInfo['change_lease_id'];
                 }else{
+                    $v['change_lease_id'] = '';
                     $v['last_print_time'] = '';
-                }   
-                unset($v['house_id'],$v['tenant_id'],$v['member_id']);
+                }
             }
 
             // foreach ($tableData as $k => &$v) {

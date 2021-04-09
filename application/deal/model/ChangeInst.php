@@ -426,6 +426,10 @@ class ChangeInst extends SystemBase
                 if($houses){
                     foreach($houses as $houseid){
                         $tenants = Db::name('rent_order')->where([['house_id','eq',$houseid]])->group('tenant_id')->column('tenant_id');
+                        $bind_tenant_id = Db::name('house')->where([['house_id','eq',$houseid]])->value('tenant_id');
+                        if($bind_tenant_id){
+                            $tenants[] = $bind_tenant_id;
+                        }
                         if($tenants){
                             // dump($v);halt($tenants);
                             Db::name('tenant')->where([['tenant_id','in',$tenants]])->update(['tenant_inst_id'=>$v['new_inst_id']]);
