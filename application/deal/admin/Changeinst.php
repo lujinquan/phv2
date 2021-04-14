@@ -46,6 +46,11 @@ class Changeinst extends Admin
         $this->assign('insts',$insts);
         return $this->fetch();
     }
+    public function test()
+    {
+        // $ChangeModel = new ChangeInstModel; 
+        // $ChangeModel->nextMonthDeal();
+    }
 
     public function apply()
     {

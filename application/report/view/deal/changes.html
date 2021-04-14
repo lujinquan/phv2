@@ -145,7 +145,7 @@
 						return params.insts[d.inst_id];
 					}}
 					,{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段',hide: isShowInst,templet: function(d) {
-						if(d.new_inst_id){
+						if(parseInt(d.new_inst_id)){
 							return params.insts[d.new_inst_id];
 						}else{
 							return '';
