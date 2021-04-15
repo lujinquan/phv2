@@ -16,6 +16,7 @@ use think\Db;
 use app\common\controller\Common;
 use app\rent\model\Rent as RentModel;
 use app\deal\model\ChangeCut as ChangeCutModel;
+use app\deal\model\ChangeInst as ChangeInstModel;
 use app\report\model\MonthReport as MonthReportModel;
 use app\rent\model\Invoice as InvoiceModel;
 use app\rent\model\Recharge as RechargeModel;
@@ -333,6 +334,11 @@ class Api extends Common
      * @return [type] [description]
      */
     public function autoAllDpkj(){
+
+        // 自动更新管段调整数据
+        $ChangeModel = new ChangeInstModel;
+        $ChangeModel->nextMonthDeal();
+
         // return $this->success('执行成功');die();
 
         // 本月开始时间

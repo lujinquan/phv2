@@ -429,9 +429,9 @@ class Rent extends Admin
         if ($this->request->isAjax()) {
 
             $curMonth = date('Y-m');
-            // $curMonth = '2020-12';
+            $curMonth = '2021-03';
             $month = date('Ym');
-            // $month = '202012';
+            $month = '2021-03';
             $ReportModel = new ReportModel;
             $data = $ReportModel->getPaidRent();//halt($result);
 
@@ -628,7 +628,7 @@ class Rent extends Admin
     {
         if ($this->request->isAjax()) {
             $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
-            // $curMonth = '2020-09';
+            $curMonth = '2021-03';
             $month = str_replace('-','',$curMonth);
             $ReportModel = new ReportModel;
             $data = $ReportModel->getPrePaidRent($curMonth);

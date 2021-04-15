@@ -129,10 +129,10 @@ class Report extends Model
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
         $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
         
-        // $curMonth = '2020-12';
+        $curMonth = '2021-03';
 
         $nextMonth = date('Y-m',strtotime('1 month'));
-        // $nextMonth = '2021-01';
+        $nextMonth = '2021-04';
         //halt($lastMonth);
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
@@ -278,6 +278,7 @@ class Report extends Model
         $baseData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->group('house_id')->where($where)->select();
 
         $last_month = date('Ym',strtotime('- 1 month',strtotime($curMonth)));
+        // halt($last_month);
         $tempData = @file_get_contents(ROOT_PATH.'file/report/prepaid/'.$last_month.'.txt');
         //halt($tempData);
         if($tempData){ // 有缓存就读取缓存数据

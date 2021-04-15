@@ -402,18 +402,19 @@ class ChangeInst extends SystemBase
 
     /**
      * 异动审批成功后，显示的审批记录生效月份显示为次月
-     * 楼栋在（本月最后一天中午十二点 至 次月零点，注意不能是次月零点再触发）期限内变更到新管段；同时充楼栋以前年欠租、以前月欠租到异动记录中
+     * 楼栋在（本月最后一天中午十二点 至 次月零点，都可触发）期限内变更到新管段；同时充楼栋以前年欠租、以前月欠租到异动记录中
      * =====================================
      * @author  Lucas 
      * email:   598936602@qq.com 
      * Website  address:  www.mylucas.com.cn
      * =====================================
-     * 创建时间: 2021-03-12 17:33:09
+     * 创建时间: 2021-04-14 11:03:36
      * @return  返回值  
      * @version 版本  2.0.27
      */
     public function nextMonthDeal()
     {
+        set_time_limit(0);
         // 1、查询生效日期是这个月的所有管段调整异动
         $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
         $change_table_data = Db::name('change_table')->where([['change_type','eq',10],['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
@@ -437,31 +438,192 @@ class ChangeInst extends SystemBase
                     }
 
                 }
-            }
-            // halt(1);
-            // 3、把生效日期是这个月的这些管段调整异动，楼下面的所有欠租调整过来
-            $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$v['ban_id']]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
 
-            $change_month_rent = 0;
-            $change_year_rent = 0;
-            if(!empty($unpaidRent)){
-                // 小于本年度1月份的时间，就是以前年；大于这个时间，就是以前月
-                $before_month = date('Y').'00';
-                foreach ($unpaidRent as $u) {
-                    if($u['rent_order_date'] < $before_month){
-                        $change_year_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
-                    }else{
-                        $change_month_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+                // 3、把生效日期是这个月的这些管段调整异动，楼下面的所有欠租调整过来
+                $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$v['ban_id']],['rent_order_status','eq',1],['rent_order_date','neq',$nextMonth]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
+
+                $change_month_rent = 0;
+                $change_year_rent = 0;
+                if(!empty($unpaidRent)){
+                    // 小于本年度1月份的时间，就是以前年；大于这个时间，就是以前月
+                    $before_month = date('Y').'00';
+                    foreach ($unpaidRent as $u) {
+                        if($u['rent_order_date'] < $before_month){
+                            $change_year_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+                        }else{
+                            $change_month_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+                        }
                     }
+
                 }
 
-            }
+                Db::name('change_table')->where([['id','eq',$v['id']]])->update(['change_month_rent'=>$change_month_rent,'change_year_rent'=>$change_year_rent]);
 
-            Db::name('change_table')->where([['id','eq',$v['id']]])->update(['change_month_rent'=>$change_month_rent,'change_year_rent'=>$change_year_rent]);
-            // dump($unpaidRent);halt($v);
-            
+                // 管段调整后，对应的楼下的减免、暂停计租都要转过去
+                Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where([['ban_id','eq',$v['ban_id']],['change_type','in','1,3']])->update(['a.inst_id'=>Db::raw('b.ban_inst_id')]);
+           
+            } 
         }
         
     }
+
+    /**
+     * 异动审批成功后，显示的审批记录生效月份显示为次月
+     * 楼栋在（本月最后一天中午十二点 至 次月零点，注意不能是次月零点再触发）期限内变更到新管段；同时充楼栋以前年欠租、以前月欠租到异动记录中
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-12 17:33:09
+     * @return  返回值  
+     * @version 版本  2.0.27
+     */
+    // public function testNextMonthDeal()
+    // {
+    //     // 1、查询生效日期是这个月的所有管段调整异动
+    //     $nextMonth = '202104';
+    //     $change_table_data = Db::name('change_table')->where([['change_type','eq',10],['order_date','eq',$nextMonth],['change_status','eq',1]])->column('ban_id');
+    //     $change_inst_data_temp = Db::name('change_inst')->where([['change_type','eq',10],['entry_date','eq','2021-04'],['change_status','eq',1]])->field('ban_ids,change_order_number,ftime,old_inst_id,new_inst_id')->select();
+    //     $change_inst_data = [];
+    //     $inst_ban_arr = [];
+    //     $ban_id_change_number_arr = [];
+    //     $ftime_change_number_arr = [];
+    //     $old_inst_change_number_arr = [];
+    //     $new_inst_change_number_arr = [];
+    //     foreach ($change_inst_data_temp as $key2 => $value2) {
+    //         $change_inst_data[] = $value2['ban_ids'];
+    //         $a1 = explode(',', $value2['ban_ids']);
+    //         foreach($a1 as $v3){
+    //             $ban_id_change_number_arr[$v3] = $value2['change_order_number'];
+    //             $ftime_change_number_arr[$v3] = $value2['ftime'];
+    //             $old_inst_change_number_arr[$v3] = $value2['old_inst_id'];
+    //             $new_inst_change_number_arr[$v3] = $value2['new_inst_id'];
+    //         }
+    //         $inst_ban_arr = array_merge($inst_ban_arr,$a1);
+    //     }
+        
+    //     // foreach ($change_inst_data as $key => $value) {
+    //     //     $a1 = explode(',', $value);
+            
+    //     //     # code...
+    //     // }
+    //     // 获取需要补充的ban_id
+    //     $diff_ban = array_diff($inst_ban_arr, $change_table_data);
+    //     // dump($diff_ban);dump($inst_ban_arr);halt($change_table_data);
+    //     foreach ($diff_ban as $key1 => $value1) {
+
+    //         $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$value1]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
+
+    //         $change_month_rent = 0;
+    //         $change_year_rent = 0;
+    //         if(!empty($unpaidRent)){
+    //             // 小于本年度1月份的时间，就是以前年；大于这个时间，就是以前月
+    //             $before_month = date('Y').'00';
+    //             foreach ($unpaidRent as $u) {
+    //                 if($u['rent_order_date'] < $before_month){
+    //                     $change_year_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+    //                 }else{
+    //                     $change_month_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+    //                 }
+    //             }
+
+    //         }
+
+    //         $ban_info = Db::name('ban')->where([['ban_id','eq',$value1]])->field('ban_inst_pid,ban_owner_id,ban_use_id')->find();
+    //         // 异动记录
+    //         $ChangeTableModel = new ChangeTableModel;
+    //         $resdata = [
+    //             'change_type' => 10,
+    //             'change_order_number' => $ban_id_change_number_arr[$value1],
+    //             'ban_id' => $value1,
+    //             'inst_id' => $old_inst_change_number_arr[$value1],
+    //             'new_inst_id' => $new_inst_change_number_arr[$value1],
+    //             'inst_pid' => $ban_info['ban_inst_pid'],
+    //             'owner_id' => $ban_info['ban_owner_id'],
+    //             'use_id' => $ban_info['ban_use_id'],
+    //             'order_date' => '202104',
+    //             'ban_id' => $value1,
+    //             'change_month_rent' => $change_month_rent,
+    //             'change_year_rent' => $change_year_rent,
+    //             'change_status' => 1,
+    //         ];
+    //         // halt($resdata);
+    //         $ChangeTableModel->save($resdata);
+    //     }
+
+
+        
+    // }
+
+    
+
+    /**
+     * 异动审批成功后，显示的审批记录生效月份显示为次月
+     * 楼栋在（本月最后一天中午十二点 至 次月零点，注意不能是次月零点再触发）期限内变更到新管段；同时充楼栋以前年欠租、以前月欠租到异动记录中
+     * =====================================
+     * @author  Lucas 
+     * email:   598936602@qq.com 
+     * Website  address:  www.mylucas.com.cn
+     * =====================================
+     * 创建时间: 2021-03-12 17:33:09
+     * @return  返回值  
+     * @version 版本  2.0.27
+     */
+    // public function tempnextMonthDeal()
+    // {
+    //     // 1、查询生效日期是这个月的所有管段调整异动
+    //     $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
+    //     $nextMonth = 202104;
+    //     $change_table_data = Db::name('change_table')->where([['change_type','eq',10],['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
+    //     // halt($change_table_data);
+    //     if(!empty($change_table_data)){
+    //         // 2、把生效日期是这个月的这些管段调整异动，楼所属的管段调整过来
+    //         foreach ($change_table_data as $v) {
+    //             // Db::name('ban')->where([['ban_id','eq',$v['ban_id']]])->update(['ban_inst_id'=>$v['new_inst_id']]);
+    //             // $houses = Db::name('house')->where([['ban_id','eq',$v['ban_id']]])->column('house_id');
+    //             // if($houses){
+    //             //     foreach($houses as $houseid){
+    //             //         $tenants = Db::name('rent_order')->where([['house_id','eq',$houseid]])->group('tenant_id')->column('tenant_id');
+    //             //         $bind_tenant_id = Db::name('house')->where([['house_id','eq',$houseid]])->value('tenant_id');
+    //             //         if($bind_tenant_id){
+    //             //             $tenants[] = $bind_tenant_id;
+    //             //         }
+    //             //         if($tenants){
+    //             //             // dump($v);halt($tenants);
+    //             //             Db::name('tenant')->where([['tenant_id','in',$tenants]])->update(['tenant_inst_id'=>$v['new_inst_id']]);
+    //             //         }
+    //             //     }
+
+    //             // }
+            
+    //             // halt(1);
+    //             // 3、把生效日期是这个月的这些管段调整异动，楼下面的所有欠租调整过来
+    //             $unpaidRent = Db::name('rent_order')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['rent_order_paid','exp',Db::raw('<rent_order_receive')],['d.ban_id','eq',$v['ban_id']],['rent_order_status','eq',1],['rent_order_date','<',202104]])->field('rent_order_paid,rent_order_receive,rent_order_date')->select();
+
+    //             $change_month_rent = 0;
+    //             $change_year_rent = 0;
+    //             if(!empty($unpaidRent)){
+    //                 // 小于本年度1月份的时间，就是以前年；大于这个时间，就是以前月
+    //                 $before_month = date('Y').'00';
+    //                 foreach ($unpaidRent as $u) {
+    //                     if($u['rent_order_date'] < $before_month){
+    //                         $change_year_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+    //                     }else{
+    //                         $change_month_rent += bcsub($u['rent_order_receive'],$u['rent_order_paid'],2);
+    //                     }
+    //                 }
+
+    //             }
+
+    //             Db::name('change_table')->where([['id','eq',$v['id']]])->update(['change_year_rent'=>$change_year_rent]);
+
+    //             // 管段调整后，对应的楼下的减免、暂停计租都要转过去（未完）
+                
+    //             // dump($unpaidRent);halt($v);
+    //         }
+    //     }
+        
+    // }
 
 }

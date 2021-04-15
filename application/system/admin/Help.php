@@ -33,10 +33,21 @@ class Help extends Admin
         if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
+            $getData = $this->request->get();
+            $where = [];
+            //标题筛选
+            if(isset($getData['title']) && $getData['title']){
+                $where[] = ['title','like','%'.$getData['title'].'%'];
+            }
+            //类型筛选
+            if(isset($getData['type']) && $getData['type']){
+                $where[] = ['type','eq',$getData['type']];
+            }
+            
             $SystemHelp = new SystemHelp;
             $data = [];
-            $data['data'] = $SystemHelp->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
-            $data['count'] = $SystemHelp->count();
+            $data['data'] = $SystemHelp->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
+            $data['count'] = $SystemHelp->where($where)->count();
             $data['code'] = 0;
             $data['msg'] = '';
             return json($data);
