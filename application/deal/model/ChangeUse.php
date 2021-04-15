@@ -375,7 +375,7 @@ class ChangeUse extends SystemBase
         ];
         // 3、如果有减免，则需要让减免失效
         ChangeTableModel::where([['change_type','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['change_status'=>0]);
-        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['is_valid'=>0,'end_date'=>date( "Y-m", strtotime( "first day of next month" ) )]);
+        Db::name('change_cut')->where([['change_status','eq',1],['house_id','eq',$finalRow['house_id']]])->update(['is_valid'=>0,'end_date'=>date( "Ym", strtotime( "first day of next month" ) )]);
 
         $HouseTaiModel = new HouseTaiModel;
         $HouseTaiModel->allowField(true)->create($taiData);
