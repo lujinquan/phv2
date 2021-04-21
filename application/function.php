@@ -417,6 +417,18 @@ if (!function_exists('get_distance')) {
     }
 }
 
+if (!function_exists('can_pay')) {
+	function can_pay(){
+		$curr_time = time();
+        $endTime = strtotime(date('Y-m',strtotime( "first day of next month" )));
+        $beginTime = $endTime - 12 * 60 * 60;
+        if($curr_time > $beginTime && $curr_time < $endTime){
+            return false;
+        }
+        return true;
+	}
+}
+
 /**
  * 微信对账单数据处理
  * @param $response 对账单数据

@@ -58,9 +58,7 @@ class Index extends Admin
             } else { //ifram模式
                 return $this->fetch();
             } 
-        }
-        
-        
+        }   
     }
 
     //楼栋选择器
@@ -146,7 +144,7 @@ class Index extends Admin
      * @return mixed
      */
     public function welcome()
-    {
+    {   
         return $this->fetch('index');
     }
 

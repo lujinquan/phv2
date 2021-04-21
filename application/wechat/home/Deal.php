@@ -64,11 +64,22 @@ class Deal extends Base
 
     protected $domain = '';
 
+    // 是否允许支付
+    protected $can_pay = true;
+
     protected function initialize()
     {
         parent::initialize();
         $site_domain = ConfigModel::where([['name','eq','site_domain']])->value('value');
         $this->domain = 'https://'.$site_domain;
+
+        // 每个月最后一天的12点以后不能支付
+        $curr_time = time();
+        $endTime = strtotime(date('Y-m',strtotime( "first day of next month" )));
+        $beginTime = $endTime - 12 * 60 * 60;
+        if($curr_time > $beginTime && $curr_time < $endTime){
+            $this->can_pay = false;
+        }
     }
 
     /**

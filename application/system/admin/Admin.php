@@ -154,6 +154,8 @@ class Admin extends Common
                 // 获取所有参数
                 $params = ParamModel::getCparams();
                 $this->assign('inst_level',INST_LEVEL);
+                $this->assign('can_pay',0);
+
                 $this->assign('params',$params);
                 $this->assign('systemusers',session('systemusers'));
                 $config = Db::name('config')->column('title,value');

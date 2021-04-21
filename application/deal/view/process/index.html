@@ -1,4 +1,15 @@
+
 <div class="j-table-content j-no-title">
+	{if condition="!$can_pay"}
+	<!-- <div class="layui-collapse page-tips">
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">重要提示</h2>
+        <div class="layui-colla-content layui-show">
+          <p class="red">系统对账期，审批功能已关闭！！！</p>
+        </div>
+      </div>
+    </div> -->
+    {/if}
 	<div class="page-toolbar j-page-toolbar clearfix">
 		<form class="layui-form layui-form-pane" action="{:url('index')}" method="get" id="hisi-table-search">
 			<div class="j-search-fl layui-col-md6  fl">
@@ -76,6 +87,7 @@
 			</div>
 		</form>
 	</div>
+	<div class="layui-input-inline" style="color:red;">提示：每月最后一天中午12点至次月1号0点，系统审批功能关闭。</div>
 	{include file="system@block/layui" /}
 	<table id="dataTable" lay-filter='dataTable' params="{$paramsJson}"></table>
 	<script type="text/html" id="toolbar">
@@ -84,11 +96,12 @@
 	  {{# if(d.change_type == 18 && d.curr_role == 6 && d.is_process){ }}
 	  <a href="{:url('printout')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-btn-normal">租约打印({{ d.print_times }})</a>
 	  {{# } }}
-	  {if condition="$inst_level < 3"}
+
+	  {if condition="$inst_level < 3 && $can_pay"}
 	  {{# if((!d.is_process) || (d.is_process && d.change_type == 18 && d.curr_role == 6 && d.print_times == 0)){ }}
 	  <button class="layui-btn layui-btn-xs layui-btn-disabled">审批</button>
 	  {{#  } else { }}
-	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
+	  <a href="{:url('process')}?change_type={{ d.change_type }}&id={{ d.change_id }}" id="test1" class="layui-btn layui-btn-xs layui-bg-green">审批</a>
 	  {{# } }}
 	  {/if}
       <a href="{:url('detail')}?change_type={{ d.change_type }}&id={{ d.change_id }}" target="_blank" class="layui-btn layui-btn-xs layui-btn-normal">明细</a>
@@ -100,7 +113,6 @@
 		var $ = layui.$;
 		var table = layui.table
 		   ,laydate = layui.laydate;
-		
 	  	//日期
 	  	laydate.render({
 	    	elem: '#date'

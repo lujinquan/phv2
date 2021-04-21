@@ -75,6 +75,7 @@ class Process extends Admin
             //halt($data['data']);
             return json($data);
         }
+        $this->assign('can_pay',can_pay());
         return $this->fetch();
     }
 
@@ -104,6 +105,7 @@ class Process extends Admin
             $data['msg'] = '';
             return json($data);
         }
+
         return $this->fetch();
     }
 
@@ -114,6 +116,10 @@ class Process extends Admin
      */
     public function process()
     {
+        if(!can_pay()){
+            return $this->error('系统对账期，审批功能已关闭');
+        }
+
         // 显示对应的审批页面
         $id = input('param.id/d');
         $change_type = input('param.change_type/d');
