@@ -316,7 +316,7 @@ class Weixin extends Common
         $result = [];
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/column_list';
-
+        
         // 验证用户
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
@@ -335,6 +335,13 @@ class Weixin extends Common
         // halt($columns);
         $all_process_columns = [];
         foreach ($columns as $k => &$v) {
+
+            if(!can_pay()){
+                if($v['col_id'] == 12){
+                    unset($columns[$k]);
+                    continue;
+                }
+            }
              $file = SystemAnnex::where([['id','eq',$v['col_icon']]])->value('file');
              $v['file'] = $this->domain.$file;
              // $v['file'] = 'https://procheck.ctnmit.com'.$file;
@@ -486,6 +493,10 @@ class Weixin extends Common
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/admin_process_list';
         // 验证用户
+        if(!can_pay()){
+            $result['msg'] = '系统对账期，审批功能已关闭';
+            return json($result);
+        }
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
             $result['code'] = $checkData['error_code'];
@@ -495,6 +506,7 @@ class Weixin extends Common
             $member_info = $checkData['member_info']; //微信用户基础数据
             $row = $checkData['member_extra_info'];
         }
+
 
         if($row){
             $params = ParamModel::getCparams();        
@@ -573,6 +585,12 @@ class Weixin extends Common
         $result['code'] = 0;
         $result['action'] = 'wechat/weixin/process';
         // 验证用户
+        
+        if(!can_pay()){
+            $result['code'] = '20001';
+            $result['msg'] = '系统对账期，审批功能已关闭';
+            return json($result);
+        }
         $checkData = $this->check_user_token();
         if($checkData['error_code']){ // 如果有错误码
             $result['code'] = $checkData['error_code'];

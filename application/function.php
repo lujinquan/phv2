@@ -423,6 +423,7 @@ if (!function_exists('can_pay')) {
         $endTime = strtotime(date('Y-m',strtotime( "first day of next month" )));
         $beginTime = $endTime - 12 * 60 * 60;
         if($curr_time > $beginTime && $curr_time < $endTime){
+        // if($curr_time > 1619064000 && $curr_time < 1619107200){
             return false;
         }
         return true;
