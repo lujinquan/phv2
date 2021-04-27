@@ -626,7 +626,13 @@ class Invoice extends Model
 
             // }
 // halt($queryMap);
-            $result = json_decode(Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []),true);
+            $tempData = Http::post($this->url, $queryMap, $header = [], $timeout = 30, $options = []);
+            if(is_array($tempData)){
+                $this->error = $tempData['msg'];
+                return false;
+            }else{
+               $result = json_decode($tempData,true); 
+            }
             if($result['code'] !== '0000'){
                 $this->error = $result['msg'];
                 return false;
