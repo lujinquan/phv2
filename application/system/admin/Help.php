@@ -13,7 +13,7 @@ namespace app\system\admin;
 
 use app\common\controller\Common;
 use app\system\model\SystemHelp;
-
+use app\system\model\SystemHelpType;
 use think\Db;
 
 /**
@@ -34,25 +34,63 @@ class Help extends Admin
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
-            $where = [];
-            //标题筛选
-            if(isset($getData['title']) && $getData['title']){
-                $where[] = ['title','like','%'.$getData['title'].'%'];
-            }
-            //类型筛选
-            if(isset($getData['type']) && $getData['type']){
-                $where[] = ['type','eq',$getData['type']];
-            }
+
+            $group = isset($getData['group'])?$getData['group']:'cate';
+
+            if($group == 'index'){
+            	$where = [];
+	            //标题筛选
+	            if(isset($getData['title']) && $getData['title']){
+	                $where[] = ['title','like','%'.$getData['title'].'%'];
+	            }
+	            //类型筛选
+	            if(isset($getData['type']) && $getData['type']){
+	                $where[] = ['type','eq',$getData['type']];
+	            }
+	            
+	            $SystemHelp = new SystemHelp;
+	            $data = [];
+	            $data['data'] = $SystemHelp->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
+	            $data['count'] = $SystemHelp->where($where)->count();
+	            $data['code'] = 0;
+	            $data['msg'] = '';
+            }else{
+            	$SystemHelpType = new SystemHelpType;
+            	$where = [];
+	            //标题筛选
+	            if(isset($getData['type_name']) && $getData['type_name']){
+	                $where[] = ['type_name','like','%'.$getData['type_name'].'%'];
+	            }
+	            
+	          
+	            $data = [];
+	            $data['data'] = $SystemHelpType->where($where)->page($page)->order('sort asc,id asc')->limit($limit)->select();
+	            $data['count'] = $SystemHelpType->where($where)->count();
+	            $data['code'] = 0;
+	            $data['msg'] = '';
+            }	
             
-            $SystemHelp = new SystemHelp;
-            $data = [];
-            $data['data'] = $SystemHelp->where($where)->page($page)->order('sort asc,update_time desc')->limit($limit)->select();
-            $data['count'] = $SystemHelp->where($where)->count();
-            $data['code'] = 0;
-            $data['msg'] = '';
             return json($data);
         }
-    	return $this->fetch();
+        $group = input('group','index');
+        $tabData = [];
+        $tabData['menu'] = [
+            [
+                'title' => '文档',
+                'url' => '?group=index',
+            ],
+            [
+                'title' => '分类',
+                'url' => '?group=cate',
+            ],
+           
+        ];
+        $tabData['current'] = url('?group='.$group);
+        $this->assign('ban_number',input('param.ban_number',''));
+        $this->assign('group',$group);
+        $this->assign('hisiTabData', $tabData);
+        $this->assign('hisiTabType', 3);
+    	return $this->fetch($group);
     }
 
     /**

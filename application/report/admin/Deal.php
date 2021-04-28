@@ -102,7 +102,7 @@ class Deal extends Admin
             // halt($where);
             $where[] = ['a.change_status','eq',1];
             $fields = 'a.change_order_number,a.change_type,sum(a.change_rent) as change_rent,sum(a.change_area) as change_area,sum(a.change_use_area) as change_use_area,sum(a.change_oprice) as change_oprice,sum(a.change_ban_num) as change_ban_num,a.tenant_id,a.house_id,a.ban_id,a.order_date,a.owner_id,a.use_id,sum(a.change_month_rent) as change_month_rent,a.inst_id,a.new_inst_id,sum(a.change_year_rent) as change_year_rent,b.ban_number,b.ban_address,b.ban_damage_id,b.ban_struct_id,b.ban_inst_id,c.tenant_name,d.house_number';
-            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->field($fields)->page($page)->group('a.change_order_number')->having('change_rent + change_area + change_use_area + change_oprice > 0')->limit($limit)->select();
+            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->field($fields)->page($page)->group('a.house_id')->having('change_rent + change_area + change_use_area + change_oprice > 0')->limit($limit)->select();
             // halt($temp);
             foreach ($temp as $k => &$v) {
                 if($v['change_type'] == 12){ // 把租金调整，都改成房屋调整
@@ -214,7 +214,7 @@ class Deal extends Admin
             // halt($where);
             $where[] = ['a.change_status','eq',1];
             $fields = 'a.change_order_number,a.change_type,sum(a.change_rent) as change_rent,sum(a.change_area) as change_area,sum(a.change_use_area) as change_use_area,sum(a.change_oprice) as change_oprice,sum(a.change_ban_num) as change_ban_num,a.tenant_id,a.house_id,a.ban_id,a.order_date,a.owner_id,a.use_id,sum(a.change_month_rent) as change_month_rent,a.inst_id,a.new_inst_id,sum(a.change_year_rent) as change_year_rent,b.ban_number,b.ban_address,b.ban_damage_id,b.ban_struct_id,b.ban_inst_id,c.tenant_name,d.house_number';
-            $tableData = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->group('a.change_order_number')->having('change_rent + change_area + change_use_area + change_oprice > 0')->where($where)->field($fields)->select();
+            $tableData = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->group('a.house_id')->having('change_rent + change_area + change_use_area + change_oprice > 0')->where($where)->field($fields)->select();
             foreach ($tableData as $k => &$v) {
                 if($v['change_type'] == 12){ // 把租金调整，都改成房屋调整
                     $v['change_type'] = 9;

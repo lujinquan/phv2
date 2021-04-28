@@ -119,21 +119,46 @@ class Api extends Common
         $systemHelp = new SystemHelp;
         $docs = $systemHelp->select();
         $nodes = [];
-        $types = CparamModel::getCparams('help_type');
-        foreach ($docs as $d) {
-            $nodes[$d['type'] - 1]['name'] = $types[$d['type']];
-            $nodes[$d['type'] - 1]['spread'] = true;
-            $nodes[$d['type'] - 1]['id'] = $d['type'];
-            $nodes[$d['type'] - 1]['alias'] = $d['type'];
-            $nodes[$d['type'] - 1]['name'] = $types[$d['type']];
-            $nodes[$d['type'] - 1]['children'][] = [
-                'name' => $d['title'], 
-                'id' => $d['id'], 
-                'alias' => $d['type'] . $d['id'], 
-                'content' => htmlspecialchars_decode($d['content'])
-            ];
+        // $types = CparamModel::getCparams('help_type');
+        $types = Db::name('system_help_type')->order('sort asc,id desc')->column('id,type_name');
+        $i = 0;
+        foreach($types as $k => $t){
+            foreach ($docs as $d) {
+                if($k == $d['type']){
+                    $nodes[$i]['name'] = $t;
+                    $nodes[$i]['sort'] = $t;
+                    $nodes[$i]['spread'] = true;
+                    $nodes[$i]['id'] = $d['type'];
+                    $nodes[$i]['alias'] = $d['type'];
+                    $nodes[$i]['name'] = $t;
+                    $nodes[$i]['children'][] = [
+                        'name' => $d['title'], 
+                        'id' => $d['id'], 
+                        'alias' => $d['type'] . $d['id'], 
+                        'content' => htmlspecialchars_decode($d['content'])
+                    ];
+                }
+                
+            }
+            $i++;
         }
+        // halt($nodes);
+        // foreach ($docs as $d) {
+        //     $nodes[$d['type'] - 1]['name'] = $types[$d['type']]['type_name'];
+        //     $nodes[$d['type'] - 1]['sort'] = $types[$d['type']]['sort'];
+        //     $nodes[$d['type'] - 1]['spread'] = true;
+        //     $nodes[$d['type'] - 1]['id'] = $d['type'];
+        //     $nodes[$d['type'] - 1]['alias'] = $d['type'];
+        //     $nodes[$d['type'] - 1]['name'] = $types[$d['type']]['type_name'];
+        //     $nodes[$d['type'] - 1]['children'][] = [
+        //         'name' => $d['title'], 
+        //         'id' => $d['id'], 
+        //         'alias' => $d['type'] . $d['id'], 
+        //         'content' => htmlspecialchars_decode($d['content'])
+        //     ];
+        // }
         $data = [];
+        // halt($nodes);
         $data['data'] = $nodes;
         // 模板实例如下：
         // $data['data']  =  [

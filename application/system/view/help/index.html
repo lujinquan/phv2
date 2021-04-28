@@ -4,7 +4,7 @@
     <button data-href="{:url('del')}" data-id="id" class="layui-btn layui-btn-gray j-page-btns"><i class="layui-icon layui-icon-close"></i>删除</button>
 </div>
 <div class="page-toolbar j-page-toolbar clearfix">
-      <form class="layui-form layui-form-pane" action="{url('index')}"  method="get" id="hisi-table-search">
+      <form class="layui-form layui-form-pane" action="{url('index')}?group={$group}"  method="get" id="hisi-table-search">
         <div class="j-search-fl layui-col-md8  fl">
               <div class="layui-input-inline j-input-margin j-width-100">
                   <input type="text" name="title" title="标题" placeholder="标题" class="layui-input">
@@ -52,7 +52,7 @@
             elem: '#dataTable'
             //,toolbar: true
 			//,defaultToolbar: ['filter']//设置右边筛选，导出，打印显示
-            ,url: '{:url("system/Help/index")}' //数据接口
+            ,url: '{:url("system/Help/index")}?group={$group}' //数据接口
             ,page: true //开启分页
             ,limit: 10
             ,text: {

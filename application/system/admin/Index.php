@@ -79,7 +79,7 @@ class Index extends Admin
 	{
         $changeType = input('param.change_type');
         $this->assign('changeType',$changeType);
-		return $this->fetch('block/queriers/ban_houses');
+		return $this->fetch('block/queriers/community');
 	}
 	 //租户选择器
 	public function tenant()
