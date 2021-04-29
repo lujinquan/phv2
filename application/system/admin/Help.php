@@ -85,10 +85,13 @@ class Help extends Admin
             ],
            
         ];
+        $SystemHelpType = new SystemHelpType;
+        $helpTypes = $SystemHelpType::order('sort asc,id asc')->column('id,type_name');
         $tabData['current'] = url('?group='.$group);
         $this->assign('ban_number',input('param.ban_number',''));
         $this->assign('group',$group);
         $this->assign('hisiTabData', $tabData);
+        $this->assign('helpTypes', $helpTypes);
         $this->assign('hisiTabType', 3);
     	return $this->fetch($group);
     }

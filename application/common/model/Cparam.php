@@ -11,6 +11,7 @@
 namespace app\common\model;
 
 use think\Model;
+use think\Db;
 
 /**
  * 系统配置模型
@@ -73,6 +74,9 @@ class Cparam extends Model
                         // 待完善
                     case 'select':
                         $result[$config['name']] = parse_attr($config['options']);
+
+                       
+                        $result['help_type'] = Db::name('system_help_type')->order('sort asc,id asc')->column('id,type_name');
                     case 'checkbox':
 
                         // if ($config['name'] == 'config_group') {

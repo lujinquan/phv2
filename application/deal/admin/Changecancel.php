@@ -5,6 +5,7 @@ namespace app\deal\admin;
 use think\Db;
 use app\system\admin\Admin;
 use app\deal\model\Process as ProcessModel;
+use app\deal\model\ChangeTable as ChangeTableModel;
 use app\deal\model\ChangeCancel as ChangeCancelModel;
 
 /**
@@ -293,6 +294,69 @@ class Changecancel extends Admin
         $this->assign('data_info',$row);
         return $this->fetch();
     }
+
+    // public function record()
+    // {
+    //     if ($this->request->isAjax()) {
+    //         $page = input('param.page/d', 1);
+    //         $limit = input('param.limit/d', 10);
+    //         $getData = $this->request->get();
+    //         $ChangeTableModel = new ChangeTableModel;
+    //         $where = $ChangeTableModel->checkWhere($getData,'record');
+    //         $fields = "a.id,a.is_back,a.change_order_number,a.cancel_type,a.cancel_rent,a.cancel_area,a.cancel_use_area,a.cancel_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as fdate,a.ftime,a.change_status,a.entry_date,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+    //         // halt($where);
+    //         $data = [];
+    //         $data['data'] = Db::name('change_table')->alias('e')->join('change_cancel a','e.change_order_id = a.change_order_number')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
+    //         foreach($data['data'] as &$s){
+    //             $table_data = Db::name('change_table')->where([['change_status','eq',1],['change_type','eq',8],['change_order_number','eq',$s['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->group('change_order_number')->having('count(change_order_number) > 1')->find();
+    //             if(!empty($table_data)){
+    //                 $s['cancel_rent'] = $table_data['total_change_rent'];
+    //                 $s['cancel_area'] = $table_data['total_change_area'];
+    //                 $s['cancel_use_area'] = $table_data['total_change_use_area'];
+    //                 $s['cancel_oprice'] = $table_data['total_change_oprice'];
+                    
+    //             }
+    //         }
+
+    //         $data['count'] = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->count('a.id');
+
+    //         $total_data = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->field($fields)->where($where)->order('a.change_status desc,ftime desc')->select();
+    //         $total_cancel_rent = $total_cancel_area = $total_cancel_use_area = $total_cancel_oprice = 0;
+    //         // halt($total_data); //->group('change_order_number')->having('count(change_order_number) > 1')
+    //         foreach($total_data as &$a){
+    //             $table_data = Db::name('change_table')->where([['change_type','eq',8],['change_order_number','eq',$a['change_order_number']]])->field('change_order_number,sum(change_area) as total_change_area,sum(change_rent) as total_change_rent,sum(change_use_area) as total_change_use_area,sum(change_oprice) as total_change_oprice')->find();
+    //             // halt($table_data);
+    //             if(!empty($table_data)){
+    //                 $a['cancel_rent'] = $table_data['total_change_rent'];
+    //                 $a['cancel_area'] = $table_data['total_change_area'];
+    //                 $a['cancel_use_area'] = $table_data['total_change_use_area'];
+    //                 $a['cancel_oprice'] = $table_data['total_change_oprice'];
+                    
+    //             }
+
+    //             $total_cancel_rent = bcadd($total_cancel_rent, $a['cancel_rent'],2);
+    //             $total_cancel_area = bcadd($total_cancel_area, $a['cancel_area'],2);
+    //             $total_cancel_use_area = bcadd($total_cancel_use_area, $a['cancel_use_area'],2);
+    //             $total_cancel_oprice = bcadd($total_cancel_oprice, $a['cancel_oprice'],2);
+
+    //         }
+    //         $data['total_cancel_rent'] = $total_cancel_rent;
+    //         $data['total_cancel_area'] = $total_cancel_area;
+    //         $data['total_cancel_use_area'] = $total_cancel_use_area;
+    //         $data['total_cancel_oprice'] = $total_cancel_oprice;
+    //         // $totalRow = Db::name('change_cancel')->alias('a')->join('ban d','a.ban_id = d.ban_id','left')->where($where)->field('sum(cancel_rent) as total_cancel_rent, sum(cancel_area) as total_cancel_area, sum(cancel_use_area) as total_cancel_use_area, sum(cancel_oprice) as total_cancel_oprice')->find();
+    //         // if($totalRow){
+    //         //     $data['total_cancel_rent'] = $totalRow['total_cancel_rent'];
+    //         //     $data['total_cancel_area'] = $totalRow['total_cancel_area'];
+    //         //     $data['total_cancel_use_area'] = $totalRow['total_cancel_use_area'];
+    //         //     $data['total_cancel_oprice'] = $totalRow['total_cancel_oprice'];
+    //         // }
+    //         $data['code'] = 0;
+    //         $data['msg'] = '';
+    //         return json($data);
+    //     }
+    //     return $this->fetch();
+    // }
 
     public function record()
     {

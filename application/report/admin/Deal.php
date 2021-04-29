@@ -119,7 +119,7 @@ class Deal extends Admin
                 }
             }
             $result['data'] = $temp;
-            $result['count'] = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->group('a.change_order_number')->having('sum(change_rent) + sum(change_area) + sum(change_use_area) + sum(change_oprice) > 0')->count('a.change_order_number');
+            $result['count'] = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->group('a.house_id')->having('sum(change_rent) + sum(change_area) + sum(change_use_area) + sum(change_oprice) > 0')->count('a.house_id');
             $result['code'] = 0;
             $result['msg'] = '';
             return json($result);
