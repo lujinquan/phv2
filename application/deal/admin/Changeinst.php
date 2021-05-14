@@ -168,7 +168,8 @@ class Changeinst extends Admin
             //halt($where);
             $fields = "a.id,a.change_order_number,a.old_inst_id,a.new_inst_id,a.change_ban_num,a.change_ban_rent,a.change_ban_area,a.change_ban_use_area,a.change_ban_oprice,from_unixtime(a.ctime, '%Y-%m-%d') as ctime,from_unixtime(a.ftime, '%Y-%m-%d') as ftime,a.change_status,a.is_back,a.entry_date,c.nick";
             $data = [];
-            $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc')->limit($limit)->select();
+            $data['data'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->field($fields)->where($where)->page($page)->order('a.change_status desc,ftime desc,id desc')->limit($limit)->select();
+            // halt(Db::name('change_inst')->getLastSql());
             $data['count'] = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->count('a.id');
             $totalRow = Db::name('change_inst')->alias('a')->join('system_user c','a.cuid = c.id','left')->where($where)->field('sum(change_ban_num) as total_change_ban_num, sum(change_ban_rent) as total_change_ban_rent, sum(change_ban_area) as total_change_ban_area, sum(change_ban_use_area) as total_change_ban_use_area, sum(change_ban_oprice) as total_change_ban_oprice')->find();
             if($totalRow){

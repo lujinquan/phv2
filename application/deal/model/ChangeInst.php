@@ -418,7 +418,7 @@ class ChangeInst extends SystemBase
         // 1、查询生效日期是这个月的所有管段调整异动
         $nextMonth = date( "Ym", strtotime( "first day of next month" ) );
         $change_table_data = Db::name('change_table')->where([['change_type','eq',10],['order_date','eq',$nextMonth],['change_status','eq',1]])->field('id,ban_id,inst_id,new_inst_id')->select();
-        // halt($change_table_data);
+        halt($change_table_data);
         if(!empty($change_table_data)){
             // 2、把生效日期是这个月的这些管段调整异动，楼所属的管段调整过来
             foreach ($change_table_data as $v) {
@@ -460,7 +460,7 @@ class ChangeInst extends SystemBase
                 Db::name('change_table')->where([['id','eq',$v['id']]])->update(['change_month_rent'=>$change_month_rent,'change_year_rent'=>$change_year_rent]);
 
                 // 管段调整后，对应的楼下的减免、暂停计租都要转过去
-                Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where([['ban_id','eq',$v['ban_id']],['change_type','in','1,3']])->update(['a.inst_id'=>Db::raw('b.ban_inst_id')]);
+                Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->where([['a.ban_id','eq',$v['ban_id']],['change_type','in','1,3']])->update(['a.inst_id'=>Db::raw('b.ban_inst_id')]);
            
             } 
         }
