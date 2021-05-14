@@ -146,14 +146,14 @@ class Pay extends Admin
                 $WeixinOrderModel = new WeixinOrderModel;
                 $where = $WeixinOrderModel->checkWhere($getData);
                 // halt($where);
-                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name';
+                $fields = 'a.out_trade_no,a.order_status,a.member_id,a.pay_money,a.trade_type,a.ptime,c.house_id,d.house_number,d.house_use_id,d.house_pre_rent,d.house_pre_rent,e.ban_inst_id,e.ban_owner_id,e.ban_address,f.tenant_name,g.fpqqlsh';
                 $data = [];
 
                 // 子查询
                 $subsql = Db::name('weixin_order_trade')->field('*')->group('out_trade_no')->buildSql();
 
 
-                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join([$subsql =>' b'], 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->field($fields)->where($where)->order('a.ctime desc')->select()->toArray();
+                $temp = WeixinOrderModel::with('weixinMember')->alias('a')->join([$subsql =>' b'], 'a.out_trade_no = b.out_trade_no', 'left')->join('rent_order c', 'b.rent_order_id = c.rent_order_id', 'left')->join('house d', 'c.house_id = d.house_id', 'left')->join('ban e', 'd.ban_id = e.ban_id', 'left')->join('tenant f', 'c.tenant_id = f.tenant_id', 'left')->join('rent_invoice g', 'a.invoice_id = g.invoice_id', 'left')->field($fields)->where($where)->order('a.ctime desc')->select()->toArray();
                 // halt($temp);
                 $tableData = array();
                 foreach($temp as $k => $v){
@@ -168,7 +168,11 @@ class Pay extends Admin
                     $tableData[$k]['pay_money'] = $v['pay_money'];
                     $tableData[$k]['member_name'] = $v['member_name'];
                     $tableData[$k]['trade_type'] = $v['trade_type'];
-                    $v['order_status'];
+                    if(empty($v['fpqqlsh'])){
+                        $tableData[$k]['fpqqlsh'] = '';
+                    }else{
+                        $tableData[$k]['fpqqlsh'] = $v['fpqqlsh'];
+                    }
                     if($v['order_status'] == 1){
                         $tableData[$k]['order_status'] = '已成功';
                     }else if($v['order_status'] == 2){
@@ -195,6 +199,7 @@ class Pay extends Admin
 
                     $titleArr = array(
                         array('title' => '支付订单号', 'field' => 'out_trade_no', 'width' => 24,'type' => 'string'),
+                        array('title' => '发票流水号', 'field' => 'fpqqlsh', 'width' => 24,'type' => 'string'),
                         array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
                         array('title' => '租户姓名', 'field' => 'tenant_name', 'width' => 12,'type' => 'number'),
                         array('title' => '管段', 'field' => 'ban_inst_id', 'width' => 12 ,'type' => 'number'),

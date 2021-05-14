@@ -74,7 +74,7 @@ class House extends Admin
     {
         set_time_limit(0);
         $date = date('Ym');
-        $date = '202104';
+        // $date = '202105';
 
         $HouseReportModel = new HouseReportModel;
         $HouseReportdata = $HouseReportModel->makeHouseReport($date);
@@ -166,7 +166,7 @@ class House extends Admin
         // if ($this->request->isAjax()) {
 
         $date = date('Ym'); // 生成的报表日期，默认当前月，【如果要手动修改日期，只需要改当前值，例如 $date = 202008; 表示当前操作会生成报表】
-        $date = '202104';
+        // $date = '202105';
         $full_date = substr_replace($date,'-',4,0);
 
         //检查上月的报表是否生成

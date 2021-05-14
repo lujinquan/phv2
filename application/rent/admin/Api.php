@@ -334,6 +334,13 @@ class Api extends Common
      * @return [type] [description]
      */
     public function autoAllDpkj(){
+        // 设置文件锁的路径和文件名
+        $lock = ROOT_PATH.'public/dpkj_lock.txt';
+        // 假如文件锁存在，退出
+        if(file_exists($lock)) {
+            exit('网络繁忙，请稍后重试！');
+        }
+        file_put_contents( $lock, '');
 
         // 自动更新管段调整数据
         $ChangeModel = new ChangeInstModel;
@@ -349,10 +356,10 @@ class Api extends Common
 		// $month_end_time = strtotime('2021-02');
 		//dump($month_begin_time);halt($month_end_time);
 
-        // 开缴费发票 ['trade_type','eq','CASH'],
-        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1],['pay_money', 'neq', 0],['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id asc')->limit(200)->select()->toArray();
+        // 开缴费发票 ['trade_type','eq','CASH'],,['trade_type', 'eq', 'JSAPI']
+        $weixin_id_undpkj = WeixinOrderModel::where([['is_need_dpkj', 'eq', 1],['order_status', 'eq', 1],['pay_money', 'neq', 0],['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('order_id')->order('order_id asc')->limit(300,300)->select()->toArray();
 
-        halt($weixin_id_undpkj);
+        // halt($weixin_id_undpkj);
 
         $i = 0;
 
@@ -372,10 +379,11 @@ class Api extends Common
                 }
             }
         }
+        unlink($lock);
         dump($i);halt($weixin_id_undpkj); 
 
         // 开充值发票
-        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1], ['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->limit(200)->order('id desc')->select()->toArray();
+        $weixin_id_undpkj = RechargeModel::where([['is_need_dpkj', 'eq', 1],['recharge_status', 'eq', 1],['transaction_id', '>', 0], ['invoice_id', 'eq', 0],['ptime','between',[$month_begin_time,$month_end_time]]])->field('id')->order('id desc')->limit(200)->select()->toArray();
 		// halt($weixin_id_undpkj);
         $k = 0;
         // halt($weixin_id_undpkj);
@@ -398,7 +406,7 @@ class Api extends Common
                 }
             }
         }
-// dump($k);halt($weixin_id_undpkj);
+dump($k);halt($weixin_id_undpkj);
         return '缴费发票开具：'.$i.'张，充值发票开具：'.$k.'张';
         // return $this->success('执行成功');
         

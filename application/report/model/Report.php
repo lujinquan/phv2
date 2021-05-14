@@ -129,10 +129,10 @@ class Report extends Model
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
         $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
         
-        $curMonth = '2021-03';
+        // $curMonth = '2021-03';
 
         $nextMonth = date('Y-m',strtotime('1 month'));
-        $nextMonth = '2021-04';
+        // $nextMonth = '2021-04';
         //halt($lastMonth);
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
