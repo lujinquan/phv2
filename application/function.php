@@ -424,9 +424,9 @@ if (!function_exists('can_pay')) {
         $beginTime = $endTime - 12 * 60 * 60;
         if($curr_time > $beginTime && $curr_time < $endTime){
         // if($curr_time > 1619064000 && $curr_time < 1619107200){
-            return false;
+            return 0;
         }
-        return true;
+        return 1;
 	}
 }
 

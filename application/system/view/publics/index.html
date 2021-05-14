@@ -126,7 +126,8 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
             token = $('input[name="__token__"]').val(),
             captcha = $('input[name="captcha"]').val();
 
-        //layer.msg('数据提交中...',{time:500000});
+        var randoms = Math.random();
+        
         that.prop('disabled', true);
         $.ajax({
             type: "POST",
@@ -141,7 +142,7 @@ layui.use(['form', 'layer', 'jquery', 'md5'], function() {
 					$(".j-errors").html('<font color="green">数据提交中...</font>');
 				} else { 	
 					$(".j-errors").html('<font color="red">'+res.msg+'</font>')
-					$('#LAY-user-get-vercode').attr('src','/captcha.html'); //更新二维码
+					$('#LAY-user-get-vercode').attr('src','/captcha.html?d='+randoms); //更新二维码
 				    that.prop('disabled', false);
 				}
                 /* layer.msg(res.msg, {}, function() {
