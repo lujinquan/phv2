@@ -9,6 +9,7 @@
          <div class="layui-btn-container">
          {if condition="in_array(342,$auths) || $Think.ADMIN_ROLE == 1"}
          <a data-href="{:url('payBackList')}" title="提示：只能撤回本月订单！" data-id="id" class="j-page-btns"><button class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-add-1"></i>批量撤回(本月)</button></a>
+         <span class="j-tips-txt">房屋已注销或正在注销异动中时，租金订单无法撤回</span>
          {/if}
          </div>
      </div>
@@ -212,7 +213,7 @@
                  // 根据类型标注颜色
 				 var result = res.data;
 				 for (var i = 0; i < result.length; i++) {
-                    console.log('这是支付时间：',result);
+                    // console.log('这是支付时间：',result);
 					if(parseInt(result[i].pay_way) == 4){
 						$("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#5fb878');
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").prop('disabled', true);
@@ -225,6 +226,14 @@
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").next().addClass('layui-btn-disabled');
 						$("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").removeAttr('name');
 					}
+
+                    // console.log('这是支付时间：',result);
+                    if(parseInt(result[i].pay_way) != 4 && parseInt(result[i].pay_way) != 2 && parseInt(result[i].is_cancel) == 1){
+                        $("[lay-id='dataTable'] tr[data-index="+i+"]").css('color','#cccccc');
+                        $("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").prop('disabled', true);
+                        $("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").next().addClass('layui-btn-disabled');
+                        $("[lay-id='dataTable'] tr[data-index="+i+"] input[type='checkbox']").removeAttr('name');
+                    }
 				 }
             }
         },isShowInst)

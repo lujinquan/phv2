@@ -68,15 +68,37 @@ class Record extends Admin
 
     public function index()
     {
+        $cancelData = Db::name('change_cancel')->where([['change_status','>',1]])->field('data_json')->select();
+        $cancelHouses = [];
+        foreach($cancelData as $c){
+            $tempCancelData = json_decode($c['data_json'],true);
+            // halt($tempCancelData);
+            foreach ($tempCancelData as $v) {
+                $cancelHouses[] = $v['house_id'];
+            }
+            
+        }
+        // halt($cancelHouses);
     	if ($this->request->isAjax()) {
             $page = input('param.page/d', 1);
             $limit = input('param.limit/d', 10);
             $getData = $this->request->get();
             $RentOrderChildModel = new RentOrderChildModel;
             $where = $RentOrderChildModel->checkWhere($getData);
-            $fields = "a.id,a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d %H-%i-%s') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
+            $fields = "a.id,a.house_id,a.rent_order_id,a.pay_way,a.is_invoice,a.rent_order_date,a.rent_order_number,a.rent_order_receive,a.rent_order_paid,a.rent_order_diff,a.rent_order_pump,a.rent_order_cut,from_unixtime(a.ptime, '%Y-%m-%d %H-%i-%s') as ptime,b.house_pre_rent,b.house_cou_rent,b.house_number,b.house_use_id,c.tenant_name,d.ban_address,d.ban_owner_id,d.ban_inst_id";
             $data = [];
-            $data['data'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.ptime desc')->select();
+            $temp = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->field($fields)->where($where)->page($page)->limit($limit)->order('a.ptime desc')->select();
+            foreach ($temp as $key => &$value) {
+                // 房屋已注销或正在注销异动中时，租金订单无法撤回
+                $cancel_id = Db::name('change_table')->where([['change_type','eq',8],['house_id','eq',$value['house_id']],['change_status','eq',1]])->value('id');
+                if($cancel_id || ($cancelHouses && in_array($value['house_id'],$cancelHouses))){
+                  
+                    $value['is_cancel'] = 1;
+                }else{
+                    $value['is_cancel'] = 0;
+                }
+            }
+            $data['data'] = $temp;
             //halt($data['data']);
             $data['count'] = Db::name('rent_order_child')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->count('a.rent_order_id');
             // 统计

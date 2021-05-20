@@ -73,7 +73,7 @@ class OpOrder extends SystemBase
             case 'myorder':
                 if(ADMIN_ROLE == 11){ //如果角色是运营中心,必须是分配的管段旗下的
                     $inst_ids = explode(',',session('admin_user.inst_ids'));
-                    $where[] = [['cuid','in',$inst_ids]];
+                    $where[] = [['inst_id','in',$inst_ids]];
                 }else{ //如果角色不是运营中心,必须是处理流程中包含当前人员id的                    
                     if($data['group'] == 'j'){
                         // 判断当前用户是否是经租会计，如果是，展示所有底下管段的数据
@@ -98,10 +98,20 @@ class OpOrder extends SystemBase
                 break;
             // 已受理工单
             case 'filished':
-                // ADMIN_ID != 1 && ADMIN_ROLE != 6 && ADMIN_ROLE != 5 &&  ADMIN_ROLE != 10 
-                if(!in_array(ADMIN_ID,[1,5,6])){
-                    $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                //如果角色是运营中心,必须是分配的管段旗下的
+                if(ADMIN_ROLE == 11){ 
+                    $inst_ids = explode(',',session('admin_user.inst_ids'));
+                    $where[] = [['inst_id','in',$inst_ids]];
+
+                    // $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                }else{
+                    
+                    // $where[] = [['inst_id','in',config('inst_ids')[INST]]];
                 }
+                // ADMIN_ID != 1 && ADMIN_ROLE != 6 && ADMIN_ROLE != 5 &&  ADMIN_ROLE != 10 
+                // if(!in_array(ADMIN_ID,[1,5,6])){
+                //     $where[] = [['duid','like','%'.ADMIN_ID.'%']];
+                // }
                 
                 
                 break;
