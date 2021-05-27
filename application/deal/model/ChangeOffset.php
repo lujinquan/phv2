@@ -274,7 +274,7 @@ class ChangeOffset extends SystemBase
                     }else{
                         $fileUploadConfig = Db::name('config')->where([['title','eq','changeoffset_file_upload']])->value('value');
                         if(strpos($fileUploadConfig, 'ChangeOffsetUpload') !== false){
-                            return ['error_msg' => '请上传报告'];
+                            // return ['error_msg' => '请上传报告'];
                         }
                     }
                 }

@@ -32,6 +32,7 @@ class Accept extends Admin
      */
     public function index() 
     {
+
         // $OpOrderModel = new OpOrderModel;
         // halt($OpOrderModel->getAcceptCount());
         if ($this->request->isAjax()) {
@@ -120,6 +121,7 @@ class Accept extends Admin
      */
     public function add() 
     {
+        
         // 【待解决问题，模糊查找whereOr如何实现】
         //$userRow = UserModel::whereOr([['role_id','eq',11],['inst_ids','like','%8,%']])->whereOr([['role_id','eq',11],['inst_ids','like','%,8%']])->select();
         //$userRow = Db::query("select * from system_user where role_id = 11 and ((inst_ids like %,8%) or (inst_ids like %8,%))");
@@ -219,9 +221,29 @@ class Accept extends Admin
                 $i++;
             }
         }
+        $OpType = new OpType;
+        $optypes = $OpType->where([['status','eq',1]])->order('sort')->select();
+        $opTypesData = [];
+        foreach($optypes as $op){
+            if($op['pid'] == 0){
+                
+                $childs = [];
+                foreach($optypes as $p){
+                    if($p['pid'] == $op['id']){
+                        $childs[] = $p['title'];
+                    }
+                }
+                $opTypesData[] = [
+                    'title' => $op['title'],
+                    'childs'=> $childs,
+                ];
+            }
+        }
+        // halt($optypesData);
         //halt($opFileArr);
         $this->assign('opAjaxTypeArr',$opAjaxTypeArr);
         $this->assign('opTypesArr',$opTypesArr);
+        $this->assign('opTypesData',$opTypesData);
         $this->assign('fileArr',$fileArr);
         $this->assign('opFileArr',$opFileArr);
         return $this->fetch();

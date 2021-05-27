@@ -87,7 +87,13 @@
 			<div class="layui-col-md6 j-explain-box">
 				<h1><i class="red">*</i>工单分类说明：</h1>
 				<ul>
+					{volist name="opTypesData" id="vo"}
 					<li>
+						{++$key}、<b>{$vo['title']}:</b>
+						<p>{if condition="$vo['childs']"}{:implode(' / ',$vo['childs'])}{/if}</p>
+					</li>
+					{/volist}
+					<!-- <li>
 						1、<b>楼栋基础数据:</b>
 						<p>地址修改 / 总楼层</p>
 					</li>
@@ -124,7 +130,7 @@
 					</li>
 					<li>
 						10、<b>意见反馈</b>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
