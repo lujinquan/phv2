@@ -247,6 +247,14 @@ a:hover{ text-decoration: none;}/* 去除鼠标移过下划线 */
 .j-details-box .long .j-form-label{width: 200px;}
 .j-details-box .j-enclosure-label.j-enclosure-long-label{width: 150px;}
 .j-details-box .j-enclosure-label{float: initial;}
+.j-details-box .long .layui-form-checkbox i{
+	border-left: 1px solid #d2d2d2!important;
+	border-radius: 2px!important;
+	margin-left: 20px;
+}
+.layui-form-item .layui-form-checkbox{
+	margin-left: 20px!important;
+}
 /* .j-enclosure-upload{ margin-top: 15px;} */
 .j-details-box .j-enclosure-upload .j-enclosure-label { float: left; position: relative;}
 /* .j-enclosure-img{ padding: 20px 0 0;} */
