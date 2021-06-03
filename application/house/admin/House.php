@@ -299,8 +299,13 @@ class House extends Admin
                 }
                 //$HouseModel = new HouseModel();
                 $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
-                
+                // halt($data['group']);
+                // if($data['group'] == 'y'){
+                //     $HouseModel->where([['house_id','eq',$data['house_id']]])->update(['house_cou_rent'=>$house_cou_rent]);
+                // }else{
                 $HouseModel->where([['house_id','eq',$data['house_id']]])->update(['house_cou_rent'=>$house_cou_rent,'house_pre_rent'=>$house_cou_rent]);
+                // }
+                
 
                 $row = $HouseModel->get($data['house_id']);
                 return $this->success('修改成功','',$row);
@@ -379,7 +384,7 @@ class House extends Admin
             //halt($HouseModel->count_house_pre_rent($data['house_id']));
             //$house_pre_rent = $HouseModel->count_house_pre_rent($data['house_id']);
             $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
-
+// halt($house_cou_rent);
             Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_pre_rent'=>$house_cou_rent,'house_cou_rent'=>$house_cou_rent]);
 
             $HouseModel = new HouseModel();
@@ -412,12 +417,25 @@ class House extends Admin
             if ($ban_info['ban_units'] < $data['house_unit_id']) {
                 return $this->error('居住单元号不能大于楼栋总单元数');
             }
-            // $HouseModel = new HouseModel();
-            //halt($HouseModel->count_house_pre_rent($data['house_id']));
-            //$house_pre_rent = $HouseModel->count_house_pre_rent($data['house_id']);
-            // $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+            $HouseModel = new HouseModel();
 
-            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_unit_id'=>$data['house_unit_id'],'house_floor_id'=>$data['house_floor_id']]);
+            $updateData = [
+                'house_unit_id' => $data['house_unit_id'],
+                'house_floor_id' => $data['house_floor_id'],
+                'house_wall_paper_area' => $data['house_wall_paper_area'],
+                'house_ceramic_title_area' => $data['house_ceramic_title_area'],
+                'house_bathtub_num' => $data['house_bathtub_num'],
+                'house_basin_num' => $data['house_basin_num'],
+                'house_below_five_num' => $data['house_below_five_num'],
+                'house_more_five_num' => $data['house_more_five_num'],
+                'house_is_water' => isset($data['house_is_water'])?$data['house_is_water']:0,
+            ];
+            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update($updateData);
+            //halt($HouseModel->count_house_pre_rent($data['house_id']));
+            $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+            // $house_cou_rent = $HouseModel->count_house_rent($data['house_id']);
+            // halt($house_pre_rent);
+            Db::name('house')->where([['house_id','eq',$data['house_id']]])->update(['house_cou_rent'=>$house_cou_rent]);
 
             $HouseModel = new HouseModel();
             $row = $HouseModel->find($data['house_id']);

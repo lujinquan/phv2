@@ -337,10 +337,12 @@ class House extends SystemBase
             // 不用加协议租金
             return $row['house_pre_rent'];
         }else{
-            //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
+            //plusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
             
+            $plusRent = ($row['house_wall_paper_area'] + $row['house_ceramic_title_area'] + $row['house_bathtub_num'] + $row['house_basin_num'] + $row['house_below_five_num']) * 0.5 + $row['house_more_five_num'];
             // 这是1.0的写法虽然有点问题，但是为了避免问题，就这么算！
-            $houseRent = $sumrent + $row['house_diff_rent'] + $row['house_pump_rent'];
+            // halt($plusRent);
+            $houseRent = $sumrent + $row['house_diff_rent'] + $row['house_pump_rent'] + $plusRent;
             return ($row['house_use_id'] == 1)?round($houseRent,1):round($houseRent,2); 
             
             // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
@@ -380,9 +382,9 @@ class House extends SystemBase
             return $row['house_pre_rent'];
         }else{
             //PlusRent加计租金（面盆浴盆，5米以上，5米以下什么的），DiffRent租差，ProtocolRent协议租金
-            
+            $plusRent = ($row['house_wall_paper_area'] + $row['house_ceramic_title_area'] + $row['house_bathtub_num'] + $row['house_basin_num'] + $row['house_below_five_num']) * 0.5 + $row['house_more_five_num'];
             // 这是1.0的写法虽然有点问题，但是为了避免问题，就这么算！
-            $houseRent = $sumrent + $row['house_diff_rent'] + $row['house_pump_rent'];
+            $houseRent = $sumrent + $row['house_diff_rent'] + $row['house_pump_rent'] + $plusRent;
             return ($row['house_use_id'] == 1)?round($houseRent,1):round($houseRent,2); 
             
             // 民用的四舍五入保留一位，机关企业的四舍五入保留两位
