@@ -117,7 +117,7 @@ class Api extends Common
     public function helpdoc() 
     {
         $systemHelp = new SystemHelp;
-        $docs = $systemHelp->select();
+        $docs = $systemHelp->order('sort asc,update_time desc')->select();
         $nodes = [];
         // $types = CparamModel::getCparams('help_type');
         $types = Db::name('system_help_type')->order('sort asc,id desc')->column('id,type_name');
