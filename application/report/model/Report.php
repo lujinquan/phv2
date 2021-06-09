@@ -129,11 +129,11 @@ class Report extends Model
         $curMonth = input('param.query_month',date('Y-m')); //默认查询当前年月
         $tenant_name = trim(input('param.tenant_name')); //查询租户姓名
         
-        // $curMonth = '2021-03';
+        // $curMonth = '2021-05';
 
         $nextMonth = date('Y-m',strtotime('1 month'));
-        // $nextMonth = '2021-04';
-        //halt($lastMonth);
+        // $nextMonth = '2021-06';
+
         $month = str_replace('-','',$curMonth);
         $params = ParamModel::getCparams();
         $separate = substr($month,0,4).'00';
@@ -262,9 +262,9 @@ class Report extends Model
         if($tenant_name){
             $where[] = ['c.tenant_name','like','%'.$tenant_name.'%'];
         }
-
-        $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
-        // halt($houses);
+// halt($where);
+        
+        // halt(Db::name('house')->getLastSql());
         // 获取有余额的房屋信息
         $housesWithBalancesIDS = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where($where)->where([['b.house_balance','>=',0]])->column('b.house_id');
         // 获取有余额的房屋id
@@ -296,8 +296,16 @@ class Report extends Model
         //halt(Db::name('rent_recharge')->getLastSql());
         $kouData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where(['pay_way'=>2])->column('a.house_id,sum(a.pay_rent) as pay_rent');
 
-        $payData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where([['pay_way','neq',2]])->column('a.house_id,sum(a.pay_rent) as pay_rent');
-        //halt($kouData);
+        $payData = Db::name('rent_recharge')->alias('a')->join('house b','a.house_id = b.house_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->group('house_id')->where($where)->where([['pay_way','neq',2]])->column('a.house_id,a.tenant_id,sum(a.pay_rent) as pay_rent');
+
+        $payHouseIds = array_keys($payData);
+
+        $houseids = array_unique(array_merge($houseids,$payHouseIds));
+
+        $houses = Db::name('house')->alias('b')->join('tenant c','b.tenant_id = c.tenant_id','left')->join('ban d','b.ban_id = d.ban_id','left')->where([['b.house_id','in',$houseids]])->column('b.house_id,b.house_number,b.house_use_id,b.house_balance,b.house_pre_rent,c.tenant_name,d.ban_owner_id,d.ban_inst_id,d.ban_owner_id,d.ban_address');
+
+        $tenants = Db::name('tenant')->column('tenant_id,tenant_name');
+        // halt($houses);
         // 合计上期结转余额
         $total_last_yue = 0;
         // 合计本期预缴
@@ -307,9 +315,10 @@ class Report extends Model
         // 合计本月余额
         $total_yue = 0;
         foreach ($houseids as $b) {
-            $pay_rent = isset($payData[$b])?$payData[$b]:0;
+            $pay_rent = isset($payData[$b])?$payData[$b]['pay_rent']:0;
             $kou_rent = isset($kouData[$b])?abs($kouData[$b]):0;
             $last_yue = isset($temps[$b]['house_balance'])?abs($temps[$b]['house_balance']):0;
+            
             if($last_yue == 0 && $pay_rent == 0 && $kou_rent == 0){
                 continue;
             }
@@ -317,11 +326,12 @@ class Report extends Model
             $data[$b]['kou_rent'] = $kou_rent;
             $data[$b]['house_pre_rent'] = $houses[$b]['house_pre_rent'];
             //$data[$b]['house_balance'] = $houses[$b]['house_balance'];
+        // dump($last_yue);dump($pay_rent);halt($kou_rent);
             $data[$b]['house_balance'] = bcadd(bcsub($last_yue, $kou_rent ,2), $pay_rent ,2);
             $data[$b]['pay_rent'] = $pay_rent;
             $data[$b]['number'] = $houses[$b]['house_number'];
             $data[$b]['address'] = $houses[$b]['ban_address'];
-            $data[$b]['tenant'] = $houses[$b]['tenant_name'];
+            $data[$b]['tenant'] = isset($payData[$b]['tenant_id'])?$tenants[$payData[$b]['tenant_id']]:$houses[$b]['tenant_name'];
             $data[$b]['use_id'] = $houses[$b]['house_use_id'];
             $data[$b]['owner_id'] = $houses[$b]['ban_owner_id'];
             $data[$b]['inst_id'] = $houses[$b]['ban_inst_id'];
@@ -343,6 +353,7 @@ class Report extends Model
             $data[$b['house_id']]['inst'] = $params['insts'][$b['ban_inst_id']];
             $data[$b['house_id']]['remark'] = '';*/
         }
+        // halt($data);
         // foreach($baseData as $b){
 
         //     if (isset($payData[$b['house_id']]) && abs($payData[$b['house_id']]) > 0) {

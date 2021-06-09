@@ -144,14 +144,14 @@
 					,{field: 'inst_id',minWidth: 120,align:'center',title: '管段',hide: isShowInst,templet: function(d) {
 						return params.insts[d.inst_id];
 					}}
-					,{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段',hide: isShowInst,templet: function(d) {
-						if(parseInt(d.new_inst_id)){
-							return params.insts[d.new_inst_id];
-						}else{
-							return '';
-						}
+					// ,{field: 'new_inst_id',minWidth: 120,align:'center',title: '新管段',hide: isShowInst,templet: function(d) {
+					// 	if(parseInt(d.new_inst_id)){
+					// 		return params.insts[d.new_inst_id];
+					// 	}else{
+					// 		return '';
+					// 	}
 						
-					}}
+					// }}
 					,{field: 'ban_number', minWidth: 110, align:'center', title: '楼栋编号'}
 					,{field: 'house_number', minWidth: 160, align:'center', title: '房屋编号'}
 					,{field: 'ban_address',minWidth:120,align:'center', title: '地址'}
@@ -194,12 +194,14 @@
 
 		$('#button_prints').click(function(){
 			var queryWhere = new Object();
-        	queryWhere.ban_inst_id = $("input[name='ban_inst_id']").val();  // 搜索机构
+        	queryWhere.inst_id = $("input[name='inst_id']").val();  // 搜索机构
+        	queryWhere.ban_address = $("input[name='ban_address']").val();  // 搜索机构
 			queryWhere.ban_owner_id = $("input[name='ban_owner_id']").val();  // 搜索产别
+			queryWhere.ban_use_id = $("input[name='ban_use_id']").val();  // 搜索使用性质
 			queryWhere.change_type = $("input[name='change_type']").val();  // 搜索异动类型
 			queryWhere.ban_struct_id = $("input[name='ban_struct_id']").val();// 搜索结构类别
 			queryWhere.ban_damage_id = $("input[name='ban_damage_id']").val();// 搜索完损等级
-			queryWhere.ctime = $("input[name='ctime']").val();// 搜索日期范围
+			queryWhere.order_date = $("input[name='order_date']").val(); // 搜索日期范围
 			//console.log(queryWhere);
 			$('#button_prints').prop('disabled', true).removeClass('layui-btn-warm').addClass('layui-bg-gray').text('导出中…');
         	$.ajax({

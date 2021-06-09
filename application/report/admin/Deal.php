@@ -102,7 +102,7 @@ class Deal extends Admin
             // halt($where);
             // $where[] = ['a.change_status','eq',1];
             $fields = 'a.change_order_number,a.change_type,sum(a.change_rent) as change_rent,sum(a.change_area) as change_area,sum(a.change_use_area) as change_use_area,sum(a.change_oprice) as change_oprice,sum(a.change_ban_num) as change_ban_num,a.tenant_id,a.house_id,a.ban_id,a.order_date,a.owner_id,a.use_id,sum(a.change_month_rent) as change_month_rent,a.inst_id,a.new_inst_id,sum(a.change_year_rent) as change_year_rent,b.ban_number,b.ban_address,b.ban_damage_id,b.ban_struct_id,b.ban_inst_id,c.tenant_name,d.house_number';
-            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->field($fields)->page($page)->group('a.house_id')->having('change_rent + change_area + change_use_area + change_oprice + change_ban_num> 0')->limit($limit)->select();
+            $temp = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id','left')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->field($fields)->page($page)->group('a.house_id')->having('change_rent + change_area + change_use_area + change_oprice + change_ban_num != 0')->limit($limit)->select();
             // halt($where);
             // halt($temp);
             foreach ($temp as $k => &$v) {
@@ -120,7 +120,7 @@ class Deal extends Admin
                 }
             }
             $result['data'] = $temp;
-            $result['count'] = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->group('a.house_id')->having('sum(change_rent) + sum(change_area) + sum(change_use_area) + sum(change_oprice) + sum(change_ban_num) > 0')->count('a.house_id');
+            $result['count'] = Db::name('change_table')->alias('a')->join('ban b','a.ban_id = b.ban_id')->join('tenant c','a.tenant_id = c.tenant_id','left')->join('house d','a.house_id = d.house_id','left')->where($where)->group('a.house_id')->having('sum(change_rent) + sum(change_area) + sum(change_use_area) + sum(change_oprice) + sum(change_ban_num) !=0')->count('a.house_id');
             $result['code'] = 0;
             $result['msg'] = '';
             return json($result);
@@ -240,7 +240,7 @@ class Deal extends Admin
                     array('title' => '异动类型', 'field' => 'change_type', 'width' => 12,'type' => 'string'),
                     array('title' => '异动编号', 'field' => 'change_order_number', 'width' => 24,'type' => 'string'),
                     array('title' => '管段', 'field' => 'inst_id', 'width' => 12 ,'type' => 'number'),
-                    array('title' => '新管段', 'field' => 'new_inst_id', 'width' => 12 ,'type' => 'number'),
+                    // array('title' => '新管段', 'field' => 'new_inst_id', 'width' => 12 ,'type' => 'number'),
                     array('title' => '楼栋编号', 'field' => 'ban_number', 'width' => 12 ,'type' => 'string'),                 
                     array('title' => '房屋编号', 'field' => 'house_number', 'width' => 24,'type' => 'string'),
                     array('title' => '地址', 'field' => 'ban_address', 'width' => 24,'type' => 'string'),

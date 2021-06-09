@@ -74,7 +74,7 @@ class House extends Admin
     {
         set_time_limit(0);
         $date = date('Ym');
-        // $date = '202105';
+        // $date = '202106';
 
         $HouseReportModel = new HouseReportModel;
         $HouseReportdata = $HouseReportModel->makeHouseReport($date);

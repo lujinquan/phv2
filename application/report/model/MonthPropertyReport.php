@@ -50,7 +50,7 @@ class MonthPropertyReport extends Model
 
         $tiaozhengWhere = [  //租金调整，上调的部分
             ['ban_owner_id','in',[1,2,3,5,6,7]],
-            ['change_type' ,'eq',9],
+            ['change_type' ,'in',[9,12]],
             ['change_status','eq',1],
             //'OrderDate' => array('between', [$year . '01', $year . '12']),
             ['order_date','eq', $cacheDate],
@@ -88,7 +88,7 @@ class MonthPropertyReport extends Model
                               ->where($tiaozhengWhere)
                               ->group('ban_owner_id,inst_id,change_cancel_type')
                               ->select();
-
+// halt($tiaozhengData);
         //重组为规定格式的产权基本数据
         foreach($propertyData as $k1 => $v1){
             $propertydata[$v1['ban_owner_id']][$v1['ban_inst_id']] = [
